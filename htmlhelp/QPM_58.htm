@@ -1,0 +1,144 @@
+<html><head>                                            
+<title>¿Cómo invocar este tipo de Help desde mi aplicación?</title>       
+</head>                                                 
+<body bgcolor="#FFFCEA" >                        
+<DIV></DIV>                                             
+<table width="100%"  border="0"  cellspacing="0"  cellpadding="2"  bgcolor="#c0c0c0" >
+<tr>                                                    
+  <td align="left" >                                    
+    <div align="left" ><font face="Arial"  color="#010101"  size="4" ><span style="FONT-SIZE: 14pt"
+   >¿Cómo invocar este tipo de Help desde mi aplicación?</span></font></div>  
+  </td>                                                 
+  <td align="right" >                                   
+    <font face="Arial"  size="2" >                      
+<A href="QPM_57.htm"><img src="SHG_ArrowPrev.bmp" alt="Previous topic"></A>&nbsp;
+<A href="QPM_2.htm"><img src="SHG_ArrowTop.bmp" alt="First topic"></A>&nbsp;
+<A href="QPM_59.htm"><img src="SHG_ArrowNext.bmp" alt="Next topic"></A>
+    </font>                                             
+  </td>                                                 
+</tr></table>                                           
+<hr><br>                                                
+<font face="Arial" color="#000000" size=2>Para invocar archivos <b>CHM</b> desde un programa [x]Harbour MiniGui es necesario utilizar una funci&oacute;n similar a <b>DisplayHelpTopic( xTopic , nMet )</b> de MiniGui Extended.<br>
+<br>
+En las versiones vigentes de <b>Object Oriented Harbour Gui</b> (OOHG) y <b>Oficial MiniGui</b> no existe dicha funci&oacute;n.<br>
+<br>
+Entonces usaremos una funci&oacute;n extra&iacute;da del muy interesante ejemplo que subi&oacute; a los files <b>Carlos Britos</b> ( <A href="mailto:bcd12a@yahoo.com.ar">bcd12a@yahoo.com.ar</A> ) llamado <b>Chm_Hlp.zip</b><br>
+<br>
+Dicho demo tiene la habilidad de llamar a los dos formatos de help mas populares:<b> hlp</b> y <b>chm</b>.  El primero es el mas viejo y esta en franco desuso.<br>
+<br>
+He aqu&iacute; una funcion recortada que nos servir&aacute; para las tres versiones de minigui actuales, el ejemplo que acompa&ntilde;a a QPM hace uso de esta funci&oacute;n:</font><br>
+<br>
+<font face="Courier New" color="#008080" size=2><b>*==============================================================*<br>
+Procedure&nbsp;US_DisplayHelpTopic(&nbsp;cActiveHelpFile&nbsp;,&nbsp;xTopic&nbsp;,&nbsp;nMet&nbsp;)<br>
+*--------------------------------------------------------------*<br>
+*-&nbsp;Adapted&nbsp;from&nbsp;Carlos&nbsp;Britos&nbsp;(&nbsp;bcd12a@yahoo.com.ar&nbsp;)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-*<br>
+*-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sample&nbsp;help&nbsp;Chm_Hlp.zip&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-*<br>
+*==============================================================*<br>
+&nbsp;&nbsp;&nbsp;LOCAL&nbsp;cParam&nbsp;:=&nbsp;""<br>
+&nbsp;&nbsp;&nbsp;If&nbsp;empty(cActiveHelpFile)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Return<br>
+&nbsp;&nbsp;&nbsp;endif<br>
+&nbsp;&nbsp;&nbsp;_HMG_nTopic&nbsp;:=&nbsp;xTopic<br>
+&nbsp;&nbsp;&nbsp;_HMG_nMet&nbsp;&nbsp;&nbsp;:=&nbsp;nMet<br>
+&nbsp;&nbsp;&nbsp;if&nbsp;valtype(nMet)&nbsp;==&nbsp;'U'<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;nMet&nbsp;:=&nbsp;0<br>
+&nbsp;&nbsp;&nbsp;endif<br>
+&nbsp;&nbsp;&nbsp;If&nbsp;ValType(&nbsp;xTopic&nbsp;)&nbsp;==&nbsp;'N'<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cParam&nbsp;:=&nbsp;"-mapid&nbsp;"&nbsp;+&nbsp;LTrim(&nbsp;Str(&nbsp;xTopic&nbsp;))&nbsp;+&nbsp;&nbsp;"&nbsp;"&nbsp;+&nbsp;cActiveHelpFile<br>
+&nbsp;&nbsp;&nbsp;ElseIf&nbsp;ValType(&nbsp;xTopic&nbsp;)&nbsp;==&nbsp;'C'<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cParam&nbsp;:=&nbsp;&nbsp;'"'&nbsp;+&nbsp;cActiveHelpFile&nbsp;+&nbsp;"::/"&nbsp;+&nbsp;AllTrim(&nbsp;xTopic&nbsp;)&nbsp;+&nbsp;'.htm"'<br>
+&nbsp;&nbsp;&nbsp;ElseIf&nbsp;ValType(&nbsp;xTopic&nbsp;)&nbsp;==&nbsp;'U'<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cParam&nbsp;:=&nbsp;'"'&nbsp;+&nbsp;cActiveHelpFile&nbsp;+&nbsp;'"'<br>
+&nbsp;&nbsp;&nbsp;EndIf<br>
+&nbsp;&nbsp;&nbsp;_Execute(&nbsp;0&nbsp;,&nbsp;"Open",&nbsp;"HH.exe",&nbsp;cParam&nbsp;,&nbsp;,&nbsp;5&nbsp;)<br>
+Return</b></font><br>
+<br>
+<font face="Arial" color="#000000" size=2>Algunos ejemplos simples de invocaci&oacute;n:<br>
+<br>
+<b>/* Para mostrar el help desde el primer t&oacute;pico */</b></font><br>
+<br>
+<font face="Courier New" color="#000000" size=2>SET&nbsp;HELPFILE&nbsp;TO&nbsp;'Simple&nbsp;Help&nbsp;Generator.chm'<br>
+do&nbsp;case<br>
+&nbsp;&nbsp;&nbsp;case&nbsp;US_MiniGuiType()&nbsp;==&nbsp;"M1"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font><b><font face="Courier New" color="#FF0000" size=2>/*&nbsp;Oficial&nbsp;MiniGUI&nbsp;1x&nbsp;*/</b></font><br>
+<font face="Courier New" color="#000000" size=2>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;US_DisplayHelpTopic(&nbsp;_HMG_ActiveHelpFile&nbsp;,&nbsp;1&nbsp;)<br>
+&nbsp;&nbsp;&nbsp;case&nbsp;US_MiniGuiType()&nbsp;==&nbsp;"M3"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font><b><font face="Courier New" color="#FF0000" size=2>/*&nbsp;Oficial&nbsp;MiniGUI&nbsp;3x&nbsp;*/</b></font><br>
+<font face="Courier New" color="#000000" size=2>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;US_DisplayHelpTopic(&nbsp;_HMG_SYSDATA&nbsp;[&nbsp;217&nbsp;]&nbsp;,&nbsp;1&nbsp;)<br>
+&nbsp;&nbsp;&nbsp;case&nbsp;US_MiniGuiType()&nbsp;==&nbsp;"E1"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font><b><font face="Courier New" color="#FF0000" size=2>/*&nbsp;Extended&nbsp;MiniGUI&nbsp;1x&nbsp;*/</b></font><br>
+<font face="Courier New" color="#000000" size=2>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;DISPLAY&nbsp;HELP&nbsp;MAIN<br>
+&nbsp;&nbsp;&nbsp;case&nbsp;US_MiniGuiType()&nbsp;==&nbsp;"O3"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font><b><font face="Courier New" color="#FF0000" size=2>/*&nbsp;Object&nbsp;Oriented&nbsp;Harbour&nbsp;GUI&nbsp;3x&nbsp;*/</b></font><br>
+<font face="Courier New" color="#000000" size=2>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;US_DisplayHelpTopic(&nbsp;'Simple&nbsp;Help&nbsp;Generator.chm'&nbsp;,&nbsp;1&nbsp;)<br>
+endcase</font><br>
+<br>
+<b><font face="Arial" color="#000000" size=2>/*Para mostrar el help desde un t&oacute;pico en orden num&eacute;rico (t&oacute;pico 3) */</font></b><br>
+<br>
+<font face="Courier New" color="#000000" size=2>SET&nbsp;HELPFILE&nbsp;TO&nbsp;'Simple&nbsp;Help&nbsp;Generator.chm'<br>
+do&nbsp;case<br>
+&nbsp;&nbsp;&nbsp;case&nbsp;US_MiniGuiType()&nbsp;==&nbsp;"M1"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font><b><font face="Courier New" color="#FF0000" size=2>/*&nbsp;Oficial&nbsp;MiniGUI&nbsp;1x&nbsp;*/</b></font><br>
+<font face="Courier New" color="#000000" size=2>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;US_DisplayHelpTopic(&nbsp;_HMG_ActiveHelpFile&nbsp;,&nbsp;3&nbsp;)<br>
+&nbsp;&nbsp;&nbsp;case&nbsp;US_MiniGuiType()&nbsp;==&nbsp;"M3"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font><b><font face="Courier New" color="#FF0000" size=2>/*&nbsp;Oficial&nbsp;MiniGUI&nbsp;3x&nbsp;*/</b></font><br>
+<font face="Courier New" color="#000000" size=2>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;US_DisplayHelpTopic(&nbsp;_HMG_SYSDATA&nbsp;[&nbsp;217&nbsp;]&nbsp;,&nbsp;3&nbsp;)<br>
+&nbsp;&nbsp;&nbsp;case&nbsp;US_MiniGuiType()&nbsp;==&nbsp;"E1"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font><b><font face="Courier New" color="#FF0000" size=2>/*&nbsp;Extended&nbsp;MiniGUI&nbsp;1x&nbsp;*/</b></font><br>
+<font face="Courier New" color="#000000" size=2>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;US_DisplayHelpTopic(&nbsp;_HMG_ActiveHelpFile&nbsp;,&nbsp;3&nbsp;)<br>
+&nbsp;&nbsp;&nbsp;case&nbsp;US_MiniGuiType()&nbsp;==&nbsp;"O3"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font><b><font face="Courier New" color="#FF0000" size=2>/*&nbsp;Object&nbsp;Oriented&nbsp;Harbour&nbsp;GUI&nbsp;3x&nbsp;*/</b></font><br>
+<font face="Courier New" color="#000000" size=2>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;US_DisplayHelpTopic(&nbsp;'Simple&nbsp;Help&nbsp;Generator.chm'&nbsp;,&nbsp;3&nbsp;)<br>
+endcase</font><br>
+<br>
+<b><font face="Arial" color="#000000" size=2>/*Para mostrar el help desde un t&oacute;pico mediante su nick name (nick: HelpAboutFunction) */</font></b><br>
+<br>
+<font face="Courier New" color="#000000" size=2>SET&nbsp;HELPFILE&nbsp;TO&nbsp;'Simple&nbsp;Help&nbsp;Generator.chm'<br>
+do&nbsp;case<br>
+&nbsp;&nbsp;&nbsp;case&nbsp;US_MiniGuiType()&nbsp;==&nbsp;"M1"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font><b><font face="Courier New" color="#FF0000" size=2>/*&nbsp;Oficial&nbsp;MiniGUI&nbsp;1x&nbsp;*/</b></font><br>
+<font face="Courier New" color="#000000" size=2>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;US_DisplayHelpTopic(&nbsp;_HMG_ActiveHelpFile&nbsp;,&nbsp;"HelpAboutFunction"&nbsp;)<br>
+&nbsp;&nbsp;&nbsp;case&nbsp;US_MiniGuiType()&nbsp;==&nbsp;"M3"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font><b><font face="Courier New" color="#FF0000" size=2>/*&nbsp;Oficial&nbsp;MiniGUI&nbsp;3x&nbsp;*/</b></font><br>
+<font face="Courier New" color="#000000" size=2>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;US_DisplayHelpTopic(&nbsp;_HMG_SYSDATA&nbsp;[&nbsp;217&nbsp;]&nbsp;,&nbsp;"HelpAboutFunction"&nbsp;)<br>
+&nbsp;&nbsp;&nbsp;case&nbsp;US_MiniGuiType()&nbsp;==&nbsp;"E1"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font><b><font face="Courier New" color="#FF0000" size=2>/*&nbsp;Extended&nbsp;MiniGUI&nbsp;1x&nbsp;*/</b></font><br>
+<font face="Courier New" color="#000000" size=2>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;US_DisplayHelpTopic(&nbsp;_HMG_ActiveHelpFile&nbsp;,&nbsp;"HelpAboutFunction"&nbsp;)<br>
+&nbsp;&nbsp;&nbsp;case&nbsp;US_MiniGuiType()&nbsp;==&nbsp;"O3"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font><b><font face="Courier New" color="#FF0000" size=2>/*&nbsp;Object&nbsp;Oriented&nbsp;Harbour&nbsp;GUI&nbsp;3x&nbsp;*/</b></font><br>
+<font face="Courier New" color="#000000" size=2>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;US_DisplayHelpTopic(&nbsp;'Simple&nbsp;Help&nbsp;Generator.chm'&nbsp;,&nbsp;"HelpAboutFunction"&nbsp;)<br>
+endcase</font><br>
+<br>
+<b><font face="Arial" color="#000000" size=2>Estos ejemplos requieren la funcion US_MiniGuiType():</font></b><br>
+<br>
+<font face="Courier New" color="#000000" size=2>Function&nbsp;US_MiniGuiType()<br>
+&nbsp;&nbsp;&nbsp;//msginfo(&nbsp;miniguiversion()&nbsp;)<br>
+&nbsp;&nbsp;&nbsp;do&nbsp;case<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;case&nbsp;at(&nbsp;"Extended"&nbsp;,&nbsp;MiniGuiVersion()&nbsp;)&nbsp;&gt;&nbsp;0<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Return&nbsp;"E1"<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;case&nbsp;at(&nbsp;"ooHG"&nbsp;,&nbsp;MiniGuiVersion()&nbsp;)&nbsp;==&nbsp;1<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Return&nbsp;"O3"<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;case&nbsp;at(&nbsp;"Harbour&nbsp;MiniGUI&nbsp;1"&nbsp;,&nbsp;MiniGuiVersion()&nbsp;)&nbsp;==&nbsp;1<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Return&nbsp;"M1"<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;case&nbsp;at(&nbsp;"Harbour&nbsp;MiniGUI&nbsp;3"&nbsp;,&nbsp;MiniGuiVersion()&nbsp;)&nbsp;==&nbsp;1<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Return&nbsp;"M3"<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;otherwise<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;msginfo(&nbsp;"Error&nbsp;detecting&nbsp;MiniGui&nbsp;type:&nbsp;"&nbsp;+&nbsp;MiniGuiVersion()&nbsp;)<br>
+&nbsp;&nbsp;&nbsp;endcase<br>
+Return&nbsp;"?"</font><br>
+ 
+<p><hr><p>                                                            
+<table width=100%><tr><td align="center"><font face="Arial" color="#000000" size=2><b><IMG SRC="QPM.bmp"></b></font><b><font face="Arial" size=2>   QPM</b> (QAC Based Project Manager) </font><b><font face="Arial" color="#0000FF" size=2>Version 05.00</b></font><br>
+<br>
+<font face="Arial" color="#E20362" size=2><b><i>Compilaci&oacute;n Incremental con las tres versiones de librer&iacute;as mas populares de la familia MiniGui: Oficial MiniGui, Extended MiniGui y Object Oriented Harbour Gui (OOHG)</i></b></font><br>
+<br>
+<font face="Arial" size=2><b><A href="mailto:QPM_Support@gmail.com" >QPM_Support@gmail.com</A></b></font><br>
+<br>
+<font face="Arial" color="#0000FF" size=2><b><A href="http://qpm.sourceforge.net" target=blank>qpm.sourceforge.net</A></b></font></td></tr></table><br>
+<br>
+<br>
+ 
+
+<table width="100%"  border="0"  cellspacing="0"  cellpadding="2"  bgcolor="#c0c0c0" > 
+  <TBODY>                                                             
+  <tr>                                                                
+    <td align="left" ><font face="Arial"  color="#010101"  size="4" ><span style="FONT-SIZE: 14pt"
+     >                                                                
+      <P>                                                             
+      <P align=left><FONT size=2><A href="http://qpm.sourceforge.net" target=blank>Powered by QPM</A>&nbsp;&nbsp;</FONT>               
+      </P></span></font></td>                                         
+    <td align="right" >                                               
+      <font face="Arial"  size="2" >                                  
+<A href="QPM_57.htm"><img src="SHG_ArrowPrev.bmp" alt="Previous topic"></A>&nbsp;
+<A href="QPM_2.htm"><img src="SHG_ArrowTop.bmp" alt="First topic"></A>&nbsp;
+<A href="QPM_59.htm"><img src="SHG_ArrowNext.bmp" alt="Next topic"></A>
+      </font>                                                         
+    </td></tr></TBODY></table><hr></body></html>                          

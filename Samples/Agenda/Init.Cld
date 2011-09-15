@@ -1,0 +1,9 @@
+Options Path D:\FGS\PRO\RN\Source\Qac\Samples\Agenda;\
+Options NoRunAtStartup                                                                                                                                                                                                                                        
+Monitor Static                                                                                                                                                                                                                                                
+Monitor Public                                                                                                                                                                                                                                                
+Monitor Local                                                                                                                                                                                                                                                 
+Monitor Private                                                                                                                                                                                                                                               
+Monitor Sort                                                                                                                                                                                                                                                  
+View CallStack                                                                                                                                                                                                                                                
+
