@@ -3,13 +3,13 @@
 
 [Setup]
 AppName=QPM (QAC Based Project Manager)
-AppVerName=QPM v05.00 build 01
+AppVerName=QPM v05.00 build 02
 AppPublisher=fernando.yurisich
-DefaultDirName=C:\QPM_05_00_01
+DefaultDirName=C:\QPM_05_00_02
 DefaultGroupName=QPM [x]Harbour MiniGui Desktop
 AllowNoIcons=yes
 OutputDir=..\QPM Distribution
-OutputBaseFilename=QPM_05_00_0001_Install
+OutputBaseFilename=QPM_05_00_0002_Install
 SetupIconFile=.\Resource\QPM_Install.ico
 Compression=lzma
 SolidCompression=yes
