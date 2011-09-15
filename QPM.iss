@@ -3,13 +3,13 @@
 
 [Setup]
 AppName=QPM (QAC Based Project Manager)
-AppVerName=QPM v05.00 build 00
-AppPublisher=QPM_Support
-DefaultDirName=C:\QPM_05_00_00
+AppVerName=QPM v05.00 build 01
+AppPublisher=fernando.yurisich
+DefaultDirName=C:\QPM_05_00_01
 DefaultGroupName=QPM [x]Harbour MiniGui Desktop
 AllowNoIcons=yes
 OutputDir=..\QPM Distribution
-OutputBaseFilename=QPM_05_00_0000_Install
+OutputBaseFilename=QPM_05_00_0001_Install
 SetupIconFile=.\Resource\QPM_Install.ico
 Compression=lzma
 SolidCompression=yes
@@ -23,49 +23,7 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 Name: "quicklaunchicon"; Description: "{cm:CreateQuickLaunchIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: checkablealone
 
 [Files]
-Source: ".\QPM.EXE"; DestDir: "{app}"; Flags: ignoreversion
-Source: ".\QPM.chm"; DestDir: "{app}"; Flags: ignoreversion
-Source: ".\us_windres.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: ".\us_ecnecil.spf"; DestDir: "{app}"; Flags: ignoreversion
-Source: ".\us_slash.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: ".\us_shell.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: ".\us_make.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: ".\us_msg.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: ".\us_res.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: ".\us_run.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: ".\us_impdef.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: ".\us_pexports.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: ".\us_reimp.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: ".\us_redir.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: ".\us_implib.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: ".\us_dlltool.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: ".\us_tlib.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: ".\us_polib.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: ".\us_objdump.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: ".\us_tdump.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: ".\us_podump.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: ".\us_upx.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: ".\us_dbfview.exe"; DestDir: "{app}"; Flags: ignoreversion
-;Source: ".\us_dbu.exe"; DestDir: "{app}"; Flags: ignoreversion
-;Source: ".\us_dbu.hlp"; DestDir: "{app}"; Flags: ignoreversion
-Source: ".\us_r2h.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: ".\us_dif.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: ".\us_difwi.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: ".\us_hhc.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: ".\us_hha.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: ".\us_hot.oci"; DestDir: "{app}"; Flags: ignoreversion
-Source: ".\us_itcc.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: ".\us_a1.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: ".\us_a2.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: ".\us_a3.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: ".\us_a4.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: ".\us_s1.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: ".\us_s2.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: ".\us_s3.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: ".\us_killer.oci"; DestDir: "{app}"; Flags: ignoreversion
-Source: ".\us_dtree.css"; DestDir: "{app}"; Flags: ignoreversion
-Source: ".\us_dtree.js"; DestDir: "{app}"; Flags: ignoreversion
-Source: ".\us_dtree.im"; DestDir: "{app}"; Flags: ignoreversion
+Source: ".\*.*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs
 ; Ejemplos
 ; Agenda
 ;Source: ".\Samples\Agenda\*.*"; DestDir: "{app}\Samples\Agenda"; Flags: ignoreversion
