@@ -1,0 +1,169 @@
+<html><head>                                            
+<title>¿Cómo se configuran los parámetros o seteos globales?</title>       
+</head>                                                 
+<body bgcolor="#FFFCEA" >                        
+<DIV></DIV>                                             
+<table width="100%"  border="0"  cellspacing="0"  cellpadding="2"  bgcolor="#c0c0c0" >
+<tr>                                                    
+  <td align="left" >                                    
+    <div align="left" ><font face="Arial"  color="#010101"  size="4" ><span style="FONT-SIZE: 14pt"
+   >¿Cómo se configuran los parámetros o seteos globales?</span></font></div>  
+  </td>                                                 
+  <td align="right" >                                   
+    <font face="Arial"  size="2" >                      
+<A href="QPM_18.htm"><img src="SHG_ArrowPrev.bmp" alt="Previous topic"></A>&nbsp;
+<A href="QPM_2.htm"><img src="SHG_ArrowTop.bmp" alt="First topic"></A>&nbsp;
+<A href="projectsettings.htm"><img src="SHG_ArrowNext.bmp" alt="Next topic"></A>
+    </font>                                             
+  </td>                                                 
+</tr></table>                                           
+<hr><br>                                                
+<font face="Arial" color="#000000" size=2><b>QPM</b> tiene una configuraci&oacute;n Global en donde se especifican los nombres de Directorios de las diferentes versiones de MiniGui, el nombre del Editor a utilizar y una serie de par&aacute;metros m&aacute;s referidos a las tools que provee o da soporte. <br>
+<br>
+Esta configuraci&oacute;n es accesible desde la opci&oacute;n <b>Global Options</b> del men&uacute; <b>Settings</b>:<br>
+<br>
+<b><IMG SRC="QPM_Img_002.png" BORDER=2></b><br>
+<br>
+<font face="Arial" color="#000000" size=2>Configurando el Editor de Texto y las herramientas de manejo de Forms:</font></font><br>
+<br>
+<u><b><font face="Arial" color="#000000">Editor:</font></b></u><br>
+<br>
+<font face="Arial" size=2><b>Program Editor for Text Files:</b> Ubicaci&oacute;n del editor de texto que se usar&aacute; para editar los programas fuentes y/o cualquier otro texto que sea necesario<br>
+<br>
+<b>Use Long Name:</b> Por default, para evitar problemas con los nombres de directorios largos o con caracteres en blanco, los par&aacute;metros pasados al editor, como ser el camino y nombre del fuente a editar, se le proporcionan en formato nombre de archivo de DOS 8.3. Activando esta opci&oacute;n, el nombre ser&aacute; proporcionado tal como es. Notese que varios productos del mercado tienen problemas en manejar este tipo de nombres de Directorios y Archivos, por lo que se recomienda no activar esta opcion salvo que sea necesaria.</font><br>
+<br>
+<font face="Arial" color="#000000" size=2><b><IMG SRC="QPM_GlobalSettings_Editot_LongName.png" BORDER=2></b></font><br>
+<br>
+<font face="arial" color="#0000FF" size=2><A NAME="suspend"></font><font face="Arial" size=2><b>Suspend Control Edit</font></b><font face="Arial" size=2>: Este seteo afecta tanto a <b>Sources</b> como a <b>Headers</b> y <b>Forms</b>. En el caso de <b>Forms</b>, s&oacute;lo tiene efecto cuando se los edita con el <b>Editor predeterminado</b>, es decir, cuando <b>NO</b> se utilizan las tools de edici&oacute;n como ser <b>HMI+</b> o <b>HMGS-Ide</b>.<br>
+Tilde esta opci&oacute;n si desea que QPM <b>no</b> efectue control sobre los archivos que se estan editando.  Esta opci&oacute;n se agreg&oacute; a QPM porque hay programas de edici&oacute;n de texto que no soportaban la facilidad de control de edici&oacute;n de QPM.  <b>Debe tildarse en caso de problemas con su editor de texto</b>, sino, se recomienda <b>no tildar</b>, ya que a futuro se prevee la facilidad de <b>Quick Edit</b>, o sea, editar el fuente con el propio QPM y si esta opcion est&aacute; tildada, dicha facilidad no estar&aacute; disponible.<br>
+Si esta opci&oacute;n est&aacute; tildada no se mostrar&aacute; la letra E cuando se est&eacute; editando un fuente.</font><br>
+<br>
+<font face="Arial" color="#FF0000" size=2><b>Nota: La activaci&oacute;n de esta opci&oacute;n desactiva el Forzado de Recompilaciones Automaticamnete (Ver <A href="ForceRecomp.htm">&iquest;Como forzar automaticamente la recompilacion de modulos?</A>)</b></font><br>
+<br>
+<font face="Arial" color="#000000" size=2><b><IMG SRC="QPM_GlobalSettings_Editot_Suspend.png" BORDER=2></b></font><br>
+<br>
+<u><b><font face="Arial">Form Tool Locate:</font></b></u><br>
+<br>
+<b><font face="Arial" size=2>HMI+:</font></b><font face="Arial" size=2> Ubicaci&oacute;n de la herramienta de modificaci&oacute;n de Forms (Pantallas) creada por Ciro Vargas Clemow. Se requiere una versi&oacute;n 1.66 o superior.<br>
+<br>
+<b>HMGSIDE:</b> Ubicaci&oacute;n de la herramienta de modificaci&oacute;n de Forms (Pantallas) creada por Walter Formigoni. Se requiere una versi&oacute;n 0.0.7 o superior.</font><br>
+<br>
+<u><b><font face="Arial">DBF Tool Locate: </font></b></u><font face="Arial" size=2>QPM provee una tool para el manejo de tablas DBF: <b>DBFView</b>, de Grigory Filatov<br>
+<br>
+Pero adem&aacute;s, ofrece la posibilidad de utilizar alguna otra herramienta para el acceso a las tablas DBF, esta herramienta externa deber&aacute; configurarse en esta pesta&ntilde;a.<br>
+<br>
+<b>Select DBF Tool:</b> Ubicaci&oacute;n de la herramienta de modificaci&oacute;n de DBF que el usuario desea utilizar</font><br>
+<br>
+<font face="Arial" color="#000000" size=2><b><IMG SRC="QPM_GlobalSettings_Dbf Tool.png" BORDER=2></b></font><br>
+<font face="Arial" size=2><A name="dbfcomillas"><br>
+<b>Do Not Use Quotes in DBF name:</b> Esta opci&oacute;n se utiliza para que al llamar a la herramienta externa de manejo de DBF <b>no</b> se le agreguen las <b>comillas</b> a los extremos del nombre de la DBF que intentamos abrir.  Esto s&oacute;lo se usa en caso de que la herramienta externa lo requiera.<br>
+Por ejemplo: si usamos <b>c:\tool\DBAlite.exe</b> como herramienta y queremos abrir la base <b>c:\DBFs\Test.dbf</b> dependiendiendo de esta opcion, el comando interno que ejecuta <b>QPM</b> ser&aacute;:<br>
+<b>Run( c:\tool\DBAlite.exe </b></font><b><font face="Arial" color="#FF0000" size=2>"</b></font><b><font face="Arial" size=2>c:\DBFs\Test.dbf</b></font><b><font face="Arial" color="#FF0000" size=2>"</b></font><b><font face="Arial" size=2> )</b> si el control es<b> FALSE</b> y<br>
+<b>Run( c:\tool\DBAlite.exe c:\DBFs\Test.dbf )</b> si el control es<b> TRUE</b></font><br>
+<br>
+<font face="Arial" color="#000000" size=2><b><IMG SRC="QPM_GlobalSettings_Dbf_Comillas.png" BORDER=2></b></font><br>
+<br>
+<br>
+<font face="Arial" color="#000000" size=4><u>FOLDERS</u></font><br>
+<br>
+<font face="Arial" color="#FF0000" size=2><b>Nota: </b>Dentro de los folders para MiniGui <b>s&oacute;lo</b> se deber&aacute;n completar los de la librer&iacute;a <b>MiniGui</b> que deseamos utilizar.  Y en cada caso, <b>s&oacute;lo es necesario</b> especificar un compilador de la familia <b>Harbour</b>, es decir, si vamos a utilizar <b>MiniGui</b> con <b>Harbour </b>no es necesario especificar el folder de <b>xHarbour</b> y viceversa.  Sin embargo, se pueden completar todos los Folder aunque se trate de MiniGui's o [x]Harbour que no utilizaremos</font><br>
+<br>
+<u><b><font face="Arial">Folders for Oficial MiniGui 1.x and Borland C: </font></b></u><font face="Arial" size=2>Completar esta configuraci&oacute;n si se desea utilizar Oficial MiniGui versi&oacute;n 1.x<br>
+<br>
+<b>MiniGui Folder:</b> Directorio principal de la minigui (Default C:\MiniGui1x)<br>
+<br>
+<b>Borland C Folder:</b> Directorio donde reside el Compilador C (Default C:\Borland\Bcc55)<br>
+<br>
+<b>Harbour Folder:</b> Directorio donde reside el Compilador Harbour (Default C:\MiniGui1x\Harbour) (Opcional si se utilizar&aacute; xHarbour)<br>
+<br>
+<b>xHarbour Folder:</b> Directorio donde reside el Compilador xHarbour (Default C:\MiniGui1x\xHarbour) (Opcional si se utilizar&aacute; Harbour)</font><br>
+<br>
+<font face="Arial" color="#000000" size=2><b><IMG SRC="QPM_GlobalSettings_OficialMiniGUI_1x.png" BORDER=2></b></font><br>
+<br>
+<u><b><font face="Arial">Folders for Oficial MiniGui 3.x and MinGW: </font></b></u><font face="Arial" size=2>Completar esta configuraci&oacute;n si se desea utilizar Oficial MiniGui versi&oacute;n 3.x<br>
+<br>
+<b>MiniGui Folder:</b> Directorio principal de la minigui (Default C:\HMG)<br>
+<br>
+<b>MinGW C Folder:</b> Directorio donde reside el Compilador C (Default C:\HMG\MinGW)<br>
+<br>
+<b>Harbour Folder:</b> Directorio donde reside el Compilador Harbour (Default C:\HMG\Harbour) (Opcional si se utilizar&aacute; xHarbour)<br>
+<br>
+<b>xHarbour Folder:</b> Directorio donde reside el Compilador xHarbour (Default C:\HMG\xHarbour) (Opcional si se utilizar&aacute; Harbour)</font><br>
+<br>
+<font face="Arial" color="#000000" size=2><b><IMG SRC="QPM_GlobalSettings_OficialMiniGUI_3x.png" BORDER=2></b></font><br>
+<br>
+<u><b><font face="Arial">Folders for Extended MiniGui 1.x and Borland C: </font></b></u><font face="Arial" size=2>Completar esta configuraci&oacute;n si se desea utilizar Extended MiniGui versi&oacute;n 1.x<br>
+<br>
+<b>MiniGui Folder:</b> Directorio principal de la minigui (Default C:\MiniGui)<br>
+<br>
+<b>Borland C Folder:</b> Directorio donde reside el Compilador C (Default C:\Borland\Bcc55)<br>
+<br>
+<b>Harbour Folder:</b> Directorio donde reside el Compilador Harbour (Default C:\MiniGui\Harbour) (Opcional si se utilizar&aacute; xHarbour)<br>
+<br>
+<b>xHarbour Folder:</b> Directorio donde reside el Compilador xHarbour (Default C:\MiniGui\xHarbour) (Opcional si se utilizar&aacute; Harbour)</font><br>
+<br>
+<font face="Arial" color="#000000" size=2><b><IMG SRC="QPM_GlobalSettings_ExtendedMiniGUI_1x.png" BORDER=2></b></font><br>
+<br>
+<u><b><font face="Arial">Folders for OOHG 3.x and Borland C: </font></b></u><font face="Arial" size=2>Completar esta configuraci&oacute;n si se desea utilizar Object Oriented Harbour Gui 3.x y el compilador Borland C<br>
+<br>
+<b>MiniGui Folder:</b> Directorio principal de la minigui (Default C:\OOHGforBorland)<br>
+<br>
+<b>Borland C Folder:</b> Directorio donde reside el Compilador C (Default C:\Borland\Bcc55)<br>
+<br>
+<b>Harbour Folder:</b> Directorio donde reside el Compilador Harbour (Default C:\OOHGforBorland\Harbour) (Opcional si se utilizar&aacute; xHarbour)<br>
+<br>
+<b>xHarbour Folder:</b> Directorio donde reside el Compilador xHarbour (Default C:\OOHGforBorland\xHarbour) (Opcional si se utilizar&aacute; Harbour)</font><br>
+<br>
+<font face="Arial" color="#000000" size=2><b><IMG SRC="QPM_GlobalSettings_OOHG_3x_Borland.png" BORDER=2></b></font><br>
+<br>
+<u><b><font face="Arial">Folders for OOHG 3.x and MinGW: </font></b></u><font face="Arial" size=2>Completar esta configuraci&oacute;n si se desea utilizar Object Oriented Harbour Gui 3.x y el compilador MinGW<br>
+<br>
+<b>MiniGui Folder:</b> Directorio principal de la minigui (Default C:\OOHGforMinGW)<br>
+<br>
+<b>MinGW C Folder:</b> Directorio donde reside el Compilador C (Default C:\MinGW)<br>
+<br>
+<b>Harbour Folder:</b> Directorio donde reside el Compilador Harbour (Default C:\OOHGforMinGW\Harbour) (Opcional si se utilizar&aacute; xHarbour)<br>
+<br>
+<b>xHarbour Folder:</b> Directorio donde reside el Compilador xHarbour (Default C:\OOHGforMinGW\xHarbour) (Opcional si se utilizar&aacute; Harbour)</font><br>
+<br>
+<font face="Arial" color="#000000" size=2><b><IMG SRC="QPM_GlobalSettings_OOHG_3x_MinGW.png" BORDER=2></b></font><br>
+<br>
+<u><b><font face="Arial">Folders for OOHG 3.x and Pelles C: </font></b></u><font face="Arial" size=2>Completar esta configuraci&oacute;n si se desea utilizar Object Oriented Harbour Gui 3.x y el compilador Pelles C<br>
+<br>
+<b>MiniGui Folder:</b> Directorio principal de la minigui (Default C:\OOHGforPelles)<br>
+<br>
+<b>Pelles C Folder:</b> Directorio donde reside el Compilador C (Default C:\Pelles)<br>
+<br>
+<b>Harbour Folder:</b> Directorio donde reside el Compilador Harbour (Default C:\OOHGforPelles\Harbour) (Opcional si se utilizar&aacute; xHarbour)<br>
+<br>
+<b>xHarbour Folder:</b> Directorio donde reside el Compilador xHarbour (Default C:\OOHGforPelles\xHarbour) (Opcional si se utilizar&aacute; Harbour)</font><br>
+<br>
+<font face="Arial" color="#000000" size=2><b><IMG SRC="QPM_GlobalSettings_OOHG_3x_Pelles.png" BORDER=2></b></font><br>
+ 
+<p><hr><p>                                                            
+<table width=100%><tr><td align="center"><font face="Arial" color="#000000" size=2><b><IMG SRC="QPM.bmp"></b></font><b><font face="Arial" size=2>   QPM</b> (QAC Based Project Manager) </font><b><font face="Arial" color="#0000FF" size=2>Version 05.00</b></font><br>
+<br>
+<font face="Arial" color="#E20362" size=2><b><i>Compilaci&oacute;n Incremental con las tres versiones de librer&iacute;as mas populares de la familia MiniGui: Oficial MiniGui, Extended MiniGui y Object Oriented Harbour Gui (OOHG)</i></b></font><br>
+<br>
+<font face="Arial" size=2><b><A href="mailto:QPM_Support@gmail.com" >QPM_Support@gmail.com</A></b></font><br>
+<br>
+<font face="Arial" color="#0000FF" size=2><b><A href="http://qpm.sourceforge.net" target=blank>qpm.sourceforge.net</A></b></font></td></tr></table><br>
+<br>
+<br>
+ 
+
+<table width="100%"  border="0"  cellspacing="0"  cellpadding="2"  bgcolor="#c0c0c0" > 
+  <TBODY>                                                             
+  <tr>                                                                
+    <td align="left" ><font face="Arial"  color="#010101"  size="4" ><span style="FONT-SIZE: 14pt"
+     >                                                                
+      <P>                                                             
+      <P align=left><FONT size=2><A href="http://qpm.sourceforge.net" target=blank>Powered by QPM</A>&nbsp;&nbsp;</FONT>               
+      </P></span></font></td>                                         
+    <td align="right" >                                               
+      <font face="Arial"  size="2" >                                  
+<A href="QPM_18.htm"><img src="SHG_ArrowPrev.bmp" alt="Previous topic"></A>&nbsp;
+<A href="QPM_2.htm"><img src="SHG_ArrowTop.bmp" alt="First topic"></A>&nbsp;
+<A href="projectsettings.htm"><img src="SHG_ArrowNext.bmp" alt="Next topic"></A>
+      </font>                                                         
+    </td></tr></TBODY></table><hr></body></html>                          

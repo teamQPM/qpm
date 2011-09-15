@@ -1,0 +1,1404 @@
+#include "minigui.ch"
+#include <QPM.ch>
+
+Function Get_QPM_Builder_VersionDisplay()
+   Local cVer := Get_QPM_Builder_Version()
+Return "v" + substr( cVer , 1 , 2 ) + "." + substr( cVer , 3 , 2 ) + " Build " + substr( cVer , 5 , 2 )
+
+Function QPM_ForceRecompPRG()
+   if GetProperty( "VentanaMain" , "GPRGFiles" , "value" ) > 0
+      if GetProperty( "VentanaMain" , "GPRGFiles" , "Cell" , GetProperty( "VentanaMain" , "GPRGFiles" , "value" ) , NCOLPRGRECOMP ) == "R"
+         SetProperty( "VentanaMain" , "GPRGFiles" , "Cell" , GetProperty( "VentanaMain" , "GPRGFiles" , "value" ) , NCOLPRGRECOMP , " " )
+      else
+         SetProperty( "VentanaMain" , "GPRGFiles" , "Cell" , GetProperty( "VentanaMain" , "GPRGFiles" , "value" ) , NCOLPRGRECOMP , "R" )
+      endif
+   endif
+Return
+
+Function QPM_CartelCancelByBug()
+   msginfo( "Selection canceled by user" + HB_OsNewLine() + ;   // esto es debido a un bug que prodeuce que cuando se de escape sin seleccionar archivos la rutina siguiente no termina
+                                           HB_OsNewLine() + ;
+            "Note: This msgbox is used for resolve a litle bug in Extended Minigui" + HB_OsNewLine() + ;
+            "when Release the GetFile function pressing the Cancel Button" )
+Return .T.
+
+Function BugGetFile( a , b , c , d , e , f )
+   Local auxReto
+// SetMGWaitHide()
+   auxReto := GetFile( a , b , c , d , e , f )
+// SetMGWaitShow()
+   if empty( auxReto )
+      QPM_CartelCancelByBug()   // esto es debido a un bug que prodeuce que cuando se de escape sin seleccionar archivos la rutina siguiente no termina
+   endif
+Return auxReto
+
+Function QPM_CreateNewFile( cType , cFile )
+   Local cMemo := "" , bReto := .F.
+   Local nOption := 1
+   Local aStruct := {}
+   do case
+      case US_Upper( cType ) == "PRG"
+         cMemo := '#include "minigui.ch"'                              + HB_OsNewLine() + ;
+                  ''                                                   + HB_OsNewLine() + ;
+                  'Function main()'                                    + HB_OsNewLine() + ;
+                  ''                                                   + HB_OsNewLine() + ;
+                  '   DEFINE WINDOW Sample ; '                         + HB_OsNewLine() + ;
+                  '     AT 0 , 0 ;     '                               + HB_OsNewLine() + ;
+                  '     WIDTH 400 ;    '                               + HB_OsNewLine() + ;
+                  '     HEIGHT 200 ;   '                               + HB_OsNewLine() + ;
+                  '     TITLE "QPM Sample" ; '                         + HB_OsNewLine() + ;
+                  '     MAIN'                                          + HB_OsNewLine() + ;
+                  ''                                                   + HB_OsNewLine() + ;
+                  '      DEFINE LABEL Label1'                          + HB_OsNewLine() + ;
+                  '        ROW 40'                                     + HB_OsNewLine() + ;
+                  '        COL 130'                                    + HB_OsNewLine() + ;
+                  '        WIDTH 200'                                  + HB_OsNewLine() + ;
+                  '        VALUE "Basic QPM Sample"'                   + HB_OsNewLine() + ;
+                  '      END LABEL'                                    + HB_OsNewLine() + ;
+                  ''                                                   + HB_OsNewLine() + ;
+                  '      DEFINE BUTTON Button1'                        + HB_OsNewLine() + ;
+                  '        ROW 100'                                    + HB_OsNewLine() + ;
+                  '        COL 100'                                    + HB_OsNewLine() + ;
+                  '        WIDTH 200'                                  + HB_OsNewLine() + ;
+                  '        CAPTION "Exit"'                             + HB_OsNewLine() + ;
+                  '        ONCLICK DoMethod( "Sample" , "Release" )'   + HB_OsNewLine() + ;
+                  '      END BUTTON'                                   + HB_OsNewLine() + ;
+                  ''                                                   + HB_OsNewLine() + ;
+                  '   END WINDOW'                                      + HB_OsNewLine() + ;
+                  ''                                                   + HB_OsNewLine() + ;
+                  '   CENTER WINDOW Sample'                            + HB_OsNewLine() + ;
+                  '   ACTIVATE WINDOW Sample'                          + HB_OsNewLine() + ;
+                  ''                                                   + HB_OsNewLine() + ;
+                  'Return .T.'                                         + HB_OsNewLine()
+         bReto := QPM_MemoWrit( cFile , cMemo )
+      case US_Upper( cType ) == "PAN"
+         SetMGWaitHide()
+         DEFINE WINDOW EditPanNew ;
+                AT 0 , 0 ;
+                WIDTH 300 ;
+                HEIGHT 200 ;
+                TITLE "Create New Form" ;
+                MODAL ;
+                NOSYSMENU ;
+                ON INTERACTIVECLOSE US_NOP()
+
+            @ 08 , 35 FRAME EditPanNewF ;
+               WIDTH 220 ;
+               HEIGHT 90
+
+            @ 13 , 40 LABEL EditPanNewL ;
+               VALUE 'Create for:' ;
+               WIDTH 200 ;
+               FONT 'arial' SIZE 10 BOLD ;
+               FONTCOLOR DEF_COLORBLUE
+
+            @ 40 , 50 RADIOGROUP EditPanNewR ;
+               OPTIONS { 'HMI+ by Ciro Vargas Clemow' , 'HMGSIde by Walter Formigoni' } ;
+               WIDTH 200 ;
+               VALUE nOption ;
+               TOOLTIP "Select Tool"
+
+            DEFINE BUTTON EditPanNewOK
+                   ROW             115
+                   COL             35
+                   WIDTH           80
+                   HEIGHT          25
+                   CAPTION         'OK'
+                   TOOLTIP         'Confirm Selection'
+                   ONCLICK         ( nOption := EditPanNew.EditPanNewR.value , EditPanNew.Release() )
+            END BUTTON
+
+            DEFINE BUTTON EditPanNewCANCEL
+                   ROW             115
+                   COL             175
+                   WIDTH           80
+                   HEIGHT          25
+                   CAPTION         'Cancel'
+                   TOOLTIP         'Cancel Selection'
+                   ONCLICK         ( nOption := 0 , EditPanNew.Release() )
+            END BUTTON
+
+         END WINDOW
+         Center Window EditPanNew
+         Activate Window EditPanNew
+         do case
+            case nOption == 0
+               bReto := .F.
+            case nOption == 1
+               cMemo := " " + HB_OsNewLine() + ;
+                         "* ooHG IDE plus form generated code" + HB_OsNewLine() + ;
+                         "* (c)2004 Ciro Vargas Clemow   pcman2010@yahoo.com" + HB_OsNewLine() + ;
+                         " " + HB_OsNewLine() + ;
+                         "DEFINE WINDOW  TEMPLATE ; " + HB_OsNewLine() + ;
+                         "AT 238 , 256 ; " + HB_OsNewLine() + ;
+                         " WIDTH 405 ; " + HB_OsNewLine() + ;
+                         " HEIGHT 218 ; " + HB_OsNewLine() + ;
+                         " TITLE 'QPM - HMI+ - Empty Sample Form' ; " + HB_OsNewLine() + ;
+                         " ICON '' ; " + HB_OsNewLine() + ;
+                         "FONT 'MS Sans Serif' ; " + HB_OsNewLine() + ;
+                         "SIZE 10" + HB_OsNewLine() + ;
+                         " " + HB_OsNewLine() + ;
+                         "END WINDOW"
+               bReto := QPM_MemoWrit( cFile , cMemo )
+            case nOption == 2
+               cMemo := "*HMGS-MINIGUI-IDE Two-Way Form Designer Generated Code" + HB_OsNewLine() + ;
+                         "*OPEN SOURCE PROJECT 2005-"+alltrim(str(year(date())))+" Walter Formigoni http://sourceforge.net/projects/hmgs-minigui/" + HB_OsNewLine() + ;
+                         'DEFINE WINDOW TEMPLATE AT 140 , 235 WIDTH 324 HEIGHT 257 TITLE "QPM - HMGSIde - Empty Sample Form" MODAL' + HB_OsNewLine() + ;
+                         "END WINDOW"
+               bReto := QPM_MemoWrit( cFile , cMemo )
+            Otherwise
+               msginfo( "Error: Invalid option in Create PanNew" )
+               bReto := .F.
+         EndCase
+         SetMGWaitShow()
+      case US_Upper( cType ) == "DBF"
+         SetMGWaitHide()
+         aStruct := { { "COD" , "N",  5, 0 }, ;
+                      { "MEMO", "M", 10, 0 } }
+         DEFINE WINDOW CreateDbfNew ;
+                AT 0 , 0 ;
+                WIDTH 300 ;
+                HEIGHT 200 ;
+                TITLE "Create New DBF" ;
+                MODAL ;
+                NOSYSMENU ;
+                ON INTERACTIVECLOSE US_NOP()
+
+            @ 08 , 35 FRAME CreateDbfNewF ;
+               WIDTH 220 ;
+               HEIGHT 90
+
+            @ 13 , 40 LABEL CreateDbfNewL ;
+               VALUE 'Create for:' ;
+               WIDTH 200 ;
+               FONT 'arial' SIZE 10 BOLD ;
+               FONTCOLOR DEF_COLORBLUE
+
+            @ 40 , 50 RADIOGROUP CreateDbfNewR ;
+               OPTIONS { 'DBF/CDX Driver (Memo FPT)' , 'DBF/NTX Diver (Memo DBT)' } ;
+               WIDTH 200 ;
+               VALUE nOption ;
+               TOOLTIP "Select Driver"
+
+            DEFINE BUTTON CreateDbfNewOK
+                   ROW             115
+                   COL             35
+                   WIDTH           80
+                   HEIGHT          25
+                   CAPTION         'OK'
+                   TOOLTIP         'Confirm Selection'
+                   ONCLICK         ( nOption := CreateDbfNew.CreateDbfNewR.value , CreateDbfNew.Release() )
+            END BUTTON
+
+            DEFINE BUTTON CreateDbfNewCANCEL
+                   ROW             115
+                   COL             175
+                   WIDTH           80
+                   HEIGHT          25
+                   CAPTION         'Cancel'
+                   TOOLTIP         'Cancel Selection'
+                   ONCLICK         ( nOption := 0 , CreateDbfNew.Release() )
+            END BUTTON
+
+         END WINDOW
+         Center Window CreateDbfNew
+         Activate Window CreateDbfNew
+         do case
+            case nOption == 0
+               bReto := .F.
+            case nOption == 1
+               DBCreate( cFile , aStruct, "DBFCDX" )
+               if file( cFile )
+                  bReto := .T.
+               else
+                  bReto := .F.
+               endif
+            case nOption == 2
+               DBCreate( cFile , aStruct, "DBFNTX" )
+               if file( cFile )
+                  bReto := .T.
+               else
+                  bReto := .F.
+               endif
+            Otherwise
+               msginfo( "Error: Invalid option in Create DbfNew" )
+               bReto := .F.
+         EndCase
+         SetMGWaitShow()
+      Otherwise
+         QPM_MemoWrit( cFile , "" )
+   endcase
+Return bReto
+
+Function QPM_DirValid( cDir , cTipo )
+   // QPM_DirValid2
+   Local bReto:=.F.
+   if US_IsDirectory( cDir )
+      do case
+         case cTipo == DefineMiniGui1 + DefineBorland
+            if ( File( cDir+DEF_SLASH + "INCLUDE" + DEF_SLASH + "minigui.ch" ) .and. ;
+                 !File( cDir+DEF_SLASH + "INCLUDE" + DEF_SLASH + "oohg.ch" ) .and. ;
+                 !US_IsDirectory( cDir+DEF_SLASH + "SOURCE" + DEF_SLASH + "TsBrowse" ) .and. ;
+                 ADIR( cDir + DEF_SLASH + 'LIB' + DEF_SLASH + 'Lib*.a' ) == 0 )
+               bReto:=.T.
+            endif
+         case cTipo == DefineMiniGui3 + DefineMinGW
+            if ( File( cDir+DEF_SLASH + "INCLUDE" + DEF_SLASH + "minigui.ch" ) .and. ;
+                 !File( cDir+DEF_SLASH + "INCLUDE" + DEF_SLASH + "tsbrowse.ch" ) .and. ;
+                 !File( cDir+DEF_SLASH + "INCLUDE" + DEF_SLASH + "oohg.h" ) )          // <-- ojo, no dice .ch, dice .h esto fue para hbqt
+               bReto:=.T.
+            endif
+         case cTipo == DefineExtended1 + DefineBorland
+            if ( File( cDir+DEF_SLASH + "INCLUDE" + DEF_SLASH + "minigui.ch" ) .and. ;
+                 File( cDir+DEF_SLASH + "INCLUDE" + DEF_SLASH + "tsbrowse.ch" ) .and. ;
+                 !File( cDir+DEF_SLASH + "INCLUDE" + DEF_SLASH + "oohg.ch" ) )
+               bReto:=.T.
+            endif
+         case cTipo == DefineOohg3 + DefineBorland
+            if ( File( cDir+DEF_SLASH + "INCLUDE" + DEF_SLASH + "oohg.ch" ) )
+               bReto:=.T.
+            endif
+         case cTipo == DefineOohg3 + DefineMinGW
+            if ( File( cDir+DEF_SLASH + "INCLUDE" + DEF_SLASH + "oohg.ch" ) )
+               bReto:=.T.
+            endif
+         case cTipo == DefineOohg3 + DefinePelles
+            if ( File( cDir+DEF_SLASH + "INCLUDE" + DEF_SLASH + "oohg.ch" ) )
+               bReto:=.T.
+            endif
+         case cTipo == "C_" + DefineMiniGui1 + DefineBorland
+            if File( cDir+DEF_SLASH + "bin" + DEF_SLASH + "BCC32.exe" )
+               bReto:=.T.
+            endif
+         case cTipo == "C_" + DefineMiniGui3 + DefineMinGW
+            if File( cDir+DEF_SLASH + "bin" + DEF_SLASH + "GCC.EXE" )
+               bReto:=.T.
+            endif
+         case cTipo == "C_" + DefineExtended1 + DefineBorland
+            if File( cDir+DEF_SLASH + "bin" + DEF_SLASH + "BCC32.exe" )
+               bReto:=.T.
+            endif
+         case cTipo == "C_" + DefineOohg3 + DefineBorland
+            if File( cDir+DEF_SLASH + "bin" + DEF_SLASH + "BCC32.exe" )
+               bReto:=.T.
+            endif
+         case cTipo == "C_" + DefineOohg3 + DefineMinGW
+            if File( cDir+DEF_SLASH + "bin" + DEF_SLASH + "GCC.exe" )
+               bReto:=.T.
+            endif
+         case cTipo == "C_" + DefineOohg3 + DefinePelles
+            if File( cDir+DEF_SLASH + "bin" + DEF_SLASH + "POCC.exe" )
+               bReto:=.T.
+            endif
+         case cTipo == DefineMiniGui1+DefineBorland+DefineHarbour
+            if File( cDir+DEF_SLASH + "BIN" + DEF_SLASH + "HARBOUR.exe" ) .and. ( File( cDir+DEF_SLASH + "LIB" + DEF_SLASH + "rtl.lib" ) .or. File( cDir+DEF_SLASH + "LIB" + DEF_SLASH + "hbrtl.lib" ) )
+               bReto:=.T.
+            endif
+         case cTipo == DefineMiniGui3+DefineMinGW+DefineHarbour
+            if File( cDir+DEF_SLASH + "BIN" + DEF_SLASH + "HARBOUR.exe" ) .and. ( File( cDir+DEF_SLASH + "LIB" + DEF_SLASH + "librtl.a" ) .or. File( cDir+DEF_SLASH + "LIB" + DEF_SLASH + "libhbrtl.a" ) )
+               bReto:=.T.
+            endif
+         case cTipo == DefineExtended1+DefineBorland+DefineHarbour
+            if File( cDir+DEF_SLASH + "BIN" + DEF_SLASH + "HARBOUR.exe" ) .and. ( File( cDir+DEF_SLASH + "LIB" + DEF_SLASH + "rtl.lib" ) .or. File( cDir+DEF_SLASH + "LIB" + DEF_SLASH + "hbrtl.lib" ) )
+               bReto:=.T.
+            endif
+         case cTipo == DefineOohg3+DefineBorland+DefineHarbour
+            if File( cDir+DEF_SLASH + "BIN" + DEF_SLASH + "HARBOUR.exe" ) .and. ( File( cDir+DEF_SLASH + "LIB" + DEF_SLASH + "rtl.lib" ) .or. File( cDir+DEF_SLASH + "LIB" + DEF_SLASH + "hbrtl.lib" ) )
+               bReto:=.T.
+            endif
+         case cTipo == DefineOohg3+DefineMinGW+DefineHarbour
+            if File( cDir+DEF_SLASH + "BIN" + DEF_SLASH + "HARBOUR.exe" ) .and. ( File( cDir+DEF_SLASH + "LIB" + DEF_SLASH + "librtl.a" ) .or. File( cDir+DEF_SLASH + "LIB" + DEF_SLASH + "libhbrtl.a" ) )
+               bReto:=.T.
+            endif
+         case cTipo == DefineOohg3+DefinePelles+DefineHarbour
+            if File( cDir+DEF_SLASH + "BIN" + DEF_SLASH + "HARBOUR.exe" ) .and. ( File( cDir+DEF_SLASH + "LIB" + DEF_SLASH + "rtl.lib" ) .or. File( cDir+DEF_SLASH + "LIB" + DEF_SLASH + "hbrtl.lib" ) )
+               bReto:=.T.
+            endif
+         case cTipo == DefineMiniGui1+DefineBorland+DefineXHarbour
+            if File( cDir+DEF_SLASH + "BIN" + DEF_SLASH + "HARBOUR.exe" ) .and. File( cDir+DEF_SLASH + "LIB" + DEF_SLASH + "rtl.lib" )
+               bReto:=.T.
+            endif
+         case cTipo == DefineMiniGui3+DefineMinGW+DefineXHarbour
+            if File( cDir+DEF_SLASH + "BIN" + DEF_SLASH + "HARBOUR.exe" ) .and. File( cDir+DEF_SLASH + "LIB" + DEF_SLASH + "librtl.a" ) .and. File( cDir+DEF_SLASH + "LIB" + DEF_SLASH + "libtip.a" )
+               bReto:=.T.
+            endif
+         case cTipo == DefineExtended1+DefineBorland+DefineXHarbour
+            if File( cDir+DEF_SLASH + "BIN" + DEF_SLASH + "HARBOUR.exe" ) .and. File( cDir+DEF_SLASH + "LIB" + DEF_SLASH + "rtl.lib" ) .and. File( cDir+DEF_SLASH + "LIB" + DEF_SLASH + "tip.lib" )
+               bReto:=.T.
+            endif
+         case cTipo == DefineOohg3+DefineBorland+DefineXHarbour
+            if File( cDir+DEF_SLASH + "BIN" + DEF_SLASH + "HARBOUR.exe" ) .and. File( cDir+DEF_SLASH + "LIB" + DEF_SLASH + "rtl.lib" ) .and. File( cDir+DEF_SLASH + "LIB" + DEF_SLASH + "tip.lib" )
+               bReto:=.T.
+            endif
+         case cTipo == DefineOohg3+DefineMinGW+DefineXHarbour
+            if File( cDir+DEF_SLASH + "BIN" + DEF_SLASH + "HARBOUR.exe" ) .and. File( cDir+DEF_SLASH + "LIB" + DEF_SLASH + "librtl.a" ) .and. File( cDir+DEF_SLASH + "LIB" + DEF_SLASH + "libtip.a" )
+               bReto:=.T.
+            endif
+         case cTipo == DefineOohg3+DefinePelles+DefineXHarbour
+            if File( cDir+DEF_SLASH + "BIN" + DEF_SLASH + "HARBOUR.exe" ) .and. File( cDir+DEF_SLASH + "LIB" + DEF_SLASH + "rtl.lib" ) .and. File( cDir+DEF_SLASH + "LIB" + DEF_SLASH + "tip.lib" )
+               bReto:=.T.
+            endif
+         otherwise
+            US_Log( "QPM1234E: Tipo de Directorio invalido: "+cTipo )
+      endcase
+   endif
+Return bReto
+
+Function CambioTitulo()
+   SetProperty( "VentanaMain" , "title" , US_FileNameOnlyNameAndExt( GetOutputModuleName( .T. ) ) + ' - QPM ('+PUB_cQPM_VersionDisplay+') [ ' + AllTrim ( PUB_cProjectFile ) + ' ]' )
+   if _IsWindowDefined( "WinHotRecovery" )
+      SetProperty( "WinHotRecovery" , "title" , US_FileNameOnlyNameAndExt( GetOutputModuleName( .T. ) ) + ' - Hot Recovery for QPM Projects [ ' + AllTrim ( PUB_cProjectFile ) + ' ]' )
+   endif
+Return .T.
+
+Function QPM_MemoWrit( p1 , p2 , bMute )
+   // QPM_MemoWrit2
+   if bMute == NIL
+      bMute := .F.
+   endif
+   if !MemoWrit( p1 , p2 )
+      if !bMute
+         US_Log( "Error in write file to: " + p1 + HB_OsNewLine() + "Requered from: " + US_StackList() )
+      endif
+      Return .F.
+   endif
+Return .T.
+
+Function GetObjExt()
+// GetObjExt2
+   if Prj_Radio_Cpp == DEF_RG_MINGW
+      Return "O"
+   endif
+Return "OBJ"
+
+Function GetObjPrefix()
+// GetObjPrefix2
+Return "OBJ"
+
+Function GetObjName()
+// GetObjName2
+Return GetObjPrefix() + GetSuffix()
+
+Function GetObjFolder()
+// GetObjPath2
+Return PUB_cProjectFolder + DEF_SLASH + GetObjName()
+
+Function OutputExt()
+// OutputExt2
+   if cOutputType == "SRCLIB" .and. Prj_Radio_Cpp == DEF_RG_MINGW
+      Return "A"
+   endif
+   if cOutputType == "DLLLIB" .and. Prj_Radio_Cpp == DEF_RG_MINGW
+      Return "A"
+   endif
+Return right( cOutputType , 3 )
+
+Function GetMiniGuiFolder()
+// GetMiniGuiFolder2
+Return &( "Gbl_T_M_"+GetMiniGuiSuffix()+GetCppSuffix() )
+
+Function GetHarbourFolder()
+// GetHarbourFolder2
+   local reto
+   if !QPM_IsXHarbour()
+      reto:=&( "Gbl_T_H_"+GetMiniGuiSuffix()+GetCppSuffix() )
+   else
+      reto:=&( "Gbl_T_X_"+GetMiniGuiSuffix()+GetCppSuffix() )
+   endif
+Return reto
+
+Function GetCppFolder()
+// GetCppFolder2
+Return &( "Gbl_T_C_"+GetMiniGuiSuffix()+GetCppSuffix() )
+
+Function GetSuffix()
+// GetSuffix2
+Return GetMiniGuiSuffix() + GetCppSuffix() + GetHarbourSuffix()
+
+Function GetMiniGuiSuffix()
+// GetMiniGuiSuffix2
+   local minver
+   if Prj_Radio_MiniGui = DEF_RG_MINIGUI1
+      minver:=DefineMiniGui1
+   endif
+   if Prj_Radio_MiniGui = DEF_RG_MINIGUI3
+      minver:=DefineMiniGui3
+   endif
+   if Prj_Radio_MiniGui = DEF_RG_EXTENDED1
+      minver:=DefineExtended1
+   endif
+   if Prj_Radio_MiniGui = DEF_RG_OOHG3
+      minver:=DefineOohg3
+   endif
+Return minver
+
+Function GetHarbourSuffix()
+// GetHarbourSuffix2
+   local hbver
+   if Prj_Radio_Harbour = DEF_RG_HARBOUR
+      hbver:=DefineHarbour
+   endif
+   if Prj_Radio_Harbour = DEF_RG_XHARBOUR
+      hbver:=DefineXHarbour
+   endif
+Return hbver
+
+Function QPM_IsXHarbour()
+   Local bReto := .f.
+   if Prj_Radio_Harbour = DEF_RG_XHARBOUR
+      bReto:=.t.
+   endif
+Return bReto
+
+Function GetCppSuffix()
+// GetCppSuffix2
+   local CompCVer
+   do case
+      case Prj_Radio_Cpp == DEF_RG_PELLES
+         CompCVer:=DefinePelles
+      case Prj_Radio_Cpp == DEF_RG_MINGW
+         CompCVer:=DefineMinGW
+      Otherwise
+         CompCVer:=DefineBorland
+   endcase
+Return CompCVer
+
+Function GetMiniGuiType()
+// GetMiniGuiType2
+Return substr( GetMiniGuiSuffix() , 1 , 1 )
+
+Function GetMiniGuiName( cForceCompiler )
+// GetMiniGuiName2
+   Local nombre:="" , sufijo:=GetMiniGuiSuffix() + GetCppSuffix()
+   do case
+      case sufijo == DefineOohg3 + DefineBorland
+         if !empty( cForceCompiler )
+            do case
+               case cForceCompiler == DefineHarbour
+                  nombre := "OOHG.lib"
+               case cForceCompiler == DefineXHarbour
+                  nombre := "xOOHG.lib"
+               otherwise
+                  US_Log( "Error 1 in cForceCompiler of function GetMiniGuiName: " + us_todostr( cForceCompiler ) )
+            endcase
+         else
+            nombre:="OOHG.lib"
+            if QPM_IsXHarbour()
+               nombre := "x"+nombre
+            endif
+         endif
+      case sufijo == DefineOohg3 + DefineMinGW
+         if !empty( cForceCompiler )
+            do case
+               case cForceCompiler == DefineHarbour
+                  nombre := "LibOOHG.a"
+               case cForceCompiler == DefineXHarbour
+                  nombre := "LibXOOHG.a"
+               otherwise
+                  US_Log( "Error 1b in cForceCompiler of function GetMiniGuiName: " + us_todostr( cForceCompiler ) )
+            endcase
+         else
+            nombre:="LibOOHG.a"
+            if QPM_IsXHarbour()
+               nombre := "LibXOOHG.a"
+            endif
+         endif
+      case sufijo == DefineOohg3 + DefinePelles
+         if !empty( cForceCompiler )
+            do case
+               case cForceCompiler == DefineHarbour
+                  nombre := "OOHG.lib"
+               case cForceCompiler == DefineXHarbour
+                  nombre := "xOOHG.lib"
+               otherwise
+                  US_Log( "Error 1c in cForceCompiler of function GetMiniGuiName: " + us_todostr( cForceCompiler ) )
+            endcase
+         else
+            nombre:="OOHG.lib"
+            if QPM_IsXHarbour()
+               nombre := "x"+nombre
+            endif
+         endif
+      case sufijo == DefineMiniGui3 + DefineMinGW
+         if !empty( cForceCompiler )
+            do case
+               case cForceCompiler == DefineHarbour
+                  nombre := "Libhmg.a"
+               case cForceCompiler == DefineXHarbour
+                  nombre := "LibXhmg.a"
+               otherwise
+                  US_Log( "Error 2 in cForceCompiler of function GetMiniGuiName: " + us_todostr( cForceCompiler ) )
+            endcase
+         else
+            nombre:="Libhmg.a"
+            if QPM_IsXHarbour()
+               nombre := "LibXhmg.a"
+            endif
+         endif
+      otherwise
+         if !empty( cForceCompiler )
+            do case
+               case cForceCompiler == DefineHarbour
+                  nombre := "MiniGui.lib"
+               case cForceCompiler == DefineXHarbour
+                  nombre := "xMinigui.lib"
+               otherwise
+                  US_Log( "Error 3 in cForceCompiler of function GetMiniGuiName: " + us_todostr( cForceCompiler ) )
+            endcase
+         else
+            nombre := "MiniGui.lib"
+            if QPM_IsXHarbour()
+               nombre := "x"+nombre
+            endif
+         endif
+   endcase
+Return nombre
+
+Function ChgPathToReal( cLinea )
+   // ChgPathToReal2
+   cLinea := US_StrTran( cLinea , "<NewLine>" , HB_OsNewLine() )
+   cLinea := US_StrTran( cLinea , "<QPM>" , PUB_cQPM_Folder + DEF_SLASH + "QPM.EXE" )
+   cLinea := US_StrTran( cLinea , "<QPMFolder>" , PUB_cQPM_Folder )
+   cLinea := US_StrTran( cLinea , "<ProjectFolder>" , PUB_cProjectFolder )
+   cLinea := US_StrTran( cLinea , "<ThisFolder>" , PUB_cThisFolder )
+Return cLinea
+
+Function ChgPathToRelative( cLinea )
+   cLinea := US_StrTran( cLinea , HB_OsNewLine() , "<NewLine>" )
+   cLinea := US_StrTran( cLinea , PUB_cProjectFolder , "<ProjectFolder>" )
+   cLinea := US_StrTran( cLinea , PUB_cQPM_Folder + DEF_SLASH + "QPM.EXE" , "<QPM>" )
+   cLinea := US_StrTran( cLinea , PUB_cQPM_Folder , "<QPMFolder>" )
+   cLinea := US_StrTran( cLinea , PUB_cThisFolder , "<ThisFolder>" )
+Return cLinea
+
+Function MsgOK( titulo , txt , tipo , autoexit , Ptiempo , bButtonRun )
+   Local ColorBack , ColorFont
+   Private contador := 0
+   Private inicial := seconds()
+   Private tiempo , WinMsg := US_WindowNameRandom("MsgOk")
+   Private PrivAutoexit
+   DEFAULT Ptiempo TO 0
+   DEFAULT bButtonRun TO .F.
+   tiempo := Ptiempo
+   if empty( titulo )
+      titulo := 'QPM (QAC Based Project Manager)'
+   endif
+   if empty( autoexit )
+      autoexit := .F.
+   endif
+   PrivAutoexit := autoexit
+   do case
+      case US_Upper( tipo ) == "E"
+         ColorBack := DEF_COLORRED
+         ColorFont := DEF_COLORWHITE
+         if tiempo == 0
+            tiempo := 10
+         endif
+      case US_Upper( tipo ) == "W"
+         ColorBack := DEF_COLORYELLOW
+         ColorFont := DEF_COLORBLACK
+         if tiempo == 0
+            tiempo := 5
+         endif
+      otherwise
+         ColorBack := DEF_COLORGREEN
+         ColorFont := DEF_COLORWHITE
+         if tiempo == 0
+            tiempo := 2
+         endif
+   endcase
+
+   if US_IsWindowModalActive()
+      DEFINE WINDOW &(WinMsg) ;
+              AT 0,0 ;
+              WIDTH if( bButtonRun , 275 , 150 ) HEIGHT 125 ;
+              TITLE titulo ;
+              MODAL ;
+              NOSYSMENU ;
+              NOCAPTION ;
+              BACKCOLOR ColorBack ;
+              FONT 'Arial' SIZE 9
+      END WINDOW
+   else
+      DEFINE WINDOW &(WinMsg) ;
+              AT 0,0 ;
+              WIDTH if( bButtonRun , 275 , 150 ) HEIGHT 125 ;
+              TITLE titulo ;
+              CHILD ;
+              TOPMOST ;
+              NOSYSMENU ;
+              NOCAPTION ;
+              BACKCOLOR ColorBack ;
+              FONT 'Arial' SIZE 9
+      END WINDOW
+   endif
+
+   @ 0 , 0 LABEL LQPM ;
+      OF &(WinMsg) ;
+      VALUE "QPM" ;
+      WIDTH &(WinMsg).Width ;
+      HEIGHT 23 ;
+      FONT  'Arial' SIZE 12 BOLD ;
+      FONTCOLOR ColorBack ;
+      BACKCOLOR ColorFont ;
+      CENTERALIGN ;
+      ACTION InterActiveMoveHandle( GetFormHandle( WinMsg ) )
+
+   @ 32 , 0 LABEL LText ;
+      OF &(WinMsg) ;
+      VALUE txt ;
+      WIDTH &(WinMsg).Width ;
+      HEIGHT 45 ;
+      FONT  'Arial' SIZE 10 BOLD ;
+      FONTCOLOR ColorFont ;
+      TRANSPARENT ;
+      CENTERALIGN ;
+      ACTION InterActiveMoveHandle( GetFormHandle( WinMsg ) )
+
+   DEFINE BUTTON bOK
+      PARENT          &(WinMsg)
+      ROW             75
+      COL             25
+      WIDTH           100
+      HEIGHT          25
+      CAPTION         if( PrivAutoexit , 'Ok (' + alltrim( str( tiempo ) ) + ')' , 'Ok' )
+      ONCLICK         MsgOk_Salir()
+   END BUTTON
+
+   if bButtonRun
+      DEFINE BUTTON bRUN
+         PARENT          &(WinMsg)
+         ROW             75
+         COL             150
+         WIDTH           100
+         HEIGHT          25
+         CAPTION         'Run'
+         ONCLICK         ( PUB_bForceRunFromMsgOk := .T. , MsgOk_Salir() )
+      END BUTTON
+   endif
+
+   if PrivAutoexit
+      DEFINE TIMER Timer_Msg ;
+             OF &(WinMsg) ;
+             INTERVAL 1000 ;
+             ACTION MsgOk_Contador()
+   endif
+
+   if bButtonRun
+      DoMethod( WinMsg , "bRUN" , "SetFocus" )
+   else
+      DoMethod( WinMsg , "bOK" , "SetFocus" )
+   endif
+
+   CENTER WINDOW &WinMsg
+   ACTIVATE WINDOW &WinMsg
+Return .T.
+
+Function MsgOk_Contador()
+   tiempo--
+   if tiempo < 1
+      if _IsWindowActive( WinMsg )
+         DoMethod( WinMsg , "Release" )
+         // ini BUG ==================================================================== \\
+         // Posible BUG, no hace release                                                 \\
+    //   if _IsWindowActive( WinMsg )
+    //      msginfo( "Press ok to continue" )
+         // DoMethod( WinMsg , "Release" )     // Suspendido en version 1.3 build 36 de hmgext
+    //   endif
+         // end BUG ==================================================================== \\
+      endif
+      Return .T.
+   else
+      if _IsWindowActive( WinMsg )
+         SetProperty( WinMsg , "bOK" , "caption" , "Ok (" + alltrim( str( tiempo ) ) + ")" )
+      else
+         Return .T.
+      endif
+   endif
+Return .F.
+
+Function MsgOk_Salir()
+   if PrivAutoexit
+      if _IsWindowActive( WinMsg )
+         SetProperty( WinMsg , "bOK" , "enabled" , .F. )
+      endif
+      tiempo := 1
+   else
+      DoMethod( WinMsg , "Release" )
+   endif
+Return .T.
+
+Function MyMsg( titulo , texto , tipo , autoexit )
+   if bAutoExit .and. !empty( PUB_cAutoLog )
+      PUB_cAutoLogTmp := MemoRead( PUB_cAutoLog )
+      QPM_MemoWrit( PUB_cAutoLog , PUB_cAutoLogTmp + HB_OsNewLine() + ;
+                texto + HB_OsNewLine() + ;
+                "" )
+      msgok( titulo , "Info saved"+HB_OsNewLine()+"Check into LOG" , tipo , autoexit )
+   else
+      SetMGWaitHide()
+      Do case
+         case us_upper( tipo ) == "W"
+            msgExclamation( texto , titulo )
+         case us_upper( tipo ) == "E"
+            msgStop( texto , titulo )
+         otherwise
+            msginfo( texto , titulo )
+      endcase
+      SetMGWaitShow()
+   endif
+Return
+
+Function QPM_ModuleType( cFile )
+   // QPM_ModuleType2
+   Local MemoAux := ""
+   Local u0 := 0 , u1 := 0 , u2 := 0
+   Local cAux1 := "Bor"
+   Local cBorland := cAux1+"land C++ - Copyright 1999 Inprise Corporation"
+   Local cAux2 := "Min"
+   Local cMinGW   := cAux2+"GW GNU C"
+   Local cAux3 := "___m"
+   Local cMinGW2  := cAux3+"ingw_CRTStartup"
+   Local cAux4 := "Pel"
+   Local cPelles  := cAux4+"les ISO C Compiler"
+   Local cAux5 := "UP"
+   if !file( cFile )
+      Return "NONE"
+   endif
+   MemoAux := memoread( cFile )
+   if Upper( US_FileNameOnlyExt( cFile ) ) == "EXE" .and. ;
+      ( u0 := at( cAux5+"X0" , MemoAux ) ) > 0 .and. ;
+      ( u1 := at( cAux5+"X1" , MemoAux ) ) > 0 .and. ;
+      ( u2 := at( cAux5+"X!" , MemoAux ) ) > 0 .and. ;
+      u0 < u1 .and. u1 < u2
+      Return "COMPRESSED"
+   endif
+   if Upper( US_FileNameOnlyExt( cFile ) ) == "EXE" .and. ;
+      at( cBorland , MemoAux ) > 0 .and. ;
+      at( cMinGW   , MemoAux ) = 0 .and. ;
+      at( cMinGW2  , MemoAux ) = 0 .and. ;
+      at( cPelles  , MemoAux ) = 0
+      Return "BORLAND"
+   endif
+   if Upper( US_FileNameOnlyExt( cFile ) ) == "EXE" .and. ;
+      at( cBorland , MemoAux ) = 0 .and. ;
+      at( cMinGW   , MemoAux ) > 0 .and. ;
+      at( cMinGW2  , MemoAux ) > 0 .and. ;
+      at( cPelles  , MemoAux ) = 0
+      Return "MINGW"
+   endif
+   if Upper( US_FileNameOnlyExt( cFile ) ) == "EXE" .and. ;
+      at( cBorland , MemoAux ) = 0 .and. ;
+      at( cMinGW   , MemoAux ) = 0 .and. ;
+      at( cMinGW2  , MemoAux ) = 0 .and. ;
+      at( cPelles  , MemoAux ) > 0
+      Return "PELLES"
+   endif
+   if Upper( US_FileNameOnlyExt( cFile ) ) == "LIB" .and. ;
+      at( "<arch>" , MemoAux ) == 2
+      Return "PELLES"
+   endif
+   if Upper( US_FileNameOnlyExt( cFile ) ) == "LIB" .and. ;
+      at( "Borland C++ 5.5." , MemoAux ) > 0
+      Return "BORLAND"
+   endif
+   if Upper( US_FileNameOnlyExt( cFile ) ) == "LIB" .and. ;
+      at( CHR( 240 ) , MemoAux ) == 1
+      Return "BORLAND"
+   endif
+   if Upper( US_FileNameOnlyExt( cFile ) ) == "A" .and. ;
+      at( "<arch>" , MemoAux ) == 2
+      Return "MINGW"
+   endif
+   if Upper( US_FileNameOnlyExt( cFile ) ) == "OBJ" .and. ;
+      at( "L" , MemoAux ) == 1 .and. ;
+      at( "CRT$XIC" , MemoAux ) > 0
+      Return "PELLES"
+   endif
+   if Upper( US_FileNameOnlyExt( cFile ) ) == "OBJ" .and. ;
+      at( "Borland C++ 5.5." , MemoAux ) > 0
+      Return "BORLAND"
+   endif
+   if Upper( US_FileNameOnlyExt( cFile ) ) == "O"
+      Return "MINGW"
+   endif
+Return "UNKNOWN"
+
+Function GetOutputModuleName( bForDisplay )
+   // GetOutputModuleName2
+   Local cOutputName
+   Local cOutputNameDisplay
+   if empty( bForDisplay )
+      bForDisplay := .F.
+   endif
+   do case
+      case cOutputRename == "NEWNAME"
+         cOutputName        := US_ShortName(PUB_cProjectFolder) + DEF_SLASH + if( OutputExt() == "A" , 'Lib' , '' ) + US_FileNameOnlyName( Prj_Text_OutputRenameNewName ) + '.' + OutputExt()
+         cOutputNameDisplay := PUB_cProjectFolder + DEF_SLASH + if( OutputExt() == "A" , 'Lib' , '' ) + US_FileNameOnlyName( Prj_Text_OutputRenameNewName ) + '.' + OutputExt()
+      otherwise
+         cOutputName        := US_ShortName(PUB_cProjectFolder) + DEF_SLASH + if( OutputExt() == "A" , 'Lib' , '' ) + if( cConvert == "A DLL" , substr( US_FileNameOnlyName( GetProperty( "VentanaMain" , "GPrgFiles" , "Cell" , 1 , NCOLPRGFULLNAME ) ) , 4 ) , US_FileNameOnlyName( GetProperty( "VentanaMain" , "GPrgFiles" , "Cell" , 1 , NCOLPRGFULLNAME ) ) ) + '.' + OutputExt()
+         cOutputNameDisplay := PUB_cProjectFolder + DEF_SLASH + if( OutputExt() == "A" , 'Lib' , '' ) + US_FileNameOnlyName( GetProperty( "VentanaMain" , "GPrgFiles" , "Cell" , 1 , NCOLPRGFULLNAME ) ) + '.' + OutputExt()
+   endcase
+   if bOutputSuffix
+      cOutputName        := US_FileNameOnlyPathAndName( cOutputName ) + "_" + GetSuffix() + '.' + OutputExt()
+      cOutputNameDisplay := US_FileNameOnlyPathAndName( cOutputNameDisplay ) + "_" + GetSuffix() + '.' + OutputExt()
+   endif
+Return if( bForDisplay , cOutputNameDisplay , cOutputName )
+
+Function MyMsgYesNo( a , b )
+   Local Reto
+   Private Pa := a , Pb := b
+   SetMGWaitHide()
+   Reto := &( "MsgYesNo( Pa , Pb )" )
+   SetMGWaitShow()
+// DO EVENTS
+Return Reto
+
+Function MyMsgYesNoCancel( a , b )
+   Local Reto
+   Private Pa := a , Pb := b
+   SetMGWaitHide()
+   Reto := &( "MsgYesNoCancel( Pa , Pb )" )
+   SetMGWaitShow()
+// DO EVENTS
+Return Reto
+
+Function MyMsgOkCancel( a , b )
+   Local Reto
+   Private Pa := a , Pb := b
+   SetMGWaitHide()
+   Reto := &( "MsgOkCancel( Pa , Pb )" )
+   SetMGWaitShow()
+// DO EVENTS
+Return Reto
+
+Function MyMsgRetryCancel( a , b )
+   Local Reto
+   Private Pa := a , Pb := b
+   SetMGWaitHide()
+   Reto := &( "MsgRetryCancel( Pa , Pb )" )
+   SetMGWaitShow()
+// DO EVENTS
+Return Reto
+
+Function KillTask()
+   Local cRunParms
+   Local KillPgm := US_ShortName( PUB_cQPM_Folder ) + DEF_SLASH + "US_Killer.exe"
+   Local KillParm := "QPM " + GetOutputModuleName()
+   cRunParms := US_ShortName( PUB_cProjectFolder ) + DEF_SLASH + "_" + PUB_cSecu + "KILL" + US_DateTimeCen() + ".cng"
+   cKillTaskControlFile := US_ShortName( PUB_cProjectFolder ) + DEF_SLASH + "_" + PUB_cSecu + "KCF" + US_DateTimeCen() + ".cnt"
+   QPM_MemoWrit( cRunParms , "Run Parms for Kill Task" + HB_OsNewLine() + ;
+                        "COMMAND " + KillPgm + " " + KillParm + HB_OsNewLine() + ;
+                        "CONTROL " + cKillTaskControlFile )
+   QPM_MemoWrit( cKillTaskControlFile , "Run Control File for " + KillPgm )
+   QPM_Execute( US_ShortName( PUB_cQPM_Folder ) + DEF_SLASH + "US_Run.exe" , "QPM " + cRunParms )
+Return .T.
+
+Function QPM_VerNunStr( nVer )
+   Local cAux := Alltrim( US_StrCero( nVer , 6 ) )
+Return ( "v" + substr( cAux , 1 , 2 ) + "." + substr( cAux , 3 , 2 ) + " build" + substr( cAux , 5 , 2 ) )
+
+Function DebugOptions( cDire , cPath )
+   LOCAL cAux := "" , cLeido := "" , i
+   LOCAL cFile := US_FileNameOnlyPath( cDire ) + DEF_SLASH + "Init.Cld"
+   cAux := cAux + 'Options Path ' + cPath + HB_OsNewLine()
+// cAux := cAux + 'Options Colors {"W+/BG","N/BG","R/BG","N+/BG","W+/B","GR+/B","W/B","N/W","R/W","N/BG","R/BG","GR+/BG"}' + HB_OsNewLine()
+   cAux := cAux + 'Options NoRunAtStartup' + HB_OsNewLine()
+// cAux := cAux + 'Window Size 13 64' + HB_OsNewLine()
+// cAux := cAux + 'Window Move 6 0' + HB_OsNewLine()
+// cAux := cAux + 'Window Next' + HB_OsNewLine()
+// cAux := cAux + 'Window Size 5 80' + HB_OsNewLine()
+// cAux := cAux + 'Window Move 19 0' + HB_OsNewLine()
+// cAux := cAux + 'Window Next' + HB_OsNewLine()
+// cAux := cAux + 'Window Size 18 16' + HB_OsNewLine()
+// cAux := cAux + 'Window Move 1 64' + HB_OsNewLine()
+// cAux := cAux + 'Window Next' + HB_OsNewLine()
+// cAux := cAux + 'Window Size 5 64' + HB_OsNewLine()
+// cAux := cAux + 'Window Move 1 0' + HB_OsNewLine()
+// cAux := cAux + 'Window Next' + HB_OsNewLine()
+   cAux := cAux + 'Monitor Static' + HB_OsNewLine()
+   cAux := cAux + 'Monitor Public' + HB_OsNewLine()
+   cAux := cAux + 'Monitor Local' + HB_OsNewLine()
+   cAux := cAux + 'Monitor Private' + HB_OsNewLine()
+   cAux := cAux + 'Monitor Sort' + HB_OsNewLine()
+   cAux := cAux + 'View CallStack'
+   if file( cFile )
+      cAux := ""
+      cLeido := memoread( cFile )
+      for i:=1 to mlcount( cLeido , 254 )
+         cLinea := memoline( cLeido , 254 , i )
+         if upper( US_Word( cLinea , 1 ) ) == "OPTIONS" .and. ;
+            upper( US_Word( cLinea , 2 ) ) == "PATH"
+            cAux := cAux + "Options Path " + cPath + HB_OsNewLine()
+         else
+            cAux := cAux + cLinea + HB_OsNewLine()
+         endif
+      next
+   endif
+   QPM_MemoWrit( cFile , cAux )
+return
+
+Function ViewLog()
+   if !File( AllTrim( Gbl_TEditor ) )
+      msgStop( "Program Editor not Found: "+AllTrim( Gbl_TEditor )+'. Look at ' + PUB_MenuGblOptions + ' of Settings menu' )
+      Return .T.
+   endif
+   If Empty( Gbl_TEditor )
+      MsgStop('Program Editor Not Defined. Look at ' + PUB_MenuGblOptions + ' of Settings menu','Operation Aborted')
+      Return .T.
+   Else
+      Editor := US_ShortName( AllTrim( Gbl_TEditor ) )
+   EndIf
+   QPM_Execute( Editor , PUB_cQPM_Folder+DEF_SLASH + "QPM.log" )
+Return .T.
+
+Function ActLibReimp()
+   Local bON := if( Prj_Radio_OutputType == DEF_RG_IMPORT , .T. , .F. )
+   if bOn
+      SetProperty( "VentanaMain" , "GPrgFiles" , "height" , 100 )
+   else
+      SetProperty( "VentanaMain" , "GPrgFiles" , "height" , GetDesktopRealHeight() - 345 )
+   endif
+   SetProperty( "VentanaMain" , "Check_Reimp"       , "visible" , bON )
+   SetProperty( "VentanaMain" , "LReImportLib"      , "visible" , bON )
+   SetProperty( "VentanaMain" , "TReImportLib"      , "visible" , bON )
+   SetProperty( "VentanaMain" , "BReImportLib"      , "visible" , bON )
+   SetProperty( "VentanaMain" , "Check_GuionA"      , "visible" , bON )
+   SetProperty( "VentanaMain" , "Check_Reimp"       , "enabled" , if( Prj_Radio_Cpp == DEF_RG_MINGW , .T. , .F. ) )
+   SetProperty( "VentanaMain" , "LReImportLib"      , "enabled" , if( GetProperty( "VentanaMain" , "Check_Reimp" , "Value" ) .and. GetProperty( "VentanaMain" , "Check_Reimp" , "enabled" ) , .T. , .F. ) )
+   SetProperty( "VentanaMain" , "TReImportLib"      , "enabled" , if( GetProperty( "VentanaMain" , "Check_Reimp" , "Value" ) .and. GetProperty( "VentanaMain" , "Check_Reimp" , "enabled" ) , .T. , .F. ) )
+   SetProperty( "VentanaMain" , "BReImportLib"      , "enabled" , if( GetProperty( "VentanaMain" , "Check_Reimp" , "Value" ) .and. GetProperty( "VentanaMain" , "Check_Reimp" , "enabled" ) , .T. , .F. ) )
+   SetProperty( "VentanaMain" , "Check_GuionA"      , "enabled" , if( Prj_Radio_Cpp == DEF_RG_MINGW , .F. , .T. ) )
+   SetProperty( "VentanaMain" , "BUpPrg"            , "enabled" , !bON )
+   SetProperty( "VentanaMain" , "BUpPrg2"           , "visible" , !bON )
+   SetProperty( "VentanaMain" , "BDownPrg"          , "enabled" , !bON )
+   SetProperty( "VentanaMain" , "BDownPrg2"         , "visible" , !bON )
+   SetProperty( "VentanaMain" , "BSortPrg"          , "enabled" , !bON )
+   SetProperty( "VentanaMain" , "BVerChange"        , "enabled" , !bON )
+   SetProperty( "VentanaMain" , "LVerTitle"         , "enabled" , !bON )
+   SetProperty( "VentanaMain" , "LVerVerNum"        , "enabled" , !bON )
+   SetProperty( "VentanaMain" , "LVerPoint"         , "enabled" , !bON )
+   SetProperty( "VentanaMain" , "LVerRelNum"        , "enabled" , !bON )
+   SetProperty( "VentanaMain" , "LVerBui"           , "enabled" , !bON )
+   SetProperty( "VentanaMain" , "LVerBuiNum"        , "enabled" , !bON )
+   SetProperty( "VentanaMain" , "ForceRecompPRG"    , "enabled" , !bON )
+#ifdef QPM_SYNCRECOVERY
+   SetProperty( "VentanaMain" , "BTakeSyncRecovery" , "enabled" , !bON )
+#endif
+   SetProperty( "VentanaMain" , "EraseALL"          , "enabled" , !bON )
+   SetProperty( "VentanaMain" , "EraseOBJ"          , "enabled" , !bON )
+   SetProperty( "VentanaMain" , "BVerChange"        , "enabled" , !bON )
+   SetProperty( "VentanaMain" , "SetTopPrg"         , "enabled" , !bON )
+   SetProperty( "VentanaMain" , "BPrgEdit"          , "enabled" , !bON )
+   SetProperty( "VentanaMain" , "LRunProjectFolder" , "enabled" , !bON )
+   SetProperty( "VentanaMain" , "TRunProjectFolder" , "enabled" , !bON )
+   SetProperty( "VentanaMain" , "BRunProjectFolder" , "enabled" , !bON )
+Return .T.
+
+Function Enumeracion( cMemoIn , cType )
+   Local bNumberOn := .F.
+   Private cMemoInP := cMemoIn
+   bNumberOn := &( "bNumberOn"+cType )
+   if !bNumberOn
+      Return cMemoIn
+   endif
+return QPM_Wait( "Enumeracion2( cMemoInP )" , "Enumerating" , , .T. )
+Function Enumeracion2( cMemoIn )
+   Local cFileIn  := PUB_cProjectFolder + DEF_SLASH + "_" + PUB_cSecu + "TmpRenumIn.mem" , ;
+         cFileOut := PUB_cProjectFolder + DEF_SLASH + "_" + PUB_cSecu + "TmpRenumOut.mem" , ;
+         nAcum := 0 , nTam := len( cMemoIn ) , nPor , nPorAnt := 0 , hIn , hOut , ;
+         cLinea , vFines := { chr(13) + chr(10) , Chr(10) } , i:=0 , cMemoOut
+   QPM_MemoWrit( cFileIn , cMemoIn )
+   hOut := fcreate( cFileOut , 0 )       // read/write mode
+   hIn := fopen( cFileIn , 0 )        // read mode
+   if ferror() = 0
+      do while US_FReadLine( hIn , @cLinea , vFines ) == 0
+         i++
+         nAcum := nAcum + len( cLinea )
+         if GetMGWaitStop()
+            fclose( hOut )
+            fclose( hIn )
+            ferase( cFileIn )
+            ferase( cFileOut )
+            Return cMemoIn
+         endif
+         nPor := int( ( nAcum * 100 ) / nTam )
+         if nPor != nPorAnt
+            SetMGWaitTxt( "Enumerating " + alltrim( str( nPor ) ) + "%" )
+            nPorAnt := nPor
+         endif
+         DO EVENTS
+         fwrite( hOut , US_StrCero( i , 6 ) + " " + cLinea + HB_OsNewLine() )
+      enddo
+   endif
+   fclose( hOut )
+   fclose( hIn )
+   cMemoOut := memoread( cFileOut )
+   ferase( cFileIn )
+   ferase( cFileOut )
+Return cMemoOut
+
+Function QPM_Execute( cCMD , cParms , bWait , nSize , RunWaitFileStop )
+   // QPM_Execute2
+   Local RunWaitControlFile , RunWaitParms , cSize
+   DEFAULT cParms TO ""
+   DEFAULT bWait TO .F.
+   DEFAULT nSize TO 1      // normal
+   if !bWait
+      do case
+         case nSize == -1           // hide
+            EXECUTE FILE ( cCMD ) PARAMETERS ( cParms ) HIDE
+         case nSize == 0            // minimized
+            EXECUTE FILE ( cCMD ) PARAMETERS ( cParms ) MINIMIZE
+         case nSize == 1            // normal
+            EXECUTE FILE ( cCMD ) PARAMETERS ( cParms )
+         case nSize == 2            // maximized
+            EXECUTE FILE ( cCMD ) PARAMETERS ( cParms ) MAXIMIZE
+         otherwise
+            msginfo( "Invalid nSize parm in function QPM_Execute: " + US_TodoStr( nSize ) )
+      endcase
+   else
+      do case
+         case nSize == -1           // hide
+            cSize := "HIDE"
+         case nSize == 0            // minimized
+            cSize := "MINIMIZE"
+         case nSize == 1            // normal
+            cSize := "NORMAL"
+         case nSize == 2            // maximized
+            cSize := "MAXIMIZE"
+         otherwise
+            msginfo( "Invalid nSize parm in function QPM_Execute (2): " + US_TodoStr( nSize ) )
+      endcase
+      RunWaitControlFile := US_ShortName( PUB_cProjectFolder ) + DEF_SLASH + "_" + PUB_cSecu + "RWCF" + US_DateTimeCen() + ".cnt"
+      RunWaitParms       := US_ShortName( PUB_cProjectFolder ) + DEF_SLASH + "_" + PUB_cSecu + "RWP" + US_DateTimeCen() + ".cng"
+      QPM_MemoWrit( RunWaitParms , "Run Wait Parms" + HB_OsNewLine() + ;
+                               "COMMAND " + cCMD + " " + cParms + HB_OsNewLine() + ;
+                               "CONTROL " + RunWaitControlFile + HB_OsNewLine() + ;
+                               "MODE " + cSize )
+      QPM_MemoWrit( RunWaitControlFile , "Run Wait Control File" )
+      EXECUTE FILE ( US_ShortName( PUB_cQPM_Folder ) + DEF_SLASH + "US_Run.exe" ) PARAMETERS ( "QPM " + RunWaitParms ) HIDE
+      do while file( RunWaitControlFile )
+         DO EVENTS
+         if GetMGWaitStop()
+            if !( RunWaitFileStop == NIL )
+               //msgstop( "QPM_Execute: Stop detected but StopFile not received from parameters" )
+               //Return .F.
+               //endif
+               QPM_MemoWrit( RunWaitFileStop , "Run Wait File Stop" )
+               do while file( RunWaitFileStop ) .and. file( RunWaitControlFile )
+                  DO EVENTS
+               enddo
+               ferase( RunWaitFileStop )
+            endif
+         endif
+      enddo
+   endif
+Return
+
+Function ErrorLogName()
+   Local cErrorLog := ""
+   Local cVer := GetMiniGuiSuffix()
+   do case
+      case cVer == "M1" .or. cVer == "M3"
+         if empty( GetProperty( "VentanaMain" , "TRunProjectFolder" , "value" ) )
+            cErrorLog := PUB_cProjectFolder + DEF_SLASH + "ErrorLog.htm"
+         else
+         // cErrorLog := "*RUNFOLDER*"
+            cErrorLog := GetProperty( "VentanaMain" , "TRunProjectFolder" , "value" ) + DEF_SLASH + "ErrorLog.htm"
+         endif
+      case cVer == "E1"
+      // if empty( GetProperty( "VentanaMain" , "TRunProjectFolder" , "value" ) )
+            cErrorLog := PUB_cProjectFolder + DEF_SLASH + "ErrorLog.htm"
+      // else
+      //    cErrorLog := GetProperty( "VentanaMain" , "TRunProjectFolder" , "value" ) + DEF_SLASH + "ErrorLog.htm"
+      // endif
+      case cVer == "O3"
+         if empty( GetProperty( "VentanaMain" , "TRunProjectFolder" , "value" ) )
+            cErrorLog := PUB_cProjectFolder + DEF_SLASH + "ErrorLog.htm"
+         else
+            cErrorLog := GetProperty( "VentanaMain" , "TRunProjectFolder" , "value" ) + DEF_SLASH + "ErrorLog.htm"
+         endif
+      otherwise
+         US_Log( "Invalid minigui suffix" )
+   endcase
+Return cErrorLog
+
+Function ErrorLogCaretPos()
+   Local cVer := GetMiniGuiSuffix()
+   do case
+      case cVer == "M1" .or. cVer == "M3"
+         Return PUB_nBottom
+      case cVer == "E1"
+         Return PUB_nBottom
+      case cVer == "O3"
+      // Return PUB_nBottom
+         Return 1
+      otherwise
+         US_Log( "Invalid minigui suffix" )
+   endcase
+Return cErrorLog
+
+Function QPM_DeleteErrorLog()
+   Local cErrorLog := ErrorLogName()
+   if MsgYesNo( "Confirm Delete Error Log ?" )
+      ferase( cErrorLog )
+      SetProperty( "VentanaMain" , "RichEditOut" , "Value" , cErrorLog + " Deleted !!!" )
+      SetProperty( "VentanaMain" , "RichEditOut" , "caretpos" , 1 )
+   endif
+Return .T.
+
+Function MuestroErrorLog()
+   SetProperty( "VentanaMain" , "RichEditOut" , "Value" , QPM_Wait( "US_ViewErrorLog()") )
+   SetProperty( "VentanaMain" , "RichEditOut" , "caretpos" , ErrorLogCaretPos() )
+Return .T.
+
+Function US_ViewErrorLog()
+   Local cMemoHtml , cMemoRtf
+   Local cMemoHtmlIni , cMemoHtmlFin
+   Local cErrorLog := ErrorLogName()
+   Local nLenLog   := 0
+   Local nPosAux   := 0
+   Local nTopLenLog := 100000
+// Local nTopLenLog := 2000
+   if cErrorLog == "*RUNFOLDER*"
+      Return "Program Running from another Folder that Project Folder" + HB_OsNewLine() + "MiniGui do't produce file 'ErrorLog'. This is a MiniGui limitation or bug"
+   endif
+   if !file( cErrorLog )
+      Return "Error Log Not Found: " + cErrorLog
+   endif
+   cMemoHtml := memoread( cErrorLog )
+   if ( nLenLog := len( cMemoHtml ) ) > nTopLenLog
+      cMemoHtmlIni := substr( cMemoHtml , 1 , int( nTopLenLog / 2 ) )
+      cMemoHtmlIni := substr( cMemoHtmlIni , 1 , if( ( nPosAux := rat( '<p class="updated">' , cMemoHtmlIni ) ) == 0 , Len( cMemoHtmlIni ) , nPosAux - 1 ) )
+      cMemoHtmlFin := substr( cMemoHtml , nLenLog - int( nTopLenLog / 2 ) )
+      cMemoHtmlFin := substr( cMemoHtmlFin , at( '<p class="updated">' , cMemoHtmlFin ) )
+      cMemoHtml := cMemoHtmlIni + HB_OsNewLine() + ;
+                   Replicate( '<HR>' , 4 ) + ;
+                   '<p class="updated"> - - - - - - - - - - - - - - - - Hidden Text - - - - - - - - - - - - - - - -</p>' + ;
+                   Replicate( '<HR>' , 4 ) + ;
+                   '<HR>' + HB_OsNewLine() + ;
+                   cMemoHtmlFin
+   endif
+//QPM_memowrit( PUB_cProjectFolder + DEF_SLASH + "errorlogCortado.html.txt" , cMemoHtml )
+   cMemoRtf := '{\rtf1\ansi\ansicpg1252\deff0\deflang3082{\fonttbl{\f0\froman\fcharset0 Arial;}{\f1\froman\fcharset0 Times New Roman;}}' + HB_OsNewLine() + ;
+            '{\colortbl ;\red0\green0\blue255;\red221\green0\blue0;}' + HB_OsNewLine() + ;
+            '\viewkind4\uc1\pard\keepn\qc\cf1\kerning36\b\f0\fs28 '
+   cMemoHtml := substr( cMemoHtml , at( '<BODY>' , cMemoHtml ) + 6 )
+   cMemoHtml := US_StrTran( cMemoHtml , '<p class="updated">', '\par\cf2 ' )
+   cMemoHtml := US_StrTran( cMemoHtml , '</p>', '\cf0\par' )
+   cMemoHtml := US_StrTran( cMemoHtml , '<br>', '\line ' )
+// cMemoHtml := strtran( cMemoHtml , '<BR>', '\line ' )
+   cMemoHtml := US_StrTran( cMemoHtml , '<HR>', '\b ' + replicate( '_' , 100 ) + '\b0\par' )
+   cMemoHtml := US_StrTran( cMemoHtml , '<b>', '{\b ' )
+   cMemoHtml := US_StrTran( cMemoHtml , '</b>', '} ' )
+   cMemoHtml := US_StrTran( cMemoHtml , '<i>', '{\i ' )
+   cMemoHtml := US_StrTran( cMemoHtml , '</i>', '}' )
+   cMemoHtml := US_StrTran( cMemoHtml , '<u>', '{\ul ' )
+   cMemoHtml := US_StrTran( cMemoHtml , '</u>', '}' )
+   cMemoHtml := US_StrTran( cMemoHtml , '</BODY></HTML>', HB_OsNewLine() )
+   cMemoHtml := US_StrTran( cMemoHtml , '<H1 Align=Center>', '' )
+   cMemoHtml := US_StrTran( cMemoHtml , '</H1>', '\par ' + HB_OsNewLine() + '\pard\cf0\kerning0\b0\f0\fs20\par' )
+   cMemoRtf := cMemoRtf + cMemoHtml + '\par\cf1\b\f0\fs24 Error Log from: ' + strtran( cErrorLog , '\' , '\\' ) + '\line\par }'
+//QPM_memowrit( PUB_cProjectFolder + DEF_SLASH + "errorlogCortado.rtf.txt" , cMemoRtf )
+Return cMemoRtf
+
+Function QPM_Send_SelectAll()
+   local cType := ""
+   do case
+      case GetProperty( "VentanaMain" , "TabFiles" , "Value" ) == nPagePrg
+         cType := "PRG"
+      case GetProperty( "VentanaMain" , "TabFiles" , "Value" ) == nPageHea
+         cType := "HEA"
+      case GetProperty( "VentanaMain" , "TabFiles" , "Value" ) == nPagePan
+         cType := "PAN"
+      case GetProperty( "VentanaMain" , "TabFiles" , "Value" ) == nPageDbf
+         cType := "DBF"
+      case GetProperty( "VentanaMain" , "TabFiles" , "Value" ) == nPageLib
+         cType := "LIB"
+      case GetProperty( "VentanaMain" , "TabFiles" , "Value" ) == nPageHlp
+         cType := "HLP"
+      case GetProperty( "VentanaMain" , "TabFiles" , "Value" ) == nPageSysout
+         cType := "SYSOUT"
+      case GetProperty( "VentanaMain" , "TabFiles" , "Value" ) == nPageOut
+         cType := "OUT"
+      otherwise
+         msginfo( "Error en SelectAll, pagina incorrecta" )
+         Return .F.
+   endcase
+   US_Send_SelectAll( "RichEdit" + cType , "VentanaMain" )
+Return .T.
+
+Function QPM_Wait( cFun , cTexto , nFila , bStop )
+   // QPM_Wait2
+// PRIVATE PcFun := cFun
+   PRIVATE SM_oMGWait := US_MGWait():New()
+   if cTexto == NIL
+      SM_oMGWait:cImagen := "QPMWAIT"
+      SM_oMGWait:nImagenWidth  := GetDesktopRealWidth() / 20
+      SM_oMGWait:nImagenHeight := SM_oMGWait:nImagenWidth
+   else
+      SM_oMGWait:cTXT := cTexto
+   endif
+   if !empty( nFila )
+      SM_oMGWait:nFila := nFila
+   endif
+   if !empty( bStop )
+      SM_oMGWait:bStopButton := bStop
+   endif
+//
+// El siguiente scan es para la correccion del problema de las teclas de funcion
+// el problema se manifiesta cuando desde un proceso en background se hace release da una ventana MODAL
+// ya que Extended Minigui le pasa el foco y ejecuta el ONGOTFOCUS de la ventana anterior, con lo cual tambien activa sus teclas en el sistema
+// La clase MGWait hace precisamente eso, hace ACTIVATE y RELEASE de una ventana mientras se ejecuta una funcion, por eso cuando no hay
+// una ventana activa ejecuto directamente la funcion sin llamar a MGWait
+// Esto no corrige definitivamente el problema pero corrige el 99% de los casos en QPM
+// El error se regenera facilmente:
+// edite prg 1
+// edite prg 2
+// coloque el orden de las ventanas de modo que despues de cerrar PRG 1 quede el foco en PRG2
+// una vez que las tenga asi, cierre prg 1 y vera que prg 2 ya no responde
+// obiamente que para esa prueba hay que sacar la pregunta de getActiveWindow()
+*  us_log( GetFocus() , .F. )
+*  us_log( GetActiveWindow() , .F. )
+*  us_log( _HMG_aFormNames[ AScan( _HMG_aFormHandles , GetActiveWindow() ) ] , .F. )
+*  AScan( US_StackListArray() , { |x| x = "QPM_TIMER_" .or. substr( x , 3 ) = "QPM_TIMER_" } ) > 0    // Notese que la comparacion es por "="
+   if GetActiveWindow() == 0
+      Return &( cFun )
+    //Return US_TempMainWindow( "SM_oMGWait:Ejecutar( PcFun )" )
+   else
+      Return SM_oMGWait:Ejecutar( cFun )
+   endif
+Function SetMGWaitTxt( txt )
+   if US_IsVarDefined( "SM_oMGWait" )
+      SM_oMGWait:cTXT := txt
+      DO EVENTS
+   endif
+Return .T.
+Function GetMGWaitTxt()
+   Local txt := ""
+   if US_IsVarDefined( "SM_oMGWait" )
+      txt := SM_oMGWait:cTXT
+   endif
+Return txt
+Function GetMGWaitStop()
+   if US_IsVarDefined( "SM_oMGWait" )
+      Return SM_oMGWait:bStop
+   endif
+Return .F.
+Function SetMGWaitShow()
+   if US_IsVarDefined( "SM_oMGWait" )
+      US_Wait( ( SM_oMGWait:nTimerRefresh / 1000 ) * 2 )
+      SM_oMGWait:bShow := .T.
+   endif
+Return .T.
+Function SetMGWaitHide()
+   if US_IsVarDefined( "SM_oMGWait" )
+      SM_oMGWait:bShow := .F.
+      US_Wait( ( SM_oMGWait:nTimerRefresh / 1000 ) * 2 )
+   endif
+Return .T.
+
+Function QPM_ChangePrjVersion()
+   DEFINE WINDOW WinChangeVersion ;
+          AT 0 , 0 ;
+          WIDTH 300 ;
+          HEIGHT 200 ;
+          TITLE "Change Project Version" ;
+          MODAL ;
+          NOSYSMENU ;
+          ON INTERACTIVECLOSE US_NOP()
+
+      @ 08 , 35 FRAME WinChangeVersionF ;
+         WIDTH 220 ;
+         HEIGHT 90
+
+      @ 18 , 40 LABEL WinChangeVersionL ;
+         VALUE 'Version : Release : Build' ;
+         WIDTH 200 ;
+         FONT 'arial' SIZE 10 BOLD ;
+         FONTCOLOR DEF_COLORBLUE
+
+      DEFINE TEXTBOX TVerVerNum
+         ROW             50
+         COL             90
+         WIDTH           25
+         VALUE           GetProperty( "VentanaMain" , "LVerVerNum" , "value" )
+         INPUTMASK       Replicate( "9" , DEF_LEN_VER_VERSION )
+      END TEXTBOX
+
+      DEFINE TEXTBOX TVerRelNum
+         ROW             50
+         COL             120
+         WIDTH           25
+         VALUE           GetProperty( "VentanaMain" , "LVerRelNum" , "value" )
+         INPUTMASK       Replicate( "9" , DEF_LEN_VER_RELEASE )
+      END TEXTBOX
+
+      DEFINE TEXTBOX TVerBuiNum
+         ROW             50
+         COL             150
+         WIDTH           50
+         VALUE           GetProperty( "VentanaMain" , "LVerBuiNum" , "value" )
+         INPUTMASK       Replicate( "9" , DEF_LEN_VER_BUILD )
+      END TEXTBOX
+
+      DEFINE BUTTON WinChangeVersionOK
+             ROW             115
+             COL             35
+             WIDTH           80
+             HEIGHT          25
+             CAPTION         'OK'
+             TOOLTIP         'Confirm Change'
+             ONCLICK         QPM_ChangePrjVersionOK()
+      END BUTTON
+
+      DEFINE BUTTON WinChangeVersionCANCEL
+             ROW             115
+             COL             175
+             WIDTH           80
+             HEIGHT          25
+             CAPTION         'Cancel'
+             TOOLTIP         'Cancel Change'
+             ONCLICK         WinChangeVersion.Release()
+      END BUTTON
+
+   END WINDOW
+   Center Window WinChangeVersion
+   Activate Window WinChangeVersion
+Return .T.
+Function QPM_ChangePrjVersionOK()
+   DELETE FILE ( PUB_cProjectFolder + DEF_SLASH + US_FileNameOnlyName( GetOutputModuleName() ) +'.'+OutputExt() )
+   SetProperty( "VentanaMain" , "LVerVerNum" , "value" , PadL( alltrim( GetProperty( "WinChangeVersion" , "TVerVerNum" , "value" ) ) , DEF_LEN_VER_VERSION , "0" ) )
+   SetProperty( "VentanaMain" , "LVerRelNum" , "value" , PadL( alltrim( GetProperty( "WinChangeVersion" , "TVerRelNum" , "value" ) ) , DEF_LEN_VER_RELEASE , "0" ) )
+   SetProperty( "VentanaMain" , "LVerBuiNum" , "value" , PadL( alltrim( GetProperty( "WinChangeVersion" , "TVerBuiNum" , "value" ) ) , DEF_LEN_VER_BUILD , "0" ) )
+   RichEditDisplay("OUT")
+   WinChangeVersion.Release()
+Return .T.
+
+Function ReplacePrjVersion( cFile , cPrjVersion )
+   Local cMemo := MemoRead( cFile ) , nInx := 0 , cLine := "" , cMemoOut := "" , bFound := .F.
+// msginfo( cMemo )
+   For nInx := 1 to MLCount( cMemo , 254 )
+      cLine := Memoline( cMemo , 254 , nInx )
+      if !bFound .and. ;
+         US_Word( cLine , 1 ) == "PRJ_VERSION"
+         bFound := .T.
+         cMemoOut := cMemoOut + "PRJ_VERSION " + cPrjVersion + HB_OsNewLine()
+      else
+         cMemoOut := cMemoOut + cLine + HB_OsNewLine()
+      endif
+   Next
+// msginfo( cMemoOut )
+   QPM_MemoWrit( cFile , cMemoOut )
+Return .T.
+
+Function QPM_ProjectFileLock( cFile )
+   PUB_nProjectFileHandle := fopen( cFile , 2 + 32 ) // 2 FO_READWRITE Open for reading or writing + 32 FO_DENYWRITE Prevent others from writing
+Return Ferror()
+Function QPM_ProjectFileUnLock()
+   if PUB_nProjectFileHandle != 0
+      fclose( PUB_nProjectFileHandle )
+   endif
+Return Ferror()
+

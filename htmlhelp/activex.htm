@@ -1,0 +1,157 @@
+<html><head>                                            
+<title>OCX - ¿Cómo usar componentes ActiveX en nuestra aplicación?</title>       
+</head>                                                 
+<body bgcolor="#FFFCEA" >                        
+<DIV></DIV>                                             
+<table width="100%"  border="0"  cellspacing="0"  cellpadding="2"  bgcolor="#c0c0c0" >
+<tr>                                                    
+  <td align="left" >                                    
+    <div align="left" ><font face="Arial"  color="#010101"  size="4" ><span style="FONT-SIZE: 14pt"
+   >OCX - ¿Cómo usar componentes ActiveX en nuestra aplicación?</span></font></div>  
+  </td>                                                 
+  <td align="right" >                                   
+    <font face="Arial"  size="2" >                      
+<A href="dll.lib.htm"><img src="SHG_ArrowPrev.bmp" alt="Previous topic"></A>&nbsp;
+<A href="QPM_2.htm"><img src="SHG_ArrowTop.bmp" alt="First topic"></A>&nbsp;
+<A href="ocxweb.htm"><img src="SHG_ArrowNext.bmp" alt="Next topic"></A>
+    </font>                                             
+  </td>                                                 
+</tr></table>                                           
+<hr><br>                                                
+<font face="Arial" color="#000000" size=2>Los componentes denominados <b>ActiveX</b>, cuyo contenedor (archivo) tiene una extensi&oacute;n <b>OCX</b>, son peque&ntilde;os programas construidos para realizar una tarea puntual que podremos incluir en nuestra aplicaci&oacute;n para darle mas funcionalidad sin tener que programarla, algo as&iacute; como un set de funciones o m&eacute;todos agrupados para realizar una tarea espec&iacute;fica, por ejemplo, manejar imagenes, manejar controladoras fiscales, manejar reproduccion de componentes multimedia, etc.<br>
+<br>
+Los <b>ActiveX</b>, utilizan una tecnolog&iacute;a llamada <b>COM</b> (Component Object Model) y sirve para que desde nuestra aplicaci&oacute;n nos comuniquemos con otro programa, en este caso puntual el otro programa "no funciona" por si solo, sino que nos brinda un servicio por medio de intercambio de ordenes y de informaci&oacute;n.<br>
+<br>
+Un ejemplo de aplicaciones <b>COM</b> que adem&aacute;s funcionan por si mismas pueden ser <b>Excel</b> y <b>Word</b>.<br>
+<br>
+Cuando nos comunicamos con <b>Excel</b> para manejar una planilla de calculo usando <b>OLE</b>, estamos haciendo algo similar a lo podr&iacute;amos hacer cuando nos comunicamos con un <b>ActiveX</b>:<b> Intercambiando ordenes y/o informaci&oacute;n entre aplicaciones</b>.<br>
+<br>
+No se bien si <b>OLE</b> contiene o se basa en <b>COM</b> o viceversa, pero el resultado final es muy parecido.<br>
+<br>
+Hasta donde pude investigar, los controles <b>OCX</b> estan generalmente programados en <b>OOP</b> y por lo tanto, manejan <b>M&eacute;todos</b> y <b>Propiedades</b> a las cuales podemos acceder desde nuestro programa <b>[x]Harbour</b>.</font><br>
+<br>
+<font face="Arial" color="#FF0000" size=2>Todas las pruebas que he realizado se hicieron con <b>xHarbour</b>, ya que hasta el momento, <b>Harbour</b> no cuenta con soporte para <b>ActiveX</b> en forma nativa.</font><br>
+<br>
+<font face="Arial" color="#000000" size=2>Antes de usar los m&eacute;todos incluidos en el <b>ActiveX</b> hay que registrar el <b>OCX</b> como lo har&iacute;amos con una <b>DLL</b> (si fuera necesario).  Tambien se podr&iacute;a acceder a los m&eacute;todos cargando el <b>OCX</b> dinamicamente mediante la funcion <b>C</b> llamada <b>LoadLibrary</b> pero es mas complicado.<br>
+<br>
+Vayamos a lo mas simple, para registrar un <b>ActiveX</b>, <b>Windows</b> nos provee del siguiente comando: <b>regsvr32 </b><br>
+<br>
+<IMG SRC="QPM_ActiveX_Regsvr32.png" BORDER=2><br>
+<br>
+Los par&aacute;metros necesarios para nuestra tarea son: <br>
+<b>/u</b> para des-regristrar un OCX<br>
+<b>/s</b> para que no muestre la caja de dialogo con el resultado de la operacion<br>
+y en donde dice <b>dllname</b> ir&iacute;a el nombre de nuestro <b>OCX</b> con el path completo, salvo que el path en donde se encuentra est&eacute; accesible por el <b>Path</b> del sistema.<br>
+<br>
+Ejemplo de registro de OCX desde la linea de comandos: </font><br>
+<br>
+<font face="Courier New" color="#008080" size=2>regsvr32 c:\myApplid\myActivex.ocx</font><br>
+<br>
+<font face="Arial" color="#000000" size=2>Ejemplo de desisntalaci&oacute;n del OCX</font><br>
+<br>
+<font face="Courier New" color="#008080" size=2>regsvr32 <b>/u</b> c:\myApplid\myActivex.ocx</font><br>
+<br>
+<font face="Arial" color="#000000" size=2>Esta tarea tambien la podemos hacer desde nuestra aplicaci&oacute;n en forma muy sencilla:<br>
+<br>
+Ejemplo de registro de OCX desde nuestro programa: </font><br>
+<br>
+<font face="Courier New" color="#008080" size=2>EXECUTE FILE "regsvr32 /s c:\myApplid\myActivex.ocx" WAIT MINIMIZE </font><br>
+<br>
+<font face="Arial" color="#000000" size=2>Ejemplo de desisntalaci&oacute;n del OCX</font><br>
+<br>
+<font face="Courier New" color="#008080" size=2>EXECUTE FILE "regsvr32 /s <b>/u </b>c:\myApplid\myActivex.ocx" WAIT MINIMIZE</font><br>
+<br>
+<font face="Arial" color="#000000" size=2>Una vez que tengamos registrado nuestro ActiveX, estamos en condiciones de poder invocar los M&eacute;todos que &eacute;l nos provee.<br>
+<br>
+Para <b>"abrir"</b> el ActiveX se utilizan estas dos funciones en conjunto:<br>
+<br>
+<b>objeto := GetActiveObject( OCX_ProgId )</b><br>
+y<br>
+<b>objeto := CreateObject( OCX_ProgId )</b><br>
+<br>
+Es decir, primero se intenta un <b>GetActiveObject</b> para ver si ya estuviera activo el objeto asociado al ActiveX y si no lo est&aacute;, se lo crea mediante <b>CreateObject</b>.<br>
+<br>
+Estas dos funciones retornan un objeto que es el que se invocar&aacute; para hacer referencia a los m&eacute;todos del ActiveX, por ejemplo, si estamos usando un ActiveX que nos retorna datos del calendario y queremos saber que en que mes estamos, har&iacute;amos lo siguiente:<br>
+<br>
+<b>cMes := objeto:mes()</b><br>
+<br>
+El par&aacute;metro <b>OCX_ProgId</b> hace referencia al nombre interno del ActiveX.  Si no tenemos este dato, podemos registrar la DLL y por medio de alguna tool ver el nombre asociado.<br>
+Para nuestro ejemplo usaremos una tool freeware llamada <b>axHelper</b> que se la puede bajar desde aqui mismo: <A HREF="QPM_Tools_axHelper.zip"><b><IMG SRC="QPM_IconZip.png" ALT="axHelper.zip"></b></A><br>
+<br>
+Esta tool desarrollada por la empresa </font><b><font face="Arial" color="#FF0000" size=2>Nir Sofer</b></font><font face="Arial" color="#000000" size=2> no requiere instalaci&oacute;n y su home page es <A href="http://www.nirsoft.net" target=blank>www.nirsoft.net</A><br>
+<br>
+Una vez que bajamos la tool, entramos en ella y pedimos que nos liste todas las Claves que encuentre en la registry de Window:<br>
+<br>
+<b><IMG SRC="QPM_ActiveX_axHelper_01.png" BORDER=2></b><br>
+<br>
+Luego ordenamos por <b>FileName</b> y buscamos nuestro <b>OCX</b>, cuando lo encontramos hacemos doble click y vemos su descripci&oacute;n.  El dato que nos interesa es el <b>ProgID</b>:<br>
+<br>
+<b><IMG SRC="QPM_ActiveX_axHelper_02.png" BORDER=2></b><br>
+<br>
+Entonces, la llamada a las dos funciones en nuestro ejemplo quedaria de la siguiente forma:<br>
+<br>
+<b>objeto := GetActiveObject( "ShazamMP3.cMP3File" )</b><br>
+y<br>
+<b>objeto := CreateObject( "ShazamMP3.cMP3File" )</b><br>
+<br>
+Una vez que el ActiveX esta Registrado y se ha creado el objeto ya podemos invocar los m&eacute;todos contenidos en &eacute;l.  Veamos un ejemplo concreto cuyo fuente se puede descargar desde aqui: <A HREF="QPM_Samples_ActiveX.zip"><b><IMG SRC="QPM_IconZip.png" ALT="ActiveX.zip"></b></A><br>
+<br>
+Este ejemplo utiliza un ActiveX llamado <b>ShazamMP3</b> creado por </font><b><font face="Arial" color="#FF0000" size=2>Erv Walter </b></font><font face="Arial" color="#000000" size=2>(home site: <A href="http://ewal.net" target=blank>http://ewal.net</A>) que tiene la habilidad de informarnos sobre datos asociados a archivos <b>MP3</b> de audio y a sus <b>Tag de informaci&oacute;n interna</b>.  Los tag de informacion interna son estructuras con informacion tales como <b>Int&eacute;rprete</b> del tema, <b>Albun</b> en donde se edito y algunos datos mas.  En el caso de los <b>MP3</b>, los <b>TAGs</b> se alojan al final del archivo (Tag Version 1) y al principio del archivo (Tag Version 2)<br>
+<br>
+El zip con el demo, ademas del c&oacute;digo fuente del demo, contine el <b>OCX</b> llamado <b>ShazamMP3.ocx</b>, un archivo de audio llamado <b>PruebaDeActiveX.mp3</b> para testear los m&eacute;todos y dos <b>DLL's</b> requeridas por dicho OCX que deber&aacute;n estar en el mismo directorio de nuestro ejecutable.  Las Dll son: <b>zlib.dll</b> (para descompresi&oacute;n de Tags comprimidos) y <b>Vbhlp32.dll</b> (para un manejo mas efectivo en la manipulacion de bit's en VB, que es el lenguaje con que fue escrito el ActiveX ShazamMP3)<br>
+<br>
+La compilaci&oacute;n del Demo mediante <b>QPM</b> se realiza con un projecto de tipo <b>EXE</b> y no tiene ninguna rareza o particularidad.<br>
+<br>
+Dentro del Source del Demo hay una explicacion de cada bloque de c&oacute;digo relevante.<br>
+<br>
+Esta es una imagen de la ejecuci&oacute;n del demo:<br>
+<br>
+<b><IMG SRC="QPM_ActiveX_Demo.png" BORDER=2></b></font><br>
+<br>
+<br>
+<font face="Arial" color="#000000" size=4><A name="olecom">Mas ayuda sobre ActiveX</font><br>
+<br>
+<font face="Arial" color="#000000" size=2>Si no se conocieran los M&eacute;todos que posee el ActiveX, &acute;por ejemplo por falta de documentaci&oacute;n, podemos utilizar una tool llamada <b>OLEView.exe</b> que generalmente viene junto con los paquetes de desarrollo de Microsoft como ser <b>Visual Studio</b>.<br>
+<br>
+<b><IMG SRC="QPM_ActiveX_OleView_01.png" BORDER=2></b><br>
+<br>
+Esta tool tambien esta disponible para bajarla desde Internet en el site oficial de microsoft (<A href="http://www.microsoft.com" target=blank>www.microsoft.com</A>), pero si no lo logr&aacute;s, podes bajarlo de aqui mismo: <A HREF="QPM_Tools_OleView.zip"><b><IMG SRC="QPM_IconZip.png" ALT="OleView.zip"></b></A><br>
+Nota: Esta herramienta requiere la dll <b>Iviewers.dll</b> que tambien esta inclu&iacute;da en el ZIP y que deber&aacute; copiarse al directorio <b>SYSTEM32</b> de Windows (o WinNT).<br>
+<br>
+Expandimos la opcion <b>All Objects</b> y buscamos alfabeticamente nuestro <b>OCX</b> y con el boton derecho del mouse desplegamos un menu contextual en donde elegimos <b>View Type Information</b> (aqu&iacute; es donde se requiere la DLL <b>Iviewers.dll</b>)<br>
+<br>
+<b><IMG SRC="QPM_ActiveX_OleView_02.png" BORDER=2></b><br>
+<br>
+Dependiendo de la cantidad de clases y m&eacute;todos que tenga el OCX variar&aacute; la informacion que obtendremos.  Notese que, al menos en nuestro ejemplo, el nombre que acusa como clase:<b> _cID3V1Tag</b> no es el que se usa en el programa, ya que en nuestro prg debemos codificar <b>ID3V1Tag</b> (sin el _<b>c</b>).<br>
+<br>
+<b><IMG SRC="QPM_ActiveX_OleView_03.png" BORDER=2></b></font><br>
+<br>
+<font face="Arial" color="#FF0000" size=2><b>Por &uacute;ltimo, en el t&oacute;pico siguiente se explica como utilizar controles ActiveX que utilizan un area de nuestro Form para mostrar informacion: <A href="ocxweb.htm">OCX con manejo de pantalla - &iquest;C&oacute;mo agregar un control Web Explorer a nuestra aplicaci&oacute;n?</A></b></font><br>
+ 
+<p><hr><p>                                                            
+<table width=100%><tr><td align="center"><font face="Arial" color="#000000" size=2><b><IMG SRC="QPM.bmp"></b></font><b><font face="Arial" size=2>   QPM</b> (QAC Based Project Manager) </font><b><font face="Arial" color="#0000FF" size=2>Version 05.00</b></font><br>
+<br>
+<font face="Arial" color="#E20362" size=2><b><i>Compilaci&oacute;n Incremental con las tres versiones de librer&iacute;as mas populares de la familia MiniGui: Oficial MiniGui, Extended MiniGui y Object Oriented Harbour Gui (OOHG)</i></b></font><br>
+<br>
+<font face="Arial" size=2><b><A href="mailto:QPM_Support@gmail.com" >QPM_Support@gmail.com</A></b></font><br>
+<br>
+<font face="Arial" color="#0000FF" size=2><b><A href="http://qpm.sourceforge.net" target=blank>qpm.sourceforge.net</A></b></font></td></tr></table><br>
+<br>
+<br>
+ 
+
+<table width="100%"  border="0"  cellspacing="0"  cellpadding="2"  bgcolor="#c0c0c0" > 
+  <TBODY>                                                             
+  <tr>                                                                
+    <td align="left" ><font face="Arial"  color="#010101"  size="4" ><span style="FONT-SIZE: 14pt"
+     >                                                                
+      <P>                                                             
+      <P align=left><FONT size=2><A href="http://qpm.sourceforge.net" target=blank>Powered by QPM</A>&nbsp;&nbsp;</FONT>               
+      </P></span></font></td>                                         
+    <td align="right" >                                               
+      <font face="Arial"  size="2" >                                  
+<A href="dll.lib.htm"><img src="SHG_ArrowPrev.bmp" alt="Previous topic"></A>&nbsp;
+<A href="QPM_2.htm"><img src="SHG_ArrowTop.bmp" alt="First topic"></A>&nbsp;
+<A href="ocxweb.htm"><img src="SHG_ArrowNext.bmp" alt="Next topic"></A>
+      </font>                                                         
+    </td></tr></TBODY></table><hr></body></html>                          
