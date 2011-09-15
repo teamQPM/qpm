@@ -1,6 +1,6 @@
 /*
  * QPM - QAC Based Project Manager
- * Copyright 2011 QPM_Support, Argentina
+ * Copyright 2011 fernando.yurisich, Argentina
  * http://qpm.sourceforge.net
  *
  * Based on QAC - Project Manager for [x]Harbour
@@ -50,7 +50,7 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
 
 // PUBLIC PUB_cQPM_Version      := substr( Prj_Version() , 1 , 2 ) + " " + substr( Prj_Version() , 3 , 2 ) + " " + substr( Prj_Version() , 7 , 2 )
    PUBLIC PUB_cQPM_Support_Link := "http://qpm.sourceforge.net"
-   PUBLIC PUB_cQPM_Support_eMail := "QPM_Support@GMail.com"
+   PUBLIC PUB_cQPM_Support_eMail := "fernando.yurisich@GMail.com"
    PUBLIC PUB_cStatusLabel      := "Status: Idle"
    PUBLIC PUB_MenuPrjOptions    := "Project Options"
    PUBLIC PUB_MenuGblOptions    := "Global Options (Folders for [x]Harbour, MiniGUI, C++ and others)"
@@ -4907,7 +4907,7 @@ Function QPM_About()
             "Licence: This program is free software" + HB_OsNewLine() + ;
             "         You can use it without charge" + HB_OsNewLine() + ;
             HB_OsNewLine() + ;
-            "Created by QPM_Support (Argentina) <" + PUB_cQPM_Support_eMail + ">" + HB_OsNewLine() + ;
+            "Created by CarozoDeQuilmes (Argentina), Supported by <" + PUB_cQPM_Support_eMail + ">" + HB_OsNewLine() + ;
             PUB_cQPM_Support_Link + HB_OsNewLine() + ;
             HB_OsNewLine() + ;
             "Based on MPM Harbour MiniGUI Project Manager" + HB_OsNewLine() + ;

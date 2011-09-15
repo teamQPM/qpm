@@ -353,7 +353,7 @@ Function SHG_Generate( cBase , bGenHtml , PUB_cSecu , cWWW )
    Local nRegistros := 0 , cMemoHeader , cMemoFooter , cFooterHTML
    Local cBackColor := "#FFFCEA"
    Local cDescri    := "Compilación Incremental con todas las versiones de MiniGui"
-   Local ceMail     := "mailto:QPM_Support@GMail.com"
+   Local ceMail     := "mailto:fernando.yurisich@GMail.com"
    Local wwwCdQ     := "http://qpm.sourceforge.net"
    Local cWWWDescri := "Powered by QPM"
    Local cAux       := ""
@@ -1213,10 +1213,10 @@ Function SHG_AddHlpHTML( accion )
          CopyToClipboard( '<A name="xxxxxxxx">' )
          SHG_Send_Paste()
       case upper( accion ) == "LINK"
-         CopyToClipboard( '<A href="http://qpm.sourceforge.net" target=blank>QPM_Support Home Page</A>' )
+         CopyToClipboard( '<A href="http://qpm.sourceforge.net" target=blank>QPM Home Page</A>' )
          SHG_Send_Paste()
       case upper( accion ) == "EMAIL"
-         CopyToClipboard( '<A href="mailto:QPM_Support@gmail.com">Mail to QPM_Support</A>' )
+         CopyToClipboard( '<A href="mailto:fernando.yurisich@gmail.com">Mail to QPM_Support</A>' )
          SHG_Send_Paste()
    otherwise
       msginfo( "invalid accion into function SHG_AddHlpHTML: " + us_todostr( accion ) )

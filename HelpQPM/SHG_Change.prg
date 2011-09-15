@@ -33,8 +33,8 @@ Return .T.
 
 Function Change()
    Local old , new
-   old := "D:/TEMP/qpm/helpqpm/"
-   new := "D:/TEMP/qpm/helpqpm/"
+   old := "QPM_Support@gmail.com"
+   new := "fernando.yurisich@gmail.com"
    USE QPM_SHG.dbf ALIAS "SHG"
    PACK
    DBGoTop()
