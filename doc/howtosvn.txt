@@ -1,0 +1,156 @@
+/*
+ * $Id$
+ */
+
+
+HOW TO USE THE SVN
+==================
+
+[01] Download and install a Subversion client:
+
+     http://tortoisesvn.net/downloads.html
+     http://subversion.tigris.org
+   
+[02] If you don´t have one, create a sourceforge user:
+
+     https://sourceforge.net/user/registration
+
+[03] Create a folder in your local disk (e.g. DUMMY) and do a complete
+     checkout to get the whole tree.  When it's done you can move the qpm
+     folder created by the checkout to any place you like.
+    
+[04] To upload changes you'll need Developer (RW) status.  Please ask one
+     of the Administrators to grant you such status. Note that the process
+     of granting this status is not an automatic process.  Be patient.
+    
+[05] Do the changes needed (remember to keep track of your changes in a
+     temporary file so you can later update the ChangeLog).
+     Always do your development using your local SVN tree. Do not modify
+     files outside your local SVN tree and then copy the changes into it,
+     because that leads to overwriting changes made by others.
+
+[06] When you're done, go on line and login to http://sourceforge.net/
+     with your sourceforge user.
+
+[07] Do an update.  NEVER forget this step to avoid overwriting changes
+     made by others.
+
+[08] Resolve all conflicts.  NEVER forget this step to avoid overwriting
+     changes made by others.
+
+[09] Update de ChangeLog using your temporary log file.  Copy the relevant
+     entries to the clipboard.
+
+[10] Do a commit.  When the SVN pops up a window with the changed files,
+     check if all of them are referred in the ChangeLog.  If not, abort
+     the commit, make the corrections and start over.
+     
+[11] Paste the ChangeLog's entries to the SVN window, save and exit.
+     * ALWAYS * add a ChangeLog entry when committing changes.
+
+[12] Wait until the process is finished and check that ended without errors.
+     If there are any errors, make de corrections and start over.
+     
+
+HOW TO FORMAT YOUR CHANGELOG ENTRIES
+====================================
+
+[1] Always add new entries to the top of the file.
+
+[2] Add an entry header using this format:
+
+    YYYY-MM-DD HH:MM UTC[-|+]hhmm Your Full Name <your_email_address>
+
+[3] Add an entry body listing all the files changed, deleted or added (all of
+    them with full path spec).  Mention the name of the changed function or
+    macro.  Describe the changes, the reasons, and other comments and
+    explanations you find useful. If the change needs some related work
+    to be done by someone else (documentation, makefile), make a clear note
+    about this.
+
+[4] Group the related changes into logical sections and use the following
+    marks to highlight them. Example:
+
+    * ./dir/file1.txt
+    + ./dir/file2.prg
+    - ./dir/file3.ch
+      * Changed: ...
+      ! Fixed: ....
+      % Optimized: ...
+      + Added: ...
+      - Removed: ...
+
+[5] Leave an empty line between the header and body and one after the body.
+
+
+HOW TO ADD SVN ID TO NEW TEXT FILES
+===================================
+
+[1] At the very top of the file insert the following lines:
+
+/*
+ * _Id_
+ */
+
+    NOTE: replace each '_' with a '$' sign.
+
+[2] When the file is commited to SVN, the second line is changed to
+    something like this:
+
+/*
+ * $Id: filename revision date time username $
+ */
+
+[3] In subsequent commits the line is updated.
+
+
+HOW TO UPDATE THE TODO LIST
+===========================
+
+[1] To add new entries, insert a group of lines with the following format:
+
+/******************************************************************************/
+
+Assigned to: <nobody> | Full name <email address>
+Added by...: 2011-09-19 22:30:00 UTC-0300 Full name <email address>
+Status.....: Open | In progress | ...
+Details....: <text>
+
+/******************************************************************************/
+
+[2] Once a task is completed, update ChangeLog and delete the group from TODO.
+
+
+HOW TO BUILD QPM FROM SVN
+=========================
+
+TODO: describe procedure.
+
+Para configurar el ambiente de trabajo por primera vez:
+
+[1] Install the latest release from http://sourceforge.net/projects/qpm/files/
+
+[2] Install Extended Minigui libraries, and xHarbour and BCC compiler from
+    http://sourceforge.net/projects/qpm/files/minigui_para_compilar_QPM/
+
+[3] Start QPM, go to Settings/Global Options menu, select the tab labeled
+    "Extended 1.x with Borland C", and configure the fields "MiniGUI Folder",
+    "Borland C Folder" and "xHarbour Folder" so they point to the folders
+    created in step [2].
+
+[4] Download the SVN from https://qpm.svn.sourceforge.net/svnroot/qpm
+
+[5] If you didn´t downloaded the SVN in C:\QPM folder, you must modify, build
+    and execute ./HelpQPM/SHG_Change.prg to change the path to files used in
+    the building of the QPM.CHM help file. The building tools do not support
+    relative paths so a full default path is specified (C:\QPM\)
+
+[5] Launch CompileAll.bat to build the binaries.
+
+
+HOW TO BUILD A NEW RELEASE
+=========================:
+
+TODO: describe procedure.
+
+/* eof */

@@ -1,0 +1,58 @@
+/*
+ * $Id$
+ */
+
+/* QPM - QAC Based Project Manager
+ * Changes log file
+ *
+ * See "How to format your ChangeLog entries" in howtosvn.txt file.
+ */
+
+
+2011-09-23 11:20:00 UTC-0300 Fernando Yurisich <fyurisich@oohg.org>
+   + ./doc
+     + Added: documentation folder.
+   + ./doc/codestyl.txt
+     + Added: coding standars.
+   + ./doc/howtosvn.txt
+     + Added: how to download SVN files and build QPM.
+     + Added: how to upload changes to the SVN.
+     + Added: how to update ChangeLog.
+     + Added: how to update ToDo.
+   + ./doc/notes.txt
+     + Added: some notes on QPM.
+   + ./doc/readme.txt
+     + Added: first file to read after downloading.
+   + ./doc/us_redir.txt
+     + Copied: from ./us_redir.doc
+   - ./us_redir.doc
+     + Moved: to ./doc/us_redir.txt
+   - ./_ClearAll.bat
+   - ./Errorlog.htm
+   + ./BuildAll.bat
+     + Use this batch to build QPM.exe, us_*.exe and QPM.chm files.
+   + ./ChangeLog
+     + Added to keep track of changes.
+   + ./LICENSE
+     + Added GNU General Public License version 3.
+   + ./TODO
+     + Added to keep track of things to do.
+   * ./helpQPM/shg_change.prg
+     * Changed default path to files used in QPM.chm
+     + Added license info and SVN ID.
+   * ./helpQPM/shg_change.qpm
+   * ./QPM_AutoProjectOnlyHelp.qpm
+   * ./QPM_US_Redir.qpm
+   * ./QPM_US_Run.qpm
+     * Changed configuration for libraries and compilers.
+   * ./helpQPM/QPM_shg.dbf
+   * ./helpQPM/QPM_shg.fpt
+     * Changed default path to files used in QPM.chm
+     * Changed default path to files used in QPM.chm
+   + ./QPM.ch
+   + ./QPM.prg
+   + ./QPM_functions.prg
+   + ./QPM_SHG_simplehelpgenerator.prg
+     + Added license info and SVN ID.
+
+/* eof */

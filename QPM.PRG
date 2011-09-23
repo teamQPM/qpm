@@ -1,11 +1,29 @@
 /*
- * QPM - QAC Based Project Manager
- * Copyright 2011 fernando.yurisich, Argentina
- * http://qpm.sourceforge.net
+ * $Id$
+ */
+
+/*
+ *    QPM - QAC Based Project Manager
  *
- * Based on QAC - Project Manager for [x]Harbour
- * Copyright 2006-2011 Carozo de Quilmes <CarozoDeQuilmes@gmail.com>
- * http://www.CarozoDeQuilmes.com.ar
+ *    Copyright 2011 Fernando Yurisich <fernando.yurisich@gmail.com>
+ *    http://qpm.sourceforge.net
+ *
+ *    Based on QAC - Project Manager for (x)Harbour
+ *    Copyright 2006-2011 Carozo de Quilmes <CarozoDeQuilmes@gmail.com>
+ *    http://www.CarozoDeQuilmes.com.ar
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU General Public License as published by
+ *    the Free Software Foundation, either version 3 of the License, or
+ *    (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU General Public License for more details.
+ *
+ *    You should have received a copy of the GNU General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include "minigui.ch"
@@ -50,7 +68,7 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
 
 // PUBLIC PUB_cQPM_Version      := substr( Prj_Version() , 1 , 2 ) + " " + substr( Prj_Version() , 3 , 2 ) + " " + substr( Prj_Version() , 7 , 2 )
    PUBLIC PUB_cQPM_Support_Link := "http://qpm.sourceforge.net"
-   PUBLIC PUB_cQPM_Support_eMail := "fernando.yurisich@GMail.com"
+   PUBLIC PUB_cQPM_Support_eMail := "qpm-users@lists.sourceforge.net"
    PUBLIC PUB_cStatusLabel      := "Status: Idle"
    PUBLIC PUB_MenuPrjOptions    := "Project Options"
    PUBLIC PUB_MenuGblOptions    := "Global Options (Folders for [x]Harbour, MiniGUI, C++ and others)"
@@ -8829,7 +8847,7 @@ Function PpoDisplay( bOnlyRenumering )
             ppoFile := PUB_cProjectFolder + DEF_SLASH + GetObjName() + DEF_SLASH + Us_FileNameOnlyName( GetProperty( "VentanaMain" , "GPrgFiles" , "Cell" , nRow , NCOLPRGNAME ) ) + ".ppo"
             if file( ppoFile )
                if val( US_FileDateTime( ppoFile ) ) < val( US_FileDateTime( ChgPathToReal( GetProperty( "VentanaMain" , "GPrgFiles" , "Cell" , nRow , NCOLPRGFULLNAME ) ) ) )
-                  msginfo( "Warning, date of prg file is more recent that date of creation of ppo file" + HB_OsNewLine() + "ReBuild the proyect after press Non-Incremental Button or after save prg file" )
+                  msginfo( "Warning, date of prg file is more recent that date of creation of ppo file" + HB_OsNewLine() + "ReBuild the project after press Non-Incremental Button or after save prg file" )
                endif
                cPpoCaretPrg := alltrim( str( VentanaMain.RichEditPRG.CaretPos ) )
                VentanaMain.RichEditPrg.FontColor := DEF_COLORFONTPPO
@@ -8839,7 +8857,7 @@ Function PpoDisplay( bOnlyRenumering )
                VentanaMain.bReLoadPpo.caption := "Edit PPO"
                bPpoDisplayado := .T.
             else
-               msginfo( "PreProcess file not found, ReBuild the proyect after press Non-Incremental Button or after save prg file" )
+               msginfo( "PreProcess file not found, ReBuild the project after press Non-Incremental Button or after save prg file" )
             endif
          else
             msginfo( "PreProcess Files is only for PRG files" )
@@ -10758,4 +10776,5 @@ Return .T.
 //------------------------------------------------------------------------------------------------//
 //- FIN Funciones para compatibilidad ------------------------------------------------------------//
 //================================================================================================//
-
+
+/* eof */
