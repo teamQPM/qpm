@@ -98,7 +98,7 @@ HOW TO ADD SVN ID TO NEW TEXT FILES
     something like this:
 
 /*
- * $Id: filename revision date time username $
+ * $Id$
  */
 
 [3] In subsequent commits the line is updated.
