@@ -8,6 +8,32 @@
  * See "How to format your ChangeLog entries" in howtosvn.txt file.
  */
 
+2011-09-23 13:05:00 UTC-0300 Fernando Yurisich <fyurisich@oohg.org>
+   + ./US_A1.exe
+   + ./US_A2.exe
+   + ./US_A3.exe
+   + ./US_A4.exe
+   + ./us_dif.exe
+   + ./us_dlltool.exe
+   + ./us_hhc.exe
+   + ./us_impdef.exe
+   + ./us_implib.exe
+   + ./us_make.exe
+   + ./us_pexports.exe
+   + ./us_podump.exe
+   + ./us_r2h.exe
+   + ./us_reimp.exe
+   + ./US_S1.exe
+   + ./US_S2.exe
+   + ./US_S3.exe
+   + ./us_tdump.exe
+   + ./us_windres.exe
+   + ./us_polib.exe
+   + ./us_tlib.exe
+   + ./us_upx.exe
+   + ./us_objdump.exe
+     + Added missing files.
+
 2011-09-23 12:21:00 UTC-0300 Fernando Yurisich <fyurisich@oohg.org>
    + ./ChangeLog
      + Added SVN property keywords
