@@ -1,0 +1,74 @@
+/*
+ * $Id$
+ */
+
+/* QPM - QAC Based Project Manager
+ * Things to do
+ *
+ * See "How to format your TODO entries" in howtosvn.txt file.
+ */
+
+/******************************************************************************/
+
+Assigned to: <nobody>
+Added by...: 2011-09-19 22:30:00 UTC-0300 Fernando Yurisich <fyurisich>
+Status.....: Open.
+Details....: Add to ./doc/howtosvn.txt file how to:
+             - Build QPM from SVN files.
+             - Build a new release.
+
+/******************************************************************************/
+
+Assigned to: <nobody>
+Added by...: 2011-09-19 22:30:00 UTC-0300 Fernando Yurisich <fyurisich>
+Status.....: Open.
+Details....: Add license detail to all files.
+
+/******************************************************************************/
+Assigned to: <nobody>
+Added by...: 2011-09-19 22:30:00 UTC-0300 Fernando Yurisich <fyurisich>
+Status.....: Open.
+Details....: Add ./doc/dirstruc.txt file describing the SVN structure.
+
+/******************************************************************************/
+Assigned to: <nobody>
+Added by...: 2011-09-22 22:30:00 UTC-0300 Fernando Yurisich <fyurisich>
+Status.....: Open.
+Details....: Spellcheck the help files.
+
+/******************************************************************************/
+Assigned to: <nobody>
+Added by...: 2011-09-22 22:30:00 UTC-0300 Fernando Yurisich <fyurisich>
+Status.....: Open.
+Details....: Translate help files to english.
+
+/******************************************************************************/
+Assigned to: <nobody>
+Added by...: 2011-09-22 22:30:00 UTC-0300 Fernando Yurisich <fyurisich>
+Status.....: Open.
+Details....: Localize entire proyect.
+
+/******************************************************************************/
+Assigned to: <nobody>
+Added by...: 2011-09-22 22:30:00 UTC-0300 Fernando Yurisich <fyurisich>
+Status.....: Open.
+Details....: Migrate to Harbour 3.0 (last stable release).
+
+/******************************************************************************/
+Assigned to: <nobody>
+Added by...: 2011-09-22 22:30:00 UTC-0300 Fernando Yurisich <fyurisich>
+Status.....: Open.
+Details....: Migrate to last version of Extended Minigui.
+             Must be done after Harbour migration.
+
+/******************************************************************************/
+Assigned to: <nobody>
+Added by...: 2011-09-22 22:30:00 UTC-0300 Fernando Yurisich <fyurisich>
+Status.....: Open.
+Details....: Migrate to last version of OOHG.
+             Some function must be rewritten completely because rely on certain
+             features of Extended version. Example: the editor in SHG module.
+             Must be done after Extended migration.
+
+/******************************************************************************/
+/* eof */

@@ -1,3 +1,31 @@
+/*
+ * $Id$
+ */
+
+/*
+ *    QPM - QAC Based Project Manager
+ *
+ *    Copyright 2011 Fernando Yurisich <fernando.yurisich@gmail.com>
+ *    http://qpm.sourceforge.net
+ *
+ *    Based on QAC - Project Manager for (x)Harbour
+ *    Copyright 2006-2011 Carozo de Quilmes <CarozoDeQuilmes@gmail.com>
+ *    http://www.CarozoDeQuilmes.com.ar
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU General Public License as published by
+ *    the Free Software Foundation, either version 3 of the License, or
+ *    (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU General Public License for more details.
+ *
+ *    You should have received a copy of the GNU General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
 #include <US_Env.h>
 
 #DEFINE QPM_SHG
@@ -9,7 +37,7 @@
 
 //#DEFINE QPM_SYNCRECOVERY
 
-// la siguiente linea hace fallar el mensaje de database QHG not fuoun cuando se abre un projecto
+// la siguiente línea hace fallar el mensaje de database SHG not found cuando se abre un proyecto
 //#translate MsgInfo( <txt> )          => SetMGWaitHide() ; MyMsg( "QPM - Notify"    , <txt> , "N" , bAutoExit ) ; SetMGWaitShow()
 #translate MsgInfo( <txt> )          => MyMsg( "QPM - Notify"    , US_TodoStr( <txt> ) , "N" , bAutoExit )
 #translate ? <txt>                   => MyMsg( "QPM - Notify"    , US_TodoStr( <txt> ) , "N" , bAutoExit )
@@ -199,8 +227,9 @@
    #define DEF_N_VER_COLOFFSET        11
 #endif
 
-// Version Project
+// Project version
 #define  DEF_LEN_VER_VERSION  2
 #define  DEF_LEN_VER_RELEASE  2
 #define  DEF_LEN_VER_BUILD    4
-
+
+/* eof */

@@ -1,3 +1,31 @@
+/*
+ * $Id$
+ */
+
+/*
+ *    QPM - QAC Based Project Manager
+ *
+ *    Copyright 2011 Fernando Yurisich <fernando.yurisich@gmail.com>
+ *    http://qpm.sourceforge.net
+ *
+ *    Based on QAC - Project Manager for (x)Harbour
+ *    Copyright 2006-2011 Carozo de Quilmes <CarozoDeQuilmes@gmail.com>
+ *    http://www.CarozoDeQuilmes.com.ar
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU General Public License as published by
+ *    the Free Software Foundation, either version 3 of the License, or
+ *    (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU General Public License for more details.
+ *
+ *    You should have received a copy of the GNU General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
 #include "minigui.ch"
 #include <QPM.ch>
 
@@ -353,7 +381,7 @@ Function SHG_Generate( cBase , bGenHtml , PUB_cSecu , cWWW )
    Local nRegistros := 0 , cMemoHeader , cMemoFooter , cFooterHTML
    Local cBackColor := "#FFFCEA"
    Local cDescri    := "Compilación Incremental con todas las versiones de MiniGui"
-   Local ceMail     := "mailto:fernando.yurisich@GMail.com"
+   Local ceMail     := "mailto:qpm-users@lists.sourceforge.net"
    Local wwwCdQ     := "http://qpm.sourceforge.net"
    Local cWWWDescri := "Powered by QPM"
    Local cAux       := ""
@@ -1216,7 +1244,7 @@ Function SHG_AddHlpHTML( accion )
          CopyToClipboard( '<A href="http://qpm.sourceforge.net" target=blank>QPM Home Page</A>' )
          SHG_Send_Paste()
       case upper( accion ) == "EMAIL"
-         CopyToClipboard( '<A href="mailto:fernando.yurisich@gmail.com">Mail to QPM_Support</A>' )
+         CopyToClipboard( '<A href="mailto:qpm-users@lists.sourceforge.net">Mail to QPM_Support</A>' )
          SHG_Send_Paste()
    otherwise
       msginfo( "invalid accion into function SHG_AddHlpHTML: " + us_todostr( accion ) )
@@ -1737,4 +1765,5 @@ Function SHG_Commands( cIn , cPos )
 Return .T.
 
 #endif
-
+
+/* eof */

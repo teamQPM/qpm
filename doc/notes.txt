@@ -1,0 +1,21 @@
+/*
+ * $Id$
+ */
+
+QPM version 5.0 build 01 and the US*.exe tools were generated using Extended
+Minigui 1.6 build 62 libraries and xHarbour 1.0.0 beta1 and Borland C 5.5.1
+compilers.
+
+Al regenerar el help, va a decir que no encuentra la ruta de las imágenes y
+archivos zip de ejemplo, eso es porque no le había podido encontrar la vuelta a
+los paths relativos en dicho proceso.
+Hay un programita pequeñito en ./source/HelpQPM que se llama SHG_Change.prg que
+sirve para cambiar la ruta de acuerdo al ambiente de desarrollo.
+
+El instalador se construye con el script ./source/qpm.iss de inno setup.
+Descargar desde http://www.jrsoftware.org/isinfo.php
+
+El Help está generado desde QPM con la utilidad SHG, al igual que el sitio de
+internet (excepto el index.htm que está hecho a mano).
+
+/* eof */
