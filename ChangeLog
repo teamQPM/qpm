@@ -8,10 +8,27 @@
  * See "How to format your ChangeLog entries" in howtosvn.txt file.
  */
 
-2011-09-23 13:05:00 UTC-0300 Fernando Yurisich <fyurisich@oohg.org>
+2011-09-24 01:00:00 UTC-0300 Fernando Yurisich <fyurisich@oohg.org>
+   * ./doc/howtosvn.txt
+     + Added: how to publish a patch release.
    * ./QPM_AutoProject.qpm
-   * ./QPM.exe
+   * ./QPM.PRG
+   * ./QPM.EXE
      * Updated to version 5.01.000
+   - ./QPM_HotRecovery_05000000.cdx
+   - ./QPM_HotRecovery_05000000.dbf
+   - ./QPM_HotRecovery_05000000.fpt
+   - ./QPM_HotRecovery_05000001.cdx
+   - ./QPM_HotRecovery_05000001.dbf
+   - ./QPM_HotRecovery_05000001.fpt
+   - ./QPM_HotRecovery_05000002.cdx
+   - ./QPM_HotRecovery_05000002.dbf
+   - ./QPM_HotRecovery_05000002.fpt
+   + ./QPM_HotRecovery_05010000.cdx
+   + ./QPM_HotRecovery_05010000.dbf
+   + ./QPM_HotRecovery_05010000.fpt
+
+2011-09-24 00:05:00 UTC-0300 Fernando Yurisich <fyurisich@oohg.org>
    * ./doc/codestyl.txt
      ! Fixed typo.
    * ./QPM.PRG
