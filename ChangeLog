@@ -9,6 +9,52 @@
  */
 
 2011-09-23 13:05:00 UTC-0300 Fernando Yurisich <fyurisich@oohg.org>
+   * ./QPM_AutoProject.qpm
+   * ./QPM.exe
+     * Updated to version 5.01.000
+   * ./doc/codestyl.txt
+     ! Fixed typo.
+   * ./QPM.PRG
+     ! Fixed: _temp.rc not deleted when compiling with MinGW.
+   * ./QPM_GlobalSettings.prg
+     ! Fixed: function GlobalSettings cancels if there's a wrong
+       combination of compiler and library options.
+   * ./FuentesComunes/US_MG.prg
+     ! Fixed: some C compiler warnings.
+     * Function GetExeFilename moved to the end of file because was
+       generating a warning in C defines placed after.
+   * ./FuentesComunes/US_ProcessWin.prg
+     ! Fixed: some C compiler warnings.
+   * ./FuentesComunes/US.CH
+   * ./FuentesComunes/US_ActiveX.prg
+   * ./FuentesComunes/US_ActiveX_Eventos.c
+   * ./FuentesComunes/US_Clases.prg
+   * ./FuentesComunes/US_Edit_CharFijo.prg
+   * ./FuentesComunes/US_Env.h
+   * ./FuentesComunes/US_HB.PRG
+   * ./FuentesComunes/US_i_richeditbox.ch
+   * ./FuentesComunes/US_K.ch
+   * ./FuentesComunes/US_Log.h
+   * ./FuentesComunes/US_Log.prg
+   * ./FuentesComunes/US_l_richeditbox.prg
+   * ./FuentesComunes/US_MG.prg
+   * ./FuentesComunes/US_MG_null.prg
+   * ./FuentesComunes/US_ProcessWin.prg
+   * ./FuentesComunes/US_RichEdit.rc
+   * ./QPM_Resources.ch
+     + Added SVN property keywords
+     + Added SVN ID and licence information.
+   * ./QPM_ProjectSettings.prg
+   * ./QPM_GlobalSettings.prg
+   * ./QPM_Functions.PRG
+   * ./QPM_Environment.prg
+   * ./QPM_Libraries.prg
+   * ./QPM.PRG
+     * Added posibility to compile with MinGW and Extended MiniGUI.
+     * Modified functions: CheckCombinationRadio and ActRadioCpp.
+     + Added SVN ID and licence information.
+
+2011-09-23 13:05:00 UTC-0300 Fernando Yurisich <fyurisich@oohg.org>
    + ./US_A1.exe
    + ./US_A2.exe
    + ./US_A3.exe

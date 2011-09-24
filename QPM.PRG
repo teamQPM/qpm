@@ -383,10 +383,13 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
    QPM_VAR0 Public DefineMinGW     := DEF_MG_MINGW        // MinGW C
    QPM_VAR0 Public DefinePelles    := DEF_MG_PELLES       // Pelles C
    //
-   PUBLIC vSuffix := { { DefineMiniGui1+DefineBorland+DefineHarbour , "MiniGUI Oficial 1.x with Borland C and Harbour" } ;
+// NOTE: added suport for MinGW and Extended
+   PUBLIC vSuffix := { { DefineMiniGui1+DefineBorland+DefineHarbour   , "MiniGUI Oficial 1.x with Borland C and Harbour" } ;
                      , { DefineMiniGui1+DefineBorland+DefineXHarbour  , "MiniGUI Oficial 1.x with Borland C and xHarbour" } ;
                      , { DefineExtended1+DefineBorland+DefineHarbour  , "MiniGUI Extended 1.x with Borland C and Harbour" } ;
                      , { DefineExtended1+DefineBorland+DefineXHarbour , "MiniGUI Extended 1.x with Borland C and xHarbour" } ;
+                     , { DefineExtended1+DefineMinGW+DefineHarbour    , "MiniGUI Extended 1.x with Borland C and Harbour" } ;
+                     , { DefineExtended1+DefineMinGW+DefineXHarbour   , "MiniGUI Extended 1.x with Borland C and xHarbour" } ;
                      , { DefineOohg3+DefineBorland+DefineHarbour      , "OOHG 3.x with Borland C and Harbour" } ;
                      , { DefineOohg3+DefineBorland+DefineXHarbour     , "OOHG 3.x with Borland C and xHarbour" } ;
                      , { DefineOohg3+DefineMinGW+DefineHarbour        , "OOHG 3.x with MinGW and Harbour" } ;
@@ -442,6 +445,21 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
    QPM_VAR1 Public vExtraFoldersForLibs DEF_MG_EXTENDED1 DEF_MG_BORLAND DEF_MG_XHARBOUR := {}
    QPM_VAR1 Public cLastLibFolder       DEF_MG_EXTENDED1 DEF_MG_BORLAND DEF_MG_XHARBOUR := ""
    QPM_VAR1 Public vLibDefault          DEF_MG_EXTENDED1 DEF_MG_BORLAND DEF_MG_XHARBOUR := {}
+// NOTE: added suport for MinGW and Extended
+   QPM_VAR2 Public Gbl_T_M_ DEF_MG_EXTENDED1 DEF_MG_MINGW := ""
+   QPM_VAR2 Public Gbl_T_C_ DEF_MG_EXTENDED1 DEF_MG_MINGW := ""
+   QPM_VAR2 Public Gbl_T_H_ DEF_MG_EXTENDED1 DEF_MG_MINGW := ""
+   QPM_VAR2 Public Gbl_T_X_ DEF_MG_EXTENDED1 DEF_MG_MINGW := ""
+   QPM_VAR1 Public IncludeLibs          DEF_MG_EXTENDED1 DEF_MG_MINGW DEF_MG_HARBOUR := {}
+   QPM_VAR1 Public ExcludeLibs          DEF_MG_EXTENDED1 DEF_MG_MINGW DEF_MG_HARBOUR := {}
+   QPM_VAR1 Public vExtraFoldersForLibs DEF_MG_EXTENDED1 DEF_MG_MINGW DEF_MG_HARBOUR := {}
+   QPM_VAR1 Public cLastLibFolder       DEF_MG_EXTENDED1 DEF_MG_MINGW DEF_MG_HARBOUR := ""
+   QPM_VAR1 Public vLibDefault          DEF_MG_EXTENDED1 DEF_MG_MINGW DEF_MG_HARBOUR := {}
+   QPM_VAR1 Public IncludeLibs          DEF_MG_EXTENDED1 DEF_MG_MINGW DEF_MG_XHARBOUR := {}
+   QPM_VAR1 Public ExcludeLibs          DEF_MG_EXTENDED1 DEF_MG_MINGW DEF_MG_XHARBOUR := {}
+   QPM_VAR1 Public vExtraFoldersForLibs DEF_MG_EXTENDED1 DEF_MG_MINGW DEF_MG_XHARBOUR := {}
+   QPM_VAR1 Public cLastLibFolder       DEF_MG_EXTENDED1 DEF_MG_MINGW DEF_MG_XHARBOUR := ""
+   QPM_VAR1 Public vLibDefault          DEF_MG_EXTENDED1 DEF_MG_MINGW DEF_MG_XHARBOUR := {}
    /* oohg 1 */
    QPM_VAR2 Public Gbl_T_M_ DEF_MG_OOHG3 DEF_MG_BORLAND := ""
    QPM_VAR2 Public Gbl_T_C_ DEF_MG_OOHG3 DEF_MG_BORLAND := ""
@@ -4768,6 +4786,9 @@ Function QPM_OpenProject2()
    &( "vExtraFoldersForLibs"+DefineMiniGui3+DefineMinGW+DefineXHarbour ) := {}
    &( "vExtraFoldersForLibs"+DefineExtended1+DefineBorland+DefineHarbour ) := {}
    &( "vExtraFoldersForLibs"+DefineExtended1+DefineBorland+DefineXHarbour ) := {}
+// NOTE: Added support for MinGW and Extended
+   &( "vExtraFoldersForLibs"+DefineExtended1+DefineMinGW+DefineHarbour ) := {}
+   &( "vExtraFoldersForLibs"+DefineExtended1+DefineMinGW+DefineXHarbour ) := {}
    &( "vExtraFoldersForLibs"+DefineOohg3+DefineBorland+DefineHarbour ) := {}
    &( "vExtraFoldersForLibs"+DefineOohg3+DefineBorland+DefineXHarbour ) := {}
    CargoIncludeLibs( GetSuffix() )
@@ -5260,6 +5281,7 @@ Return .F.
 
 Function QPM_Build()
 Return QPM_Wait( "QPM_Build2()" , "Prepare for build..." )
+
 Function QPM_Build2()
    Local cExtraLinkObjects := ""
    Local cExtraLinkSearch := ""
@@ -5283,6 +5305,7 @@ Function QPM_Build2()
    Local cInputReImpNameDisplay := ""
    Local cExtraFoldersHB := ""
    Local cExtraFoldersC := ""
+   Local cResourceFileName
 // if US_MiniGuiType() == "M2"
 //    US_Log( "Sorry!, but this release of QPM don't work with Oficial MiniGui 2.x.  The last QPM that work with it is 04.11.16.  This QPM only work with Oficial Minigui 3.0.31 or above" )
 //    Return .F.
@@ -5410,6 +5433,14 @@ Function QPM_Build2()
       MsgStop('You must save project first')
       Return .T.
    EndIf
+
+// NOTE: added support for MINGW and Extended: the resource file in Extended with MinGW is named hmg.rc
+   if Getminiguisuffix() == DefineExtended1 .and. IsMinGW
+     cResourceFileName := "hmg"
+   else
+     cResourceFileName := substr( US_FileNameOnlyName( GetMiniGuiName() ), 4 )
+   endif
+
 
    DO EVENTS
    do case
@@ -5830,18 +5861,19 @@ Function QPM_Build2()
                      US_Log( "Error 5672" )
                endcase
             Next i
+            
             do case
                case IsMinGW
-               // if !bConsole
-                  // if cOutputType == "SRCEXE"
-                  //    Out := Out + PUB_cCharTab + 'echo ' + US_ShortName(GetCppFolder()) + DEF_SLASH + 'LIB'+DEF_SLASH+'c0w32.obj, + >> _'+PUB_cSecu+'Script.ld ' + Hb_OsNewLine()
+                  // if !bConsole
+                     // if cOutputType == "SRCEXE"
+                     //    Out := Out + PUB_cCharTab + 'echo ' + US_ShortName(GetCppFolder()) + DEF_SLASH + 'LIB'+DEF_SLASH+'c0w32.obj, + >> _'+PUB_cSecu+'Script.ld ' + Hb_OsNewLine()
+                     // endif
+                     // if cOutputType == "SRCDLL"
+                     //    Out := Out + PUB_cCharTab + 'echo ' + US_ShortName(GetCppFolder()) + DEF_SLASH + 'LIB'+DEF_SLASH+'c0d32.obj, + >> _'+PUB_cSecu+'Script.ld ' + Hb_OsNewLine()
+                     // endif
+                  // else
+                  //    Out := Out + PUB_cCharTab + 'echo ' + US_ShortName(GetCppFolder()) + DEF_SLASH + 'LIB'+DEF_SLASH+'c0x32.obj, + >> _'+PUB_cSecu+'Script.ld ' + Hb_OsNewLine()
                   // endif
-                  // if cOutputType == "SRCDLL"
-                  //    Out := Out + PUB_cCharTab + 'echo ' + US_ShortName(GetCppFolder()) + DEF_SLASH + 'LIB'+DEF_SLASH+'c0d32.obj, + >> _'+PUB_cSecu+'Script.ld ' + Hb_OsNewLine()
-                  // endif
-               // else
-               //    Out := Out + PUB_cCharTab + 'echo ' + US_ShortName(GetCppFolder()) + DEF_SLASH + 'LIB'+DEF_SLASH+'c0x32.obj, + >> _'+PUB_cSecu+'Script.ld ' + Hb_OsNewLine()
-               // endif
                   If !bConsole
                      If File( US_FileNameOnlyPathAndName( PRGFILES[1] ) + '.RC' )
                         cExtraLinkObjects := cExtraLinkObjects + ' $(DIR_OBJECTS)'+DEF_SLASH+'_Temp.o'
@@ -5849,12 +5881,17 @@ Function QPM_Build2()
                      else
                      // CdQ laptop
                         if QPM_IsXHarbour()
-                           if !file( GetMiniGuiFolder() + DEF_SLASH + "Resources" + DEF_SLASH + US_FileNameOnlyName( substr( GetMiniGuiName() , 4 ) ) + ".o" )
-                              US_FileCopy( GetMiniGuiFolder() + DEF_SLASH + "Resources" + DEF_SLASH + US_FileNameOnlyName( substr( GetMiniGuiName( DefineHarbour ) , 4 ) ) + ".o" , GetMiniGuiFolder() + DEF_SLASH + "Resources" + DEF_SLASH + US_FileNameOnlyName( substr( GetMiniGuiName() , 4 ) ) + ".o" )
+// NOTE: added support for MINGW and Extended: the resource file in Extended with MinGW is named hmg.rc
+//                           if !file( GetMiniGuiFolder() + DEF_SLASH + "Resources" + DEF_SLASH + US_FileNameOnlyName( substr( GetMiniGuiName() , 4 ) ) + ".o" )
+//                              US_FileCopy( GetMiniGuiFolder() + DEF_SLASH + "Resources" + DEF_SLASH + US_FileNameOnlyName( substr( GetMiniGuiName( DefineHarbour ) , 4 ) ) + ".o" , GetMiniGuiFolder() + DEF_SLASH + "Resources" + DEF_SLASH + US_FileNameOnlyName( substr( GetMiniGuiName() , 4 ) ) + ".o" )
+//                           endif
+                           if !file( GetMiniGuiFolder() + DEF_SLASH + "Resources" + DEF_SLASH + cResourceFileName + ".o" )
+                              US_FileCopy( GetMiniGuiFolder() + DEF_SLASH + "Resources" + DEF_SLASH + cResourceFileName + ".o" , GetMiniGuiFolder() + DEF_SLASH + "Resources" + DEF_SLASH + cResourceFileName + ".o" )
                            endif
                         endif
-                        cExtraLinkObjects := cExtraLinkObjects + ' $(DIR_MINIGUI_RES)' + DEF_SLASH + US_FileNameOnlyName( substr( GetMiniGuiName() , 4 ) ) + '.o'
-                        Out := Out + PUB_cCharTab + 'echo INPUT( $(DIR_MINIGUI_RES)' + DEF_SLASH + US_FileNameOnlyName( substr( GetMiniGuiName() , 4 ) ) + '.o ) >> _'+PUB_cSecu+'Script.ld' + Hb_OsNewLine()
+// NOTE: added support for MINGW and Extended: the resource file in Extended with MinGW is named hmg.rc
+                        cExtraLinkObjects := cExtraLinkObjects + ' $(DIR_MINIGUI_RES)' + DEF_SLASH + cResourceFileName + '.o'
+                        Out := Out + PUB_cCharTab + 'echo INPUT( $(DIR_MINIGUI_RES)' + DEF_SLASH + cResourceFileName + '.o ) >> _'+PUB_cSecu+'Script.ld' + Hb_OsNewLine()
                      endif
                   endif
                   for i=1 to len( &( 'vLibDefault'+GetSuffix() ) )
@@ -6098,6 +6135,7 @@ Function QPM_Build2()
                            endif
                         endif
                      Next i
+
                      // Busca el .res de la minigui correcta
                      if file( GetMiniGuiFolder() + DEF_SLASH + 'RESOURCES' + DEF_SLASH + substr( GetMiniGuiName() , 1 , at( "." , GetMiniGuiName() ) - 1 ) + '.res' )
                         Out := Out + PUB_cCharTab + 'echo ' + US_ShortName( GetMiniGuiFolder()) + DEF_SLASH + 'RESOURCES' + DEF_SLASH + substr( GetMiniGuiName() , 1 , at( "." , GetMiniGuiName() ) - 1 ) + '.res >> _'+PUB_cSecu+'Script.ld' + HB_OsNewLine()
@@ -6241,6 +6279,7 @@ Function QPM_Build2()
                            endif
                         endif
                      Next i
+
                      // Busca el .res de la minigui correcta
                      if file( GetMiniGuiFolder() + DEF_SLASH + 'RESOURCES' + DEF_SLASH + substr( GetMiniGuiName() , 1 , at( "." , GetMiniGuiName() ) - 1 ) + '.res' )
                         Out := Out + PUB_cCharTab + 'echo ' + US_ShortName( GetMiniGuiFolder()) + DEF_SLASH + 'RESOURCES' + DEF_SLASH + substr( GetMiniGuiName() , 1 , at( "." , GetMiniGuiName() ) - 1 ) + '.res + >> _'+PUB_cSecu+'Script.ld' + HB_OsNewLine()
@@ -6617,23 +6656,31 @@ Function QPM_Build2()
                US_Log( "Error in US_FileChar26Zap for file: " + US_ShortName(GetMiniGuiFolder()) + DEF_SLASH + "include" + DEF_SLASH + "minigui.ch" )
             endif
          endif
+
+// NOTE: added support for MINGW and Extended: the resource file in Extended with MinGW is named hmg.rc
+//         if !bConvert .and. !bConsole .and. QPM_IsXHarbour() .and. ;
+//            !file( US_ShortName(GetMiniGuiFolder()) + DEF_SLASH + 'resources' + DEF_SLASH + substr( US_FileNameOnlyName( GetMiniGuiName() ) , 4 ) + '.RC' )
+//               US_FileCopy( US_ShortName(GetMiniGuiFolder()) + DEF_SLASH + 'resources' + DEF_SLASH + substr( US_FileNameOnlyName( GetMiniGuiName( DefineHarbour ) ) , 4 ) + '.RC' , US_ShortName(GetMiniGuiFolder()) + DEF_SLASH + 'resources' + DEF_SLASH + substr( US_FileNameOnlyName( GetMiniGuiName() ) , 4 ) + '.RC' )
+//         endif
          if !bConvert .and. !bConsole .and. QPM_IsXHarbour() .and. ;
-            !file( US_ShortName(GetMiniGuiFolder()) + DEF_SLASH + 'resources' + DEF_SLASH + substr( US_FileNameOnlyName( GetMiniGuiName() ) , 4 ) + '.RC' )
-               US_FileCopy( US_ShortName(GetMiniGuiFolder()) + DEF_SLASH + 'resources' + DEF_SLASH + substr( US_FileNameOnlyName( GetMiniGuiName( DefineHarbour ) ) , 4 ) + '.RC' , US_ShortName(GetMiniGuiFolder()) + DEF_SLASH + 'resources' + DEF_SLASH + substr( US_FileNameOnlyName( GetMiniGuiName() ) , 4 ) + '.RC' )
+            !file( US_ShortName(GetMiniGuiFolder()) + DEF_SLASH + 'resources' + DEF_SLASH + cResourceFileName + '.RC' )
+               US_FileCopy( US_ShortName(GetMiniGuiFolder()) + DEF_SLASH + 'resources' + DEF_SLASH + cResourceFileName + '.RC' , US_ShortName(GetMiniGuiFolder()) + DEF_SLASH + 'resources' + DEF_SLASH + cResourceFileName + '.RC' )
          endif
+
+// NOTE: added support for MINGW and Extended: the resource file in Extended with MinGW is named hmg.rc
          QPM_MemoWrit ( PUB_cProjectFolder + DEF_SLASH + '_'+PUB_cSecu+'Build.Bat' , '@ECHO OFF' + Hb_OsNewLine() + ;
            if( !bConvert .and. !bConsole , 'if exist "' + US_FileNameOnlyPathAndName( PRGFILES[1] ) + '.RC" del "' + US_ShortName(PUB_cProjectFolder) + DEF_SLASH + '_Temp.rc" > NUL ' + Hb_OsNewLine() , '' ) + ;
            if( !bConvert .and. !bConsole , 'if exist "' + US_FileNameOnlyPathAndName( PRGFILES[1] ) + '.RC1.ERROR" del "' + US_FileNameOnlyPathAndName( PRGFILES[1] ) + '.RC1.ERROR" > NUL ' + Hb_OsNewLine() , '' ) + ;
            if( !bConvert .and. !bConsole , 'if exist "' + US_ShortName(OBJFOLDER)     + DEF_SLASH + US_FileNameOnlyName( PRGFILES[1] ) + '.RC2.ERROR" del ' + US_ShortName(OBJFOLDER) + DEF_SLASH + US_FileNameOnlyName( PRGFILES[1] ) + '.RC2.ERROR > NUL ' + Hb_OsNewLine() , '' ) + ;
-           if( !bConvert .and. !bConsole , 'if exist "' + US_ShortName(OBJFOLDER)     + DEF_SLASH + substr(US_FileNameOnlyName(GetMiniGuiName()),4) + '.RC4.ERROR" del ' + US_ShortName(OBJFOLDER) + DEF_SLASH + substr(US_FileNameOnlyName(GetMiniGuiName()),4) + '.RC4.ERROR > NUL ' + Hb_OsNewLine() , '' ) + ;
-           if( !bConvert .and. !bConsole , 'if not exist "' + US_ShortName(GetMiniGuiFolder()) + DEF_SLASH + 'resources' + DEF_SLASH + substr( US_FileNameOnlyName( GetMiniGuiName() ) , 4 ) + '.RC" ECHO US_Res from Batch Error: Resource File Not Found: ' + US_ShortName(GetMiniGuiFolder()) + DEF_SLASH + 'resources' + DEF_SLASH + substr( US_FileNameOnlyName( GetMiniGuiName() ) , 4 ) + '.RC > ' + US_ShortName(GetCppFolder()) + DEF_SLASH + 'BIN' + DEF_SLASH + '_'+PUB_cSecu+'Temp.Err' + Hb_OsNewLine() , '' ) + ;
+           if( !bConvert .and. !bConsole , 'if exist "' + US_ShortName(OBJFOLDER)     + DEF_SLASH + cResourceFileName + '.RC4.ERROR" del ' + US_ShortName(OBJFOLDER) + DEF_SLASH + cResourceFileName + '.RC4.ERROR > NUL ' + Hb_OsNewLine() , '' ) + ;
+           if( !bConvert .and. !bConsole , 'if not exist "' + US_ShortName(GetMiniGuiFolder()) + DEF_SLASH + 'resources' + DEF_SLASH + cResourceFileName + '.RC" ECHO US_Res from Batch Error: Resource File Not Found: ' + US_ShortName(GetMiniGuiFolder()) + DEF_SLASH + 'resources' + DEF_SLASH + cResourceFileName + '.RC > ' + US_ShortName(GetCppFolder()) + DEF_SLASH + 'BIN' + DEF_SLASH + '_'+PUB_cSecu+'Temp.Err' + Hb_OsNewLine() , '' ) + ;
            if( !bConvert .and. !bConsole , 'if exist "' + US_FileNameOnlyPathAndName( PRGFILES[1] ) + '.RC" ' + US_ShortName(PUB_cQPM_Folder) + DEF_SLASH + 'US_Res.exe QPM ' + if( bLogActivity , '-LIST' + US_ShortName(PUB_cQPM_Folder) , "" ) + ' -ONLYINCLUDE ' + US_ShortName( US_FileNameOnlyPathAndName( PRGFILES[1] ) + '.RC' ) + ' ' + US_ShortName( US_FileNameOnlyPathAndName( PRGFILES[1] ) + '.RC' ) + '1 ' + Hb_OsNewLine() , '' ) + ;
            if( !bConvert .and. !bConsole , 'if ERRORLEVEL = 1 GOTO ERROR' + Hb_OsNewLine() , '' ) + ;
            if( !bConvert .and. !bConsole , 'if exist "' + US_FileNameOnlyPathAndName( PRGFILES[1] ) + '.RC" ' + US_ShortName(PUB_cQPM_Folder) + DEF_SLASH + 'US_Res.exe QPM ' + if( bLogActivity , '-LIST' + US_ShortName(PUB_cQPM_Folder) , "" ) + ' ' + US_ShortName( US_FileNameOnlyPathAndName( PRGFILES[1] ) + '.RC' ) + '1 ' + ' ' + US_ShortName(OBJFOLDER)+DEF_SLASH+US_FileNameOnlyName( PRGFILES[1] ) + '.RC2 '+ Hb_OsNewLine() , '' ) + ;
            if( !bConvert .and. !bConsole , 'if ERRORLEVEL = 1 GOTO ERROR' + Hb_OsNewLine() , '' ) + ;
-           if( !bConvert .and. !bConsole , 'if exist "' + US_FileNameOnlyPathAndName( PRGFILES[1] ) + '.RC" ' + US_ShortName(PUB_cQPM_Folder) + DEF_SLASH + 'US_Res.exe QPM ' + if( bLogActivity , '-LIST' + US_ShortName(PUB_cQPM_Folder) , "" ) + ' -FORCE ' + US_ShortName(GetMiniGuiFolder()) + DEF_SLASH + 'resources' + DEF_SLASH + substr( US_FileNameOnlyName( GetMiniGuiName() ) , 4 ) + '.RC ' + ' ' +US_ShortName(OBJFOLDER)+DEF_SLASH+substr(US_FileNameOnlyName(GetMiniGuiName()),4)+'.RC4 '+Hb_OsNewLine() , '' ) + ;
+           if( !bConvert .and. !bConsole , 'if exist "' + US_FileNameOnlyPathAndName( PRGFILES[1] ) + '.RC" ' + US_ShortName(PUB_cQPM_Folder) + DEF_SLASH + 'US_Res.exe QPM ' + if( bLogActivity , '-LIST' + US_ShortName(PUB_cQPM_Folder) , "" ) + ' -FORCE ' + US_ShortName(GetMiniGuiFolder()) + DEF_SLASH + 'resources' + DEF_SLASH + cResourceFileName + '.RC ' + ' ' +US_ShortName(OBJFOLDER)+DEF_SLASH+cResourceFileName+'.RC4 '+Hb_OsNewLine() , '' ) + ;
            if( !bConvert .and. !bConsole , 'if ERRORLEVEL = 1 GOTO ERROR' + Hb_OsNewLine() , '' ) + ;
-           if( !bConvert .and. !bConsole , 'if exist "' + US_FileNameOnlyPathAndName( PRGFILES[1] ) + '.RC" copy /b ' + US_ShortName(OBJFOLDER) + DEF_SLASH + US_FileNameOnlyName( PRGFILES[1] ) + '.RC2+' + US_ShortName(OBJFOLDER) + DEF_SLASH + substr( US_FileNameOnlyName( GetMiniGuiName() ) , 4 ) + '.RC4+' + US_ShortName(GetMiniGuiFolder()) + DEF_SLASH + 'resources' + DEF_SLASH + 'filler ' + US_ShortName(PUB_cProjectFolder)+DEF_SLASH + '_Temp.RC > NUL ' + Hb_OsNewLine() , '' ) + ;
+           if( !bConvert .and. !bConsole , 'if exist "' + US_FileNameOnlyPathAndName( PRGFILES[1] ) + '.RC" copy /b ' + US_ShortName(OBJFOLDER) + DEF_SLASH + US_FileNameOnlyName( PRGFILES[1] ) + '.RC2+' + US_ShortName(OBJFOLDER) + DEF_SLASH + cResourceFileName + '.RC4+' + US_ShortName(GetMiniGuiFolder()) + DEF_SLASH + 'resources' + DEF_SLASH + 'filler ' + US_ShortName(PUB_cProjectFolder)+DEF_SLASH + '_Temp.RC > NUL ' + Hb_OsNewLine() , '' ) + ;
            substr(US_ShortName(GetCppFolder()),1,2) + Hb_OsNewLine() + ;
            'CD' + substr(US_ShortName(GetCppFolder()),3) + DEF_SLASH + "BIN "+ Hb_OsNewLine() + ;
            if( bConvert , 'IF NOT EXIST ' + US_ShortName(GetCppFolder()) + DEF_SLASH + 'BIN'+DEF_SLASH+'US_DLLTOOL.EXE COPY ' + US_ShortName(PUB_cQPM_Folder) + DEF_SLASH + 'US_DllTool.exe' + Hb_OsNewLine() , '' ) + ;
@@ -6645,7 +6692,7 @@ Function QPM_Build2()
            ':ERROR' + Hb_OsNewLine() + ;
            if( !bConvert .and. !bConsole , 'if exist "' + US_FileNameOnlyPathAndName( PRGFILES[1] ) + '.RC1.ERROR" copy "' + US_FileNameOnlyPathAndName( PRGFILES[1] ) + '.RC1.ERROR" ' + US_ShortName(GetCppFolder()) + DEF_SLASH + 'BIN' + DEF_SLASH + '_'+PUB_cSecu+'Temp.Log' + Hb_OsNewLine() , '' ) + ;
            if( !bConvert .and. !bConsole , 'if exist "' + US_ShortName(OBJFOLDER)     + DEF_SLASH + US_FileNameOnlyName( PRGFILES[1] ) + '.RC2.ERROR" copy ' + US_ShortName(OBJFOLDER) + DEF_SLASH + US_FileNameOnlyName( PRGFILES[1] ) + '.RC2.ERROR ' + US_ShortName(GetCppFolder()) + DEF_SLASH + 'BIN' + DEF_SLASH + '_'+PUB_cSecu+'Temp.Log' + Hb_OsNewLine() , '' ) + ;
-           if( !bConvert .and. !bConsole , 'if exist "' + US_ShortName(OBJFOLDER)     + DEF_SLASH + substr(US_FileNameOnlyName(GetMiniGuiName()),4) + '.RC4.ERROR" copy ' + US_ShortName(OBJFOLDER) + DEF_SLASH + substr(US_FileNameOnlyName(GetMiniGuiName()),4) + '.RC4.ERROR ' + US_ShortName(GetCppFolder()) + DEF_SLASH + 'BIN' + DEF_SLASH + '_'+PUB_cSecu+'Temp.Log' + Hb_OsNewLine() , '' ) + ;
+           if( !bConvert .and. !bConsole , 'if exist "' + US_ShortName(OBJFOLDER)     + DEF_SLASH + cResourceFileName + '.RC4.ERROR" copy ' + US_ShortName(OBJFOLDER) + DEF_SLASH + cResourceFileName + '.RC4.ERROR ' + US_ShortName(GetCppFolder()) + DEF_SLASH + 'BIN' + DEF_SLASH + '_'+PUB_cSecu+'Temp.Log' + Hb_OsNewLine() , '' ) + ;
            if( !bConvert .and. !bConsole , 'if exist "' + US_ShortName(GetCppFolder()) + DEF_SLASH + 'BIN' + DEF_SLASH + '_'+PUB_cSecu+'Temp.Err" copy ' + US_ShortName(GetCppFolder()) + DEF_SLASH + 'BIN' + DEF_SLASH + '_'+PUB_cSecu+'Temp.Err ' + US_ShortName(GetCppFolder()) + DEF_SLASH + 'BIN' + DEF_SLASH + '_'+PUB_cSecu+'Temp.Log' + Hb_OsNewLine() , '' ) + ;
            'Echo ERROR > ' + US_ShortName(PUB_cProjectFolder) + DEF_SLASH + '_'+PUB_cSecu+'End.Txt' + Hb_OsNewLine() + ;
            'GOTO END' + Hb_OsNewLine() + ;
@@ -6654,11 +6701,11 @@ Function QPM_Build2()
            ':END' + Hb_OsNewLine() + ;
            if( !bConvert .and. !bConsole , 'if exist "' + US_FileNameOnlyPathAndName( PRGFILES[1] ) + '.RC" del "' + US_FileNameOnlyPathAndName( PRGFILES[1] ) + '.RC1" > NUL ' + Hb_OsNewLine() , '' ) + ;
            if( !bConvert .and. !bConsole , 'if exist "' + US_FileNameOnlyPathAndName( PRGFILES[1] ) + '.RC" del ' + US_ShortName(OBJFOLDER)     + DEF_SLASH + US_FileNameOnlyName( PRGFILES[1] ) + '.RC2 > NUL ' + Hb_OsNewLine() , '' ) + ;
-           if( !bConvert .and. !bConsole , 'if exist "' + US_FileNameOnlyPathAndName( PRGFILES[1] ) + '.RC" del ' + US_ShortName(OBJFOLDER)     + DEF_SLASH + substr(US_FileNameOnlyName(GetMiniGuiName()),4) + '.RC4 > NUL ' + Hb_OsNewLine() , '' ) + ;
+           if( !bConvert .and. !bConsole , 'if exist "' + US_FileNameOnlyPathAndName( PRGFILES[1] ) + '.RC" del ' + US_ShortName(OBJFOLDER)     + DEF_SLASH + cResourceFileName + '.RC4 > NUL ' + Hb_OsNewLine() , '' ) + ;
            if( !bConvert .and. !bConsole , 'if exist "' + US_ShortName(GetCppFolder()) + DEF_SLASH + 'BIN' + DEF_SLASH + '_'+PUB_cSecu+'Temp.Err" del ' + US_ShortName(GetCppFolder()) + DEF_SLASH + 'BIN' + DEF_SLASH + '_'+PUB_cSecu+'Temp.Err > NUL ' + Hb_OsNewLine() , '' ) + ;
            if( !bConvert .and. !bConsole , 'if exist "' + US_FileNameOnlyPathAndName( PRGFILES[1] ) + '.RC1.ERROR" del "' + US_FileNameOnlyPathAndName( PRGFILES[1] ) + '.RC1.ERROR" > NUL ' + Hb_OsNewLine() , '' ) + ;
            if( !bConvert .and. !bConsole , 'if exist "' + US_ShortName(OBJFOLDER)     + DEF_SLASH + US_FileNameOnlyName( PRGFILES[1] ) + '.RC2.ERROR" del ' + US_ShortName(OBJFOLDER) + DEF_SLASH + US_FileNameOnlyName( PRGFILES[1] ) + '.RC2.ERROR > NUL ' + Hb_OsNewLine() , '' ) + ;
-           if( !bConvert .and. !bConsole , 'if exist "' + US_ShortName(OBJFOLDER)     + DEF_SLASH + substr(US_FileNameOnlyName(GetMiniGuiName()),4) + '.RC4.ERROR" del ' + US_ShortName(OBJFOLDER) + DEF_SLASH + substr(US_FileNameOnlyName(GetMiniGuiName()),4) + '.RC4.ERROR > NUL ' + Hb_OsNewLine() , '' ) + ;
+           if( !bConvert .and. !bConsole , 'if exist "' + US_ShortName(OBJFOLDER)     + DEF_SLASH + cResourceFileName + '.RC4.ERROR" del ' + US_ShortName(OBJFOLDER) + DEF_SLASH + cResourceFileName + '.RC4.ERROR > NUL ' + Hb_OsNewLine() , '' ) + ;
            "" )
       case ( IsBorland .or. IsPelles )
          QPM_MemoWrit ( PUB_cProjectFolder + DEF_SLASH + '_'+PUB_cSecu+'Build.Bat' , '@ECHO OFF' + Hb_OsNewLine() + ;
@@ -6683,6 +6730,8 @@ Function QPM_Build2()
       VentanaMain.bStop.Enabled := .T.
    endif
 
+// TODO: save build.bat to debug
+
    MemoAux := memoread( PUB_cProjectFolder + DEF_SLASH + '_'+PUB_cSecu+'Progress.Log' )
    QPM_MemoWrit( PUB_cProjectFolder + DEF_SLASH + '_'+PUB_cSecu+'Progress.Log' , MemoAux + US_TimeDis( Time() ) + " - Checking Force Recomp Modules..." + HB_OsNewLine() )
 // for i:=1 to len( vForceRecomp )
@@ -6700,14 +6749,13 @@ Function QPM_Build2()
       DO EVENTS
    next i
 
-   //
-
    if bLogActivity
       QPM_MemoWrit( US_ShortName( PUB_cProjectFolder + DEF_SLASH + '_'+PUB_cSecu+'Build.Bat' ) , "@ECHO Writing Log Activity..." + HB_OsNewLine() + MemoRead( US_ShortName( PUB_cProjectFolder + DEF_SLASH + '_'+PUB_cSecu+'Build.Bat' ) ) )
       QPM_Execute( US_ShortName( PUB_cProjectFolder + DEF_SLASH + '_'+PUB_cSecu+'Build.Bat' ) )
    else
       QPM_Execute( US_ShortName( PUB_cProjectFolder + DEF_SLASH + '_'+PUB_cSecu+'Build.Bat' ) , , DEF_QPM_EXEC_NOWAIT , DEF_QPM_EXEC_HIDE )
    endif
+   
 Return .T.
 
 Function QPM_Run( bWithParm )
@@ -6976,6 +7024,8 @@ Function QPM_Timer_StatusRefresh()
          DELETE FILE ( PUB_cQPM_Folder + DEF_SLASH + '_' + PUB_cSecu + 'Script.ld' )
          //
          DELETE FILE ( PUB_cProjectFolder + DEF_SLASH + '_' + PUB_cSecu + 'Build.Bat' )
+         DELETE FILE ( PUB_cProjectFolder + DEF_SLASH + "_Temp.RC" )
+
          // INI for PellesC and xHarbour
 //       DELETE FILE ( PUB_cProjectFolder + DEF_SLASH + OutName + '.exp' )
 //       DELETE FILE ( PUB_cProjectFolder + DEF_SLASH + OutName + '.lib' )

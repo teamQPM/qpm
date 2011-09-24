@@ -1,3 +1,31 @@
+/*
+ * $Id$
+ */
+
+/*
+ *    QPM - QAC Based Project Manager
+ *
+ *    Copyright 2011 Fernando Yurisich <fernando.yurisich@gmail.com>
+ *    http://qpm.sourceforge.net
+ *
+ *    Based on QAC - Project Manager for (x)Harbour
+ *    Copyright 2006-2011 Carozo de Quilmes <CarozoDeQuilmes@gmail.com>
+ *    http://www.CarozoDeQuilmes.com.ar
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU General Public License as published by
+ *    the Free Software Foundation, either version 3 of the License, or
+ *    (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU General Public License for more details.
+ *
+ *    You should have received a copy of the GNU General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
 // No incluir: #include "US_ENV.H"
 // Esto causaria que se redefina "msginfo" y "?" lo que provoca que no funcione US_LOG
 
@@ -11,22 +39,6 @@ Return _HMG_ActiveHelpFile
 
    Function GetModuleFileName()
    Return GetExeFilename()
-
-   #pragma BEGINDUMP
-   #include <windows.h>
-   #include "hbapi.h"
-   #include "hbvm.h"
-   #include "hbstack.h"
-   #include "hbapiitm.h"
-   HB_FUNC ( GETEXEFILENAME )
-   {
-      unsigned char pBuf[250];
-
-      GetModuleFileName( GetModuleHandle(NULL), (LPTSTR) pBuf, 249 );
-
-      hb_retc( (char*) pBuf );
-   }
-   #pragma ENDDUMP
 
 *//========================================================================\\*
 *//== Funcion para obtener el contenido de un RichEditBox                ==\\*
@@ -214,6 +226,7 @@ Function US_GetRtfClipboard()
    DoMethod( cVentana , cControl , "release" )
 Return cAux
 #pragma BEGINDUMP
+
 #define _WIN32_IE      0x0500
 #define HB_OS_WIN_32_USED
 #define _WIN32_WINNT   0x0400
@@ -3669,11 +3682,11 @@ HB_FUNC ( US_MAPISENDMAIL )
     mssg.lpszDateReceived   = 0            ;  // in yyyy/mm/dd hh:mm format
     mssg.lpszConversationID = 0            ;  // Conversation thread ID
     mssg.flFlags            = MAPI_LOGON_UI | MAPI_NEW_SESSION ;   // unread, return receipt
-    mssg.lpOriginator       = &orig        ;  // Originator's descriptor
+    mssg.lpOriginator       = (lpMapiRecipDesc) &orig        ;  // Originator's descriptor
     mssg.nRecipCount        = 1            ;  // Number of receipients
-    mssg.lpRecips           = &rcpt        ;  // Recipient descriptors
+    mssg.lpRecips           = (lpMapiRecipDesc) &rcpt        ;  // Recipient descriptors
     mssg.nFileCount         = 1            ;  // Number of file attachments
-    mssg.lpFiles            = &file        ;  // Attachment descriptors
+    mssg.lpFiles            = (lpMapiFileDesc) &file        ;  // Attachment descriptors
 
     // Load the DLL at runtime
 #ifdef __MINGW32__
@@ -3688,19 +3701,22 @@ HB_FUNC ( US_MAPISENDMAIL )
         return;
        }
 
-    if (!(pMAPILogon = (LPMAPILOGON) GetProcAddress (hMAPILib, "MAPILogon")))
+    pMAPILogon = (LPMAPILOGON) GetProcAddress (hMAPILib, "MAPILogon");
+    if (! pMAPILogon)
        {
         hb_retnl( 102 );   // failed
         return;
        }
 
-    if (!(pMAPISendMail = (LPMAPISENDMAIL) GetProcAddress (hMAPILib, "MAPISendMail")))
+    pMAPISendMail = (LPMAPISENDMAIL) GetProcAddress (hMAPILib, "MAPISendMail");
+    if (! pMAPISendMail)
        {
         hb_retnl( 103 );   // failed
         return;
        }
 
-    if (!(pMAPILogoff = (LPMAPILOGOFF) GetProcAddress (hMAPILib, "MAPILogoff")))
+    pMAPILogoff = (LPMAPILOGOFF) GetProcAddress (hMAPILib, "MAPILogoff");
+    if (! pMAPILogoff)
        {
         hb_retnl( 104 );   // failed
         return;
@@ -5144,5 +5160,15 @@ HB_FUNC (GETDESKTOPREALHEIGHT)
    hb_retni(rect.bottom - rect.top);
 }
 
+HB_FUNC (GETEXEFILENAME)
+{
+   unsigned char pBuf[250];
+
+   GetModuleFileName( GetModuleHandle(NULL), (LPTSTR) pBuf, 249 );
+
+   hb_retc( (char*) pBuf );
+}
+
 #pragma ENDDUMP
-
+
+/* eof */

@@ -1,3 +1,31 @@
+/*
+ * $Id$
+ */
+
+/*
+ *    QPM - QAC Based Project Manager
+ *
+ *    Copyright 2011 Fernando Yurisich <fernando.yurisich@gmail.com>
+ *    http://qpm.sourceforge.net
+ *
+ *    Based on QAC - Project Manager for (x)Harbour
+ *    Copyright 2006-2011 Carozo de Quilmes <CarozoDeQuilmes@gmail.com>
+ *    http://www.CarozoDeQuilmes.com.ar
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU General Public License as published by
+ *    the Free Software Foundation, either version 3 of the License, or
+ *    (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU General Public License for more details.
+ *
+ *    You should have received a copy of the GNU General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
 #include "minigui.ch"
 #include <QPM.ch>
 
@@ -14,6 +42,10 @@ Function QPM_IsLibrariesNamesOld( cDir , cType )
             endif
          case cType == DefineExtended1+DefineBorland+DefineHarbour
             if File( cDir+DEF_SLASH + "BIN" + DEF_SLASH + "HARBOUR.exe" ) .and. File( cDir+DEF_SLASH + "LIB" + DEF_SLASH + "hbrtl.lib" )
+               bReto:=.F.
+            endif
+         case cType == DefineExtended1+DefineMinGW+DefineHarbour
+            if File( cDir+DEF_SLASH + "BIN" + DEF_SLASH + "HARBOUR.exe" ) .and. File( cDir+DEF_SLASH + "LIB" + DEF_SLASH + "libhbrtl.a" )
                bReto:=.F.
             endif
          case cType == DefineOohg3+DefineBorland+DefineHarbour
@@ -320,6 +352,74 @@ Function QPM_CargoLibraries()
    aadd( &( "vLibDefault"+DefineExtended1+DefineBorland+DefineHarbour ) , cPre+'minizip'+cExt )
    aadd( &( "vLibDefault"+DefineExtended1+DefineBorland+DefineHarbour ) , cPre+'xHB'+cExt )
 
+   // Minigui Extended 1.x con MinGW and Harbour ( Syncronized to release 2.0.1 )
+   cPre := "LIB"
+   cExt := ".a"
+   &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineHarbour ) := {}
+   aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineHarbour ) , cPre+'gtgui'+cExt )
+   aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineHarbour ) , cPre+'gtwin'+cExt ) /* Excluido a partir de build 20, se deja para debug, es controlado mas abajo */
+   aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineHarbour ) , if( bOldNamesLib , cPre+'hbsix'+cExt , cPre+'hbsix'+cExt ) )
+   aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineHarbour ) , if( bOldNamesLib , cPre+'vm'+cExt , cPre+'hbvm'+cExt ) )
+   aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineHarbour ) , if( bOldNamesLib , cPre+'rdd'+cExt , cPre+'hbrdd'+cExt ) )
+   aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineHarbour ) , if( bOldNamesLib , cPre+'macro'+cExt , cPre+'hbmacro'+cExt ) )
+   aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineHarbour ) , if( bOldNamesLib , cPre+'pp'+cExt , cPre+'hbpp'+cExt ) )
+   aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineHarbour ) , if( bOldNamesLib , cPre+'rtl'+cExt , cPre+'hbrtl'+cExt ) )
+   aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineHarbour ) , if( bOldNamesLib , cPre+'lang'+cExt , cPre+'hblang'+cExt ) )
+   aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineHarbour ) , if( bOldNamesLib , cPre+'common'+cExt , cPre+'hbcommon'+cExt ) )
+   aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineHarbour ) , if( bOldNamesLib , cPre+'nulsys'+cExt , cPre+'hbnulsys'+cExt ) )
+   aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineHarbour ) , if( bOldNamesLib , cPre+'dbfntx'+cExt , cPre+'rddntx'+cExt ) )
+   aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineHarbour ) , if( bOldNamesLib , cPre+'dbfcdx'+cExt , cPre+'rddcdx'+cExt ) )
+   aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineHarbour ) , if( bOldNamesLib , cPre+'dbffpt'+cExt , cPre+'rddfpt'+cExt ) )
+   aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineHarbour ) , cPre+'user32'+cExt )
+   aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineHarbour ) , cPre+'winspool'+cExt )
+   aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineHarbour ) , cPre+'comctl32'+cExt )
+   aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineHarbour ) , cPre+'comdlg32'+cExt )
+   aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineHarbour ) , cPre+'gdi32'+cExt )
+   aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineHarbour ) , cPre+'ole32'+cExt )
+   aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineHarbour ) , cPre+'oleaut32'+cExt )
+   aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineHarbour ) , cPre+'uuid'+cExt )
+   aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineHarbour ) , cPre+'winmm'+cExt )
+   aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineHarbour ) , cPre+'vfw32'+cExt )
+   aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineHarbour ) , cPre+'wsock32'+cExt )
+   aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineHarbour ) , if( bOldNamesLib , cPre+'ct'+cExt , cPre+'hbct'+cExt ) )
+   aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineHarbour ) , cPre+'misc'+cExt )
+// aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineHarbour ) , cPre+'hbodbc'+cExt )
+// aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineHarbour ) , cPre+'odbc32'+cExt )
+   aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineHarbour ) , cPre+'socket'+cExt )
+   aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineHarbour ) , cPre+'mysql'+cExt )
+   aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineHarbour ) , cPre+'mysqldll'+cExt )
+   aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineHarbour ) , cPre+'graph'+cExt )
+   aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineHarbour ) , cPre+'edit'+cExt )
+   aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineHarbour ) , cPre+'report'+cExt )
+   aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineHarbour ) , cPre+'ini'+cExt )
+   aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineHarbour ) , cPre+'editex'+cExt )
+   aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineHarbour ) , cPre+'crypt'+cExt )
+   aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineHarbour ) , cPre+'dll'+cExt )
+   aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineHarbour ) , cPre+'hbole'+cExt )
+   aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineHarbour ) , cPre+'registry'+cExt )
+   aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineHarbour ) , if( bOldNamesLib , cPre+'codepage'+cExt , cPre+'hbcpage'+cExt ) )
+   aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineHarbour ) , if( bOldNamesLib , cPre+'debug'+cExt , cPre+'hbdebug'+cExt ) )
+   aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineHarbour ) , if( bOldNamesLib , cPre+'dbfdbt'+cExt , cPre+'rdddbt'+cExt ) )
+   aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineHarbour ) , cPre+'tip'+cExt )
+   aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineHarbour ) , if( bOldNamesLib , cPre+'hsx'+cExt , cPre+'hbhsx'+cExt ) )
+   aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineHarbour ) , cPre+'pcrepos'+cExt )
+   aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineHarbour ) , cPre+'hbpcre'+cExt )
+   aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineHarbour ) , cPre+'hbprinter'+cExt )
+   aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineHarbour ) , cPre+'miniprint'+cExt )
+   aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineHarbour ) , cPre+'zlib1'+cExt )
+   aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineHarbour ) , cPre+'ziparchive'+cExt )
+   aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineHarbour ) , cPre+'hbzip'+cExt )
+   aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineHarbour ) , cPre+'hbmzip'+cExt )
+   aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineHarbour ) , cPre+'minizip'+cExt )
+   aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineHarbour ) , cPre+'hbzlib'+cExt )
+   aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineHarbour ) , cPre+'rddads'+cExt )
+   aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineHarbour ) , cPre+'ace32'+cExt )
+   aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineHarbour ) , cPre+'hbw32'+cExt )
+   aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineHarbour ) , cPre+'hbwin'+cExt )
+   aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineHarbour ) , cPre+'stdc++'+cExt ) /* for c++ */
+   aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineHarbour ) , cPre+'xHB'+cExt )
+   aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineHarbour ) , cPre+'ws2_32'+cExt )
+
    // Minigui Extended 1.x con BorlandC and xHarbour ( Syncronized to 1.5 build 53 )
    cPre := ""
    cExt := ".lib"
@@ -364,6 +464,75 @@ Function QPM_CargoLibraries()
    aadd( &( "vLibDefault"+DefineExtended1+DefineBorland+DefineXHarbour ) , cPre+'ziparchive'+cExt )
    aadd( &( "vLibDefault"+DefineExtended1+DefineBorland+DefineXHarbour ) , cPre+'dbfdbt'+cExt )
    aadd( &( "vLibDefault"+DefineExtended1+DefineBorland+DefineXHarbour ) , cPre+'hbzip'+cExt )
+
+// NOTE: added support for MinGW and Extended
+   // Minigui Extended 1.x MinGW and xHarbour
+   cPre := "LIB"
+   cExt := ".a"
+   &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineXHarbour ) := {}
+   aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineXHarbour ) , cPre+'gtgui'+cExt )
+   aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineXHarbour ) , cPre+'gtwin'+cExt )
+   aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineXHarbour ) , cPre+'debug'+cExt )
+   aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineXHarbour ) , cPre+'vm'+cExt )
+   aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineXHarbour ) , cPre+'rtl'+cExt )
+   aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineXHarbour ) , cPre+'lang'+cExt )
+   aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineXHarbour ) , cPre+'codepage'+cExt )
+   aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineXHarbour ) , cPre+'macro'+cExt )
+   aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineXHarbour ) , cPre+'pp'+cExt )
+   aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineXHarbour ) , cPre+'dbfntx'+cExt )
+   aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineXHarbour ) , cPre+'dbfcdx'+cExt )
+   aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineXHarbour ) , cPre+'dbffpt'+cExt )
+   aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineXHarbour ) , cPre+'hsx'+cExt )
+   aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineXHarbour ) , cPre+'hbsix'+cExt )
+   aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineXHarbour ) , cPre+'common'+cExt )
+   aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineXHarbour ) , cPre+'ct'+cExt )
+// aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineXHarbour ) , cPre+'hbodbc'+cExt )
+   aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineXHarbour ) , cPre+'tip'+cExt )
+   aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineXHarbour ) , cPre+'pcrepos'+cExt )
+   aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineXHarbour ) , cPre+'user32'+cExt )
+   aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineXHarbour ) , cPre+'winspool'+cExt )
+   aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineXHarbour ) , cPre+'ole32'+cExt )
+   aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineXHarbour ) , cPre+'oleaut32'+cExt )
+   aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineXHarbour ) , cPre+'uuid'+cExt )
+   aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineXHarbour ) , cPre+'gdi32'+cExt )
+   aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineXHarbour ) , cPre+'comctl32'+cExt )
+   aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineXHarbour ) , cPre+'comdlg32'+cExt )
+// aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineXHarbour ) , cPre+'odbc32'+cExt )
+   aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineXHarbour ) , cPre+'mapi32'+cExt )
+   aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineXHarbour ) , cPre+'ws2_32'+cExt )
+   aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineXHarbour ) , cPre+'rdd'+cExt )
+   aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineXHarbour ) , cPre+'dbfdbt'+cExt )
+*  aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineXHarbour ) , cPre+'misc'+cExt )
+*  aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineXHarbour ) , cPre+'hbole'+cExt )
+   aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineXHarbour ) , cPre+'dll'+cExt )
+   aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineXHarbour ) , cPre+'hbprinter'+cExt )
+   aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineXHarbour ) , cPre+'socket'+cExt )
+   aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineXHarbour ) , cPre+'miniprint'+cExt )
+   aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineXHarbour ) , cPre+'zlib1'+cExt )
+   aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineXHarbour ) , cPre+'ziparchive'+cExt )
+   aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineXHarbour ) , cPre+'hbzip'+cExt )
+   aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineXHarbour ) , cPre+'hbmzip'+cExt )
+   aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineXHarbour ) , cPre+'hbzlib'+cExt )
+*  aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineXHarbour ) , cPre+'rddads'+cExt )
+*  aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineXHarbour ) , cPre+'ace32'+cExt )
+   aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineXHarbour ) , cPre+'mysql'+cExt )
+   aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineXHarbour ) , cPre+'mysqldll'+cExt )
+// aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineXHarbour ) , cPre+'libmysql'+cExt )
+   aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineXHarbour ) , cPre+'nulsys'+cExt )
+   aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineXHarbour ) , cPre+'gtnul'+cExt )
+   // Interface Libraries
+   aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineXHarbour ) , cPre+'winmm'+cExt )
+   aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineXHarbour ) , cPre+'vfw32'+cExt )
+   aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineXHarbour ) , cPre+'wsock32'+cExt )
+   // [x]Harbour Dependent
+   aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineXHarbour ) , cPre+'xGraph'+cExt )
+   aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineXHarbour ) , cPre+'xEdit'+cExt )
+   aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineXHarbour ) , cPre+'xReport'+cExt )
+   aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineXHarbour ) , cPre+'xIni'+cExt )
+   aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineXHarbour ) , cPre+'xEditex'+cExt )
+   aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineXHarbour ) , cPre+'xCrypt'+cExt )
+   aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineXHarbour ) , cPre+'xRegistry'+cExt )
+   aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineXHarbour ) , cPre+'stdc++'+cExt ) /* for c++ */
 
    // OOHG 3.x con BorlandC and Harbour ( Syncronized to prerelease 2006/07/29 )
    cPre := ""
@@ -718,4 +887,5 @@ Function QPM_CargoLibraries()
    aadd( &( "vLibDefault"+DefineOohg3+DefinePelles+DefineXHarbour ) , cPre+'wsock32'+cExt )
    //==========================================================================================
 Return .T.
-
+
+/* eof */

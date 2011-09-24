@@ -11,6 +11,20 @@
 /******************************************************************************/
 
 Assigned to: <nobody>
+Added by...: 2011-09-23 15:00:00 UTC-0300 Fernando Yurisich <fyurisich>
+Status.....: Open.
+Details....: In HELP:
+             - Topic: Qué versiones de librerías gráficas soporta
+               Update versions and add support for MinGW with Extended.
+             - Topic: Cómo compilar con OOHG y MinGW o Pelles C
+               Substitute MINGW by BCC.
+               Change topic name.
+             - Change references to previous topic.
+             - Update links.
+
+/******************************************************************************/
+
+Assigned to: <nobody>
 Added by...: 2011-09-19 22:30:00 UTC-0300 Fernando Yurisich <fyurisich>
 Status.....: Open.
 Details....: Add to ./doc/howtosvn.txt file how to:
@@ -69,6 +83,12 @@ Details....: Migrate to last version of OOHG.
              Some function must be rewritten completely because rely on certain
              features of Extended version. Example: the editor in SHG module.
              Must be done after Extended migration.
+
+/******************************************************************************/
+Assigned to: <nobody>
+Added by...: 2011-09-23 22:30:00 UTC-0300 Fernando Yurisich <fyurisich>
+Status.....: Open.
+Details....: Save a copy of build.bat to debug.
 
 /******************************************************************************/
 /* eof */

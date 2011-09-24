@@ -56,7 +56,7 @@ Function BugGetFile( a , b , c , d , e , f )
    auxReto := GetFile( a , b , c , d , e , f )
 // SetMGWaitShow()
    if empty( auxReto )
-      QPM_CartelCancelByBug()   // esto es debido a un bug que prodeuce que cuando se de escape sin seleccionar archivos la rutina siguiente no termina
+      QPM_CartelCancelByBug()   // esto es debido a un bug que se produce cuando se da escape sin seleccionar archivos la rutina siguiente no termina
    endif
 Return auxReto
 
@@ -282,6 +282,13 @@ Function QPM_DirValid( cDir , cTipo )
                  !File( cDir+DEF_SLASH + "INCLUDE" + DEF_SLASH + "oohg.ch" ) )
                bReto:=.T.
             endif
+// NOTE: added support for MINGW and Extended
+         case cTipo == DefineExtended1 + DefineMinGW
+            if ( File( cDir+DEF_SLASH + "INCLUDE" + DEF_SLASH + "minigui.ch" ) .and. ;
+                 File( cDir+DEF_SLASH + "INCLUDE" + DEF_SLASH + "tsbrowse.ch" ) .and. ;
+                 !File( cDir+DEF_SLASH + "INCLUDE" + DEF_SLASH + "oohg.ch" ) )
+               bReto:=.T.
+            endif
          case cTipo == DefineOohg3 + DefineBorland
             if ( File( cDir+DEF_SLASH + "INCLUDE" + DEF_SLASH + "oohg.ch" ) )
                bReto:=.T.
@@ -304,6 +311,11 @@ Function QPM_DirValid( cDir , cTipo )
             endif
          case cTipo == "C_" + DefineExtended1 + DefineBorland
             if File( cDir+DEF_SLASH + "bin" + DEF_SLASH + "BCC32.exe" )
+               bReto:=.T.
+            endif
+// NOTE: added support for MINGW and Extended
+         case cTipo == "C_" + DefineExtended1 + DefineMinGW
+            if File( cDir+DEF_SLASH + "bin" + DEF_SLASH + "GCC.exe" )
                bReto:=.T.
             endif
          case cTipo == "C_" + DefineOohg3 + DefineBorland
@@ -330,6 +342,11 @@ Function QPM_DirValid( cDir , cTipo )
             if File( cDir+DEF_SLASH + "BIN" + DEF_SLASH + "HARBOUR.exe" ) .and. ( File( cDir+DEF_SLASH + "LIB" + DEF_SLASH + "rtl.lib" ) .or. File( cDir+DEF_SLASH + "LIB" + DEF_SLASH + "hbrtl.lib" ) )
                bReto:=.T.
             endif
+// NOTE: added support for MINGW and Extended
+         case cTipo == DefineExtended1+DefineMinGW+DefineHarbour
+            if File( cDir+DEF_SLASH + "BIN" + DEF_SLASH + "HARBOUR.exe" ) .and. ( File( cDir+DEF_SLASH + "LIB" + DEF_SLASH + "librtl.a" ) .or. File( cDir+DEF_SLASH + "LIB" + DEF_SLASH + "libhbrtl.a" ) )
+               bReto:=.T.
+            endif
          case cTipo == DefineOohg3+DefineBorland+DefineHarbour
             if File( cDir+DEF_SLASH + "BIN" + DEF_SLASH + "HARBOUR.exe" ) .and. ( File( cDir+DEF_SLASH + "LIB" + DEF_SLASH + "rtl.lib" ) .or. File( cDir+DEF_SLASH + "LIB" + DEF_SLASH + "hbrtl.lib" ) )
                bReto:=.T.
@@ -352,6 +369,11 @@ Function QPM_DirValid( cDir , cTipo )
             endif
          case cTipo == DefineExtended1+DefineBorland+DefineXHarbour
             if File( cDir+DEF_SLASH + "BIN" + DEF_SLASH + "HARBOUR.exe" ) .and. File( cDir+DEF_SLASH + "LIB" + DEF_SLASH + "rtl.lib" ) .and. File( cDir+DEF_SLASH + "LIB" + DEF_SLASH + "tip.lib" )
+               bReto:=.T.
+            endif
+// NOTE: added support for MINGW and Extended
+         case cTipo == DefineExtended1+DefineMinGW+DefineXHarbour
+            if File( cDir+DEF_SLASH + "BIN" + DEF_SLASH + "HARBOUR.exe" ) .and. File( cDir+DEF_SLASH + "LIB" + DEF_SLASH + "librtl.a" ) .and. File( cDir+DEF_SLASH + "LIB" + DEF_SLASH + "libtip.a" )
                bReto:=.T.
             endif
          case cTipo == DefineOohg3+DefineBorland+DefineXHarbour
@@ -561,6 +583,22 @@ Function GetMiniGuiName( cForceCompiler )
             nombre:="Libhmg.a"
             if QPM_IsXHarbour()
                nombre := "LibXhmg.a"
+            endif
+         endif
+      case sufijo == DefineExtended1 + DefineMinGW
+         if !empty( cForceCompiler )
+            do case
+               case cForceCompiler == DefineHarbour
+                  nombre := "libminigui.a"
+               case cForceCompiler == DefineXHarbour
+                  nombre := "LibXminigui.a"
+               otherwise
+                  US_Log( "Error 2 in cForceCompiler of function GetMiniGuiName: " + us_todostr( cForceCompiler ) )
+            endcase
+         else
+            nombre:="libminigui.a"
+            if QPM_IsXHarbour()
+               nombre := "LibXminigui.a"
             endif
          endif
       otherwise

@@ -1,3 +1,31 @@
+/*
+ * $Id$
+ */
+
+/*
+ *    QPM - QAC Based Project Manager
+ *
+ *    Copyright 2011 Fernando Yurisich <fernando.yurisich@gmail.com>
+ *    http://qpm.sourceforge.net
+ *
+ *    Based on QAC - Project Manager for (x)Harbour
+ *    Copyright 2006-2011 Carozo de Quilmes <CarozoDeQuilmes@gmail.com>
+ *    http://www.CarozoDeQuilmes.com.ar
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU General Public License as published by
+ *    the Free Software Foundation, either version 3 of the License, or
+ *    (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU General Public License for more details.
+ *
+ *    You should have received a copy of the GNU General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
 #include "minigui.ch"
 #include <QPM.ch>
 
@@ -10,7 +38,8 @@ Function GlobalSettings()
           TITLE PUB_MenuGblOptions ;
           MODAL ;
           NOSYSMENU ;
-          ON INTERACTIVECLOSE US_NOP()
+          ON INTERACTIVECLOSE US_NOP() ;
+          ON INIT SelectTab()
 
       DEFINE TAB TabGSettings ;
              OF WinGSettings ;
@@ -495,6 +524,111 @@ Function GlobalSettings()
 
          END PAGE
 
+         // NOTE: added support for MinGW and Extended
+         //-- Extended Minigui 1.x ----------------------------------------------------//
+         DEFINE PAGE "Extended 1.x with MinGW"
+
+            @ 43 , 10 LABEL &("LDummy_"+DefineExtended1+DefineMinGW) ;
+               VALUE 'Folders for Extended MiniGUI 1.x with MinGW:' ;
+               WIDTH 601 ;
+               FONT 'arial' SIZE 10 BOLD ;
+               TRANSPARENT ;
+               FONTCOLOR DEF_COLORBLUE
+
+            DEFINE LABEL &("L_"+DefineExtended1+DefineMinGW)
+                    ROW             70
+                    COL             10
+                    WIDTH           109
+                    VALUE           'MiniGUI Folder:'
+                    TRANSPARENT     .T.
+            END LABEL
+            DEFINE TEXTBOX &("T_"+DefineExtended1+DefineMinGW)
+                    VALUE           &( "Gbl_T_M_"+DefineExtended1+DefineMinGW )
+                    ROW             70
+                    COL             120
+                    WIDTH           561
+            END TEXTBOX
+            DEFINE BUTTON &("B_"+DefineExtended1+DefineMinGW)
+                    ROW             70
+                    COL             691
+                    WIDTH           25
+                    HEIGHT          25
+                    PICTURE         'folderselect'
+                    TOOLTIP         'Select Folder'
+                    ONCLICK         If ( !Empty( Folder := GetFolder( "Seleccione el Folder" , WinGSettings.&("T_"+DefineExtended1+DefineMinGW).Value ) ) , WinGSettings.&("T_"+DefineExtended1+DefineMinGW).Value := Folder , )
+            END BUTTON
+
+            DEFINE LABEL &("LC_"+DefineExtended1+DefineMinGW)
+                    ROW             100
+                    COL             10
+                    WIDTH           109
+                    VALUE           'MinGW Folder:'
+                    TRANSPARENT     .T.
+            END LABEL
+            DEFINE TEXTBOX &("TC_"+DefineExtended1+DefineMinGW)
+                    VALUE           &( "Gbl_T_C_"+DefineExtended1+DefineMinGW )
+                    ROW             100
+                    COL             120
+                    WIDTH           561
+            END TEXTBOX
+            DEFINE BUTTON &("BC_"+DefineExtended1+DefineMinGW)
+                    ROW             100
+                    COL             691
+                    WIDTH           25
+                    HEIGHT          25
+                    PICTURE         'folderselect'
+                    TOOLTIP         'Select Folder'
+                    ONCLICK         If ( !Empty( Folder := GetFolder( "Seleccione el Folder" , WinGSettings.&("TC_"+DefineExtended1+DefineMinGW).Value ) ) , WinGSettings.&("TC_"+DefineExtended1+DefineMinGW).Value := Folder , )
+            END BUTTON
+
+            DEFINE LABEL &("L_"+DefineExtended1+DefineMinGW+DefineHarbour)
+                    ROW             130
+                    COL             10
+                    WIDTH           109
+                    VALUE           'Harbour Folder:'
+                    TRANSPARENT     .T.
+            END LABEL
+            DEFINE TEXTBOX &("T_"+DefineExtended1+DefineMinGW+DefineHarbour)
+                    VALUE           &( "Gbl_T_H_"+DefineExtended1+DefineMinGW )
+                    ROW             130
+                    COL             120
+                    WIDTH           561
+            END TEXTBOX
+            DEFINE BUTTON &("B_"+DefineExtended1+DefineMinGW+DefineHarbour)
+                    ROW             130
+                    COL             691
+                    WIDTH           25
+                    HEIGHT          25
+                    PICTURE         'folderselect'
+                    TOOLTIP         'Select Folder'
+                    ONCLICK         If ( !Empty( Folder := GetFolder( "Seleccione el Folder" , WinGSettings.&("T_"+DefineExtended1+DefineMinGW+DefineHarbour).Value ) ) , WinGSettings.&("T_"+DefineExtended1+DefineMinGW+DefineHarbour).Value := Folder , )
+            END BUTTON
+
+            DEFINE LABEL &("L_"+DefineExtended1+DefineMinGW+DefineXHarbour)
+                    ROW             160
+                    COL             10
+                    WIDTH           109
+                    VALUE           'xHarbour Folder:'
+                    TRANSPARENT     .T.
+            END LABEL
+            DEFINE TEXTBOX &("T_"+DefineExtended1+DefineMinGW+DefineXHarbour)
+                    VALUE           &( "Gbl_T_X_"+DefineExtended1+DefineMinGW )
+                    ROW             160
+                    COL             120
+                    WIDTH           561
+            END TEXTBOX
+            DEFINE BUTTON &("B_"+DefineExtended1+DefineMinGW+DefineXHarbour)
+                    ROW             160
+                    COL             691
+                    WIDTH           25
+                    HEIGHT          25
+                    PICTURE         'folderselect'
+                    TOOLTIP         'Select Folder'
+                    ONCLICK         If ( !Empty( Folder := GetFolder( "Seleccione el Folder" , WinGSettings.&("T_"+DefineExtended1+DefineMinGW+DefineXHarbour).Value ) ) , WinGSettings.&("T_"+DefineExtended1+DefineMinGW+DefineXHarbour).Value := Folder , )
+            END BUTTON
+
+         END PAGE
+
          //-- Object Oriented Harbour GUI 3.x with Borland ---------------------------------------//
          DEFINE PAGE "OOHG 3.x with Borland C"
 
@@ -833,7 +967,17 @@ Function GlobalSettings()
 
    ON KEY ESCAPE OF WinGSettings ACTION GlobalEscape()
 
-   if !empty( PUB_cProjectFolder )
+   CENTER   WINDOW WinGSettings
+
+   ACTIVATE WINDOW WinGSettings
+
+Return .T.
+
+Function SelectTab
+
+   if empty( PUB_cProjectFolder )
+      WinGSettings.TabGSettings.value := 1
+   else
       do case
          case Prj_Radio_MiniGui == DEF_RG_MINIGUI1 .and. Prj_Radio_Cpp == DEF_RG_BORLAND
             WinGSettings.TabGSettings.value := 3
@@ -841,25 +985,21 @@ Function GlobalSettings()
             WinGSettings.TabGSettings.value := 4
          case Prj_Radio_MiniGui == DEF_RG_EXTENDED1 .and. Prj_Radio_Cpp == DEF_RG_BORLAND
             WinGSettings.TabGSettings.value := 5
-         case Prj_Radio_MiniGui == DEF_RG_OOHG3 .and. Prj_Radio_Cpp == DEF_RG_BORLAND
+         case Prj_Radio_MiniGui == DEF_RG_EXTENDED1 .and. Prj_Radio_Cpp == DEF_RG_MINGW
             WinGSettings.TabGSettings.value := 6
-         case Prj_Radio_MiniGui == DEF_RG_OOHG3 .and. Prj_Radio_Cpp == DEF_RG_MINGW
+         case Prj_Radio_MiniGui == DEF_RG_OOHG3 .and. Prj_Radio_Cpp == DEF_RG_BORLAND
             WinGSettings.TabGSettings.value := 7
-         case Prj_Radio_MiniGui == DEF_RG_OOHG3 .and. Prj_Radio_Cpp == DEF_RG_PELLES
+         case Prj_Radio_MiniGui == DEF_RG_OOHG3 .and. Prj_Radio_Cpp == DEF_RG_MINGW
             WinGSettings.TabGSettings.value := 8
+         case Prj_Radio_MiniGui == DEF_RG_OOHG3 .and. Prj_Radio_Cpp == DEF_RG_PELLES
+            WinGSettings.TabGSettings.value := 9
          otherwise
             US_Log( "Invalid combination: Prj_Radio_MiniGui: " + US_TodoStr( Prj_Radio_MiniGui ) + HB_OsNewLine() + ;
                     "                     Prj_Radio_Cpp: " + US_TodoStr( Prj_Radio_Cpp ) )
       endcase
-   else
-      WinGSettings.TabGSettings.value := 1
    endif
 
-   CENTER   WINDOW WinGSettings
-
-   ACTIVATE WINDOW WinGSettings
-
-Return .T.
+Return Nil
 
 Function GlobalEscape()
    if GlobalChanged()
@@ -888,6 +1028,10 @@ Function GlobalChanged()
       &( "Gbl_T_C_"+DefineExtended1+DefineBorland ) != WinGSettings.&("TC_"+DefineExtended1+DefineBorland).value .or. ;
       &( "Gbl_T_H_"+DefineExtended1+DefineBorland ) != WinGSettings.&("T_"+DefineExtended1+DefineBorland+DefineHarbour).value .or. ;
       &( "Gbl_T_X_"+DefineExtended1+DefineBorland ) != WinGSettings.&("T_"+DefineExtended1+DefineBorland+DefineXHarbour).value .or. ;
+      &( "Gbl_T_M_"+DefineExtended1+DefineMinGW ) != WinGSettings.&("T_"+DefineExtended1+DefineMinGW).value .or. ; // NOTE: added support for MinGW and Extended
+      &( "Gbl_T_C_"+DefineExtended1+DefineMinGW ) != WinGSettings.&("TC_"+DefineExtended1+DefineMinGW).value .or. ;
+      &( "Gbl_T_H_"+DefineExtended1+DefineMinGW ) != WinGSettings.&("T_"+DefineExtended1+DefineMinGW+DefineHarbour).value .or. ;
+      &( "Gbl_T_X_"+DefineExtended1+DefineMinGW ) != WinGSettings.&("T_"+DefineExtended1+DefineMinGW+DefineXHarbour).value .or. ;
       &( "Gbl_T_M_"+DefineOohg3+DefineBorland ) != WinGSettings.&("T_"+DefineOohg3+DefineBorland).value .or. ;
       &( "Gbl_T_C_"+DefineOohg3+DefineBorland ) != WinGSettings.&("TC_"+DefineOohg3+DefineBorland).value .or. ;
       &( "Gbl_T_H_"+DefineOohg3+DefineBorland ) != WinGSettings.&("T_"+DefineOohg3+DefineBorland+DefineHarbour).value .or. ;
@@ -921,6 +1065,11 @@ Function GlobalSettingsSave()
    &( "Gbl_T_C_"+DefineExtended1+DefineBorland ) := WinGSettings.&("TC_"+DefineExtended1+DefineBorland).value
    &( "Gbl_T_H_"+DefineExtended1+DefineBorland ) := WinGSettings.&("T_"+DefineExtended1+DefineBorland+DefineHarbour).value
    &( "Gbl_T_X_"+DefineExtended1+DefineBorland ) := WinGSettings.&("T_"+DefineExtended1+DefineBorland+DefineXHarbour).value
+// NOTE: added support for MinGW and Extended
+   &( "Gbl_T_M_"+DefineExtended1+DefineMinGW ) := WinGSettings.&("T_"+DefineExtended1+DefineMinGW).value
+   &( "Gbl_T_C_"+DefineExtended1+DefineMinGW ) := WinGSettings.&("TC_"+DefineExtended1+DefineMinGW).value
+   &( "Gbl_T_H_"+DefineExtended1+DefineMinGW ) := WinGSettings.&("T_"+DefineExtended1+DefineMinGW+DefineHarbour).value
+   &( "Gbl_T_X_"+DefineExtended1+DefineMinGW ) := WinGSettings.&("T_"+DefineExtended1+DefineMinGW+DefineXHarbour).value
    &( "Gbl_T_M_"+DefineOohg3+DefineBorland ) := WinGSettings.&("T_"+DefineOohg3+DefineBorland).value
    &( "Gbl_T_C_"+DefineOohg3+DefineBorland ) := WinGSettings.&("TC_"+DefineOohg3+DefineBorland).value
    &( "Gbl_T_H_"+DefineOohg3+DefineBorland ) := WinGSettings.&("T_"+DefineOohg3+DefineBorland+DefineHarbour).value
@@ -934,4 +1083,5 @@ Function GlobalSettingsSave()
    &( "Gbl_T_H_"+DefineOohg3+DefinePelles ) := WinGSettings.&("T_"+DefineOohg3+DefinePelles+DefineHarbour).value
    &( "Gbl_T_X_"+DefineOohg3+DefinePelles ) := WinGSettings.&("T_"+DefineOohg3+DefinePelles+DefineXHarbour).value
 Return .T.
-
+
+/* eof */
