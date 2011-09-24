@@ -162,7 +162,14 @@ HOW TO BUILD A NEW RELEASE
     
 [4] Build the project.
 
-[5] To publish a patch release just zip QPM.EXE and upload it to sourceforge.
+[5] To publish a patch or upgrade release:
+    a) create a new folder in your local and name it
+       QPM_<old version number>_to_<new version number>
+    b) copy QPM.EXE
+    c) copy ./doc/UpgradeReadme.txt and rename it as README.TXT
+    d) update README.TXT if necessary.
+    e) zip the folder
+    f) upload the zip file to sourceforge.
 
 TODO: describe procedure to build a full release.
 
