@@ -8,6 +8,10 @@
  * See "How to format your ChangeLog entries" in howtosvn.txt file.
  */
 
+2011-09-24 01:45:00 UTC-0300 Fernando Yurisich <fyurisich@oohg.org>
+   + ./doc/UpgradeReadme.txt
+     + Added SVN property keywords.
+
 2011-09-24 01:40:00 UTC-0300 Fernando Yurisich <fyurisich@oohg.org>
    * ./doc/howtosvn.txt
      * Updated: how to publish a patch release.
