@@ -8,20 +8,20 @@
  * See "How to format your ChangeLog entries" in howtosvn.txt file.
  */
 
-2011-09-24 01:45:00 UTC-0300 Fernando Yurisich <fyurisich@oohg.org>
+2011-09-24 01:45:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    + ./doc/UpgradeReadme.txt
      + Added SVN property keywords.
 
-2011-09-24 01:40:00 UTC-0300 Fernando Yurisich <fyurisich@oohg.org>
+2011-09-24 01:40:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * ./doc/howtosvn.txt
      * Updated: how to publish a patch release.
    + ./doc/UpgradeReadme.txt
      + Model instructions for installing/uninstalling a patch release.
      
-2011-09-24 01:10:00 UTC-0300 Fernando Yurisich <fyurisich@oohg.org>
+2011-09-24 01:10:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    + ./QPM_05010000.cfg
 
-2011-09-24 01:00:00 UTC-0300 Fernando Yurisich <fyurisich@oohg.org>
+2011-09-24 01:00:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * ./doc/howtosvn.txt
      + Added: how to publish a patch release.
    * ./QPM_AutoProject.qpm
@@ -41,7 +41,7 @@
    + ./QPM_HotRecovery_05010000.dbf
    + ./QPM_HotRecovery_05010000.fpt
 
-2011-09-24 00:05:00 UTC-0300 Fernando Yurisich <fyurisich@oohg.org>
+2011-09-24 00:05:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * ./doc/codestyl.txt
      ! Fixed typo.
    * ./QPM.PRG
@@ -84,7 +84,7 @@
      * Modified functions: CheckCombinationRadio and ActRadioCpp.
      + Added SVN ID and licence information.
 
-2011-09-23 13:05:00 UTC-0300 Fernando Yurisich <fyurisich@oohg.org>
+2011-09-23 13:05:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    + ./US_A1.exe
    + ./US_A2.exe
    + ./US_A3.exe
@@ -110,15 +110,15 @@
    + ./us_objdump.exe
      + Added missing files.
 
-2011-09-23 12:21:00 UTC-0300 Fernando Yurisich <fyurisich@oohg.org>
+2011-09-23 12:21:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    + ./ChangeLog
      + Added SVN property keywords
 
-2011-09-23 12:20:00 UTC-0300 Fernando Yurisich <fyurisich@oohg.org>
+2011-09-23 12:20:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    + ./QPM_SHG_SimpleHelpGenerator.prg
      + Added SVN property keywords
 
-2011-09-23 12:20:00 UTC-0300 Fernando Yurisich <fyurisich@oohg.org>
+2011-09-23 12:20:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    + ./doc/codestyl.txt
    + ./doc/howtosvn.txt
    + ./doc/notes.txt
@@ -132,7 +132,7 @@
    + ./BuildAll.bat
      + Added SVN property keywords
 
-2011-09-23 11:20:00 UTC-0300 Fernando Yurisich <fyurisich@oohg.org>
+2011-09-23 11:20:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    + ./doc
      + Added: documentation folder.
    + ./doc/codestyl.txt
