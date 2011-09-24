@@ -1,3 +1,31 @@
+/*
+ * $Id$
+ */
+
+/*
+ *    QPM - QAC Based Project Manager
+ *
+ *    Copyright 2011 Fernando Yurisich <fernando.yurisich@gmail.com>
+ *    http://qpm.sourceforge.net
+ *
+ *    Based on QAC - Project Manager for (x)Harbour
+ *    Copyright 2006-2011 Carozo de Quilmes <CarozoDeQuilmes@gmail.com>
+ *    http://www.CarozoDeQuilmes.com.ar
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU General Public License as published by
+ *    the Free Software Foundation, either version 3 of the License, or
+ *    (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU General Public License for more details.
+ *
+ *    You should have received a copy of the GNU General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
 #include "minigui.ch"
 #include <QPM.ch>
 
@@ -22,6 +50,11 @@ Function LoadEnvironment
    &( "Gbl_T_C_"+DefineExtended1+DefineBorland ) := 'C:'+DEF_SLASH+'Borland'+DEF_SLASH+'bcc55'
    &( "Gbl_T_H_"+DefineExtended1+DefineBorland ) := 'C:'+DEF_SLASH+'MiniGui'+DEF_SLASH+'Harbour'
    &( "Gbl_T_X_"+DefineExtended1+DefineBorland ) := 'C:'+DEF_SLASH+'MiniGui'+DEF_SLASH+'xHarbour'
+   // NOTE: Added support to MinGW and Extended
+   &( "Gbl_T_M_"+DefineExtended1+DefineMinGW ) := 'C:'+DEF_SLASH+'MiniGui'
+   &( "Gbl_T_C_"+DefineExtended1+DefineMinGW ) := 'C:'+DEF_SLASH+'HMG'+DEF_SLASH+'MinGW'
+   &( "Gbl_T_H_"+DefineExtended1+DefineMinGW ) := 'C:'+DEF_SLASH+'HMG'+DEF_SLASH+'Harbour'
+   &( "Gbl_T_X_"+DefineExtended1+DefineMinGW ) := 'C:'+DEF_SLASH+'HMG'+DEF_SLASH+'xHarbour'
    //
    &( "Gbl_T_M_"+DefineOohg3+DefineBorland ) := 'C:'+DEF_SLASH+'OOHGforBorland'
    &( "Gbl_T_C_"+DefineOohg3+DefineBorland ) := 'C:'+DEF_SLASH+'Borland'+DEF_SLASH+'bcc55'
@@ -207,6 +240,11 @@ Function SaveEnvironment
    c := c + 'CCOMPILATOR'+DefineExtended1+DefineBorland + ' ' + alltrim(&( "Gbl_T_C_"+DefineExtended1+DefineBorland )) + Hb_OsNewLine()
    c := c + 'HARBOURFOLDER'+DefineExtended1+DefineBorland + ' ' + alltrim(&( "Gbl_T_H_"+DefineExtended1+DefineBorland )) + Hb_OsNewLine()
    c := c + 'XHARBOURFOLDER'+DefineExtended1+DefineBorland + ' ' + alltrim(&( "Gbl_T_X_"+DefineExtended1+DefineBorland )) + Hb_OsNewLine()
+   // NOTE: Added support for MinGW and Extended
+   c := c + 'MINIGUIFOLDER'+DefineExtended1+DefineMinGW + ' ' + alltrim(&( "Gbl_T_M_"+DefineExtended1+DefineMinGW )) + Hb_OsNewLine()
+   c := c + 'CCOMPILATOR'+DefineExtended1+DefineMinGW + ' ' + alltrim(&( "Gbl_T_C_"+DefineExtended1+DefineMinGW )) + Hb_OsNewLine()
+   c := c + 'HARBOURFOLDER'+DefineExtended1+DefineMinGW + ' ' + alltrim(&( "Gbl_T_H_"+DefineExtended1+DefineMinGW )) + Hb_OsNewLine()
+   c := c + 'XHARBOURFOLDER'+DefineExtended1+DefineMinGW + ' ' + alltrim(&( "Gbl_T_X_"+DefineExtended1+DefineMinGW )) + Hb_OsNewLine()
    //
    c := c + 'MINIGUIFOLDER'+DefineOohg3+DefineBorland + ' ' + alltrim(&( "Gbl_T_M_"+DefineOohg3+DefineBorland )) + Hb_OsNewLine()
    c := c + 'CCOMPILATOR'+DefineOohg3+DefineBorland + ' ' + alltrim(&( "Gbl_T_C_"+DefineOohg3+DefineBorland )) + Hb_OsNewLine()
@@ -243,4 +281,4 @@ Function SaveEnvironment
    endif
 Return .T.
 
-
+/* eof */

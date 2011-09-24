@@ -1,3 +1,31 @@
+/*
+ * $Id$
+ */
+
+/*
+ *    QPM - QAC Based Project Manager
+ *
+ *    Copyright 2011 Fernando Yurisich <fernando.yurisich@gmail.com>
+ *    http://qpm.sourceforge.net
+ *
+ *    Based on QAC - Project Manager for (x)Harbour
+ *    Copyright 2006-2011 Carozo de Quilmes <CarozoDeQuilmes@gmail.com>
+ *    http://www.CarozoDeQuilmes.com.ar
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU General Public License as published by
+ *    the Free Software Foundation, either version 3 of the License, or
+ *    (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU General Public License for more details.
+ *
+ *    You should have received a copy of the GNU General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
 //========================================================================
 // Function US_GetProcessesNT()      Lista procesos en NT
 // Retorna un vector (que comienza con indice en 1) con el ProcessID
@@ -104,7 +132,8 @@ HB_FUNC(US_2GETPROCESSESNT)
       hb_storc( "Error in load of DLL PSAPI.DLL from Function GetProcessesNT" , -1, 2 );
       return;
       }
-   if (!(pEnumProcesses = (LPENUMPROCESSES) GetProcAddress(hPsApiLib, "EnumProcesses")))
+   pEnumProcesses = (LPENUMPROCESSES) GetProcAddress(hPsApiLib, "EnumProcesses");
+   if (! pEnumProcesses)
       {
       hb_reta( 2 );
       hb_storni( 102 , -1, 1 );
@@ -112,7 +141,8 @@ HB_FUNC(US_2GETPROCESSESNT)
       FreeLibrary(hPsApiLib);
       return;
       }
-   if (!(pEnumProcessModules = (LPENUMPROCESSMODULES) GetProcAddress(hPsApiLib, "EnumProcessModules")))
+   pEnumProcessModules = (LPENUMPROCESSMODULES) GetProcAddress(hPsApiLib, "EnumProcessModules");
+   if (! pEnumProcessModules)
       {
       hb_reta( 2 );
       hb_storni( 103 , -1, 1 );
@@ -120,7 +150,8 @@ HB_FUNC(US_2GETPROCESSESNT)
       FreeLibrary(hPsApiLib);
       return;
       }
-   if (!(pGetModuleFileNameExA = (LPGETMODULEFILENAMEEXA) GetProcAddress(hPsApiLib, "GetModuleFileNameExA")))
+   pGetModuleFileNameExA = (LPGETMODULEFILENAMEEXA) GetProcAddress(hPsApiLib, "GetModuleFileNameExA");
+   if (! pGetModuleFileNameExA)
       {
       hb_reta( 2 );
       hb_storni( 104 , -1, 1 );
@@ -277,7 +308,8 @@ HB_FUNC(US_2GETPROCESSESW9X)
       hb_storc( "Error in load of DLL PSAPI.DLL from Function GetProcessesNT" , -1, 2 );
       return;
       }
-   if (!(pCreateToolhelp32Snapshot = (LPCREATETOOLHELP32SNAPSHOT) GetProcAddress(bKernelDll, "CreateToolhelp32Snapshot")))
+   pCreateToolhelp32Snapshot = (LPCREATETOOLHELP32SNAPSHOT) GetProcAddress(bKernelDll, "CreateToolhelp32Snapshot");
+   if (! pCreateToolhelp32Snapshot)
       {
       hb_reta( 2 );
       hb_storni( 902 , -1, 1 );
@@ -285,7 +317,8 @@ HB_FUNC(US_2GETPROCESSESW9X)
       FreeLibrary(bKernelDll);
       return;
       }
-   if (!(pProcess32First = (LPPROCESS32FIRST) GetProcAddress(bKernelDll, "Process32First")))
+   pProcess32First = (LPPROCESS32FIRST) GetProcAddress(bKernelDll, "Process32First");
+   if (! pProcess32First)
       {
       hb_reta( 2 );
       hb_storni( 903 , -1, 1 );
@@ -293,7 +326,8 @@ HB_FUNC(US_2GETPROCESSESW9X)
       FreeLibrary(bKernelDll);
       return;
       }
-   if (!(pProcess32Next = (LPPROCESS32NEXT) GetProcAddress(bKernelDll, "Process32Next")))
+   pProcess32Next = (LPPROCESS32NEXT) GetProcAddress(bKernelDll, "Process32Next");
+   if (! pProcess32Next)
       {
       hb_reta( 2 );
       hb_storni( 904 , -1, 1 );
@@ -484,4 +518,5 @@ HB_FUNC(US_2SETPRIORITYTOPROCESS)
 //------------------------------------------------------------------------
 // Fin Function US_SetPriorityToProcess( nPId , nPriority )
 //========================================================================
-
+
+/* eof */

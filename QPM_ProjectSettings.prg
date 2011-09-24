@@ -1,3 +1,31 @@
+/*
+ * $Id$
+ */
+
+/*
+ *    QPM - QAC Based Project Manager
+ *
+ *    Copyright 2011 Fernando Yurisich <fernando.yurisich@gmail.com>
+ *    http://qpm.sourceforge.net
+ *
+ *    Based on QAC - Project Manager for (x)Harbour
+ *    Copyright 2006-2011 Carozo de Quilmes <CarozoDeQuilmes@gmail.com>
+ *    http://www.CarozoDeQuilmes.com.ar
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU General Public License as published by
+ *    the Free Software Foundation, either version 3 of the License, or
+ *    (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU General Public License for more details.
+ *
+ *    You should have received a copy of the GNU General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
 #include "minigui.ch"
 #include <QPM.ch>
 
@@ -391,8 +419,11 @@ Function CheckCombinationRadio(cFrom)
          bError := .T.
       case nCppValue == DEF_RG_MINGW .and. nMiniGuiValue == DEF_RG_MINIGUI1
          bError := .T.
+/*
+OBSOLETE: 23/09/11 fyurisich
       case nCppValue == DEF_RG_MINGW .and. nMiniGuiValue == DEF_RG_EXTENDED1
          bError := .T.
+*/
       case nCppValue == DEF_RG_PELLES .and. nMiniGuiValue != DEF_RG_OOHG3
          bError := .T.
    endcase
@@ -409,8 +440,11 @@ Function CheckCombinationRadio(cFrom)
                   SetProperty( "WinPSettings" , "Radio_Cpp"     , "value" , DEF_RG_BORLAND )
                case nMiniGuiValue == DEF_RG_MINIGUI3
                   SetProperty( "WinPSettings" , "Radio_Cpp"     , "value" , DEF_RG_MINGW )
+/*
+OBSOLETE: 23/09/11 fyurisich
                case nMiniGuiValue == DEF_RG_EXTENDED1
                   SetProperty( "WinPSettings" , "Radio_Cpp"     , "value" , DEF_RG_BORLAND )
+*/
                case nMiniGuiValue == DEF_RG_OOHG3
                   SetProperty( "WinPSettings" , "Radio_Cpp"     , "value" , DEF_RG_BORLAND )
             endcase
@@ -438,7 +472,8 @@ Function ActRadioCpp( nMiniGui , nCpp , nHarbour )
          SetProperty( "WinPSettings" , "Radio_Cpp"     , "enabled" , DEF_RG_PELLES , .F. )
       case nMiniGui == DEF_RG_EXTENDED1
          SetProperty( "WinPSettings" , "Radio_Cpp"     , "enabled" , DEF_RG_BORLAND , .T. )
-         SetProperty( "WinPSettings" , "Radio_Cpp"     , "enabled" , DEF_RG_MINGW , .F. )
+// NOTE: 23/09/11 fyurisich Changed last parameter from .F. to .T.
+         SetProperty( "WinPSettings" , "Radio_Cpp"     , "enabled" , DEF_RG_MINGW , .T. )
          SetProperty( "WinPSettings" , "Radio_Cpp"     , "enabled" , DEF_RG_PELLES , .F. )
       case nMiniGui == DEF_RG_OOHG3
          SetProperty( "WinPSettings" , "Radio_Cpp"     , "enabled" , DEF_RG_BORLAND , .T. )
@@ -469,4 +504,5 @@ Function FSwitchMode()
       CargoExcludeLibs( GetSuffix() )
    endif
 Return .t.
-
+
+/* eof */

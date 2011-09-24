@@ -177,7 +177,7 @@ File structure
 
 [1] All files must have at the very top de SVN ID.  See ./doc/howtosvn.txt
 
-[2] Al source ( *.prg, *.ch, *.rc ) files must have, inmediatly after the
+[2] All source ( *.prg, *.ch, *.rc ) files must have, inmediatly after the
     SVN ID, the following licence information:
     
 /*
