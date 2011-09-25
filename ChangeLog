@@ -8,6 +8,13 @@
  * See "How to format your ChangeLog entries" in howtosvn.txt file.
  */
 
+2011-09-25 00:57:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * ./QPM_CompatibilityStatistics.ch
+   * ./QPM_CompatibilityOpenProject.ch
+   * ./QPM_CompatibilityOpenGlobal.ch
+   * ./QPM_CompatibilityHotRecovery.ch
+     + Added SVN property keywords.
+
 2011-09-25 00:55:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * ./QPM_CompatibilityStatistics.ch
    * ./QPM_CompatibilityOpenProject.ch
