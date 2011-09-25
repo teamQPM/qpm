@@ -66,15 +66,16 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
    PAR_cP20=IIF(PAR_cP20=NIL,"",PAR_cP20)
    LOC_cParam:=ALLTRIM(PAR_cP1+" "+PAR_cP2+" "+PAR_cP3+" "+PAR_cP4+" "+PAR_cP5+" "+PAR_cP6+" "+PAR_cP7+" "+PAR_cP8+" "+PAR_cP9+" "+PAR_cP10+" "+PAR_cP11+" "+PAR_cP12+" "+PAR_cP13+" "+PAR_cP14+" "+PAR_cP15+" "+PAR_cP16+" "+PAR_cP17+" "+PAR_cP18+" "+PAR_cP19+" "+PAR_cP20)
 
-// PUBLIC PUB_cQPM_Version      := substr( Prj_Version() , 1 , 2 ) + " " + substr( Prj_Version() , 3 , 2 ) + " " + substr( Prj_Version() , 7 , 2 )
-   PUBLIC PUB_cQPM_Support_Link := "http://qpm.sourceforge.net"
+// PUBLIC PUB_cQPM_Version       := substr( Prj_Version() , 1 , 2 ) + " " + substr( Prj_Version() , 3 , 2 ) + " " + substr( Prj_Version() , 7 , 2 )
+   PUBLIC PUB_cQPM_Support_Link  := "http://qpm.sourceforge.net"
+   PUBLIC PUB_cQPM_Support_Admin := "Fernando Yurisich (Uruguay)"
    PUBLIC PUB_cQPM_Support_eMail := "qpm-users@lists.sourceforge.net"
-   PUBLIC PUB_cStatusLabel      := "Status: Idle"
-   PUBLIC PUB_MenuPrjOptions    := "Project Options"
-   PUBLIC PUB_MenuGblOptions    := "Global Options (Folders for [x]Harbour, MiniGUI, C++ and others)"
-   PUBLIC PUB_nBottom           := 9999999999      // ir al bottom de editbox
-   PUBLIC PUB_cCharTab          := CHR( 09 )
-   PUBLIC PUB_cCharFileNameTemp := "_"      // $ trae problemas con Make de MinGW
+   PUBLIC PUB_cStatusLabel       := "Status: Idle"
+   PUBLIC PUB_MenuPrjOptions     := "Project Options"
+   PUBLIC PUB_MenuGblOptions     := "Global Options (Folders for [x]Harbour, MiniGUI, C++ and others)"
+   PUBLIC PUB_nBottom            := 9999999999      // ir al bottom de editbox
+   PUBLIC PUB_cCharTab           := CHR( 09 )
+   PUBLIC PUB_cCharFileNameTemp  := "_"      // $ trae problemas con Make de MinGW
                                             // # no genera uno de los Temp.log
    //
    PUBLIC PUB_cQPM_Version2 := us_word(PUB_cQPM_Version,1) + US_Word(PUB_cQPM_Version,2) + us_word(PUB_cQPM_Version,3)
@@ -580,7 +581,7 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
    PUBLIC vExeList := {}
    aadd( vExeList , PUB_cQPM_Folder+DEF_SLASH+"QPM.exe"                   )
    aadd( vExeList , PUB_cQPM_Folder+DEF_SLASH+"QPM.chm"                   )
-   aadd( vExeList , PUB_cQPM_Folder+DEF_SLASH+"US_ecnecil.spf"            )   // QPM Licencia
+// aadd( vExeList , PUB_cQPM_Folder+DEF_SLASH+"US_ecnecil.spf"            )   // QPM Licencia, now it's loaded from RC
    aadd( vExeList , PUB_cQPM_Folder+DEF_SLASH+"US_Slash.exe"              )
    aadd( vExeList , PUB_cQPM_Folder+DEF_SLASH+"US_Shell.exe"              )
    aadd( vExeList , PUB_cQPM_Folder+DEF_SLASH+"US_Make.exe"               )
@@ -611,11 +612,11 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
    aadd( vExeList , PUB_cQPM_Folder+DEF_SLASH+"US_dif.exe"                )   // Compare (exe)
    aadd( vExeList , PUB_cQPM_Folder+DEF_SLASH+"US_difwi.dll"              )   // Compare (dll)
    aadd( vExeList , PUB_cQPM_Folder+DEF_SLASH+"US_windres.exe"            )   // Resource compiler for MinGW
-   aadd( vExeList , PUB_cQPM_Folder+DEF_SLASH+"US_hot.oci"                )   // Hot Recovery Icon
+// aadd( vExeList , PUB_cQPM_Folder+DEF_SLASH+"US_hot.oci"                )   // Hot Recovery Icon
    aadd( vExeList , PUB_cQPM_Folder+DEF_SLASH+"US_hhc.exe"                )   // Compilador de HTML HELP WorkShop
    aadd( vExeList , PUB_cQPM_Folder+DEF_SLASH+"US_hha.dll"                )   // DLL de HTML HELP WorkShop
    aadd( vExeList , PUB_cQPM_Folder+DEF_SLASH+"US_itcc.dll"               )   // DLL de HTML HELP WorkShop
-   aadd( vExeList , PUB_cQPM_Folder+DEF_SLASH+"US_killer.oci"             )   // TEMPORAL ICO PARA US_KILLER
+// aadd( vExeList , PUB_cQPM_Folder+DEF_SLASH+"US_killer.oci"             )   // TEMPORAL ICO PARA US_KILLER
    aadd( vExeList , PUB_cQPM_Folder+DEF_SLASH+"US_dtree.css"              )   // Tree for HTML Help
    aadd( vExeList , PUB_cQPM_Folder+DEF_SLASH+"US_dtree.js"               )   // Java Function for Tree for HTML Help
    aadd( vExeList , PUB_cQPM_Folder+DEF_SLASH+"US_dtree.im"               )   // ZIP encubierto para imagenes de Tree for HTML Help
@@ -4941,31 +4942,43 @@ Return NIL
 
 Function QPM_About()
    // QPM_About2
-   MsgInfo( "QPM (QAC Based Project Manager) - Project Manager for MiniGui (" + PUB_cQPM_VersionDisplay + ")" + HB_OsNewLine() + ;
+   MsgInfo( "QPM (QAC based Project Manager)" + HB_OsNewLine() + ;
+            "Project Manager for MiniGui (" + PUB_cQPM_VersionDisplay + ")" + HB_OsNewLine() + ;
             HB_OsNewLine() + ;
-            "Licence: This program is free software" + HB_OsNewLine() + ;
-            "         You can use it without charge" + HB_OsNewLine() + ;
+            "Created by CarozoDeQuilmes (Argentina)" + HB_OsNewLine() + ;
+            "Supported by " + PUB_cQPM_Support_Admin + HB_OsNewLine() + ;
             HB_OsNewLine() + ;
-            "Created by CarozoDeQuilmes (Argentina), Supported by <" + PUB_cQPM_Support_eMail + ">" + HB_OsNewLine() + ;
-            PUB_cQPM_Support_Link + HB_OsNewLine() + ;
+            "Home Site: " + PUB_cQPM_Support_Link + HB_OsNewLine() + ;
+            "Users list: " + PUB_cQPM_Support_eMail + HB_OsNewLine() + ;
             HB_OsNewLine() + ;
             "Based on MPM Harbour MiniGUI Project Manager" + HB_OsNewLine() + ;
             "Created by Roberto Lopez <roblez@ciudad.com.ar>" + HB_OsNewLine() + ;
             "(c) 2003-2006 Roberto Lopez <roblez@ciudad.com.ar>" + HB_OsNewLine() + ;
             HB_OsNewLine() + ;
-            "QPM " + PUB_cQPM_VersionDisplay + " has been compiled with previous QPM version " + Get_QPM_Builder_VersionDisplay() + HB_OsNewLine() + ;
+            "This release has been builded with previous QPM version " + HB_OsNewLine() + ;
+            Get_QPM_Builder_VersionDisplay() + " using: " + HB_OsNewLine() + ;
+            "- " + MiniGuiVersion() + "    " + HB_OsNewLine() + ;
+            "- " + HB_COMPILER() + HB_OsNewLine() + ;
+            "- " + Version() + HB_OsNewLine() + ;
             HB_OsNewLine() + ;
             "Building date: " + substr( GetLinkDate() , 1 , 4 ) + "." + substr( GetLinkDate() , 5 , 2 ) + "." + substr( GetLinkDate() , 7 , 2 ) + HB_OsNewLine() + ;
-            "Building time: " + GetLinkTime() + HB_OsNewLine() + ;
-            HB_OsNewLine() + ;
-            "Building with: " + MiniGuiVersion() + HB_OsNewLine() + ;
-            HB_COMPILER() + HB_OsNewLine() + ;
-            Version() , "About QPM" )
+            "Building time: " + GetLinkTime(), "About QPM" )
 Return .T.
 
 Function QPM_Licence()
    // QPM_Licence2
-   MsgInfo( memoread( PUB_cQPM_Folder + DEF_SLASH + "us_ecnecil.spf" ) , "QPM Licence" )
+   //   MsgInfo( memoread( PUB_cQPM_Folder + DEF_SLASH + "us_ecnecil.spf" ) , "QPM Licence" )
+   MsgInfo( HB_LoadString( ID_LICENSE_LINE_1 ) + HB_OsNewLine() + ;
+            HB_OsNewLine() + ;
+            HB_LoadString( ID_LICENSE_LINE_2 ) + HB_OsNewLine() + ;
+            HB_LoadString( ID_LICENSE_LINE_3 ) + HB_OsNewLine() + ;
+            HB_OsNewLine() + ;
+            HB_LoadString( ID_LICENSE_LINE_4 ) + HB_OsNewLine() + ;
+            HB_OsNewLine() + ;
+            HB_LoadString( ID_LICENSE_LINE_5 ) + " " + HB_LoadString( ID_LICENSE_LINE_6 ) + HB_OsNewLine() + ;
+            HB_OsNewLine() + ;
+            HB_LoadString( ID_LICENSE_LINE_7 ) + HB_OsNewLine() + ;
+            HB_LoadString( ID_LICENSE_LINE_8 ), HB_LoadString( ID_LICENSE_LINE_9 ) )
 Return .T.
 
 Function QPM_SaveProject( bCheck )
@@ -10554,7 +10567,7 @@ Function QPM_DefinoMainMenu()
                    SEPARATOR
                    ITEM '&About'           ACTION QPM_About()
                    SEPARATOR
-                   ITEM '&Licence'         ACTION QPM_Licence()
+                   ITEM '&License'         ACTION QPM_Licence()
            END POPUP
            POPUP '&Links     '
                    ITEM "Go To topic Link in Help"       ACTION US_DisplayHelpTopic( GetActiveHelpFile() , "links" )
@@ -10710,6 +10723,15 @@ Return Nil
 #include "Winuser.h"
 #include <wingdi.h>
 #include <setupapi.h>
+
+HB_FUNC( HB_LOADSTRING )
+{
+   LPBYTE cBuffer;
+   cBuffer = GlobalAlloc(GPTR, 255);
+   LoadString(GetModuleHandle(NULL), hb_parni(1), (LPSTR) cBuffer, 254);
+   hb_retc(cBuffer);
+   GlobalFree(cBuffer);
+}
 
 HB_FUNC ( US_C_GETFILE )
 {

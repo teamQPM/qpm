@@ -1,3 +1,31 @@
+/*
+ * $Id$
+ */
+
+/*
+ *    QPM - QAC Based Project Manager
+ *
+ *    Copyright 2011 Fernando Yurisich <fernando.yurisich@gmail.com>
+ *    http://qpm.sourceforge.net
+ *
+ *    Based on QAC - Project Manager for (x)Harbour
+ *    Copyright 2006-2011 Carozo de Quilmes <CarozoDeQuilmes@gmail.com>
+ *    http://www.CarozoDeQuilmes.com.ar
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU General Public License as published by
+ *    the Free Software Foundation, either version 3 of the License, or
+ *    (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU General Public License for more details.
+ *
+ *    You should have received a copy of the GNU General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
 FUNCTION MAIN(cP1,cP2,cP3,cP4,cP5,cP6,cP7,cP8,cP9,cP10,cP11,cP12,cP13,cP14,cP15,cP16,cP17,cP18,cP19,cP20)
    Local Version:="01.03" , bLoop:=.T. , cLinea , cFines := { Chr(13) + Chr(10) , Chr(10) } , hFiIn , cont:=0 , hFiOut
    Local cFileOut , nBytesSalida:=0 , cFileIn , cParam , cFileTMP , cmd , cmdbat , bList:=.F. , gccbat := "_GCCbat.bat"
@@ -146,4 +174,5 @@ Function QPM_Log( STRING )
    SET ALTERNATE TO
    SET CONSOLE ON
 RETURN .t.
-
+
+/* eof */

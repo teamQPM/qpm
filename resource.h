@@ -1,5 +1,5 @@
 /*
- * $Id: US_RichEdit.rc 12 2011-09-24 03:21:53Z fyurisich $
+ * $Id$
  */
 
 /*
@@ -26,6 +26,19 @@
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "QPM_Resources.ch"
+/*
+ * This file contains the resources ID definitions.
+ */
+
+// STRINGS
+#define ID_LICENSE_LINE_1 301
+#define ID_LICENSE_LINE_2 302
+#define ID_LICENSE_LINE_3 303
+#define ID_LICENSE_LINE_4 304
+#define ID_LICENSE_LINE_5 305
+#define ID_LICENSE_LINE_6 306
+#define ID_LICENSE_LINE_7 307
+#define ID_LICENSE_LINE_8 308
+#define ID_LICENSE_LINE_9 309
 
 /* eof */
