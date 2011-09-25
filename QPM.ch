@@ -232,4 +232,7 @@
 #define  DEF_LEN_VER_RELEASE  2
 #define  DEF_LEN_VER_BUILD    4
 
+// Resources ID definitions
+#include "resource.h"
+
 /* eof */

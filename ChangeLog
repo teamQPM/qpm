@@ -8,6 +8,66 @@
  * See "How to format your ChangeLog entries" in howtosvn.txt file.
  */
 
+2011-09-25 00:45:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * ./QPM.EXE
+   * ./TODO
+   * ./HelpQPM/QPM_SHG.fpt
+   * ./QPM_AutoProject.qpm
+     * Updated.
+   * ./QPM.PRG
+     + Added users list in About window.
+     - Removed license information from About window.
+     + Added homepage and users list info in About window.
+     * License info is loaded from RC instead on file.
+     - Removed check on us_hot.oci and us_killer.oci
+     + Added HB_LOADSTRING C level function.
+   + ./resource.h
+     + Resources ID definitions.
+   + ./QPM.ch
+     + Added inclue of resource.h
+   - ./us_ecnecil.spf
+   - ./us_hot.oci
+   - ./us_killer.oci
+   - ./QPM_05000000.cfg
+   - ./QPM_05000001.cfg
+   - ./QPM_05000002.cfg
+   - ./QPM.EXE.LOG
+   * ./doc/codestyl.txt
+     ! Fixed typo.
+   * ./QPM.iss
+     * Updated version number.
+   * ./QPM_Resources.ch
+     + Added us_hot2.ico (copy of ./us_hot.oci)
+     + Added us_hot2.ico (32x32 icon from ./us_hot.oci)
+   * ./QPM_Killer.prg
+     * WinKiller window´s icon is loaded from RC instead of disk.
+   * ./QPM_HotRecovery.prg
+     * WinHotRecovery window´s icon is loaded from RC instead of disk.
+   * ./FuentesComunes/US_ActiveX_Eventos.c
+     ! Fixed C warning.
+   + ./QPM_CompatibilityStatistics.ch
+   + ./QPM_CompatibilityOpenProject.CH
+   + ./QPM_CompatibilityOpenGlobal.CH
+   + ./QPM_CompatibilityHotRecovery.ch
+   + ./QPM.iss
+   + ./QPM.rc
+   + ./us_redir.c
+   + ./us_run.RC
+   + ./QPM_HotRecovery.prg
+   + ./QPM_Killer.prg
+   + ./QPM_SHG_AssistImage.prg
+   + ./QPM_SHG_AssistLink.prg
+   + ./QPM_SyncRecovery.prg
+   + ./QPM_Version.PRG
+   + ./us_msg.prg
+   + ./us_res.prg
+   + ./us_run.prg
+   + ./us_shell.prg
+   + ./us_slash.prg
+   + ./QPM_ExtraRun.prg
+     + Added SVN property keywords.
+     + Added SVN ID and licence information.
+
 2011-09-24 01:45:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    + ./doc/UpgradeReadme.txt
      + Added SVN property keywords.

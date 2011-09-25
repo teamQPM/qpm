@@ -91,4 +91,11 @@ Status.....: Open.
 Details....: Save a copy of build.bat to debug.
 
 /******************************************************************************/
+Assigned to: <nobody>
+Added by...: 2011-09-25 00:30:00 UTC-0300 Fernando Yurisich <fyurisich>
+Status.....: Open.
+Details....: See if ./HelpQPM/QPM_SHG.fpt needs rebuilding every time QPM
+             is executed.
+
+/******************************************************************************/
 /* eof */

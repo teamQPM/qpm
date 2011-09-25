@@ -83,7 +83,7 @@ PHB_SYMB s___GetMessage = NULL;
 HB_FUNC( US_ACTIVEX___ERROR )       // CdQ - Esto provoca GPF en xHarbour
 // -----------------------------------------------------------------------------
 {
-   PHB_ITEM pSelf = hb_stackSelfItem();
+//   PHB_ITEM pSelf = hb_stackSelfItem();
    PHB_SYMB sMessage;
    int iPCount;
 
