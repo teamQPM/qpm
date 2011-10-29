@@ -33,7 +33,7 @@ Function QPM_IsLibrariesNamesOld( cDir , cType )
    Local bReto:=.T.
       do case
          case cType == DefineMiniGui1+DefineBorland+DefineHarbour
-            if File( cDir+DEF_SLASH + "BIN" + DEF_SLASH + "HARBOUR.exe" ) .and. File( cDir+DEF_SLASH + "LIB" + DEF_SLASH + "bhrtl.lib" )
+            if File( cDir+DEF_SLASH + "BIN" + DEF_SLASH + "HARBOUR.exe" ) .and. File( cDir+DEF_SLASH + "LIB" + DEF_SLASH + "hbrtl.lib" )
                bReto:=.F.
             endif
          case cType == DefineMiniGui3+DefineMinGW+DefineHarbour
@@ -311,7 +311,8 @@ Function QPM_CargoLibraries()
       aadd( &( "vLibDefault"+DefineExtended1+DefineBorland+DefineHarbour ) , cPre+'gtgui'+cExt ) /* Introduced in build 18b */
       aadd( &( "vLibDefault"+DefineExtended1+DefineBorland+DefineHarbour ) , cPre+'gtwin'+cExt ) /* Excluido a partir de 18b, se deja para debug, es controlado mas abajo */
    endif
-   aadd( &( "vLibDefault"+DefineExtended1+DefineBorland+DefineHarbour ) , cPre+'PropGrid'+cExt )
+   aadd( &( "vLibDefault"+DefineExtended1+DefineBorland+DefineHarbour ) , cPre+'propgrid'+cExt )
+   aadd( &( "vLibDefault"+DefineExtended1+DefineBorland+DefineHarbour ) , cPre+'tsbrowse'+cExt )
    aadd( &( "vLibDefault"+DefineExtended1+DefineBorland+DefineHarbour ) , cPre+'dll'+cExt )
    aadd( &( "vLibDefault"+DefineExtended1+DefineBorland+DefineHarbour ) , if( bOldNamesLib , cPre+'rtl'+cExt , cPre+'hbrtl'+cExt ) )
    aadd( &( "vLibDefault"+DefineExtended1+DefineBorland+DefineHarbour ) , if( bOldNamesLib , cPre+'vm'+cExt , cPre+'hbvm'+cExt ) )
