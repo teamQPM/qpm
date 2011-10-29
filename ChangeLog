@@ -8,6 +8,18 @@
  * See "How to format your ChangeLog entries" in howtosvn.txt file.
  */
 
+2011-10-29 20:15:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * ./QPM.EXE
+   * ./QPM.PRG
+     ! Changed version to 5.2.1
+   * ./QPM_Libraries.prg
+     + Added tsbrowse.lib to HMG Extended + Harbour combination.
+     ! In Function QPM_IsLibrariesNamesOld() changed from
+       'bhrtl.lib' to 'hbrtl.lib'.
+   * ./QPM_AutoProject.qpm
+   * HelpQPM/QPM_SHG.fpt
+     * Version updated.
+
 2011-10-18 09:07:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * ./TODO
      + Updated.
