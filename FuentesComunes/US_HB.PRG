@@ -2935,7 +2935,7 @@ BOOL DirectoryExists( LPTSTR szDirName )
 }
 HB_FUNC( MYISDIRECTORY )
 {
-   hb_retl( DirectoryExists( hb_parc(1) ) ) ;
+   hb_retl( DirectoryExists( (LPTSTR) hb_parc(1) ) ) ;
 }
 #pragma ENDDUMP
 //---------------------------------------------------------------------------------------------------------

@@ -49,6 +49,18 @@ Return US_2GETPROCESSESNT()
 #include "psapi.h"
 #include "hbapi.h"
 
+#ifdef __XHARBOUR__
+   #define HB_STORC( n, x, y )    hb_storc( n, x, y )
+   #define HB_STORNI( n, x, y )   hb_storni( n, x, y )
+   #define HB_STORL( n, x, y )    hb_storl( n, x, y )
+   #define HB_STORNL( n, x, y )   hb_stornl( n, x, y )
+#else
+   #define HB_STORC( n, x, y )    hb_storvc( n, x, y )
+   #define HB_STORNI( n, x, y )   hb_storvni( n, x, y )
+   #define HB_STORL( n, x, y )    hb_storvl( n, x, y )
+   #define HB_STORNL( n, x, y )   hb_storvnl( n, x, y )
+#endif
+
 /*
 typedef ULONG (FAR PASCAL MAPILOGON)(
     ULONG ulUIParam,
@@ -128,16 +140,16 @@ HB_FUNC(US_2GETPROCESSESNT)
    if (!hPsApiLib)
       {
       hb_reta( 2 );
-      hb_storni( 101 , -1, 1 );
-      hb_storc( "Error in load of DLL PSAPI.DLL from Function GetProcessesNT" , -1, 2 );
+      HB_STORNI( 101 , -1, 1 );
+      HB_STORC( "Error in load of DLL PSAPI.DLL from Function GetProcessesNT" , -1, 2 );
       return;
       }
    pEnumProcesses = (LPENUMPROCESSES) GetProcAddress(hPsApiLib, "EnumProcesses");
    if (! pEnumProcesses)
       {
       hb_reta( 2 );
-      hb_storni( 102 , -1, 1 );
-      hb_storc( "Error in GetProcAddress of Function EnumProcesses of DLL PSAPI.DLL from Function GetProcessesNT" , -1, 2 );
+      HB_STORNI( 102 , -1, 1 );
+      HB_STORC( "Error in GetProcAddress of Function EnumProcesses of DLL PSAPI.DLL from Function GetProcessesNT" , -1, 2 );
       FreeLibrary(hPsApiLib);
       return;
       }
@@ -145,8 +157,8 @@ HB_FUNC(US_2GETPROCESSESNT)
    if (! pEnumProcessModules)
       {
       hb_reta( 2 );
-      hb_storni( 103 , -1, 1 );
-      hb_storc( "Error in GetProcAddress of Function EnumProcessModules of DLL PSAPI.DLL from Function GetProcessesNT" , -1, 2 );
+      HB_STORNI( 103 , -1, 1 );
+      HB_STORC( "Error in GetProcAddress of Function EnumProcessModules of DLL PSAPI.DLL from Function GetProcessesNT" , -1, 2 );
       FreeLibrary(hPsApiLib);
       return;
       }
@@ -154,8 +166,8 @@ HB_FUNC(US_2GETPROCESSESNT)
    if (! pGetModuleFileNameExA)
       {
       hb_reta( 2 );
-      hb_storni( 104 , -1, 1 );
-      hb_storc( "Error in GetProcAddress of Function GetModuleFileNameExA of DLL PSAPI.DLL from Function GetProcessesNT" , -1, 2 );
+      HB_STORNI( 104 , -1, 1 );
+      HB_STORC( "Error in GetProcAddress of Function GetModuleFileNameExA of DLL PSAPI.DLL from Function GetProcessesNT" , -1, 2 );
       FreeLibrary(hPsApiLib);
       return;
       }
@@ -163,8 +175,8 @@ HB_FUNC(US_2GETPROCESSESNT)
    if ( !pEnumProcesses( aProcesses, sizeof(aProcesses), &cbNeeded ) )
       {
       hb_reta( 2 );
-      hb_storni( 105 , -1, 1 );
-      hb_storc( "Error in Function EnumProcesses of DLL PSAPI.DLL from Function GetProcessesNT" , -1, 2 );
+      HB_STORNI( 105 , -1, 1 );
+      HB_STORC( "Error in Function EnumProcesses of DLL PSAPI.DLL from Function GetProcessesNT" , -1, 2 );
       FreeLibrary(hPsApiLib);
       return;
       }
@@ -202,8 +214,8 @@ HB_FUNC(US_2GETPROCESSESNT)
           }
           // Print the process name and identifier.
      //   _tprintf( TEXT("%s  (PID: %u)\n"), szProcessName, aProcesses[i] );
-          hb_storni( aProcesses[i] , -1, ( ( i + 1 ) * 2 ) - 1 );
-          hb_storc( szProcessName , -1, ( ( i + 1 ) * 2 ));
+          HB_STORNI( aProcesses[i] , -1, ( ( i + 1 ) * 2 ) - 1 );
+          HB_STORC( szProcessName , -1, ( ( i + 1 ) * 2 ));
        };
    FreeLibrary(hPsApiLib);
 }
@@ -304,16 +316,16 @@ HB_FUNC(US_2GETPROCESSESW9X)
    if (!bKernelDll)
       {
       hb_reta( 2 );
-      hb_storni( 901 , -1, 1 );
-      hb_storc( "Error in load of DLL PSAPI.DLL from Function GetProcessesNT" , -1, 2 );
+      HB_STORNI( 901 , -1, 1 );
+      HB_STORC( "Error in load of DLL PSAPI.DLL from Function GetProcessesNT" , -1, 2 );
       return;
       }
    pCreateToolhelp32Snapshot = (LPCREATETOOLHELP32SNAPSHOT) GetProcAddress(bKernelDll, "CreateToolhelp32Snapshot");
    if (! pCreateToolhelp32Snapshot)
       {
       hb_reta( 2 );
-      hb_storni( 902 , -1, 1 );
-      hb_storc( "Error in GetProcAddress of Function CreateToolhelp32Snapshot of DLL KERNEL32.DLL from Function GetProcessesNT" , -1, 2 );
+      HB_STORNI( 902 , -1, 1 );
+      HB_STORC( "Error in GetProcAddress of Function CreateToolhelp32Snapshot of DLL KERNEL32.DLL from Function GetProcessesNT" , -1, 2 );
       FreeLibrary(bKernelDll);
       return;
       }
@@ -321,8 +333,8 @@ HB_FUNC(US_2GETPROCESSESW9X)
    if (! pProcess32First)
       {
       hb_reta( 2 );
-      hb_storni( 903 , -1, 1 );
-      hb_storc( "Error in GetProcAddress of Function Process32First of DLL KERNEL32.DLL from Function GetProcessesNT" , -1, 2 );
+      HB_STORNI( 903 , -1, 1 );
+      HB_STORC( "Error in GetProcAddress of Function Process32First of DLL KERNEL32.DLL from Function GetProcessesNT" , -1, 2 );
       FreeLibrary(bKernelDll);
       return;
       }
@@ -330,8 +342,8 @@ HB_FUNC(US_2GETPROCESSESW9X)
    if (! pProcess32Next)
       {
       hb_reta( 2 );
-      hb_storni( 904 , -1, 1 );
-      hb_storc( "Error in GetProcAddress of Function Process32Next of DLL KERNEL32.DLL from Function GetProcessesNT" , -1, 2 );
+      HB_STORNI( 904 , -1, 1 );
+      HB_STORC( "Error in GetProcAddress of Function Process32Next of DLL KERNEL32.DLL from Function GetProcessesNT" , -1, 2 );
       FreeLibrary(bKernelDll);
       return;
       }
@@ -340,8 +352,8 @@ HB_FUNC(US_2GETPROCESSESW9X)
    if( hProcessSnap == INVALID_HANDLE_VALUE )
       {
       hb_reta( 2 );
-      hb_storni( 905 , -1, 1 );
-      hb_storc( "Error in Create of function CreateToolhelp32Snapshot of DLL Kernel.DLL from Function US_GetProcessesW9X" , -1, 2 );
+      HB_STORNI( 905 , -1, 1 );
+      HB_STORC( "Error in Create of function CreateToolhelp32Snapshot of DLL Kernel.DLL from Function US_GetProcessesW9X" , -1, 2 );
       return;
       }
    // Set the size of the structure before using it.
@@ -352,8 +364,8 @@ HB_FUNC(US_2GETPROCESSESW9X)
    if( !pProcess32First( hProcessSnap, &pe32 ) )
       {
       hb_reta( 2 );
-      hb_storni( 906 , -1, 1 );
-      hb_storc( "Error in Function Process32First of DLL Kernel.DLL from Function US_GetProcessesW9X" , -1, 2 );
+      HB_STORNI( 906 , -1, 1 );
+      HB_STORC( "Error in Function Process32First of DLL Kernel.DLL from Function US_GetProcessesW9X" , -1, 2 );
       CloseHandle( hProcessSnap );     // Must clean up the snapshot object!
       return;
       }
@@ -362,8 +374,8 @@ HB_FUNC(US_2GETPROCESSESW9X)
       i++;
       //printf( "\nPROCESS NAME:  %s", pe32.szExeFile );
       //printf( "\n  process ID        = 0x%08X", pe32.th32ProcessID );
-      hb_storni( pe32.th32ProcessID , -1, ( ( i + 1 ) * 2 ) - 1 );
-      hb_storc( pe32.szExeFile , -1, ( ( i + 1 ) * 2 ));
+      HB_STORNI( pe32.th32ProcessID , -1, ( ( i + 1 ) * 2 ) - 1 );
+      HB_STORC( pe32.szExeFile , -1, ( ( i + 1 ) * 2 ));
       } while( pProcess32Next( hProcessSnap, &pe32 ) );
    CloseHandle( hProcessSnap );
    FreeLibrary(bKernelDll);

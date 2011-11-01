@@ -409,7 +409,7 @@ Function QPM_HotRecoveryMenu()
          WIDTH ( GetProperty( "WinHotRecovery" , "width" ) - 390 ) + 4 ;
          HEIGHT ( GetProperty( "WinHotRecovery" , "height" ) - 166 ) + 4
 
-      oW_HTML := US_ActiveX():New( "WinHotRecovery" , "Shell.Explorer.2" , 115 , 365 , GetProperty( "WinHotRecovery" , "width" ) - 390 , GetProperty( "WinHotRecovery" , "height" ) - 166 )
+      oW_HTML := TActiveX():New( "WinHotRecovery" , "Shell.Explorer.2" , 115 , 365 , GetProperty( "WinHotRecovery" , "width" ) - 390 , GetProperty( "WinHotRecovery" , "height" ) - 166 )
       o_HTML := oW_HTML:Load()
 
       // ---------

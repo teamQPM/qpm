@@ -1710,9 +1710,18 @@ Function SHG_Commands( cIn , cPos )
    Local bError := .F. , cParm := "" , cParm2 := ""
    Local cLineAux := "" , cMemoInAux := "" , cMemoOutAux := ""
    Local cMemoOut := "" , cMemoIn := memoread( cIn )
+   
+#IFDEF __XHARBOUR__
    Do while ( nFrom := at( "<!--SHG_" + cPos + "COMMAND " , cMemoIn , nBase ) ) > 0
+#ELSE
+   Do while ( nFrom := hb_at( "<!--SHG_" + cPos + "COMMAND " , cMemoIn , nBase ) ) > 0
+#ENDIF
       nBase++
+#IFDEF __XHARBOUR__
       if ( nTo := at( "-->" , cMemoIn , nFrom + 1 ) ) > 0
+#ELSE
+      if ( nTo := hb_at( "-->" , cMemoIn , nFrom + 1 ) ) > 0
+#ENDIF
          cLineCommand := substr( cMemoIn , nFrom , nTo - nFrom )
          cCommand := US_Word( cLineCommand , 2 )
          cParm := US_WordSubStr( cLineCommand , 3 )

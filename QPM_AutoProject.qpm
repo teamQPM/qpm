@@ -1,10 +1,10 @@
 VERSION 05 02 01
-PRJ_VERSION 05 02 0001
+PRJ_VERSION 05 02 0018
 PROJECTFOLDER <ThisFolder>
 LASTLIBFOLDERM1BH 
 LASTLIBFOLDERM1BX 
-LASTLIBFOLDERE1BH 
-LASTLIBFOLDERE1BX D:\FGS\FGS_MiniGui\GUIs\Extended_1_7_Build78a_ForBorlandC\xharbour-1.20.01.bin.w32.bcc32.5.51\lib
+LASTLIBFOLDERE1BH C:\MiniGUI203\Harbour\lib
+LASTLIBFOLDERE1BX C:\MiniGUI203\xHarbour\lib
 LASTLIBFOLDERE1GH 
 LASTLIBFOLDERE1GX 
 LASTLIBFOLDERO3BH 
@@ -19,7 +19,7 @@ RUNFOLDER
 RUNPARAM 
 OVERRIDECOMPILEPARM -q0
 OVERRIDELINKPARM 
-CHECKHARBOUR X
+CHECKHARBOUR H
 CHECKCPP B
 CHECKMINIGUI E1
 CHECKCONSOLE NO
@@ -44,7 +44,7 @@ EXTRARUNQPMPARM
 EXTRARUNEXEPARM 
 EXTRARUNFREEPARM 
 EXTRARUNTYPE 
-EXTRARUNQPMRADIO BUILD
+EXTRARUNQPMRADIO 
 EXTRARUNQPMLITE .T.
 EXTRARUNQPMFORCEFULL .F.
 EXTRARUNQPMRUN .F.
@@ -87,7 +87,7 @@ MI_BSELECTALLHEA .F.
 MI_BSELECTALLPAN .F.
 MI_BSELECTALLDBF .F.
 MI_BSELECTALLLIB .F.
-SHGDATABASE <ProjectFolder>\HelpQPM\QPM_SHG.dbf
+SHGDATABASE *NONE*
 SHGLASTFOLDERIMG <ProjectFolder>\QPM\HelpQPM
 SHGOUTPUTTYPE YES
 SHGHTMLFOLDER D:\Temp\QPM\htmlhelp
@@ -107,8 +107,6 @@ SOURCE <ProjectFolder>\QPM_SHG_AssistLink.PRG
 SOURCE <ProjectFolder>\QPM_SHG_SimpleHelpGenerator.prg
 SOURCE <ProjectFolder>\QPM_SyncRecovery.prg
 SOURCE <FR> <ProjectFolder>\QPM_Version.PRG
-SOURCE <ProjectFolder>\FuentesComunes\US_ActiveX.prg
-SOURCE <ProjectFolder>\FuentesComunes\US_ActiveX_Eventos.c
 SOURCE <ProjectFolder>\FuentesComunes\US_Clases.prg
 SOURCE <ProjectFolder>\FuentesComunes\US_Edit_CharFijo.prg
 SOURCE <ProjectFolder>\FuentesComunes\US_HB.PRG
@@ -116,6 +114,7 @@ SOURCE <ProjectFolder>\FuentesComunes\US_Log.prg
 SOURCE <ProjectFolder>\FuentesComunes\US_l_richeditbox.prg
 SOURCE <ProjectFolder>\FuentesComunes\US_MG.PRG
 SOURCE <ProjectFolder>\FuentesComunes\US_ProcessWin.prg
+SOURCE <ProjectFolder>\FuentesComunes\TAxPrg.prg
 HEAD <ProjectFolder>\qpm.ch
 HEAD <ProjectFolder>\QPM_CompatibilityHotRecovery.ch
 HEAD <ProjectFolder>\QPM_CompatibilityOpenGlobal.CH
@@ -128,4 +127,8 @@ HEAD <ProjectFolder>\FuentesComunes\US_i_richeditbox.ch
 HEAD <ProjectFolder>\FuentesComunes\Us_k.ch
 HEAD <ProjectFolder>\FuentesComunes\US_Log.h
 HEAD <ProjectFolder>\resource.h
+INCLUDEE1BH *Last* C:\MiniGUI203\Harbour\lib\calldll.lib 
+INCLUDEE1BH *Last* C:\MiniGUI203\Harbour\lib\hbct.lib 
+INCLUDEE1BX *Last* C:\MiniGUI203\xHarbour\lib\calldll.lib 
+INCLUDEE1BX *Last* C:\MiniGUI203\xHarbour\lib\zlib.lib 
 

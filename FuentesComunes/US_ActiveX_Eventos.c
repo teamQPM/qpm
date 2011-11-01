@@ -437,7 +437,11 @@ HB_FUNC( ATLAXGETDISP ) // hWnd -> pDisp
          if ( pExec )
          {
 
+#ifdef __XHARBOUR__
             hb_vmPushState();
+#else
+            hb_vmRequestReenter();
+#endif
 
             switch ( hb_itemType( pExec ) )
             {
@@ -542,7 +546,11 @@ HB_FUNC( ATLAXGETDISP ) // hWnd -> pDisp
 
             } // EOF for( i=iArg; i > 0; i-- )
 
+#ifdef __XHARBOUR__
             hb_vmPopState();
+#else
+            hb_vmRequestRestore();
+#endif
 
          } // EOF if ( pExec )
 

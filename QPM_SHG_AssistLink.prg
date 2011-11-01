@@ -39,7 +39,11 @@ Function SHG_LinkGenerateList( cIn , cTopic )
 // Local vIncludeExt := { "ZIP" , "RAR" , "MP3" , "WAV" , "EXE" }
    Local vExcludeExt := { "HTM" , "HTML" }
    do while bLoop
+#IFDEF __XHARBOUR__
       if ( nPos := at( "<A " , cMemoHtmUpper , nLastPos ) ) > 0
+#ELSE
+      if ( nPos := hb_at( "<A " , cMemoHtmUpper , nLastPos ) ) > 0
+#ENDIF
          nCaretHtm := nPos - 1
          nLastPos := nPos + nLenGuia
          vKeys := SHG_LinkParser( SHG_LinkGetString( cMemoHtm , nCaretHtm + 2 ) )

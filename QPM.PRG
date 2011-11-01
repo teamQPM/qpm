@@ -1012,6 +1012,7 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
                    WIDTH   135
                    HEIGHT  25
                    PICTURE "clearall"
+                   NOXPSTYLE .T.
                    TOOLTIP 'Delete ALL temporary objects folders and ALL Installer folders'
                    ONCLICK EraseALL()
            END BUTTON
@@ -1024,6 +1025,7 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
                    WIDTH   65
                    HEIGHT  25
                    PICTURE 'SyncRec'
+                   NOXPSTYLE .T.
                    TOOLTIP 'Force take Sync Recovery Point for this project'
                    ONCLICK QPM_ForceSyncRecovery()
            END BUTTON
@@ -1034,6 +1036,7 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
                    WIDTH   65
                    HEIGHT  25
                    PICTURE "clearall"
+                   NOXPSTYLE .T.
                    TOOLTIP 'Delete ALL temporary objects folders and ALL Installer folders'
                    ONCLICK EraseALL()
            END BUTTON
@@ -1046,6 +1049,7 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
                    WIDTH   170
                    HEIGHT  25
                    PICTURE 'force'
+                   NOXPSTYLE .T.
                    TOOLTIP 'Force Recomp of all program in project'
                    ONCLICK EraseOBJ()
            END BUTTON
@@ -1081,6 +1085,7 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
                          WIDTH           25
                          HEIGHT          25
                          PICTURE         'folderselect'
+                         NOXPSTYLE       .T.
                          TOOLTIP         'Select Folder'
                          ONCLICK         ( If ( !Empty( Folder := GetFolder( "Select Folder" , VentanaMain.TProjectFolder.Value ) ) , VentanaMain.TProjectFolder.Value := Folder , ) , QPM_CheckFiles() )
                  END BUTTON
@@ -1105,6 +1110,7 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
                          WIDTH           25
                          HEIGHT          25
                          PICTURE         'folderselect'
+                         NOXPSTYLE       .T.
                          TOOLTIP         'Select Folder'
                          ONCLICK         If ( !Empty( Folder := GetFolder( "Select Folder" , VentanaMain.TRunProjectFolder.Value ) ) , VentanaMain.TRunProjectFolder.Value := Folder , )
                  END BUTTON
@@ -1115,6 +1121,7 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
                          WIDTH   65
                          HEIGHT  25
                          PICTURE 'add'
+                         NOXPSTYLE .T.
                          TOOLTIP 'Add File'
                          ONCLICK QPM_AddFilesPRG()
                  END BUTTON
@@ -1127,6 +1134,7 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
                          WIDTH   65
                          HEIGHT          25
                          PICTURE 'remove'
+                         NOXPSTYLE .T.
                          TOOLTIP 'Remove File'
                          ONCLICK QPM_RemoveFilePRG()
                  END BUTTON
@@ -1139,6 +1147,7 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
                          WIDTH   30
                          HEIGHT  25
                          PICTURE 'remove'
+                         NOXPSTYLE .T.
                          TOOLTIP 'Remove File'
                          ONCLICK QPM_RemoveFilePRG()
                  END BUTTON
@@ -1149,6 +1158,7 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
                          WIDTH   30
                          HEIGHT  25
                          PICTURE 'hotrec'
+                         NOXPSTYLE .T.
                          TOOLTIP 'Force take Hot Recovery Version for this source'
                          ONCLICK QPM_ForceHotRecovery( "PRG" )
                  END BUTTON
@@ -1162,6 +1172,7 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
                          WIDTH   65
                          HEIGHT  25
                          PICTURE 'Edit'
+                         NOXPSTYLE .T.
                          TOOLTIP 'Edit File'
                          ONCLICK QPM_EditPRG ()
                  END BUTTON
@@ -1172,6 +1183,7 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
                          WIDTH   30
                          HEIGHT  25
                          PICTURE 'SetTop'
+                         NOXPSTYLE .T.
                          TOOLTIP 'Set Top Project File'
                          ONCLICK QPM_SetTopPRG()
                  END BUTTON
@@ -1182,6 +1194,7 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
                          WIDTH   30
                          HEIGHT  25
                          PICTURE 'ForceRecomp'
+                         NOXPSTYLE .T.
                          TOOLTIP 'Force Source Recomp (Togle On/Off)'
                          ONCLICK QPM_ForceRecompPRG()
                  END BUTTON
@@ -1192,6 +1205,7 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
                          WIDTH   65
                          HEIGHT  25
                          PICTURE "Sort"
+                         NOXPSTYLE .T.
                          TOOLTIP 'Sort PRG and C files in alfabetical order, except top File'
                          ONCLICK SortPRG( "VentanaMain" , "GPrgFiles" , NCOLPRGNAME )
                  END BUTTON
@@ -1202,6 +1216,7 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
                          WIDTH   55
                          HEIGHT  25
                          PICTURE 'ChangeVersion'
+                         NOXPSTYLE .T.
                          TOOLTIP 'Change Version, Release and Build'
                          ONCLICK QPM_ChangePrjVersion()
                  END BUTTON
@@ -1275,6 +1290,7 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
                          WIDTH   11
                          HEIGHT  21
                          PICTURE 'SYNC'
+                         NOXPSTYLE .T.
                          TOOLTIP 'Syncronize Tabs'
                          ONCLICK TabSync()
                  END BUTTON
@@ -1285,6 +1301,7 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
                          WIDTH   11
                          HEIGHT  21
                          PICTURE 'UP'
+                         NOXPSTYLE .T.
                          TOOLTIP 'Up PRG or C file in List'
                          ONCLICK UpPrg()
                  END BUTTON
@@ -1295,6 +1312,7 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
                          WIDTH   11
                          HEIGHT  21
                          PICTURE 'DOWN'
+                         NOXPSTYLE .T.
                          TOOLTIP 'Down PRG or C file in List'
                          ONCLICK DownPrg()
                  END BUTTON
@@ -1305,6 +1323,7 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
                          WIDTH   11
                          HEIGHT  21
                          PICTURE 'UP'
+                         NOXPSTYLE .T.
                          TOOLTIP 'Up PRG or C file in List'
                          ONCLICK UpPrg()
                  END BUTTON
@@ -1315,6 +1334,7 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
                          WIDTH   11
                          HEIGHT  21
                          PICTURE 'DOWN'
+                         NOXPSTYLE .T.
                          TOOLTIP 'Down PRG or C file in List'
                          ONCLICK DownPrg()
                  END BUTTON
@@ -1324,7 +1344,7 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
                     WIDTH 270 ;
                     HEIGHT GetDesktopRealHeight() - 345 ;
                     HEADERS { 'S' , 'R' , 'Src Name' , 'Src Full Name' , 'Offset' , 'Control Edit' , 'Hot Recovery' } ;
-                    WIDTHS { 20 , 0 , 100 , 1000 , 20 , 20 , 20 };
+                    WIDTHS { 25 , 0 , 100 , 1000 , 20 , 20 , 20 };
                     ITEMS aGridPRG ;
                     VALUE 1 ;
                     IMAGE vImagesGrid ;
@@ -1368,6 +1388,7 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
                          WIDTH           25
                          HEIGHT          25
                          PICTURE         'folderselect'
+                         NOXPSTYLE .T.
                          TOOLTIP         'Select Library'
                          ONCLICK         If( !Empty( FileName := BugGetFile( { {'Library (*.lib)','*.lib'} } , 'Select Library for ReImport' , US_FileNameOnlyPath( ChgPathToReal( VentanaMain.TReImportLib.Value ) ) , .F. , .T. ) ) , VentanaMain.TReImportLib.Value := ChgPathToRelative( FileName ) , )
                  END BUTTON
@@ -1395,6 +1416,7 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
                          WIDTH   65
                          HEIGHT  25
                          PICTURE 'add'
+                         NOXPSTYLE .T.
                          TOOLTIP 'Add Header'
                          ONCLICK QPM_AddFilesHEA()
                  END BUTTON
@@ -1407,6 +1429,7 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
                          WIDTH   65
                          HEIGHT          25
                          PICTURE 'remove'
+                         NOXPSTYLE .T.
                          TOOLTIP 'Remove Header'
                          ONCLICK QPM_RemoveFileHEA()
                  END BUTTON
@@ -1419,6 +1442,7 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
                          WIDTH   30
                          HEIGHT  25
                          PICTURE 'remove'
+                         NOXPSTYLE .T.
                          TOOLTIP 'Remove Header'
                          ONCLICK QPM_RemoveFileHEA()
                  END BUTTON
@@ -1429,6 +1453,7 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
                          WIDTH   30
                          HEIGHT  25
                          PICTURE 'hotrec'
+                         NOXPSTYLE .T.
                          TOOLTIP 'Force take Hot Recovery Version for this header'
                          ONCLICK QPM_ForceHotRecovery( "HEA" )
                  END BUTTON
@@ -1441,6 +1466,7 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
                          WIDTH   65
                          HEIGHT  25
                          PICTURE 'Edit'
+                         NOXPSTYLE .T.
                          TOOLTIP 'Modify Header'
                          ONCLICK QPM_EditHEA ()
                  END BUTTON
@@ -1451,6 +1477,7 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
                          WIDTH   65
                          HEIGHT  25
                          PICTURE "Sort"
+                         NOXPSTYLE .T.
                          TOOLTIP 'Sort Headers in alfabetical order'
                          ONCLICK SortHEA( "VentanaMain" , "GHeaFiles" , NCOLHEANAME )
                  END BUTTON
@@ -1461,6 +1488,7 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
                          WIDTH   11
                          HEIGHT  21
                          PICTURE 'SYNC'
+                         NOXPSTYLE .T.
                          TOOLTIP 'Syncronize Tabs'
                          ONCLICK TabSync()
                  END BUTTON
@@ -1471,6 +1499,7 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
                          WIDTH   11
                          HEIGHT  21
                          PICTURE 'UP'
+                         NOXPSTYLE .T.
                          TOOLTIP 'Up Headers in List'
                          ONCLICK UpHea()
                  END BUTTON
@@ -1481,6 +1510,7 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
                          WIDTH   11
                          HEIGHT  21
                          PICTURE 'DOWN'
+                         NOXPSTYLE .T.
                          TOOLTIP 'Down Headers in List'
                          ONCLICK DownHea()
                  END BUTTON
@@ -1491,6 +1521,7 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
                          WIDTH   11
                          HEIGHT  21
                          PICTURE 'UP'
+                         NOXPSTYLE .T.
                          TOOLTIP 'Up Headers in List'
                          ONCLICK UpHea()
                  END BUTTON
@@ -1501,6 +1532,7 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
                          WIDTH   11
                          HEIGHT  21
                          PICTURE 'DOWN'
+                         NOXPSTYLE .T.
                          TOOLTIP 'Down Headers in List'
                          ONCLICK DownHea()
                  END BUTTON
@@ -1509,7 +1541,7 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
                     WIDTH 270 ;
                     HEIGHT GetDesktopRealHeight() - 285 ;
                     HEADERS { 'S' , 'Header Name' , 'Header Full Name' , 'Offset' , 'Control Edit' , 'Hot Recovery' } ;
-                    WIDTHS { 20 , 100 , 1000 , 20 , 20 , 20 };
+                    WIDTHS { 25 , 100 , 1000 , 20 , 20 , 20 };
                     ITEMS aGridHea ;
                     IMAGE vImagesGrid ;
                     VALUE 1 ;
@@ -1530,6 +1562,7 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
                          WIDTH   65
                          HEIGHT  25
                          PICTURE 'add'
+                         NOXPSTYLE .T.
                          TOOLTIP 'Add Form'
                          ONCLICK QPM_AddFilesPAN()
                  END BUTTON
@@ -1542,6 +1575,7 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
                          WIDTH   65
                          HEIGHT          25
                          PICTURE 'remove'
+                         NOXPSTYLE .T.
                          TOOLTIP 'Remove Form'
                          ONCLICK QPM_RemoveFilePAN()
                  END BUTTON
@@ -1554,6 +1588,7 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
                          WIDTH   30
                          HEIGHT  25
                          PICTURE 'remove'
+                         NOXPSTYLE .T.
                          TOOLTIP 'Remove Form'
                          ONCLICK QPM_RemoveFilePAN()
                  END BUTTON
@@ -1564,6 +1599,7 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
                          WIDTH   30
                          HEIGHT  25
                          PICTURE 'hotrec'
+                         NOXPSTYLE .T.
                          TOOLTIP 'Force take Hot Recovery Version for this form'
                          ONCLICK QPM_ForceHotRecovery( "PAN" )
                  END BUTTON
@@ -1596,6 +1632,7 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
                          WIDTH   65
                          HEIGHT  25
                          PICTURE "Sort"
+                         NOXPSTYLE .T.
                          TOOLTIP 'Sort Forms in alfabetical order'
                          ONCLICK SortPAN( "VentanaMain" , "GPanFiles" , NCOLPANNAME )
                  END BUTTON
@@ -1616,6 +1653,7 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
                          WIDTH   11
                          HEIGHT  21
                          PICTURE 'SYNC'
+                         NOXPSTYLE .T.
                          TOOLTIP 'Syncronize Tabs'
                          ONCLICK TabSync()
                  END BUTTON
@@ -1626,6 +1664,7 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
                          WIDTH   11
                          HEIGHT  21
                          PICTURE 'UP'
+                         NOXPSTYLE .T.
                          TOOLTIP 'Up Forms in List'
                          ONCLICK UpPan()
                  END BUTTON
@@ -1636,6 +1675,7 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
                          WIDTH   11
                          HEIGHT  21
                          PICTURE 'DOWN'
+                         NOXPSTYLE .T.
                          TOOLTIP 'Down Forms in List'
                          ONCLICK DownPan()
                  END BUTTON
@@ -1646,6 +1686,7 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
                          WIDTH   11
                          HEIGHT  21
                          PICTURE 'UP'
+                         NOXPSTYLE .T.
                          TOOLTIP 'Up Forms in List'
                          ONCLICK UpPan()
                  END BUTTON
@@ -1656,6 +1697,7 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
                          WIDTH   11
                          HEIGHT  21
                          PICTURE 'DOWN'
+                         NOXPSTYLE .T.
                          TOOLTIP 'Down Forms in List'
                          ONCLICK DownPan()
                  END BUTTON
@@ -1664,7 +1706,7 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
                     WIDTH 270 ;
                     HEIGHT GetDesktopRealHeight() - 285 ;
                     HEADERS { 'S' , 'Form Name' , 'Form Full Name' , 'Offset' , 'Control Edit' , 'Hot Recovery' } ;
-                    WIDTHS { 20 , 100 , 1000 , 20 , 20 , 20 };
+                    WIDTHS { 25 , 100 , 1000 , 20 , 20 , 20 };
                     ITEMS aGridPan ;
                     VALUE 1 ;
                     IMAGE vImagesGrid ;
@@ -1685,6 +1727,7 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
                          WIDTH   65
                          HEIGHT  25
                          PICTURE 'add'
+                         NOXPSTYLE .T.
                          TOOLTIP 'Add Dbf'
                          ONCLICK QPM_AddFilesDBF()
                  END BUTTON
@@ -1695,6 +1738,7 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
                          WIDTH   65
                          HEIGHT  25
                          PICTURE 'remove'
+                         NOXPSTYLE .T.
                          TOOLTIP 'Remove Dbf'
                          ONCLICK QPM_RemoveFileDBF()
                  END BUTTON
@@ -1705,6 +1749,7 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
                          WIDTH   65
                          HEIGHT  25
                          PICTURE 'Edit'
+                         NOXPSTYLE .T.
                          TOOLTIP 'Modify Dbf with associated Tool'
                          ONCLICK QPM_EditDBF()
                  END BUTTON
@@ -1715,6 +1760,7 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
                          WIDTH   65
                          HEIGHT  25
                          PICTURE "Sort"
+                         NOXPSTYLE .T.
                          TOOLTIP "Sort Dbf's in alfabetical order"
                          ONCLICK SortDBF( "VentanaMain" , "GDbfFiles" , NCOLDBFNAME )
                  END BUTTON
@@ -1725,6 +1771,7 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
                          WIDTH   11
                          HEIGHT  21
                          PICTURE 'SYNC'
+                         NOXPSTYLE .T.
                          TOOLTIP 'Syncronize Tabs'
                          ONCLICK TabSync()
                  END BUTTON
@@ -1735,6 +1782,7 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
                          WIDTH   11
                          HEIGHT  21
                          PICTURE 'UP'
+                         NOXPSTYLE .T.
                          TOOLTIP "Up Dbf's in List"
                          ONCLICK UpDbf()
                  END BUTTON
@@ -1745,6 +1793,7 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
                          WIDTH   11
                          HEIGHT  21
                          PICTURE 'DOWN'
+                         NOXPSTYLE .T.
                          TOOLTIP "Down Dbf's in List"
                          ONCLICK DownDbf()
                  END BUTTON
@@ -1755,6 +1804,7 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
                          WIDTH   11
                          HEIGHT  21
                          PICTURE 'UP'
+                         NOXPSTYLE .T.
                          TOOLTIP "Up Dbf's in List"
                          ONCLICK UpDbf()
                  END BUTTON
@@ -1765,6 +1815,7 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
                          WIDTH   11
                          HEIGHT  21
                          PICTURE 'DOWN'
+                         NOXPSTYLE .T.
                          TOOLTIP "Down Dbf's in List"
                          ONCLICK DownDbf()
                  END BUTTON
@@ -1773,7 +1824,7 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
                     WIDTH 270 ;
                     HEIGHT GetDesktopRealHeight() - 285 ;
                     HEADERS { 'S' , 'Dbf Name' , 'Dbf Full Name' , 'Offset' , 'Control Edit' , 'Search' } ;
-                    WIDTHS { 20 , 100 , 1000 , 20 , 20 , 20 };
+                    WIDTHS { 25 , 100 , 1000 , 20 , 20 , 20 };
                     ITEMS aGridDbf ;
                     VALUE 1 ;
                     IMAGE vImagesGrid ;
@@ -1801,6 +1852,7 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
                          WIDTH   65
                          HEIGHT  25
                          PICTURE 'add'
+                         NOXPSTYLE .T.
                          TOOLTIP 'Add File'
                          ONCLICK QPM_AddFilesLIB()
                  END BUTTON
@@ -1811,6 +1863,7 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
                          WIDTH   65
                          HEIGHT  25
                          PICTURE 'remove'
+                         NOXPSTYLE .T.
                          TOOLTIP 'Remove File'
                          ONCLICK QPM_RemoveFileLIB()
                  END BUTTON
@@ -1841,6 +1894,7 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
                          WIDTH   65
                          HEIGHT  25
                          PICTURE "Sort"
+                         NOXPSTYLE .T.
                          TOOLTIP 'Sort Libs and Objects Included in alfabetical order'
                          ONCLICK SortINC( "VentanaMain" , "GIncFiles" , NCOLINCNAME )
                  END BUTTON
@@ -1851,6 +1905,7 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
                          WIDTH   11
                          HEIGHT  21
                          PICTURE 'SYNC'
+                         NOXPSTYLE .T.
                          TOOLTIP 'Syncronize Tabs'
                          ONCLICK TabSync()
                  END BUTTON
@@ -1861,6 +1916,7 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
                          WIDTH   11
                          HEIGHT  21
                          PICTURE 'UP'
+                         NOXPSTYLE .T.
                          TOOLTIP 'Up Lib or Obj in Include List'
                          ONCLICK UpLibInclude()
                  END BUTTON
@@ -1871,6 +1927,7 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
                          WIDTH   11
                          HEIGHT  21
                          PICTURE 'DOWN'
+                         NOXPSTYLE .T.
                          TOOLTIP 'Down Lib or Obj in Include List'
                          ONCLICK DownLibInclude()
                  END BUTTON
@@ -1879,7 +1936,7 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
                     WIDTH 270 ;
                     HEIGHT 170 ;
                     HEADERS { 'S' , 'Include Name' , 'Include Full Name'} ;
-                    WIDTHS { 20 , 100 , 1000 };
+                    WIDTHS { 25 , 100 , 1000 };
                     ITEMS aGridInc ;
                     VALUE 1 ;
                     IMAGE vImagesGrid ;
@@ -1903,6 +1960,7 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
                          WIDTH   65
                          HEIGHT  25
                          PICTURE 'add'
+                         NOXPSTYLE .T.
                          TOOLTIP 'Add File'
                          ONCLICK QPM_AddExcludeFilesLIB()
                  END BUTTON
@@ -1913,6 +1971,7 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
                          WIDTH   65
                          HEIGHT  25
                          PICTURE 'remove'
+                         NOXPSTYLE .T.
                          TOOLTIP 'Remove File'
                          ONCLICK QPM_RemoveExcludeFileLIB()
                  END BUTTON
@@ -1923,6 +1982,7 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
                          WIDTH   65
                          HEIGHT  25
                          PICTURE "Sort"
+                         NOXPSTYLE .T.
                          TOOLTIP 'Sort Libs Excluded in alfabetical order'
                          ONCLICK SortEXC( "VentanaMain" , "GExcFiles" , NCOLEXCNAME )
                  END BUTTON
@@ -1933,6 +1993,7 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
                          WIDTH   11
                          HEIGHT  21
                          PICTURE 'UP'
+                         NOXPSTYLE .T.
                          TOOLTIP 'Up Libs in Exclude List'
                          ONCLICK UpLibExclude()
                  END BUTTON
@@ -1943,6 +2004,7 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
                          WIDTH   11
                          HEIGHT  21
                          PICTURE 'DOWN'
+                         NOXPSTYLE .T.
                          TOOLTIP 'Down Libs in Exclude List'
                          ONCLICK DownLibExclude()
                  END BUTTON
@@ -1951,7 +2013,7 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
                     WIDTH 270 ;
                     HEIGHT GetDesktopRealHeight() - 585 ;
                     HEADERS { 'S' , 'Exclude Library Name' } ;
-                    WIDTHS { 20 , 200 };
+                    WIDTHS { 25 , 200 };
                     ITEMS aGridExc ;
                     VALUE 1 ;
                     IMAGE vImagesGrid ;
@@ -1986,6 +2048,7 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
                          WIDTH           25
                          HEIGHT          25
                          PICTURE         'folderselect'
+                         NOXPSTYLE .T.
                          TOOLTIP         'Select QPM Help Generator Database'
                          ONCLICK         (            SHG_GetDatabase()                            , if( SHG_BaseOK , SetProperty( "VentanaMain" , "RichEditHlp" , "readonly" , .F. ) , US_NOP() ) )
                  END BUTTON
@@ -2010,6 +2073,7 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
                          WIDTH   65
                          HEIGHT  25
                          PICTURE 'add'
+                         NOXPSTYLE .T.
                          TOOLTIP 'Add Topic'
                          ONCLICK QPM_AddFilesHLP()
                  END BUTTON
@@ -2020,6 +2084,7 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
                          WIDTH   65
                          HEIGHT  25
                          PICTURE 'remove'
+                         NOXPSTYLE .T.
                          TOOLTIP 'Remove Topic'
                          ONCLICK QPM_RemoveFileHLP()
                  END BUTTON
@@ -2030,6 +2095,7 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
                          WIDTH   65
                          HEIGHT  25
                          PICTURE 'Edit'
+                         NOXPSTYLE .T.
                          TOOLTIP 'Edit Topic Name'
                          ONCLICK QPM_EditHLP ()
                  END BUTTON
@@ -2040,6 +2106,7 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
                          WIDTH   65
                          HEIGHT  25
                          PICTURE 'TEST'
+                         NOXPSTYLE .T.
                          TOOLTIP 'Test CHM file'
                          ONCLICK SHG_DisplayHelp( SHG_GetOutputName() )
                  END BUTTON
@@ -2090,6 +2157,7 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
                          WIDTH   11
                          HEIGHT  21
                          PICTURE 'SYNC'
+                         NOXPSTYLE .T.
                          TOOLTIP 'Syncronize Tabs'
                          ONCLICK TabSync()
                  END BUTTON
@@ -2100,6 +2168,7 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
                          WIDTH   11
                          HEIGHT  21
                          PICTURE 'UP'
+                         NOXPSTYLE .T.
                          TOOLTIP 'Up Hlp file in List'
                          ONCLICK UpHlp()
                  END BUTTON
@@ -2110,6 +2179,7 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
                          WIDTH   11
                          HEIGHT  21
                          PICTURE 'DOWN'
+                         NOXPSTYLE .T.
                          TOOLTIP 'Down Hlp file in List'
                          ONCLICK DownHlp()
                  END BUTTON
@@ -2120,6 +2190,7 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
                          WIDTH   11
                          HEIGHT  21
                          PICTURE 'UP'
+                         NOXPSTYLE .T.
                          TOOLTIP 'Up Hlp file in List'
                          ONCLICK UpHlp()
                  END BUTTON
@@ -2130,6 +2201,7 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
                          WIDTH   11
                          HEIGHT  21
                          PICTURE 'DOWN'
+                         NOXPSTYLE .T.
                          TOOLTIP 'Down Hlp file in List'
                          ONCLICK DownHlp()
                  END BUTTON
@@ -2138,7 +2210,7 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
                     WIDTH 270 ;
                     HEIGHT GetDesktopRealHeight() - 345 ;
                     HEADERS { 'I' , 'Topic' , 'Nick Name' , 'Offset' , 'Control Edit' } ;
-                    WIDTHS { 20 , 1000 , 0 , 20 , 20 };
+                    WIDTHS { 25 , 1000 , 0 , 20 , 20 };
                     ITEMS aGridHlp ;
                     VALUE 1 ;
                     IMAGE vImagesGrid ;
@@ -2311,10 +2383,11 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
                  END CHECKBOX
 
                  @ 25, 00 IMAGE IBorde1HEA ;
-                     PICTURE         "YELLOW" ;
-                     WIDTH           GetDesktopRealWidth() - 348 ;
-                     HEIGHT          GetDesktopRealHeight() - 217 ;
-                     STRETCH
+                         PICTURE         "YELLOW" ;
+                         WIDTH           GetDesktopRealWidth() - 348 ;
+                         HEIGHT          GetDesktopRealHeight() - 217 ;
+                         STRETCH
+                     
                  @ 35, 10 RICHEDITBOX RichEditHEA ;
                          WIDTH           GetDesktopRealWidth() - 364 ;
                          HEIGHT          GetDesktopRealHeight() - 272 ;
@@ -2607,26 +2680,28 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
 
                  DEFINE BUTTON BAddHlpKey
                          ROW             66
-                         COL             GetDesktopRealWidth() - 415
+                         COL             GetDesktopRealWidth() - 416
                          WIDTH           28
                          HEIGHT          25
                          PICTURE 'add'
+                         NOXPSTYLE .T.
                          TOOLTIP 'Add Key for Automatic Index on Help'
                          ONCLICK SHG_AddHlpKey()
                  END BUTTON
 
                  DEFINE BUTTON BRemoveHlpKey
                          ROW             66
-                         COL             GetDesktopRealWidth() - 383
+                         COL             GetDesktopRealWidth() - 384
                          WIDTH           28
                          HEIGHT          25
                          PICTURE 'remove'
+                         NOXPSTYLE .T.
                          TOOLTIP 'Remove Key from Help'
                          ONCLICK QPM_RemoveKeyHLP()
                  END BUTTON
 
-                 @ 95, ( GetDesktopRealWidth() - 415 ) GRID GHlpKeys ;
-                    WIDTH 60 ;
+                 @ 95, ( GetDesktopRealWidth() - 480 ) GRID GHlpKeys ;
+                    WIDTH 124 ;
                     HEIGHT GetDesktopRealHeight() - 332 ;
                     HEADERS { 'Keys' } ;
                     WIDTHS { 100 };
@@ -2681,6 +2756,7 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
                          VALUE           'Override Compile Parm:'
                          TRANSPARENT     if( IsXPThemeActive() , .T. , .F. )
                  END LABEL
+                 
                  DEFINE TEXTBOX OverrideCompile
                          ROW             37
                          COL             155
@@ -2695,6 +2771,7 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
                          VALUE           'Override Link Parm:'
                          TRANSPARENT     if( IsXPThemeActive() , .T. , .F. )
                  END LABEL
+                 
                  DEFINE TEXTBOX OverrideLink
                          ROW             37
                          COL             263 + ( ( GetDesktopRealWidth() - 620 ) / 2 )
@@ -2783,6 +2860,7 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
                    WIDTH           85
                    HEIGHT          25
                    PICTURE "STOP"
+                   NOXPSTYLE .T.
                    TOOLTIP 'Stop BUILD Process'
                    ONCLICK QPM_Wait( "BuildStop()" , "Stopping, please wait ..." )
            END BUTTON
@@ -2794,6 +2872,7 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
                    WIDTH           85
                    HEIGHT          25
                    PICTURE "KILL"
+                   NOXPSTYLE .T.
                    TOOLTIP 'Open Process Manager'
                    ONCLICK ( SetProperty( "VentanaMain" , "bKill" , "Enabled" , .F. ) , DoMethod( "WinKiller" , "restore" ) , QPM_bKiller := .T. , if( !PUB_QPM_bHigh , QPM_SetProcessPriority( "HIGH" ) , ) , SetProperty( "WinKiller" , "TimerRefresh" , "Enabled" , GetProperty( "WinKiller" , "Check_AutoRefresh" , "value" ) ) , DoMethod( "VentanaMain" , "minimize" ) )
            END BUTTON
@@ -2974,6 +3053,7 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
                       WIDTH           75
                       HEIGHT          25
                       PICTURE "STOP"
+                      NOXPSTYLE .T.
                       TOOLTIP 'Stop BUILD Process'
                       ONCLICK QPM_Wait( "BuildStop()" , "Stopping, please wait ..." )
               END BUTTON
@@ -2997,6 +3077,7 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
                       TOOLTIP 'Run Program with Parameters'
                       ONCLICK ( bRunParm := .T. , QPM_Run( bRunParm ) )
               END BUTTON
+              
               DEFINE BUTTON BRun
                       ROW             ( ( GetDesktopRealHeight() * 85 ) / 100 )
                       COL             ( ( GetDesktopRealWidth() * 48 ) / 100 )
@@ -3006,6 +3087,7 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
                       TOOLTIP 'Run Program Without Parameters'
                       ONCLICK ( bRunParm := .F. , QPM_Run( bRunParm ) )
               END BUTTON
+              
               VentanaLite.BRunP.enabled := .F.
               VentanaLite.BRun.enabled := .F.
 
@@ -9596,12 +9678,22 @@ Function DbfDataSearch( Txt )
       DBSelectarea( "DbfAlias" )
       VentanaMain.DbfBrowse.Value := nRecord
       VentanaMain.DbfBrowse.Refresh()
+#IFDEF __XHARBOUR__
       VentanaMain.RichEditDbf.Value := "     " + HB_OsNewline() + ;
                                        "     " + HB_OsNewline() + ;
                                        "     Text found at record: " + alltrim( str( nRecord ) ) + HB_OsNewLine() + ;
                                        "     Field: " + cFieldName + HB_OsNewLine() + ;
                                        "     Position: " + alltrim( str( nFieldPos ) ) + HB_OsNewLine() + ;
                                        "     Content: " + substr( cFieldTxt , at( us_upper( Txt ) , US_Upper( cFieldTxt ) , nFieldPos ) , 200 ) + HB_OsNewLine()
+#ELSE
+      VentanaMain.RichEditDbf.Value := "     " + HB_OsNewline() + ;
+                                       "     " + HB_OsNewline() + ;
+                                       "     Text found at record: " + alltrim( str( nRecord ) ) + HB_OsNewLine() + ;
+                                       "     Field: " + cFieldName + HB_OsNewLine() + ;
+                                       "     Position: " + alltrim( str( nFieldPos ) ) + HB_OsNewLine() + ;
+                                       "     Content: " + substr( cFieldTxt , hb_at( us_upper( Txt ) , US_Upper( cFieldTxt ) , nFieldPos ) , 200 ) + HB_OsNewLine()
+#ENDIF
+
       VentanaMain.RichEditDbf.CaretPos := 1
       FindChr( GetControlHandle ( "RichEditDbf" , "VentanaMain" ) , VentanaMain.CSearch.DisplayValue , FindChr( GetControlHandle ( "RichEditDbf" , "VentanaMain" ) , "Content: " , 1 , .F. , .F. , .T. ) , .F. , .F. , .T. )
       SetProperty( "VentanaMain" , "GDbfFiles" , "Cell" , VentanaMain.GDbfFiles.Value , NCOLDBFSEARCH , alltrim( str( nRecord ) ) + " " + cFieldName + " " + alltrim( str( nFieldPos ) ) )
@@ -9773,7 +9865,12 @@ Function GlobalSearch2( cType , Txt , nRow , bFunc , bDbfData , DBFcBaseType , n
       MemoAux := us_upper( MemoRead( ChgPathToReal( GetProperty( "VentanaMain" , "GPrgFiles" , "Cell" , nRow , NCOLPRGFULLNAME ) ) ) )
       bSalir := .F.
       nPosition := 1
+
+#IFDEF __XHARBOUR__
       do while ( Pos := at( us_upper( Txt ) , MemoAux , nPosition ) ) > 0 .and. !bSalir
+#ELSE
+      do while ( Pos := hb_at( us_upper( Txt ) , MemoAux , nPosition ) ) > 0 .and. !bSalir
+#ENDIF
          DO EVENTS
          nPosition := Pos + 1
          vAux := {}
@@ -9913,7 +10010,11 @@ Function GlobalSearch2( cType , Txt , nRow , bFunc , bDbfData , DBFcBaseType , n
  //  msginfo( "pre valid" )
                         if columnValid
  //  msginfo( "intro" )
+#IFDEF __XHARBOUR__
                            if ( AuxPosition := at( US_Upper( Txt ) , US_Upper( US_TodoStr( &( aStru[x][1] ) ) ) , nPosBase ) ) > 0
+#ELSE
+                           if ( AuxPosition := hb_at( US_Upper( Txt ) , US_Upper( US_TodoStr( &( aStru[x][1] ) ) ) , nPosBase ) ) > 0
+#ENDIF
 //   msginfo( "encontro" )
                               bFound := .T.
                               nRecordFound      := RecNo()
@@ -10726,6 +10827,18 @@ Return Nil
 #include <wingdi.h>
 #include <setupapi.h>
 
+#ifdef __XHARBOUR__
+   #define HB_STORC( n, x, y )    hb_storc( n, x, y )
+   #define HB_STORNI( n, x, y )   hb_storni( n, x, y )
+   #define HB_STORL( n, x, y )    hb_storl( n, x, y )
+   #define HB_STORNL( n, x, y )   hb_stornl( n, x, y )
+#else
+   #define HB_STORC( n, x, y )    hb_storvc( n, x, y )
+   #define HB_STORNI( n, x, y )   hb_storvni( n, x, y )
+   #define HB_STORL( n, x, y )    hb_storvl( n, x, y )
+   #define HB_STORNL( n, x, y )   hb_storvnl( n, x, y )
+#endif
+
 HB_FUNC( HB_LOADSTRING )
 {
    LPBYTE cBuffer;
@@ -10798,7 +10911,7 @@ HB_FUNC ( US_C_GETFILE )
 
                                 for (n = 1; n < iNumSelected; n++)
                                 {
-                                        hb_storc( cFullName[n], -1, n );
+                                        HB_STORC( cFullName[n], -1, n );
                                 }
                         }
                         else

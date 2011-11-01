@@ -40,7 +40,11 @@ Function SHG_ImageGenerateList( cIn , cTopic )
 // msginfo( "entra: " + cMemoHtm )
    do while bLoop
 //      msginfo( "into loop: " + cMemoHtmUpper )
+#IFDEF __XHARBOUR__
       if ( nPos := at( "<IMG " , cMemoHtmUpper , nLastPos ) ) > 0
+#ELSE
+      if ( nPos := hb_at( "<IMG " , cMemoHtmUpper , nLastPos ) ) > 0
+#ENDIF
          nCaretHtm := nPos - 1
          nLastPos := nPos + nLenGuia
          vKeys := SHG_ImageParser( SHG_ImageGetString( cMemoHtm , nCaretHtm + 2 ) )
