@@ -25,15 +25,21 @@
  *    You should have received a copy of the GNU General Public License
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+/*
+ * This file was borrowed from Harbour MiniGUI Extended Edition 2.0.3
+*/
 
-#include "minigui.ch"
 #include "hbclass.ch"
 
-CLASS US_ActiveX
-   DATA aAxEv        INIT {}
-   DATA aAxExec      INIT {}
-   DATA hAtl
-   DATA hSink
+#ifndef __XHARBOUR__
+   #xcommand TRY                => bError := errorBlock( {|oError| break( oError ) } ) ;;
+                                   BEGIN SEQUENCE
+   #xcommand CATCH [<!oError!>] => errorBlock( bError ) ;;
+                                   RECOVER [USING <oError>] <-oError-> ;;
+                                   errorBlock( bError )
+#endif
+
+CLASS TActiveX
    DATA oOle
    DATA hWnd
    DATA cWindowName
@@ -57,13 +63,11 @@ CLASS US_ActiveX
    METHOD GetCol()
    METHOD GetWidth()
    METHOD GetHeight()
-   METHOD UserMap( nMsg, xExec, oSelf )
-   ERROR HANDLER __Error
 ENDCLASS
 
-METHOD New( cWindowName , cProgId , nRow , nCol , nWidth , nHeight ) CLASS US_ActiveX
-   if( empty( nRow )    , nRow    := 0                              , )
-   if( empty( nCol )    , nCol    := 0                              , )
+METHOD New( cWindowName , cProgId , nRow , nCol , nWidth , nHeight ) CLASS TActiveX
+   if( empty( nRow )    , nRow    := 0 , )
+   if( empty( nCol )    , nCol    := 0 , )
    if( empty( nWidth )  , nWidth  := GetProperty( cWindowName , "width" ) , )
    if( empty( nHeight ) , nHeight := GetProperty( cWindowName , "Height" ) , )
    ::nRow := nRow
@@ -76,37 +80,23 @@ METHOD New( cWindowName , cProgId , nRow , nCol , nWidth , nHeight ) CLASS US_Ac
    ::nOldWinHeight := GetProperty( cWindowName , "Height" )
 Return Self
 
-METHOD Load() CLASS US_ActiveX
+METHOD Load() CLASS TActiveX
+   local oError, bError
    local nHandle := GetFormHandle(::cWindowName)
-   local hSink
-   local OCX_oError
-   local OCX_bSaveHandler
-   local OCX_nError := 0
-   ::hWnd := InitActiveX( nHandle, ::cProgId , ::nCol , ::nRow , ::nWidth , ::nHeight )
-   hAtl     := AtlAxGetDisp( ::hWnd )
-   SetupConnectionPoint( hAtl, @hSink, ::aAxEv , ::aAxExec )
-   ::hSink := hSink
-#ifdef __XHARBOUR__
+   local xObjeto
+   local OCX_Error := 0
+   AtlAxWinInit()
+   ::hWnd := CreateWindowEx( nHandle, ::cProgId )
+   MoveWindow( ::hWnd , ::nCol , ::nRow , ::nWidth , ::nHeight , .t. )
+   xObjeto := AtlAxGetDisp( ::hWnd )
    TRY
-      ::oOle := ToleAuto():New( hAtl )
-   CATCH OCX_oError
-      msginfo( OCX_oError:description )
+      ::oOle := CreateObject( xObjeto )
+   CATCH
+      MsgInfo( oError:description )
    END
-#else
-   OCX_bSaveHandler := errorblock( { |x| break(x) } )
-   BEGIN SEQUENCE
-      ::oOle := ToleAuto():New( hAtl )
-      RECOVER USING OCX_oError
-         OCX_nError = OCX_oError:genCode
-   END
-   errorblock( OCX_bSaveHandler )
-   if OCX_nError != 0
-      msginfo( OCX_oError:description )
-   endif
-#endif
 RETURN ::oOle
 
-METHOD ReSize( nRow , nCol , nWidth , nHeight ) CLASS US_ActiveX
+METHOD ReSize( nRow , nCol , nWidth , nHeight ) CLASS TActiveX
    if !::bHide
       MoveWindow( ::hWnd , nCol , nRow , nWidth , nHeight , .t. )
    endif
@@ -118,7 +108,7 @@ METHOD ReSize( nRow , nCol , nWidth , nHeight ) CLASS US_ActiveX
    ::nOldWinHeight := GetProperty( ::cWindowName , "Height" )
 RETURN .T.
 
-METHOD Adjust() CLASS US_ActiveX
+METHOD Adjust() CLASS TActiveX
    Local nAuxRight , nAuxBottom
    nAuxRight := ( ::nOldWinWidth - ( ::nWidth + ::nCol ) )
    nAuxBottom := ( ::nOldWinHeight - ( ::nHeight + ::nRow ) )
@@ -129,62 +119,92 @@ METHOD Adjust() CLASS US_ActiveX
    ::nOldWinHeight := GetProperty( ::cWindowName , "Height" )
 RETURN .T.
 
-METHOD GetRow() CLASS US_ActiveX
+METHOD GetRow() CLASS TActiveX
 RETURN ::nRow
 
-METHOD GetCol() CLASS US_ActiveX
+METHOD GetCol() CLASS TActiveX
 RETURN ::nCol
 
-METHOD GetWidth() CLASS US_ActiveX
+METHOD GetWidth() CLASS TActiveX
 RETURN ::nWidth
 
-METHOD GetHeight() CLASS US_ActiveX
+METHOD GetHeight() CLASS TActiveX
 RETURN ::nHeight
 
-METHOD Hide() CLASS US_ActiveX
+METHOD Hide() CLASS TActiveX
    MoveWindow( ::hWnd , 0 , 0 , 0 , 0 , .t. )
    ::bHide := .T.
 RETURN .T.
 
-METHOD Show() CLASS US_ActiveX
+METHOD Show() CLASS TActiveX
    MoveWindow( ::hWnd , ::nCol , ::nRow , ::nWidth , ::nHeight , .t. )
    ::bHide := .F.
 RETURN .T.
 
-METHOD Release() CLASS US_ActiveX
-// SHUTDOWNCONNECTIONPOINT( ::hSink )
-// ReleaseDispatch( ::hAtl )  // CdQ - Esta funcion provoca GPF en Windows
+METHOD Release() CLASS TActiveX
    DestroyWindow( ::hWnd )
-// AtlAxWinEnd()
-Return .T.
+   AtlAxWinEnd()
+RETURN .T.
 
-METHOD Refresh() CLASS US_ActiveX
+METHOD Refresh() CLASS TActiveX
    ::Hide()
    ::Show()
 RETURN .T.
 
-METHOD UserMap( nMsg, xExec, oSelf ) CLASS US_ActiveX
-   LOCAL nAt
-   nAt := AScan( ::aAxEv, nMsg )
-   IF nAt == 0
-      AAdd( ::aAxEv, nMsg )
-      AAdd( ::aAxExec, { NIL, NIL } )
-      nAt := Len( ::aAxEv )
-   ENDIF
-   ::aAxExec[ nAt ] := { xExec, oSelf }
-RETURN NIL
 
-///*-----------------------------------------------------------------------------------------------*/
 #pragma BEGINDUMP
-#include <windows.h>
-#include "hbapi.h"
 
-HB_FUNC_STATIC( DESTROYWINDOW ) // hWnd
+#include <windows.h>
+#include <commctrl.h>
+#include <hbapi.h>
+#include <hbvm.h>
+#include <hbstack.h>
+
+typedef HRESULT ( WINAPI *LPAtlAxWinInit )    ( void );
+typedef HRESULT ( WINAPI *LPAtlAxGetControl ) ( HWND hwnd, IUnknown** unk );
+
+HMODULE hAtl = NULL;
+LPAtlAxWinInit    AtlAxWinInit;
+LPAtlAxGetControl AtlAxGetControl;
+
+static void _Ax_Init( void )
 {
-    DestroyWindow( (HWND)hb_parnl( 1 ) );
-    return;
+   if( ! hAtl )
+   {
+      hAtl = LoadLibrary( "Atl.Dll" );
+      AtlAxWinInit    = ( LPAtlAxWinInit )    GetProcAddress( hAtl, "AtlAxWinInit" );
+      AtlAxGetControl = ( LPAtlAxGetControl ) GetProcAddress( hAtl, "AtlAxGetControl" );
+      ( AtlAxWinInit )();
+   }
+}
+
+HB_FUNC( ATLAXWININIT )
+{
+   _Ax_Init();
+}
+
+HB_FUNC( ATLAXWINEND )
+{
+   if( hAtl )
+      FreeLibrary( hAtl );
+}
+
+HB_FUNC( ATLAXGETDISP ) // hWnd -> pDisp
+{
+   IUnknown *pUnk;
+   IDispatch *pDisp;
+   _Ax_Init();
+   AtlAxGetControl( (HWND)hb_parnl( 1 ), &pUnk );
+   pUnk->lpVtbl->QueryInterface( pUnk, &IID_IDispatch, ( void ** ) &pDisp );
+   hb_retnl( (LONG)pDisp );
+}
+
+HB_FUNC_STATIC( CREATEWINDOWEX ) // hWnd, cProgId -> hActiveXWnd
+{
+   HWND hControl;
+   hControl = CreateWindowEx( 0, "AtlAxWin", hb_parc( 2 ),
+              WS_VISIBLE|WS_CHILD, 0, 0, 0, 0, (HWND)hb_parnl( 1 ), 0, 0, NULL );
+   hb_retnl( (LONG) hControl );
 }
 
 #pragma ENDDUMP
-
-/* eof */

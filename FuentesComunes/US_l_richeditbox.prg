@@ -378,6 +378,18 @@ Return aRange[2]-aRange[1]
 #include "Winuser.h"
 #include <wingdi.h>
 
+#ifdef __XHARBOUR__
+   #define HB_STORC( n, x, y )    hb_storc( n, x, y )
+   #define HB_STORNI( n, x, y )   hb_storni( n, x, y )
+   #define HB_STORL( n, x, y )    hb_storl( n, x, y )
+   #define HB_STORNL( n, x, y )   hb_stornl( n, x, y )
+#else
+   #define HB_STORC( n, x, y )    hb_storvc( n, x, y )
+   #define HB_STORNI( n, x, y )   hb_storvni( n, x, y )
+   #define HB_STORL( n, x, y )    hb_storvl( n, x, y )
+   #define HB_STORNL( n, x, y )   hb_storvnl( n, x, y )
+#endif
+
 #ifdef xxMINGW32__
    /* Flags for the SETEXTEX data structure */
    #define ST_DEFAULT  0
@@ -437,8 +449,8 @@ HB_FUNC(GETSELRANGE)               //GetSelRange(HWND hwndCtrl)
         SendMessage( (HWND) hb_parnl (1),(UINT) EM_EXGETSEL, 0, (LPARAM) &cRange );
 
         hb_reta( 2 );
-        hb_stornl( cRange.cpMin , -1, 1 );
-        hb_stornl( cRange.cpMax  , -1, 2 );
+        HB_STORNL( cRange.cpMin , -1, 1 );
+        HB_STORNL( cRange.cpMax  , -1, 2 );
 
 }
 
@@ -502,10 +514,10 @@ HB_FUNC(GETRECT)               //GetRect(HWND hwndCtrl)
         SendMessage( (HWND) hb_parnl (1),(UINT) EM_GETRECT, 0, (LPARAM) &rc );
 
         hb_reta( 4 );
-        hb_stornl( rc.left , -1, 1 );
-        hb_stornl( rc.top  , -1, 2 );
-        hb_stornl( rc.right  , -1, 3 );
-        hb_stornl( rc.bottom  , -1, 4 );
+        HB_STORNL( rc.left , -1, 1 );
+        HB_STORNL( rc.top  , -1, 2 );
+        HB_STORNL( rc.right  , -1, 3 );
+        HB_STORNL( rc.bottom  , -1, 4 );
 
 }
 
@@ -670,9 +682,9 @@ HB_FUNC ( FINDCHR )        //FindChr(HWND hwnd, LPCTSTR lpszText, int Direction,
 
 
         hb_reta( 3 );
-        hb_stornl( Findtxt.chrgText.cpMin , -1, 1 );
-        hb_stornl( Findtxt.chrgText.cpMax , -1, 2 );
-        hb_stornl( lResult , -1, 3 );
+        HB_STORNL( Findtxt.chrgText.cpMin , -1, 1 );
+        HB_STORNL( Findtxt.chrgText.cpMax , -1, 2 );
+        HB_STORNL( lResult , -1, 3 );
 
 
 }
@@ -693,14 +705,14 @@ HB_FUNC ( GETPARFORM )        //GetParForm(HWND hwnd )
     nNumb  = (parForm.wNumbering  == PFN_BULLET ) ? TRUE : FALSE ;
 
         hb_reta( 8 );
-        hb_storl( left   , -1, 1 );
-        hb_storl( center , -1, 2 );
-        hb_storl( right  , -1, 3 );
-        hb_storni( parForm.cTabCount ,        -1, 4 );
-        hb_storl( nNumb , -1, 5 );
-        hb_stornl( parForm.dxStartIndent , -1, 6 );
-        hb_stornl( parForm.dxRightIndent , -1, 7 );
-        hb_stornl( parForm.dxOffset , -1, 8 );
+        HB_STORL( left   , -1, 1 );
+        HB_STORL( center , -1, 2 );
+        HB_STORL( right  , -1, 3 );
+        HB_STORNI( parForm.cTabCount ,        -1, 4 );
+        HB_STORL( nNumb , -1, 5 );
+        HB_STORNL( parForm.dxStartIndent , -1, 6 );
+        HB_STORNL( parForm.dxRightIndent , -1, 7 );
+        HB_STORNL( parForm.dxOffset , -1, 8 );
 }
 
 HB_FUNC ( SETPARFORM )        //SetParForm(HWND hwnd, BOOL left, BOOL Center, BOOL Right, int Tab, int Number, int StartIndent, int RightIndent, int Offset)
@@ -787,8 +799,8 @@ HB_FUNC ( LINEPOS )
 
 
         hb_reta( 2 );
-        hb_stornl( nLine , -1, 1 );
-        hb_stornl( (cRange.cpMax - nIndex) , -1, 2 );
+        HB_STORNL( nLine , -1, 1 );
+        HB_STORNL( (cRange.cpMax - nIndex) , -1, 2 );
 
 }
 
@@ -1052,8 +1064,8 @@ HB_FUNC ( GETZOOM )                // GetZoom(HWND hwnd)
      SendMessage( (HWND) hb_parnl (1),(UINT) EM_GETZOOM , (WPARAM) &numer, (LPARAM) &denom);
 
         hb_reta( 2 );
-        hb_storni( numer , -1, 1 );
-        hb_storni( denom , -1, 2 );
+        HB_STORNI( numer , -1, 1 );
+        HB_STORNI( denom , -1, 2 );
 
 }
 
@@ -1077,7 +1089,7 @@ HB_FUNC ( GETPARTABS )        //GetParTabs(HWND hwnd )
 
         hb_reta( parForm.cTabCount );
     for ( n = 1; n <= parForm.cTabCount; n++)
-        hb_storni( parForm.rgxTabs[ n-1 ] / 20 ,        -1, n );
+        HB_STORNI( parForm.rgxTabs[ n-1 ] / 20 ,        -1, n );
 }
 
 HB_FUNC ( SETPARTABS )        //SetParTabs(HWND hwnd , aTabs)
@@ -1223,8 +1235,8 @@ HB_FUNC ( WINSIZE1 )                // WinSize(HWND hwnd)
     ReleaseDC(hwnd, hdc);
 
         hb_reta( 2 );
-        hb_storni( tm.tmDigitizedAspectX  , -1, 1 );
-        hb_storni( tm.tmAveCharWidth, -1, 2 );
+        HB_STORNI( tm.tmDigitizedAspectX  , -1, 1 );
+        HB_STORNI( tm.tmAveCharWidth, -1, 2 );
 }
 
 HB_FUNC ( POSFROMCHAR )                // PointRTF(HWND hwnd)
@@ -1238,8 +1250,8 @@ HB_FUNC ( POSFROMCHAR )                // PointRTF(HWND hwnd)
     ptl  = SendMessage( (HWND) hb_parnl (1),(UINT) EM_POSFROMCHAR, (WPARAM) (LONG) cRange.cpMax ,0 );
 
         hb_reta( 2 );
-        hb_stornl( HIWORD (ptl)  , -1, 1 );
-        hb_stornl( LOWORD (ptl)  , -1, 2 );
+        HB_STORNL( HIWORD (ptl)  , -1, 1 );
+        HB_STORNL( LOWORD (ptl)  , -1, 2 );
 }
 
 
@@ -1346,7 +1358,11 @@ HB_FUNC ( PAGESETUPRTF )                // PageSetupRtf(HWND hwnd , lMar, rMar,t
 
 
     psd.lStructSize= sizeof(PAGESETUPDLG);
-    psd.hwndOwner = ISNIL(1) ? GetActiveWindow():(HWND) hb_parnl(1) ;
+#ifdef __XHARBOUR__
+    psd.hwndOwner = ISNIL( 1 ) ? GetActiveWindow():(HWND) hb_parnl(1) ;
+#else
+    psd.hwndOwner = HB_ISNIL( 1 ) ? GetActiveWindow():(HWND) hb_parnl(1) ;
+#endif
     psd.hDevMode  = (HGLOBAL) DevMode;
     psd.hDevNames = (HGLOBAL) NULL;
     psd.rtMargin = rtMar;
@@ -1368,15 +1384,15 @@ HB_FUNC ( PAGESETUPRTF )                // PageSetupRtf(HWND hwnd , lMar, rMar,t
         PaperOrient = DevMode->dmOrientation;
     }
         hb_reta( 9 );
-        hb_storni( lResult, -1, 1 );
-        hb_storni( rtMar.left   / 100 , -1, 2 );
-        hb_storni( rtMar.right  / 100  , -1, 3 );
-        hb_storni( rtMar.top    / 100 , -1, 4 );
-        hb_storni( rtMar.bottom / 100  , -1, 5 );
-        hb_storni( ptPapSize.x / 100 , -1, 6 );
-        hb_storni( ptPapSize.y / 100 , -1, 7 );
-        hb_storni( PaperSize , -1, 8 );
-        hb_storni( PaperOrient , -1, 9 );
+        HB_STORNI( lResult, -1, 1 );
+        HB_STORNI( rtMar.left   / 100 , -1, 2 );
+        HB_STORNI( rtMar.right  / 100  , -1, 3 );
+        HB_STORNI( rtMar.top    / 100 , -1, 4 );
+        HB_STORNI( rtMar.bottom / 100  , -1, 5 );
+        HB_STORNI( ptPapSize.x / 100 , -1, 6 );
+        HB_STORNI( ptPapSize.y / 100 , -1, 7 );
+        HB_STORNI( PaperSize , -1, 8 );
+        HB_STORNI( PaperOrient , -1, 9 );
 
 }
 /*
@@ -1461,9 +1477,9 @@ HB_FUNC ( TESTCHR )        //TestChr(HWND hwnd, LPCTSTR lpszText, int Direction)
 
 
         hb_reta( 3 );
-        hb_stornl( Findtxt.chrgText.cpMin , -1, 1 );
-        hb_stornl( Findtxt.chrgText.cpMax , -1, 2 );
-        hb_stornl( lResult , -1, 3 );
+        HB_STORNL( Findtxt.chrgText.cpMin , -1, 1 );
+        HB_STORNL( Findtxt.chrgText.cpMax , -1, 2 );
+        HB_STORNL( lResult , -1, 3 );
 }
 
 HB_FUNC ( PLAINSELTEXT )                // PlainSelText(HWND hwnd )
@@ -1495,8 +1511,8 @@ HB_FUNC ( SETTABSTOP )                // SetTabStop(HWND hwnd)
     SendMessage( (HWND) hb_parnl (1),(UINT) EM_SETTABSTOPS , (WPARAM) 1, (LPARAM)(UINT) dis);
     lResult = GetDialogBaseUnits();
         hb_reta( 2 );
-        hb_stornl( HIWORD (lResult)  , -1, 1 );
-        hb_stornl( LOWORD (lResult)  , -1, 2 );
+        HB_STORNL( HIWORD (lResult)  , -1, 1 );
+        HB_STORNL( LOWORD (lResult)  , -1, 2 );
 
 }
 */
@@ -1548,8 +1564,8 @@ HB_FUNC ( GETSCROLLPOSRTF )                // GetScrollPosRtf(HWND hwnd )
         SendMessage( (HWND) hb_parnl (1),(UINT) EM_GETSCROLLPOS, 0,  (LPARAM) &pt );
 
         hb_reta( 2 );
-        hb_stornl( pt.x  , -1, 1 );
-        hb_stornl( pt.y  , -1, 2 );
+        HB_STORNL( pt.x  , -1, 1 );
+        HB_STORNL( pt.y  , -1, 2 );
 
 }
 HB_FUNC ( SETSCROLLPOSRTF )                // SetScrollPosRtf(HWND hwnd, x, y )

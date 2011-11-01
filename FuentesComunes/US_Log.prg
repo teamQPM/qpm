@@ -51,7 +51,7 @@ Return if( bReto == 0 , .T. , .F. )
 
 HB_FUNC(US_LOGAUXILIAR)
 {
-  hb_retni( us_log( hb_parc(1) , hb_parni(2) ) );
+  hb_retni( us_log( (char *) hb_parc(1), (int) hb_parni(2) ) );
   return;
 }
 #pragma ENDDUMP

@@ -8,6 +8,66 @@
  * See "How to format your ChangeLog entries" in howtosvn.txt file.
  */
 
+2011-10-31 21:30:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * ./QPM_HotRecovery.prg
+     * Changed US_ActiveX() by TActiveX()
+   * ./QPM_AutoProjectOnlyHelp.qpm
+     * Updated to new version.
+   * ./QPM_AutoProject.qpm
+     * Updated to new version.
+     * Changed paths to HMG Extended and Harbour.
+     * Changed to Harbour compiler and HMG Extended 2.0.3
+     - No more help database.
+     - ./FuentesComunes/US_ActiveX.prg
+     - ./FuentesComunes/US_ActiveX_Eventos.c
+     + ./FuentesComunes/TAxPrg.prg
+     + Added calldll.lib and hbct.lib in order to compile with Harbour.
+   + ./FuentesComunes/TAxPrg.prg
+     * Substitutes ./FuentesComunes/US_ActiveX.prg and
+       ./FuentesComunes/US_ActiveX_Eventos.c because old function
+       do not compile with Harbour 3.x
+   * ./FuentesComunes/US_ActiveX.prg
+     * Substituted by ./FuentesComunes/TAxPrg.prg
+   * ./FuentesComunes/US_ActiveX_Eventos.c
+     * Substituted by ./FuentesComunes/TAxPrg.prg
+   * ./QPM_SHG_SimpleHelpGenerator.prg
+   * ./QPM_SHG_AssistLink.prg
+   * ./QPM_SHG_AssistImage.prg
+     * Added #IFDEF __XHARBOUR__ to isolate at() extended function, in
+       #ELSE added hb_at() instead of at()
+   * ./QPM.prg
+     + Added NOXPSTYLE to buttons with PICTURE but no CAPTION, so
+       they look the same way as before changing compilers.
+     + Added 5 pixels to first columun of grids GPrgFiles, GHeaFiles,
+       GPanFiles, GDbfFiles, GIncFiles, GExcFiles and GHlpFiles.
+     * Changed location of buttons BAddHlpKey and BRemoveHlpKey.
+     * Changed location and widht of grid GHlpKeys.
+     * Added #IFDEF __XHARBOUR__ to isolate at() extended function, in
+       #ELSE added hb_at() instead of at()
+     * Added #IFDEF __XHARBOUR__ to redefine hb_storc(), hb_storni(),
+       hb_storl() and hb_stornl() for Harbour compiler.
+     * Changed hb_storc() to HB_STORC() to fix error in Harbour.
+   * ./FuentesComunes/US_l_richeditbox.prg
+     * Added #IFDEF __XHARBOUR__ to redefine hb_storc(), hb_storni(),
+       hb_storl() and hb_stornl() for Harbour compiler.
+     * Changed hb_stornl() to HB_STORNL() to fix error in Harbour.
+     * Changed hb_storni() to HB_STORNI() to fix error in Harbour.
+     * Changed hb_storl() to HB_STORL() to fix error in Harbour.
+     * Added #IFDEF __XHARBOUR__ to isolate ISNIL() function, in
+       #ELSE added HS_ISNIL() instead of ISNIL()
+   * ./FuentesComunes/US_ProcessWin.prg
+     * Added #IFDEF __XHARBOUR__ to redefine hb_storc(), hb_storni(),
+       hb_storl() and hb_stornl() for Harbour compiler.
+     * Changed hb_storni() to HB_STORNI() to fix error in Harbour.
+     * Changed hb_storc() to HB_STORC() to fix error in Harbour.
+   * ./FuentesComunes/US_Edit_CharFijo.prg
+     + Added NOXPSTYLE to buttons with PICTURE but no CAPTION, so
+       they look the same way as before changing compilers.
+   * ./FuentesComunes/US_HB.prg
+   * ./FuentesComunes/US_LOG.prg
+   * ./FuentesComunes/US_MG.prg
+     * Added some casting to pacify C compiler.
+
 2011-10-29 20:27:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * ./doc/howtosvn.txt
      * Typos corrected.

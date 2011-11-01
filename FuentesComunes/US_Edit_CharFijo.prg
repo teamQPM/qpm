@@ -350,6 +350,7 @@ METHOD Init( cMemo ) CLASS US_RichEdit
       @ US_TFil( if( GetDesktopWidth() < 1024 , 1.4 , 1.3 ) ) , US_LCol( 1.0 ) + ( ( ::nButtonWidth + ::nEspacio ) * 2.5 ) BUTTON CB_Copy ;
          OF &(::US_WinEdit) ;
          PICTURE "US_EditCopy" ;
+         NOXPSTYLE ;
          HEIGHT ::nButtonHeight ;
          WIDTH ::nButtonWidth ;
          TOOLTIP ::Lan( "Copiar" ) ;
@@ -358,6 +359,7 @@ METHOD Init( cMemo ) CLASS US_RichEdit
       @ US_TFil( if( GetDesktopWidth() < 1024 , 1.4 , 1.3 ) ) , GetProperty( ::US_WinEdit , "CB_Copy" , "col" ) + ( ( ::nButtonWidth + ::nEspacio ) * 1 ) BUTTON CB_Paste ;
          OF &(::US_WinEdit) ;
          PICTURE "US_EditPaste" ;
+         NOXPSTYLE ;
          HEIGHT ::nButtonHeight ;
          WIDTH ::nButtonWidth ;
          TOOLTIP ::Lan( "Pegar" ) ;
@@ -366,6 +368,7 @@ METHOD Init( cMemo ) CLASS US_RichEdit
       @ US_TFil( if( GetDesktopWidth() < 1024 , 1.4 , 1.3 ) ) , GetProperty( ::US_WinEdit , "CB_Copy" , "col" ) + ( ( ::nButtonWidth + ::nEspacio ) * 2 ) BUTTON CB_Cut ;
          OF &(::US_WinEdit) ;
          PICTURE "US_EditCut" ;
+         NOXPSTYLE ;
          HEIGHT ::nButtonHeight ;
          WIDTH ::nButtonWidth ;
          TOOLTIP ::Lan( "Cortar" ) ;
@@ -374,6 +377,7 @@ METHOD Init( cMemo ) CLASS US_RichEdit
       @ US_TFil( if( GetDesktopWidth() < 1024 , 1.4 , 1.3 ) ) , GetProperty( ::US_WinEdit , "CB_Cut" , "col" ) + ( ( ::nButtonWidth + ::nEspacio ) * 1.5 ) BUTTON CB_Delete ;
          OF &(::US_WinEdit) ;
          PICTURE "US_EditDelete" ;
+         NOXPSTYLE ;
          HEIGHT ::nButtonHeight ;
          WIDTH ::nButtonWidth ;
          TOOLTIP ::Lan( "Borrar" ) ;
@@ -382,6 +386,7 @@ METHOD Init( cMemo ) CLASS US_RichEdit
       @ US_TFil( if( GetDesktopWidth() < 1024 , 1.4 , 1.3 ) ) , GetProperty( ::US_WinEdit , "CB_Delete" , "col" ) + ( ( ::nButtonWidth + ::nEspacio ) * 1.5 ) BUTTON CB_Undo ;
          OF &(::US_WinEdit) ;
          PICTURE "US_EditUndo" ;
+         NOXPSTYLE ;
          HEIGHT ::nButtonHeight ;
          WIDTH ::nButtonWidth ;
          TOOLTIP ::Lan( "Revertir" ) ;
@@ -390,6 +395,7 @@ METHOD Init( cMemo ) CLASS US_RichEdit
       @ US_TFil( if( GetDesktopWidth() < 1024 , 1.4 , 1.3 ) ) , GetProperty( ::US_WinEdit , "CB_Undo" , "col" ) + ( ( ::nButtonWidth + ::nEspacio ) * 1 ) BUTTON CB_Redo ;
          OF &(::US_WinEdit) ;
          PICTURE "US_EditRedo" ;
+         NOXPSTYLE ;
          HEIGHT ::nButtonHeight ;
          WIDTH ::nButtonWidth ;
          TOOLTIP ::Lan( "Rehacer" ) ;
@@ -420,6 +426,7 @@ METHOD Init( cMemo ) CLASS US_RichEdit
          @ US_TFil( if( GetDesktopWidth() < 1024 , 1.4 , 1.3 ) ) , GetProperty( ::US_WinEdit , "CB_Redo" , "col" ) + ( ( ::nButtonWidth + ::nEspacio ) * 1.5 ) BUTTON CB_Find ;
             OF &(::US_WinEdit) ;
             PICTURE "US_EditFind" ;
+            NOXPSTYLE ;
             HEIGHT ::nButtonHeight ;
             WIDTH ::nButtonWidth ;
             TOOLTIP ::Lan( "Reemplazar" ) ;
@@ -519,6 +526,7 @@ METHOD Init( cMemo ) CLASS US_RichEdit
       @ US_TFIL( 2.6 ) , GetProperty( ::US_WinEdit , "CB_Right" , "col" ) + ( ( ::nButtonWidth + ::nEspacio ) * 1.5 ) BUTTON CB_Color ;
          OF &(::US_WinEdit) ;
          PICTURE "US_EditColor" ;
+         NOXPSTYLE ;
          HEIGHT ::nButtonHeight ;
          WIDTH ::nButtonWidth ;
          TOOLTIP ::Lan( "Colores" ) ;

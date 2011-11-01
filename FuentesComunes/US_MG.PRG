@@ -3451,27 +3451,27 @@ HB_FUNC ( US_MCIFUNC )
         int  func    = hb_parni(2);
         switch(func)
       {
-         case  1:  hb_retnl( MCIWndPlay(mcihand) ) ; break;
-         case  2:  hb_retnl( MCIWndStop(mcihand) ) ; break;
-         case  3:  hb_retnl( MCIWndPause(mcihand) ) ; break;
-         case  4:  hb_retnl( MCIWndClose(mcihand) ) ; break;
-         case  5:            MCIWndDestroy(mcihand) ; hb_retnl(0);break;
-         case  6:  hb_retnl( MCIWndEject(mcihand) ) ; break;
-         case  7:  hb_retnl( MCIWndEnd(mcihand) ) ; break;
-         case  8:  hb_retnl( MCIWndHome(mcihand) ) ; break;
-         case  9:  hb_retnl( MCIWndOpen(mcihand,hb_parc(3),NULL) ) ; break;
-         case 10:  hb_retnl( MCIWndOpenDialog(mcihand) ) ; break;
-         case 11:  hb_retnl( MCIWndPlayReverse(mcihand) ) ; break;
-         case 12:  hb_retnl( MCIWndResume(mcihand) ) ; break;
-         case 13:            MCIWndSetRepeat(mcihand,hb_parl(3) ) ;hb_retnl(0); break;
-         case 14:  hb_retnl( MCIWndSetSpeed(mcihand,hb_parni(3)) ) ; break;
-         case 15:  hb_retnl( MCIWndSetVolume(mcihand,hb_parni(3)) ) ; break;
-         case 16:            MCIWndSetZoom(mcihand,hb_parni(3) ) ; hb_retnl(0); break;
-         case 17:  hb_retnl( MCIWndGetLength(mcihand) ) ; break;
-         case 18:  hb_retnl( MCIWndGetPosition(mcihand) ) ; break;
-         case 19:  hb_retnl( MCIWndGetVolume(mcihand) ) ; break;
-         case 20:  hb_retnl( MCIWndSeek(mcihand,hb_parni(3)) ) ; hb_retnl(0); break;
-         default: hb_retnl( 0 ) ;
+         case  1:  hb_retnl( MCIWndPlay(mcihand) ); break;
+         case  2:  hb_retnl( MCIWndStop(mcihand) ); break;
+         case  3:  hb_retnl( MCIWndPause(mcihand) ); break;
+         case  4:  hb_retnl( MCIWndClose(mcihand) ); break;
+         case  5:            MCIWndDestroy(mcihand); hb_retnl(0);break;
+         case  6:  hb_retnl( MCIWndEject(mcihand) ); break;
+         case  7:  hb_retnl( MCIWndEnd(mcihand) ); break;
+         case  8:  hb_retnl( MCIWndHome(mcihand) ); break;
+         case  9:  hb_retnl( MCIWndOpen(mcihand,hb_parc(3),NULL) ); break;
+         case 10:  hb_retnl( MCIWndOpenDialog(mcihand) ); break;
+         case 11:  hb_retnl( MCIWndPlayReverse(mcihand) ); break;
+         case 12:  hb_retnl( MCIWndResume(mcihand) ); break;
+         case 13:            MCIWndSetRepeat(mcihand,hb_parl(3) );hb_retnl(0); break;
+         case 14:  hb_retnl( MCIWndSetSpeed(mcihand,hb_parni(3)) ); break;
+         case 15:  hb_retnl( MCIWndSetVolume(mcihand,hb_parni(3)) ); break;
+         case 16:            MCIWndSetZoom(mcihand,hb_parni(3) ); hb_retnl(0); break;
+         case 17:  hb_retnl( MCIWndGetLength(mcihand) ); break;
+         case 18:  hb_retnl( MCIWndGetPosition(mcihand) ); break;
+         case 19:  hb_retnl( MCIWndGetVolume(mcihand) ); break;
+         case 20:  hb_retnl( MCIWndSeek(mcihand,hb_parni(3)) ); hb_retnl(0); break;
+         default: hb_retnl( 0 );
       }
 }
 
@@ -3486,7 +3486,7 @@ HB_FUNC ( US_INITIMAGE )
         h = CreateWindowEx(0,"static",NULL,
         WS_CHILD | WS_VISIBLE | SS_BITMAP | SS_NOTIFY,
         hb_parni(3), hb_parni(4), 0, 0,
-        hwnd,(HMENU)hb_parni(2) , GetModuleHandle(NULL) , NULL ) ;
+        hwnd,(HMENU)hb_parni(2) , GetModuleHandle(NULL) , NULL );
 
         hBitmap = (HBITMAP)LoadImage(0,hb_parc(5),IMAGE_BITMAP,hb_parni(6),hb_parni(7),LR_LOADFROMFILE|LR_CREATEDIBSECTION);
         if (hBitmap==NULL)
@@ -3635,58 +3635,58 @@ LPMAPILOGON    pMAPILogon = NULL;
 LPMAPILOGOFF   pMAPILogoff = NULL;
 LPMAPISENDMAIL pMAPISendMail = NULL;
 
-MapiRecipDesc orig ;
+MapiRecipDesc orig;
 
 // http://www.dorn.org/uni/mapi/simple.html
-MapiRecipDesc rcpt[2] ;    // this message needs two recipients.
+MapiRecipDesc rcpt[2];    // this message needs two recipients.
 
-MapiFileDesc  file ;
-MapiMessage   mssg ;
+MapiFileDesc  file;
+MapiMessage   mssg;
 
 HB_FUNC ( US_MAPISENDMAIL )
 {
-    int nModoDialog = hb_parni( 11 ) ;
+    int nModoDialog = hb_parni( 11 );
 
-    orig.ulReserved         = 0            ;  // Reserved
-    orig.ulRecipClass       = MAPI_ORIG    ;  // Reciepient Class MAPI_TO MAPI_CC MAPI_BCC
-    orig.lpszName           = hb_parc( 4 ) ;  // Originator's Name
-    orig.lpszAddress        = hb_parc( 5 ) ;  // Originators Address
-    orig.ulEIDSize          = 0            ;  // Count in bytes of size of pEntryID
-    orig.lpEntryID          = 0            ;  // System-specific Originator reference
+    orig.ulReserved         = 0;                                  // Reserved
+    orig.ulRecipClass       = MAPI_ORIG;                          // Reciepient Class MAPI_TO MAPI_CC MAPI_BCC
+    orig.lpszName           = (LPSTR) hb_parc( 4 );               // Originator's Name
+    orig.lpszAddress        = (LPSTR) hb_parc( 5 );               // Originators Address
+    orig.ulEIDSize          = 0;                                  // Count in bytes of size of pEntryID
+    orig.lpEntryID          = 0;                                  // System-specific Originator reference
 
-    rcpt[0].ulReserved         = 0            ;  // Reserved
-    rcpt[0].ulRecipClass       = MAPI_TO      ;  // Reciepient Class MAPI_TO MAPI_CC MAPI_BCC
-    rcpt[0].lpszName           = hb_parc( 6 ) ;  // Reciepient's Name, e.g., vouchcac@hotmail.com
-    rcpt[0].lpszAddress        = hb_parc( 7 ) ;  // Reciepient's Address
-    rcpt[0].ulEIDSize          = 0            ;  // Count in bytes of size of pEntryID
-    rcpt[0].lpEntryID          = 0            ;  // System-specific Recipient reference
+    rcpt[0].ulReserved         = 0;                               // Reserved
+    rcpt[0].ulRecipClass       = MAPI_TO;                         // Reciepient Class MAPI_TO MAPI_CC MAPI_BCC
+    rcpt[0].lpszName           = (LPSTR) hb_parc( 6 );            // Reciepient's Name, e.g., vouchcac@hotmail.com
+    rcpt[0].lpszAddress        = (LPSTR) hb_parc( 7 );            // Reciepient's Address
+    rcpt[0].ulEIDSize          = 0;                               // Count in bytes of size of pEntryID
+    rcpt[0].lpEntryID          = 0;                               // System-specific Recipient reference
 
-    rcpt[1].ulReserved         = 0            ;  // Reserved
-    rcpt[1].ulRecipClass       = MAPI_CC      ;  // Reciepient Class MAPI_TO MAPI_CC MAPI_BCC
-    rcpt[1].lpszName           = hb_parc( 8 ) ;  // Reciepient's Name, e.g., vouchcac@hotmail.com
-    rcpt[1].lpszAddress        = hb_parc( 9 ) ;  // Reciepient's Address
-    rcpt[1].ulEIDSize          = 0            ;  // Count in bytes of size of pEntryID
-    rcpt[1].lpEntryID          = 0            ;  // System-specific Recipient reference
+    rcpt[1].ulReserved         = 0;                               // Reserved
+    rcpt[1].ulRecipClass       = MAPI_CC;                         // Reciepient Class MAPI_TO MAPI_CC MAPI_BCC
+    rcpt[1].lpszName           = (LPSTR) hb_parc( 8 );            // Reciepient's Name, e.g., vouchcac@hotmail.com
+    rcpt[1].lpszAddress        = (LPSTR) hb_parc( 9 );            // Reciepient's Address
+    rcpt[1].ulEIDSize          = 0;                               // Count in bytes of size of pEntryID
+    rcpt[1].lpEntryID          = 0;                               // System-specific Recipient reference
 
-    file.ulReserved         = 0            ;  // Reserved for future usage
-    file.flFlags            = 0            ;  // Flags ?
-    file.nPosition          = -1           ;  // Character of text to be replaced by attachment
-    file.lpszPathName       = hb_parc( 10 ) ;  // Full Path Name with Extension of the attached file
-    file.lpszFileName       = 0            ;  // Original File Name ( optional )
-    file.lpFileType         = 0            ;  // Attachment file type ( can be lpMapiFileTagExt )
+    file.ulReserved         = 0;                                  // Reserved for future usage
+    file.flFlags            = 0;                                  // Flags ?
+    file.nPosition          = -1;                                 // Character of text to be replaced by attachment
+    file.lpszPathName       = (LPSTR) hb_parc( 10 );              // Full Path Name with Extension of the attached file
+    file.lpszFileName       = 0;                                  // Original File Name ( optional )
+    file.lpFileType         = 0;                                  // Attachment file type ( can be lpMapiFileTagExt )
 
-    mssg.ulReserved         = 0            ;  // Reserved
-    mssg.lpszSubject        = hb_parc( 2 ) ;  // Message Subject
-    mssg.lpszNoteText       = hb_parc( 3 ) ;  // Message Text
-    mssg.lpszMessageType    = 0            ;  // Message Class
-    mssg.lpszDateReceived   = 0            ;  // in yyyy/mm/dd hh:mm format
-    mssg.lpszConversationID = 0            ;  // Conversation thread ID
-    mssg.flFlags            = MAPI_LOGON_UI | MAPI_NEW_SESSION ;   // unread, return receipt
-    mssg.lpOriginator       = (lpMapiRecipDesc) &orig        ;  // Originator's descriptor
-    mssg.nRecipCount        = 1            ;  // Number of receipients
-    mssg.lpRecips           = (lpMapiRecipDesc) &rcpt        ;  // Recipient descriptors
-    mssg.nFileCount         = 1            ;  // Number of file attachments
-    mssg.lpFiles            = (lpMapiFileDesc) &file        ;  // Attachment descriptors
+    mssg.ulReserved         = 0;                                  // Reserved
+    mssg.lpszSubject        = (LPSTR) hb_parc( 2 );               // Message Subject
+    mssg.lpszNoteText       = (LPSTR) hb_parc( 3 );               // Message Text
+    mssg.lpszMessageType    = 0;                                  // Message Class
+    mssg.lpszDateReceived   = 0;                                  // in yyyy/mm/dd hh:mm format
+    mssg.lpszConversationID = 0;                                  // Conversation thread ID
+    mssg.flFlags            = MAPI_LOGON_UI | MAPI_NEW_SESSION;   // unread, return receipt
+    mssg.lpOriginator       = (lpMapiRecipDesc) &orig;            // Originator's descriptor
+    mssg.nRecipCount        = 1;                                  // Number of receipients
+    mssg.lpRecips           = (lpMapiRecipDesc) &rcpt;            // Recipient descriptors
+    mssg.nFileCount         = 1;                                  // Number of file attachments
+    mssg.lpFiles            = (lpMapiFileDesc) &file;             // Attachment descriptors
 
     // Load the DLL at runtime
 #ifdef __MINGW32__
