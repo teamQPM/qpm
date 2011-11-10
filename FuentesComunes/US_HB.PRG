@@ -245,8 +245,10 @@ Return NIL
 //   oSock:Close()
 //Return lRet
 
+/*
 Function US_IsInternet()
 Return CallDLL32( "WININET.DLL" , "InternetGetConnectedStateEx" , 0 , "" , 0 , 0 )
+*/
 
 //==================================================================================\\
 //= Function US_DBConvert                                                          =\\
@@ -1301,14 +1303,6 @@ RETURN .T.
 //   NEXT
 //Return .F.
 
-FUNCTION US_SEGURO(STRING,FILA,DEFAULT)
-   LOCAL C
-   C:=US_OPCION(STRING,"NO SI",FILA,DEFAULT)
-   IF C="SI"
-      RETURN .T.
-   ENDIF
-RETURN .F.
-
 FUNCTION US_CENTER(LONGI,ESTRING)
    ESTRING=ALLTRIM(ESTRING)
    IF LEN(ESTRING) > LONGI
@@ -1468,13 +1462,6 @@ RETURN (RETT * IF(NEGATIVE,-1,1))
 
 Function US_CurDisk()
 return diskname()+":"
-
-*//========================================================================\\*
-*// ESTA FUNCION MUESTRA UN CARTEL CON PAUSA
-*// USE: US_CARTEL(ESTRING,FILA)
-*//========================================================================\\*
-FUNCTION US_CARTEL(ESTRING,FILA)
-RETURN US_OPCION(ESTRING,"",IF(FILA=NIL,10,FILA),,,,"N")
 
 *//========================================================================\\*
 *// ESTA FUNCION CONVIERTE SEGUNDOS EN FORMATO HH:MM:SS
@@ -2043,9 +2030,10 @@ Function US_FileTmp( prefix )
    enddo
 return cFile
 
+/*
 FUNCTION US_MENU(PTOP,PLEFT,PBOTTOM,PRIGHT,VECTOR,VECTORBOOL,USERFUNC)
 RETURN US_MGMenu(PTOP,PLEFT,PBOTTOM,PRIGHT,VECTOR,VECTORBOOL,USERFUNC)
-
+*/
 Function US_DB_CodePage( cbase , cNewCode )
    Local cMode:="" , i:=0 , vEstructura:={}
    do case

@@ -1592,6 +1592,13 @@ METHOD US_EditFindNext(repl) CLASS US_RichEdit
    enddo
 Return ret
 
+
+/*
+ * ESTA FUNCION MUESTRA UN CARTEL CON PAUSA
+ */
+FUNCTION US_CARTEL(ESTRING,FILA)
+RETURN US_OPCION(ESTRING,"",IF(FILA=NIL,10,FILA),,,,"N")
+
 METHOD US_EditRedraw() CLASS US_RichEdit
    Local nOldWidth := ::nOldWinWidth , nOldHeight := ::nOldWinHeight
    US_Redraw( ::US_WinEdit , @nOldWidth , @nOldHeight )

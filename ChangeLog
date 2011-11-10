@@ -8,6 +8,31 @@
  * See "How to format your ChangeLog entries" in howtosvn.txt file.
  */
 
+2011-11-10 17:36:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   - ./hmi.INI
+   * ./doc/notes.txt
+     + Added list of files to include in a distribution.
+   * ./doc/us_res.prg
+   * ./doc/us_slash.prg
+     + Change support information.
+   * ./QPM_US_Slash.qpm
+   * ./QPM_US_Res.qpm
+     * Updated.
+   * ./FuentesComunes/US_HB.prg
+     * Commented out function US_IsInternet.
+     * Commented out function US_MENU.
+     - Deleted functions US_SEGURO and US_CARTEL.
+   * ./FuentesComunes/US_MG_Null.prg
+     - Deleted function US_MGLOG.
+     - Deleted function US_MGMENU.
+   * ./FuentesComunes/US_Clases.prg
+     + Added function US_SEGURO.
+     * Commented out unused classes.
+   * ./FuentesComunes/US_Edit_CharFijo.prg
+     + Added function US_CARTEL.
+   * ./QPM.prg
+     - Deleted commented out functions US_MGLog, US_Opcion and US_MGMenu.
+
 2011-10-31 21:30:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * ./QPM_HotRecovery.prg
      * Changed US_ActiveX() by TActiveX()

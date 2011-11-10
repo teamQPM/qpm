@@ -10936,15 +10936,6 @@ Return .T.
 //================================================================================================//
 //- INI Funciones para compatibilidad ------------------------------------------------------------//
 //------------------------------------------------------------------------------------------------//
-//Function US_MGLog()
-//   msginfo( "La funcion US_MGLog fue reemplazada por Nula en QPM.PRG" )
-//Return .T.
-//Function US_Opcion()
-//   msginfo( "La funcion US_Opcion fue reemplazada por Nula en QPM.PRG" )
-//Return .T.
-//Function US_MGMenu()
-//   msginfo( "La funcion US_MGMenu fue reemplazada por Nula en QPM.PRG" )
-//Return .T.
 Function VP_TITLEBAR()
    msginfo( "La funcion VP_TITLEBAR fue reemplazada por Nula en QPM.PRG" )
 Return .T.
