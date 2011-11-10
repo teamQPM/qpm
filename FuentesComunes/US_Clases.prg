@@ -28,6 +28,8 @@
 
 #include "US_ENV.H"
 
+/*
+
 //==================================================================================\\
 //= CLASE US_RTF                                                                   =\\
 //----------------------------------------------------------------------------------\\
@@ -58,13 +60,7 @@ CLASS US_RTF
                                                "}"+ ;
                                                "\pard\plain\f2\fs20 "
    DATA cFooter       HIDDEN              init "\par}"
-
-   /*- Propiedades ----------------------------------------------------*/
-
 // DATA cFile         EXPORTED            init NIL            && Archivo para procesar
-
-   /*- Fin Propiedades ------------------------------------------------*/
-
 ENDCLASS
 
 METHOD New() CLASS US_RTF
@@ -128,13 +124,7 @@ CLASS US_Media
    DATA oMedio        HIDDEN               init NIL            && objeto asociado al tipo de file
    DATA cError        HIDDEN               init ""             && Last Error
    DATA nReto         HIDDEN               init 0              && Codigo de retorno
-
-   /*- Propiedades ----------------------------------------------------*/
-
 // DATA cFile         EXPORTED            init NIL            && Archivo para procesar
-
-   /*- Fin Propiedades ------------------------------------------------*/
-
 ENDCLASS
 
 METHOD New() CLASS US_Media
@@ -303,8 +293,7 @@ CLASS US_Player
    DATA bIsPlayListActive HIDDEN           init .F.
    DATA bMute          HIDDEN              init .F.            && esta bool actua como GLOBAL para todos los pgm que utilizan el objeto de esta clase, el mute es controlado desde los prg
    DATA nMilLengthControl HIDDEN           init 0              && Longitud segun el control play, es auxiliar para hacer auto stop en archivos defectuosos (milisegundos)
-   /*--------------------------------------------------------------------------------------------------------------*/
-   /*                                              1     2     3     4     5     6     7     8     9    10    11   */
+   //                                              1     2     3     4     5     6     7     8     9    10    11
    DATA vButtons       HIDDEN              init { .F. , .F. , .F. , .F. , .F. , .F. , .F. , .F. , .F. , .F. , .F.}
    DATA bButtonFirst   HIDDEN              init 1
    DATA bButtonPrev    HIDDEN              init 2
@@ -317,17 +306,10 @@ CLASS US_Player
    DATA bButtonNext    HIDDEN              init 9
    DATA bButtonLast    HIDDEN              init 10
    DATA bButtonOpen    HIDDEN              init 11
-   /*--------------------------------------------------------------------------------------------------------------*/
-
-   /*- Propiedades ----------------------------------------------------*/
-
    DATA cSkin          EXPORTED            init NIL            && Skins disponibles: NULO o "VP"
    DATA SecondsSeek    EXPORTED            init 10             && Segundos de incremento en forward
    DATA PL_BackColor   EXPORTED            init US_CYAN        && Color de Fondo de PlayList
    DATA PL_FontColor   EXPORTED            init US_BLUE        && Color de Texto de PlayList
-
-   /*- Fin Propiedades ------------------------------------------------*/
-
 ENDCLASS
 
 METHOD New() CLASS US_Player
@@ -952,6 +934,14 @@ METHOD PlayerListToolTip() CLASS US_Player
    SetProperty( ::PL_Window , "LPlayerList" , "tooltip" , var )
 Return
 
+FUNCTION US_SEGURO(STRING,FILA,DEFAULT)
+   LOCAL C
+   C:=US_OPCION(STRING,"NO SI",FILA,DEFAULT)
+   IF C="SI"
+      RETURN .T.
+   ENDIF
+RETURN .F.
+
 //----------------------------------------------------------------------------------\\
 //= END CLASE US_Player                                                            =\\
 //==================================================================================\\
@@ -972,9 +962,6 @@ CLASS US_FileFind
    DATA US_FileFindPan          HIDDEN             init "US_SeekF"+US_NameRandom()
    DATA Reto                    HIDDEN              init NIL
    DATA bStopSeek               HIDDEN   AS LOGIC   init .F.            && Variable para Stop
-
-   /*- Propiedades ----------------------------------------------------*/
-
    DATA cTitulo       EXPORTED            init NIL
    DATA cInitialPath  EXPORTED            init "C:"+DEF_SLASH
    DATA cMascara      EXPORTED            init "*.*"          && Mascara para busqueda de archivos
@@ -983,9 +970,6 @@ CLASS US_FileFind
    DATA bCenter       EXPORTED AS LOGIC   init .T.            && ¿desea centrar la ventana del dialogo?
    DATA bEscape       EXPORTED AS LOGIC   init .F.            && ¿desea salir con escape?
    DATA bStop         EXPORTED AS LOGIC   init .T.            && ¿desea tener un boton de Stop?
-
-   /*- Fin Propiedades ------------------------------------------------*/
-
 ENDCLASS
 
 METHOD New() CLASS US_FileFind
@@ -1065,6 +1049,8 @@ Return
 //= END CLASE US_FileFind                                                          =\\
 //==================================================================================\\
 
+*/
+
 //==================================================================================\\
 //= CLASE US_InputBox                                                              =\\
 //----------------------------------------------------------------------------------\\
@@ -1079,9 +1065,6 @@ CLASS US_InputBox
 
    DATA US_InputBoxPan HIDDEN             init "US_WIP"+US_NameRandom()
    DATA Reto          HIDDEN              init NIL
-
-   /*- Propiedades ----------------------------------------------------*/
-
    DATA cTitulo       EXPORTED            init "Este es el titulo del dialogo"
    DATA cLeyenda      EXPORTED            init "Esta es la leyenda del dialogo"
    DATA ValorInicial  EXPORTED            init NIL            && Valor Inicial
@@ -1094,8 +1077,6 @@ CLASS US_InputBox
    DATA bButtonCancel EXPORTED AS LOGIC   init .F.            && ¿desea tener un boton Cancel?
    DATA bEscape       EXPORTED AS LOGIC   init .F.            && ¿desea salir con escape?
    DATA cValid        EXPORTED            init NIL            && Bloque a evaluar
-
-   /*- Fin Propiedades ------------------------------------------------*/
 
 ENDCLASS
 
@@ -1189,6 +1170,8 @@ Return
 //= END CLASE US_InputBox                                                          =\\
 //==================================================================================\\
 
+/*
+
 //==================================================================================\\
 //= CLASE US_Lista                                                                 =\\
 //----------------------------------------------------------------------------------\\
@@ -1202,9 +1185,6 @@ CLASS US_Lista
 
    DATA Ventana       HIDDEN              init "US_PM"+US_NameRandom()
    DATA Opcion        HIDDEN              init 0
-
-   /*- Propiedades ----------------------------------------------------*/
-
    DATA cTitulo       EXPORTED            init "Este es el titulo del dialogo"
    DATA Lista         EXPORTED            init NIL            && Vector con los valores a elegir
    DATA ListaBool     EXPORTED            init NIL            && Vector para saber que elementos son utiles
@@ -1217,9 +1197,6 @@ CLASS US_Lista
    DATA bEscape       EXPORTED AS LOGIC   init .T.            && ¿desea salir con escape?
    DATA bWinChild     EXPORTED AS LOGIC   init .F.            && ¿desea salir con escape?
    DATA cSkin         EXPORTED            init ""             && Skin
-
-   /*- Fin Propiedades ------------------------------------------------*/
-
 ENDCLASS
 
 METHOD New() CLASS US_Lista
@@ -1331,6 +1308,8 @@ RETURN
 //= END CLASE US_Lista                                                             =\\
 //==================================================================================\\
 
+*/
+
 //==================================================================================\\
 //= CLASE US_MGWait                                                                =\\
 //----------------------------------------------------------------------------------\\
@@ -1355,9 +1334,6 @@ CLASS US_MGWait
    DATA cFuncion      HIDDEN              init ""             && Funcion de usuario a ejecutar
    DATA bShowAnterior HIDDEN              init .T.            && Backup de EXPORTED bShow
    DATA cTXTAnterior  HIDDEN              init ""             && Backup de EXPORTED cTXT
-
-   /*- Propiedades ----------------------------------------------------*/
-
    DATA nAncho        EXPORTED            init ( GetDesktopRealWidth() * 0.6 )   && Ancho de la ventana modo texto
    DATA nAlto         EXPORTED            init ( GetDesktopRealHeight() * 0.1 )  && Alto de la ventana modo texto
    DATA bAnimated     EXPORTED            init .F.            && Indica imagen animada o texto con blink (sin desarrollar)
@@ -1371,9 +1347,6 @@ CLASS US_MGWait
    DATA bStopButton   EXPORTED            init .F.            && Boton para Stop
    DATA bStop         EXPORTED            init .F.            && Flag para Stop
    DATA nTimerRefresh EXPORTED            init 100            && intervalo del timer para hacer refresh de texto o mostrar/ocultar ventana
-
-   /*- Fin Propiedades ------------------------------------------------*/
-
 ENDCLASS
 
 METHOD New() CLASS US_MGWait
@@ -1569,7 +1542,7 @@ return ::Reto
 //= END CLASE US_MGWait                                                            =\\
 //==================================================================================\\
 
-
+/*
 
 
 //==================================================================================\\
@@ -1599,8 +1572,6 @@ CLASS US_MGWaitNew
    DATA bShowAnterior HIDDEN              init .T.            && Backup de EXPORTED bShow
    DATA cTXTAnterior  HIDDEN              init ""             && Backup de EXPORTED cTXT
 
-   /*- Propiedades ----------------------------------------------------*/
-
    DATA bAnimated     EXPORTED            init .F.            && Indica imagen animada o texto con blink (sin desarrollar)
    DATA cTXT          EXPORTED            init ""             && Texto a displayar
    DATA nFila         EXPORTED            init NIL            && Fila en donde displayar el wait
@@ -1612,9 +1583,6 @@ CLASS US_MGWaitNew
    DATA bStopButton   EXPORTED            init .F.            && Boton para Stop
    DATA bStop         EXPORTED            init .F.            && Flag para Stop
    DATA nTimerRefresh EXPORTED            init 100            && intervalo del timer para hacer refresh de texto o mostrar/ocultar ventana
-
-   /*- Fin Propiedades ------------------------------------------------*/
-
 ENDCLASS
 
 METHOD New() CLASS US_MGWaitNew
@@ -1809,13 +1777,7 @@ CLASS US_Modelo
    METHOD Destroy()                              && Destruir el Objeto
 
 // DATA cFile         HIDDEN              init NIL            && Archivo para procesar
-
-   /*- Propiedades ----------------------------------------------------*/
-
 // DATA cFile         EXPORTED            init NIL            && Archivo para procesar
-
-   /*- Fin Propiedades ------------------------------------------------*/
-
 ENDCLASS
 
 METHOD New() CLASS US_Modelo

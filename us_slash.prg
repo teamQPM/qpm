@@ -81,7 +81,7 @@ FUNCTION MAIN(cP1,cP2,cP3,cP4,cP5,cP6,cP7,cP8,cP9,cP10,cP11,cP12,cP13,cP14,cP15,
    cParam:=alltrim(substr(cParam , 1 , US_WordInd( cParam, US_Words( cParam ) - 1 ) - 1 ))
    if bList
       QPM_Log( "US_Slash "+Version )
-      QPM_Log( "Slash 000I: by QPM_Support ( fernando.yurisich@gmail.com )" )
+      QPM_Log( "Slash 000I: by QPM_Support ( http://qpm.sourceforge.net )" )
       QPM_Log( "Slash 999I: Log into "+cQPMDir+"QPM.log" )
       QPM_Log( "Slash 003I: FileIn : "+cFileIn )
       QPM_Log( "Slash 013I: FileOut: "+cFileOut )

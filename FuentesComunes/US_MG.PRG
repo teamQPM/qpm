@@ -26,23 +26,23 @@
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-// No incluir: #include "US_ENV.H"
-// Esto causaria que se redefina "msginfo" y "?" lo que provoca que no funcione US_LOG
-
 #include "US_ENV.H"
-
-Function US_msginfo(parm,win)
-Return msginfo( us_todoStr(parm) , win )
 
 Function GetActiveHelpFile()
 Return _HMG_ActiveHelpFile
 
-   Function GetModuleFileName()
-   Return GetExeFilename()
+/*
+Function US_msginfo(parm,win)
+Return msginfo( us_todoStr(parm) , win )
+*/
+/*
+Function GetModuleFileName()
+Return GetExeFilename()
+*/
 
-*//========================================================================\\*
-*//== Funcion para obtener el contenido de un RichEditBox                ==\\*
-*//------------------------------------------------------------------------\\*
+/*
+ * Función para obtener el contenido de un RichEditBox
+ */
 Function US_GetRichEditValue( ventana , control , modo )
    Local cFile:="" , memo , hRichEdit := GetControlHandle ( control , ventana )
    if empty( modo )
@@ -60,9 +60,9 @@ Function US_GetRichEditValue( ventana , control , modo )
    endcase
 Return memo
 
-*//======================================================================================\\*
-*//== Funcion para Convertir caretpos de RTF a posicion de RTF contando los  controles ==\\*
-*//--------------------------------------------------------------------------------------\\*
+/*
+ * Función para Convertir caretpos de RTF a posicion de RTF contando los  controles
+ */
 Function US_RTF2MemoPos( cMemoRtf , nPosTxt )
    Local cVenti := US_GetCurrentWindow() , cControl := "control"+US_NameRandom()
    Local cAux , cSeco , cClip , nPosTxtPriv := nPosTxt
@@ -93,36 +93,14 @@ Function US_RTF2MemoPos( cMemoRtf , nPosTxt )
    cAux := US_GetRichEditValue( cVenti , cControl , "RTF" )
    DoMethod( cVenti , cControl , "release" )
 Return ( at( cSeco , cAux ) - if( nPosTxtPriv < LOC_nAuxiliar , 2 , 1 ) )    // -1
-//= END Funcion para Convertir caretpos de RTF a posicion de RTF contando los  controles ==\\
-//=========================================================================================\\
 
-*//========================================================================\\*
-*//== Funcion para Convertir RTF to TXT                                  ==\\*
-*//------------------------------------------------------------------------\\*
-//Function US_RTF2TXT( memo )
-//   Local win := US_WindowNameRandom("US_RTF2TXT") , control := "control"
-//   Local cAux
-//   DEFINE WINDOW &win at GetDesktopRealHeight() , GetDesktopRealWidth() ;
-//      WIDTH 10 ;
-//      HEIGHT 10 ;
-//      USMODAL ;
-//      NOSHOW ;
-//      NOSYSMENU ;
-//      NOCAPTION ;
-//      ON INIT DoMethod( win , "release" )
-//      @ 0,0 RICHEDITBOX &control ;
-//        value memo
-//   END WINDOW
-//   DoMethod( win , "hide" )
-//   cAux := US_GetRichEditValue( win , control , "TXT" )
-//   ACTIVATE WINDOW &win
-//Return cAux
+/*
+ * Función para Convertir RTF to TXT
+ */
 Function US_RTF2TXT( memo )
    Local win := US_GetCurrentWindow() , cControl := procname()+"Control"+US_NameRandom()
    Local cAux
 //US_Log( win )
-//   OF &(Win) ;
-//   OF &(ThisWindow.name) ;
    @ 0,0 RICHEDITBOX &cControl ;
      OF &(Win) ;
      value memo ;
@@ -132,30 +110,10 @@ Function US_RTF2TXT( memo )
    cAux := US_GetRichEditValue( win , cControl , "TXT" )
    DoMethod( win , cControl , "release" )
 Return cAux
-//= END Function para Convertir RTF to TXT                                         =\\
-//==================================================================================\\
 
-*//========================================================================\\*
-*//== Funcion para Recodificar correctamente un texto aparentemente RTF  ==\\*
-*//------------------------------------------------------------------------\\*
-//Function US_RTF2RTF( memo )
-//   Local win := US_WindowNameRandom("US_RTF2RTF") , Control := "control"
-//   Local cAux
-//   DEFINE WINDOW &win at GetDesktopRealHeight() , GetDesktopRealWidth() ;
-//      WIDTH 0 ;
-//      HEIGHT 0 ;
-//      USMODAL ;
-//      NOSHOW ;
-//      NOSYSMENU ;
-//      NOCAPTION ;
-//      ON INIT DoMethod( win , "release" )
-//      @ 0,0 RICHEDITBOX &control ;
-//        value memo
-//   END WINDOW
-//   DoMethod( win , "hide" )
-//   cAux := US_GetRichEditValue( win , control , "RTF" )
-//   ACTIVATE WINDOW &win
-//Return cAux
+/*
+ * Función para Recodificar correctamente un texto aparentemente RTF
+ */
 Function US_RTF2RTF( memo )
    Local win := US_GetCurrentWindow() , cControl := procname()+"control"+US_NameRandom()
    Local cAux
@@ -168,30 +126,10 @@ Function US_RTF2RTF( memo )
    cAux := US_GetRichEditValue( win , cControl , "RTF" )
    DoMethod( win , cControl , "release" )
 Return cAux
-//= END Function para Recodificar RTF to RTF                                       =\\
-//==================================================================================\\
 
-*//========================================================================\\*
-*//== Funcion para Convertir TXT to RTF                                  ==\\*
-*//------------------------------------------------------------------------\\*
-//Function US_TXT2RTF( memo )
-//   Local win := US_WindowNameRandom("US_TXT2RTF") , control := "control"
-//   Local cAux
-//   DEFINE WINDOW &win at GetDesktopRealHeight() , GetDesktopRealWidth() ;
-//      WIDTH 10 ;
-//      HEIGHT 10 ;
-//      USMODAL ;
-//      NOSHOW ;
-//      NOSYSMENU ;
-//      NOCAPTION ;
-//      ON INIT DoMethod( win , "release" )
-//      @ 0,0 RICHEDITBOX &control ;
-//        value memo
-//   END WINDOW
-//   DoMethod( win , "hide" )
-//   cAux := US_GetRichEditValue( win , control , "RTF" )
-//   ACTIVATE WINDOW &win
-//Return cAux
+/*
+ * Función para Convertir TXT to RTF
+ ***
 Function US_TXT2RTF( memo )
    Local win := US_GetCurrentWindow() , cControl := procname()+"control"+US_NameRandom()
    Local cAux
@@ -204,12 +142,10 @@ Function US_TXT2RTF( memo )
    cAux := US_GetRichEditValue( win , cControl , "RTF" )
    DoMethod( win , cControl , "release" )
 Return cAux
-//= END Function para Convertir TXT to RTF                                         =\\
-//==================================================================================\\
 
-*//========================================================================\\*
-*//== Funcion para Obtener el contenido de un clipboard con texto RTF    ==\\*
-*//------------------------------------------------------------------------\\*
+/*
+ * Función para Obtener el contenido de un clipboard con texto RTF
+ */
 Function US_GetRtfClipboard()
    Local cVentana := US_GetCurrentWindow() , cControl := Procname()+"Control"+US_NameRandom()
    Local hEd
@@ -225,6 +161,7 @@ Function US_GetRtfClipboard()
    cAux := US_GetRichEditValue( cVentana , cControl , "RTF" )
    DoMethod( cVentana , cControl , "release" )
 Return cAux
+
 #pragma BEGINDUMP
 
 #define _WIN32_IE      0x0500
@@ -232,30 +169,31 @@ Return cAux
 #define _WIN32_WINNT   0x0400
 #include <windows.h>
 #include "hbapi.h"
+
+/*
+ * Función para Obtener el contenido de un clipboard con texto RTF
+ */
 HB_FUNC(US_GETRTFCLIPBOARDPASTE)
 {
    SendMessage( (HWND) hb_parnl (1),(UINT) WM_PASTE, 0, 0);
 }
-#pragma ENDDUMP
-//= END Funcion para Obtener el contenido de un clipboard con texto RTF           ==\\
-//==================================================================================\\
 
-*//========================================================================\\*
-*//== Funcion para posicionar el reproductor de medios                   ==\\*
-*//------------------------------------------------------------------------\\*
+#pragma ENDDUMP
+
+/*
+ * Función para posicionar el reproductor de medios
+ */
 Function US_SetPlayerPosition( ParentForm , ControlName , nPos )
    Local h , mVar
    mVar := '_' + ParentForm + '_' + ControlName
    h := _HMG_aControlhandles [&mVar]
    US_mcifunc ( h , 20 , nPos )
 Return Nil
-//= END Function US_SetPlayerPosition                                              =\\
-//==================================================================================\\
 
-*//========================================================================\\*
-*//== Funciones de API para agregar y remover fuentes dinamicamente      ==\\*
-*//========================================================================\\*
-// ejemplo: US_AddFont("VPArial.ttf",.T.)
+/*
+ * Función de API para agregar fuentes en forma dinámica
+ * Ejemplo: US_AddFont( "VPArial.ttf", .T. )
+ ***
 Function US_AddFont( cNameFont , bCompartida )
    Local R
    #define FR_PRIVATE     0x10
@@ -271,7 +209,10 @@ Function US_AddFont( cNameFont , bCompartida )
    US_LOG("AddFont: "+cNameFont+", compartida: "+us_todostr(bCompartida)+", RC="+us_todostr(R)+", "+if(r<>0,"OK","ERROR") , .F. )
 Return if(R<>0,0,-1)
 
-// ejemplo: US_RemoveFont("VPArial.ttf",.T.)
+/*
+ * Función de API para remover fuentes en forma dinámica
+ * Ejemplo: US_RemoveFont( "VPArial.ttf", .T. )
+ ***
 Function US_RemoveFont(cNameFont,bCompartida)
    Local R
    if bCompartida=NIL .or. !bCompartida
@@ -300,16 +241,11 @@ Return CallDll32( "AddFontResourceEx" , "GDI32.DLL" , lpszFilename, fl, pdv )
 //DECLARE DLL_TYPE_BOOL RemoveFontResourceEx ( DLL_TYPE_LPCTSTR lpFileName, DLL_TYPE_DWORD fl, DLL_TYPE_LPVOID pdv ) IN GDI32.DLL
 Function RemoveFontResourceEx( lpFileName, fl, pdv )
 Return CallDll32( "RemoveFontResourceEx" , "GDI32.DLL" , lpFileName, fl, pdv )
+*/
 
-*//------------------------------------------------------------------------\\*
-*//                                                                        \\*
-*//------------------------------------------------------------------------\\*
 FUNCTION US_NOP()
 RETURN NIL
 
-*//------------------------------------------------------------------------\\*
-*//                                                                        \\*
-*//------------------------------------------------------------------------\\*
 FUNCTION US_TOTFil()
 RETURN (25)
 
@@ -325,15 +261,16 @@ RETURN US_PAlto(nValor)
 FUNCTION US_LCol(nValor)
 RETURN IIF(!US_SUBWIN,US_PAncho((nValor * 100) / US_TOTCol()),(US_PAncho((nValor * 100) / US_TOTCol()))-US_COLDES)
 
+/*
 FUNCTION US_RCol(nValor)
 RETURN US_LCol(nValor + 1)
-
+*/
 FUNCTION US_TFil(nValor)
 RETURN IIF(!US_SUBWIN,US_PAlto((nValor * 100) / US_TOTFil()),(US_PAlto((nValor * 100) / US_TOTFil()))-US_FILDES)
-
+/*
 FUNCTION US_BFil(nValor)
 RETURN US_TFil(nValor + 1)
-
+*/
 FUNCTION US_Fils(nValor)
 RETURN (US_PAlto((nValor * 100) / US_TOTFil()))
 
@@ -348,9 +285,9 @@ FUNCTION US_PAlto(nValor)
 RETURN ((US_WALTO * nValor) / 100)
 *RETURN int((US_WALTO * nValor) / 100)
 
-*//------------------------------------------------------------------------\\*
-*// Funcion para establecer el tamaño de una fuente                        \\*
-*//------------------------------------------------------------------------\\*
+/*
+ * Función para establecer el tamaño de una fuente                   
+ */
 FUNCTION US_WFont(nValor)
 *   Local ancho, alto
 *   ancho:=( ( US_WLienzo * nValor ) / 640 )
@@ -359,9 +296,9 @@ FUNCTION US_WFont(nValor)
 Return ( ( US_WLienzo * nValor ) / 640 )
 *****Return ( ( US_HLienzo * nValor ) / 480 )
 
-*//------------------------------------------------------------------------\\*
-*// ESTA FUNCION DEJA ELEJIR UNA OPCION DE UNA LISTA Y/O ENVIA UN CARTEL
-*//------------------------------------------------------------------------\\*
+/*
+ * ESTA Función DEJA ELEJIR UNA OPCION DE UNA LISTA Y/O ENVIA UN CARTEL
+ */
 FUNCTION US_Opcion(cTexto,LISTA,FILA,DEFAULT,cMsgTIT,FAYUDA,TIPO,TECLASALIR,ESPERA,COLORTIT,COLORFTIT,COLORMSG,COLORFMSG)
    LOCAL PALS, LONGIHELP, AYUDA:=.F., KESCTXT, COLUMNA:=14, LINEAS:=0, INDLIS, ;
          LONGIPAL, DESPLA, ;
@@ -624,15 +561,11 @@ FUNCTION USIOpcion(ESPERA)
    ENDIF
 RETURN
 
+/*
 FUNCTION USROpcion(OPCION)
    RPTA:=OPCION
 RETURN &(Ventana).Release()
 
-*// FIN US_Opcion
-
-*//------------------------------------------------------------------------\\*
-*//                                                                        \\*
-*//------------------------------------------------------------------------\\*
 FUNCTION US_SETKEY(TECLA,VENTANA,ACCION)
 *us_log("tecla,ventana,accion "+us_todostr(tecla)+"<"+us_todostr(ventana)+"<"+us_todostr(accion))
 DO CASE
@@ -3151,10 +3084,9 @@ DO CASE
 ENDCASE
 RETURN
 
-*//------------------------------------------------------------------------\\*
-*//                                                                        \\*
-*//------------------------------------------------------------------------\\*
-// 0=LETRAS Y NUMEROS   1=LETRAS    2=NUMEROS
+/*
+ * 0=LETRAS Y NUMEROS   1=LETRAS    2=NUMEROS
+ ***
 FUNCTION US_SETALLKEY(TIPO,VENTANA,ACCION,VARIABLE)
 IF TIPO = NIL
    TIPO = 0
@@ -3240,10 +3172,9 @@ LOCAL R
 R=&ACCION
 RETURN
 
-*//------------------------------------------------------------------------\\*
-*//                                                                        \\*
-*//------------------------------------------------------------------------\\*
-// 0=LETRAS Y NUMEROS   1=LETRAS    2=NUMEROS
+/*
+ * 0=LETRAS Y NUMEROS   1=LETRAS    2=NUMEROS
+ ***
 FUNCTION US_RELALLKEY(TIPO,VENTANA)
 IF TIPO = NIL
    TIPO = 0
@@ -3320,10 +3251,8 @@ DO CASE
       US_LOG("TIPO NO CONTEMPLADA EN US_RELALLKEY(), VALOR RECIBIDO: "+US_TODOSTR(TIPO)+".  Valores aceptados: 0 para Letras y Numeros, 1 para Letras solas y 2 para Numeros solos",.T.)
 ENDCASE
 RETURN
+*/
 
-*//------------------------------------------------------------------------\\*
-*//                                                                        \\*
-*//------------------------------------------------------------------------\\*
 FUNCTION US_MGMenu(W_TOP,W_LEFT,W_BOTTOM,W_RIGHT,VECTOR,VECTORBOOL,USERFUNC)
    PRIVATE Ventana:="US_PM"+ALLTRIM(STR(DAY(DATE())))+ALLTRIM(STR(INT(SECONDS()))) , ;
            Opcion:=0, W_COLS, W_FILS
@@ -3346,7 +3275,8 @@ FUNCTION US_MGMenu(W_TOP,W_LEFT,W_BOTTOM,W_RIGHT,VECTOR,VECTORBOOL,USERFUNC)
               US_FILDES:=(&(Ventana).Row - US_WFIL), ;
               US_COLDES:=(&(Ventana).Col - US_WCOL)
 
-      US_SETKEY("K_ESC",Ventana,"US_MenuEleccion(.T.)")
+//      US_SETKEY("K_ESC",Ventana,"US_MenuEleccion(.T.)")
+      ON KEY ESCAPE OF &VENTANA ACTION US_MenuEleccion(.T.)
 
       DEFINE LISTBOX List_1
              ROW     0
@@ -3373,9 +3303,7 @@ FUNCTION US_MenuEleccion(Escape)
    &(Ventana).Release()
 RETURN
 
-*//------------------------------------------------------------------------\\*
-*//                                                                        \\*
-*//------------------------------------------------------------------------\\*
+/*
 FUNCTION US_IsEscDefined(Ventana)
    LOCAL bContenido:=NIL
    STORE KEY ESCAPE OF &(Ventana) TO bContenido
@@ -3384,19 +3312,14 @@ FUNCTION US_IsEscDefined(Ventana)
    ENDIF
 RETURN .F.
 
-*//------------------------------------------------------------------------\\*
-*//                                                                        \\*
-*//------------------------------------------------------------------------\\*
 Function _DefaultMenuItem( ItemNumber, ItemName, FormName )
    Local i , h
    i := GetControlIndex( ItemName, FormName )
    h := _HMG_aControlpageMap[ i ]
    SetMenuDefaultItem( h, ItemNumber )
 Return
+*/
 
-*//------------------------------------------------------------------------\\*
-*//                                                                        \\*
-*//------------------------------------------------------------------------\\*
 #pragma BEGINDUMP
 
 #include <windows.h>
@@ -3429,8 +3352,6 @@ HB_FUNC ( INTERACTIVEMOVEHANDLE )
 }
 #pragma ENDDUMP
 
-*-----------------------------------------------------------------------------------*
-
 #pragma BEGINDUMP
 
 #include <windows.h>
@@ -3440,10 +3361,12 @@ HB_FUNC ( INTERACTIVEMOVEHANDLE )
 #include <commctrl.h>
 #include <vfw.h>
 
+/*
 HB_FUNC ( SETMENUDEFAULTITEM )
 {
         SetMenuDefaultItem( (HMENU) hb_parnl( 1 ), hb_parni( 2 ) - 1, TRUE );
 }
+*/
 
 HB_FUNC ( US_MCIFUNC )
 {
@@ -3475,6 +3398,7 @@ HB_FUNC ( US_MCIFUNC )
       }
 }
 
+/*
 HB_FUNC ( US_INITIMAGE )
 {
         HWND  h;
@@ -3512,20 +3436,18 @@ HB_FUNC ( US_C_SETPICTURE )
 
         SendMessage((HWND) hb_parnl (1),(UINT)STM_SETIMAGE,(WPARAM)IMAGE_BITMAP,(LPARAM)hBitmap);
 }
-
+*/
 #pragma ENDDUMP
 
-*-----------------------------------------------------------------------------------*
-
+*/
 #define EM_SETSEL   177
-*------------------------------------------
+
 Function US_Send_SelectAll(ControlName,Ventana)
    Local c := GetControlHandle (ControlName,Ventana)
    SendMessage( c , EM_SETSEL , 0 , -1 )
 Return NIL
-*-----------------------------------------------------------------------------------*
 
-*-----------------------------------------------------------------------------------*
+/*
 Function US_SendMail(nModo, nIdioma, cRetoMsg, cTitulo, cTexto, cOrigName, cOrigAddress, cDestName, cDestAddress, cDestNameCC, cDestAddressCC, cAttachFile)
    Local rta:=0
    do case
@@ -3795,23 +3717,9 @@ HB_FUNC ( US_MAPISENDMAIL )
 
 #pragma ENDDUMP
 
-//==================================================================================\\
-//= Functiones para registry                                                       =\\
-//=--------------------------------------------------------------------------------=\\
-//= Function US_DelRegKey          // deletea claves de registry                   =\\
-//= USE:                                                                           =\\
-//= US_DelRegKey(nKey, cRegKey, cSubKey)                                           *\\
-//= Idiomas: 0 Espa±ol (Default) - 1 Ingles                                        =\\
-//= Retorna:                                                                       =\\
-//=    0 = ---- los codigos de retorno no estan implementados                      =\\
-//----------------------------------------------------------------------------------\\
-//= Function US_DelRegVal          // deletea valores de registry                  =\\
-//= USE:                                                                           =\\
-//= US_DelRegVal(nKey, cRegKey, cSubKey)                                           *\\
-//= Idiomas: 0 Espa±ol (Default) - 1 Ingles                                        =\\
-//= Retorna:                                                                       =\\
-//=    0 = ---- los codigos de retorno no estan implementados                      =\\
-//----------------------------------------------------------------------------------\\
+/*
+ * Functiones para registry
+ */
 Function US_GetReg(nKey, cRegKey, cVar)
    LOCAL oReg, cValor
    //msginfo("GetReg: key: "+cRegKey+" | var: "+cVar)
@@ -3839,6 +3747,7 @@ Function US_SetReg(nKey, cRegKey, cVar, Valor)
    oReg:Close()
 RETURN nValue
 
+/*
 Function US_DelRegKey(nKey, cRegKey, cSubKey)
    LOCAL oReg, nValue
    //msginfo("DelRegKey: key: "+cRegKey+" | subkey: "+cSubKey)
@@ -3868,20 +3777,13 @@ Function US_DelRegVal(nKey, cRegKey, cValor)
    endif
    oReg:Close()
 RETURN nValue
-//= END Functiones de Registry                                                     =\\
-//==================================================================================\\
 
-//==================================================================================\\
-//= Function US_GetFolder                                                          =\\
-//= USE:                                                                           =\\
-//= US_GetFolder( cTitulo , cInitialFolder )                                       =\\
-//----------------------------------------------------------------------------------\\
 #pragma BEGINDUMP
 
 #include <shlobj.h>
 
-// La siguiente funcion es llamada dinamicamente cuando se abre el browse de folders y setea el folder inicial
-// con el valor de strTmpPath que fue cargado con el parametro 2 (si es que estß)
+// La siguiente Función es llamada dinamicamente cuando se abre el browse de folders y setea el folder inicial
+// con el valor de strTmpPath que fue cargado con el parametro 2 (si es que está)
 
 char strTmpPath[MAX_PATH] ;
 
@@ -3942,14 +3844,7 @@ HB_FUNC( US_GETFOLDER ) // Based Upon Code Contributed By Ryszard Ry³ko
 }
 
 #pragma ENDDUMP
-//= END Function US_GetFolder                                                      =\\
-//==================================================================================\\
 
-//==================================================================================\\
-//= Function US_MGIndex                                                            =\\
-//= USE:                                                                           =\\
-//= US_MGIndex( "Base", "Clave", "cNombre" [, "PACK"] )                            =\\
-//----------------------------------------------------------------------------------\\
 Function US_MGIndex(cBase, cClave, cNombre, cPack)
    Local bPack:=.F.
    Private Incremento:=1
@@ -4041,19 +3936,10 @@ FUNCTION US_MGIndex_IndexMeter(mTamagno, NombreIndice)
    US_MGIndexMenu.TRegistro.value:=str(registro,10)
    US_MGIndexMenu.TPorcentaje.value:=str(nCompletado, 9, 2)+'%'
 RETURN(.T.)
-//= END Function US_MGIndex                                                        =\\
-//==================================================================================\\
 
-//==================================================================================\\
-//= Function US_SetWindowRgn                                                       =\\
-//= USE:                                                                           =\\
-//= US_SetWindowRgn( WindowName , clo , row , width , heith , type )               =\\
-//=                                                                                =\\
-//= Type: 0 Reset                                                                  =\\
-//=       1 Rectangular                                                            =\\
-//=       2 Eliptica                                                               =\\
-//=                                                                                =\\
-//----------------------------------------------------------------------------------\\
+/*
+ * Type: 0 Reset
+ */
 Function US_SetWindowRgn(name,col,row,w,h,lx)
    local lhand:=0
    lhand := GetFormHandle( name )
@@ -4084,12 +3970,8 @@ HB_FUNC (US_2SETWINDOWRGN)
      }
 }
 #pragma ENDDUMP
-//= END Function US_SetWindowRgn                                                   =\\
-//==================================================================================\\
 
-//==================================================================================\\
-//= Function US_Execute                                                            =\\
-//----------------------------------------------------------------------------------\\
+/*
 #define SW_HIDE             0
 #define SW_SHOWNORMAL       1
 #define SW_NORMAL           1
@@ -4164,19 +4046,11 @@ Function US_Execute(cFile,cParm)
       Case Reto = SE_ERR_SHARE              && A sharing violation occurred.
          msginfo("Error al interntar compartir el recurso o archivo")
       otherwise
-         US_Log("Funcion "+Procname()+": Error desconocido al intentar ver el Reporte, RC="+us_todostr(Reto))
-         msginfo("Funcion "+Procname()+": Error desconocido al intentar ver el Reporte, RC="+us_todostr(Reto))
+         US_Log("Función "+Procname()+": Error desconocido al intentar ver el Reporte, RC="+us_todostr(Reto))
+         msginfo("Función "+Procname()+": Error desconocido al intentar ver el Reporte, RC="+us_todostr(Reto))
    endcase
 Return if( Reto > 32 , 0 , -1 )
-//= END Function US_Execute                                                        =\\
-//==================================================================================\\
-
-//==================================================================================\\
-//= Funciones de StackWindow                                                       =\\
-//= USE:                                                                           =\\
-//= US_WinStackAdd( @RN_StackWin , "ventana" )                                     =\\
-//= US_WinStackDel( @RN_StackWin , "ventana" )                                     =\\
-//----------------------------------------------------------------------------------\\
+*/
 Function US_WinStackAdd( Vector , Ventana )
    // sexto elemento es el estado de la ventana: NORMAL MINIMIZADA MAXIMIZADA
    // es usado para cuando se restauran todas las ventanas minimizadas
@@ -4199,7 +4073,7 @@ Function US_WinStackDel( Vector , Ventana )
        Vector[len(Vector)][j] := NIL
    next
 Return
-
+*/
 Function US_WinStackStatus( Vector , Ventana , Estado )
    Local i:=0
    for i=1 to len(Vector)
@@ -4208,7 +4082,7 @@ Function US_WinStackStatus( Vector , Ventana , Estado )
       endif
    next
 Return
-
+/*
 Function US_WinMinimizeAll( Vector )
    Local i:=0
    US_Log( , .F. )
@@ -4221,7 +4095,7 @@ Return .T.
 
 Function US_WinRestoreAll( Vector )
    Local i:=0
-** US_Log( , .F. )
+*  US_Log( , .F. )
    for i=1 to len(Vector)
       if Vector[i][1] != NIL
          if i = 1
@@ -4249,7 +4123,7 @@ Function US_WinHideAll( Vector )
    Local i:=0
    US_Log( , .F. )
    DoMethod( Vector[1][1] , "Hide" )
-   **for i=1 to len(Vector)
+   * for i=1 to len(Vector)
    for i=len(Vector) to 2 step -1
       if Vector[i][1] != NIL
          DoMethod( Vector[i][1] , "Hide" )
@@ -4266,15 +4140,10 @@ Function US_WinShowAll( Vector )
       endif
    next
 Return .T.
-//= END Funciones US_StackWin                                                      =\\
-//==================================================================================\\
 
-//==================================================================================\\
-//= Funcion US_Maximize                                                            =\\
-//= Para Maximizar o Restaurar una ventana                                         =\\
-//= USE:                                                                           =\\
-//= US_Maximize( @VectorStack , Ventana , @nOldWinWidth , @nOldWinHeight , @bWinMaximizedAll , @bThisMaximized )  =\\
-//----------------------------------------------------------------------------------\\
+/*
+ * Función para maximizar o restaurar una ventana
+ */
 Function US_Maximize( Vector , Ventana , nViejoWidth , nViejoHeight , bSystemMaximized , bModuleMaximized )
    Local i:=0
    if bSystemMaximized
@@ -4302,15 +4171,10 @@ Function US_Maximize( Vector , Ventana , nViejoWidth , nViejoHeight , bSystemMax
       endif
    endif
 Return .t.
-//= END Funciones US_Maximize                                                      =\\
-//==================================================================================\\
 
-//==================================================================================\\
-//= Function US_Redraw                                                             =\\
-//= Para Redibujar una ventana                                                     =\\
-//= USE:                                                                           =\\
-//= US_Redraw( cFormName , @nOldWidth , @nOldHeight )                              =\\
-//----------------------------------------------------------------------------------\\
+/*
+ * Función para redibujar una ventana
+ */
 Function US_Redraw      && para que funcione esta llamada mediante US_MGWait se agrego un if en el US_Redraw2 para ignorar su ventana "US_WAIT"
    Parameters cFormName , nOldWidth , nOldHeight
 Return VP_MGWait( "US_Redraw2( cFormName , @nOldWidth , @nOldHeight )" )
@@ -4323,12 +4187,12 @@ Function US_Redraw2( cFormName , nOldWidth , nOldHeight )
             Private nWidth :=GetProperty( cFormName , "width" )
             Private nHeight:=GetProperty( cFormName , "height" )
             // US_LOG("Redraw: "+cFormName)
-            /* Ini exclusivo FGS */
+            // Ini exclusivo FGS
             US_WWinPorciento:=( (nWidth * US_WWinPorciento ) / nOldWidth )
             US_HWinPorciento:=( (nHeight * US_HWinPorciento ) / nOldHeight )
             US_WLienzo:=nWidth
             US_HLienzo:=nHeight
-            /* Fin exclusivo FGS */
+            // Fin exclusivo FGS
             nFormName := GetFormHandle( cFormName )
             For inx=1 to len( _HMG_aControlParenthandles )
                if nFormName == _HMG_aControlParenthandles[inx]
@@ -4365,12 +4229,7 @@ Function US_Redraw2( cFormName , nOldWidth , nOldHeight )
       DoMethod( cFormName , foco , "setfocus" )
    endif
 return
-//= END Function US_Redraw                                                         =\\
-//==================================================================================\\
 
-//==================================================================================\\
-//= Funciones de Copy/Paste                                                        =\\
-//----------------------------------------------------------------------------------\\
 #pragma BEGINDUMP
 
 #include <windows.h>
@@ -4382,20 +4241,7 @@ return
 #define VK_X 88
 #define VK_Z 90
 
-// #define VK_HOME 36
-// #define VK_END  35
-
-/* select all - ctrl-a */
-/* NOTA: Esta funcion es reemplazada por US_SelectAll que esta mas abajo en este fuente !!!!! */
-//HB_FUNC( SEND_SELECTALL )
-//{
-//    keybd_event(VK_CONTROL, MapVirtualKey(VK_CONTROL, 0), 0, 0);
-//    keybd_event(VK_A, MapVirtualKey(VK_A, 0), 0, 0);
-//    keybd_event(VK_A, MapVirtualKey(VK_A, 0), KEYEVENTF_KEYUP, 0);
-//    keybd_event(VK_CONTROL, MapVirtualKey(VK_CONTROL, 0), KEYEVENTF_KEYUP, 0);
-//}
-
-/* copy - ctrl-c */
+// copy - ctrl-c
 HB_FUNC( US_SEND_COPY )
 {
     keybd_event(VK_CONTROL, MapVirtualKey(VK_CONTROL, 0), 0, 0);
@@ -4404,7 +4250,7 @@ HB_FUNC( US_SEND_COPY )
     keybd_event(VK_CONTROL, MapVirtualKey(VK_CONTROL, 0), KEYEVENTF_KEYUP, 0);
 }
 
-/* paste - ctrl-v */
+// paste - ctrl-v 
 HB_FUNC( US_SEND_PASTE )
 {
     keybd_event(VK_CONTROL, MapVirtualKey(VK_CONTROL, 0), 0, 0);
@@ -4413,7 +4259,7 @@ HB_FUNC( US_SEND_PASTE )
     keybd_event(VK_CONTROL, MapVirtualKey(VK_CONTROL, 0), KEYEVENTF_KEYUP, 0);
 }
 
-/* cut - ctrl-x */
+// cut - ctrl-x 
 HB_FUNC( US_SEND_CUT )
 {
     keybd_event(VK_CONTROL, MapVirtualKey(VK_CONTROL, 0), 0, 0);
@@ -4422,7 +4268,7 @@ HB_FUNC( US_SEND_CUT )
     keybd_event(VK_CONTROL, MapVirtualKey(VK_CONTROL, 0), KEYEVENTF_KEYUP, 0);
 }
 
-/* undo - ctrl-z */
+// undo - ctrl-z 
 HB_FUNC( US_SEND_UNDO )
 {
     keybd_event(VK_CONTROL, MapVirtualKey(VK_CONTROL, 0), 0, 0);
@@ -4432,12 +4278,10 @@ HB_FUNC( US_SEND_UNDO )
 }
 
 #pragma ENDDUMP
-//= END Funciones de Copy/Paste                                                    =\\
-//==================================================================================\\
 
-//==================================================================================\\
-//= Function US_AutoScroll                                                         =\\
-//----------------------------------------------------------------------------------\\
+/*
+ * Function US_AutoScroll
+ ***
 Function US_AutoScroll( sVentana, cTextBox, nOffset )
    #define WM_VSCROLL                      0x0115
    Local nVentH, nVScrollValue , reto:=.F.
@@ -4803,21 +4647,21 @@ FUNCTION US_MSG(M99SISTEMA,M99NUM,M99FILPOS,M99MODO)
    IF M99ERROR = "SI"
       RETURN -1
    ENDIF
-   /* AREA ACTUAL */
+   // AREA ACTUAL 
    M99AREAA = DBF()
-   /* ABRE LA BASE DE MENSAJES Y EL INDICE */
+   // ABRE LA BASE DE MENSAJES Y EL INDICE 
    DBUSEAREA(.T.,,M99BASE,"MSG")
    DBSETINDEX(M99BASE+"01")
-   /* PROCESO EL MENSAJE */
+   // PROCESO EL MENSAJE 
    M99I = 0
    DECLARE M99LMEN[0]
-   M99CONTRASTE= "N"                 //* GRIS
-   M99FONDO = "N/"+M99CONTRASTE      //* NEGRO
-   M99NOTIFY = "G/"+M99CONTRASTE     //* VERDE
-   M99WARNING = "GR+/"+M99CONTRASTE  //* AMARILLO
-   M99CRITICAL = "R+/"+M99CONTRASTE   //* ROJO
-   M99SEVERO = "R+/"+M99CONTRASTE     //* ROJO
-   M99AYUDA = "BG+/"+M99CONTRASTE      //* CELESTE
+   M99CONTRASTE= "N"                 /// GRIS
+   M99FONDO = "N/"+M99CONTRASTE      /// NEGRO
+   M99NOTIFY = "G/"+M99CONTRASTE     /// VERDE
+   M99WARNING = "GR+/"+M99CONTRASTE  /// AMARILLO
+   M99CRITICAL = "R+/"+M99CONTRASTE   /// ROJO
+   M99SEVERO = "R+/"+M99CONTRASTE     /// ROJO
+   M99AYUDA = "BG+/"+M99CONTRASTE      /// CELESTE
    M99CCREVERSE= "W/B"
    M99CCPROMPT = "W+/R,R/W, , ,W/R"
    M99RPTA = DBSEEK(M99NUMB,.F.)
@@ -4883,10 +4727,10 @@ FUNCTION US_MSG(M99SISTEMA,M99NUM,M99FILPOS,M99MODO)
       ENDCASE
       US_OPCION(M99MEN,"",M99FILPOS,,M99SISTEMA+M99NUM+" "+M99TIPO,"US_MSGHELP("+M99NUM+","+STR(M99FILPOS)+")",IIF(MSG_TIPO="S","C",MSG_TIPO),IIF(MSG_TIPO="N",0,2),IIF(MSG_RESP="N",.F.,.T.))
    ENDIF
-   /* CIERRA EL INDICE Y LA BASE DE MENSAJES */
+   // CIERRA EL INDICE Y LA BASE DE MENSAJES 
    DBCLEARINDEX()
    DBCLOSEAREA()
-   /* VUELVE AL AREA ACTIVA ANTES DEL MENSAJE */
+   // VUELVE AL AREA ACTIVA ANTES DEL MENSAJE 
    IF M99AREAA != ""
       DBSELECTAREA(M99AREAA)
    ENDIF
@@ -4894,9 +4738,9 @@ RETURN .T.
 //= END Funcion US_MSG                                                             =\\
 //==================================================================================\\
 
-//==================================================================================\\
-//= Funciones simples para porcentajes de pantalla                                 =\\
-//----------------------------------------------------------------------------------\\
+/*
+ * Funciones simples para porcentajes de pantalla
+ */
 
 // Pantalla completa
 Function US_PorScreenAncho( nPor )
@@ -4914,10 +4758,7 @@ Return ( ( GetProperty( Ven , "Width" ) * nPor ) / 100 )
 Function US_PorWindowAlto( Ven , nPor )
 Return ( ( GetProperty( Ven , "Height" ) * nPor ) / 100 )
 
-//= END Funciones de Porcentaje                                                    =\\
-//==================================================================================\\
-
-//CDQ  //==================================================================================\\
+/*
 //CDQ  //= Funciones para flat border y transparent form                               =\\
 //CDQ  //----------------------------------------------------------------------------------\\
 //CDQ  #define SWP_NOMOVE     2
@@ -5007,6 +4848,7 @@ Return ( ( GetProperty( Ven , "Height" ) * nPor ) / 100 )
 //CDQ
 //CDQ  //= END Funciones para flat border y transparent form                           =\\
 //CDQ  //==================================================================================\\
+*/
 
 Function US_GetCurrentWindow()
 Return ThisWindow.name
@@ -5031,6 +4873,7 @@ Function US_WindowNameRandom( prefix )
    enddo
 Return win
 
+/*
 Function US_Achoice( aItems, nValue, cTitle )
    // DEFAULT cTitle TO "Please, select", nValue TO 0
    if( cTitle == NIL , cTitle := "Please, select" , )
@@ -5062,6 +4905,7 @@ Function US_Achoice( aItems, nValue, cTitle )
    CENTER WINDOW US_AcoiceForm
    ACTIVATE WINDOW US_AcoiceForm
 return nValue
+*/
 
 Function US_TempMainWindow( cFun )
    Local Reto
@@ -5079,12 +4923,7 @@ Function US_TempMainWindow( cFun )
    DoMethod( cPan , "activate" )
 Return Reto
 
-*==============================================================*
 Function US_DisplayHelpTopic( cActiveHelpFile , xTopic , nMet )
-*--------------------------------------------------------------*
-*- Adapted from Carlos Britos ( bcd12a@yahoo.com.ar )         -*
-*-              sample help Chm_Hlp.zip                       -*
-*==============================================================*
    LOCAL cParam := ""
    If empty(cActiveHelpFile)
        Return
@@ -5104,6 +4943,7 @@ Function US_DisplayHelpTopic( cActiveHelpFile , xTopic , nMet )
    _Execute( 0 , "Open", "HH.exe", cParam , , 5 )
 Return
 
+/*
 Function US_MiniGuiType()
    //msginfo( miniguiversion() )
    do case
@@ -5121,9 +4961,10 @@ Function US_MiniGuiType()
          msginfo( "Error detecting MiniGui type: " + MiniGuiVersion() )
    endcase
 Return "?"
-
+*/
 Function US_InitialBarIsOculta()
 Return ( ( GetDesktopRealHeight() == GetDesktopHeight() ) .and. ( GetDesktopRealWidth() == GetDesktopWidth() ) )
+
 
 #pragma BEGINDUMP
 
@@ -5160,6 +5001,7 @@ HB_FUNC (GETDESKTOPREALHEIGHT)
    hb_retni(rect.bottom - rect.top);
 }
 
+/*
 HB_FUNC (GETEXEFILENAME)
 {
    unsigned char pBuf[250];
@@ -5168,7 +5010,7 @@ HB_FUNC (GETEXEFILENAME)
 
    hb_retc( (char*) pBuf );
 }
-
+*/
 #pragma ENDDUMP
 
 /* eof */
