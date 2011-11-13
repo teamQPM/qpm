@@ -167,7 +167,7 @@ HOW TO BUILD A NEW RELEASE
        QPM_<old version number>_upgrade_to_<new version number>
     b) copy QPM.EXE
     c) copy ./doc/UpgradeReadme.txt and rename it as README.TXT
-    d) update README.TXT if necessary.
+    d) update README.TXT replacing OLD by <new version number>.
     e) zip the folder
     f) upload the zip file to sourceforge.
 

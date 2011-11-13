@@ -1693,7 +1693,6 @@ Function HotPutComment( cComment )
 Return .T.
 
 Function HotGridImage( cWin , cGrid , nRow , nCol , cOper , nBitImage )
-   // HotGridImage2
    Local nBits := ( 2 ** nHotPUB_nGridImgTop ) // ej: 9 imagenes primarias = 256 ( HotPUB_nGridImgTilde, HotPUB_nGridImgEquis, etc )
    Local i , cString , nAux
    $US_Log()
