@@ -35,7 +35,7 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
    Local Folder , FileName , i , nPos , LogIni := 0 , nIndx
    Local LOC_cParam := ""
 
-   PUBLIC PUB_cQPM_Version      := "05 02 01"
+   PUBLIC PUB_cQPM_Version      := "05 02 02"
 
    PUBLIC PUB_QPM_bHigh := .F.
    QPM_SetProcessPriority( "HIGH" )
@@ -10171,8 +10171,7 @@ Function ResetImgGrid( cGrid )
 Return .T.
 
 Function GridImage( cWin , cGrid , nRow , nCol , cOper , nBitImage )
-   // GridImage2
-   Local nBits := ( 2 ** PUB_nGridImgTop ) // ej: 9 imagenes primarias = 256 ( PUB_nGridImgTilde, PUB_nGridImgEquis, etc )
+   Local nBits  := 256   // ( 2 ** PUB_nGridImgTop ) // ej: 9 imagenes primarias = 256 ( PUB_nGridImgTilde, PUB_nGridImgEquis, etc )
    Local i , cString , nAux
 // msginfo( us_todostr( nBits ) )
 // msginfo( GetProperty( cWin , cGrid , "Cell" , nRow , nCol ) )

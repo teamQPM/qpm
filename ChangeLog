@@ -8,6 +8,24 @@
  * See "How to format your ChangeLog entries" in howtosvn.txt file.
  */
 
+2011-11-13 16:40:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   - ./QPM_05020000.cfg
+   * .doc/howtosvn.txt
+     * Updated HOW TO BUILD A NEW RELEASE section.
+   * ./HelpQPM/QPM_SHG.fpt
+   * ./HelpQPM/QPM_SHG.dbf
+   * ./HelpQPM/QPM_SHG.cdx
+     * Changed references to personal email to users list.
+     * Some typos corrected.
+   * ./FuentesComunes/US_HB.PRG
+     * Some unused functions commented out.
+   * ./QPM.prg
+   * ./QPM.exe
+   * ./QPM.prg
+   * ./QPM_HotRecovery.prg
+   * ./QPM_AutoProject.qpm
+     ! Fixed: grids display wrong images (NTOC function changed in Harbour).
+
 2011-11-10 17:36:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    - ./hmi.INI
    * ./doc/notes.txt

@@ -2077,6 +2077,7 @@ RETURN 0
 *// $INI FUNCIONES para manejo de bits y numeros hexadecimales
 *//------------------------------------------------------------------------\\*
 
+/*
 #ifdef _CATOOLS
 
    FUNCTION US_BIT(CHAR,POS)
@@ -2216,6 +2217,8 @@ FUNCTION us_synchsafe(estring)
        next
    next
 RETURN int(total)
+*/
+
 *//------------------------------------------------------------------------\\*
 *// $fin funciones para manejo de bits y numeros hexadecimales
 *//========================================================================\\*
