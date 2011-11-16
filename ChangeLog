@@ -8,6 +8,19 @@
  * See "How to format your ChangeLog entries" in howtosvn.txt file.
  */
 
+2011-11-16 12:00:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * ./QPM.exe
+     * Updated.
+   * ./FuentesComunes/US_Edit_CharFijo.prg
+   * ./QPM.prg
+     * Changed direction parameter in FindChr calls from numeric to logical.
+   * ./FuentesComunes/US_l_richeditbox.prg
+     * Formatting
+     * Removed unused sentences to pacify harbour compiler -w3 warnings.
+     ! Fixed: Search functionality wasn't working after changing to Harbour
+       3.1.0 and Extended 2.0.3. Caused by FINDCHR function that, now,
+       expects an unicode string as target to lookup.
+
 2011-11-13 16:40:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    - ./QPM_05020000.cfg
    * .doc/howtosvn.txt
@@ -184,9 +197,9 @@
      + Added us_hot2.ico (copy of ./us_hot.oci)
      + Added us_hot2.ico (32x32 icon from ./us_hot.oci)
    * ./QPM_Killer.prg
-     * WinKiller window¥s icon is loaded from RC instead of disk.
+     * WinKiller window›s icon is loaded from RC instead of disk.
    * ./QPM_HotRecovery.prg
-     * WinHotRecovery window¥s icon is loaded from RC instead of disk.
+     * WinHotRecovery window›s icon is loaded from RC instead of disk.
    * ./FuentesComunes/US_ActiveX_Eventos.c
      ! Fixed C warning.
    + ./QPM_CompatibilityStatistics.ch
