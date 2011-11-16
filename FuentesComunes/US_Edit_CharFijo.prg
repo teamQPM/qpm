@@ -752,7 +752,7 @@ METHOD US_EditInicial() CLASS US_RichEdit
       ::bUS_EditMaximized := ::US_EditMaximize()
    endif
    if !empty( ::cInitialFind )
-      FindChr( ::hEd , ::cInitialFind , 1 , .T. , .F. , .T. )
+      FindChr( ::hEd , ::cInitialFind , .T. , .T. , .F. , .T. )
    else
       SetProperty( ::US_WinEdit , ::cRichControlName , "caretpos" , 1 )
       SetProperty( ::US_WinEdit , ::cRichControlName , "caretpos" , 0 )
@@ -861,7 +861,7 @@ METHOD US_EditLoad() CLASS US_RichEdit
    if !empty(cFile)
       VP_EditLoadLastDir:=substr(cFile,1,rat(DEF_SLASH,cFile)-1)
       if !empty( GetProperty( ::US_WinEdit , ::cRichControlName , "value" ) )
-         Rpta:=US_Opcion("El anotador posee datos, ¿los Guarda en el Portapapeles (G), los Borra (D) o agrega el texto el nuevo texto al final (A)?","Guardar Borrar Agregar",10,"SINDEFAULT","Cuidado !!!",,"W")
+         Rpta:=US_Opcion("El anotador posee datos, +los Guarda en el Portapapeles (G), los Borra (D) o agrega el texto el nuevo texto al final (A)?","Guardar Borrar Agregar",10,"SINDEFAULT","Cuidado !!!",,"W")
          do case
             case Rpta="Guardar"
                bLoad:=.T.
@@ -1560,7 +1560,7 @@ METHOD US_EditFindNext(repl) CLASS US_RichEdit
    mcase     := &(::US_WinFindEdit).checkbox_1.value
    wholeword := &(::US_WinFindEdit).checkbox_2.value
    seltxt    := &(::US_WinFindEdit).checkbox_3.value
-   direction := &(::US_WinFindEdit).radiogrp_1.value - 1
+   direction := IF( &(::US_WinFindEdit).radiogrp_1.value == 1, .F., .T. )
    if repl != 0
       ReplTxt   := &(::US_WinFindEdit).text_2.Value
    endif

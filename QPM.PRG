@@ -35,7 +35,7 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
    Local Folder , FileName , i , nPos , LogIni := 0 , nIndx
    Local LOC_cParam := ""
 
-   PUBLIC PUB_cQPM_Version      := "05 02 02"
+   PUBLIC PUB_cQPM_Version      := "05 02 03"
 
    PUBLIC PUB_QPM_bHigh := .F.
    QPM_SetProcessPriority( "HIGH" )
@@ -9603,10 +9603,10 @@ Function LocalSearch( Txt , bFunc )
       aadd( Resultado , PositionAux )
       if Resultado[1] > 0
          SetProperty( "VentanaMain" , "RichEdit"+cTab , "CaretPos" , PositionAux )
-         FindChr( GetControlHandle ( "RichEdit"+cTab , "VentanaMain" ) , Txt , 1 , .F. , .F. , .T. )
+         FindChr( GetControlHandle ( "RichEdit"+cTab , "VentanaMain" ) , Txt , .T. , .F. , .F. , .T. )
       endif
    else
-      Resultado := FindChr( GetControlHandle( "RichEdit"+cTab , "VentanaMain" ) , Txt , 1 , .F. , .F. , .T. )
+      Resultado := FindChr( GetControlHandle( "RichEdit"+cTab , "VentanaMain" ) , Txt , .T. , .F. , .F. , .T. )
    endif
    if Resultado[3] < 0
       if CaretAnt == 0
@@ -9614,7 +9614,7 @@ Function LocalSearch( Txt , bFunc )
          MsgOk( 'QPM (QAC Based Project Manager)' , "Text not Found" , 'E' , .T. , 2 )
       else
        //DO EVENTS
-       //FindChr( GetControlHandle( "RichEdit"+cTab , "VentanaMain" ) , "main" , 0 , .F. , .F. , .T. )
+       //FindChr( GetControlHandle( "RichEdit"+cTab , "VentanaMain" ) , "main" , .F. , .F. , .F. , .T. )
        //SetProperty( "VentanaMain" , "RichEdit"+cTab , "CaretPos" , 0 )
        //DoMethod( "VentanaMain" , "RichEdit"+cTab , "SetFocus" )
          //SendMessage( GetControlHandle( "RichEdit"+cTab , "VentanaMain" ) , EM_SETSEL , 1 , 1 )
@@ -9695,7 +9695,7 @@ Function DbfDataSearch( Txt )
 #ENDIF
 
       VentanaMain.RichEditDbf.CaretPos := 1
-      FindChr( GetControlHandle ( "RichEditDbf" , "VentanaMain" ) , VentanaMain.CSearch.DisplayValue , FindChr( GetControlHandle ( "RichEditDbf" , "VentanaMain" ) , "Content: " , 1 , .F. , .F. , .T. ) , .F. , .F. , .T. )
+      FindChr( GetControlHandle ( "RichEditDbf" , "VentanaMain" ) , VentanaMain.CSearch.DisplayValue , FindChr( GetControlHandle ( "RichEditDbf" , "VentanaMain" ) , "Content: " , .T. , .F. , .F. , .T. ) , .F. , .F. , .T. )
       SetProperty( "VentanaMain" , "GDbfFiles" , "Cell" , VentanaMain.GDbfFiles.Value , NCOLDBFSEARCH , alltrim( str( nRecord ) ) + " " + cFieldName + " " + alltrim( str( nFieldPos ) ) )
       DoMethod( "VentanaMain" , "GDbfFiles" , "ColumnsAutoFitH" )
       VentanaMain.BLocalSearchDbf.caption := "Continue Search"

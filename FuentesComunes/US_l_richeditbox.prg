@@ -1,7 +1,7 @@
 /*
  * $Id$
  */
-
+ 
 /*
  *    QPM - QAC Based Project Manager
  *
@@ -91,172 +91,178 @@
 #define CFM_CHARSET             0x08000000
 
 *-----------------------------------------------------------------------------*
-Function _SetFontNameRTF (ParentForm,ControlName, Value , lAllText)
+Function _SetFontNameRTF (ParentForm,ControlName, Value, lAllText)
 *-----------------------------------------------------------------------------*
-Local Sel , an , s, ab , ai ,ac, au , as, aFont, ret:=.t., mask:=0
+Local Sel, H, an, s, ab, ai, ac, au, as, aFont, ret, mask
+
     DEFAULT lAllText TO .f.
-        H = GetControlHandle( ControlName , ParentForm  )
+
+    H := GetControlHandle( ControlName, ParentForm  )
     if  !lAllText
         Sel := RangeSelRTF(H)
     else
         Sel := -1
     endif
-    mask := CFM_FACE
-    aFont := GetFontRTF(H, 1 ) //Sel )
 
-        an := aFont [1]
-        s  := aFont [2]
-        ab := aFont [3]
-        ai := aFont [4]
-    ac := aFont [5]
-        au := aFont [6]
-        as := aFont [7]
+    mask := CFM_FACE
+    aFont := GetFontRTF(H, 1)
 
     an := Value
+    s  := aFont [2]
+    ab := aFont [3]
+    ai := aFont [4]
+    ac := aFont [5]
+    au := aFont [6]
+    as := aFont [7]
 
     ret := SetFontRTF(H, Sel, an, s, ab, ai, ac, au, as, mask)
+
 Return ret
 
 
 *-----------------------------------------------------------------------------*
-Function _SetFontSizeRTF ( ParentForm , ControlName , Value , lAllText )
+Function _SetFontSizeRTF ( ParentForm, ControlName, Value, lAllText )
 *-----------------------------------------------------------------------------*
-Local Sel , H , an , s, ab , ai , au , ac , as, aFont ,ret:=.t., mask:=0
+Local Sel, H, an, s, ab, ai, au, ac, as, aFont, ret, mask
+
     DEFAULT lAllText TO .f.
 
-        H = GetControlHandle( ControlName , ParentForm )
+    H := GetControlHandle( ControlName, ParentForm )
     if  !lAllText
         Sel := RangeSelRTF(H)
     else
         Sel := -1
     endif
+
     mask := CFM_SIZE
-    aFont := GetFontRTF(H, 0 ) //Sel )
+    aFont := GetFontRTF(H, 0)
 
-        an := aFont [1]
-        s  := aFont [2]
-        ab := aFont [3]
-        ai := aFont [4]
+    an := aFont [1]
+    s  := Value
+    ab := aFont [3]
+    ai := aFont [4]
     ac := aFont [5]
-        au := aFont [6]
-        as := aFont [7]
+    au := aFont [6]
+    as := aFont [7]
 
-    s := Value
-
-    ret := SetFontRTF(H, Sel, an, s, ab, ai, ac, au, as , mask)
-
+    ret := SetFontRTF(H, Sel, an, s, ab, ai, ac, au, as, mask)
 
 Return ret
 
+
 *-----------------------------------------------------------------------------*
-Function _SetFontBoldRTF ( ParentForm , ControlName , Value , lAllText  )
+Function _SetFontBoldRTF ( ParentForm, ControlName, Value, lAllText  )
 *-----------------------------------------------------------------------------*
-Local Sel , H , an , s, ab , ai , au , ac , as, aFont ,ret:=.t.,mask:=0
+Local Sel, H, an, s, ab, ai, au, ac, as, aFont, ret, mask
+
     DEFAULT lAllText TO .f.
 
-        H = GetControlHandle( ControlName , ParentForm )
+    H := GetControlHandle( ControlName, ParentForm )
     if  !lAllText
         Sel := RangeSelRTF(H)
     else
         Sel := -1
     endif
+    
     mask := CFM_BOLD
-    aFont := GetFontRTF(H, 1 ) //Sel )
+    aFont := GetFontRTF(H, 1)
 
-        an := aFont [1]
-        s  := aFont [2]
-        ab := aFont [3]
-        ai := aFont [4]
-    ac := aFont [5]
-        au := aFont [6]
-        as := aFont [7]
-
+    an := aFont [1]
+    s  := aFont [2]
     ab := Value
+    ai := aFont [4]
+    ac := aFont [5]
+    au := aFont [6]
+    as := aFont [7]
 
     ret := SetFontRTF(H, Sel, an, s, ab, ai, ac, au, as, mask)
 
-
 Return Ret
+
+
 *-----------------------------------------------------------------------------*
-Function _SetFontItalicRTF ( ParentForm , ControlName , Value , lAllText  )
+Function _SetFontItalicRTF ( ParentForm, ControlName, Value, lAllText  )
 *-----------------------------------------------------------------------------*
-Local Sel , H , an , s, ab , ai , au , ac , as, aFont ,ret:=.t., mask:=0
+Local Sel, H, an, s, ab, ai, au, ac, as, aFont, ret, mask
+
     DEFAULT lAllText TO .f.
 
-        H = GetControlHandle( ControlName , ParentForm )
+    H := GetControlHandle( ControlName, ParentForm )
     if  !lAllText
         Sel := RangeSelRTF(H)
     else
         Sel := -1
     endif
+
     mask := CFM_ITALIC
-    aFont := GetFontRTF(H, 1 ) //Sel )
+    aFont := GetFontRTF(H, 1)
 
-        an := aFont [1]
-        s  := aFont [2]
-        ab := aFont [3]
-        ai := aFont [4]
-    ac := aFont [5]
-        au := aFont [6]
-        as := aFont [7]
-
+    an := aFont [1]
+    s  := aFont [2]
+    ab := aFont [3]
     ai := Value
+    ac := aFont [5]
+    au := aFont [6]
+    as := aFont [7]
 
     ret := SetFontRTF(H, Sel, an, s, ab, ai, ac, au, as, mask)
 
 Return Ret
+
+
 *-----------------------------------------------------------------------------*
-Function _SetFontUnderlineRTF ( ParentForm , ControlName , Value , lAllText  )
+Function _SetFontUnderlineRTF ( ParentForm, ControlName, Value, lAllText  )
 *-----------------------------------------------------------------------------*
-Local Sel , H , an , s, ab , ai , au , ac , as, aFont ,ret:=.t., mask:=0
+Local Sel, H, an, s, ab, ai, au, ac, as, aFont, ret, mask
+
     DEFAULT lAllText TO .f.
 
-        H = GetControlHandle( ControlName , ParentForm )
+    H := GetControlHandle( ControlName, ParentForm )
     if  !lAllText
         Sel := RangeSelRTF(H)
     else
         Sel := -1
     endif
+
     mask := CFM_UNDERLINE
-    aFont := GetFontRTF(H, 1 ) //Sel )
+    aFont := GetFontRTF(H, 1)
 
-        an := aFont [1]
-        s  := aFont [2]
-        ab := aFont [3]
-        ai := aFont [4]
+    an := aFont [1]
+    s  := aFont [2]
+    ab := aFont [3]
+    ai := aFont [4]
     ac := aFont [5]
-        au := aFont [6]
-        as := aFont [7]
-
     au := Value
+    as := aFont [7]
 
-    ret := SetFontRTF(H, Sel, an, s, ab, ai, ac, au, as , mask)
-
+    ret := SetFontRTF(H, Sel, an, s, ab, ai, ac, au, as, mask)
 
 Return Ret
+
+
 *-----------------------------------------------------------------------------*
-Function _SetFontStrikeOutRTF ( ParentForm , ControlName , Value , lAllText  )
+Function _SetFontStrikeOutRTF ( ParentForm, ControlName, Value, lAllText  )
 *-----------------------------------------------------------------------------*
-Local Sel , H , an , s, ab , ai , au , ac , as, aFont ,ret:=.t.,mask:=0
+Local Sel, H, an, s, ab, ai, au, ac, as, aFont, ret, mask
+
     DEFAULT lAllText TO .f.
 
-        H = GetControlHandle( ControlName , ParentForm )
+    H := GetControlHandle( ControlName, ParentForm )
     if  !lAllText
         Sel := RangeSelRTF(H)
     else
         Sel := -1
     endif
+    
     mask := CFM_STRIKEOUT
-    aFont := GetFontRTF(H, 1 ) //Sel )
+    aFont := GetFontRTF(H, 1)
 
-        an := aFont [1]
-        s  := aFont [2]
-        ab := aFont [3]
-        ai := aFont [4]
+    an := aFont [1]
+    s  := aFont [2]
+    ab := aFont [3]
+    ai := aFont [4]
     ac := aFont [5]
-        au := aFont [6]
-        as := aFont [7]
-
+    au := aFont [6]
     as := Value
 
     ret := SetFontRTF(H, Sel, an, s, ab, ai, ac, au, as,mask)
@@ -265,94 +271,93 @@ Return Ret
 
 
 *-----------------------------------------------------------------------------*
-Function _SetFormatLeftRTF ( ParentForm , ControlName , Value  )
+Function _SetFormatLeftRTF ( ParentForm, ControlName, Value  )
 *-----------------------------------------------------------------------------*
-    LOCAL aParForm, H , al, ac, ar, at, an , ret
-        H = GetControlHandle( ControlName , ParentForm )
-    aParForm := GetParForm( H )
+    LOCAL aParForm, H, al, ac, ar, at, an, ret
+    
+    H := GetControlHandle( ControlName, ParentForm )
+    
+    aParForm := GetParForm(H)
 
-        al := aParForm [1]
-        ac := aParForm [2]
-        ar := aParForm [3]
-        at := aParForm [4]
-    an := aParForm [5]
-
-    ar := .f.
-    ac := .f.
     al := Value
+    ac := .f.
+    ar := .f.
+    at := aParForm [4]
+    an := aParForm [5]
 
     ret := SetParForm(H, al, ac, ar, at, an)
 
 Return ret
 
-*-----------------------------------------------------------------------------*
-Function _SetFormatCenterRTF ( ParentForm , ControlName , Value  )
-*-----------------------------------------------------------------------------*
-    LOCAL aParForm, H , al, ac, ar, at, an , ret
-        H = GetControlHandle( ControlName , ParentForm )
-    aParForm := GetParForm( H )
 
-        al := aParForm [1]
-        ac := aParForm [2]
-        ar := aParForm [3]
-        at := aParForm [4]
-    an := aParForm [5]
+*-----------------------------------------------------------------------------*
+Function _SetFormatCenterRTF ( ParentForm, ControlName, Value  )
+*-----------------------------------------------------------------------------*
+    LOCAL aParForm, H, al, ac, ar, at, an, ret
+    
+    H := GetControlHandle( ControlName, ParentForm )
+    
+    aParForm := GetParForm(H)
 
     al := .f.
+    ac := Value
     ar := .f.
-        ac := Value
+    at := aParForm [4]
+    an := aParForm [5]
 
     ret := SetParForm(H, al, ac, ar, at, an)
 
 Return ret
 
-*-----------------------------------------------------------------------------*
-Function _SetFormatRightRTF ( ParentForm , ControlName , Value  )
-*-----------------------------------------------------------------------------*
-    LOCAL aParForm, H , al, ac, ar, at, an , ret
-        H = GetControlHandle( ControlName , ParentForm )
-    aParForm := GetParForm( H )
 
-        al := aParForm [1]
-        ac := aParForm [2]
-        ar := aParForm [3]
-        at := aParForm [4]
-    an := aParForm [5]
+*-----------------------------------------------------------------------------*
+Function _SetFormatRightRTF ( ParentForm, ControlName, Value  )
+*-----------------------------------------------------------------------------*
+    LOCAL aParForm, H, al, ac, ar, at, an, ret
+    
+    H := GetControlHandle( ControlName, ParentForm )
+
+    aParForm := GetParForm(H)
 
     al := .f.
     ac := .f.
     ar := Value
+    at := aParForm [4]
+    an := aParForm [5]
 
     ret := SetParForm(H, al, ac, ar, at, an)
 
 Return ret
 
-*-----------------------------------------------------------------------------*
-Function _SetFormatTabRTF ( ParentForm , ControlName , Value  )
-*-----------------------------------------------------------------------------*
-    LOCAL aParForm, H , al, ac, ar, at, an , ret
-        H = GetControlHandle( ControlName , ParentForm )
-    aParForm := GetParForm( H )
 
-        al := aParForm [1]
-        ac := aParForm [2]
-        ar := aParForm [3]
-        at := aParForm [4]
-    an := aParForm [5]
+*-----------------------------------------------------------------------------*
+Function _SetFormatTabRTF ( ParentForm, ControlName, Value  )
+*-----------------------------------------------------------------------------*
+    LOCAL aParForm, H, al, ac, ar, at, an, ret
+    
+    H := GetControlHandle( ControlName, ParentForm )
+    
+    aParForm := GetParForm(H)
 
+    al := aParForm [1]
+    ac := aParForm [2]
+    ar := aParForm [3]
     at := Value
+    an := aParForm [5]
 
     ret := SetParForm(H, al, ac, ar, at, an)
 
 Return Ret
 
+
 *-----------------------------------------------------------------------------*
 Function RangeSelRTF(ControlHandle)
 *-----------------------------------------------------------------------------*
-        Local aRange
-        aRange = GetSelRange(ControlHandle)
+    Local aRange
 
-Return aRange[2]-aRange[1]
+    aRange := GetSelRange(ControlHandle)
+
+Return (aRange[2] - aRange[1])
 
 *=============================================================
 
@@ -437,7 +442,7 @@ HB_FUNC(SETOPTIONS)               //SetOptions(HWND hwndCtrl, nOption )
                 nOption = ECO_AUTOVSCROLL ;
     nOption = ECO_AUTOVSCROLL ;
 */
-        SendMessage( (HWND) hb_parnl (1),(UINT) EM_SETOPTIONS, (WPARAM) ECOOP_SET , (LPARAM) hb_parnl (2) );
+        SendMessage( (HWND) hb_parnl (1),(UINT) EM_SETOPTIONS, (WPARAM) ECOOP_SET, (LPARAM) hb_parnl (2) );
 
 }
 
@@ -449,12 +454,12 @@ HB_FUNC(GETSELRANGE)               //GetSelRange(HWND hwndCtrl)
         SendMessage( (HWND) hb_parnl (1),(UINT) EM_EXGETSEL, 0, (LPARAM) &cRange );
 
         hb_reta( 2 );
-        HB_STORNL( cRange.cpMin , -1, 1 );
-        HB_STORNL( cRange.cpMax  , -1, 2 );
+        HB_STORNL( cRange.cpMin, -1, 1 );
+        HB_STORNL( cRange.cpMax, -1, 2 );
 
 }
 
-HB_FUNC(SETSELRANGE)               //SetSelRange(HWND hwndCtrl ,LONG nMin, LONG nMax)
+HB_FUNC(SETSELRANGE)               //SetSelRange(HWND hwndCtrl,LONG nMin, LONG nMax)
 {
    CHARRANGE cRange;
         cRange.cpMin = 0;
@@ -514,10 +519,10 @@ HB_FUNC(GETRECT)               //GetRect(HWND hwndCtrl)
         SendMessage( (HWND) hb_parnl (1),(UINT) EM_GETRECT, 0, (LPARAM) &rc );
 
         hb_reta( 4 );
-        HB_STORNL( rc.left , -1, 1 );
-        HB_STORNL( rc.top  , -1, 2 );
-        HB_STORNL( rc.right  , -1, 3 );
-        HB_STORNL( rc.bottom  , -1, 4 );
+        HB_STORNL( rc.left, -1, 1 );
+        HB_STORNL( rc.top, -1, 2 );
+        HB_STORNL( rc.right, -1, 3 );
+        HB_STORNL( rc.bottom, -1, 4 );
 
 }
 
@@ -539,7 +544,7 @@ HB_FUNC(SETRECT)               //SetRect(HWND hwndCtrl, int left, int.top, int r
 
 
 
-HB_FUNC(AUTOURLDETECT)               //AutoUrlDetect(HWND hwndCtrl , BOOL lLink)
+HB_FUNC(AUTOURLDETECT)               //AutoUrlDetect(HWND hwndCtrl, BOOL lLink)
 {
    SendMessage( (HWND) hb_parnl (1),(UINT) EM_AUTOURLDETECT, (WPARAM) hb_parl(2), 0);
 }
@@ -627,66 +632,63 @@ HB_FUNC ( CANPASTE )
 
 HB_FUNC ( FINDCHR )        //FindChr(HWND hwnd, LPCTSTR lpszText, int Direction, int wholeword, int mcase, int seltxt)
 {
-        LRESULT lResult;
+    LRESULT lResult;
     FINDTEXTEX Findtxt;
     CHARRANGE cRng1;
     CHARRANGE cRng2;
-    int Style =0;
+    int Style = 0;
 
-
-        if ( hb_parl (3) )
-        {
-                Style = Style | FR_DOWN  ;
-        }
-
-        if ( hb_parl (4) )
-
+    if( hb_parl( 3 ) )
     {
-                Style = Style | FR_WHOLEWORD ;
-        }
-        if ( hb_parl (5) )
-
-    {
-                Style = Style | FR_MATCHCASE ;
-        }
-
-        SendMessage( (HWND) hb_parnl (1),(UINT) EM_EXGETSEL, 0, (LPARAM) &cRng1 );
-
-        if ( hb_parl (3) )
-    {
-       cRng1.cpMin = cRng1.cpMax;
-       cRng1.cpMax = -1;
+      Style = Style | FR_DOWN  ;                // search forward
     }
-   else
+
+    if( hb_parl( 4 ) )
     {
-       cRng1.cpMin = cRng1.cpMin;
-       cRng1.cpMax = 0;
+      Style = Style | FR_WHOLEWORD ;
+    }
+
+    if( hb_parl( 5 ) )
+    {
+      Style = Style | FR_MATCHCASE ;
+    }
+
+    SendMessage( (HWND) hb_parnl (1),(UINT) EM_EXGETSEL, 0, (LPARAM) &cRng1 );
+
+    if( hb_parl( 3 ) )                          // forward
+    {
+      cRng1.cpMin = cRng1.cpMax;
+      cRng1.cpMax = -1;
+    }
+    else                                       // backward
+    {
+      cRng1.cpMin = cRng1.cpMin;
+      cRng1.cpMax = 0;
     }
 
     cRng2.cpMin = 0;
     cRng2.cpMax = 0;
 
-    Findtxt.chrg = (CHARRANGE)cRng1;
-    Findtxt.lpstrText=  hb_parc(2);
-    Findtxt.chrgText = (CHARRANGE)cRng2;
+    Findtxt.chrg      = (CHARRANGE) cRng1;
+    Findtxt.lpstrText = (LPCTSTR) hb_mbtowc( hb_parc( 2 ) );
+    Findtxt.chrgText  = (CHARRANGE) cRng2;
 
+    lResult = SendMessage( (HWND) hb_parnl( 1 ), (UINT) EM_FINDTEXTEX, (WPARAM) Style, (LPARAM) &Findtxt );
 
+    if( lResult > 0 )
+    {
+      if( ! hb_parl( 6 ) )
+      {
+        Findtxt.chrgText.cpMin =  Findtxt.chrgText.cpMax;
+      }
 
-    lResult = SendMessage( (HWND) hb_parnl (1),(UINT) EM_FINDTEXTEX, (WPARAM) Style, (LPARAM) &Findtxt);
+      SendMessage( (HWND) hb_parnl( 1 ), (UINT) EM_EXSETSEL, 0, (LPARAM) &Findtxt.chrgText );
+    }
 
-    if (lResult >0 )
-        if ( !hb_parl (6))
-           Findtxt.chrgText.cpMin =  Findtxt.chrgText.cpMax;
-        SendMessage( (HWND) hb_parnl (1),(UINT) EM_EXSETSEL, 0, (LPARAM) &Findtxt.chrgText );
-
-
-
-        hb_reta( 3 );
-        HB_STORNL( Findtxt.chrgText.cpMin , -1, 1 );
-        HB_STORNL( Findtxt.chrgText.cpMax , -1, 2 );
-        HB_STORNL( lResult , -1, 3 );
-
-
+    hb_reta( 3 );
+    HB_STORNL( Findtxt.chrgText.cpMin, -1, 1 );
+    HB_STORNL( Findtxt.chrgText.cpMax, -1, 2 );
+    HB_STORNL( lResult, -1, 3 );
 }
 
 HB_FUNC ( GETPARFORM )        //GetParForm(HWND hwnd )
@@ -705,14 +707,14 @@ HB_FUNC ( GETPARFORM )        //GetParForm(HWND hwnd )
     nNumb  = (parForm.wNumbering  == PFN_BULLET ) ? TRUE : FALSE ;
 
         hb_reta( 8 );
-        HB_STORL( left   , -1, 1 );
-        HB_STORL( center , -1, 2 );
-        HB_STORL( right  , -1, 3 );
-        HB_STORNI( parForm.cTabCount ,        -1, 4 );
-        HB_STORL( nNumb , -1, 5 );
-        HB_STORNL( parForm.dxStartIndent , -1, 6 );
-        HB_STORNL( parForm.dxRightIndent , -1, 7 );
-        HB_STORNL( parForm.dxOffset , -1, 8 );
+        HB_STORL( left, -1, 1 );
+        HB_STORL( center, -1, 2 );
+        HB_STORL( right, -1, 3 );
+        HB_STORNI( parForm.cTabCount,        -1, 4 );
+        HB_STORL( nNumb, -1, 5 );
+        HB_STORNL( parForm.dxStartIndent, -1, 6 );
+        HB_STORNL( parForm.dxRightIndent, -1, 7 );
+        HB_STORNL( parForm.dxOffset, -1, 8 );
 }
 
 HB_FUNC ( SETPARFORM )        //SetParForm(HWND hwnd, BOOL left, BOOL Center, BOOL Right, int Tab, int Number, int StartIndent, int RightIndent, int Offset)
@@ -759,7 +761,7 @@ HB_FUNC ( SETPARFORM )        //SetParForm(HWND hwnd, BOOL left, BOOL Center, BO
     parForm.cbSize= sizeof(PARAFORMAT2);
     parForm.dwMask = Mask ;
 
-    SendMessage( (HWND) hb_parnl (1),EM_GETPARAFORMAT, 0  , (LPARAM)&parForm );
+    SendMessage( (HWND) hb_parnl (1),EM_GETPARAFORMAT, 0, (LPARAM)&parForm );
 
     parForm.dwMask     = Mask ;
     parForm.wAlignment = wAlign ;
@@ -770,7 +772,7 @@ HB_FUNC ( SETPARFORM )        //SetParForm(HWND hwnd, BOOL left, BOOL Center, BO
         parForm.dxRightIndent = nRightId;
         parForm.dxOffset   = nOffset;
 
-    lResult = SendMessage( (HWND) hb_parnl (1),EM_SETPARAFORMAT, 0 , (LPARAM)&parForm );
+    lResult = SendMessage( (HWND) hb_parnl (1),EM_SETPARAFORMAT, 0, (LPARAM)&parForm );
 
         if ( lResult )
         {
@@ -793,14 +795,14 @@ HB_FUNC ( LINEPOS )
 
         SendMessage( (HWND) hb_parnl (1),(UINT) EM_EXGETSEL, 0, (LPARAM) &cRange );
 
-    nLine  = SendMessage( (HWND) hb_parnl (1),(UINT) EM_LINEFROMCHAR , (WPARAM) cRange.cpMax , 0);
+    nLine  = SendMessage( (HWND) hb_parnl (1),(UINT) EM_LINEFROMCHAR, (WPARAM) cRange.cpMax, 0);
 
-    nIndex = SendMessage( (HWND) hb_parnl (1),(UINT) EM_LINEINDEX , (WPARAM) nLine , 0);
+    nIndex = SendMessage( (HWND) hb_parnl (1),(UINT) EM_LINEINDEX, (WPARAM) nLine, 0);
 
 
         hb_reta( 2 );
-        HB_STORNL( nLine , -1, 1 );
-        HB_STORNL( (cRange.cpMax - nIndex) , -1, 2 );
+        HB_STORNL( nLine, -1, 1 );
+        HB_STORNL( (cRange.cpMax - nIndex), -1, 2 );
 
 }
 
@@ -808,7 +810,7 @@ HB_FUNC ( GETLINECOUNT )
 {
     LRESULT nLine;
 
-    nLine  = SendMessage( (HWND) hb_parnl (1),(UINT) EM_GETLINECOUNT , 0 , 0);
+    nLine  = SendMessage( (HWND) hb_parnl (1),(UINT) EM_GETLINECOUNT, 0, 0);
 
         hb_retnl( nLine );
 
@@ -838,7 +840,7 @@ HB_FUNC ( GETLINEINDEX )
 {
     LRESULT nIndex;
 
-    nIndex = SendMessage( (HWND) hb_parnl (1),(UINT) EM_LINEINDEX , (WPARAM) hb_parnl(2) , 0);
+    nIndex = SendMessage( (HWND) hb_parnl (1),(UINT) EM_LINEINDEX, (WPARAM) hb_parnl(2), 0);
 
         hb_retnl( nIndex) ;
 }
@@ -846,13 +848,13 @@ HB_FUNC ( GETLINEINDEX )
 HB_FUNC ( SETSEL )
 {
 
-    SendMessage( (HWND) hb_parnl (1),(UINT) EM_SETSEL , (WPARAM) hb_parnl(2) ,(LPARAM) hb_parnl(3));
+    SendMessage( (HWND) hb_parnl (1),(UINT) EM_SETSEL, (WPARAM) hb_parnl(2),(LPARAM) hb_parnl(3));
 
 }
 HB_FUNC ( HIDESELECTION )
 {
 
-    SendMessage( (HWND) hb_parnl (1),(UINT)  EM_HIDESELECTION , (WPARAM) hb_parnl(2) ,0);
+    SendMessage( (HWND) hb_parnl (1),(UINT)  EM_HIDESELECTION, (WPARAM) hb_parnl(2),0);
 
 }
 
@@ -886,7 +888,7 @@ HB_FUNC ( SELECTALL )
 
 }
 
-HB_FUNC ( GETSELTEXT )            //GetSelText(H , nSel)
+HB_FUNC ( GETSELTEXT )            //GetSelText(H, nSel)
 
 {
         char strBuffer[1024];
@@ -958,7 +960,7 @@ int CALLBACK EditWordBreakProcX(LPSTR lpszEditText, int ichCurrent,
 
 
 
-HB_FUNC ( PRINTRTF )             //PrintRTF(HWND hwnd, LONG hDC, int maxrow, int maxcol ,BOOL lPrn)
+HB_FUNC ( PRINTRTF )             //PrintRTF(HWND hwnd, LONG hDC, int maxrow, int maxcol,BOOL lPrn)
 {
         LRESULT lResult ;
     FORMATRANGE formrange;
@@ -980,12 +982,12 @@ HB_FUNC ( PRINTRTF )             //PrintRTF(HWND hwnd, LONG hDC, int maxrow, int
     formrange.rcPage = rcP;
     formrange.chrg = cprng;
 
-    lResult =  SendMessage( (HWND) hb_parnl (1),(UINT) EM_FORMATRANGE , 0, (LPARAM)&formrange );
+    lResult =  SendMessage( (HWND) hb_parnl (1),(UINT) EM_FORMATRANGE, 0, (LPARAM)&formrange );
     if (hb_parl (7) )
-       SendMessage( (HWND) hb_parnl (1),(UINT) EM_DISPLAYBAND , 0, (LPARAM) &rcP );
+       SendMessage( (HWND) hb_parnl (1),(UINT) EM_DISPLAYBAND, 0, (LPARAM) &rcP );
 
 
-     SendMessage( (HWND) hb_parnl (1),(UINT) EM_FORMATRANGE , 0, 0 );
+     SendMessage( (HWND) hb_parnl (1),(UINT) EM_FORMATRANGE, 0, 0 );
 
    hb_retnl(lResult);
 }
@@ -998,7 +1000,7 @@ HB_FUNC ( GETLENTEXT )
     gtl.flags = GTL_PRECISE ;
     gtl.codepage = CP_ACP;
 
-    lResult = SendMessage( (HWND) hb_parnl (1),(UINT) EM_GETTEXTLENGTHEX , (WPARAM) &gtl, 0 );
+    lResult = SendMessage( (HWND) hb_parnl (1),(UINT) EM_GETTEXTLENGTHEX, (WPARAM) &gtl, 0 );
    hb_retnl(lResult);
 }
 
@@ -1025,35 +1027,35 @@ HB_FUNC ( GETTEXT )                // GetText(HWND hwnd )
     stxt.codepage = CP_ACP;
 
 
-    lResult = SendMessage( (HWND) hb_parnl (1),(UINT) EM_SETTEXTEX , (WPARAM) &stxt, (LPARAM) (LPCTSTR)&strBuffer );
+    lResult = SendMessage( (HWND) hb_parnl (1),(UINT) EM_SETTEXTEX, (WPARAM) &stxt, (LPARAM) (LPCTSTR)&strBuffer );
     hb_retnl(lResult);
 }
 
-HB_FUNC ( REPLACESEL )                // GetText(HWND hwnd , LPCTSTR lpszText)
+HB_FUNC ( REPLACESEL )                // GetText(HWND hwnd, LPCTSTR lpszText)
 {
         LRESULT lResult ;
-    lResult = SendMessage( (HWND) hb_parnl (1),(UINT) EM_REPLACESEL , (WPARAM) TRUE, (LPARAM)hb_parc(2));
+    lResult = SendMessage( (HWND) hb_parnl (1),(UINT) EM_REPLACESEL, (WPARAM) TRUE, (LPARAM)hb_parc(2));
     hb_retnl(lResult);
 }
 
 HB_FUNC ( GETUNDONAME )                // GetUndoName(HWND hwnd)
 {
         LRESULT lResult ;
-    lResult = SendMessage( (HWND) hb_parnl (1),(UINT) EM_GETUNDONAME , 0, 0);
+    lResult = SendMessage( (HWND) hb_parnl (1),(UINT) EM_GETUNDONAME, 0, 0);
     hb_retnl(lResult);
 }
 
 HB_FUNC ( STOPUNDOGROUP )                // GetUndoName(HWND hwnd)
 {
         LRESULT lResult ;
-    lResult = SendMessage( (HWND) hb_parnl (1),(UINT) EM_STOPGROUPTYPING , 0, 0);
+    lResult = SendMessage( (HWND) hb_parnl (1),(UINT) EM_STOPGROUPTYPING, 0, 0);
     hb_retnl(lResult);
 }
 
 HB_FUNC ( CLEARUNDOBUFFER )                // ClearUndoBuffer(HWND hwnd)
 {
         LRESULT lResult ;
-    lResult = SendMessage( (HWND) hb_parnl (1),(UINT) EM_EMPTYUNDOBUFFER , 0, 0);
+    lResult = SendMessage( (HWND) hb_parnl (1),(UINT) EM_EMPTYUNDOBUFFER, 0, 0);
     hb_retnl(lResult);
 }
 
@@ -1061,18 +1063,18 @@ HB_FUNC ( GETZOOM )                // GetZoom(HWND hwnd)
 {
     int numer;
     int denom;
-     SendMessage( (HWND) hb_parnl (1),(UINT) EM_GETZOOM , (WPARAM) &numer, (LPARAM) &denom);
+     SendMessage( (HWND) hb_parnl (1),(UINT) EM_GETZOOM, (WPARAM) &numer, (LPARAM) &denom);
 
         hb_reta( 2 );
-        HB_STORNI( numer , -1, 1 );
-        HB_STORNI( denom , -1, 2 );
+        HB_STORNI( numer, -1, 1 );
+        HB_STORNI( denom, -1, 2 );
 
 }
 
 HB_FUNC ( SETZOOM )                // SetZoom(HWND hwnd,int numer, int denom)
 {
         LRESULT lResult ;
-    lResult = SendMessage( (HWND) hb_parnl (1),(UINT) EM_SETZOOM , (WPARAM) hb_parni(2), (LPARAM) hb_parni (3));
+    lResult = SendMessage( (HWND) hb_parnl (1),(UINT) EM_SETZOOM, (WPARAM) hb_parni(2), (LPARAM) hb_parni (3));
 
     hb_retnl(lResult);
 
@@ -1089,10 +1091,10 @@ HB_FUNC ( GETPARTABS )        //GetParTabs(HWND hwnd )
 
         hb_reta( parForm.cTabCount );
     for ( n = 1; n <= parForm.cTabCount; n++)
-        HB_STORNI( parForm.rgxTabs[ n-1 ] / 20 ,        -1, n );
+        HB_STORNI( parForm.rgxTabs[ n-1 ] / 20,        -1, n );
 }
 
-HB_FUNC ( SETPARTABS )        //SetParTabs(HWND hwnd , aTabs)
+HB_FUNC ( SETPARTABS )        //SetParTabs(HWND hwnd, aTabs)
 {
     PARAFORMAT2 parForm;
         LRESULT lResult ;
@@ -1132,7 +1134,7 @@ HB_FUNC ( GETPARSTARTID )        //GetParStartId(HWND hwnd )
         hb_retnl( parForm.dxStartIndent );
 }
 
-HB_FUNC ( SETPARSTARTID )        //SetParStartId(HWND hwnd , LONG dxStartOffset)
+HB_FUNC ( SETPARSTARTID )        //SetParStartId(HWND hwnd, LONG dxStartOffset)
 {
     PARAFORMAT2 parForm;
     LONG oldStartId;
@@ -1159,7 +1161,7 @@ HB_FUNC ( GETPARRIGHTID )        //GetParRightId(HWND hwnd )
         hb_retnl( parForm.dxRightIndent );
 }
 
-HB_FUNC ( SETPARRIGHTID )        //SetParRightId(HWND hwnd , LONG dxRightId)
+HB_FUNC ( SETPARRIGHTID )        //SetParRightId(HWND hwnd, LONG dxRightId)
 {
     PARAFORMAT2 parForm;
     LONG oldRightId;
@@ -1186,7 +1188,7 @@ HB_FUNC ( GETPAROFFSET )        //GetParTabs(HWND hwnd )
         hb_retnl( parForm.dxOffset );
 }
 
-HB_FUNC ( SETPAROFFSET )        //SetParOffset(HWND hwnd , LONG dxOffset)
+HB_FUNC ( SETPAROFFSET )        //SetParOffset(HWND hwnd, LONG dxOffset)
 {
     PARAFORMAT2 parForm;
     LONG oldOffset;
@@ -1208,14 +1210,14 @@ HB_FUNC ( SHOWSCROLLBAR )               // ShowScrollBar(HWND hwnd, vert/hor, sh
     if ( hb_parl (2) )
        nBar = SB_VERT ;
 
-    SendMessage( (HWND) hb_parnl (1),(UINT) EM_SHOWSCROLLBAR ,  (WPARAM) (UINT) nBar , (LPARAM) (BOOL)hb_parl (3) );
+    SendMessage( (HWND) hb_parnl (1),(UINT) EM_SHOWSCROLLBAR,  (WPARAM) (UINT) nBar, (LPARAM) (BOOL)hb_parl (3) );
 }
 
 
 HB_FUNC ( REQUESTRESIZE )                // RequestResize(HWND hwnd)
 {
 
-    SendMessage( (HWND) hb_parnl (1),(UINT) EM_REQUESTRESIZE , 0, 0 );
+    SendMessage( (HWND) hb_parnl (1),(UINT) EM_REQUESTRESIZE, 0, 0 );
 
 }
 HB_FUNC ( WINSIZE1 )                // WinSize(HWND hwnd)
@@ -1235,7 +1237,7 @@ HB_FUNC ( WINSIZE1 )                // WinSize(HWND hwnd)
     ReleaseDC(hwnd, hdc);
 
         hb_reta( 2 );
-        HB_STORNI( tm.tmDigitizedAspectX  , -1, 1 );
+        HB_STORNI( tm.tmDigitizedAspectX, -1, 1 );
         HB_STORNI( tm.tmAveCharWidth, -1, 2 );
 }
 
@@ -1247,18 +1249,18 @@ HB_FUNC ( POSFROMCHAR )                // PointRTF(HWND hwnd)
 //    hwnd = (HWND) hb_parnl (1);
 
         SendMessage( (HWND) hb_parnl (1),(UINT) EM_EXGETSEL, 0, (LPARAM) &cRange );
-    ptl  = SendMessage( (HWND) hb_parnl (1),(UINT) EM_POSFROMCHAR, (WPARAM) (LONG) cRange.cpMax ,0 );
+    ptl  = SendMessage( (HWND) hb_parnl (1),(UINT) EM_POSFROMCHAR, (WPARAM) (LONG) cRange.cpMax,0 );
 
         hb_reta( 2 );
-        HB_STORNL( HIWORD (ptl)  , -1, 1 );
-        HB_STORNL( LOWORD (ptl)  , -1, 2 );
+        HB_STORNL( HIWORD (ptl), -1, 1 );
+        HB_STORNL( LOWORD (ptl), -1, 2 );
 }
 
 
 HB_FUNC ( GETTEXTMODE)                // GetTextMode(HWND hwnd)
 {
         LRESULT lResult ;
-    lResult = SendMessage( (HWND) hb_parnl (1),(UINT) EM_GETTEXTMODE , 0, 0);
+    lResult = SendMessage( (HWND) hb_parnl (1),(UINT) EM_GETTEXTMODE, 0, 0);
 
     hb_retnl(lResult);
 }
@@ -1272,7 +1274,7 @@ HB_FUNC ( SETTEXTMODE)                // SetTextMode(HWND hwnd, Mode)
     else
         Mode = TM_PLAINTEXT ;
 
-    lResult = SendMessage( (HWND) hb_parnl (1),(UINT) EM_SETTEXTMODE ,(WPARAM) Mode, 0);
+    lResult = SendMessage( (HWND) hb_parnl (1),(UINT) EM_SETTEXTMODE,(WPARAM) Mode, 0);
         if ( lResult )
         {
                 hb_retl( FALSE );
@@ -1289,7 +1291,7 @@ HB_FUNC ( SETTEXTMODE)                // SetTextMode(HWND hwnd, Mode)
 HB_FUNC ( GETEVENTMASK)                // GetEventMask(HWND hwnd)
 {
         LRESULT lResult ;
-    lResult = SendMessage( (HWND) hb_parnl (1),(UINT) EM_GETEVENTMASK  , 0, 0);
+    lResult = SendMessage( (HWND) hb_parnl (1),(UINT) EM_GETEVENTMASK, 0, 0);
 
     hb_retnl(lResult);
 }
@@ -1297,7 +1299,7 @@ HB_FUNC ( GETEVENTMASK)                // GetEventMask(HWND hwnd)
 HB_FUNC ( SETEVENTMASK)                // SetEventMask(HWND hwnd, eMask)
 {
         LRESULT lResult ;
-    lResult = SendMessage( (HWND) hb_parnl (1),(UINT) EM_SETEVENTMASK  , 0,(LPARAM) hb_parni (2));
+    lResult = SendMessage( (HWND) hb_parnl (1),(UINT) EM_SETEVENTMASK, 0,(LPARAM) hb_parni (2));
 
     hb_retnl(lResult);
 }
@@ -1306,13 +1308,13 @@ HB_FUNC ( SETEVENTMASK)                // SetEventMask(HWND hwnd, eMask)
 HB_FUNC ( SHOWSCROLLBAR )                // ShowScrollBar(HWND hwnd)
 {
         LRESULT lResult ;
-    lResult = SendMessage( (HWND) hb_parnl (1),(UINT) EM_SHOWSCROLLBAR , (WPARAM) SB_HORZ, (LPARAM) TRUE);
+    lResult = SendMessage( (HWND) hb_parnl (1),(UINT) EM_SHOWSCROLLBAR, (WPARAM) SB_HORZ, (LPARAM) TRUE);
 
     hb_retnl(lResult);
 
 }
 */
-HB_FUNC ( PAGESETUPRTF )                // PageSetupRtf(HWND hwnd , lMar, rMar,tMar, bMar, wPage, hPage, sPage,oPage )
+HB_FUNC ( PAGESETUPRTF )                // PageSetupRtf(HWND hwnd, lMar, rMar,tMar, bMar, wPage, hPage, sPage,oPage )
 {
         LRESULT lResult ;
 //    DWORD dwNeeded = 0;
@@ -1385,14 +1387,14 @@ HB_FUNC ( PAGESETUPRTF )                // PageSetupRtf(HWND hwnd , lMar, rMar,t
     }
         hb_reta( 9 );
         HB_STORNI( lResult, -1, 1 );
-        HB_STORNI( rtMar.left   / 100 , -1, 2 );
-        HB_STORNI( rtMar.right  / 100  , -1, 3 );
-        HB_STORNI( rtMar.top    / 100 , -1, 4 );
-        HB_STORNI( rtMar.bottom / 100  , -1, 5 );
-        HB_STORNI( ptPapSize.x / 100 , -1, 6 );
-        HB_STORNI( ptPapSize.y / 100 , -1, 7 );
-        HB_STORNI( PaperSize , -1, 8 );
-        HB_STORNI( PaperOrient , -1, 9 );
+        HB_STORNI( rtMar.left   / 100, -1, 2 );
+        HB_STORNI( rtMar.right  / 100, -1, 3 );
+        HB_STORNI( rtMar.top    / 100, -1, 4 );
+        HB_STORNI( rtMar.bottom / 100, -1, 5 );
+        HB_STORNI( ptPapSize.x / 100, -1, 6 );
+        HB_STORNI( ptPapSize.y / 100, -1, 7 );
+        HB_STORNI( PaperSize, -1, 8 );
+        HB_STORNI( PaperOrient, -1, 9 );
 
 }
 /*
@@ -1477,9 +1479,9 @@ HB_FUNC ( TESTCHR )        //TestChr(HWND hwnd, LPCTSTR lpszText, int Direction)
 
 
         hb_reta( 3 );
-        HB_STORNL( Findtxt.chrgText.cpMin , -1, 1 );
-        HB_STORNL( Findtxt.chrgText.cpMax , -1, 2 );
-        HB_STORNL( lResult , -1, 3 );
+        HB_STORNL( Findtxt.chrgText.cpMin, -1, 1 );
+        HB_STORNL( Findtxt.chrgText.cpMax, -1, 2 );
+        HB_STORNL( lResult, -1, 3 );
 }
 
 HB_FUNC ( PLAINSELTEXT )                // PlainSelText(HWND hwnd )
@@ -1497,7 +1499,7 @@ HB_FUNC ( PLAINSELTEXT )                // PlainSelText(HWND hwnd )
 
         SendMessage( (HWND) hb_parnl (1),(UINT)  EM_GETSELTEXT, 0, (LPARAM) &strBuffer );
 
-    lResult = SendMessage( (HWND) hb_parnl (1),(UINT) EM_SETTEXTEX , (WPARAM) &stxt, (LPARAM) (LPCTSTR)&strBuffer );
+    lResult = SendMessage( (HWND) hb_parnl (1),(UINT) EM_SETTEXTEX, (WPARAM) &stxt, (LPARAM) (LPCTSTR)&strBuffer );
         SendMessage( (HWND) hb_parnl (1),(UINT) EM_EXSETSEL, 0, (LPARAM) &cRange );
 
     hb_retnl(lResult);
@@ -1508,11 +1510,11 @@ HB_FUNC ( SETTABSTOP )                // SetTabStop(HWND hwnd)
     int *dis;
         LRESULT lResult ;
     dis = 4;
-    SendMessage( (HWND) hb_parnl (1),(UINT) EM_SETTABSTOPS , (WPARAM) 1, (LPARAM)(UINT) dis);
+    SendMessage( (HWND) hb_parnl (1),(UINT) EM_SETTABSTOPS, (WPARAM) 1, (LPARAM)(UINT) dis);
     lResult = GetDialogBaseUnits();
         hb_reta( 2 );
-        HB_STORNL( HIWORD (lResult)  , -1, 1 );
-        HB_STORNL( LOWORD (lResult)  , -1, 2 );
+        HB_STORNL( HIWORD (lResult), -1, 1 );
+        HB_STORNL( LOWORD (lResult), -1, 2 );
 
 }
 */
@@ -1564,8 +1566,8 @@ HB_FUNC ( GETSCROLLPOSRTF )                // GetScrollPosRtf(HWND hwnd )
         SendMessage( (HWND) hb_parnl (1),(UINT) EM_GETSCROLLPOS, 0,  (LPARAM) &pt );
 
         hb_reta( 2 );
-        HB_STORNL( pt.x  , -1, 1 );
-        HB_STORNL( pt.y  , -1, 2 );
+        HB_STORNL( pt.x, -1, 1 );
+        HB_STORNL( pt.y, -1, 2 );
 
 }
 HB_FUNC ( SETSCROLLPOSRTF )                // SetScrollPosRtf(HWND hwnd, x, y )
