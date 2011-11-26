@@ -2820,34 +2820,7 @@ Function US_GetShortFullFileName( cPath )
    endif
 Return sShortPathName
 
-#pragma BEGINDUMP
-#define _WIN32_IE      0x0500
-#define HB_OS_WIN_32_USED
-#define _WIN32_WINNT   0x0400
-
-#include <windows.h>
-#include "hbapi.h"
-
-HB_FUNC(USAUX_GETSHORTPATHNAME)
-{
-   char buffer[ MAX_PATH + 1 ] = {0};
-   DWORD iRet;
-
-   iRet = GetShortPathName( hb_parc(1), buffer, MAX_PATH ) ;
-   if (iRet < MAX_PATH) {
-   hb_storclen( buffer, iRet, 2);
-   }
-   else
-   {
-   hb_storc( "", 2 );
-   }
-   hb_retnl( iRet ) ;
-}
-#pragma ENDDUMP
-*//------------------------------------------------------------------------\\*
-*// $fin funcion para nombre corto de archivo
-*//========================================================================\\*
-
+/*
 //=========================================================================================================
 // Ini Leer numero de serie de disco
 //---------------------------------------------------------------------------------------------------------
@@ -2874,64 +2847,7 @@ HB_FUNC (HDGETSERIAL)
 //---------------------------------------------------------------------------------------------------------
 // Fin Leer numero de serie de disco
 //=========================================================================================================
-
-//=========================================================================================================
-// Ini Leer nombre de computadora y usuario
-//---------------------------------------------------------------------------------------------------------
-#pragma BEGINDUMP
-#include <windows.h>
-#include <hbapi.h>
-// BOOL GetComputerName( LPTSTR lpBuffer, LPDWORD nSize )
-// http://msdn.microsoft.com/library/default.asp?url=/library/en-us/sysinfo/base/getcomputername.asp
-// Devuelve el nombre del PC.
-HB_FUNC ( US_GETCOMPUTERNAME )
-{
-   TCHAR lpBuffer[255];
-   DWORD nSize = 255;
-   GetComputerName( lpBuffer, &nSize );
-   hb_retc( lpBuffer );
-}
-// BOOL GetUserName( LPTSTR lpBuffer, LPDWORD nSize );
-// http://msdn.microsoft.com/library/default.asp?url=/library/en-us/sysinfo/base/getusername.asp
-// Devuelve el nombre del usuario.
-HB_FUNC ( US_GETUSERNAME )
-{
-   TCHAR lpBuffer[MAX_PATH + 1];
-   DWORD nSize = MAX_PATH;
-   GetUserName( lpBuffer, &nSize );
-   hb_retc( lpBuffer );
-}
-#pragma ENDDUMP
-//---------------------------------------------------------------------------------------------------------
-// Fin Leer nombre de computadora y usuario
-//=========================================================================================================
-
-//=========================================================================================================
-// Ini Verificar Directorio
-//---------------------------------------------------------------------------------------------------------
-#pragma BEGINDUMP
-#include <windows.h>
-#include <winbase.h>
-#include "hbapi.h"
-#include "hbvm.h"
-#include "hbstack.h"
-#include "hbapiitm.h"
-
-BOOL DirectoryExists( LPTSTR szDirName )
-{
-   unsigned int nAttributes;
-   if ( ( nAttributes = GetFileAttributes( szDirName ) ) == -1 ) return FALSE;
-   if ( ( nAttributes & FILE_ATTRIBUTE_DIRECTORY ) != 0 ) return TRUE;
-   return FALSE;
-}
-HB_FUNC( MYISDIRECTORY )
-{
-   hb_retl( DirectoryExists( (LPTSTR) hb_parc(1) ) ) ;
-}
-#pragma ENDDUMP
-//---------------------------------------------------------------------------------------------------------
-// Fin Verificar Directorio
-//=========================================================================================================
+*/
 
 // Dado un Path devuelve su nombre corto
 Function US_PathShortName( cPath )
@@ -3089,36 +3005,6 @@ return ( GetE("OS") == "Windows_NT" )
 //= END Function US_IsNT                                                           =\\
 //==================================================================================\\
 
-//==================================================================================\\
-//= Function US_NT_Administrator                                                   =\\
-//= USE:                                                                           =\\
-//= US_NT_Administrator()                                                          *\\
-//= Idiomas: 0 Espa±ol (Default) - 1 Ingles                                        =\\
-//= Retorna:                                                                       =\\
-//=    0 = ---- los codigos de retorno no estan implementados                      =\\
-//----------------------------------------------------------------------------------\\
-#pragma BEGINDUMP
-#include <windows.h>
-#include "hbapi.h"
-#include "hbapiitm.h"
-HB_FUNC( US_NT_ADMINISTRATOR )
-{
-   LUID tmpLuid;
-   TOKEN_PRIVILEGES tkp, tkpNewButIgnored;
-   DWORD lBufferNeeded;
-   HANDLE hdlTokenHandle;
-   HANDLE hdlProcessHandle = GetCurrentProcess();
-   OpenProcessToken(hdlProcessHandle, TOKEN_ADJUST_PRIVILEGES | TOKEN_QUERY, &hdlTokenHandle);
-   LookupPrivilegeValue(NULL, "SeShutdownPrivilege", &tmpLuid);
-   tkp.PrivilegeCount            = 1;
-   tkp.Privileges[0].Luid        = tmpLuid;
-   tkp.Privileges[0].Attributes  = SE_PRIVILEGE_ENABLED;
-   AdjustTokenPrivileges(hdlTokenHandle, FALSE, &tkp, sizeof(tkpNewButIgnored), &tkpNewButIgnored, &lBufferNeeded);
-}
-#pragma ENDDUMP
-//= END Function US_NT_Administrator                                               =\\
-//==================================================================================\\
-
 #ifndef __XHARBOUR__
 Function US_DeleteFileMulti( cIn )
    Local vAux := Directory( cIn , "HS" ) , i
@@ -3135,39 +3021,6 @@ Function US_DoEvents()
   while US_ProcessMess()
   enddo
 return
-#pragma BEGINDUMP
-#define _WIN32_IE 0x0500
-#define HB_OS_WIN_32_USED
-#define _WIN32_WINNT 0x0400
-#include <shlobj.h>
-#include <shlwapi.h>
-#include <winerror.h>
-#include <windows.h>
-#include <lmcons.h>
-#include <commctrl.h>
-#include "hbapi.h"
-#include "hbvm.h"
-#include "hbstack.h"
-#include "hbapiitm.h"
-#include "hbapifs.h"
-#include "tchar.h"
-#include "item.api"
-HB_FUNC( US_PROCESSMESS )
-{
-   MSG   Msg;
-
-   if( PeekMessage((LPMSG) & Msg, 0, 0, 0, PM_REMOVE) )
-   {
-      TranslateMessage( &Msg );
-      DispatchMessage( &Msg );
-      hb_retl( TRUE );
-   }
-   else
-   {
-      hb_retl( FALSE );
-   }
-}
-#pragma ENDDUMP
 
 //=========================================================================================================
 // Ini Leer linea de archivo binario
@@ -3227,5 +3080,129 @@ RETURN 0
 //--------------------------------------------------------------------------------------------------------
 // Fin Leer linea de archivo binario
 //=========================================================================================================
+
+#pragma BEGINDUMP
+#define _WIN32_IE      0x0500
+#define HB_OS_WIN_32_USED
+#define _WIN32_WINNT   0x0400
+
+#include <windows.h>
+#include "hbapi.h"
+
+HB_FUNC(USAUX_GETSHORTPATHNAME)
+{
+   char buffer[ MAX_PATH + 1 ] = {0};
+   DWORD iRet;
+
+   iRet = GetShortPathName( hb_parc(1), buffer, MAX_PATH ) ;
+   if (iRet < MAX_PATH) {
+   hb_storclen( buffer, iRet, 2);
+   }
+   else
+   {
+   hb_storc( "", 2 );
+   }
+   hb_retnl( iRet ) ;
+}
+
+//=========================================================================================================
+// Ini Leer nombre de computadora y usuario
+//---------------------------------------------------------------------------------------------------------
+// BOOL GetComputerName( LPTSTR lpBuffer, LPDWORD nSize )
+// http://msdn.microsoft.com/library/default.asp?url=/library/en-us/sysinfo/base/getcomputername.asp
+// Devuelve el nombre del PC.
+HB_FUNC ( US_GETCOMPUTERNAME )
+{
+   TCHAR lpBuffer[255];
+   DWORD nSize = 255;
+   GetComputerName( lpBuffer, &nSize );
+   hb_retc( lpBuffer );
+}
+// BOOL GetUserName( LPTSTR lpBuffer, LPDWORD nSize );
+// http://msdn.microsoft.com/library/default.asp?url=/library/en-us/sysinfo/base/getusername.asp
+// Devuelve el nombre del usuario.
+HB_FUNC ( US_GETUSERNAME )
+{
+   TCHAR lpBuffer[MAX_PATH + 1];
+   DWORD nSize = MAX_PATH;
+   GetUserName( lpBuffer, &nSize );
+   hb_retc( lpBuffer );
+}
+//---------------------------------------------------------------------------------------------------------
+// Fin Leer nombre de computadora y usuario
+//=========================================================================================================
+
+//=========================================================================================================
+// Ini Verificar Directorio
+//---------------------------------------------------------------------------------------------------------
+#include <winbase.h>
+#include "hbvm.h"
+#include "hbstack.h"
+#include "hbapiitm.h"
+
+BOOL DirectoryExists( LPTSTR szDirName )
+{
+   unsigned int nAttributes;
+   if ( ( nAttributes = GetFileAttributes( szDirName ) ) == -1 ) return FALSE;
+   if ( ( nAttributes & FILE_ATTRIBUTE_DIRECTORY ) != 0 ) return TRUE;
+   return FALSE;
+}
+HB_FUNC( MYISDIRECTORY )
+{
+   hb_retl( DirectoryExists( (LPTSTR) hb_parc(1) ) ) ;
+}
+//---------------------------------------------------------------------------------------------------------
+// Fin Verificar Directorio
+//=========================================================================================================
+
+//==================================================================================\\
+//= Function US_NT_Administrator                                                   =\\
+//= USE:                                                                           =\\
+//= US_NT_Administrator()                                                          *\\
+//= Idiomas: 0 Espa±ol (Default) - 1 Ingles                                        =\\
+//= Retorna:                                                                       =\\
+//=    0 = ---- los codigos de retorno no estan implementados                      =\\
+//----------------------------------------------------------------------------------\\
+HB_FUNC( US_NT_ADMINISTRATOR )
+{
+   LUID tmpLuid;
+   TOKEN_PRIVILEGES tkp, tkpNewButIgnored;
+   DWORD lBufferNeeded;
+   HANDLE hdlTokenHandle;
+   HANDLE hdlProcessHandle = GetCurrentProcess();
+   OpenProcessToken(hdlProcessHandle, TOKEN_ADJUST_PRIVILEGES | TOKEN_QUERY, &hdlTokenHandle);
+   LookupPrivilegeValue(NULL, "SeShutdownPrivilege", &tmpLuid);
+   tkp.PrivilegeCount            = 1;
+   tkp.Privileges[0].Luid        = tmpLuid;
+   tkp.Privileges[0].Attributes  = SE_PRIVILEGE_ENABLED;
+   AdjustTokenPrivileges(hdlTokenHandle, FALSE, &tkp, sizeof(tkpNewButIgnored), &tkpNewButIgnored, &lBufferNeeded);
+}
+//= END Function US_NT_Administrator                                               =\\
+//==================================================================================\\
+
+#include <shlobj.h>
+#include <shlwapi.h>
+#include <winerror.h>
+#include <lmcons.h>
+#include <commctrl.h>
+#include "hbapifs.h"
+#include "tchar.h"
+#include "item.api"
+HB_FUNC( US_PROCESSMESS )
+{
+   MSG   Msg;
+
+   if( PeekMessage((LPMSG) & Msg, 0, 0, 0, PM_REMOVE) )
+   {
+      TranslateMessage( &Msg );
+      DispatchMessage( &Msg );
+      hb_retl( TRUE );
+   }
+   else
+   {
+      hb_retl( FALSE );
+   }
+}
+#pragma ENDDUMP
 
 /* eof */

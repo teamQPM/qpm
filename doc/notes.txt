@@ -18,44 +18,4 @@ Descargar desde http://www.jrsoftware.org/isinfo.php
 El Help está generado desde QPM con la utilidad SHG, al igual que el sitio de
 internet (excepto el index.htm que está hecho a mano).
 
-Required files on distribution
-QPM.chm
-QPM.exe
-US_A1.exe
-US_A2.exe
-US_A3.exe
-US_A4.exe
-US_DbfView.exe
-US_dif.exe
-US_difwi.dll
-US_DllTool.exe
-US_dtree.css
-US_dtree.im
-US_dtree.js
-US_hha.dll
-US_hhc.exe
-US_ImpDef.exe
-US_ImpLib.exe
-US_itcc.dll
-US_Make.exe
-US_Msg.exe
-US_ObjDump.exe
-US_PExports.exe
-US_PODump.exe
-US_POLib.exe
-US_R2H.exe
-US_Redir.exe
-US_Reimp.exe
-US_Res.exe
-US_Run.exe
-US_S1.exe
-US_S2.exe
-US_S3.exe
-US_Shell.exe
-US_Slash.exe
-US_Tdump.exe
-US_TLib.exe
-US_Upx.exe
-US_windres.exe
-
 /* eof */

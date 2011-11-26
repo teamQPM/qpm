@@ -29,13 +29,14 @@
 
 [Setup]
 AppName=QPM (QAC based Project Manager)
-AppVerName=QPM v05.01 build 00
+AppVerName=QPM v05.02 build 04
 AppPublisher=fernando.yurisich
-DefaultDirName=C:\QPM_05_01_00
+DefaultDirName=C:\QPM_05_02_04
+UsePreviousAppDir=no
 DefaultGroupName=QPM (QAC based Project Manager)
 AllowNoIcons=yes
 OutputDir=..\QPM Distribution
-OutputBaseFilename=QPM_05_01_0000_Install
+OutputBaseFilename=QPM_05_02_0004_Install
 SetupIconFile=.\Resource\QPM_Install.ico
 Compression=lzma
 SolidCompression=yes
@@ -49,7 +50,44 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 Name: "quicklaunchicon"; Description: "{cm:CreateQuickLaunchIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: checkablealone
 
 [Files]
-Source: ".\*.*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs
+Source: "QPM.chm"; DestDir: "{app}"; Flags: ignoreversion
+Source: "QPM.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "US_A1.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "US_A2.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "US_A3.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "US_A4.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "US_DbfView.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "US_dif.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "US_difwi.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "US_DllTool.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "US_dtree.css"; DestDir: "{app}"; Flags: ignoreversion
+Source: "US_dtree.im"; DestDir: "{app}"; Flags: ignoreversion
+Source: "US_dtree.js"; DestDir: "{app}"; Flags: ignoreversion
+Source: "US_hha.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "US_hhc.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "US_ImpDef.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "US_ImpLib.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "US_itcc.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "US_Make.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "US_Msg.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "US_ObjDump.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "US_PExports.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "US_PODump.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "US_POLib.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "US_R2H.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "US_Redir.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "US_Reimp.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "US_Res.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "US_Run.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "US_S1.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "US_S2.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "US_S3.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "US_Shell.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "US_Slash.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "US_Tdump.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "US_TLib.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "US_Upx.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "US_windres.exe"; DestDir: "{app}"; Flags: ignoreversion
 ; Ejemplos
 ; Agenda
 ;Source: ".\Samples\Agenda\*.*"; DestDir: "{app}\Samples\Agenda"; Flags: ignoreversion
