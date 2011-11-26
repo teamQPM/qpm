@@ -35,7 +35,7 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
    Local Folder , FileName , i , nPos , LogIni := 0 , nIndx
    Local LOC_cParam := ""
 
-   PUBLIC PUB_cQPM_Version      := "05 02 03"
+   PUBLIC PUB_cQPM_Version      := "05 02 04"
 
    PUBLIC PUB_QPM_bHigh := .F.
    QPM_SetProcessPriority( "HIGH" )
@@ -4923,6 +4923,11 @@ Function QPM_OpenProject2()
    ActOutputTypeSet()
    ActLibReimp()
    CambioTitulo()
+Return .t.
+
+Function QPM_ClearLastOpenList()
+   vLastOpen := {}
+   QPM_DefinoMainMenu()
 Return .t.
 
 Function QPM_CheckFiles()
@@ -10609,6 +10614,10 @@ Function QPM_DefinoMainMenu()
                           r_Null := &( "_DefineMenuItem( vLastOpen[" + str(i) + "] , {|| " + cAux + " } , , if( file( vLastOpen[" + str(i) + "] ) , 'GridTilde' , 'GridEquis' ) )" )
                        endif
                    next
+                   if len( vLastOpen ) > 0
+                      SEPARATOR
+                      ITEM '&Clear list'            ACTION QPM_ClearLastOpenList()
+                   endif
                 // US_Debug( .F. )
                    SEPARATOR
                    ITEM '&Exit'            ACTION QPM_Exit()
@@ -10773,9 +10782,11 @@ Function US_GetFile( aFilter, title, cIniFolder, multiselect, nochangedir )
    Local reto
    SetMGWaitHide()
    Reto := US_GetFile2( aFilter, title, cIniFolder, multiselect, nochangedir )
-   if empty( Reto )
-      QPM_CartelCancelByBug()                    // esto es debido a un bug que prodeuce que cuando se de escape sin seleccionar archivos la rutina siguiente no termina
-   endif
+/*
+ *   if empty( Reto )
+ *      QPM_CartelCancelByBug()                    // esto es debido a un bug que prodeuce que cuando se de escape sin seleccionar archivos la rutina siguiente no termina
+ *  endif
+ */
    SetMGWaitShow()
 Return reto
 Function US_GetFile2( aFilter, title, cIniFolder, multiselect, nochangedir )

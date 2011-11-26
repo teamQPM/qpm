@@ -1976,10 +1976,17 @@ us_log( "hay agregados" , .f. )
 Return .T.
 
 Function QPM_HotRecovery_Migrate()
-   Local cOldTxt := GetMGWaitTxt()
+   Local cOldTxt := GetMGWaitTxt(), i
+   
    $US_Log()
    Declare vHotR[ ADIR( PUB_MigrateFolderFrom + DEF_SLASH + 'QPM_HotRecovery_*.dbf' ) ]
+   Declare vHotRold[ ADIR( PUB_MigrateFolderFrom + DEF_SLASH + 'QAC_HotRecovery_*.dbf' ) ]
    ADIR( PUB_MigrateFolderFrom + DEF_SLASH + 'QPM_HotRecovery_*.dbf' , vHotR )
+   ADIR( PUB_MigrateFolderFrom + DEF_SLASH + 'QAC_HotRecovery_*.dbf' , vHotRold )
+   For i := 1 to len(vHotRold)
+     aAdd( vHotR, vHotRold[i] )
+   Next i
+   
    if len( vHotR ) > 0
       aSort( vHotR ,,, { |x, y| US_Upper(x) > US_Upper(y) })
       US_FileCopy( PUB_MigrateFolderFrom + DEF_SLASH + vHotR[1] , PUB_cQPM_Folder + DEF_SLASH + 'QPM_HotRecovery_' + PUB_cQPM_Version3 + '.dbf' )

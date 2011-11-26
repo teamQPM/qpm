@@ -8,6 +8,30 @@
  * See "How to format your ChangeLog entries" in howtosvn.txt file.
  */
 
+2011-11-26 21:00:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * ./doc/howtosvn.txt
+     * Updated HOW TO BUILD A NEW RELEASE section.
+   * ./doc/notes.txt
+     - Deleted list of needed files (moved to ./doc/howtosvn.txt)
+   * ./QPM_AutoProject.qpm
+     * Updated to new release 05_02_04.
+   * ./QPM.iss
+     * Updated to new release 05_02_04.
+   * ./QPM.exe
+     * Changed release number to 05_02_04.
+     + Added option "Clear list" to File menu.
+     - QPM_CartelCancelByBug() no longer needed in US_GetFile().
+   * ./QPM_Functions.PRG
+     - QPM_CartelCancelByBug() no longer needed in BugGetFile().
+   * ./QPM_HotRecovery.prg
+     * QPM_HotRecovery_Migrate() function now also processes QAC Hot
+       Recovery databases.
+   * ./FuentesComunes/US_HB.PRG
+     * Some unused functions commented out.
+     * C sections moved to end of file to facilitate debuging (C compiler
+       messes up the source's lines numbers and, when an error occurs,
+       the errorsys module reports a wrong number).
+
 2011-11-16 12:00:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * ./QPM.exe
      * Updated.
@@ -23,7 +47,7 @@
 
 2011-11-13 16:40:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    - ./QPM_05020000.cfg
-   * .doc/howtosvn.txt
+   * ./doc/howtosvn.txt
      * Updated HOW TO BUILD A NEW RELEASE section.
    * ./HelpQPM/QPM_SHG.fpt
    * ./HelpQPM/QPM_SHG.dbf

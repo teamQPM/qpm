@@ -55,9 +55,11 @@ Function BugGetFile( a , b , c , d , e , f )
 // SetMGWaitHide()
    auxReto := GetFile( a , b , c , d , e , f )
 // SetMGWaitShow()
-   if empty( auxReto )
-      QPM_CartelCancelByBug()   // esto es debido a un bug que se produce cuando se da escape sin seleccionar archivos la rutina siguiente no termina
-   endif
+/*
+ *   if empty( auxReto )
+ *     QPM_CartelCancelByBug()   // esto es debido a un bug que se produce cuando se da escape sin seleccionar archivos la rutina siguiente no termina
+ *  endif
+ */
 Return auxReto
 
 Function QPM_CreateNewFile( cType , cFile )
