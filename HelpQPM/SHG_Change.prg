@@ -29,18 +29,21 @@
 
 Function main()
 
+   LOCAL old := "C:/QPM/SOURCE/HELPQPM/"
+   LOCAL new := "C:/QPM/HELPQPM/"
+
    DEFINE WINDOW Sample ;
      AT 0 , 0 ;
-     WIDTH 400 ;
+     WIDTH 408 ;
      HEIGHT 200 ;
-     TITLE "QAC Sample" ;
+     TITLE "Change path to help files" ;
      MAIN
 
       DEFINE LABEL Label1
         ROW 40
-        COL 130
-        WIDTH 200
-        VALUE "Basic QAC Sample"
+        COL 20
+        WIDTH 360
+        VALUE "From " + old + " to " + new
       END LABEL
 
       DEFINE BUTTON Button1
@@ -48,7 +51,7 @@ Function main()
         COL 100
         WIDTH 200
         CAPTION "Change"
-        ONCLICK Change()
+        ONCLICK Change( old, new )
       END BUTTON
 
    END WINDOW
@@ -58,10 +61,7 @@ Function main()
 
 Return .T.
 
-Function Change()
-   Local old , new
-   old := "C:/QPM/SOURCE/HELPQPM/"
-   new := "C:/QPM/SOURCE/HELPQPM/"
+Function Change( old, new )
    USE QPM_SHG.dbf ALIAS "SHG"
    PACK
    DBGoTop()
@@ -77,6 +77,7 @@ Function Change()
       DBSkip()
    ENDDO
    USE
+   MSGINFO("Path changed to " + new)
 Return
 
 // US_StrTran reemplaza caracteres ignorando si es mayusculas o minusculas

@@ -11,6 +11,14 @@
 /******************************************************************************/
 
 Assigned to: <nobody>
+Added by...: 2011-11-27 01:00:00 UTC-0300 Fernando Yurisich <fyurisich>
+Status.....: Open.
+Details....: Remove validation of SHGHTMLFOLDER when checked "Add HTML Output"
+             in SHG tab.
+
+/******************************************************************************/
+
+Assigned to: <nobody>
 Added by...: 2011-10-17 15:00:00 UTC-0300 Fernando Yurisich <fyurisich>
 Status.....: Open.
 Details....: F3 key not released when application is minimized.
@@ -38,22 +46,6 @@ Details....: In HELP:
              - Update links.
 
 /******************************************************************************/
-
-Assigned to: <nobody>
-Added by...: 2011-09-19 22:30:00 UTC-0300 Fernando Yurisich <fyurisich>
-Status.....: Open.
-Details....: Add to ./doc/howtosvn.txt file how to:
-             - Build QPM from SVN files.
-             - Build a new release.
-
-/******************************************************************************/
-
-Assigned to: <nobody>
-Added by...: 2011-09-19 22:30:00 UTC-0300 Fernando Yurisich <fyurisich>
-Status.....: Open.
-Details....: Add license detail to all files.
-
-/******************************************************************************/
 Assigned to: <nobody>
 Added by...: 2011-09-19 22:30:00 UTC-0300 Fernando Yurisich <fyurisich>
 Status.....: Open.
@@ -76,19 +68,6 @@ Assigned to: <nobody>
 Added by...: 2011-09-22 22:30:00 UTC-0300 Fernando Yurisich <fyurisich>
 Status.....: Open.
 Details....: Localize entire proyect.
-
-/******************************************************************************/
-Assigned to: <nobody>
-Added by...: 2011-09-22 22:30:00 UTC-0300 Fernando Yurisich <fyurisich>
-Status.....: Open.
-Details....: Migrate to Harbour 3.0 (last stable release).
-
-/******************************************************************************/
-Assigned to: <nobody>
-Added by...: 2011-09-22 22:30:00 UTC-0300 Fernando Yurisich <fyurisich>
-Status.....: Open.
-Details....: Migrate to last version of Extended Minigui.
-             Must be done after Harbour migration.
 
 /******************************************************************************/
 Assigned to: <nobody>
