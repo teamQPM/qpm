@@ -57,6 +57,7 @@ Source: "US_A2.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: "US_A3.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: "US_A4.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: "US_DbfView.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "DbfView.chm"; DestDir: "{app}"; Flags: ignoreversion
 Source: "US_dif.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: "US_difwi.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "US_DllTool.exe"; DestDir: "{app}"; Flags: ignoreversion

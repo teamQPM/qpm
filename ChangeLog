@@ -8,6 +8,28 @@
  * See "How to format your ChangeLog entries" in howtosvn.txt file.
  */
 
+2011-11-27 01:40:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * ./QPM.chm
+     * Some typos corrected.
+     * Compiler references updated.
+   * ./QPM_AutoProjectOnlyHelp.qpm
+     * Updated.
+   * ./TODO
+     * Updated.
+   * ./us_dbfview.exe
+     * Updated to version 0.78.
+   + ./DBFview.chm
+   * ./QPM.iss
+     + Added DBFview.chm
+   * ./HelpQPM/QPM_SHG.dbf
+   * ./HelpQPM/QPM_SHG.fpt
+   * ./HelpQPM/SHG_Change.qpm
+     * Updated.
+   * ./HelpQPM/SHG_Change.prg
+     * Changed window layout.
+   * ./htmlhelp/*.htm
+     * Updated.
+
 2011-11-26 21:00:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * ./doc/howtosvn.txt
      * Updated HOW TO BUILD A NEW RELEASE section.
