@@ -179,9 +179,9 @@ FUNCTION MAIN(cP1,cP2,cP3,cP4,cP5,cP6,cP7,cP8,cP9,cP10,cP11,cP12,cP13,cP14,cP15,
                //    if upper( US_FileNameOnlyExt( US_Word(cParam,3) ) ) == "EXE"
                //       Say( "               " + US_Word(cParam,3) + " Is Running ?" )
                //    else
-               //       Say( "               " + US_Word(cParam,3) + " Is Open by Another Aplication ?" )
+               //       Say( "               " + US_Word(cParam,3) + " Is Open by Another Application ?" )
                //    endif
-                     Say( "               " + US_Word(cParam,3) + " Is Running or Open by Another Aplication ???" )
+                     Say( "               " + US_Word(cParam,3) + " Is Running or Open by Another Application ???" )
                      bError:=.T.
                   endif
                endif
@@ -212,9 +212,9 @@ FUNCTION MAIN(cP1,cP2,cP3,cP4,cP5,cP6,cP7,cP8,cP9,cP10,cP11,cP12,cP13,cP14,cP15,
                   // if upper( US_FileNameOnlyExt( US_Word(cParam,3) ) ) == "EXE"
                   //    Say( "               " + US_Word(cParam,3) + " Is Running ?" )
                   // else
-                  //    Say( "               " + US_Word(cParam,3) + " Is Open by Another Aplication ?" )
+                  //    Say( "               " + US_Word(cParam,3) + " Is Open by Another Application ?" )
                   // endif
-                     Say( "               " + US_Word(cParam,3) + " Is Running or Open by Another Aplication ???" )
+                     Say( "               " + US_Word(cParam,3) + " Is Running or Open by Another Application ???" )
                      bError:=.T.
                   else
                      if ferase( US_Word(cParam,2) ) == -1

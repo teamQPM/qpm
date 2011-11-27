@@ -9,6 +9,18 @@
  */
 
 2011-11-27 01:40:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * ./QPM.PRG
+     + Can run builded application even if it was moved and/or renamed.
+   * ./QPM_AUTOPROJECT.QPM
+     * Updated.
+   * ./QPM.EXE
+     * Updated.
+   * ./US_SHELL.PRG
+     * Some typos corrected.
+   * ./SAMPLES/MAKELIB/CHECK.PRG
+     * Some typos corrected.
+
+2011-11-27 01:40:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * ./QPM.chm
      * Some typos corrected.
      * Compiler references updated.
