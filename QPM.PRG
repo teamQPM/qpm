@@ -6864,12 +6864,12 @@ Function QPM_Run( bWithParm )
 // QPM_Run2
    Local RUNFOLDER     := AllTrim(US_FileNameOnlyPath(VentanaMain.TRunProjectFolder.Value))
    Local TopName       := US_FileNameOnlyName( GetOutputModuleName() )
-   Local App           := ""
+   Local App           := US_ShortName( Prj_Text_OutputCopyMoveFolder ) + DEF_SLASH + US_FileNameOnlyNameAndExt( GetOutputModuleName() )
    Local cParm         := ""
    Local cRunParms     := ""
    Local cOldFolder    := GetCurrentFolder()
    Local oInput        := US_InputBox():New()
-   App := GetOutputModuleName()
+
    if bWaitForBuild
       do while !bBuildFinished
          DO EVENTS
@@ -6881,8 +6881,9 @@ Function QPM_Run( bWithParm )
    If Empty( PUB_cProjectFolder ) .Or. Empty( TopName )
       Return .F.
    EndIf
+
    If .Not. File( App )
-      MsgStop ('Aplication "' + App + '" not build or moved' + HB_OsNewLine() + 'You Must (Re)Build Project without MOVE option Prior To Run It' )
+      MsgStop ('Application "' + App + '" not found !!!' + HB_OsNewLine() + 'You Must (Re)Build Project Prior To Run It.' )
    Else
       if bWithParm
 //us_log( "previo" )
@@ -6939,13 +6940,14 @@ Function QPM_Run( bWithParm )
             PUB_ErrorLogTime := 0
          endif
       endif
+
       QPM_KillerModule := App
 
       SetCurrentFolder( RUNFOLDER )
 
       CloseDbfAutoView()
       if VentanaMain.GDbfFiles.Value > 0
-         DefineRichEditForNotDbfView( "DBF view is disable while Run Appl !!!" )
+         DefineRichEditForNotDbfView( "DBF view is disable while Running Application !!!" )
       endif
       cRunParms := US_ShortName( PUB_cProjectFolder ) + DEF_SLASH + "_" + PUB_cSecu + "RUN" + US_DateTimeCen() + ".cng"
       aadd( RunControlFile , US_ShortName( PUB_cProjectFolder ) + DEF_SLASH + "_" + PUB_cSecu + "RCF" + US_DateTimeCen() + ".cnt" )

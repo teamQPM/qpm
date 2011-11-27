@@ -11,6 +11,13 @@
 /******************************************************************************/
 
 Assigned to: <nobody>
+Added by...: 2011-11-27 12:20:00 UTC-0300 Fernando Yurisich <fyurisich>
+Status.....: Open.
+Details....: US_FileDate( cRecoveryFile ) is not returning DATE value.
+
+/******************************************************************************/
+
+Assigned to: <nobody>
 Added by...: 2011-11-27 01:00:00 UTC-0300 Fernando Yurisich <fyurisich>
 Status.....: Open.
 Details....: Remove validation of SHGHTMLFOLDER when checked "Add HTML Output"

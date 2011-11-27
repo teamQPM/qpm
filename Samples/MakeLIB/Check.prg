@@ -13,7 +13,7 @@ Function Main()
       DEFINE LABEL hola
          ROW 0
          COL 0
-         VALUE "Main Aplication Running from: "
+         VALUE "Main Application Running from: "
          AUTOSIZE .T.
       END LABEL
 
