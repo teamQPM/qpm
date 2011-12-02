@@ -32,14 +32,10 @@
 #ifdef QPM_SHG
 
 Function SHG_ImageGenerateList( cIn , cTopic )
-/* pepe  */
    Local bLoop := .T. , vKeys , nPos , nLastPos := 1 , nCaretHtm , i , vDesdeLen , bCambio := .F.
    Local cMemoHtm := memoread( cIn ) , cStringCmd
    Local cMemoHtmUpper := upper( cMemoHtm ) , nLenGuia := len( "<IMG" )
-// msginfo( cIn )
-// msginfo( "entra: " + cMemoHtm )
    do while bLoop
-//      msginfo( "into loop: " + cMemoHtmUpper )
 #IFDEF __XHARBOUR__
       if ( nPos := at( "<IMG " , cMemoHtmUpper , nLastPos ) ) > 0
 #ELSE
@@ -60,18 +56,15 @@ Function SHG_ImageGenerateList( cIn , cTopic )
                   aadd( vFilesToCompile , upper( US_WSlash( vKeys[i][2] ) ) )
                endif
                vDesdeLen := SHG_ImageGetPos( cMemoHtm , nCaretHtm + 1 )
-     //     msginfo( vDesdeLen )
                cStringCmd := SHG_ImageVector2String( vKeys , .T. )
                cMemoHtm := substr( cMemoHtm , 1 , vDesdeLen[1][1] - 1 ) + ;
                            cStringCmd + ;
                            substr( cMemoHtm , vDesdeLen[1][1] + vDesdeLen[1][2] )
                cMemoHtmUpper := upper( cMemoHtm )
                nLastPos := vDesdeLen[1][1] + len( cStringCmd )
-    //      msginfo( "$" + substr( cMemoHtmUpper , nLastPos , 3 ) + "$" )
                exit
             endif
          next
-   //    msginfo( vFilesToCompile )
       else
          bLoop := .F.
       endif
@@ -79,7 +72,6 @@ Function SHG_ImageGenerateList( cIn , cTopic )
    if bCambio
       QPM_MemoWrit( cIn , cMemoHtm )
       US_FileChar26Zap( cIn )
- //     msginfo( "sale: " + cMemoHtm )
    endif
 Return .T.
 
@@ -87,28 +79,22 @@ Function SHG_ImageGetString( cMemo , nPos )
    Local nDesde , nLen , vAux
    vAux := SHG_ImageGetPos( cMemo , nPos )
    if vAux[1][2] > 0       // != NIL
-   // msginfo( substr( cMemo , vAux[1][1] , vAux[1][2] ) )
       Return substr( cMemo , vAux[1][1] , vAux[1][2] )
    endif
 Return ""
 
 Function SHG_ImageGetPos( cMemo , nPos )
-   Local nAuxDesde , nDesde , nHasta , nLen , vResult , nRtfPos := nPos   // US_Rtf2MemoPos( cMemo , nPos )
+   Local nAuxDesde , nDesde , nHasta , nLen , vResult , nRtfPos := nPos
    Local nLenGuia := len( "<IMG" )
-// msginfo( "nrtfpos: " + us_todostr( nRtfPos ) )
    nAuxDesde := rat( ">" , substr( cMemo , 1 , nRtfPos ) ) + 1
- //msginfo( "busco en: " + substr( cMemo , nAuxDesde , ( nRtfPos - nAuxDesde + 1 ) + nLenGuia ) )
    if ( nDesde := rat( "<IMG " , upper( substr( cMemo , nAuxDesde , ( nRtfPos - nAuxDesde + 1 ) + nLenGuia ) ) ) ) == 0
- //  msginfo( "sale 1" )
       Return { { nPos , 0 } }
    endif
    nDesde := nDesde + ( nAuxDesde - 1 )
    if ( nHasta := at( ">" , upper( substr( cMemo , nRtfPos + 1 ) ) ) ) == 0
-  // msginfo( "sale 2" )
       Return { { nPos , 0 } }
    endif
    nLen := ( ( nRtfPos + nHasta ) - nDesde ) + 1
-// msginfo( "estring @" + substr( cMemo , nDesde , nLen ) + "@" )
 Return { { nDesde , nLen } }
 
 Function SHG_ImageVector2String( vKeys , bSupressPath )
@@ -124,7 +110,6 @@ Function SHG_ImageVector2String( vKeys , bSupressPath )
          if upper( vKeys[i][1] ) == "SRC" .and. bSupressPath
          // nCaseName := Directory( US_WSlash( vKeys[i][2] ) )
          // nCaseName[1][1] := US_FileNameOnlyNameAndExt( nCaseName[1][1] )
-           // msginfo( vKeys[i][2] + HB_OsNewLine() + nCaseName[1][1] )
          // if upper( nCaseName[1][1] ) == upper( US_FileNameOnlyNameAndExt( US_WSlash( vKeys[i][2] ) ) )
          //    vKeys[i][2] := nCaseName[1][1]
          // else
@@ -184,7 +169,6 @@ Function SHG_ImageParser( cString )
    aadd( vResult , { "HSPACE" , cP_HSPACE } )
    aadd( vResult , { "VSPACE" , cP_VSPACE } )
    aadd( vResult , { "ALIGN"  , cP_ALIGN } )
-//msginfo( "antes de Retornar: " + us_todostr( vResult ) )
 Return vResult
 
 Function SHG_ImageAssistant( cMemo , nCaretPos )
@@ -355,7 +339,7 @@ Function SHG_ImageAssistant( cMemo , nCaretPos )
              TOOLTIP         'Confirm Selection'
              ONCLICK         SHG_ImageAssistantOK()
       END BUTTON
-          // ONCLICK         ( cAuxName := PanInputImage.TextSrc.Value , cAuxNick := PanInputImage.TextNick.Value , if( !empty( cAuxNick ) .and. !FILEVALID( cAuxNick , 255 , 50 ) , msginfo( "NickName is not a valid file name of Windows" + HB_OsNewLine() + 'Remember: only numbers (0-9), letters (a-z or A-Z) and not use the followed simbols: \ / : * ? " < > |') , PanInputImage.Release() ) )
+          // ONCLICK         ( cAuxName := PanInputImage.TextSrc.Value , cAuxNick := PanInputImage.TextNick.Value , if( !empty( cAuxNick ) .and. !FILEVALID( cAuxNick , 255 , 50 ) , MsgInfo( "NickName is not a valid file name of Windows" + HB_OsNewLine() + 'Remember: only numbers (0-9), letters (a-z or A-Z) and not use the followed simbols: \ / : * ? " < > |') , PanInputImage.Release() ) )
 
       @ 235 , 195 LABEL LabelReq ;
          VALUE 'RED field are required' ;
@@ -386,17 +370,16 @@ Function SHG_ImageAssistant( cMemo , nCaretPos )
    END WINDOW
    Center Window PanInputImage
    Activate Window PanInputImage
-// msginfo( cReto )
 Return cReto
 
 Function SHG_ImageAssistantOK()
    if empty( PanInputImage.TextSrc.Value )
-      msginfo( "Image file is requered" )
+      MsgInfo( "Image file is required." )
       return .F.
    endif
    if !file( US_WSlash( PanInputImage.TextSrc.Value ) )
       SHG_ImageAssistantDisplay()
-      msginfo( "Image file not found: " + PanInputImage.TextSrc.Value )
+      MsgInfo( "Image file not found: " + PanInputImage.TextSrc.Value )
       return .F.
    endif
    cReto := "<IMG"
@@ -427,7 +410,7 @@ Function SHG_ImageAssistantOK()
 Return .T.
 
 Function SHG_ImageAssistantDELETE()
-   if MsgYesNo( "Confirm Delete Tag for this image ?" )
+   if MyMsgYesNo( "Confirm Delete Tag for this image ?" )
       cReto := "*DELETE*"
       PanInputImage.Release()
    endif
@@ -474,10 +457,10 @@ Function SHG_ImageAssistantGetVector( cMemo , nCaretPos )
                   case upper( vKeys[i][2] ) == "RIGHT"
                      PanInputImage.CAlign.Value := 6
                   otherwise
-                     msginfo( "Invalid CAlign: " + US_TodoStr( vKeys[i][2] ) )
+                     MsgInfo( "Invalid CAlign: " + US_TodoStr( vKeys[i][2] ) )
                endcase
             otherwise
-               msginfo( "invalid key in function " + procname() + " :" + vKeys[i][1] )
+               MsgInfo( "Invalid key in function " + procname() + " :" + vKeys[i][1] )
          endcase
       next
    endif

@@ -92,7 +92,7 @@ METHOD Load() CLASS TActiveX
    TRY
       ::oOle := CreateObject( xObjeto )
    CATCH
-      MsgInfo( oError:description )
+      MsgInfo( oError:description, nil, nil, .F. )
    END
 RETURN ::oOle
 

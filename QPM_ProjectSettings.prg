@@ -315,13 +315,13 @@ Return .T.
 
 Function ProjectEscape()
    if ProjectChanged()
-      if MsgYesNo('Do you want cancel changes ?')
+      if MyMsgYesNo('Do you want to cancel the changes ?')
          WinPSettings.release()
       endif
    else
       WinPSettings.release()
    endif
-// ON KEY ESCAPE OF WinPSettings ACTION ( if( MsgYesNo('Do you want cancel changes ?') , WinPSettings.release() , ) )
+// ON KEY ESCAPE OF WinPSettings ACTION ( if( MyMsgYesNo('Do you want to cancel the changes ?') , WinPSettings.release() , ) )
 Return .T.
 
 Function ProjectChanged()
@@ -379,7 +379,6 @@ Function HabilitoRadioSegunType()
    else
       SetProperty( "WinPSettings" , "Check_Console" , "enabled" , .F. )
       SetProperty( "WinPSettings" , "Radio_Harbour" , "enabled" , .F. )
-   // SeteoMiniGui()
    endif
 Return .T.
 
@@ -419,11 +418,6 @@ Function CheckCombinationRadio(cFrom)
          bError := .T.
       case nCppValue == DEF_RG_MINGW .and. nMiniGuiValue == DEF_RG_MINIGUI1
          bError := .T.
-/*
-OBSOLETE: 23/09/11 fyurisich
-      case nCppValue == DEF_RG_MINGW .and. nMiniGuiValue == DEF_RG_EXTENDED1
-         bError := .T.
-*/
       case nCppValue == DEF_RG_PELLES .and. nMiniGuiValue != DEF_RG_OOHG3
          bError := .T.
    endcase
@@ -431,20 +425,15 @@ OBSOLETE: 23/09/11 fyurisich
       do case
          case cFrom == "H"
          case cFrom == "C"
-            msgstop( "Compiler C++ is not valid for selected MiniGui" )
+            msgstop( "C++ Compiler is not valid for selected MiniGui." )
             SetProperty( "WinPSettings" , "Radio_Cpp"     , "value" , OLD_Radio_Cpp )
          case cFrom == "M"
-            msginfo( "Warning, Compiler C++ has been changed" )
+            MsgInfo( "Warning, C++ Compiler has been changed." )
             do case
                case nMiniGuiValue == DEF_RG_MINIGUI1
                   SetProperty( "WinPSettings" , "Radio_Cpp"     , "value" , DEF_RG_BORLAND )
                case nMiniGuiValue == DEF_RG_MINIGUI3
                   SetProperty( "WinPSettings" , "Radio_Cpp"     , "value" , DEF_RG_MINGW )
-/*
-OBSOLETE: 23/09/11 fyurisich
-               case nMiniGuiValue == DEF_RG_EXTENDED1
-                  SetProperty( "WinPSettings" , "Radio_Cpp"     , "value" , DEF_RG_BORLAND )
-*/
                case nMiniGuiValue == DEF_RG_OOHG3
                   SetProperty( "WinPSettings" , "Radio_Cpp"     , "value" , DEF_RG_BORLAND )
             endcase
@@ -472,7 +461,6 @@ Function ActRadioCpp( nMiniGui , nCpp , nHarbour )
          SetProperty( "WinPSettings" , "Radio_Cpp"     , "enabled" , DEF_RG_PELLES , .F. )
       case nMiniGui == DEF_RG_EXTENDED1
          SetProperty( "WinPSettings" , "Radio_Cpp"     , "enabled" , DEF_RG_BORLAND , .T. )
-// NOTE: 23/09/11 fyurisich Changed last parameter from .F. to .T.
          SetProperty( "WinPSettings" , "Radio_Cpp"     , "enabled" , DEF_RG_MINGW , .T. )
          SetProperty( "WinPSettings" , "Radio_Cpp"     , "enabled" , DEF_RG_PELLES , .F. )
       case nMiniGui == DEF_RG_OOHG3

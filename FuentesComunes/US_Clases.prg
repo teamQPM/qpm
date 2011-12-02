@@ -27,6 +27,8 @@
 */
 
 #include "US_ENV.H"
+#include "hbclass.ch"
+#include "minigui.ch"
 
 /*
 
@@ -329,7 +331,7 @@ METHOD Create( Ventana ) CLASS US_Player
    SET PLAYER &( ::cControl ) OF &( ::US_PlayerPan ) VOLUME ::nPlayVolume
 
    DEFINE TIMER TimerTime OF ::US_PlayerPan ;
-      INTERVAL  250 ;     && 1000 ciclos=1 segundo ????
+      INTERVAL  250 ;     && 1000 ciclos=1 segundo
       ACTION if( ::nPlayMode != 0 , ::TimerPlayer() , )
 
 return Self
@@ -1484,13 +1486,6 @@ METHOD OnInit() CLASS US_MGWait
       ACTION ::MGWaitRefresh()
    ::Reto := eval( {|| &(::cFuncion) } )
    DoMethod( ::MGWaitPan , "Release" )
-   // ini BUG ======================================================================================================= \\
-   // el siguiente bloque es por un bug cuando ejecuto un getfile y doy escape, no hace el release de la linea previa
-// if _IsWindowDefined( ::MGWaitPan )
-//    msginfo( "Selection canceled" )
-//    DoMethod( ::MGWaitPan , "Release" )
-// endif
-   // end BUG ======================================================================================================= \\
 return NIL
 
 METHOD Ejecutar( cFun ) CLASS US_MGWait

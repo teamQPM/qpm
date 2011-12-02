@@ -43,13 +43,14 @@ Function QPM_ForceRecompPRG()
    endif
 Return
 
+/*
 Function QPM_CartelCancelByBug()
-   msginfo( "Selection canceled by user" + HB_OsNewLine() + ;   // esto es debido a un bug que prodeuce que cuando se de escape sin seleccionar archivos la rutina siguiente no termina
+   MsgInfo( "Selection canceled by user" + HB_OsNewLine() + ;   // esto es debido a un bug que prodeuce que cuando se de escape sin seleccionar archivos la rutina siguiente no termina
                                            HB_OsNewLine() + ;
             "Note: This msgbox is used for resolve a litle bug in Extended Minigui" + HB_OsNewLine() + ;
             "when Release the GetFile function pressing the Cancel Button" )
 Return .T.
-
+*/
 Function BugGetFile( a , b , c , d , e , f )
    Local auxReto
 // SetMGWaitHide()
@@ -177,7 +178,7 @@ Function QPM_CreateNewFile( cType , cFile )
                          "END WINDOW"
                bReto := QPM_MemoWrit( cFile , cMemo )
             Otherwise
-               msginfo( "Error: Invalid option in Create PanNew" )
+               MsgInfo( "Error: Invalid option in Create PanNew." )
                bReto := .F.
          EndCase
          SetMGWaitShow()
@@ -251,7 +252,7 @@ Function QPM_CreateNewFile( cType , cFile )
                   bReto := .F.
                endif
             Otherwise
-               msginfo( "Error: Invalid option in Create DbfNew" )
+               MsgInfo( "Error: Invalid option in Create DbfNew." )
                bReto := .F.
          EndCase
          SetMGWaitShow()
@@ -404,7 +405,6 @@ Function CambioTitulo()
 Return .T.
 
 Function QPM_MemoWrit( p1 , p2 , bMute )
-   // QPM_MemoWrit2
    if bMute == NIL
       bMute := .F.
    endif
@@ -417,26 +417,21 @@ Function QPM_MemoWrit( p1 , p2 , bMute )
 Return .T.
 
 Function GetObjExt()
-// GetObjExt2
    if Prj_Radio_Cpp == DEF_RG_MINGW
       Return "O"
    endif
 Return "OBJ"
 
 Function GetObjPrefix()
-// GetObjPrefix2
 Return "OBJ"
 
 Function GetObjName()
-// GetObjName2
 Return GetObjPrefix() + GetSuffix()
 
 Function GetObjFolder()
-// GetObjPath2
 Return PUB_cProjectFolder + DEF_SLASH + GetObjName()
 
 Function OutputExt()
-// OutputExt2
    if cOutputType == "SRCLIB" .and. Prj_Radio_Cpp == DEF_RG_MINGW
       Return "A"
    endif
@@ -446,11 +441,9 @@ Function OutputExt()
 Return right( cOutputType , 3 )
 
 Function GetMiniGuiFolder()
-// GetMiniGuiFolder2
 Return &( "Gbl_T_M_"+GetMiniGuiSuffix()+GetCppSuffix() )
 
 Function GetHarbourFolder()
-// GetHarbourFolder2
    local reto
    if !QPM_IsXHarbour()
       reto:=&( "Gbl_T_H_"+GetMiniGuiSuffix()+GetCppSuffix() )
@@ -460,15 +453,12 @@ Function GetHarbourFolder()
 Return reto
 
 Function GetCppFolder()
-// GetCppFolder2
 Return &( "Gbl_T_C_"+GetMiniGuiSuffix()+GetCppSuffix() )
 
 Function GetSuffix()
-// GetSuffix2
 Return GetMiniGuiSuffix() + GetCppSuffix() + GetHarbourSuffix()
 
 Function GetMiniGuiSuffix()
-// GetMiniGuiSuffix2
    local minver
    if Prj_Radio_MiniGui = DEF_RG_MINIGUI1
       minver:=DefineMiniGui1
@@ -485,7 +475,6 @@ Function GetMiniGuiSuffix()
 Return minver
 
 Function GetHarbourSuffix()
-// GetHarbourSuffix2
    local hbver
    if Prj_Radio_Harbour = DEF_RG_HARBOUR
       hbver:=DefineHarbour
@@ -503,7 +492,6 @@ Function QPM_IsXHarbour()
 Return bReto
 
 Function GetCppSuffix()
-// GetCppSuffix2
    local CompCVer
    do case
       case Prj_Radio_Cpp == DEF_RG_PELLES
@@ -516,11 +504,9 @@ Function GetCppSuffix()
 Return CompCVer
 
 Function GetMiniGuiType()
-// GetMiniGuiType2
 Return substr( GetMiniGuiSuffix() , 1 , 1 )
 
 Function GetMiniGuiName( cForceCompiler )
-// GetMiniGuiName2
    Local nombre:="" , sufijo:=GetMiniGuiSuffix() + GetCppSuffix()
    do case
       case sufijo == DefineOohg3 + DefineBorland
@@ -623,7 +609,6 @@ Function GetMiniGuiName( cForceCompiler )
 Return nombre
 
 Function ChgPathToReal( cLinea )
-   // ChgPathToReal2
    cLinea := US_StrTran( cLinea , "<NewLine>" , HB_OsNewLine() )
    cLinea := US_StrTran( cLinea , "<QPM>" , PUB_cQPM_Folder + DEF_SLASH + "QPM.EXE" )
    cLinea := US_StrTran( cLinea , "<QPMFolder>" , PUB_cQPM_Folder )
@@ -767,13 +752,6 @@ Function MsgOk_Contador()
    if tiempo < 1
       if _IsWindowActive( WinMsg )
          DoMethod( WinMsg , "Release" )
-         // ini BUG ==================================================================== \\
-         // Posible BUG, no hace release                                                 \\
-    //   if _IsWindowActive( WinMsg )
-    //      msginfo( "Press ok to continue" )
-         // DoMethod( WinMsg , "Release" )     // Suspendido en version 1.3 build 36 de hmgext
-    //   endif
-         // end BUG ==================================================================== \\
       endif
       Return .T.
    else
@@ -807,18 +785,17 @@ Function MyMsg( titulo , texto , tipo , autoexit )
       SetMGWaitHide()
       Do case
          case us_upper( tipo ) == "W"
-            msgExclamation( texto , titulo )
+            MsgExclamation( texto , titulo, nil, .F. )    // this is not translated
          case us_upper( tipo ) == "E"
-            msgStop( texto , titulo )
+            MsgStop( texto , titulo, nil, .F. )           // this is not translated
          otherwise
-            msginfo( texto , titulo )
+            MsgInfo( texto , titulo, nil, .F. )           // this is not translated
       endcase
       SetMGWaitShow()
    endif
 Return
 
 Function QPM_ModuleType( cFile )
-   // QPM_ModuleType2
    Local MemoAux := ""
    Local u0 := 0 , u1 := 0 , u2 := 0
    Local cAux1 := "Bor"
@@ -915,38 +892,34 @@ Return if( bForDisplay , cOutputNameDisplay , cOutputName )
 
 Function MyMsgYesNo( a , b )
    Local Reto
-   Private Pa := a , Pb := b
+   DEFAULT b TO "QPM - Confirm"
    SetMGWaitHide()
-   Reto := &( "MsgYesNo( Pa , Pb )" )
+   Reto := MsgYesNo( a , b, nil, .F. )
    SetMGWaitShow()
-// DO EVENTS
 Return Reto
 
 Function MyMsgYesNoCancel( a , b )
    Local Reto
-   Private Pa := a , Pb := b
+   DEFAULT b TO "QPM - Confirm"
    SetMGWaitHide()
-   Reto := &( "MsgYesNoCancel( Pa , Pb )" )
+   Reto := MsgYesNoCancel( a , b, nil, .F. )
    SetMGWaitShow()
-// DO EVENTS
 Return Reto
 
 Function MyMsgOkCancel( a , b )
    Local Reto
-   Private Pa := a , Pb := b
+   DEFAULT b TO "QPM - Confirm"
    SetMGWaitHide()
-   Reto := &( "MsgOkCancel( Pa , Pb )" )
+   Reto := MsgOkCancel( a , b, nil, .F. )
    SetMGWaitShow()
-// DO EVENTS
 Return Reto
 
 Function MyMsgRetryCancel( a , b )
    Local Reto
-   Private Pa := a , Pb := b
+   DEFAULT b TO "QPM - Confirm"
    SetMGWaitHide()
-   Reto := &( "MsgRetryCancel( Pa , Pb )" )
+   Reto := MsgRetryCancel( a , b, nil, .F. )
    SetMGWaitShow()
-// DO EVENTS
 Return Reto
 
 Function KillTask()
@@ -1008,11 +981,11 @@ return
 
 Function ViewLog()
    if !File( AllTrim( Gbl_TEditor ) )
-      msgStop( "Program Editor not Found: "+AllTrim( Gbl_TEditor )+'. Look at ' + PUB_MenuGblOptions + ' of Settings menu' )
+      MsgStop( "Program Editor not Found: "+AllTrim( Gbl_TEditor )+'. Look at ' + PUB_MenuGblOptions + ' of Settings menu' )
       Return .T.
    endif
    If Empty( Gbl_TEditor )
-      MsgStop('Program Editor Not Defined. Look at ' + PUB_MenuGblOptions + ' of Settings menu','Operation Aborted')
+      MyMsg( 'Operation Aborted', US_TodoStr( 'Program Editor Not Defined. Look at ' + PUB_MenuGblOptions + ' of Settings menu.' ) , "E" , bAutoExit )
       Return .T.
    Else
       Editor := US_ShortName( AllTrim( Gbl_TEditor ) )
@@ -1107,7 +1080,6 @@ Function Enumeracion2( cMemoIn )
 Return cMemoOut
 
 Function QPM_Execute( cCMD , cParms , bWait , nSize , RunWaitFileStop )
-   // QPM_Execute2
    Local RunWaitControlFile , RunWaitParms , cSize
    DEFAULT cParms TO ""
    DEFAULT bWait TO .F.
@@ -1123,7 +1095,7 @@ Function QPM_Execute( cCMD , cParms , bWait , nSize , RunWaitFileStop )
          case nSize == 2            // maximized
             EXECUTE FILE ( cCMD ) PARAMETERS ( cParms ) MAXIMIZE
          otherwise
-            msginfo( "Invalid nSize parm in function QPM_Execute: " + US_TodoStr( nSize ) )
+            MsgInfo( "Invalid nSize parm in function QPM_Execute: " + US_TodoStr( nSize ) )
       endcase
    else
       do case
@@ -1136,7 +1108,7 @@ Function QPM_Execute( cCMD , cParms , bWait , nSize , RunWaitFileStop )
          case nSize == 2            // maximized
             cSize := "MAXIMIZE"
          otherwise
-            msginfo( "Invalid nSize parm in function QPM_Execute (2): " + US_TodoStr( nSize ) )
+            MsgInfo( "Invalid nSize parm in function QPM_Execute (2): " + US_TodoStr( nSize ) )
       endcase
       RunWaitControlFile := US_ShortName( PUB_cProjectFolder ) + DEF_SLASH + "_" + PUB_cSecu + "RWCF" + US_DateTimeCen() + ".cnt"
       RunWaitParms       := US_ShortName( PUB_cProjectFolder ) + DEF_SLASH + "_" + PUB_cSecu + "RWP" + US_DateTimeCen() + ".cng"
@@ -1150,7 +1122,7 @@ Function QPM_Execute( cCMD , cParms , bWait , nSize , RunWaitFileStop )
          DO EVENTS
          if GetMGWaitStop()
             if !( RunWaitFileStop == NIL )
-               //msgstop( "QPM_Execute: Stop detected but StopFile not received from parameters" )
+               //MsgStop( "QPM_Execute: Stop detected but StopFile not received from parameters" )
                //Return .F.
                //endif
                QPM_MemoWrit( RunWaitFileStop , "Run Wait File Stop" )
@@ -1209,7 +1181,7 @@ Return cErrorLog
 
 Function QPM_DeleteErrorLog()
    Local cErrorLog := ErrorLogName()
-   if MsgYesNo( "Confirm Delete Error Log ?" )
+   if MyMsgYesNo( "Confirm Delete Error Log ?" )
       ferase( cErrorLog )
       SetProperty( "VentanaMain" , "RichEditOut" , "Value" , cErrorLog + " Deleted !!!" )
       SetProperty( "VentanaMain" , "RichEditOut" , "caretpos" , 1 )
@@ -1291,14 +1263,13 @@ Function QPM_Send_SelectAll()
       case GetProperty( "VentanaMain" , "TabFiles" , "Value" ) == nPageOut
          cType := "OUT"
       otherwise
-         msginfo( "Error en SelectAll, pagina incorrecta" )
+         MsgInfo( "Error en SelectAll, página incorrecta." )
          Return .F.
    endcase
    US_Send_SelectAll( "RichEdit" + cType , "VentanaMain" )
 Return .T.
 
 Function QPM_Wait( cFun , cTexto , nFila , bStop )
-   // QPM_Wait2
 // PRIVATE PcFun := cFun
    PRIVATE SM_oMGWait := US_MGWait():New()
    if cTexto == NIL
@@ -1446,7 +1417,6 @@ Return .T.
 
 Function ReplacePrjVersion( cFile , cPrjVersion )
    Local cMemo := MemoRead( cFile ) , nInx := 0 , cLine := "" , cMemoOut := "" , bFound := .F.
-// msginfo( cMemo )
    For nInx := 1 to MLCount( cMemo , 254 )
       cLine := Memoline( cMemo , 254 , nInx )
       if !bFound .and. ;
@@ -1457,7 +1427,6 @@ Function ReplacePrjVersion( cFile , cPrjVersion )
          cMemoOut := cMemoOut + cLine + HB_OsNewLine()
       endif
    Next
-// msginfo( cMemoOut )
    QPM_MemoWrit( cFile , cMemoOut )
 Return .T.
 

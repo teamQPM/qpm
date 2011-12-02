@@ -493,7 +493,7 @@ Function US_SetPriorityToProcess( nPId , nPriority )
       case nPriority == 6
          nReto := US_2SetPriorityToProcess( nPId , REALTIME_PRIORITY_CLASS )
       OTHERWISE
-         msgstop( "Invalid Priority Class: " + alltrim( str( nPriority ) ) + " in function " + Procname() )
+         MsgStop( "Invalid Priority Class: " + alltrim( str( nPriority ) ) + " in function " + Procname(), NIL, NIL, .F. )   // this is not translated
          nReto := -3
    endcase
 Return nReto

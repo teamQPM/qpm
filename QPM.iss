@@ -29,14 +29,14 @@
 
 [Setup]
 AppName=QPM (QAC based Project Manager)
-AppVerName=QPM v05.02 build 04
+AppVerName=QPM v05.02 build 05
 AppPublisher=fernando.yurisich
-DefaultDirName=C:\QPM_05_02_04
+DefaultDirName=C:\QPM_05_02_05
 UsePreviousAppDir=no
 DefaultGroupName=QPM (QAC based Project Manager)
 AllowNoIcons=yes
 OutputDir=..\QPM Distribution
-OutputBaseFilename=QPM_05_02_0004_Install
+OutputBaseFilename=QPM_05_02_0005_Install
 SetupIconFile=.\Resource\QPM_Install.ico
 Compression=lzma
 SolidCompression=yes
@@ -91,22 +91,22 @@ Source: "US_Upx.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: "US_windres.exe"; DestDir: "{app}"; Flags: ignoreversion
 ; Ejemplos
 ; Agenda
-;Source: ".\Samples\Agenda\*.*"; DestDir: "{app}\Samples\Agenda"; Flags: ignoreversion
-;Source: ".\Samples\Agenda\images\*.*"; DestDir: "{app}\Samples\Agenda\images"; Flags: ignoreversion
-;Source: ".\Samples\Agenda\base\*.*"; DestDir: "{app}\Samples\Agenda\base"; Flags: ignoreversion
+Source: ".\Samples\Agenda\*.*"; DestDir: "{app}\Samples\Agenda"; Flags: ignoreversion
+Source: ".\Samples\Agenda\images\*.*"; DestDir: "{app}\Samples\Agenda\images"; Flags: ignoreversion
+Source: ".\Samples\Agenda\base\*.*"; DestDir: "{app}\Samples\Agenda\base"; Flags: ignoreversion
 ; Console Mode
-;Source: ".\Samples\ConsoleMode\*.*"; DestDir: "{app}\Samples\ConsoleMode"; Flags: ignoreversion
+Source: ".\Samples\ConsoleMode\*.*"; DestDir: "{app}\Samples\ConsoleMode"; Flags: ignoreversion
 ; Contactos
-;Source: ".\Samples\Contactos\*.*"; DestDir: "{app}\Samples\Contactos"; Flags: ignoreversion
+Source: ".\Samples\Contactos\*.*"; DestDir: "{app}\Samples\Contactos"; Flags: ignoreversion
 ; Make Lib
-;Source: ".\Samples\MakeLib\*.*"; DestDir: "{app}\Samples\MakeLib"; Flags: ignoreversion
+Source: ".\Samples\MakeLib\*.*"; DestDir: "{app}\Samples\MakeLib"; Flags: ignoreversion
 ; Merge Console and Graphic Mode
-;Source: ".\Samples\MergeConsoleModeWithWindowsMode\*.*"; DestDir: "{app}\Samples\MergeConsoleModeWithWindowsMode"; Flags: ignoreversion
+Source: ".\Samples\MergeConsoleModeWithWindowsMode\*.*"; DestDir: "{app}\Samples\MergeConsoleModeWithWindowsMode"; Flags: ignoreversion
 ; Simple Help Generator (SHG)
-;Source: ".\Samples\SHG_SimpleHelpGenerator\*.*"; DestDir: "{app}\Samples\SHG_SimpleHelpGenerator"; Flags: ignoreversion
+Source: ".\Samples\SHG_SimpleHelpGenerator\*.*"; DestDir: "{app}\Samples\SHG_SimpleHelpGenerator"; Flags: ignoreversion
 ; TsBrowse
-;Source: ".\Samples\TSBrowse_(Extended_1_4_b44)\*.*"; DestDir: "{app}\Samples\TSBrowse_(Extended_1_3_b38)"; Flags: ignoreversion
-;Source: ".\Samples\TSBrowse_(Extended_1_4_b44)\BITMAPS\*.*"; DestDir: "{app}\Samples\TSBrowse_(Extended_1_3_b38)\BITMAPS"; Flags: ignoreversion
+Source: ".\Samples\TsBrowse_(Extended_1_5_b54)\*.*"; DestDir: "{app}\Samples\TSBrowse_(Extended_1_3_b38)"; Flags: ignoreversion
+Source: ".\Samples\TsBrowse_(Extended_1_5_b54)\BITMAPS\*.*"; DestDir: "{app}\Samples\TSBrowse_(Extended_1_3_b38)\BITMAPS"; Flags: ignoreversion
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]

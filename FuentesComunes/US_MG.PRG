@@ -27,13 +27,16 @@
 */
 
 #include "US_ENV.H"
+#include "minigui.ch"
+
+#translate MsgInfo(<texto>) => US_LOG( <texto> , .T. )
 
 Function GetActiveHelpFile()
 Return _HMG_ActiveHelpFile
 
 /*
-Function US_msginfo(parm,win)
-Return msginfo( us_todoStr(parm) , win )
+Function US_MsgInfo(parm,win)
+Return MsgInfo( us_todoStr(parm) , win )
 */
 /*
 Function GetModuleFileName()
@@ -59,40 +62,6 @@ Function US_GetRichEditValue( ventana , control , modo )
          memo := GetProperty( ventana , control , "value" )
    endcase
 Return memo
-
-/*
- * Función para Convertir caretpos de RTF a posicion de RTF contando los  controles
- */
-Function US_RTF2MemoPos( cMemoRtf , nPosTxt )
-   Local cVenti := US_GetCurrentWindow() , cControl := "control"+US_NameRandom()
-   Local cAux , cSeco , cClip , nPosTxtPriv := nPosTxt
-   Local Reto , hEd
-   Local LOC_nPosAux
-   Local LOC_nAuxiliar
-   if cVenti == ""
-      Private PRI_cMemoRtf := cMemoRtf , PRI_nPosTxT := nPosTxt
-      Return US_TempMainWindow( procname()+"( PRI_cMemoRtf , PRI_nPosTxt )" )
-   endif
-   @ 0,0 RICHEDITBOX &cControl ;
-      OF &( cVenti ) ;
-      WIDTH 0 ;
-      HEIGHT 0 ;
-      VALUE cMemoRtf ;
-      INVISIBLE
-   LOC_nAuxiliar := len( US_GetRichEditValue( cVenti , cControl , "TXT" ) )
-   cAux := US_GetRichEditValue( cVenti , cControl , "RTF" )
-   hEd := GetControlHandle( cControl , cVenti )
-   do while at( ( cSeco := "CdQ"+alltrim(str(int(seconds()))) ) , cAux ) > 0
-   enddo
-   cClip := US_GetRtfClipboard()
-   CopyToClipboard( cSeco )
-   DoMethod( cVenti , cControl , "setfocus" )
-   SetProperty( cVenti , cControl , "caretpos" , nPosTxtPriv + if( nPosTxtPriv < LOC_nAuxiliar , 1 , 0 ) )
-   PasteRTF( hEd )
-   CopyRtfToClipboard( cClip )
-   cAux := US_GetRichEditValue( cVenti , cControl , "RTF" )
-   DoMethod( cVenti , cControl , "release" )
-Return ( at( cSeco , cAux ) - if( nPosTxtPriv < LOC_nAuxiliar , 2 , 1 ) )    // -1
 
 /*
  * Función para Convertir RTF to TXT
@@ -129,7 +98,8 @@ Return cAux
 
 /*
  * Función para Convertir TXT to RTF
- ***
+ */
+/*
 Function US_TXT2RTF( memo )
    Local win := US_GetCurrentWindow() , cControl := procname()+"control"+US_NameRandom()
    Local cAux
@@ -142,6 +112,7 @@ Function US_TXT2RTF( memo )
    cAux := US_GetRichEditValue( win , cControl , "RTF" )
    DoMethod( win , cControl , "release" )
 Return cAux
+*/
 
 /*
  * Función para Obtener el contenido de un clipboard con texto RTF
@@ -193,7 +164,8 @@ Return Nil
 /*
  * Función de API para agregar fuentes en forma dinámica
  * Ejemplo: US_AddFont( "VPArial.ttf", .T. )
- ***
+ */
+/*
 Function US_AddFont( cNameFont , bCompartida )
    Local R
    #define FR_PRIVATE     0x10
@@ -208,11 +180,13 @@ Function US_AddFont( cNameFont , bCompartida )
    endif
    US_LOG("AddFont: "+cNameFont+", compartida: "+us_todostr(bCompartida)+", RC="+us_todostr(R)+", "+if(r<>0,"OK","ERROR") , .F. )
 Return if(R<>0,0,-1)
+*/
 
 /*
  * Función de API para remover fuentes en forma dinámica
  * Ejemplo: US_RemoveFont( "VPArial.ttf", .T. )
- ***
+ */
+/*
 Function US_RemoveFont(cNameFont,bCompartida)
    Local R
    if bCompartida=NIL .or. !bCompartida
@@ -401,7 +375,7 @@ FUNCTION US_Opcion(cTexto,LISTA,FILA,DEFAULT,cMsgTIT,FAYUDA,TIPO,TECLASALIR,ESPE
 
    if GetActiveWindow() = 0
 
-      msginfo(cMsg)
+      MsgInfo(cMsg)
 
    else
 
@@ -3722,7 +3696,6 @@ HB_FUNC ( US_MAPISENDMAIL )
  */
 Function US_GetReg(nKey, cRegKey, cVar)
    LOCAL oReg, cValor
-   //msginfo("GetReg: key: "+cRegKey+" | var: "+cVar)
    oReg := TReg32():Create(nKey, cRegKey)
    cValor := oReg:Get(cVar)
    if empty( cValor )
@@ -3737,7 +3710,6 @@ RETURN cValor
 
 Function US_SetReg(nKey, cRegKey, cVar, Valor)
    LOCAL oReg, nValue
-   //msginfo("SetReg: key: "+cRegKey+" | var: "+cVar+" | valor: "+Valor)
    oReg := TReg32():Create(nKey, cRegKey)
    nValue := oReg:Set(cVar, Valor)
    if oReg:lError
@@ -3750,7 +3722,6 @@ RETURN nValue
 /*
 Function US_DelRegKey(nKey, cRegKey, cSubKey)
    LOCAL oReg, nValue
-   //msginfo("DelRegKey: key: "+cRegKey+" | subkey: "+cSubKey)
    if US_IsNT()
       US_NT_Administrator()
    endif
@@ -3765,7 +3736,6 @@ RETURN nValue
 
 Function US_DelRegVal(nKey, cRegKey, cValor)
    LOCAL oReg, nValue
-   //msginfo("DelRegVal: key: "+cRegKey+" | Valor: "+cValor)
    if US_IsNT()
       US_NT_Administrator()
    endif
@@ -4014,40 +3984,39 @@ Function US_Execute(cFile,cParm)
    endcase
    do case
       case Reto > 32    && Succesfull
-      // msginfo("Archivo abierto con el programa correspondiente")
       case Reto = 0     && The operating system is out of memory or resources.
-         msginfo("Windows no tiene suficiente memoria para abrir el archivo")
+         MsgInfo("Windows no tiene suficiente memoria para abrir el archivo")
       case Reto = ERROR_FILE_NOT_FOUND      && The specified file was not found.
-         msginfo("Windows no encuentra el archivo seleccionado")
+         MsgInfo("Windows no encuentra el archivo seleccionado")
       case Reto = ERROR_PATH_NOT_FOUND      && The specified path was not found.
-         msginfo("Windows no encuentra el directorio de la aplicacion seleccionada")
+         MsgInfo("Windows no encuentra el directorio de la aplicacion seleccionada")
       case Reto = ERROR_BAD_FORMAT          && The .exe file is invalid (non-Microsoft Win32 .exe or error in .exe image).
-         msginfo("El archivo seleccionado no es un ejecutable vßlido para Windows")
+         MsgInfo("El archivo seleccionado no es un ejecutable vßlido para Windows")
       case Reto = SE_ERR_ACCESSDENIED       && The operating system denied access to the specified file.
-         msginfo("El sistema operativo nego el acceso al archivo solicitado")
+         MsgInfo("El sistema operativo nego el acceso al archivo solicitado")
       case Reto = SE_ERR_ASSOCINCOMPLETE    && The file name association is incomplete or invalid.
-         msginfo("El archivo esta asociado a una aplicacion invßlida")
+         MsgInfo("El archivo esta asociado a una aplicacion inválida")
       case Reto = SE_ERR_DDEBUSY            && The Dynamic Data Exchange (DDE) transaction could not be completed because other DDE transactions were being processed.
-         msginfo("El Dynamic Data Exchange (DDE) no se puede completar porque otra transaccion esta siendo procesada")
+         MsgInfo("El Dynamic Data Exchange (DDE) no se puede completar porque otra transaccion esta siendo procesada")
       Case Reto = SE_ERR_DDEFAIL            && The DDE transaction failed.
-         msginfo("El Dynamic Data Exchange (DDE) fall¾")
+         MsgInfo("El Dynamic Data Exchange (DDE) falló.")
       Case Reto = SE_ERR_DDETIMEOUT         && The DDE transaction could not be completed because the request timed out.
-         msginfo("El Dynamic Data Exchange (DDE) cancelo por Time Out")
+         MsgInfo("El Dynamic Data Exchange (DDE) cancelo por Time Out")
       Case Reto = SE_ERR_DLLNOTFOUND        && The specified dynamic-link library (DLL) was not found.
-         msginfo("La libreria de llamada Dinamica no fue encontrada")
+         MsgInfo("La libreria de llamada Dinamica no fue encontrada")
       Case Reto = SE_ERR_FNF                && The specified file was not found.
-         msginfo("Windows no encuentra el archivo seleccionado")
+         MsgInfo("Windows no encuentra el archivo seleccionado")
       Case Reto = SE_ERR_NOASSOC            && There is no application associated with the given file name extension. This error will also be returned if you attempt to print a file that is not printable.
-         msginfo("Este tipo de archivo no tiene programa asociado")
+         MsgInfo("Este tipo de archivo no tiene programa asociado")
       Case Reto = SE_ERR_OOM                && There was not enough memory to complete the operation.
-         msginfo("Windows no tiene suficiente memoria para satisfascer el requerimiento")
+         MsgInfo("Windows no tiene suficiente memoria para satisfascer el requerimiento")
       Case Reto = SE_ERR_PNF                && The specified path was not found.
-         msginfo("Windows no encuentra el directorio de la aplicacion seleccionada")
+         MsgInfo("Windows no encuentra el directorio de la aplicacion seleccionada")
       Case Reto = SE_ERR_SHARE              && A sharing violation occurred.
-         msginfo("Error al interntar compartir el recurso o archivo")
+         MsgInfo("Error al interntar compartir el recurso o archivo")
       otherwise
          US_Log("Función "+Procname()+": Error desconocido al intentar ver el Reporte, RC="+us_todostr(Reto))
-         msginfo("Función "+Procname()+": Error desconocido al intentar ver el Reporte, RC="+us_todostr(Reto))
+         MsgInfo("Función "+Procname()+": Error desconocido al intentar ver el Reporte, RC="+us_todostr(Reto))
    endcase
 Return if( Reto > 32 , 0 , -1 )
 */
@@ -4140,95 +4109,7 @@ Function US_WinShowAll( Vector )
       endif
    next
 Return .T.
-
-/*
- * Función para maximizar o restaurar una ventana
- */
-Function US_Maximize( Vector , Ventana , nViejoWidth , nViejoHeight , bSystemMaximized , bModuleMaximized )
-   Local i:=0
-   if bSystemMaximized
-      if !bModuleMaximized
-         DoMethod( Ventana , "maximize" )
-         US_WinStackStatus( @Vector , Ventana , "MAXIMIZADA" )
-         US_Redraw( Ventana , @nViejoWidth , @nViejoHeight )
-      else
-         DoMethod( Ventana , "restore" )
-         US_WinStackStatus( @Vector , Ventana , "NORMAL" )
-         bSystemMaximized := .F.
-      endif
-      bModuleMaximized := !bModuleMaximized
-   else
-      if bModuleMaximized
-         DoMethod( Ventana , "restore" )
-         US_WinStackStatus( @Vector , Ventana , "NORMAL" )
-         bModuleMaximized := .F.
-      else
-         DoMethod( Ventana , "maximize" )
-         US_WinStackStatus( @Vector , Ventana , "MAXIMIZADA" )
-         US_Redraw( Ventana , @nViejoWidth , @nViejoHeight )
-         bSystemMaximized := .T.
-         bModuleMaximized := .T.
-      endif
-   endif
-Return .t.
-
-/*
- * Función para redibujar una ventana
- */
-Function US_Redraw      && para que funcione esta llamada mediante US_MGWait se agrego un if en el US_Redraw2 para ignorar su ventana "US_WAIT"
-   Parameters cFormName , nOldWidth , nOldHeight
-Return VP_MGWait( "US_Redraw2( cFormName , @nOldWidth , @nOldHeight )" )
-
-Function US_Redraw2( cFormName , nOldWidth , nOldHeight )
-   Local nFormName , inx:=0 , i:=0 , foco := GetProperty( cFormName , "focusedcontrol" )
-   for i=len(RN_WinStack) to 1 step -1
-      if RN_WinStack[i][1] != NIL
-         if RN_WinStack[i][1] = cFormName
-            Private nWidth :=GetProperty( cFormName , "width" )
-            Private nHeight:=GetProperty( cFormName , "height" )
-            // US_LOG("Redraw: "+cFormName)
-            // Ini exclusivo FGS
-            US_WWinPorciento:=( (nWidth * US_WWinPorciento ) / nOldWidth )
-            US_HWinPorciento:=( (nHeight * US_HWinPorciento ) / nOldHeight )
-            US_WLienzo:=nWidth
-            US_HLienzo:=nHeight
-            // Fin exclusivo FGS
-            nFormName := GetFormHandle( cFormName )
-            For inx=1 to len( _HMG_aControlParenthandles )
-               if nFormName == _HMG_aControlParenthandles[inx]
-                  if !empty( _HMG_aControlnames[inx] )
-                     if !empty( GetProperty( cFormName , _HMG_aControlnames[inx] , "fontsize" ) )
-                  ****  if nWidth != nOldWidth
-                           SetProperty( cFormName , _HMG_aControlnames[inx] , "fontsize" , ( GetProperty( cFormName , _HMG_aControlnames[inx] , "fontsize" )  * nWidth  ) / nOldWidth  )
-                  ****  else
-                  ****     if nHeight < nOldHeight
-                  ****        SetProperty( cFormName , _HMG_aControlnames[inx] , "fontsize" , ( GetProperty( cFormName , _HMG_aControlnames[inx] , "fontsize" )  * nHeight ) / nOldHeight )
-                  ****     endif
-                  ****  endif
-                        //US_LOG("SetFont for: "+US_TodoStr(_HMG_aControlnames[inx]))
-                     endif
-                     SetProperty( cFormName , _HMG_aControlnames[inx] , "row"      , ( GetProperty( cFormName , _HMG_aControlnames[inx] , "row"      )  * nHeight ) / nOldHeight )
-                     SetProperty( cFormName , _HMG_aControlnames[inx] , "col"      , ( GetProperty( cFormName , _HMG_aControlnames[inx] , "col"      )  * nWidth  ) / nOldWidth  )
-                     SetProperty( cFormName , _HMG_aControlnames[inx] , "width"    , ( GetProperty( cFormName , _HMG_aControlnames[inx] , "width"    )  * nWidth  ) / nOldWidth  )
-                     SetProperty( cFormName , _HMG_aControlnames[inx] , "height"   , ( GetProperty( cFormName , _HMG_aControlnames[inx] , "height"   )  * nHeight ) / nOldHeight )
-                     // US_LOG("Post SetSize for: "+US_TodoStr(_HMG_aControlnames[inx]) , .t. )
-                  endif
-               endif
-            next
-            nOldWidth :=nWidth
-            nOldHeight:=nHeight
-         else
-            if substr(RN_WinStack[i][1],1,7) != "US_WAIT"    && ignorar la ventana de US_Wait, si no se llama con US_MGWait este if deberia eliminarse y dejar el exit siempre
-               exit
-            endif
-         endif
-      endif
-   next
-   if !empty( foco )   && posiblemente este bloque siempre es .F.
-      us_log( "setfocus" , .F. )
-      DoMethod( cFormName , foco , "setfocus" )
-   endif
-return
+*/
 
 #pragma BEGINDUMP
 
@@ -4326,7 +4207,7 @@ FUNCTION US_MSGUP(MSG_PREFIX,MSG_VERSION,MSG_RELEASE,MSG_DISPLAY)
       IF MSG_DISPLAY="OFF"
          MSG_DISPLAY="NO"
       ELSE
-         msgStop("MUP999I: "+MSG_PREFIX+" VERSION "+MSG_VERSION+" RELEASE "+MSG_RELEASE+cCRLF+ ;
+         MsgStop("MUP999I: "+MSG_PREFIX+" VERSION "+MSG_VERSION+" RELEASE "+MSG_RELEASE+cCRLF+ ;
                  "MUP444E: PARAMETRO DISPLAY ERRONEO, VALORES ACEPTADOS: 'ON' U 'OFF'"+cCRLF+ ;
                  "         RECIBIDO:"+cCRLF+ ;
                  MSG_DISPLAY)
@@ -4337,7 +4218,7 @@ FUNCTION US_MSGUP(MSG_PREFIX,MSG_VERSION,MSG_RELEASE,MSG_DISPLAY)
    MSG_ARC=MSG_PREFIX+"_MSG??.HLP"
    MSG_DIR=DIRECTORY(MSG_ARC)
    IF LEN(MSG_DIR)=0
-      msgStop("MUP999I: "+MSG_PREFIX+" VERSION "+MSG_VERSION+" RELEASE "+MSG_RELEASE+cCRLF+ ;
+      MsgStop("MUP999I: "+MSG_PREFIX+" VERSION "+MSG_VERSION+" RELEASE "+MSG_RELEASE+cCRLF+ ;
             "MUP345E: NO SE ENCONTRARON ARCHIVOS '"+MSG_PREFIX+"_MSG??.HLP'")
       RETURN .F.
    ENDIF
@@ -4345,13 +4226,13 @@ FUNCTION US_MSGUP(MSG_PREFIX,MSG_VERSION,MSG_RELEASE,MSG_DISPLAY)
    MSG_BASE=MSG_PREFIX+"_MSG"
    MSG_IND=MSG_PREFIX+"_MSG01"
    IF !FILE(MSG_PREFIX+"_MSG.DBF")
-      msgStop("MUP999I: "+MSG_PREFIX+" VERSION "+MSG_VERSION+" RELEASE "+MSG_RELEASE+cCRLF+ ;
+      MsgStop("MUP999I: "+MSG_PREFIX+" VERSION "+MSG_VERSION+" RELEASE "+MSG_RELEASE+cCRLF+ ;
             "MUP998E: NO SE ENCUENTRA LA BASE DE MENSAJES '"+MSG_PREFIX+"_MSG.DBF'")
       RETURN .F.
    ENDIF
 
    IF MSG_DISPLAY="SI"
-      msgStop("MUP000I: "+US_LOWER("Presione OK para refrescar la base de mensajes '"+MSG_BASE+".DBF' DESDE '"+MSG_ARC+"'."))
+      MsgStop("MUP000I: "+US_LOWER("Presione OK para refrescar la base de mensajes '"+MSG_BASE+".DBF' DESDE '"+MSG_ARC+"'."))
    ENDIF
 
    CREATE ESTRTEMP
@@ -4536,15 +4417,15 @@ FUNCTION US_MSGUP(MSG_PREFIX,MSG_VERSION,MSG_RELEASE,MSG_DISPLAY)
          CASE SUBSTR(MSG_LINEA,1,1)="*"
          CASE SUBSTR(MSG_LINEA,1,2)="/*"
          OTHERWISE
-              msgStop("MUP002E: MSG_INI INVALIDO EN LINEA "+ALLTRIM(STR(RECNO()))+": "+MSG_INI)
+              MsgStop("MUP002E: MSG_INI INVALIDO EN LINEA "+ALLTRIM(STR(RECNO()))+": "+MSG_INI)
               ERROR = "SI"
       ENDCASE
       SKIP
    ENDDO
    IF ERROR = "SI"
-      msgStop("seccion de programa no desarrollada para MINIGUI, buscar 985678")
-      **? "MUP005I: PRESIONE ENTER PARA VER LOS ERRORES..."
-      **INKEY(0)
+      MsgStop("Sección de programa no desarrollada para MINIGUI, buscar 985678.")
+      **US_LOG( "MUP005I: PRESIONE ENTER PARA VER LOS ERRORES...", .T. )
+      **US_LOG("Inkey(0) , Presione Enter" , .T. )
       **SELE TEM
       **GO TOP
       **DBEDIT()
@@ -4552,7 +4433,7 @@ FUNCTION US_MSGUP(MSG_PREFIX,MSG_VERSION,MSG_RELEASE,MSG_DISPLAY)
       **SELE BAS
       **USE
       **CLEAR
-      msgStop("MUP006E: REFRESH DE BASE DE MENSAJES TERMINADO CON ERROR...")
+      MsgStop("MUP006E: REFRESH DE BASE DE MENSAJES TERMINADO CON ERROR...", NIL, NIL, .F.)    // this is not translated
       RETURN .F.
    ENDIF
    SELE BAS
@@ -4569,7 +4450,7 @@ FUNCTION US_MSGUP(MSG_PREFIX,MSG_VERSION,MSG_RELEASE,MSG_DISPLAY)
       DELETE FILE ("MSG_TEMP.DBT")
    ENDIF
    IF MSG_DISPLAY="SI"
-      msginfo("MUP007I: "+US_LOWER("REFRESH DE BASE DE MENSAJES TERMINADO OK."))
+      MsgInfo("MUP007I: "+US_LOWER("REFRESH DE BASE DE MENSAJES TERMINADO OK."))
    ENDIF
 RETURN .T.
 
@@ -4945,7 +4826,6 @@ Return
 
 /*
 Function US_MiniGuiType()
-   //msginfo( miniguiversion() )
    do case
       case at( "Extended" , MiniGuiVersion() ) > 0
          Return "E1"
@@ -4958,7 +4838,7 @@ Function US_MiniGuiType()
       case at( "Harbour MiniGUI 3" , MiniGuiVersion() ) == 1
          Return "M3"
       otherwise
-         msginfo( "Error detecting MiniGui type: " + MiniGuiVersion() )
+         MsgInfo( "Error detecting MiniGui type: " + MiniGuiVersion() )
    endcase
 Return "?"
 */

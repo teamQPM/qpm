@@ -28,6 +28,10 @@
 
 #include "US_ENV.H"
 #include "fileio.ch"
+#include "minigui.ch"
+
+#xcommand ? <texto> => US_LOG( <texto> , .T. )
+#translate inkey(0) => US_LOG("Inkey(0) , Presione Enter" , .T. )
 
 Function US_FirstChar( cLine )
 Return Len( cLine ) - Len( ltrim( cLine ) ) + 1
@@ -1065,11 +1069,6 @@ else
    longitud_last := longitud_de_salida
 endif
 
-//msginfo("Longitud de entrad: " + alltrim(str(longitud_de_entrada)))
-//msginfo("Longitud de salida: " + alltrim(str(longitud_de_salida)))
-//msginfo("cant arch         : " + alltrim(str(cant_arch_sal)))
-//msginfo("Longitud last     : " + alltrim(str(longitud_last)))
-
 if bHomogeneo
    nHomoAux:=(longitud_de_entrada / cant_arch_sal)
    if int(nHomoAux) < nHomoAux
@@ -1154,11 +1153,11 @@ do while loop
       bytes_evaluo_parcial:=bytes_evaluo_parcial + fwrite(salida, buffer, aux_bytes)
       fclose(salida)
       fseek(entrada,(-(bytes_leidos - aux_bytes)),1)
-      *?? alltrim(str( bytes_grabados + aux_bytes)) + " ok!"
+      *US_LOG( alltrim(str( bytes_grabados + aux_bytes)) + " ok!", .T. )
       total_grabados := total_grabados + aux_bytes
       bytes_grabados := 0
       crear := .t.
-      // ? " grabados en a2 " + alltrim(str(aux_bytes)) + " POS ? " + " TOT " + alltrim(str( total_grabados ))
+      // US_LOG( " grabados en a2 " + alltrim(str(aux_bytes)) + " POS ? " + " TOT " + alltrim(str( total_grabados )), .T. )
    endif
    bytes_evaluo_total:=total_grabados
 
@@ -2354,7 +2353,7 @@ Local Reto := "" , error := .F.
 //    at( ")" , Reto ) > 0 .or. ;
 //    at( "&" , Reto ) > 0 .or. ;
 //    at( "'" , Reto ) > 0
-//    msgStop( "This name: "+nombre+HB_OsNewLine()+"don't work correctly with make utility. Please, use a name without parenthesis characters" )
+//    MsgStop( "This name: "+nombre+HB_OsNewLine()+"don't work correctly with make utility. Please, use a name without parenthesis characters.", NIL, NIL, .F. )  // this is not translated
 //    Reto := ""
 // endif
    /* FIN parche para parentesis por make GCC */
@@ -2369,7 +2368,7 @@ Local Reto := "" , error := .F.
    endif
    if at( chr( 0 ) , Reto ) > 0
       if us_words( nombre ) > 1
-         msginfo( "This name: "+nombre+HB_OsNewLine()+"with spaces, don't work correctly with Novell. Please, use a name without spaces" )
+         MsgInfo( "Name: "+nombre+HB_OsNewLine()+"includes spaces, it won't work correctly with Novell. Please, use a name without spaces.", NIL, NIL, .F. )
          Reto := ""
       else
          Reto := nombre
@@ -2382,14 +2381,14 @@ Local Reto := "" , error := .F.
          error := .T.
       endif
       if error
-         msgStop( "This name: "+nombre+HB_OsNewLine()+"don't work correctly with Novell. Please, use a name without spaces and tokens with 8 characters or less" )
+         MsgStop( "This name: "+nombre+HB_OsNewLine()+"don't work correctly with Novell. Please, use a name without spaces and tokens with 8 characters or less.", NIL, NIL, .F. )  // this is not translated
          Reto := ""
       endif
    endif
    /* fin parche para Novell */
    /* INI parche para parentesis */
    if at( "(" , Reto ) > 0
-      msgStop( "This name: "+nombre+HB_OsNewLine()+"don't work correctly. Please, use a name without parenthesis characters" )
+      MsgStop( "This name: "+nombre+HB_OsNewLine()+"don't work correctly. Please, use a name without parenthesis characters.", NIL, NIL, .F. )  // this is not translated
       Reto := ""
    endif
    /* FIN parche para parentesis */

@@ -64,7 +64,7 @@ FUNCTION MAIN(cP1,cP2,cP3,cP4,cP5,cP6,cP7,cP8,cP9,cP10,cP11,cP12,cP13,cP14,cP15,
    endif
 
    if Upper( US_Word( cParam , 1 ) ) != "QPM"
-      MsgInfo( "US_Run 999E: Running out System" )
+      MsgInfo( "US_Run 999E: Running out System" )       // This is not translated
       ERRORLEVEL(1)
       bOk := .F.
       return bOk
@@ -73,14 +73,14 @@ FUNCTION MAIN(cP1,cP2,cP3,cP4,cP5,cP6,cP7,cP8,cP9,cP10,cP11,cP12,cP13,cP14,cP15,
    endif
 
    if empty( cParam )
-      msginfo( "US_Run 123: Missing Parameters" )
+      MsgInfo( "US_Run 123: Missing Parameters" )        // This is not translated
       ERRORLEVEL(1)
       bOk := .F.
       return bOk
    endif
 
    if !file( cParam )
-      msginfo( "US_Run 124: Paramters File not Found: " + cParam )
+      MsgInfo( "US_Run 124: Paramters File not Found: " + cParam )         // This is not translated
       ERRORLEVEL(1)
       bOk := .F.
       return bOk
@@ -115,8 +115,7 @@ FUNCTION MAIN(cP1,cP2,cP3,cP4,cP5,cP6,cP7,cP8,cP9,cP10,cP11,cP12,cP13,cP14,cP15,
       MAIN ;
       ICON "DOS" ;
       NOSHOW ;
-      ON INIT US_RunInit() ;
-      ON RELEASE US_RunRelease()
+      ON INIT US_RunInit()
    END WINDOW
 
    ACTIVATE WINDOW VentanaMain
@@ -150,10 +149,9 @@ Function US_RunInit()
       SetCurrentFolder( cCurrentPath )
    endif
    DO EVENTS
-// msginfo( str( reto ) )
    if Reto > 8
-      msginfo( "US_Run 333: Error Running: " + cCMD + HB_OsNewLine() + ;
-               "Code: "+US_TodoStr( Reto ) )
+      MsgInfo( "US_Run 333: Error Running: " + cCMD + HB_OsNewLine() + ;
+               "Code: "+US_TodoStr( Reto ) )                          // This is not translated
       // Code 0019798320 = File Not Found
       bOk := .F.
    endif
@@ -164,26 +162,25 @@ Function US_RunInit()
    VentanaMain.Release()
 Return
 
-Function US_RunRelease()
-Return
-
+/*
 Function STREAMOUT()
-   msginfo( "Function " + procname() + " suspend from US_Run" )
+   MsgInfo( "Function " + procname() + " suspend from US_Run" )           // This is not translated
 Return
 Function PASTERTF()
-   msginfo( "Function " + procname() + " suspend from US_Run" )
+   MsgInfo( "Function " + procname() + " suspend from US_Run" )           // This is not translated
 Return
 Function GETCONTROLINDEX()
-   msginfo( "Function " + procname() + " suspend from US_Run" )
+   MsgInfo( "Function " + procname() + " suspend from US_Run" )           // This is not translated
 Return
 Function VP_MGWAIT()
-   msginfo( "Function " + procname() + " suspend from US_Run" )
+   MsgInfo( "Function " + procname() + " suspend from US_Run" )           // This is not translated
 Return
 Function COPYTOCLIPBOARD()
-   msginfo( "Function " + procname() + " suspend from US_Run" )
+   MsgInfo( "Function " + procname() + " suspend from US_Run" )           // This is not translated
 Return
 Function COPYRTFTOCLIPBOARD()
-   msginfo( "Function " + procname() + " suspend from US_Run" )
+   MsgInfo( "Function " + procname() + " suspend from US_Run" )           // This is not translated
 Return
+*/
 
 /* eof */

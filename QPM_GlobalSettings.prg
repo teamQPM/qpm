@@ -1003,7 +1003,7 @@ Return Nil
 
 Function GlobalEscape()
    if GlobalChanged()
-      if MsgYesNo('Do you want cancel changes ?')
+      if MyMsgYesNo('Do you want cancel changes ?')
          WinGSettings.release()
       endif
    else
