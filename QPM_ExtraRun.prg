@@ -269,7 +269,7 @@ Function QPM_GetExtraRunInit()
       case Prj_ExtraRunType == "FREE"
          ExtraRun.ExtraRunSelectRadio.Value := 4
       otherwise
-         msginfo( "Invalid ExtraRun Type: "+us_todostr( Prj_ExtraRunType ) )
+         MsgInfo( "Invalid ExtraRun Type: "+us_todostr( Prj_ExtraRunType ) )
    endcase
    ExtraRun.ExtraRunQPMProjText.Value      := Prj_ExtraRunProjQPM
    ExtraRun.ExtraRunExeText.Value          := Prj_ExtraRunCmdEXE
@@ -332,15 +332,15 @@ Function QPM_GetExtraRunSave( bTest )
    endif
    /* */
    if ExtraRun.ExtraRunSelectRadio.Value = 2 .and. empty( ExtraRun.ExtraRunQPMProjText.Value )
-      msginfo( "Project name is empty!!!" )
+      MsgInfo( "Project name is empty !!!" )
       Return .F.
    endif
    if ExtraRun.ExtraRunSelectRadio.Value = 3 .and. empty( ExtraRun.ExtraRunExeText.Value )
-      msginfo( "Run Program o Process is empty!!!" )
+      MsgInfo( "Run Program o Process is empty !!!" )
       Return .F.
    endif
    if ExtraRun.ExtraRunSelectRadio.Value = 4 .and. empty( ExtraRun.ExtraRunFreeText.Value )
-      msginfo( "Free command is empty!!!" )
+      MsgInfo( "Free command is empty !!!" )
       Return .F.
    endif
    &( Prefix + "_ExtraRunProjQPM" ) := ExtraRun.ExtraRunQPMProjText.Value
@@ -356,7 +356,7 @@ Function QPM_GetExtraRunSave( bTest )
       case ExtraRun.ExtraRunQPMRadio.Value == 4
          &( Prefix + "_ExtraRunQPMRadio" ) := "CLEAR"
       otherwise
-         msginfo( "Invalid Radio Type: " + us_todostr( ExtraRun.ExtraRunQPMRadio.Value ) )
+         MsgInfo( "Invalid Radio Type: " + us_todostr( ExtraRun.ExtraRunQPMRadio.Value ) )
          &( Prefix + "_ExtraRunQPMRadio" ) := "OPEN"
    endcase
    &( Prefix + "_ExtraRunQPMForceFull" ) := ExtraRun.ExtraRunQPM2ForceFull.Value
@@ -423,7 +423,7 @@ Function QPM_GetExtraRunSave( bTest )
          &( Prefix + "_ExtraRunType" ) := "FREE"
          SetProperty( "WinPSettings" , "Text_ExtraRunCmd" , "Value" , &( Prefix + "_ExtraRunCmdFREE" ) )
       otherwise
-         msginfo( "Invalid ExtraRun Radio: " + us_todostr( ExtraRun.ExtraRunSelectRadio.Value ) )
+         MsgInfo( "Invalid ExtraRun Radio: " + us_todostr( ExtraRun.ExtraRunSelectRadio.Value ) )
    endcase
    if bTest
       QPM_ExecuteExtraRun( .T. )

@@ -257,11 +257,11 @@ Function QPM_HotRecoveryMenu()
    Local cOldRegPath := ""
    Local cOldRegPathDif := .F.
    If Empty( PUB_cProjectFile )
-      MsgStop( 'You must open project first' )
+      MsgStop( 'You must open project first.' )
       Return .F.
    EndIf
    if GetProperty( "VentanaMain" , "GPrgFiles" , "ItemCount" ) < 1
-      MsgStop( 'You PRG file list is empty' )
+      MsgStop( 'You PRG file list is empty.' )
       Return .F.
    EndIf
 
@@ -799,7 +799,7 @@ Function QPM_HotChangeFrom( bSysOut )
                if GetProperty( "WinHotRecovery" , "HR_GridVersionsFromPRG" , "itemcount" ) > 0
                   HR_cNameFrom := QPM_HotGetNameVersionsFrom( "WinHotRecovery" , "HR_GridVersionsFromPRG" , GetProperty( "WinHotRecovery" , "HR_GridVersionsFromPRG" , "value" ) )
                else
-                  HR_cNameFrom := "Version don't exist"
+                  HR_cNameFrom := "Version doesn't exists"
                endif
             case HR_cHotItemType == "HEA"
                SetProperty( "WinHotRecovery" , "HR_GridVersionsFromPRG" , "visible" , .F. )
@@ -809,7 +809,7 @@ Function QPM_HotChangeFrom( bSysOut )
                if GetProperty( "WinHotRecovery" , "HR_GridVersionsFromHEA" , "itemcount" ) > 0
                   HR_cNameFrom := QPM_HotGetNameVersionsFrom( "WinHotRecovery" , "HR_GridVersionsFromHEA" , GetProperty( "WinHotRecovery" , "HR_GridVersionsFromHEA" , "value" ) )
                else
-                  HR_cNameFrom := "Version don't exist"
+                  HR_cNameFrom := "Version doesn't exists"
                endif
             case HR_cHotItemType == "PAN"
                SetProperty( "WinHotRecovery" , "HR_GridVersionsFromPRG" , "visible" , .F. )
@@ -819,7 +819,7 @@ Function QPM_HotChangeFrom( bSysOut )
                if GetProperty( "WinHotRecovery" , "HR_GridVersionsFromPAN" , "itemcount" ) > 0
                   HR_cNameFrom := QPM_HotGetNameVersionsFrom( "WinHotRecovery" , "HR_GridVersionsFromPAN" , GetProperty( "WinHotRecovery" , "HR_GridVersionsFromPAN" , "value" ) )
                else
-                  HR_cNameFrom := "Version don't exist"
+                  HR_cNameFrom := "Version doesn't exists"
                endif
          endcase
       case GetProperty( "WinHotRecovery" , "HR_FileFrom" , "value" ) == 2
@@ -888,7 +888,7 @@ Function QPM_HotChangeTarget( bSysOut )
                if GetProperty( "WinHotRecovery" , "HR_GridVersionsTargetPRG" , "itemcount" ) > 0
                   HR_cNameTarget := QPM_HotGetNameVersionsTarget( "WinHotRecovery" , "HR_GridVersionsTargetPRG" , GetProperty( "WinHotRecovery" , "HR_GridVersionsTargetPRG" , "value" ) )
                else
-                  HR_cNameTarget := "Version don't exist"
+                  HR_cNameTarget := "Version doesn't exists"
                endif
             case HR_cHotItemType == "HEA"
                SetProperty( "WinHotRecovery" , "HR_GridVersionsTargetPRG" , "visible" , .F. )
@@ -898,7 +898,7 @@ Function QPM_HotChangeTarget( bSysOut )
                if GetProperty( "WinHotRecovery" , "HR_GridVersionsTargetHEA" , "itemcount" ) > 0
                   HR_cNameTarget := QPM_HotGetNameVersionsTarget( "WinHotRecovery" , "HR_GridVersionsTargetHEA" , GetProperty( "WinHotRecovery" , "HR_GridVersionsTargetHEA" , "value" ) )
                else
-                  HR_cNameTarget := "Version don't exist"
+                  HR_cNameTarget := "Version doesn't exists"
                endif
             case HR_cHotItemType == "PAN"
                SetProperty( "WinHotRecovery" , "HR_GridVersionsTargetPRG" , "visible" , .F. )
@@ -908,7 +908,7 @@ Function QPM_HotChangeTarget( bSysOut )
                if GetProperty( "WinHotRecovery" , "HR_GridVersionsTargetPAN" , "itemcount" ) > 0
                   HR_cNameTarget := QPM_HotGetNameVersionsTarget( "WinHotRecovery" , "HR_GridVersionsTargetPAN" , GetProperty( "WinHotRecovery" , "HR_GridVersionsTargetPAN" , "value" ) )
                else
-                  HR_cNameTarget := "Version don't exist"
+                  HR_cNameTarget := "Version doesn't exists"
                endif
          endcase
          SetProperty( "WinHotRecovery" , "FrameHotRecoveryFileFrom"   , "caption" , "Select File 'Base' for Compare Process" )
@@ -935,7 +935,7 @@ Function QPM_HotCargoMemo( cZona , cSubZona , cType )
          if GetProperty( "WinHotRecovery" , "HR_Grid" + cSubZona + cZona + cType , "itemcount" ) > 0
             &( "HR_cMemo" + cZona + cSubZona + cType ) := QPM_HotObtengo( GetProperty( "WinHotRecovery" , "HR_Grid" + cSubZona + cZona + cType , "cell" , GetProperty( "WinHotRecovery" , "HR_Grid" + cSubZona + cZona + cType , "value" ) , DEF_N_VER_COLCODE ) )
          else
-            &( "HR_cMemo" + cZona + cSubZona + cType ) := "This Hot Recovery Version Don't exist !!!" + HB_OsNewLine()
+            &( "HR_cMemo" + cZona + cSubZona + cType ) := "This Hot Recovery Version Doesn't Exists !!!" + HB_OsNewLine()
          endif
       else
          &( "HR_cMemo" + cZona + cSubZona + cType ) := memoread( ChgPathToReal( GetProperty( "WinHotRecovery" , "HR_Grid" + cSubZona + cZona + cType , "cell" , GetProperty( "WinHotRecovery" , "HR_Grid" + cSubZona + cZona + cType , "value" ) , DEF_N_ITEM_COLFULLNAME ) ) )
@@ -1118,7 +1118,7 @@ Function QPM_HotObtengo( cCode )
          bMemoZiped := if( HR_FILE_TY == "Z" , .T. , .F. )
          cMemoAux := HR_FILE
       else
-         cMemoAux := "This Hot Recovery Version Don't exist !!!" + HB_OsNewLine()
+         cMemoAux := "This Hot Recovery Version Doesn't Exists !!!" + HB_OsNewLine()
       endif
       DBCloseArea( "HOTREC" )
    endif
@@ -1129,7 +1129,7 @@ Function QPM_HotObtengo( cCode )
       QPM_MemoWrit( cHotRecoveryZipFile , US_UnMaskBinData( cMemoAux ) )
       aFilesInZip := HB_GETFILESINZIP( cHotRecoveryZipFile )
       if !HB_UNZIPFILE( cHotRecoveryZipFile , , .T. , , PUB_cProjectFolder , aFilesInZip[ 1 ] )
-         msginfo( "Error decompresing Hot Recovery Version" )
+         MsgInfo( "Error decompresing Hot Recovery Version." )
       else
          cMemoAux := memoread( PUB_cProjectFolder + DEF_SLASH + aFilesInZip[ 1 ] )
       endif
@@ -1247,15 +1247,15 @@ Function QPM_HotRecoveryProcess()
    Private PRI_cVersion := GetProperty( "WinHotRecovery" , "HR_GridVersionsFrom" + HR_cHotItemType , "cell" , GetProperty( "WinHotRecovery" , "HR_GridVersionsFrom" + HR_cHotItemType , "value" ) , DEF_N_VER_COLVERSION )
    $US_Log()
    if GridImage( "WinHotRecovery" , "HR_GridItemTarget" + HR_cHotItemType , GetProperty( "WinHotRecovery" , "HR_GridItemTarget" + HR_cHotItemType , "value" ) , DEF_N_ITEM_COLIMAGE , "?" , PUB_nGridImgEdited )
-      msgstop( "You can't recover into an edited file, finish edit and retry again" )
+      MsgStop( "You can't recover into an edited file, finish edit and retry again." )
       Return .F.
    endif
    if GridImage( "WinHotRecovery" , "HR_GridItemTarget" + HR_cHotItemType , GetProperty( "WinHotRecovery" , "HR_GridItemTarget" + HR_cHotItemType , "value" ) , DEF_N_ITEM_COLIMAGE , "?" , PUB_nGridImgEquis )
-      msgstop( "You can't recover into an missing file" )
+      MsgStop( "You can't recover into an missing file." )
       Return .F.
    endif
    if GetProperty( "WinHotRecovery" , "HR_GridVersionsFrom" + HR_cHotItemType , "itemcount" ) < 1
-      msgstop( "No versions found for this component" )
+      MsgStop( "No versions found for this component." )
       Return .F.
    endif
    cTargetDescri := GetProperty( "WinHotRecovery" , "HR_GridItemTarget" + HR_cHotItemType , "cell" , GetProperty( "WinHotRecovery" , "HR_GridItemTarget" + HR_cHotItemType , "value" ) , DEF_N_ITEM_COLFULLNAME )
@@ -1270,21 +1270,21 @@ Function QPM_HotRecoveryProcess()
       cFromFile   := GetProperty( "WinHotRecovery" , "THR_ExternalFileFrom" , "value" )
       if !file( cFromFile )
          if alltrim( cFromFile ) == ""
-            msginfo( "External file not completed" )
+            MsgInfo( "External file isn't complete." )
             return .F.
          else
-            msginfo( "External File not found: " + cFromFile )
+            MsgInfo( "External File not found: " + cFromFile )
             return .F.
          endif
       endif
    endif
-   if msgYesNo( "Recovery Process will be replace 'Target' File with 'From' File"                   + HB_OsNewLine() + ;
-                "and will generate a new version with 'Target' file content before the copy"        + HB_OsNewLine() + ;
-                                                                                                      HB_OsNewLine() + ;
-                "'From'   File: " + cFromDescri                                                     + HB_OsNewLine() + ;
-                "'Target' File: " + cTargetDescri                                                   + HB_OsNewLine() + ;
-                                                                                                      HB_OsNewLine() + ;
-                "Are you sure?" )
+   if MyMsgYesNo( "Recovery Process will be replace 'Target' File with 'From' File"                   + HB_OsNewLine() + ;
+                  "and will generate a new version with 'Target' file content before the copy"        + HB_OsNewLine() + ;
+                                                                                                        HB_OsNewLine() + ;
+                  "'From'   File: " + cFromDescri                                                     + HB_OsNewLine() + ;
+                  "'Target' File: " + cTargetDescri                                                   + HB_OsNewLine() + ;
+                                                                                                        HB_OsNewLine() + ;
+                  "Are you sure?" )
       if QPM_Wait( "QPM_HotRecoveryProcessYes()" , "Recovering..." )
          HotGridImage( "WinHotRecovery" , "HR_GridVersionsFrom" + HR_cHotItemType , 1 , DEF_N_VER_COLIMAGE , "+" , HotGridImgTarget )
          HotGridImage( "WinHotRecovery" , "HR_GridVersionsTarget" + HR_cHotItemType , 1 , DEF_N_VER_COLIMAGE , "+" , HotGridImgTarget )
@@ -1294,13 +1294,13 @@ Function QPM_HotRecoveryProcess()
                HotGridImage( "WinHotRecovery" , "HR_GridVersionsFrom" + HR_cHotItemType , ( val( PRI_cVersion ) - 1 ) * -1 , DEF_N_VER_COLIMAGE , "+" , HotGridImgFrom )
                HotGridImage( "WinHotRecovery" , "HR_GridVersionsTarget" + HR_cHotItemType , ( val( PRI_cVersion ) - 1 ) * -1 , DEF_N_VER_COLIMAGE , "+" , HotGridImgFrom )
             endif
-            msginfo( "Recovery Process Succesfull"                                                     + HB_OsNewLine() + ;
+            MsgInfo( "Recovery Process Succesfull."                                                     + HB_OsNewLine() + ;
                                                                                                          HB_OsNewLine() + ;
                      "Old Target file copied to version -1"                                            + HB_OsNewLine() + ;
                      "Old Version " + PRI_cVersion + " restored in Target File"                        + HB_OsNewLine() + ;
                      "Old Version -1 moved to version -2" )
          else
-            msginfo( "Recovery Process Succesfull"                                                     + HB_OsNewLine() + ;
+            MsgInfo( "Recovery Process Succesfull."                                                     + HB_OsNewLine() + ;
                                                                                                          HB_OsNewLine() + ;
                      "Old Target file copied to version -1"                                            + HB_OsNewLine() + ;
                      "Old Version -1 moved to version -2"                                             + HB_OsNewLine() + ;
@@ -1319,7 +1319,7 @@ Function QPM_HotRecoveryProcessYes()
    $US_Log()
    if GetProperty( "WinHotRecovery" , "HR_FileFrom" , "value" ) == 1
       if !QPM_Memowrit( cFileAux , QPM_HotObtengo( GetProperty( "WinHotRecovery" , "HR_GridVersionsFrom" + HR_cHotItemType , "cell" , GetProperty( "WinHotRecovery" , "HR_GridVersionsFrom" + HR_cHotItemType , "value" ) , DEF_N_VER_COLCODE ) ) , .T. )
-         msginfo( "Error while extract Hot Recovery Versions, process canceled" )
+         MsgInfo( "Error while extract Hot Recovery Versions, process canceled." )
          bError := .T.
       endif
    endif
@@ -1329,7 +1329,7 @@ Function QPM_HotRecoveryProcessYes()
       SetFDaTi( cHotRecoveryFile , US_FileDate( ChgPathToReal( cTargetFile ) ) , US_FileTime( ChgPathToReal( cTargetFile ) ) )
       nCode := QPM_HotRecovery( "ADD" , "RECOVERY" , HR_cHotItemType , cTargetFile , cHotRecoveryFile )
       if US_FileCopy( cFromFile , ChgPathToReal( cTargetFile ) ) != US_FileSize( cFromFile )
-         msginfo( "Error while copy Hot Recovery Versions to Item, process canceled" )
+         MsgInfo( "Error while copy Hot Recovery Versions to Item, process canceled." )
          US_Log( 'Funcion sin implementar: QPM_HotRecovery( "DELETE" , "RECOVERY" , HR_cHotItemType , nCode )' )
          bError := .T.
       endif
@@ -1427,12 +1427,12 @@ Return .T.
 Function HotRecoverySaveOptions()
    $US_Log()
    if GetProperty( "HR_WinOptions" , "T_Version_Limit" , "value" ) < HR_nVersionsMinimun
-      msgStop( "Value out range" )
+      MsgStop( "Value out range." )
       DoMethod( "HR_WinOptions" , "T_Version_Limit" , "SetFocus" )
       Return .F.
    endif
    if GetProperty( "HR_WinOptions" , "T_Version_Limit" , "value" ) < HR_nVersionsSet
-      if msgyesno( "If you set Versions value less to " + alltrim( str( HR_nVersionsSet ) ) + " (actual value), QPM will be delete old versions greater to " + alltrim( str( GetProperty( "HR_WinOptions" , "T_Version_Limit" , "value" ) ) ) + ;
+      if MyMsgYesNo( "If you set Versions value less to " + alltrim( str( HR_nVersionsSet ) ) + " (actual value), QPM will be delete old versions greater to " + alltrim( str( GetProperty( "HR_WinOptions" , "T_Version_Limit" , "value" ) ) ) + ;
                    HB_OsNewLine() + ;
                    HB_OsNewLine() + "Are you sure?" )
          QPM_Wait( 'HotRecoverySaveOptionsClear( "HR_SECU" , GetProperty( "HR_WinOptions" , "T_Version_Limit" , "value" ) ) ' , "Cleaning versions greater " + alltrim( str( HR_nVersionsSet ) ) + "..." )
@@ -1443,7 +1443,7 @@ Function HotRecoverySaveOptions()
       endif
    endif
    HR_nVersionsSet := GetProperty( "HR_WinOptions" , "T_Version_Limit" , "value" )
-   msginfo( "New Hot Recovery Version limit set to " + alltrim( str( HR_nVersionsSet ) ) )
+   MsgInfo( "New Hot Recovery Version limit set to " + alltrim( str( HR_nVersionsSet ) ) )
 Return .T.
 
 Function HotRecoverySaveOptionsClear( cCampo , nLimit )
@@ -1460,7 +1460,7 @@ Function HotRecoverySaveOptionsClear( cCampo , nLimit )
       QPM_HotRecoveryClear( cCampo , nLimit )
       DBCloseArea( "HOTREC" )
    else
-      msgStop( "Unable to open Hot Recovery Database in EXCLUSIVE mode" )
+      MsgStop( "Unable to open Hot Recovery Database in EXCLUSIVE mode." )
    endif
    if !empty( OPEN_cAreaOld )
       DBSelectArea( OPEN_cAreaOld )
@@ -1484,7 +1484,7 @@ Function HotRecoveryReindex()
       SetMGWaitShow()
       DBCloseArea( "HOTREC" )
    else
-      msgStop( "Unable to open Hot Recovery Database in EXCLUSIVE mode" )
+      MsgStop( "Unable to open Hot Recovery Database in EXCLUSIVE mode." )
    endif
    if !empty( OPEN_cAreaOld )
       DBSelectArea( OPEN_cAreaOld )
@@ -1663,11 +1663,11 @@ Function HotGetComment( cType , bOnlyDbf , nRecCode )
                endif
             endif
          else
-            msgStop( "This Hot Recovery Version Don't exist !!!" )
+            MsgStop( "This Hot Recovery Version Doesn't Exists !!!" )
          endif
          DBCloseArea( "HOTREC" )
       else
-         msgStop( "Unable to open Hot Recovery Database in EXCLUSIVE mode" )
+         MsgStop( "Unable to open Hot Recovery Database in EXCLUSIVE mode." )
       endif
       if !empty( OPEN_cAreaOld )
          DBSelectArea( OPEN_cAreaOld )
@@ -1700,7 +1700,7 @@ Function HotGridImage( cWin , cGrid , nRow , nCol , cOper , nBitImage )
       Return .F.
    endif
    if ( nAux := aScan( vHotImagesTranslateGrid , { |x| x[2] == GetProperty( cWin , cGrid , "Cell" , nRow , nCol ) } ) ) == 0
-      msginfo( "Error en posicionamiento en Funcion HotGridImage para el valor: " + us_todoStr( GetProperty( cWin , cGrid , "Cell" , nRow , nCol ) ) )
+      MsgInfo( "Error en posicionamiento en Funcion HotGridImage para el valor: " + us_todoStr( GetProperty( cWin , cGrid , "Cell" , nRow , nCol ) ) )
       Return .F.
    endif
    cString := NTOC( vHotImagesTranslateGrid[ nAux ][ 1 ] , 2 , nBits , "0" )
@@ -1722,11 +1722,11 @@ Function HotGridImage( cWin , cGrid , nRow , nCol , cOper , nBitImage )
  //         cString := strtran( cString , "1" , "0" )
  //         cString := substr( cString , 1 , nBits - nBitImage ) + "1" + substr( cString , nBits - nBitImage + 2 )
          otherwise
-            msginfo( "Error in operator from Function HotGridImage" )
+            MsgInfo( "Error in operator from Function HotGridImage." )
       endcase
    Next i
    if ( nAux := aScan( vHotImagesTranslateGrid , { |x| x[1] == CTON( cString , 2 ) } ) ) == 0
-      msginfo( "Error en posicionamiento (2) en Funcion HotGridImage para el valor: " + us_todoStr( CTON( cString , 2 ) ) )
+      MsgInfo( "Error en posicionamiento (2) en Funcion HotGridImage para el valor: " + us_todoStr( CTON( cString , 2 ) ) )
       Return .F.
    endif
    SetProperty( cWin , cGrid , "Cell" , nRow , nCol , vHotImagesTranslateGrid[ nAux ][ 2 ] )
@@ -1748,11 +1748,11 @@ Function HotPutCommentWithOutImage( cComment )
          SetProperty( "WinHotRecovery" , "HR_GridVersionsFrom" + HR_cHotItemType , "cell" , 1 , DEF_N_VER_COLCOMMENT , cComment )
          SetProperty( "WinHotRecovery" , "HR_GridVersionsTarget" + HR_cHotItemType , "cell" , 1 , DEF_N_VER_COLCOMMENT , cComment )
       else
-         msgStop( "This Hot Recovery Version Don't exist !!!" )
+         MsgStop( "This Hot Recovery Version Doesn't Exists !!!" )
       endif
       DBCloseArea( "HOTREC" )
    else
-      msgStop( "Unable to open Hot Recovery Database in EXCLUSIVE mode" )
+      MsgStop( "Unable to open Hot Recovery Database in EXCLUSIVE mode." )
    endif
    if !empty( OPEN_cAreaOld )
       DBSelectArea( OPEN_cAreaOld )
@@ -1766,29 +1766,29 @@ Function QPM_ForceHotRecovery( Par_cType )
    Private cType := Par_cType
    $US_Log()
    if Prj_Radio_OutputType == DEF_RG_IMPORT
-      msgStop( "Hot Recovery Version don't support DLL files" )
+      MsgStop( "Hot Recovery Version don't support DLL files." )
       Return .T.
    endif
    if !US_IsDirectory( PUB_cProjectFolder )
-      msgStop( "Project Folder not Found: " + PUB_cProjectFolder + '. Look at ' + PagePRG )
+      MsgStop( "Project Folder not Found: " + PUB_cProjectFolder + '. Look at ' + PagePRG )
       Return .T.
    endif
    If nValue == 0
-      msgStop( "File not selected !!!" )
+      MsgStop( "File not selected !!!" )
       Return .T.
    EndIf
    if !File( ChgPathToReal( GetProperty( "VentanaMain" , "G"+cType+"Files" , "Cell" , nValue , &( "nCol"+cType+"FullName" ) ) ) )
-      msgStop( "File not found !!!" )
+      MsgStop( "File not found !!!" )
       Return .F.
    endif
-   if msgYesNo( "Do you create new Hot Recovery Version for" + HB_OsNewLine() + HB_OsNewLine() + ;
+   if MyMsgYesNo( "Do you create new Hot Recovery Version for" + HB_OsNewLine() + HB_OsNewLine() + ;
                 ChgPathToReal( GetProperty( "VentanaMain" , "G"+cType+"Files" , "Cell" , nValue , &( "nCol"+cType+"FullName" ) ) ) )
       US_FileCopy( ChgPathToReal( GetProperty( "VentanaMain" , "G"+cType+"Files" , "Cell" , nValue , &( "nCol"+cType+"FullName" ) ) ) , HotRecoveryControlFile )
       SetFDaTi( HotRecoveryControlFile , US_FileDate( ChgPathToReal( GetProperty( "VentanaMain" , "G"+cType+"Files" , "Cell" , nValue , &( "nCol"+cType+"FullName" ) ) ) ) , US_FileTime( ChgPathToReal( GetProperty( "VentanaMain" , "G"+cType+"Files" , "Cell" , nValue , &( "nCol"+cType+"FullName" ) ) ) ) )
       //
       nRecCode := QPM_Wait( "QPM_HotRecovery( 'ADD' , 'FORCE' , cType , '" + GetProperty( "VentanaMain" , "G"+cType+"Files" , "Cell" , nValue , &( "nCol"+cType+"FullName" ) ) + "' , '" + HotRecoveryControlFile + "' )" , "Creating Version File for Hot Recovery..." )
       HotGetComment( cType , .T. , nRecCode )
-      msginfo( "Hot Recovery Version Succesfull Created !!!" )
+      MsgInfo( "Hot Recovery Version Succesfull Created !!!" )
    endif
 Return .T.
 
@@ -1815,10 +1815,10 @@ Function HotRecoveryImport2( cDatabase )
 us_log( cTemp_HR_Database, .F. )
 us_log( cTemp_Database,.F.)
    if upper( QPM_HR_Database ) == upper( cDatabase )
-      MsgStop( "Import Database is the same that Hot Recovery Version Database" )
+      MsgStop( "Import Database is the same that Hot Recovery Version Database." )
       Return .F.
    endif
-   if !MsgYesNo( "Import Hot Recovery Versions Records ?" + HB_OsNewLine() + HB_OsNewLine() + "from: " + cDatabase + HB_OsNewLine() + "  to: " + QPM_HR_Database )
+   if ! MyMsgYesNo( "Import Hot Recovery Versions Records ?" + HB_OsNewLine() + HB_OsNewLine() + "from: " + cDatabase + HB_OsNewLine() + "  to: " + QPM_HR_Database )
       Return .F.
    endif
    SetMGWaitTxt( "Importing Records (Fase 1 of 16)" )
@@ -1968,7 +1968,7 @@ us_log( "hay agregados" , .f. )
       ferase( US_FileNameOnlyPathAndName( cTemp_HR_Database ) + ".fpt" )
       ferase( US_FileNameOnlyPathAndName( cTemp_HR_Database ) + ".cdx" )
       us_log( HB_OsNewLine() + "Added: " + US_TodoStr( nCont_Added ) + HB_OsNewLine() + "Skipped: " + US_TodoStr( nCont_Skipped ) + HB_OsNewLine() + "Total Read: " + US_TodoStr( nCont_Total ),.f. )
-      MsgInfo( "Import finished OK." + HB_OsNewLine() + HB_OsNewLine() + "Added: " + US_TodoStr( nCont_Added ) + HB_OsNewLine() + "Skipped: " + US_TodoStr( nCont_Skipped ) + HB_OsNewLine() + "Total Read: " + US_TodoStr( nCont_Total ),.f. )
+      MsgInfo( "Import finished OK." + HB_OsNewLine() + HB_OsNewLine() + "Added: " + US_TodoStr( nCont_Added ) + HB_OsNewLine() + "Skipped: " + US_TodoStr( nCont_Skipped ) + HB_OsNewLine() + "Total Read: " + US_TodoStr( nCont_Total ) )
       if !empty( OPEN_cAreaOld )
          DBSelectArea( OPEN_cAreaOld )
       endif
@@ -2045,12 +2045,24 @@ Function QPM_HotRecovery_Migrate()
    endif
 Return .t.
 
-Function HotRecoveryDatabaseCompatibility( cDatabase )
+Function HotRecoveryDatabaseCompatibility( PRI_COMPATIBILITY_DATABASE )
    $US_Log()
-   PRIVATE PRI_COMPATIBILITY_DATABASE              := cDatabase
-#include "QPM_CompatibilityHotRecovery.ch"
-   cDatabase           := PRI_COMPATIBILITY_DATABASE
-   RELEASE PRI_COMPATIBILITY_DATABASE
+   
+//#include "QPM_CompatibilityHotRecovery.ch"
+// if US_DbUseArea( .T. , "DBFCDX" , PRI_COMPATIBILITY_DATABASE , "__HOTCOMPAT" )
+//    if AScan( DbStruct() , { |x| x[1] == "HR_UNIQUE" } ) == 0
+//       DbClosearea( "__HOTCOMPAT" )
+//       US_DB_CMP( US_FileNameOnlyPathAndName( PRI_COMPATIBILITY_DATABASE ) , "ADD" , "HR_UNIQUE" , "C" , 32 , 0 )
+//       US_DbUseArea( .T. , "DBFCDX" , PRI_COMPATIBILITY_DATABASE , "__HOTCOMPAT" )
+//       REPLACE HR_UNIQUE with HB_MD5( HR_HASH + HB_MD5( US_ExtractMemoKey( HR_DATA , "VERSION_COMPUTER" ) ) + HB_MD5( US_ExtractMemoKey( HR_DATA , "VERSION_USER" ) ) + HB_MD5( US_ExtractMemoKey( HR_DATA , "VERSION_DATETIME" ) ) ) ALL
+//    else
+//    endif
+//    DbCloseArea( "__HOTCOMPAT" )
+// else
+//    US_Log( "Unable to open Hot Recovery Database for Checking Compatibility: " + PRI_COMPATIBILITY_DATABASE )
+//    return .F.
+// endif
+
 Return .T.
 
 #endif

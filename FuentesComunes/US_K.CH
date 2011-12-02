@@ -27,7 +27,7 @@
 */
 
 // Estas son definiciones temporales hasta que se implementen definitivamente
-
+/*
 #xcommand ON KEY SPACE [ OF <parent> ] ACTION <action> ;
 => ;
 _DefineHotKey ( <"parent"> , 0 , VK_SPACE , <{action}> )
@@ -368,5 +368,5 @@ _ReleaseHotKey ( <"parent"> , 0 , VK_8   )
 #xcommand RELEASE KEY 9 OF <parent> ;
 => ;
 _ReleaseHotKey ( <"parent"> , 0 , VK_9   )
-
+*/
 /* eof */

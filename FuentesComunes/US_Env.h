@@ -54,9 +54,6 @@
 #ifndef __US_ENV
    #define __US_ENV
 
-   #include "hbclass.ch"
-   #include "minigui.ch"
-
    #ifdef PRINTER_COLLATE_TRUE
       #define __US_MULTIPLE__
       #define __M3__
@@ -105,11 +102,8 @@
    #endif
 
    #ifdef __US_ERROR_MULTIPLE__
-   ERROR EN DETECCION DE MINIGUI, SE DETECTARON MAS DE UNA MINIGUI !!!!
+   ERROR EN DETECCION DE MINIGUI, SE DETECTÓ MÁS DE UNA MINIGUI !!!!
    #endif
-
-   #include "US_K.ch"
-   #include "US.ch"
 
    #ifdef __OOHG__
    #translate USMODAL => MODALSIZE

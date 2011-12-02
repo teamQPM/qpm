@@ -29,36 +29,32 @@
 #include <US_Env.h>
 
 #DEFINE QPM_SHG
-
 #DEFINE QPM_KILLER
-
 #DEFINE QPM_HOTRECOVERY
 #DEFINE QPM_HOTRECOVERYWINDOW
 
 //#DEFINE QPM_SYNCRECOVERY
 
-// la siguiente línea hace fallar el mensaje de database SHG not found cuando se abre un proyecto
-//#translate MsgInfo( <txt> )          => SetMGWaitHide() ; MyMsg( "QPM - Notify"    , <txt> , "N" , bAutoExit ) ; SetMGWaitShow()
-#translate MsgInfo( <txt> )          => MyMsg( "QPM - Notify"    , US_TodoStr( <txt> ) , "N" , bAutoExit )
-#translate ? <txt>                   => MyMsg( "QPM - Notify"    , US_TodoStr( <txt> ) , "N" , bAutoExit )
-#translate ?? <txt>                  => MyMsg( "QPM - Notify"    , US_TodoStr( <txt> ) , "N" , bAutoExit )
-#translate MsgWarning( <txt> )       => MyMsg( "QPM - Warning"   , US_TodoStr( <txt> ) , "W" , bAutoExit )
-#translate MsgStop( <txt> )          => MyMsg( "QPM - Error"     , US_TodoStr( <txt> ) , "E" , bAutoExit )
-// MsgYesNocancel( <txt> ) retorna 1 for yes, 0 for no y -1 for cancel
-#translate MsgYesNoCancel( <txt> )   => MyMsgYesNoCancel( <txt> , "QPM - Confirm" )
-#translate MsgYesNo( <txt> )         => MyMsgYesNo( <txt> , "QPM - Confirm" )
-#translate MsgOkCancel( <txt> )      => MyMsgOkCancel( <txt> , "QPM - Confirm" )
-#translate MsgRetryCancel( <txt> )   => MyMsgRetryCancel( <txt> , "QPM - Confirm" )
+#translate MyMsgWarning( <txt> )       => MyMsg( "QPM - Warning"   , US_TodoStr( <txt> ) , "W" , bAutoExit )
+#translate MsgInfo( <txt> )            => MyMsg( "QPM - Notify"    , US_TodoStr( <txt> ) , "N" , bAutoExit )
+#translate MsgStop( <txt> )            => MyMsg( "QPM - Error"     , US_TodoStr( <txt> ) , "E" , bAutoExit )
+
+//#translate ? <txt>                   => MyMsg( "QPM - Notify"    , US_TodoStr( <txt> ) , "N" , bAutoExit )
+//#translate ?? <txt>                  => MyMsg( "QPM - Notify"    , US_TodoStr( <txt> ) , "N" , bAutoExit )
+//#translate MsgYesNoCancel( <txt> )   => MyMsgYesNoCancel( <txt> , "QPM - Confirm" )
+//#translate MsgYesNo( <txt> )         => MyMsgYesNo( <txt> , "QPM - Confirm" )
+//#translate MsgOkCancel( <txt> )      => MyMsgOkCancel( <txt> , "QPM - Confirm" )
+//#translate MsgRetryCancel( <txt> )   => MyMsgRetryCancel( <txt> , "QPM - Confirm" )
 
 #translate DEFAULT <var> TO <val>    =>  if( <var> == NIL , <var> := <val> , )
-//#translate DEFAULT <var> TO <val>    =>  if( <var> == NIL .or. empty( <var> ) , <var> := <val> , )
 
+/*
 #command MOVE RADIOGROUP FROM <Control> OF <w> ITEM <item> TO <y>,<x> ;
                                      => ;
                                         MoveWindow ( _HMG_aControlHandles \[ GetControlIndex ( ;
                                         <"Control">, <"w"> ) \] \[ <item> \] , <x> , <y> , _GetControlWidth ( ;
                                         <"Control">, <"w"> ) , 28 , .t. )
-
+*/
 #define DEF_COLORWHITE          {255,255,255}
 #define DEF_COLORYELLOW         {242,242,000}
 #define DEF_COLORRED            {228,022,058}

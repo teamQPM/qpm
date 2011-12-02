@@ -90,7 +90,7 @@ METHOD Load() CLASS US_ActiveX
    TRY
       ::oOle := ToleAuto():New( hAtl )
    CATCH OCX_oError
-      msginfo( OCX_oError:description )
+      MsgInfo( OCX_oError:description, NIL, NIL, .F. )
    END
 #else
    OCX_bSaveHandler := errorblock( { |x| break(x) } )
@@ -101,7 +101,7 @@ METHOD Load() CLASS US_ActiveX
    END
    errorblock( OCX_bSaveHandler )
    if OCX_nError != 0
-      msginfo( OCX_oError:description )
+      MsgInfo( OCX_oError:description, NIL, NIL, .F. )
    endif
 #endif
 RETURN ::oOle

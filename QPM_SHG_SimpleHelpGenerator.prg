@@ -140,7 +140,7 @@ Function SHG_Close()
       Return .F.
    endif
    if SHG_BaseOk
-      if MsgYesNo( "Confirm Close Help Database ?" )
+      if MyMsgYesNo( "Confirm Close Help Database ?" )
          QPM_Wait( 'DoMethod( "VentanaMain" , "GHlpFiles" , "DeleteAllItems" )' )
          if US_FileSize( US_FileNameOnlyPathAndName( SHG_Database ) + ".dbt" ) > SHG_DbSize
             QPM_Wait( 'SHG_PackDatabase()' )
@@ -158,9 +158,6 @@ Return .T.
 
 Function SHG_PackDatabase()
    Local cTmpDb := US_FileNameOnlyPathAndName( SHG_Database ) + "_" + PUB_cSecu + ".dbf"
-// msginfo( shg_dbsize )
-// msginfo( US_FileSize( US_FileNameOnlyPathAndName( SHG_Database ) + ".dbt" ) )
-//msginfo( "pack" )
    if !file( cTmpDb )
       DBUseArea( .T. , , SHG_Database , "SHG" , DEF_DBF_EXCLUSIVE , DEF_DBF_WRITE )
       COPY TO ( cTmpDb )
@@ -198,7 +195,7 @@ Function SHG_GetDatabase()
          cFile := US_FileNameOnlyPathAndName( cFile ) + ".dbf"
       endif
       if !file( cFile )
-         if MsgYesNo( "Help Database '"+cFile+"' not found.  Do you want create an empty database ?" )
+         if MyMsgYesNo( "Help Database '"+cFile+"' not found.  Do you want to create an empty database ?" )
             SHG_CreateDatabase( cFile )
             SetProperty( "VentanaMain" , "THlpDataBase" , "Value" , cFile )
          else
@@ -258,7 +255,7 @@ Function SHG_DeleteRecord( nRec )
    DBSetIndex( US_FileNameOnlyPathAndName( SHG_Database ) )
    DBGoTop()
    if !DbSeek( nRec )
-      msginfo( "Error locating record number " + US_TodoStr( nRec ) + " in function SHG_DeleteRecord. Please, contact support" )
+      MsgInfo( "Error locating record number " + US_TodoStr( nRec ) + " in function SHG_DeleteRecord. Please, contact support." )
    else
       DELETE
    endif
@@ -272,7 +269,7 @@ Function SHG_GetField( cField , nRow )
    DBSetIndex( US_FileNameOnlyPathAndName( SHG_Database ) )
    DBGoTop()
    if !DbSeek( nRow )
-      msginfo( "Error locating record number " + US_TodoStr( nRow ) + " in function SHG_GetField. Please, contact support" )
+      MsgInfo( "Error locating record number " + US_TodoStr( nRow ) + " in function SHG_GetField. Please, contact support." )
    else
       cAux := &( cField )
    endif
@@ -281,13 +278,11 @@ Return cAux
 
 Function SHG_SetField( cField , nRow , xValue )
    Local bReto := .F.
-// msginfo( us_todostr( nRow ) )
-// msginfo( us_todostr( xValue ) )
    DBUseArea( .T. , , SHG_Database , "SHG" , DEF_DBF_EXCLUSIVE , DEF_DBF_WRITE )
    DBSetIndex( US_FileNameOnlyPathAndName( SHG_Database ) )
    DBGoTop()
    if !DbSeek( nRow )
-      msginfo( "Error locating record number " + US_TodoStr( nRow ) + " in function SHG_SetField. Please, contact support" )
+      MsgInfo( "Error locating record number " + US_TodoStr( nRow ) + " in function SHG_SetField. Please, contact support." )
    else
       if &cField == xValue
       else
@@ -313,7 +308,7 @@ Function SHG_CheckSave()
       Return .T.
    endif
    if len( vDiff ) == 1
-      if ( rpt := MsgYesNoCancel( "Help Topic '" + alltrim( GetProperty( "VentanaMain" , "GHlpFiles" , "Cell" , vDiff[1] , NCOLHLPTOPIC ) ) + "' not saved !!!" + HB_OsNewLine() + "Save it ???" ) ) == 1
+      if ( rpt := MyMsgYesNoCancel( "Help Topic '" + alltrim( GetProperty( "VentanaMain" , "GHlpFiles" , "Cell" , vDiff[1] , NCOLHLPTOPIC ) ) + "' not saved !!!" + HB_OsNewLine() + "Save it ???" ) ) == 1
          SHG_SetField( "SHG_TYPE"  , vDiff[1] , SHG_GetField( "SHG_TYPET"  , vDiff[1] ) )
     //   SHG_SetField( "SHG_ORDER" , vDiff[1] , SHG_GetField( "SHG_ORDERT" , vDiff[1] ) )
          SHG_SetField( "SHG_TOPIC" , vDiff[1] , SHG_GetField( "SHG_TOPICT" , vDiff[1] ) )
@@ -332,7 +327,7 @@ Function SHG_CheckSave()
       endif
       Return .T.
    endif
-   if ( rpt := MsgYesNoCancel( alltrim( str( len( vDiff ) ) ) + " Help's Topic's not saved !!!" + HB_OsNewLine() + HB_OsNewLine() + "Reply YES for save ALL Topic" + HB_OsNewLine() + "Reply NO for discard ALL changes of Topics" + HB_OsNewLine() + "Reply CANCEL for return to edit HLP Topics" ) ) == 1
+   if ( rpt := MyMsgYesNoCancel( alltrim( str( len( vDiff ) ) ) + " Help's Topic's not saved !!!" + HB_OsNewLine() + HB_OsNewLine() + "Reply YES for save ALL Topic" + HB_OsNewLine() + "Reply NO for discard ALL changes of Topics" + HB_OsNewLine() + "Reply CANCEL for return to edit HLP Topics" ) ) == 1
       SetMGWaitTxt( "Saving Hlp Topics..." )
       SHG_SaveAll()
    else
@@ -402,12 +397,12 @@ Function SHG_Generate( cBase , bGenHtml , PUB_cSecu , cWWW )
       Return .F.
    endif
    if US_FileInUse( SHG_GetOutputName() )
-      msginfo( "Output name '" + SHG_GetOutputName() + "' is in use." + HB_OsNewLine() + "Close the help process an retry" )
+      MsgInfo( "Output name '" + SHG_GetOutputName() + "' is in use." + HB_OsNewLine() + "Close the help process an retry." )
       Return .F.
    endif
    // check
    if !file( cBase )
-      msgStop( "Help database not found: " + cBase + HB_OsNewLine() + "Use open button for open or create help database" )
+      msgStop( "Help database not found: " + cBase + HB_OsNewLine() + "Use open button for open or create help database." )
       return .F.
    endif
    Prefijo     := US_FileNameOnlyName( SHG_GetOutputName() )
@@ -444,9 +439,9 @@ Function SHG_Generate( cBase , bGenHtml , PUB_cSecu , cWWW )
    endif
    if !SHG_BaseOK
       if empty( SHG_Database )
-         msginfo( "QPM Help Generator Database not selected. Use open button for open or create help database" )
+         MsgInfo( "QPM Help Generator Database not selected. Use open button for open or create help database" )
       else
-         msginfo( "Error open QPM Help Generator Database: " + SHG_Database + HB_OsNewLine() + "Look at " + PageHlp )
+         MsgInfo( "Error open QPM Help Generator Database: " + SHG_Database + HB_OsNewLine() + "Look at " + PageHlp )
       endif
       Return .F.
    endif
@@ -474,7 +469,7 @@ Function SHG_Generate( cBase , bGenHtml , PUB_cSecu , cWWW )
          if bCreateDir
             US_DirRemoveLoop( cCreateDir , 2 )
          endif
-         msginfo( "Folder requered for output type CHM and HTML" )
+         MsgInfo( "Folder requered for output type CHM and HTML." )
          Return .F.
       endif
    endif
@@ -497,7 +492,7 @@ Function SHG_Generate( cBase , bGenHtml , PUB_cSecu , cWWW )
       US_FileCopy( PUB_cQPM_Folder + DEF_SLASH + "US_A2.exe" , cDirOutCHM + DEF_SLASH + "SHG_ArrowNext.bmp" ) != US_FileSize( PUB_cQPM_Folder + DEF_SLASH + "US_A2.exe" ) .or. ;
       US_FileCopy( PUB_cQPM_Folder + DEF_SLASH + "US_A3.exe" , cDirOutCHM + DEF_SLASH + "SHG_ArrowTop.bmp" ) != US_FileSize( PUB_cQPM_Folder + DEF_SLASH + "US_A3.exe" ) .or. ;
       US_FileCopy( PUB_cQPM_Folder + DEF_SLASH + "US_A4.exe" , cDirOutCHM + DEF_SLASH + "SHG_ArrowBottom.bmp" ) != US_FileSize( PUB_cQPM_Folder + DEF_SLASH + "US_A4.exe" )
-      msginfo( "Error copying navigation images" )
+      MsgInfo( "Error copying navigation images." )
    else
       QPM_MemoWrit( cDirOutCHM + DEF_SLASH + "SHG_ArrowPrev.bmp" , "BM6" + substr( memoread( cDirOutCHM + DEF_SLASH + "SHG_ArrowPrev.bmp" ) , 4 ) )
       QPM_MemoWrit( cDirOutCHM + DEF_SLASH + "SHG_ArrowNext.bmp" , "BM6" + substr( memoread( cDirOutCHM + DEF_SLASH + "SHG_ArrowNext.bmp" ) , 4 ) )
@@ -520,7 +515,7 @@ Function SHG_Generate( cBase , bGenHtml , PUB_cSecu , cWWW )
          US_FileCopy( PUB_cQPM_Folder + DEF_SLASH + "US_dtree.js" , cDirOutHTML + DEF_SLASH + "SHG_dtree.js" )
          US_FileCopy( PUB_cQPM_Folder + DEF_SLASH + "US_dtree.im" , cDirOutHTML + DEF_SLASH + "SHG_dtree.zip" )
          if !HB_UNZIPFILE(cDirOutHTML + DEF_SLASH + "SHG_dtree.zip",,.T.,,cDirOutHTML + DEF_SLASH + "SHG_IMG" , "*.*" )
-            msginfo( "Error decompresing images for index tree of HTML Help (Java Mode)" )
+            MsgInfo( "Error decompresing images for index tree of HTML Help (Java Mode)." )
          else
             ferase( cDirOutHTML + DEF_SLASH + "SHG_dtree.zip" )
          endif
@@ -591,7 +586,6 @@ Function SHG_Generate( cBase , bGenHtml , PUB_cSecu , cWWW )
             next
          endif
       endif
-   // msginfo( alltrim( SHG_TOPIC ) + hb_osNewLine() + SHG_TYPE )
       aadd( vFiles , { alltrim( SHG_TYPE ) , strtran( strtran( alltrim( SHG_TOPIC ) , "<" , "&lt;" ) , ">" , "&gt;" ) , cName + ".htm" , cDirOutCHM + DEF_SLASH + cName + ".Inx" , cPrev , cTop , cNext } )
       QPM_MemoWrit( cDirOutCHM + DEF_SLASH + cName + ".rtf" , SHG_Memo )
       US_FileChar26Zap( cDirOutCHM + DEF_SLASH + cName + ".rtf" )
@@ -646,10 +640,9 @@ Function SHG_CopyImageToHtmlFolder( vImage , cDirOut )
       DO EVENTS
       if file( vImage[i] )
          if US_FileCopy( vImage[i] , cDirOut + DEF_SLASH + US_FileNameOnlyNameAndExt( vImage[i] ) ) != US_FileSize( vImage[i] )
-            msginfo( "Error copying file '" + vImage[i] + "' to folder: " + cDirOut )
+            MsgInfo( "Error copying file '" + vImage[i] + "' to folder: " + cDirOut )
          else
             if US_FileNameOnlyNameAndExt( US_FileNameCase( vImage[i] ) ) !=  US_FileNameOnlyNameAndExt( US_FileNameCase( cDirOut + DEF_SLASH + US_FileNameOnlyNameAndExt( vImage[i] ) ) )
-  //     msginfo(US_FileNameOnlyNameAndExt( US_FileNameCase( vImage[i] ) ) + hb_osNewLine() + US_FileNameOnlyNameAndExt( US_FileNameCase( cDirOut + DEF_SLASH + US_FileNameOnlyNameAndExt( vImage[i] ) ) ) )
                frename( cDirOut + DEF_SLASH + US_FileNameOnlyNameAndExt( vImage[i] ) , cDirOut + DEF_SLASH + US_FileNameOnlyNameAndExt( vImage[i] ) + "." + PUB_cSecu )
                frename( cDirOut + DEF_SLASH + US_FileNameOnlyNameAndExt( vImage[i] ) + "." + PUB_cSecu , cDirOut + DEF_SLASH + US_FileNameOnlyNameAndExt( US_FileNameCase( vImage[i] ) ) )
             endif
@@ -872,11 +865,11 @@ Return .T.
 Function SHG_DisplayHelp( cName )
    Local cOldHelp := GetActiveHelpFile()
    if !file( cName )
-      MsgInfo( "Help file '" + cName + "' not found !!!" + HB_OsNewLine() + "Run 'Generate Help' process and try again" )
+      MsgInfo( "Help file '" + cName + "' not found !!!" + HB_OsNewLine() + "Run 'Generate Help' process and try again." )
       Return .F.
    endif
    if US_FileInUse( cName )
-      msginfo( "Help file '" + cName + "' is in use." + HB_OsNewLine() + "Close the help process an re-open with TEST button" )
+      MsgInfo( "Help file '" + cName + "' is in use." + HB_OsNewLine() + "Close the help process an re-open with TEST button." )
       Return .F.
    endif
    SET HELPFILE TO cName
@@ -929,30 +922,26 @@ Function SHG_Togle()
       Return .F.
    endif
    if GetProperty( "VentanaMain" , "GHlpFiles" , "Value" ) < 1
-      msginfo( "Topic not selected" )
+      MsgInfo( "Topic not selected." )
       Return .F.
    endif
    if GetProperty( "VentanaMain" , "GHlpFiles" , "Value" ) == 1
-      msginfo( "Global foot not togle !!!, this is a system Topic" )
+      MsgInfo( "Global foot not toggled !!!, this is a system Topic." )
       Return .F.
    endif
    if GetProperty( "VentanaMain" , "GHlpFiles" , "Value" ) == 2
-      msginfo( "Welcome page not togle !!!, this is a system Topic" )
+      MsgInfo( "Welcome page not toggled !!!, this is a system Topic." )
       Return .F.
    endif
-// msginfo( us_todoStr( GetProperty( "VentanaMain" , "GHlpFiles" , "Cell" , GetProperty( "VentanaMain" , "GHlpFiles" , "Value" ) , NCOLHLPSTATUS ) ) )
    if GridImage( "VentanaMain" , "GHlpFiles" , GetProperty( "VentanaMain" , "GHlpFiles" , "Value" ) , NCOLHLPSTATUS , "?" , PUB_nGridImgHlpBook )
-// msginfo( "entro book" )
       GridImage( "VentanaMain" , "GHlpFiles" , GetProperty( "VentanaMain" , "GHlpFiles" , "Value" ) , NCOLHLPSTATUS , "-" , PUB_nGridImgHlpBook )
       GridImage( "VentanaMain" , "GHlpFiles" , GetProperty( "VentanaMain" , "GHlpFiles" , "Value" ) , NCOLHLPSTATUS , "+" , PUB_nGridImgHlpPage )
       SHG_SetField( "SHG_TYPET" , GetProperty( "VentanaMain" , "GHlpFiles" , "Value" ) , "P" )
    else
-// msginfo( "entro page" )
       GridImage( "VentanaMain" , "GHlpFiles" , GetProperty( "VentanaMain" , "GHlpFiles" , "Value" ) , NCOLHLPSTATUS , "-" , PUB_nGridImgHlpPage )
       GridImage( "VentanaMain" , "GHlpFiles" , GetProperty( "VentanaMain" , "GHlpFiles" , "Value" ) , NCOLHLPSTATUS , "+" , PUB_nGridImgHlpBook )
       SHG_SetField( "SHG_TYPET" , GetProperty( "VentanaMain" , "GHlpFiles" , "Value" ) , "B" )
    endif
-// msginfo( us_todoStr( GetProperty( "VentanaMain" , "GHlpFiles" , "Cell" , GetProperty( "VentanaMain" , "GHlpFiles" , "Value" ) , NCOLHLPSTATUS ) ) )
 // if GetProperty( "VentanaMain" , "GHlpFiles" , "Cell" , GetProperty( "VentanaMain" , "GHlpFiles" , "Value" ) , NCOLHLPSTATUS ) == 1
 //    SetProperty( "VentanaMain" , "GHlpFiles" , "Cell" , GetProperty( "VentanaMain" , "GHlpFiles" , "Value" ) , NCOLHLPSTATUS , 2 )
 //    SHG_SetField( "SHG_TYPET" , GetProperty( "VentanaMain" , "GHlpFiles" , "Value" ) , "P" )
@@ -990,18 +979,17 @@ Function SHG_LoadDatabase( cDataBase )
    Local cAux := "" , vStructure
    SetMGWaitTxt( "Loading Help Database ..." )
    if US_IsDBF( cDataBase ) != 0
-      msginfo( "Error open QPM Help Generator Database: " + cDataBase + HB_OsNewLine() + "Look at " + PageHlp )
+      MsgInfo( "Error open QPM Help Generator Database: " + cDataBase + HB_OsNewLine() + "Look at " + PageHlp )
       SHG_BaseOK := .F.
    else
       if upper( US_FileNameOnlyExt( cDatabase ) ) != "DBF"
-         msginfo( "Error open QPM Help Generator Database: " + cDataBase + HB_OsNewLine() + "Bad extension" )
+         MsgInfo( "Error open QPM Help Generator Database: " + cDataBase + HB_OsNewLine() + "Bad extension." )
          SHG_BaseOK := .F.
       endif
       if upper( right( US_FileNameOnlyName( cDatabase ) , 4 ) ) != "_SHG"
-         msginfo( "Error open QPM Help Generator Database: " + cDataBase + HB_OsNewLine() + "Bad Name, not _SHG suffix into database name" )
+         MsgInfo( "Error open QPM Help Generator Database: " + cDataBase + HB_OsNewLine() + "Bad Name, not _SHG suffix into database name." )
          SHG_BaseOK := .F.
       endif
- us_log( "chequeo: " + US_FileNameOnlyPathAndName( cDatabase ) + ".dbt" , .F. )
       if file( US_FileNameOnlyPathAndName( cDatabase ) + ".dbt" )
          SetMGWaitTxt( "Converting SHG Database to DBFCDX Driver..." )
  us_log( "convert " + cDatabase, .F. )
@@ -1026,6 +1014,8 @@ Function SHG_LoadDatabase( cDataBase )
                endif
             endif
          endif
+      else
+ us_log( "chequeo: " + US_FileNameOnlyPathAndName( cDatabase ) + ".dbt" , .F. )
       endif
       SetMGWaitTxt( "Packing Help Database ..." )
       DBUseArea( .T. , , cDataBase , "SHG" , DEF_DBF_EXCLUSIVE , DEF_DBF_WRITE )
@@ -1056,10 +1046,8 @@ Function SHG_LoadDatabase( cDataBase )
       SetMGWaitTxt( "Reindex Help Database ..." )
       SHG_IndexON( cDatabase )
       DBCloseArea( "SHG" )
-//msginfo( "pos pack" )
       SetMGWaitTxt( "New Secuence Database ..." )
       SHG_NewSecuence()
-//msginfo( "pos new" )
       DBUseArea( .T. , , cDataBase , "SHG" , DEF_DBF_EXCLUSIVE , DEF_DBF_WRITE )
       DBSetIndex( US_FileNameOnlyPathAndName( SHG_Database ) )
       DbGoTo( 2 )
@@ -1143,7 +1131,7 @@ Function SHG_AddHlpKey()
          SHG_SetField( "SHG_KEYST" , GetProperty( "VentanaMain" , "GHlpFiles" , "Value" ) , cOldMemo + if( !empty( cOldMemo ) , HB_OsNewLine() , "" ) + cAux )
       endif
    else
-      msginfo( "Help Database not selected.  Use open button for open or create help database" )
+      MsgInfo( "Help Database not selected.  Use open button for open or create help database." )
    endif
 Return .T.
 
@@ -1193,29 +1181,17 @@ Function SHG_AddHlpHTML( accion )
       case upper( accion ) == "xxxxx"
          cMemoTxt := strtran( cMemoTxt , HB_OsNewLine() , chr( 10 ) )
          cTagAux := SHG_LinkAssistant( cMemoTxt , nCaretTxt )
- //  msginfo( cTagAux )
-         if !empty( cTagAux )
+         if ! empty( cTagAux )
             vDesdeLen := SHG_LinkGetPos( cMemoTxt , nCaretTxt )
-      //    msginfo( vdesdelen )
       //    if len( vDesdeLen ) == 0
       //       aadd( vdesdeLen , { { nCaretTxt , 0 } } )
       //    endif
-//   msginfo( vDesdeLen )
      //     nDesdeRtf := US_Rtf2MemoPos( cMemoRtf , vDesdeLen[1][1] )
- //  msginfo( nDesdeRtf )
      //     nHastaRtf := US_Rtf2MemoPos( cMemoRtf , vDesdeLen[1][1] + vDesdeLen[1][2] )
- //  msginfo( nHastaRtf )
      //     cMemoRtfAux := substr( cMemoRtf , 1 , nDesdeRtf - 1 ) + cTagAux + substr( cMemoRtf , nHastaRtf )
- //  msginfo( cMemoRtfAux )
      //     SetProperty( "VentanaMain" , "RichEditHlp" , "Value" , cMemoRtfAux )
      //     SetProperty( "VentanaMain" , "RichEditHlp" , "caretpos" , nCaretTxt )
-            //
-  //  msginfo( "old desde: " + str( vDesdeLen[1][1] ) )
-  //  msginfo( "count 13: " + str( at( chr(13) , substr( cMemoTxt , 1 , vDesdeLen[1][1] ) ) ) )
-  //  msginfo( "count 10: " + str( at( chr(10) , substr( cMemoTxt , 1 , vDesdeLen[1][1] ) ) ) )
-  //  msginfo( "count: " + str( Occurs( HB_OsNewLine() , substr( cMemoTxt , 1 , vDesdeLen[1][1] ) ) ) )
         //  vDesdeLen[1][1] := vDesdeLen[1][1] - Occurs( HB_OsNewLine() , substr( cMemoTxt , 1 , vDesdeLen[1][1] ) )
-  //  msginfo( "new desde: " + str( vDesdeLen[1][1] )  )
             if vDesdeLen[1][2] > 0
                SETSELRANGE( GetControlHandle( "RichEditHlp" , "VentanaMain" ) , vDesdeLen[1][1] - 1 , vDesdeLen[1][1] + vDesdeLen[1][2] - 1 )
             endif
@@ -1247,7 +1223,7 @@ Function SHG_AddHlpHTML( accion )
          CopyToClipboard( '<A href="mailto:qpm-users@lists.sourceforge.net">Mail to QPM_Support</A>' )
          SHG_Send_Paste()
    otherwise
-      msginfo( "invalid accion into function SHG_AddHlpHTML: " + us_todostr( accion ) )
+      MsgInfo( "Invalid accion into function SHG_AddHlpHTML: " + us_todostr( accion ) )
    endcase
    CopyRtfToClipboard( cClip )
 Return .T.
@@ -1384,7 +1360,7 @@ Function SHG_InputTopicOK()
    cAuxTopic := PanInputTopic.TextTopic.Value
    cAuxNick  := PanInputTopic.TextNick.Value
    if !empty( cAuxNick ) .and. !FILEVALID( cAuxNick , 255 , 50 )
-      msginfo( "NickName is not a valid file name of Windows" + HB_OsNewLine() + ;
+      MsgInfo( "NickName is not a valid file name of Windows." + HB_OsNewLine() + ;
                'Remember: only numbers (0-9), letters (a-z or A-Z) and not use the followed simbols: \ / : * ? " < > |')
       Return .F.
    else
@@ -1392,7 +1368,7 @@ Function SHG_InputTopicOK()
          for i := 1 to GetProperty( "VentanaMain" , "GHlpFiles" , "Itemcount" )
             if i != GetProperty( "VentanaMain" , "GHlpFiles" , "Value" )
                if upper( cAuxNick + ".htm" ) == upper( GetProperty( "VentanaMain" , "GHlpFiles" , "cell" , i , NCOLHLPNICK ) )
-                  msginfo( "Nick Name already assigned to topic: " + GetProperty( "VentanaMain" , "GHlpFiles" , "cell" , i , NCOLHLPTOPIC ) )
+                  MsgInfo( "Nick Name already assigned to topic: " + GetProperty( "VentanaMain" , "GHlpFiles" , "cell" , i , NCOLHLPTOPIC ) )
                   return .F.
                endif
             endif
@@ -1438,8 +1414,6 @@ Function SHG_Parser( mycType , mycString , mycKey , mycVar , myvNextKeys )
                j := 1
                nEncontroSignoIgual := 0
                do while j <= len( cAuxString )
-   //   msginfo( str( j ) + " >" + substr( cAuxString , j , 1 ) + "< " + cAuxString )
-   //   msginfo( " "+myvNextKeys[i] + " *** " + substr( upper( cAuxString ) , j ) )
                   for h := 1 to len( myvNextKeys )
                      if at( " "+upper(myvNextKeys[h])+"=" , substr( upper( cAuxString ) , j ) ) == 1
                         mycVar := substr( cAuxString , 1 , j - 1 )
@@ -1455,22 +1429,17 @@ Function SHG_Parser( mycType , mycString , mycKey , mycVar , myvNextKeys )
                   next
                   do case
       //             case at( " "+myvNextKeys[i]+"=" , substr( upper( cAuxString ) , j ) ) == 1
-      //msginfo( "entro 1" )
       //                mycVar := substr( cAuxString , 1 , j - 1 )
       //                exit
       //             case at( " "+myvNextKeys[i] , substr( upper( cAuxString ) , j ) ) == 1
-      //msginfo( "entro 2" )
       //                nEncontroSignoIgual := j
       //                j := j + len( myvNextKeys[i] ) + 1
       //                loop
                      case substr( cAuxString , j , 1 ) == "=" .and. nEncontroSignoIgual > 0
-   //   msginfo( "entro 3" )
                         mycVar := substr( cAuxString , 1 , nEncontroSignoIgual - 1 )
                         exit
                      case substr( cAuxString , j , 1 ) == " "
-  //    msginfo( "entro 4" )
                      otherwise
-  //    msginfo( "entro 5" )
                         nEncontroSignoIgual := 0
                   endcase
                   j++
@@ -1490,7 +1459,7 @@ Function SHG_Parser( mycType , mycString , mycKey , mycVar , myvNextKeys )
          mycVar := US_Word( mycString , 1 )
          mycString := alltrim( US_StrTran( mycString , mycVar , " " , 1 , 1 ) )
       otherwise
-         msginfo( "Invalid type en funcion " + procname() )
+         MsgInfo( "Invalid type in function " + procname() )
    endcase
 Return mycString
 
@@ -1498,7 +1467,7 @@ Function SHG_CancelChangesTopic()
    Local nRecord , cAuxMemo
    if SHG_BaseOK
       if GetProperty( "VentanaMain" , "GHlpFiles" , "Value" ) < 1
-         msginfo( "Topic not selected" )
+         MsgInfo( "Topic not selected." )
          Return .F.
       else
          nRecord  := GetProperty( "VentanaMain" , "GHlpFiles" , "Value" )
@@ -1508,7 +1477,7 @@ Function SHG_CancelChangesTopic()
             !( SHG_GetField( "SHG_NICK"  , nRecord ) == SHG_GetField( "SHG_NICKT"  , nRecord ) ) .or. ;
             !( cAuxMemo == SHG_GetField( "SHG_MEMO" , nRecord ) ) .or. ;
             !( SHG_GetField( "SHG_KEYS"  , nRecord ) == SHG_GetField( "SHG_KEYST"  , nRecord ) )
-            if !MsgYesNo( "Cancel changes of topic '" + GetProperty( "VentanaMain" , "GHlpFiles" , "Cell" , GetProperty( "VentanaMain" , "GHlpFiles" , "Value" ) , NCOLHLPTOPIC ) + "' ?" )
+            if ! MyMsgYesNo( "Cancel changes of topic '" + GetProperty( "VentanaMain" , "GHlpFiles" , "Cell" , GetProperty( "VentanaMain" , "GHlpFiles" , "Value" ) , NCOLHLPTOPIC ) + "' ?" )
                Return .F.
             else
                SetMGWaitTxt( "Restoring..." )
@@ -1523,11 +1492,11 @@ Function SHG_CancelChangesTopic()
                SetProperty( "VentanaMain" , "GHlpFiles" , "Cell" , nRecord , NCOLHLPEDIT , "E" )
             endif
          else
-            msginfo( "Topic '" + GetProperty( "VentanaMain" , "GHlpFiles" , "Cell" , GetProperty( "VentanaMain" , "GHlpFiles" , "Value" ) , NCOLHLPTOPIC ) + "' not changed from last save !!!" )
+            MsgInfo( "Topic '" + GetProperty( "VentanaMain" , "GHlpFiles" , "Cell" , GetProperty( "VentanaMain" , "GHlpFiles" , "Value" ) , NCOLHLPTOPIC ) + "' not changed from last save !!!" )
          endif
       endif
    else
-      msginfo( "Help Database not selected.  Use open button for open or create help database" )
+      MsgInfo( "Help Database not selected.  Use open button for open or create help database." )
    endif
 Return .T.
 

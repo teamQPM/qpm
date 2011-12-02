@@ -26,6 +26,7 @@
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+/*
 // Definiciones de Colores para MiniGui
 #define US_GREEN   { 74,136,101}
 #define US_RED     {192, 63, 39}
@@ -36,14 +37,11 @@
 #define US_BLACK   {  0,  0,  0}
 #define US_WHITE   {255,255,255}
 #define US_GREY    {192,192,192}
-
 #xcommand ?? <texto> => US_LOG( <texto> , .T. )
 #xcommand ? <texto> => US_LOG( <texto> , .T. )
-
-#translate msginfo(<texto>) => US_LOG( <texto> , .T. )
-
 #translate inkey(0) => US_LOG("Inkey(0) , Presione Enter" , .T. )
-
+#translate MsgInfo(<texto>) => US_LOG( <texto> , .T. )
 #include "US_i_richeditbox.ch"
+*/
 
 /* eof */

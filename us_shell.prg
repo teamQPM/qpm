@@ -413,7 +413,7 @@ FUNCTION MAIN(cP1,cP2,cP3,cP4,cP5,cP6,cP7,cP8,cP9,cP10,cP11,cP12,cP13,cP14,cP15,
                      if bPellesDynamic
                         aadd( vFuncionesPelles , "DYNAMIC " + cDLL_Name + " " + US_Word( cLineaAux , 2 ) )
                      else
-                        aadd( vFuncionesPelles , "STATIC " + vObjectsPelles[ US_h2d( US_Word( cLineaAux , 1 ) ) ] + " " + US_Word( cLineaAux , 2 ) )
+                        aadd( vFuncionesPelles , "STATIC " + vObjectsPelles[ VAL(NTOC(US_Word( cLineaAux , 1 ),10)) ] + " " + US_Word( cLineaAux , 2 ) )
                      endif
                   endif
                next

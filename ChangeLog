@@ -8,7 +8,103 @@
  * See "How to format your ChangeLog entries" in howtosvn.txt file.
  */
 
-2011-11-27 01:40:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2011-12-02 00:50:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * ./QPM.EXE
+     * Compilation with MinGW now uses command file to avoid limitations
+       in the number of objects you can include in the command line.
+       Tested OK with 330 objects.
+     * Version number changed to 05_02_05.
+   * ./QPM.iss
+     ! Fixed path to TSBrowse sample.
+     * Updated.
+   * doc/howtosvn.txt
+     * Updated section HOW TO BUILD A NEW RELEASE.
+   * ./QPM_SHG_SimpleHelpGenerator.prg
+     - Some comments deleted.
+   * ./QPM_AUTOPROJECT.QPM
+     - QPM_CompatibilityHotRecovery.ch
+     - US.ch
+   * ./QPM.prg
+     * msgwarning() modified to MsgWarning() because of #translate
+     * msgstop() modified to MsgStop() because of #translate
+     - Some DO EVENTS deleted (mostly inside FOR/NEXT loops for performance).
+     - Some comments deleted.
+     * msginfo() modified to MsgInfo() because of #translate
+     * msginfo () (with a space between) modified to MsgInfo() because of
+       #translate
+     * VP_MGWAIT() function commented out.
+     * Some messages improved.
+     - Some comments deleted.
+   * ./FuentesComunes/US_MG.prg
+     - Deleted US_RTF2MemoPos(), US_Maximize(), US_Redraw() and US_Redraw2()
+     * msgstop() modified to MsgStop() because of #translate
+   * ./FuentesComunes/US.ch
+     * All content commented out.
+   * ./QPM_ProjectSettings.prg
+     - Some comments deleted.
+   * ./FuentesComunes/US_Classes.prg
+     - Some comments deleted.
+     + Added #include "hbclass.ch" and "minigui.ch"
+   * ./FuentesComunes/US_Edit_CharFijo.prg
+     + Added #include "US_i_richeditbox.ch", "hbclass.ch" and "minigui.ch"
+     * msginfo() modified to MsgInfo() because of #translate
+     - Some comments deleted.
+     + Added US_RTF2MemoPos(), US_Maximize(), US_Redraw() and US_Redraw2()
+     * US_Redraw() returns nil (it's a dummy function).
+     * US_Redraw2() it's never called.
+   * ./FuentesComunes/US_ProcesWin.prg
+     * msgstop() modified to MsgStop() because of #translate
+   * ./FuentesComunes/US_Env.h
+     - #include US_K.ch because it's not used.
+     - #include US.ch because was included in other files.
+     - #include "hbclass.ch" because was included in other files.
+     - #include "minigui.ch" because was included in other files.
+   * ./FuentesComunes/US_K.ch
+     * All content commented out because it's not used.
+   * ./FuentesComunes/US_HB.prg
+     - Some comments deleted.
+     * msgstop() modified to MsgStop() because of #translate
+   * ./QPM_SHG_AssistImage.prg
+   * ./QPM_SHG_AssistLink.prg
+     - Some comments deleted.
+   * ./QPM.ch
+     * #command directive commented out.
+     - Some comments deleted.
+   * ./QPM_HotRecovery.prg
+     * Some messages improved.
+     * Commented code move from QPM_CompatibilityHotRecovery.ch into
+       HotRecoveryDatabaseCompatibility() function.
+   * ./QPM_FUNCTIONS.PRG
+     * msgstop() modified to MsgStop() because of #translate
+     - Some comments deleted.
+   * ./QPM_ENVIRONMENT.PRG
+     * msgstop() modified to MsgStop() because of #translate
+   * ./US_RUN.PRG
+     * msginfo() modified to MsgInfo() because of #translate
+     - Deleted empty US_RunRelease() function.
+     - Some comments deleted.
+     - Functions STREAMOUT(), PASTERTF(), GETCONTROLINDEX(), VP_MGWAIT(),
+       COPYTOCLIPBOARD() and COPYRTFTOCLIPBOARD() commented out.
+   * US_MSG.EXE
+   * US_REDIR.EXE
+   * US_RES.EXE
+   * US_RUN.EXE
+   * US_SHELL.EXE
+   * US_SLASH.EXE
+     * Updated.
+   * US_SHELL.prg
+     * Changed US_h2d() by VAL(NTOC()).
+   * QPM_US_MSG.qpm
+   * QPM_US_REDIR.qpm
+   * QPM_US_RES.qpm
+   * QPM_US_RUN.qpm
+   * QPM_US_SHELL.qpm
+   * QPM_US_SLASH.qpm
+   * ./helpQPM/SHG_CHANGE.qpm
+     * Changed to Harbour compiler and HMG Extended 2.0.3
+     * Added hbct library.
+
+2011-11-27 12:24:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * ./QPM.PRG
      + Can run builded application even if it was moved and/or renamed.
    * ./QPM_AUTOPROJECT.QPM

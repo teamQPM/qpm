@@ -145,7 +145,7 @@ Function LoadEnvironment
       endif
    endif
    if EnvironmentVersion > PUB_nQPM_Version
-      msgstop( "Version of Environment file is greater than the version of this program, the file is not procesed.  You can continue using the program without problems" )
+      MsgStop( "Version of Environment file is greater than the version of this program, the file is not procesed.  You can continue using the program without problems." )
       Return .F.
    endif
       PRIVATE PRI_COMPATIBILITY_ENVIRONMENTVERSION    := EnvironmentVersion

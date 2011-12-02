@@ -32,7 +32,6 @@
 #ifdef QPM_SHG
 
 Function SHG_LinkGenerateList( cIn , cTopic )
-/* pepe  */
    Local bLoop := .T. , vKeys , nPos , nLastPos := 1 , nCaretHtm , i , vDesdeLen , bCambio := .F.
    Local cMemoHtm := memoread( cIn ) , cStringCmd
    Local cMemoHtmUpper := upper( cMemoHtm ) , nLenGuia := len( "<A" )
@@ -62,14 +61,12 @@ Function SHG_LinkGenerateList( cIn , cTopic )
                   aadd( vFilesToCompile , upper( US_WSlash( vKeys[i][2] ) ) )
                endif
                vDesdeLen := SHG_LinkGetPos( cMemoHtm , nCaretHtm + 1 )
-     //     msginfo( vDesdeLen )
                cStringCmd := SHG_LinkVector2String( vKeys , .T. )
                cMemoHtm := substr( cMemoHtm , 1 , vDesdeLen[1][1] - 1 ) + ;
                            cStringCmd + ;
                            substr( cMemoHtm , vDesdeLen[1][1] + vDesdeLen[1][2] )
                cMemoHtmUpper := upper( cMemoHtm )
                nLastPos := vDesdeLen[1][1] + len( cStringCmd )
-    //      msginfo( "$" + substr( cMemoHtmUpper , nLastPos , 3 ) + "$" )
                exit
 ////        else
 ////           if upper( vKeys[i][1] ) == "HREF" .and. vKeys[i][2] != NIL .and. ;
@@ -92,7 +89,6 @@ Function SHG_LinkGenerateList( cIn , cTopic )
 ////           endif
             endif
          next
-   //    msginfo( vFilesToCompile )
       else
          bLoop := .F.
       endif
@@ -100,7 +96,6 @@ Function SHG_LinkGenerateList( cIn , cTopic )
    if bCambio
       QPM_MemoWrit( cIn , cMemoHtm )
       US_FileChar26Zap( cIn )
- //     msginfo( "sale: " + cMemoHtm )
    endif
 Return .T.
 
@@ -108,28 +103,22 @@ Function SHG_LinkGetString( cMemo , nPos )
    Local nDesde , nLen , vAux
    vAux := SHG_LinkGetPos( cMemo , nPos )
    if vAux[1][2] > 0       // != NIL
-   // msginfo( substr( cMemo , vAux[1][1] , vAux[1][2] ) )
       Return substr( cMemo , vAux[1][1] , vAux[1][2] )
    endif
 Return ""
 
 Function SHG_LinkGetPos( cMemo , nPos )
-   Local nAuxDesde , nDesde , nHasta , nLen , vResult , nRtfPos := nPos   // US_Rtf2MemoPos( cMemo , nPos )
+   Local nAuxDesde , nDesde , nHasta , nLen , vResult , nRtfPos := nPos
    Local nLenGuia := len( "<A" )
-// msginfo( "nrtfpos: " + us_todostr( nRtfPos ) )
    nAuxDesde := rat( ">" , substr( cMemo , 1 , nRtfPos ) ) + 1
- //msginfo( "busco en: " + substr( cMemo , nAuxDesde , ( nRtfPos - nAuxDesde + 1 ) + nLenGuia ) )
    if ( nDesde := rat( "<A " , upper( substr( cMemo , nAuxDesde , ( nRtfPos - nAuxDesde + 1 ) + nLenGuia ) ) ) ) == 0
- //  msginfo( "sale 1" )
       Return { { nPos , 0 } }
    endif
    nDesde := nDesde + ( nAuxDesde - 1 )
    if ( nHasta := at( ">" , upper( substr( cMemo , nRtfPos + 1 ) ) ) ) == 0
-  // msginfo( "sale 2" )
       Return { { nPos , 0 } }
    endif
    nLen := ( ( nRtfPos + nHasta ) - nDesde ) + 1
-// msginfo( "estring @" + substr( cMemo , nDesde , nLen ) + "@" )
 Return { { nDesde , nLen } }
 
 Function SHG_LinkVector2String( vKeys , bSupressPath )
@@ -146,7 +135,6 @@ Function SHG_LinkVector2String( vKeys , bSupressPath )
          if upper( vKeys[i][1] ) == "HREF" .and. bSupressPath
          // nCaseName := Directory( US_WSlash( vKeys[i][2] ) )
          // nCaseName[1][1] := US_FileNameOnlyNameAndExt( nCaseName[1][1] )
-           // msginfo( vKeys[i][2] + HB_OsNewLine() + nCaseName[1][1] )
          // if upper( nCaseName[1][1] ) == upper( US_FileNameOnlyNameAndExt( US_WSlash( vKeys[i][2] ) ) )
          //    vKeys[i][2] := nCaseName[1][1]
          // else
@@ -186,7 +174,6 @@ Function SHG_LinkParser( cString )
    aadd( vResult , { "HREF"   , cP_HREF } )
    aadd( vResult , { "TARGET" , cP_TARGET } )
    aadd( vResult , { "TITLE"  , cP_TITLE } )
-//msginfo( "antes de Retornar: " + us_todostr( vResult ) )
 Return vResult
 
 Function SHG_LinkAssistant( cMemo , nCaretPos )
@@ -357,7 +344,7 @@ Function SHG_LinkAssistant( cMemo , nCaretPos )
              TOOLTIP         'Confirm Selection'
              ONCLICK         SHG_LinkAssistantOK()
       END BUTTON
-          // ONCLICK         ( cAuxName := PanInputLink.TextSrc.Value , cAuxNick := PanInputLink.TextNick.Value , if( !empty( cAuxNick ) .and. !FILEVALID( cAuxNick , 255 , 50 ) , msginfo( "NickName is not a valid file name of Windows" + HB_OsNewLine() + 'Remember: only numbers (0-9), letters (a-z or A-Z) and not use the followed simbols: \ / : * ? " < > |') , PanInputLink.Release() ) )
+          // ONCLICK         ( cAuxName := PanInputLink.TextSrc.Value , cAuxNick := PanInputLink.TextNick.Value , if( !empty( cAuxNick ) .and. !FILEVALID( cAuxNick , 255 , 50 ) , MsgInfo( "NickName is not a valid file name of Windows" + HB_OsNewLine() + 'Remember: only numbers (0-9), letters (a-z or A-Z) and not use the followed simbols: \ / : * ? " < > |') , PanInputLink.Release() ) )
 
       @ 235 , 195 LABEL LabelReq ;
          VALUE 'RED field are required' ;
@@ -388,17 +375,16 @@ Function SHG_LinkAssistant( cMemo , nCaretPos )
    END WINDOW
    Center Window PanInputLink
    Activate Window PanInputLink
-// msginfo( cReto )
 Return cReto
 
 Function SHG_LinkAssistantOK()
    if empty( PanInputLink.TextSrc.Value )
-      msginfo( "Link file is requered" )
+      MsgInfo( "Link file is required." )
       return .F.
    endif
    if !file( US_WSlash( PanInputLink.TextSrc.Value ) )
       SHG_LinkAssistantDisplay()
-      msginfo( "Link file not found: " + PanInputLink.TextSrc.Value )
+      MsgInfo( "Link file not found: " + PanInputLink.TextSrc.Value )
       return .F.
    endif
    cReto := "<IMG"
@@ -429,7 +415,7 @@ Function SHG_LinkAssistantOK()
 Return .T.
 
 Function SHG_LinkAssistantDELETE()
-   if MsgYesNo( "Confirm Delete Tag for this Link ?" )
+   if MyMsgYesNo( "Confirm Delete Tag for this Link ?" )
       cReto := "*DELETE*"
       PanInputLink.Release()
    endif
@@ -476,10 +462,10 @@ Function SHG_LinkAssistantGetVector( cMemo , nCaretPos )
                   case upper( vKeys[i][2] ) == "RIGHT"
                      PanInputLink.CAlign.Value := 6
                   otherwise
-                     msginfo( "Invalid CAlign: " + US_TodoStr( vKeys[i][2] ) )
+                     MsgInfo( "Invalid CAlign: " + US_TodoStr( vKeys[i][2] ) )
                endcase
             otherwise
-               msginfo( "invalid key in function " + procname() + " :" + vKeys[i][1] )
+               MsgInfo( "Invalid key in function " + procname() + " :" + vKeys[i][1] )
          endcase
       next
    endif

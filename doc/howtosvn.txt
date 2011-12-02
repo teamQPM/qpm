@@ -172,9 +172,8 @@ HOW TO BUILD A NEW RELEASE
     f) upload the zip file to sourceforge.
 
 [6] To publish a new full release:
-    a) create a new folder in your local disk and name it
-       QPM_<new version number>
-    b) copy the following file to the newly created folder:
+    a) install INNO Setup Compiler from http://www.jrsoftware.org/
+    b) Open QPM.ISS and verify the following files are included:
          QPM.chm
          QPM.exe
          US_A1.exe
@@ -182,6 +181,7 @@ HOW TO BUILD A NEW RELEASE
          US_A3.exe
          US_A4.exe
          US_DbfView.exe
+         DbfView.chm
          US_dif.exe
          US_difwi.dll
          US_DllTool.exe
@@ -213,14 +213,14 @@ HOW TO BUILD A NEW RELEASE
          US_TLib.exe
          US_Upx.exe
          US_windres.exe
-    c) lunch Inno Setup and open QPM.iss
-    d) update the following variables to the new version number:
-         AppVerName=QPM v05.02 build 04
-         DefaultDirName=C:\QPM_05_02_04
-         OutputBaseFilename=QPM_05_02_0004_Install
-    e) update AppPublisher line with your name.
-    f) hit "compile" button.
-    g) upload file C:\QPM Distribution\QPM_05_02_0004_Install.exe
+         Samples\*.*
+    c) update the following variables to the new version number:
+         AppVerName=QPM v05.02 build 05
+         DefaultDirName=C:\QPM_05_02_05
+         OutputBaseFilename=QPM_05_02_0005_Install
+    d) update AppPublisher line with your name.
+    e) hit "compile" button.
+    f) upload file C:\QPM Distribution\QPM_05_02_0005_Install.exe
        to sourceforge.
 
 /* eof */

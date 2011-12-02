@@ -11,6 +11,14 @@
 /******************************************************************************/
 
 Assigned to: <nobody>
+Added by...: 2011-11-29 12:20:00 UTC-0300 Fernando Yurisich <fyurisich>
+Status.....: Open.
+Details....: Delete ./FuentesComunes/US_K.ch, ./FuentesComunes/US.ch and
+             ./QPM_CompatibilityHotRecovery.ch
+
+/******************************************************************************/
+
+Assigned to: <nobody>
 Added by...: 2011-11-27 12:20:00 UTC-0300 Fernando Yurisich <fyurisich>
 Status.....: Open.
 Details....: US_FileDate( cRecoveryFile ) is not returning DATE value.
@@ -84,12 +92,6 @@ Details....: Migrate to last version of OOHG.
              Some function must be rewritten completely because rely on certain
              features of Extended version. Example: the editor in SHG module.
              Must be done after Extended migration.
-
-/******************************************************************************/
-Assigned to: <nobody>
-Added by...: 2011-09-23 22:30:00 UTC-0300 Fernando Yurisich <fyurisich>
-Status.....: Open.
-Details....: Save a copy of build.bat to debug.
 
 /******************************************************************************/
 Assigned to: <nobody>

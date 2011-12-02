@@ -41,14 +41,14 @@ Function QPM_SetProcessPriority( cType )
          nType := 5
          PUB_QPM_bHigh := .F.
       otherwise
-         msginfo( "Invalid Priority class in function " + Procname() + ": " + cType )
+         MsgInfo( "Invalid Priority class in function " + Procname() + ": " + cType )
          Return 20
    endcase
    For P := Len( aProcSelf ) to 1 Step -2
       if !empty( aProcSelf[ P ] )
          if upper( aProcSelf[ P ] ) == upper( GetModuleFileName( GetInstance() ) )
             if ( nReto := US_SetPriorityToProcess( aProcSelf[ P-1 ] , nType ) ) != 0
-               msginfo( "Set High Priority for Process '" + GetModuleFileName( GetInstance() ) + "' Failed with code: " + alltrim( str( nReto ) ) )
+               MsgInfo( "Set High Priority for Process '" + GetModuleFileName( GetInstance() ) + "' Failed with code: " + alltrim( str( nReto ) ) )
             endif
             exit
          endif
@@ -221,9 +221,9 @@ Function KillIt( nValue )
    Local nPID := 0 , reto := 0
    if nValue > 0
       nPID := val( WinKiller.GGrid.Item( nValue )[1] )
-      IF MsgOkCancel( "Process #" + str( nPID ) + " will be terminated." + CRLF + ;
+      IF MyMsgOkCancel( "Process #" + str( nPID ) + " will be terminated." + CRLF + ;
          "Process Name: " + WinKiller.GGrid.Item( nValue )[3] + CRLF + ;
-         "Continue?", "Confirm", , .f. )
+         "Continue?", "Confirm" )
          if ( reto := US_KillProcess( nPID ) ) == 0
             ADel( QPM_KillerProcessLast, nPID )
             ASize( QPM_KillerProcessLast, Len(QPM_KillerProcessLast) - 1 )
@@ -233,7 +233,7 @@ Function KillIt( nValue )
          endif
       ENDIF
    else
-      msginfo( "Not process select" )
+      MsgInfo( "No process selected." )
    ENDIF
 Return
 
