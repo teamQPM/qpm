@@ -29,14 +29,14 @@
 
 [Setup]
 AppName=QPM (QAC based Project Manager)
-AppVerName=QPM v05.02 build 05
+AppVerName=QPM v05.03 build 01
 AppPublisher=fernando.yurisich
-DefaultDirName=C:\QPM_05_02_05
+DefaultDirName=C:\QPM_05_03_01
 UsePreviousAppDir=no
 DefaultGroupName=QPM (QAC based Project Manager)
 AllowNoIcons=yes
 OutputDir=..\QPM Distribution
-OutputBaseFilename=QPM_05_02_0005_Install
+OutputBaseFilename=QPM_05_03_0001_Install
 SetupIconFile=.\Resource\QPM_Install.ico
 Compression=lzma
 SolidCompression=yes
@@ -52,10 +52,6 @@ Name: "quicklaunchicon"; Description: "{cm:CreateQuickLaunchIcon}"; GroupDescrip
 [Files]
 Source: "QPM.chm"; DestDir: "{app}"; Flags: ignoreversion
 Source: "QPM.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: "US_A1.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: "US_A2.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: "US_A3.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: "US_A4.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: "US_DbfView.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: "DbfView.chm"; DestDir: "{app}"; Flags: ignoreversion
 Source: "US_dif.exe"; DestDir: "{app}"; Flags: ignoreversion
@@ -80,9 +76,6 @@ Source: "US_Redir.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: "US_Reimp.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: "US_Res.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: "US_Run.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: "US_S1.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: "US_S2.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: "US_S3.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: "US_Shell.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: "US_Slash.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: "US_Tdump.exe"; DestDir: "{app}"; Flags: ignoreversion

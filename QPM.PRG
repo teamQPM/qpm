@@ -35,7 +35,7 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
    Local Folder , FileName , i , nPos , LogIni := 0 , nIndx
    Local LOC_cParam := ""
 
-   PUBLIC PUB_cQPM_Version      := "05 02 05"
+   PUBLIC PUB_cQPM_Version      := "05 03 01"
 
    PUBLIC PUB_QPM_bHigh := .F.
    QPM_SetProcessPriority( "HIGH" )
@@ -334,12 +334,15 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
    PUBLIC SHG_HtmlFolder := ""
    PUBLIC SHG_WWW         := ""
    PUBLIC SHG_BaseOK      := .F.
+
+/*
    PUBLIC SHG_vImagesGrid := {}
    aadd( SHG_vImagesGrid , 'SHG_ImgNone' )      // 0                     0000 0000
    aadd( SHG_vImagesGrid , 'SHG_ImgBook' )      // 1                     0000 0001
    aadd( SHG_vImagesGrid , 'SHG_ImgPage' )      // 2                     0000 0010
    aadd( SHG_vImagesGrid , 'SHG_ImgFoot' )      // 3                     0000 0011
    aadd( SHG_vImagesGrid , 'SHG_ImgWelcome' )   // 4                     0000 0100
+*/
    //
    PUBLIC bAutoSyncTab := .T.
    PUBLIC bRunParm        := .F.
@@ -581,7 +584,6 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
    PUBLIC vExeList := {}
    aadd( vExeList , PUB_cQPM_Folder+DEF_SLASH+"QPM.exe"                   )
    aadd( vExeList , PUB_cQPM_Folder+DEF_SLASH+"QPM.chm"                   )
-// aadd( vExeList , PUB_cQPM_Folder+DEF_SLASH+"US_ecnecil.spf"            )   // QPM Licencia, now it's loaded from RC
    aadd( vExeList , PUB_cQPM_Folder+DEF_SLASH+"US_Slash.exe"              )
    aadd( vExeList , PUB_cQPM_Folder+DEF_SLASH+"US_Shell.exe"              )
    aadd( vExeList , PUB_cQPM_Folder+DEF_SLASH+"US_Make.exe"               )
@@ -602,26 +604,15 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
    aadd( vExeList , PUB_cQPM_Folder+DEF_SLASH+"US_Upx.exe"                )
    aadd( vExeList , PUB_cQPM_Folder+DEF_SLASH+"US_DbfView.exe"            )   // by Grigory Filatov
    aadd( vExeList , PUB_cQPM_Folder+DEF_SLASH+"US_R2H.exe"                )   // Rtf to HTML
-   aadd( vExeList , PUB_cQPM_Folder+DEF_SLASH+"US_A1.exe"                 )   // BMP encubierto para flecha de CHM (Prev)
-   aadd( vExeList , PUB_cQPM_Folder+DEF_SLASH+"US_A2.exe"                 )   // BMP encubierto para flecha de CHM (Next)
-   aadd( vExeList , PUB_cQPM_Folder+DEF_SLASH+"US_A3.exe"                 )   // BMP encubierto para flecha de CHM (First)
-   aadd( vExeList , PUB_cQPM_Folder+DEF_SLASH+"US_A4.exe"                 )   // BMP encubierto para flecha de CHM (Last)
-   aadd( vExeList , PUB_cQPM_Folder+DEF_SLASH+"US_S1.exe"                 )   // BMP encubierto para HTML help (Welcome)
-   aadd( vExeList , PUB_cQPM_Folder+DEF_SLASH+"US_S2.exe"                 )   // BMP encubierto para HTML help (Book)
-   aadd( vExeList , PUB_cQPM_Folder+DEF_SLASH+"US_S3.exe"                 )   // BMP encubierto para HTML help (Page)
    aadd( vExeList , PUB_cQPM_Folder+DEF_SLASH+"US_dif.exe"                )   // Compare (exe)
    aadd( vExeList , PUB_cQPM_Folder+DEF_SLASH+"US_difwi.dll"              )   // Compare (dll)
    aadd( vExeList , PUB_cQPM_Folder+DEF_SLASH+"US_windres.exe"            )   // Resource compiler for MinGW
-// aadd( vExeList , PUB_cQPM_Folder+DEF_SLASH+"US_hot.oci"                )   // Hot Recovery Icon
    aadd( vExeList , PUB_cQPM_Folder+DEF_SLASH+"US_hhc.exe"                )   // Compilador de HTML HELP WorkShop
    aadd( vExeList , PUB_cQPM_Folder+DEF_SLASH+"US_hha.dll"                )   // DLL de HTML HELP WorkShop
    aadd( vExeList , PUB_cQPM_Folder+DEF_SLASH+"US_itcc.dll"               )   // DLL de HTML HELP WorkShop
-// aadd( vExeList , PUB_cQPM_Folder+DEF_SLASH+"US_killer.oci"             )   // TEMPORAL ICO PARA US_KILLER
    aadd( vExeList , PUB_cQPM_Folder+DEF_SLASH+"US_dtree.css"              )   // Tree for HTML Help
    aadd( vExeList , PUB_cQPM_Folder+DEF_SLASH+"US_dtree.js"               )   // Java Function for Tree for HTML Help
    aadd( vExeList , PUB_cQPM_Folder+DEF_SLASH+"US_dtree.im"               )   // ZIP encubierto para imagenes de Tree for HTML Help
-// aadd( vExeList , PUB_cQPM_Folder+DEF_SLASH+"US_Dbu.exe"                )   // by S. Rathinagiri
-// aadd( vExeList , PUB_cQPM_Folder+DEF_SLASH+"US_Dbu.hlp"                )
    //
    PUBLIC vExeNotFound          := {}
    PUBLIC cExeNotFoundMsg       := {}
@@ -940,6 +931,7 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
            MAIN ;
            ON GOTFOCUS DefinoWindowsHotKeys( "VentanaMain" ) ;
            ON LOSTFOCUS LiberoWindowsHotKeys( "VentanaMain" ) ;
+           ON MINIMIZE LiberoWindowsHotKeys( "VentanaMain" ) ;
            ON INIT MainInitAutoRun() ;
            ON RELEASE if( !PUB_bLite , SaveEnvironment() , ) ;
            ON INTERACTIVECLOSE QPM_Exit()
@@ -6417,7 +6409,7 @@ Function QPM_Build2()
             MsgInfo( "Invalid Output Type: "+cOutputType )
             Return .F.
       endcase
-      
+
       DO EVENTS
 
       // Linking
@@ -6429,15 +6421,15 @@ Function QPM_Build2()
                     cOutputType == "SRCDLL"
                   if cOutputType == "SRCEXE"
                      Out := Out + PUB_cCharTab + '$(US_MSG_EXE) $(DIR_PROJECT)' + DEF_SLASH + '_'+PUB_cSecu+'Progress.Log -MSG:Linking to make ' + cOutputNameDisplay + ' ...' + Hb_OsNewLine()
-                     Out := Out + PUB_cCharTab + '$(REDIR) $(ILINK_EXE) -Wall -mno-cygwin $(USER_FLAGS_LINK) -o $(APP_NAME) ' + ' ' + (CCOMPILERFOLDER+DEF_SLASH+'_'+PUB_cSecu+'Script.ld')
-                     Out := Out + PUB_cCharTab + if( !bConsole , if( PUB_bDebugActive , ' ' , ' -mwindows ') , ' -mconsole ' )
+                     Out := Out + PUB_cCharTab + '$(REDIR) $(ILINK_EXE) -Wall -mno-cygwin $(USER_FLAGS_LINK) -o $(APP_NAME) ' + (CCOMPILERFOLDER+DEF_SLASH+'_'+PUB_cSecu+'Script.ld')
+                     Out := Out + PUB_cCharTab + if( !bConsole , if( PUB_bDebugActive , ' ' , ' -mwindows ') , ' -mconsole ' ) + Hb_OsNewLine()
                   endif
                   if cOutputType == "SRCDLL"
                      Out := Out + PUB_cCharTab + '$(US_MSG_EXE) $(DIR_PROJECT)' + DEF_SLASH + '_'+PUB_cSecu+'Progress.Log -MSG:Making Dynamic Library (DLL) ' + cOutputNameDisplay + ' ...' + Hb_OsNewLine()
-                     Out := Out + PUB_cCharTab + '$(REDIR) $(ILINK_EXE) -shared -o$(APP_NAME) '
+                     Out := Out + PUB_cCharTab + '$(REDIR) $(ILINK_EXE) -shared -o $(APP_NAME) ' + (CCOMPILERFOLDER+DEF_SLASH+'_'+PUB_cSecu+'Script.ld')
                   endif
                   For i := 1 To Len ( vLibIncludeFiles )
-                     if US_Upper( US_Word( GetProperty( "VentanaMain" , "GIncFiles" , "Cell" , i , NCOLINCFULLNAME ) , 2 ) ) == "*FIRST*" && for .res
+                     if US_Upper( US_Word( GetProperty( "VentanaMain" , "GIncFiles" , "Cell" , i , NCOLINCFULLNAME ) , 2 ) ) == "*FIRST*"
                         if file( GetMiniGuiFolder() + DEF_SLASH + "Resources" + DEF_SLASH + substr( US_FileNameOnlyName( vLibIncludeFiles[i] ) , 4 ) + '.o' )
                            Out := Out + PUB_cCharTab + '$(DIR_MINIGUI_RES)' + DEF_SLASH + substr( US_FileNameOnlyName( vLibIncludeFiles[i] ) , 4 ) + '.o'
                         endif
@@ -6498,6 +6490,9 @@ Function QPM_Build2()
          otherwise
             US_Log( "Error 6255" )
       endcase
+
+      // Copy or Move
+      
       if cOutputCopyMove == "COPY" .or. cOutputCopyMove == "MOVE"
          if IsMinGW
             Out := Out + Hb_OsNewLine()
@@ -6505,7 +6500,6 @@ Function QPM_Build2()
          Out := Out + PUB_cCharTab + '$(US_MSG_EXE) $(DIR_PROJECT)' + DEF_SLASH + '_'+PUB_cSecu+'Progress.Log -MSG:' + cOutputCopyMove + ' '+cOutputNameDisplay+' to ' + Prj_Text_OutputCopyMoveFolder + DEF_SLASH + US_FileNameOnlyNameAndExt( cOutputNameDisplay ) + ' ...' + Hb_OsNewLine()
          Out := Out + PUB_cCharTab + '$(US_SHELL_EXE) ' + cOutputCopyMove + ' ' + cOutputName + ' ' + US_ShortName( Prj_Text_OutputCopyMoveFolder ) + DEF_SLASH + US_FileNameOnlyNameAndExt( cOutputName ) + Hb_OsNewLine()
       endif
-      Out := Out + Hb_OsNewLine()
 
       if PUB_bDebugActive
          if cOutputCopyMove == "MOVE"
@@ -7506,27 +7500,28 @@ Function LiberoWindowsHotKeys( ven )
 Return .T.
 
 Function TranslateLog(Log)
-   Local NewLog := '' , i
-   Local msg    := US_ShortName(PUB_cQPM_Folder) + DEF_SLASH + 'US_MSG.EXE ' + US_ShortName(PUB_cProjectFolder) + DEF_SLASH + '_'+PUB_cSecu+'Progress.Log -MSG:'
-   Local slash  := US_ShortName(PUB_cQPM_Folder) + DEF_SLASH + 'US_SLASH.EXE QPM'
-   Local shellCZ:= US_ShortName(PUB_cQPM_Folder) + DEF_SLASH + 'US_SHELL.EXE QPM COPYZAP '
-   Local shellMZ:= US_ShortName(PUB_cQPM_Folder) + DEF_SLASH + 'US_SHELL.EXE QPM MOVEZAP '
-   Local shell  := US_ShortName(PUB_cQPM_Folder) + DEF_SLASH + 'US_SHELL.EXE QPM '
-   Local implib := US_ShortName(PUB_cQPM_Folder) + DEF_SLASH + 'US_IMPLIB.EXE'
+   Local NewLog       := '' , i
+   Local msg          := PUB_cCharTab + US_ShortName(PUB_cQPM_Folder) + DEF_SLASH + 'US_MSG.EXE ' + US_ShortName(PUB_cProjectFolder) + DEF_SLASH + '_'+PUB_cSecu+'Progress.Log -MSG:'
+   Local slash        := US_ShortName(PUB_cQPM_Folder) + DEF_SLASH + 'US_SLASH.EXE QPM'
+   Local shellCZ      := US_ShortName(PUB_cQPM_Folder) + DEF_SLASH + 'US_SHELL.EXE QPM COPYZAP '
+   Local shellMZ      := US_ShortName(PUB_cQPM_Folder) + DEF_SLASH + 'US_SHELL.EXE QPM MOVEZAP '
+   Local shell        := US_ShortName(PUB_cQPM_Folder) + DEF_SLASH + 'US_SHELL.EXE QPM '
+   Local implib       := US_ShortName(PUB_cQPM_Folder) + DEF_SLASH + 'US_IMPLIB.EXE'
    Local implibPelles := US_ShortName(PUB_cQPM_Folder) + DEF_SLASH + 'US_POLIB.EXE'
-   Local impdef := US_ShortName(PUB_cQPM_Folder) + DEF_SLASH + 'US_IMPDEF.EXE'
-   Local PExports := US_ShortName(PUB_cQPM_Folder) + DEF_SLASH + 'US_PEXPORTS.EXE'
-   Local ImpLibBor := HB_OsNewLine()+"Borland Implib Version 3.0.22 Copyright (c) 1991, 2000 Inprise Corporation"+HB_OsNewLine()
-   Local ImpDefBor := HB_OsNewLine()+"Borland Impdef Version 3.0.22 Copyright (c) 1991, 2000 Inprise Corporation"+HB_OsNewLine()
-   Local reimp  := US_ShortName(PUB_cQPM_Folder) + DEF_SLASH + 'US_REIMP.EXE'
-   Local gcc    := US_ShortName( &('Gbl_T_C_'+GetMiniGuiSuffix()+GetCppSuffix()) ) + DEF_SLASH + 'BIN'+DEF_SLASH+'GCC.EXE'
-   Local dlltool:= US_ShortName( &('Gbl_T_C_'+GetMiniGuiSuffix()+GetCppSuffix()) ) + DEF_SLASH + 'BIN'+DEF_SLASH+'US_DLLTOOL.EXE'
-// Local myredir:= US_ShortName(PUB_cQPM_Folder) + DEF_SLASH + 'US_REDIR.EXE' + PUB_cUS_RedirOpt + DEF_SLASH + "_"+PUB_cSecu+"Temp.Log "
-   Local myredir:= US_ShortName(PUB_cQPM_Folder) + DEF_SLASH + 'US_REDIR.EXE' + PUB_cUS_RedirOpt + US_ShortName( PUB_cProjectFolder ) + DEF_SLASH + '_'+PUB_cSecu+'Temp.Log '
-   Local QPM_Ver:= '/D__QPM_VERSION__="'+"'"+PUB_cQPM_Version2+"'"+'"'
-   Local PRJ_Ver:= '/D__PRJ_VERSION__="'+"'"+cPrj_Version+"'"+'"'
-   Local cEcho  := '> _'+PUB_cSecu+'Script.ld'
-   Local cDelete:= '** error 1 ** '
+   Local impdef       := US_ShortName(PUB_cQPM_Folder) + DEF_SLASH + 'US_IMPDEF.EXE'
+   Local PExports     := US_ShortName(PUB_cQPM_Folder) + DEF_SLASH + 'US_PEXPORTS.EXE'
+   Local ImpLibBor    := HB_OsNewLine()+"Borland Implib Version 3.0.22 Copyright (c) 1991, 2000 Inprise Corporation"+HB_OsNewLine()
+   Local ImpDefBor    := HB_OsNewLine()+"Borland Impdef Version 3.0.22 Copyright (c) 1991, 2000 Inprise Corporation"+HB_OsNewLine()
+   Local reimp        := US_ShortName(PUB_cQPM_Folder) + DEF_SLASH + 'US_REIMP.EXE'
+   Local gcc          := US_ShortName( &('Gbl_T_C_'+GetMiniGuiSuffix()+GetCppSuffix()) ) + DEF_SLASH + 'BIN'+DEF_SLASH+'GCC.EXE'
+   Local dlltool      := US_ShortName( &('Gbl_T_C_'+GetMiniGuiSuffix()+GetCppSuffix()) ) + DEF_SLASH + 'BIN'+DEF_SLASH+'US_DLLTOOL.EXE'
+// Local myredir      := US_ShortName(PUB_cQPM_Folder) + DEF_SLASH + 'US_REDIR.EXE' + PUB_cUS_RedirOpt + DEF_SLASH + "_"+PUB_cSecu+"Temp.Log "
+   Local myredir      := US_ShortName(PUB_cQPM_Folder) + DEF_SLASH + 'US_REDIR.EXE' + PUB_cUS_RedirOpt + US_ShortName( PUB_cProjectFolder ) + DEF_SLASH + '_'+PUB_cSecu+'Temp.Log '
+   Local QPM_Ver      := '/D__QPM_VERSION__="'+"'"+PUB_cQPM_Version2+"'"+'"'
+   Local PRJ_Ver      := '/D__PRJ_VERSION__="'+"'"+cPrj_Version+"'"+'"'
+   Local cEcho2       := '>> _'+PUB_cSecu+'Script.ld'
+   Local cEcho        := '> _'+PUB_cSecu+'Script.ld'
+   Local cDelete      := '** error 1 ** '
                           /* Texto ,  Position ( 0=Cualquiera ) , Producto */
    Local vWarnings := { { ") Warning W"                                , 0 , DefineXHarbour } , ; // Warning en Compilaciones
                         { "Warning W"                                  , 1 , "CBORLAND" } , ;     // Warning en funcion C
@@ -7558,7 +7553,7 @@ Function TranslateLog(Log)
    else
       NewLog := StrTran( NewLog , myredir , "" )
    endif
-   NewLog := StrTran( NewLog , msg , "==> " )
+   NewLog := StrTran( NewLog , msg , HB_OsNewLine() + "==> " )
    NewLog := StrTran( NewLog , slash , gcc )
    NewLog := StrTran( NewLog , shellCZ, "COPY -z" )
    NewLog := StrTran( NewLog , shellMZ, "MOVE -z" )
@@ -7569,6 +7564,7 @@ Function TranslateLog(Log)
    NewLog := StrTran( NewLog , reimp , "ReIMPORT " )
    NewLog := StrTran( NewLog , dlltool, "GENERATE 'A'" )
    NewLog := StrTran( NewLog , PExports , "LIST 'DLL'" )
+   NewLog := StrTran( NewLog , cEcho2, "" )
    NewLog := StrTran( NewLog , cEcho, "" )
    NewLog := StrTran( NewLog , ImpLibBor, "" )
    NewLog := StrTran( NewLog , ImpDefBor, "" )

@@ -176,10 +176,6 @@ HOW TO BUILD A NEW RELEASE
     b) Open QPM.ISS and verify the following files are included:
          QPM.chm
          QPM.exe
-         US_A1.exe
-         US_A2.exe
-         US_A3.exe
-         US_A4.exe
          US_DbfView.exe
          DbfView.chm
          US_dif.exe
@@ -204,9 +200,6 @@ HOW TO BUILD A NEW RELEASE
          US_Reimp.exe
          US_Res.exe
          US_Run.exe
-         US_S1.exe
-         US_S2.exe
-         US_S3.exe
          US_Shell.exe
          US_Slash.exe
          US_Tdump.exe

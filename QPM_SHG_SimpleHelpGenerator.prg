@@ -469,7 +469,7 @@ Function SHG_Generate( cBase , bGenHtml , PUB_cSecu , cWWW )
          if bCreateDir
             US_DirRemoveLoop( cCreateDir , 2 )
          endif
-         MsgInfo( "Folder requered for output type CHM and HTML." )
+         MsgInfo( "Folder required for output type CHM and HTML." )
          Return .F.
       endif
    endif
@@ -488,48 +488,45 @@ Function SHG_Generate( cBase , bGenHtml , PUB_cSecu , cWWW )
          return .F.
       endif
    endif
-   if US_filecopy( PUB_cQPM_Folder + DEF_SLASH + "US_A1.exe" , cDirOutCHM + DEF_SLASH + "SHG_ArrowPrev.bmp" ) != US_FileSize( PUB_cQPM_Folder + DEF_SLASH + "US_A1.exe" ) .or. ;
-      US_FileCopy( PUB_cQPM_Folder + DEF_SLASH + "US_A2.exe" , cDirOutCHM + DEF_SLASH + "SHG_ArrowNext.bmp" ) != US_FileSize( PUB_cQPM_Folder + DEF_SLASH + "US_A2.exe" ) .or. ;
-      US_FileCopy( PUB_cQPM_Folder + DEF_SLASH + "US_A3.exe" , cDirOutCHM + DEF_SLASH + "SHG_ArrowTop.bmp" ) != US_FileSize( PUB_cQPM_Folder + DEF_SLASH + "US_A3.exe" ) .or. ;
-      US_FileCopy( PUB_cQPM_Folder + DEF_SLASH + "US_A4.exe" , cDirOutCHM + DEF_SLASH + "SHG_ArrowBottom.bmp" ) != US_FileSize( PUB_cQPM_Folder + DEF_SLASH + "US_A4.exe" )
-      MsgInfo( "Error copying navigation images." )
-   else
-      QPM_MemoWrit( cDirOutCHM + DEF_SLASH + "SHG_ArrowPrev.bmp" , "BM6" + substr( memoread( cDirOutCHM + DEF_SLASH + "SHG_ArrowPrev.bmp" ) , 4 ) )
-      QPM_MemoWrit( cDirOutCHM + DEF_SLASH + "SHG_ArrowNext.bmp" , "BM6" + substr( memoread( cDirOutCHM + DEF_SLASH + "SHG_ArrowNext.bmp" ) , 4 ) )
-      QPM_MemoWrit( cDirOutCHM + DEF_SLASH + "SHG_ArrowTop.bmp" , "BM6" + substr( memoread( cDirOutCHM + DEF_SLASH + "SHG_ArrowTop.bmp" ) , 4 ) )
-      QPM_MemoWrit( cDirOutCHM + DEF_SLASH + "SHG_ArrowBottom.bmp" , "BM6" + substr( memoread( cDirOutCHM + DEF_SLASH + "SHG_ArrowBottom.bmp" ) , 4 ) )
-      if bGenHtml
-         US_FileCopy( cDirOutCHM + DEF_SLASH + "SHG_ArrowPrev.bmp" , cDirOutHTML + DEF_SLASH + "SHG_ArrowPrev.bmp" )
-         US_FileCopy( cDirOutCHM + DEF_SLASH + "SHG_ArrowNext.bmp" , cDirOutHTML + DEF_SLASH + "SHG_ArrowNext.bmp" )
-         US_FileCopy( cDirOutCHM + DEF_SLASH + "SHG_ArrowTop.bmp" , cDirOutHTML + DEF_SLASH + "SHG_ArrowTop.bmp" )
-         US_FileCopy( cDirOutCHM + DEF_SLASH + "SHG_ArrowBottom.bmp" , cDirOutHTML + DEF_SLASH + "SHG_ArrowBottom.bmp" )
-         /* Copio extra images for html help */
-         US_FileCopy( PUB_cQPM_Folder + DEF_SLASH + "US_S1.exe" , cDirOutHTML + DEF_SLASH + "SHG_Welcome.bmp" )
-         US_FileCopy( PUB_cQPM_Folder + DEF_SLASH + "US_S2.exe" , cDirOutHTML + DEF_SLASH + "SHG_Book.bmp" )
-         US_FileCopy( PUB_cQPM_Folder + DEF_SLASH + "US_S3.exe" , cDirOutHTML + DEF_SLASH + "SHG_Page.bmp" )
-         QPM_MemoWrit( cDirOutHTML + DEF_SLASH + "SHG_Welcome.bmp" , "BM6" + substr( memoread( cDirOutHTML + DEF_SLASH + "SHG_Welcome.bmp" ) , 4 ) )
-         QPM_MemoWrit( cDirOutHTML + DEF_SLASH + "SHG_Book.bmp" , "BM6" + substr( memoread( cDirOutHTML + DEF_SLASH + "SHG_Book.bmp" ) , 4 ) )
-         QPM_MemoWrit( cDirOutHTML + DEF_SLASH + "SHG_Page.bmp" , "BM6" + substr( memoread( cDirOutHTML + DEF_SLASH + "SHG_Page.bmp" ) , 4 ) )
-         /* Copio dtree for html help */
-         US_FileCopy( PUB_cQPM_Folder + DEF_SLASH + "US_dtree.css" , cDirOutHTML + DEF_SLASH + "SHG_dtree.css" )
-         US_FileCopy( PUB_cQPM_Folder + DEF_SLASH + "US_dtree.js" , cDirOutHTML + DEF_SLASH + "SHG_dtree.js" )
-         US_FileCopy( PUB_cQPM_Folder + DEF_SLASH + "US_dtree.im" , cDirOutHTML + DEF_SLASH + "SHG_dtree.zip" )
-         if !HB_UNZIPFILE(cDirOutHTML + DEF_SLASH + "SHG_dtree.zip",,.T.,,cDirOutHTML + DEF_SLASH + "SHG_IMG" , "*.*" )
-            MsgInfo( "Error decompresing images for index tree of HTML Help (Java Mode)." )
-         else
-            ferase( cDirOutHTML + DEF_SLASH + "SHG_dtree.zip" )
-         endif
- *    HB_UNZIPFILE( <cFile>, <bBlock>, <lWithPath>, <cPassWord>, <cPath>, <cFile> | <aFile>, <pFileProgress> ) ---> lCompress
- * $ARGUMENTS$
- *      <cFile>   Name of the zip file to extract
- *      <bBlock>  Code block to execute while extracting
- *      <lWithPath> Toggle to create directory if needed
- *      <cPassWord> Password to use to extract files
- *      <cPath>    Path to extract the files to - mandatory
- *      <cFile> | <aFiles> A File or Array of files to extract - mandatory
- *      <pFileProgress> Code block for File Progress
+
+   _SaveBitmap( LoadBitmap( "SHG_ARROWPREV" ), cDirOutCHM + DEF_SLASH + "SHG_ArrowPrev.bmp" )
+   _SaveBitmap( LoadBitmap( "SHG_ARROWNEXT" ), cDirOutCHM + DEF_SLASH + "SHG_ArrowNext.bmp" )
+   _SaveBitmap( LoadBitmap( "SHG_ARROWTOP" ), cDirOutCHM + DEF_SLASH + "SHG_ArrowTop.bmp" )
+   _SaveBitmap( LoadBitmap( "SHG_ARROWBOTTOM" ), cDirOutCHM + DEF_SLASH + "SHG_ArrowBottom.bmp" )
+
+   if bGenHtml
+      US_FileCopy( cDirOutCHM + DEF_SLASH + "SHG_ArrowPrev.bmp" , cDirOutHTML + DEF_SLASH + "SHG_ArrowPrev.bmp" )
+      US_FileCopy( cDirOutCHM + DEF_SLASH + "SHG_ArrowNext.bmp" , cDirOutHTML + DEF_SLASH + "SHG_ArrowNext.bmp" )
+      US_FileCopy( cDirOutCHM + DEF_SLASH + "SHG_ArrowTop.bmp" , cDirOutHTML + DEF_SLASH + "SHG_ArrowTop.bmp" )
+      US_FileCopy( cDirOutCHM + DEF_SLASH + "SHG_ArrowBottom.bmp" , cDirOutHTML + DEF_SLASH + "SHG_ArrowBottom.bmp" )
+
+      /* Copy extra images for html help */
+      _SaveBitmap( LoadBitmap( "SHG_WELCOME" ), cDirOutHTML + DEF_SLASH + "SHG_Welcome.bmp" )
+      _SaveBitmap( LoadBitmap( "SHG_BOOK" ), cDirOutHTML + DEF_SLASH + "SHG_Book.bmp" )
+      _SaveBitmap( LoadBitmap( "SHG_PAGE" ), cDirOutHTML + DEF_SLASH + "SHG_Page.bmp" )
+   
+      /* Copy dtree for html help */
+      US_FileCopy( PUB_cQPM_Folder + DEF_SLASH + "US_dtree.css" , cDirOutHTML + DEF_SLASH + "SHG_dtree.css" )
+      US_FileCopy( PUB_cQPM_Folder + DEF_SLASH + "US_dtree.js" , cDirOutHTML + DEF_SLASH + "SHG_dtree.js" )
+      US_FileCopy( PUB_cQPM_Folder + DEF_SLASH + "US_dtree.im" , cDirOutHTML + DEF_SLASH + "SHG_dtree.zip" )
+
+      /*    HB_UNZIPFILE( <cFile>, <bBlock>, <lWithPath>, <cPassWord>, <cPath>, <cFile> | <aFile>, <pFileProgress> ) ---> lCompress
+       * $ARGUMENTS$
+       *      <cFile>   Name of the zip file to extract
+       *      <bBlock>  Code block to execute while extracting
+       *      <lWithPath> Toggle to create directory if needed
+       *      <cPassWord> Password to use to extract files
+       *      <cPath>    Path to extract the files to - mandatory
+       *      <cFile> | <aFiles> A File or Array of files to extract - mandatory
+       *      <pFileProgress> Code block for File Progress
+       */
+      if !HB_UNZIPFILE(cDirOutHTML + DEF_SLASH + "SHG_dtree.zip", nil, .T., nil, cDirOutHTML + DEF_SLASH + "SHG_IMG" + DEF_SLASH, "*.*", nil )
+         MsgInfo( "Error decompresing images for index tree of HTML Help (Java Mode)." )
+      else
+         ferase( cDirOutHTML + DEF_SLASH + "SHG_dtree.zip" )
       endif
    endif
+
    DBUseArea( .T. , , cBase , "HlpAlias" , DEF_DBF_EXCLUSIVE , DEF_DBF_WRITE )
    DBSetIndex( US_FileNameOnlyPathAndName( cBase ) )
    nRegistros := Reccount()
@@ -631,7 +628,7 @@ Function SHG_Generate( cBase , bGenHtml , PUB_cSecu , cWWW )
       //ferase( PUB_cQPM_Folder + DEF_SLASH + "hha.dll" )
    endif
    ferase( PUB_cQPM_Folder + DEF_SLASH + "itcc_dll.tmp" )
-   US_DirRemoveLoop( cDirOutCHM , 5 )    // Esto no funciona porque el directorio sigue tomado
+   US_DirRemoveLoop( cDirOutCHM , 5 )
 Return .T.
 
 Function SHG_CopyImageToHtmlFolder( vImage , cDirOut )
@@ -977,6 +974,7 @@ Return
 
 Function SHG_LoadDatabase( cDataBase )
    Local cAux := "" , vStructure
+   
    SetMGWaitTxt( "Loading Help Database ..." )
    if US_IsDBF( cDataBase ) != 0
       MsgInfo( "Error open QPM Help Generator Database: " + cDataBase + HB_OsNewLine() + "Look at " + PageHlp )
@@ -992,21 +990,15 @@ Function SHG_LoadDatabase( cDataBase )
       endif
       if file( US_FileNameOnlyPathAndName( cDatabase ) + ".dbt" )
          SetMGWaitTxt( "Converting SHG Database to DBFCDX Driver..." )
- us_log( "convert " + cDatabase, .F. )
          if !US_DBConvert( cDatabase , US_FileNameOnlyPathAndName( cDatabase ) + "_" + PUB_cSecu + ".dbf" , "DBFNTX" , "DBFCDX" )
             US_Log( "Error converting SHG database to DBFCDX Driver" )
          else
- us_log( "borro " + cDatabase, .F. )
             ferase( cDatabase )
- us_log( "borro " + US_FileNameOnlyPathAndName( cDatabase ) + ".dbt", .F. )
             ferase( US_FileNameOnlyPathAndName( cDatabase ) + ".dbt" )
- us_log( "borro " + US_FileNameOnlyPathAndName( cDatabase ) + ".ntx", .F. )
             ferase( US_FileNameOnlyPathAndName( cDatabase ) + ".ntx" )
- us_log( "rename " + US_FileNameOnlyPathAndName( cDatabase ) + "_" + PUB_cSecu + ".dbf | " + cDatabase , .F.)
             if frename( US_FileNameOnlyPathAndName( cDatabase ) + "_" + PUB_cSecu + ".dbf" , cDatabase ) < 0
                US_Log( "Error renaming SHG Database '"+ US_FileNameOnlyPathAndName( cDatabase ) + "_" + PUB_cSecu + ".dbf" + "' in Migration process, ferror: " + US_TodoStr( fError() ) )
             else
- us_log( "rename " + US_FileNameOnlyPathAndName( cDatabase ) + "_" + PUB_cSecu + ".fpt | " + US_FileNameOnlyPathAndName( cDatabase ) + ".fpt", .F. )
                if frename( US_FileNameOnlyPathAndName( cDatabase ) + "_" + PUB_cSecu + ".fpt" , US_FileNameOnlyPathAndName( cDatabase ) + ".fpt" ) < 0
                   US_Log( "Error renaming SHG Database '" + US_FileNameOnlyPathAndName( cDatabase ) + "_" + PUB_cSecu + ".fpt" + "' in Migration process, ferror: " + US_TodoStr( fError() ) )
            //  else
@@ -1014,9 +1006,8 @@ Function SHG_LoadDatabase( cDataBase )
                endif
             endif
          endif
-      else
- us_log( "chequeo: " + US_FileNameOnlyPathAndName( cDatabase ) + ".dbt" , .F. )
       endif
+      
       SetMGWaitTxt( "Packing Help Database ..." )
       DBUseArea( .T. , , cDataBase , "SHG" , DEF_DBF_EXCLUSIVE , DEF_DBF_WRITE )
       vStructure := DBStruct()
@@ -1027,14 +1018,13 @@ Function SHG_LoadDatabase( cDataBase )
          DBUseArea( .T. , , cDataBase , "SHG" , DEF_DBF_EXCLUSIVE , DEF_DBF_WRITE )
       endif
       PACK
-  //  DBCloseArea( "SHG" )
       ferase( US_FileNameOnlyPathAndName( cDataBase ) + ".bak" )
-  //  DBUseArea( .T. , , cDataBase , "SHG" , DEF_DBF_EXCLUSIVE , DEF_DBF_WRITE )
- //   DBSetIndex( US_FileNameOnlyPathAndName( SHG_Database ) )
-      DbGoTop()
+
+      DO EVENTS
+
       SetMGWaitTxt( "Loading Topics..." )
-      do while !eof()
-         DO EVENTS
+      DbGoTop()
+      do while ! eof()
          REPLACE SHG_TYPET  WITH SHG_TYPE
          REPLACE SHG_TOPICT WITH SHG_TOPIC
          REPLACE SHG_NICKT  WITH SHG_NICK
@@ -1043,9 +1033,11 @@ Function SHG_LoadDatabase( cDataBase )
          DBSkip()
       enddo
       DbGoTop()
+
       SetMGWaitTxt( "Reindex Help Database ..." )
       SHG_IndexON( cDatabase )
       DBCloseArea( "SHG" )
+
       SetMGWaitTxt( "New Secuence Database ..." )
       SHG_NewSecuence()
       DBUseArea( .T. , , cDataBase , "SHG" , DEF_DBF_EXCLUSIVE , DEF_DBF_WRITE )
@@ -1743,5 +1735,313 @@ Function SHG_Commands( cIn , cPos )
 Return .T.
 
 #endif
+
+#pragma BEGINDUMP
+
+#include <windows.h>
+#include "hbapi.h"
+#include "hbapiitm.h"
+
+#define HDIB HANDLE
+#define IS_WIN30_DIB(lpbi)  ((*(LPDWORD)(lpbi)) == sizeof(BITMAPINFOHEADER))
+
+WORD DIBNumColors(LPSTR lpDIB)
+{
+    WORD wBitCount;  // DIB bit count
+
+    // If this is a Windows-style DIB, the number of colors in the
+    // color table can be less than the number of bits per pixel
+    // allows for (i.e. lpbi->biClrUsed can be set to some value).
+    // If this is the case, return the appropriate value.
+
+
+    if (IS_WIN30_DIB(lpDIB))
+    {
+        DWORD dwClrUsed;
+
+        dwClrUsed = ((LPBITMAPINFOHEADER)lpDIB)->biClrUsed;
+        if (dwClrUsed)
+
+        return (WORD)dwClrUsed;
+    }
+
+    // Calculate the number of colors in the color table based on
+    // the number of bits per pixel for the DIB.
+
+    if (IS_WIN30_DIB(lpDIB))
+        wBitCount = ((LPBITMAPINFOHEADER)lpDIB)->biBitCount;
+    else
+        wBitCount = ((LPBITMAPCOREHEADER)lpDIB)->bcBitCount;
+
+    // return number of colors based on bits per pixel
+
+    switch (wBitCount)
+    {
+        case 1:
+            return 2;
+
+        case 4:
+            return 16;
+
+        case 8:
+            return 256;
+
+        default:
+            return 0;
+    }
+}
+
+WORD PaletteSize(LPSTR lpDIB)
+{
+    // calculate the size required by the palette
+    if (IS_WIN30_DIB (lpDIB))
+        return (WORD) (DIBNumColors(lpDIB) * sizeof(RGBQUAD));
+    else
+        return (WORD) (DIBNumColors(lpDIB) * sizeof(RGBTRIPLE));
+}
+
+HANDLE DDBToDIB(HBITMAP hBitmap, HPALETTE hPal)
+{
+    BITMAP              bm;         // bitmap structure
+    BITMAPINFOHEADER    bi;         // bitmap header
+    LPBITMAPINFOHEADER  lpbi;       // pointer to BITMAPINFOHEADER
+    DWORD               dwLen;      // size of memory block
+    HANDLE              hDIB, h;    // handle to DIB, temp handle
+    HDC                 hDC;        // handle to DC
+    WORD                biBits;     // bits per pixel
+
+    // check if bitmap handle is valid
+
+    if (!hBitmap)
+        return NULL;
+
+    // fill in BITMAP structure, return NULL if it didn't work
+
+    if (!GetObject(hBitmap, sizeof(bm), (LPSTR)&bm))
+        return NULL;
+
+   // if no palette is specified, use default palette
+
+   if( hPal == NULL )
+   {
+      hPal = ( HPALETTE ) GetStockObject(DEFAULT_PALETTE);
+   }
+
+    // calculate bits per pixel
+
+    biBits = ( WORD ) ( bm.bmPlanes * bm.bmBitsPixel );
+
+    // make sure bits per pixel is valid
+
+    if (biBits <= 1)
+        biBits = 1;
+    else if (biBits <= 4)
+        biBits = 4;
+    else if (biBits <= 8)
+        biBits = 8;
+    else // if greater than 8-bit, force to 24-bit
+        biBits = 24;
+
+    // initialize BITMAPINFOHEADER
+
+    bi.biSize = sizeof(BITMAPINFOHEADER);
+    bi.biWidth = bm.bmWidth;
+    bi.biHeight = bm.bmHeight;
+    bi.biPlanes = 1;
+    bi.biBitCount = biBits;
+    bi.biCompression = BI_RGB;
+    bi.biSizeImage = 0;
+    bi.biXPelsPerMeter = 0;
+    bi.biYPelsPerMeter = 0;
+    bi.biClrUsed = 0;
+    bi.biClrImportant = 0;
+
+    // calculate size of memory block required to store BITMAPINFO
+
+    dwLen = bi.biSize + PaletteSize((LPSTR)&bi);
+
+    // get a DC
+
+    hDC = GetDC(NULL);
+
+    // select and realize our palette
+
+    hPal = SelectPalette(hDC, hPal, FALSE);
+    RealizePalette(hDC);
+
+    // alloc memory block to store our bitmap
+
+    hDIB = GlobalAlloc(GHND, dwLen);
+
+    // if we couldn't get memory block
+
+    if (!hDIB)
+    {
+      // clean up and return NULL
+
+      SelectPalette(hDC, hPal, TRUE);
+      RealizePalette(hDC);
+      ReleaseDC(NULL, hDC);
+      return NULL;
+    }
+
+    // lock memory and get pointer to it
+
+    lpbi = (LPBITMAPINFOHEADER)GlobalLock(hDIB);
+
+    /// use our bitmap info. to fill BITMAPINFOHEADER
+
+    *lpbi = bi;
+
+    // call GetDIBits with a NULL lpBits param, so it will calculate the
+    // biSizeImage field for us
+
+    GetDIBits(hDC, hBitmap, 0, (UINT)bi.biHeight, NULL, (LPBITMAPINFO)lpbi,
+        DIB_RGB_COLORS);
+
+    // get the info. returned by GetDIBits and unlock memory block
+
+    bi = *lpbi;
+    GlobalUnlock(hDIB);
+
+    // if the driver did not fill in the biSizeImage field, make one up
+    if (bi.biSizeImage == 0)
+        bi.biSizeImage = ((((DWORD)bm.bmWidth * biBits)+ 31) / 32 * 4) * bm.bmHeight;
+    // realloc the buffer big enough to hold all the bits
+
+    dwLen = bi.biSize + PaletteSize((LPSTR)&bi) + bi.biSizeImage;
+
+    h = GlobalReAlloc(hDIB, dwLen, 0);
+    if ( h )
+    {
+        hDIB = h;
+    }
+    else
+    {
+        // clean up and return NULL
+
+        GlobalFree(hDIB);
+///        hDIB = NULL;
+        SelectPalette(hDC, hPal, TRUE);
+        RealizePalette(hDC);
+        ReleaseDC(NULL, hDC);
+        return NULL;
+    }
+
+    // lock memory block and get pointer to it */
+
+    lpbi = (LPBITMAPINFOHEADER)GlobalLock(hDIB);
+
+    // call GetDIBits with a NON-NULL lpBits param, and actualy get the
+    // bits this time
+
+    if (GetDIBits(hDC, hBitmap, 0, (UINT)bi.biHeight, (LPSTR)lpbi +
+            (WORD)lpbi->biSize + PaletteSize((LPSTR)lpbi), (LPBITMAPINFO)lpbi,
+            DIB_RGB_COLORS) == 0)
+    {
+        // clean up and return NULL
+
+        GlobalFree(hDIB);
+
+///////        hDIB = NULL;
+
+        SelectPalette(hDC, hPal, TRUE);
+        RealizePalette(hDC);
+        ReleaseDC(NULL, hDC);
+        return NULL;
+    }
+
+    bi = *lpbi;
+
+    // clean up
+    GlobalUnlock(hDIB);
+    SelectPalette(hDC, hPal, TRUE);
+    RealizePalette(hDC);
+    ReleaseDC(NULL, hDC);
+
+    // return handle to the DIB
+    return hDIB;
+}
+
+WORD SaveDIB(HDIB hDib, LPSTR lpFileName)
+{
+    BITMAPFILEHEADER    bmfHdr;     // Header for Bitmap file
+    LPBITMAPINFOHEADER  lpBI;       // Pointer to DIB info structure
+    HANDLE              fh;         // file handle for opened file
+    DWORD               dwDIBSize;
+    DWORD               dwWritten;
+    DWORD               dwBmBitsSize;
+
+    fh = CreateFile(lpFileName, GENERIC_WRITE, 0, NULL, CREATE_ALWAYS,
+            FILE_ATTRIBUTE_NORMAL | FILE_FLAG_SEQUENTIAL_SCAN, NULL);
+
+
+    // Get a pointer to the DIB memory, the first of which contains
+    // a BITMAPINFO structure
+
+    lpBI = (LPBITMAPINFOHEADER)GlobalLock(hDib);
+    if (!lpBI)
+    {
+        CloseHandle(fh);
+        return 1;
+    }
+
+    if (lpBI->biSize != sizeof(BITMAPINFOHEADER))
+    {
+        GlobalUnlock(hDib);
+        CloseHandle(fh);
+        return 1;
+    }
+
+
+    bmfHdr.bfType = ((WORD) ('M' << 8) | 'B'); // is always "BM"
+
+    dwDIBSize = *(LPDWORD)lpBI + PaletteSize((LPSTR)lpBI);
+
+
+    dwBmBitsSize = ((((lpBI->biWidth)*((DWORD)lpBI->biBitCount))+ 31) / 32 * 4) *  lpBI->biHeight;
+    dwDIBSize += dwBmBitsSize;
+    lpBI->biSizeImage = dwBmBitsSize;
+
+
+    bmfHdr.bfSize = dwDIBSize + sizeof(BITMAPFILEHEADER);
+    bmfHdr.bfReserved1 = 0;
+    bmfHdr.bfReserved2 = 0;
+
+    // Now, calculate the offset the actual bitmap bits will be in
+    // the file -- It's the Bitmap file header plus the DIB header,
+    // plus the size of the color table.
+
+    bmfHdr.bfOffBits = (DWORD)sizeof(BITMAPFILEHEADER) + lpBI->biSize +
+            PaletteSize((LPSTR)lpBI);
+
+    // Write the file header
+
+    WriteFile(fh, (LPSTR)&bmfHdr, sizeof(BITMAPFILEHEADER), &dwWritten, NULL);
+
+    // Write the DIB header and the bits -- use local version of
+    // MyWrite, so we can write more than 32767 bytes of data
+
+    WriteFile(fh, (LPSTR)lpBI, dwDIBSize, &dwWritten, NULL);
+
+    GlobalUnlock(hDib);
+    CloseHandle(fh);
+
+    if (dwWritten == 0)
+        return 1; // oops, something happened in the write
+    else
+        return 0; // Success code
+}
+
+HB_FUNC( _SAVEBITMAP )                   // hBitmap, cFile
+{
+   HANDLE hDIB;
+
+   hDIB = DDBToDIB( ( HBITMAP ) ( HWND ) hb_parnl( 1 ), NULL );
+   SaveDIB( hDIB, ( LPSTR ) hb_parc( 2 ) );
+   GlobalFree( hDIB );
+}
+
+#pragma ENDDUMP
 
 /* eof */

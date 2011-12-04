@@ -121,13 +121,13 @@
    BANEN                        BITMAP     .\resource\BanEN.bmp
    BANBR                        BITMAP     .\resource\BanBR.bmp
    BANPT                        BITMAP     .\resource\BanPT.bmp
-/*
-   QPM_Splash                   BITMAP     .\resource\QPM_Splash.bmp
-   SHG_ImgBook                  BITMAP     .\resource\SHG_ImgBook.BMP
-   SHG_ImgPage                  BITMAP     .\resource\SHG_ImgPage.BMP
-   SHG_ImgFoot                  BITMAP     .\resource\SHG_ImgFoot.BMP
-   SHG_ImgWelcome               BITMAP     .\resource\SHG_ImgWelcome.BMP
-*/
+   SHG_ARROWPREV                BITMAP     .\resource\SHG_ArrowPrev.bmp
+   SHG_ARROWNEXT                BITMAP     .\resource\SHG_ArrowNext.bmp
+   SHG_ARROWTOP                 BITMAP     .\resource\SHG_ArrowTop.bmp
+   SHG_ARROWBOTTOM              BITMAP     .\resource\SHG_ArrowBottom.bmp
+   SHG_BOOK                     BITMAP     .\resource\SHG_Book.BMP
+   SHG_PAGE                     BITMAP     .\resource\SHG_Page.BMP
+   SHG_WELCOME                  BITMAP     .\resource\SHG_Welcome.BMP
 
 // STRINGS
 STRINGTABLE
