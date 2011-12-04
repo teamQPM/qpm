@@ -1041,7 +1041,7 @@ METHOD US_EditSetFontName() CLASS US_RichEdit
    if nPos > 0
       cName := ::vFonts[nPos]
       if !_SetFontNameRTF( ::US_WinEdit , ::cRichControlName , cName)
-         US_Log("No se pudieron cambiar las fuentes")
+//         US_Log("No se pudieron cambiar las fuentes")
       endif
    endif
 Return NIL
@@ -1637,11 +1637,11 @@ Function PageSetupRTF_Click()
 Return .T.
 
 Function PrintRTF_Click()
-   US_Log( "Funcion sin implementar" )
+//   US_Log( "Funcion sin implementar" )
 Return .T.
 
 Function PreviewRTF_Click()
-   US_Log( "Funcion sin implementar" )
+//   US_Log( "Funcion sin implementar" )
 Return .T.
 
 #pragma BEGINDUMP
@@ -1871,7 +1871,7 @@ Function US_Redraw2( cFormName , nOldWidth , nOldHeight )
       endif
    next
    if !empty( foco )   && posiblemente este bloque siempre es .F.
-      us_log( "setfocus" , .F. )
+//      us_log( "setfocus" , .F. )
       DoMethod( cFormName , foco , "setfocus" )
    endif
 return

@@ -32,7 +32,7 @@
 #ifdef QPM_SYNCRECOVERY
 
 Function QPM_SyncRecoveryMenu( cFileName )
-   US_Log( "Not implemented" )
+//   US_Log( "Not implemented" )
 Return .T.
 
 #endif

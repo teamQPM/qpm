@@ -791,16 +791,16 @@ Function Say( txt )
 Return .T.
 
 Function GetSuffix()
-   US_Log( "Function " + procname() + " Suspend from US_Shell" )
+//   US_Log( "Function " + procname() + " Suspend from US_Shell" )
 Return .T.
 Function GetMiniGuiSuffix()
-   US_Log( "Function " + procname() + " Suspend from US_Shell" )
+//   US_Log( "Function " + procname() + " Suspend from US_Shell" )
 Return .T.
 Function GetHarbourSuffix()
-   US_Log( "Function " + procname() + " Suspend from US_Shell" )
+//   US_Log( "Function " + procname() + " Suspend from US_Shell" )
 Return .T.
 Function GetCppSuffix()
-   US_Log( "Function " + procname() + " Suspend from US_Shell" )
+//   US_Log( "Function " + procname() + " Suspend from US_Shell" )
 Return .T.
 
 /* eof */

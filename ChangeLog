@@ -8,6 +8,68 @@
  * See "How to format your ChangeLog entries" in howtosvn.txt file.
  */
 
+2011-12-04 22:00:00 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * ./QPM.exe
+     * Update to version 05_03_01.
+   * ./QPM.prg
+     ! Fixed: building aborted with UPX option is checked.
+     * Process log improved (added blank lines).
+     - Removed US_A*.EXE from list of needed files.
+     - Removed US_S*.EXE from list of needed files.
+   * ./QPM.iss
+     - Removed US_A*.EXE from list of packed files.
+     - Removed US_S*.EXE from list of packed files.
+   * ./us_msg.exe
+   * ./us_redir.exe
+   * ./us_res.exe
+   * ./us_run.exe
+   * ./us_shell.exe
+   * ./us_slash.exe
+   * ./qpm_autoproject.qpm
+   * ./qpm_autoprojectonlyhelp.qpm
+   * ./qpm_us_msg.qpm
+   * ./qpm_us_redir.qpm
+   * ./qpm_us_res.qpm
+   * ./qpm_us_run.qpm
+   * ./qpm_us_shell.qpm
+   * ./qpm_us_slash.qpm
+   * ./doc/howtosvn.txt
+   * ./ToDo
+     * Updated
+   * ./buildall.bat
+     * Changed to avoid compiling ./QPM_AutoProjectOnlyHelp.qpm
+   * ./QPM_AUTOPROJECT.QPM
+     - Excluded ziparchive.lib
+     + Added hbziparc.lib
+     ! Images not shown in java tree in htmlhelp.
+     * Updated
+   * ./QPM_Resources.ch
+     + Added arrow bitmaps used in SHG.
+     + Added bitmaps used to build HTML help pages index.
+   * ./QPM_SHG_SimpleHelpGenerator.prg
+     * Arrow images and bitmaps used to build HTML help pages are loaded
+       form resource file instead of disk.
+   * ./QPM_Environment.prg
+     + Added: QPM_version.path is created if it dosn't exists at start.
+   * ./QPM_ExtraRun.prg
+     * Fixed: picture not shown in button ExtraRunTest.
+   * ./US_A1.exe
+   * ./US_A2.exe
+   * ./US_A3.exe
+   * ./US_A4.exe
+   * ./US_S1.exe
+   * ./US_S2.exe
+   * ./US_S3.exe
+     - Deleted.
+   * ./resource/SHG_Welcome.bmp
+   * ./resource/SHG_Page.bmp
+   * ./resource/SHG_Book.bmp
+   * ./resource/SHG_ArrowTop.bmp
+   * ./resource/SHG_ArrowPrev.bmp
+   * ./resource/SHG_ArrowNext.bmp
+   * ./resource/SHG_ArrowBottom.bmp
+     + Added.
+
 2011-12-02 00:50:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * ./QPM.EXE
      * Compilation with MinGW now uses command file to avoid limitations
@@ -17,7 +79,7 @@
    * ./QPM.iss
      ! Fixed path to TSBrowse sample.
      * Updated.
-   * doc/howtosvn.txt
+   * ./doc/howtosvn.txt
      * Updated section HOW TO BUILD A NEW RELEASE.
    * ./QPM_SHG_SimpleHelpGenerator.prg
      - Some comments deleted.
@@ -85,21 +147,21 @@
      - Some comments deleted.
      - Functions STREAMOUT(), PASTERTF(), GETCONTROLINDEX(), VP_MGWAIT(),
        COPYTOCLIPBOARD() and COPYRTFTOCLIPBOARD() commented out.
-   * US_MSG.EXE
-   * US_REDIR.EXE
-   * US_RES.EXE
-   * US_RUN.EXE
-   * US_SHELL.EXE
-   * US_SLASH.EXE
+   * ./US_MSG.EXE
+   * ./US_REDIR.EXE
+   * ./US_RES.EXE
+   * ./US_RUN.EXE
+   * ./US_SHELL.EXE
+   * ./US_SLASH.EXE
      * Updated.
-   * US_SHELL.prg
+   * ./US_SHELL.prg
      * Changed US_h2d() by VAL(NTOC()).
-   * QPM_US_MSG.qpm
-   * QPM_US_REDIR.qpm
-   * QPM_US_RES.qpm
-   * QPM_US_RUN.qpm
-   * QPM_US_SHELL.qpm
-   * QPM_US_SLASH.qpm
+   * ./QPM_US_MSG.qpm
+   * ./QPM_US_REDIR.qpm
+   * ./QPM_US_RES.qpm
+   * ./QPM_US_RUN.qpm
+   * ./QPM_US_SHELL.qpm
+   * ./QPM_US_SLASH.qpm
    * ./helpQPM/SHG_CHANGE.qpm
      * Changed to Harbour compiler and HMG Extended 2.0.3
      * Added hbct library.
@@ -332,8 +394,8 @@
      * License info is loaded from RC instead on file.
      - Removed check on us_hot.oci and us_killer.oci
      + Added HB_LOADSTRING C level function.
-   + ./resource.h
-     + Resources ID definitions.
+   + ./QPM_Resources.ch
+     + Resources ID definitions by including resource.h
    + ./QPM.ch
      + Added inclue of resource.h
    - ./us_ecnecil.spf

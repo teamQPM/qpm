@@ -239,10 +239,11 @@ Function QPM_GetExtraRun()
          HEIGHT 28 ;
 
       @ 532,235 BUTTON ExtraRunTest ;
-         PICTURE 'test'   ;
+         PICTURE 'TEST' ;
+         NOXPSTYLE ;
          ACTION QPM_GetExtraRunSave( .T. ) ;
          WIDTH 70 ;
-         HEIGHT 26 ;
+         HEIGHT 26
 
       @ 532,357 BUTTON ExtraRunCancel ;
          CAPTION 'Cancel' ;

@@ -77,7 +77,17 @@ Function LoadEnvironment
    if PUB_bLite .and. file( US_FileNameOnlyPathAndName( PUB_cProjectFile )+ ".cfg" )
       EnvironmentMemo := MemoRead ( US_FileNameOnlyPathAndName( PUB_cProjectFile )+ ".cfg" )
    else
-      if !file( PUB_cQPM_Folder + DEF_SLASH + 'QPM_' + PUB_cQPM_Version3 + '.cfg' )
+      if file( PUB_cQPM_Folder + DEF_SLASH + 'QPM_' + PUB_cQPM_Version3 + '.cfg' )
+         if US_DirWrite( GetWindowsFolder() )
+            if file( GetWindowsFolder() + DEF_SLASH + 'QPM_' + PUB_cQPM_Version3 + '.path' )
+               if ! (MemoRead( GetWindowsFolder() + DEF_SLASH + 'QPM_' + PUB_cQPM_Version3 + '.path' ) == PUB_cQPM_Folder )
+                  QPM_MemoWrit( GetWindowsFolder() + DEF_SLASH + 'QPM_' + PUB_cQPM_Version3 + '.path' , PUB_cQPM_Folder )
+               endif
+            else
+               QPM_MemoWrit( GetWindowsFolder() + DEF_SLASH + 'QPM_' + PUB_cQPM_Version3 + '.path' , PUB_cQPM_Folder )
+            endif
+         endif
+      else
          if US_DirWrite( GetWindowsFolder() )
             //
             DECLARE vAuxDir[ ADIR( GetWindowsFolder() + DEF_SLASH + 'QAC_????????.path' ) ]
