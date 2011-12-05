@@ -8,6 +8,23 @@
  * See "How to format your ChangeLog entries" in howtosvn.txt file.
  */
 
+2011-12-05 09:51:00 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * ./us_dbfview.exe
+   * ./us_msg.exe
+   * ./us_redir.exe
+   * ./us_res.exe
+   * ./us_run.exe
+   * ./us_shell.exe
+   * ./us_slash.exe
+   * ./us_upx.exe
+   * ./qpm_us_msg.qpm
+   * ./qpm_us_redir.qpm
+   * ./qpm_us_res.qpm
+   * ./qpm_us_run.qpm
+   * ./qpm_us_shell.qpm
+   * ./qpm_us_slash.qpm
+     * Unchecked upx option because it was slowing down my machine.
+
 2011-12-04 22:00:00 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * ./QPM.exe
      * Update to version 05_03_01.
