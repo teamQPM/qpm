@@ -8,6 +8,13 @@
  * See "How to format your ChangeLog entries" in howtosvn.txt file.
  */
 
+2011-12-05 10:17:00 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * ./RTFtoHTML/VB rtf2htm3/FGS_ConsoleRtf2Html3_BR_.exe
+   * ./RTFtoHTML/VB rtf2htm3/FGS_ConsoleRtf2Html3_P_.exe
+   * ./RTFtoHTML/VB rtf2htm3/FGS_TestRtf2Html3.exe
+   * ./RTFtoHTML/VB rtf2htm3/FGS_TestRtf2Html3.log
+     + Added, for those who don't have VB package.
+
 2011-12-05 09:51:00 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * ./us_dbfview.exe
    * ./us_msg.exe
