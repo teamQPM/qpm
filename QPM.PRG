@@ -35,13 +35,12 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
    Local Folder , FileName , i , nPos , LogIni := 0 , nIndx
    Local LOC_cParam := ""
 
-   PUBLIC PUB_cQPM_Version      := "05 03 01"
+   PUBLIC PUB_cQPM_Version      := "05 03 02"
 
    PUBLIC PUB_QPM_bHigh := .F.
    QPM_SetProcessPriority( "HIGH" )
 
    Request DBFCDX , DBFFPT
-// Rddsetdefault( "DBFNTX" )
    Rddsetdefault( "DBFCDX" )
 
    PAR_cP1 =IIF(PAR_cP1 =NIL,"",PAR_cP1 )
@@ -5785,7 +5784,6 @@ Function QPM_Build2()
          Out := Out + 'DIR_MINIGUI = ' + US_ShortName(GetMiniGuiFolder()) + Hb_OsNewLine()
          Out := Out + 'DIR_MINIGUI_RES = ' + US_ShortName(GetMiniGuiFolder()) + DEF_SLASH + 'Resources' + Hb_OsNewLine()
          Out := Out + 'DIR_HARBOUR = ' + US_ShortName( GetHarbourFolder() ) + Hb_OsNewLine()
-         Out := Out + 'REDIR = ' + US_ShortName(PUB_cQPM_Folder) + DEF_SLASH + 'US_REDIR.EXE' + PUB_cUS_RedirOpt + US_ShortName( PUB_cProjectFolder ) + DEF_SLASH + '_'+PUB_cSecu+'Temp.Log ' + Hb_OsNewLine()
       case IsPelles
          Out := Out + 'IMPDEF_PC_EXE = ' + US_ShortName(PUB_cQPM_Folder) + DEF_SLASH + 'US_IMPDEF.EXE' + Hb_OsNewLine()
          Out := Out + 'IMPLIB_PC_EXE = ' + US_ShortName(PUB_cQPM_Folder) + DEF_SLASH + 'US_POLIB.EXE' + Hb_OsNewLine()
@@ -5805,6 +5803,7 @@ Function QPM_Build2()
       otherwise
          US_Log( "Error 5549" )
    endcase
+   Out := Out + 'REDIR = ' + US_ShortName(PUB_cQPM_Folder) + DEF_SLASH + 'US_REDIR.EXE' + PUB_cUS_RedirOpt + US_ShortName( PUB_cProjectFolder ) + DEF_SLASH + '_'+PUB_cSecu+'Temp.Log ' + Hb_OsNewLine()
    Out := Out + 'HARBOUR_EXE = ' + US_ShortName( GetHarbourFolder() ) + DEF_SLASH + 'BIN'+DEF_SLASH+'HARBOUR.EXE' + Hb_OsNewLine()
    Out := Out + 'US_MSG_EXE = ' + US_ShortName(PUB_cQPM_Folder) + DEF_SLASH + 'US_MSG.EXE' + Hb_OsNewLine()
    Out := Out + 'US_UPX_EXE = ' + US_ShortName(PUB_cQPM_Folder) + DEF_SLASH + 'US_UPX.EXE' + Hb_OsNewLine()
