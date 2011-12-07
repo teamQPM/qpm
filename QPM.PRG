@@ -6861,7 +6861,7 @@ Function QPM_Run( bWithParm )
 // QPM_Run2
    Local RUNFOLDER     := alltrim(US_FileNameOnlyPath(VentanaMain.TRunProjectFolder.Value))
    Local TopName       := US_FileNameOnlyName( GetOutputModuleName() )
-   Local App           := US_ShortName( Prj_Text_OutputCopyMoveFolder ) + DEF_SLASH + US_FileNameOnlyNameAndExt( GetOutputModuleName() )
+   Local App
    Local cParm         := ""
    Local cRunParms     := ""
    Local cOldFolder    := GetCurrentFolder()
@@ -6879,6 +6879,12 @@ Function QPM_Run( bWithParm )
       Return .F.
    EndIf
 
+   if Prj_Radio_OutputCopyMove == 3
+      App := US_ShortName( Prj_Text_OutputCopyMoveFolder ) + DEF_SLASH + US_FileNameOnlyNameAndExt( GetOutputModuleName() )
+   else
+      App := GetOutputModuleName()
+   endif
+   
    If .Not. File( App )
       MsgStop ('Application "' + App + '" not found !!!' + HB_OsNewLine() + 'You Must (Re)Build Project Prior To Run It.' )
    Else
