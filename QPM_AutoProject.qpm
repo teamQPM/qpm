@@ -1,5 +1,5 @@
 VERSION 05 03 02                                                                                                                                                                                                                                              
-PRJ_VERSION 05 03 0003
+PRJ_VERSION 05 03 0004
 PROJECTFOLDER <ThisFolder>                                                                                                                                                                                                                                    
 LASTLIBFOLDERM1BH                                                                                                                                                                                                                                             
 LASTLIBFOLDERM1BX                                                                                                                                                                                                                                             
@@ -17,7 +17,7 @@ LASTLIBFOLDERM3GH
 LASTLIBFOLDERM3GX                                                                                                                                                                                                                                             
 RUNFOLDER                                                                                                                                                                                                                                                     
 RUNPARAM                                                                                                                                                                                                                                                      
-OVERRIDECOMPILEPARM -q                                                                                                                                                                                                                                        
+OVERRIDECOMPILEPARM -q0                                                                                                                                                                                                                                       
 OVERRIDELINKPARM                                                                                                                                                                                                                                              
 CHECKHARBOUR H                                                                                                                                                                                                                                                
 CHECKCPP B                                                                                                                                                                                                                                                    

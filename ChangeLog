@@ -8,6 +8,13 @@
  * See "How to format your ChangeLog entries" in howtosvn.txt file.
  */
 
+2011-12-06 23:15:00 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * ./QPM.exe
+   * ./QPM_AutoProject.qpm
+     * Updated.
+   * ./QPM.prg
+     ! Fixed: run not working when exe is not moved from project folder.
+
 2011-12-05 19:10:00 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * ./QPM_AUTOPROJECT.QPM
      + QPM_CompatibilityHotRecovery.ch
