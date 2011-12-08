@@ -33,31 +33,31 @@ Function QPM_IsLibrariesNamesOld( cDir , cType )
    Local bReto:=.T.
       do case
          case cType == DefineMiniGui1+DefineBorland+DefineHarbour
-            if File( cDir+DEF_SLASH + "BIN" + DEF_SLASH + "HARBOUR.exe" ) .and. File( cDir+DEF_SLASH + "LIB" + DEF_SLASH + "hbrtl.lib" )
+            if File( cDir+DEF_SLASH + "BIN" + DEF_SLASH + "HARBOUR.exe" ) .and. File( GetHarbourLibFolder() + DEF_SLASH + "hbrtl.lib" )
                bReto:=.F.
             endif
          case cType == DefineMiniGui3+DefineMinGW+DefineHarbour
-            if File( cDir+DEF_SLASH + "BIN" + DEF_SLASH + "HARBOUR.exe" ) .and. File( cDir+DEF_SLASH + "LIB" + DEF_SLASH + "libhbrtl.a" )
+            if File( cDir+DEF_SLASH + "BIN" + DEF_SLASH + "HARBOUR.exe" ) .and. File( GetHarbourLibFolder() + DEF_SLASH + "libhbrtl.a" )
                bReto:=.F.
             endif
          case cType == DefineExtended1+DefineBorland+DefineHarbour
-            if File( cDir+DEF_SLASH + "BIN" + DEF_SLASH + "HARBOUR.exe" ) .and. File( cDir+DEF_SLASH + "LIB" + DEF_SLASH + "hbrtl.lib" )
+            if File( cDir+DEF_SLASH + "BIN" + DEF_SLASH + "HARBOUR.exe" ) .and. File( GetHarbourLibFolder() + DEF_SLASH + "hbrtl.lib" )
                bReto:=.F.
             endif
          case cType == DefineExtended1+DefineMinGW+DefineHarbour
-            if File( cDir+DEF_SLASH + "BIN" + DEF_SLASH + "HARBOUR.exe" ) .and. File( cDir+DEF_SLASH + "LIB" + DEF_SLASH + "libhbrtl.a" )
+            if File( cDir+DEF_SLASH + "BIN" + DEF_SLASH + "HARBOUR.exe" ) .and. File( GetHarbourLibFolder() + DEF_SLASH + "libhbrtl.a" )
                bReto:=.F.
             endif
          case cType == DefineOohg3+DefineBorland+DefineHarbour
-            if File( cDir+DEF_SLASH + "BIN" + DEF_SLASH + "HARBOUR.exe" ) .and. File( cDir+DEF_SLASH + "LIB" + DEF_SLASH + "hbrtl.lib" )
+            if File( cDir+DEF_SLASH + "BIN" + DEF_SLASH + "HARBOUR.exe" ) .and. File( GetHarbourLibFolder() + DEF_SLASH + "hbrtl.lib" )
                bReto:=.F.
             endif
          case cType == DefineOohg3+DefineMinGW+DefineHarbour
-            if File( cDir+DEF_SLASH + "BIN" + DEF_SLASH + "HARBOUR.exe" ) .and. File( cDir+DEF_SLASH + "LIB" + DEF_SLASH + "libhbrtl.a" )
+            if File( cDir+DEF_SLASH + "BIN" + DEF_SLASH + "HARBOUR.exe" ) .and. File( GetHarbourLibFolder() + DEF_SLASH + "libhbrtl.a" )
                bReto:=.F.
             endif
          case cType == DefineOohg3+DefinePelles+DefineHarbour
-            if File( cDir+DEF_SLASH + "BIN" + DEF_SLASH + "HARBOUR.exe" ) .and. File( cDir+DEF_SLASH + "LIB" + DEF_SLASH + "hbrtl.lib" )
+            if File( cDir+DEF_SLASH + "BIN" + DEF_SLASH + "HARBOUR.exe" ) .and. File( GetHarbourLibFolder() + DEF_SLASH + "hbrtl.lib" )
                bReto:=.F.
             endif
       // otherwise

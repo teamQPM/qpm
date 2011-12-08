@@ -35,7 +35,7 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
    Local Folder , FileName , i , nPos , LogIni := 0 , nIndx
    Local LOC_cParam := ""
 
-   PUBLIC PUB_cQPM_Version      := "05 03 02"
+   PUBLIC PUB_cQPM_Version      := "05 03 03"
 
    PUBLIC PUB_QPM_bHigh := .F.
    QPM_SetProcessPriority( "HIGH" )
@@ -516,6 +516,7 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
    PUBLIC cPrj_Version    := "00000000"  // VVRRBBBB
    //
    PUBLIC Prj_Radio_Harbour     := DEF_RG_HARBOUR
+   PUBLIC Prj_Check_HarbourIs31 := .T.
    //PUBLIC Prj_Check_34          := .F.
    //PUBLIC Prj_Check_34_Enabled := .F.
    PUBLIC Prj_Radio_Cpp         := DEF_RG_BORLAND
@@ -4298,6 +4299,7 @@ Function QPM_OpenProject2()
       //bAutoexit := .F.
       bWarningCpp := .T.
       Prj_Radio_Harbour := DEF_RG_HARBOUR
+      Prj_Check_HarbourIs31 := .T.
       * No Borrar           Prj_Check_34 := .F.
       Prj_Radio_Cpp      := DEF_RG_BORLAND
       Prj_Radio_MiniGui  := DEF_RG_OOHG3
@@ -4540,6 +4542,12 @@ Function QPM_OpenProject2()
                  Else
                     Prj_Radio_Harbour := DEF_RG_HARBOUR
                 * No Borrar         Prj_Check_34_Enabled := .F.
+                 EndIf
+         ElseIf  US_Upper( US_Word( LOC_cLine , 1 ) ) == 'CHECKHARBOURIS31'
+                 If US_Upper ( US_Word( LOC_cLine , 2 ) ) = "YES"
+                    Prj_Check_HarbourIs31 := .T.
+                 Else
+                    Prj_Check_HarbourIs31 := .F.
                  EndIf
          ElseIf  US_Upper( US_Word( LOC_cLine , 1 ) ) == 'XHARBOURMTSUPPORT'
                  If US_Upper ( US_Word( LOC_cLine , 2 ) ) = 'YES'
@@ -5064,6 +5072,7 @@ Function QPM_SaveProject( bCheck )
    cINI := cINI + 'OVERRIDECOMPILEPARM ' + GetProperty( "VentanaMain" , "OverrideCompile" , "value" ) + HB_OsNewLine()
    cINI := cINI + 'OVERRIDELINKPARM ' + GetProperty( "VentanaMain" , "OverrideLink" , "value" ) + HB_OsNewLine()
    cINI := cINI + 'CHECKHARBOUR ' + if ( Prj_Radio_Harbour == DEF_RG_XHARBOUR , DefineXHarbour , DefineHarbour ) + HB_OsNewLine()
+   cINI := cINI + 'CHECKHARBOURIS31 ' + if ( Prj_Check_HarbourIs31, "YES", "NO" ) + HB_OsNewLine()
    * No Borrar    cINI := cINI + 'XHARBOURMTSUPPORT ' + if ( Prj_Check_34 == .T. , 'YES' , 'NO' ) + HB_OsNewLine()
    cINI := cINI + 'CHECKCPP ' + GetCppSuffix() + HB_OsNewLine()
    cINI := cINI + 'CHECKMINIGUI ' + GetMiniGuiSuffix() + HB_OsNewLine()
@@ -5714,7 +5723,6 @@ Function QPM_Build2()
    DO EVENTS
 
    DELETE FILE ( PUB_cProjectFolder + DEF_SLASH + '_'+PUB_cSecu+'End.Txt' )
-// DELETE FILE ( US_ShortName(GetCppFolder()) + DEF_SLASH + 'BIN' + DEF_SLASH + '_'+PUB_cSecu+'Temp.Log' )
    DELETE FILE ( US_ShortName( PUB_cProjectFolder ) + DEF_SLASH + '_'+PUB_cSecu+'Temp.Log' )
    DELETE FILE ( US_Shortname( GetCppFolder()) + DEF_SLASH + 'BIN' + DEF_SLASH + '_'+PUB_cSecu+'Temp.Log' )
    DELETE FILE ( PUB_cProjectFolder + DEF_SLASH + 'BIN' + DEF_SLASH + '_'+PUB_cSecu+'Progress.Log' )
@@ -5812,7 +5820,7 @@ Function QPM_Build2()
    Out := Out + 'DIR_C_INCLUDE = ' + cExtraFoldersC + Hb_OsNewLine()
    Out := Out + 'DIR_MINIGUI_LIB = ' + US_ShortName(GetMiniGuiFolder()+DEF_SLASH + 'lib') + Hb_OsNewLine()
    Out := Out + 'DIR_COMPC_LIB = ' + US_ShortName(GetCppFolder()) + DEF_SLASH + 'LIB' + Hb_OsNewLine()
-   Out := Out + 'DIR_HARBOUR_LIB = ' + US_ShortName( GetHarbourFolder() ) + DEF_SLASH + 'LIB' + Hb_OsNewLine()
+   Out := Out + 'DIR_HARBOUR_LIB = ' + GetHarbourLibFolder( .F. ) + Hb_OsNewLine()
    Out := Out + 'DIR_PROJECT = ' + US_ShortName(PUB_cProjectFolder) + Hb_OsNewLine()
    Out := Out + 'PAUSE_EXE = PAUSE' + Hb_OsNewLine()
    Out := Out + 'DIR_OBJECTS = ' + US_ShortName(PUB_cProjectFolder) + DEF_SLASH + GetObjName() + Hb_OsNewLine()
@@ -5990,7 +5998,7 @@ Function QPM_Build2()
 
 // libraries
 
-            if QPM_IsXHarbour() .and. !IsMinGW .and. file( US_ShortName( GetHarbourFolder() ) + DEF_SLASH + 'lib'+DEF_SLASH+'bcc640'+PUB_xHarbourMT+'.lib' )
+            if QPM_IsXHarbour() .and. !IsMinGW .and. file( GetHarbourLibFolder()+DEF_SLASH+'bcc640'+PUB_xHarbourMT+'.lib' )
                Out := Out + PUB_cCharTab + 'echo $(DIR_HARBOUR_LIB)'+DEF_SLASH+'bcc640'+PUB_xHarbourMT+'.lib + >> _'+PUB_cSecu+'Script.ld' + HB_OsNewLine()
             endif
 
@@ -6043,13 +6051,13 @@ Function QPM_Build2()
                            US_Upper( &('vLibDefault'+GetSuffix()+'['+str(i)+']') ) == "LIBPROPGRID.A" .or. ;
                            US_Upper( &('vLibDefault'+GetSuffix()+'['+str(i)+']') ) == "LIBSOCKET.A"
                            if File( GetMiniGuiFolder() + DEF_SLASH + 'lib'+DEF_SLASH+'lib' + if(QPM_IsXHarbour(),"x","") + substr( &('vLibDefault'+GetSuffix()+'['+str(i)+']') , 4 ) ) .or. ;
-                              File( US_ShortName( GetHarbourFolder() ) + DEF_SLASH + 'lib'+DEF_SLASH+'lib' + if(QPM_IsXHarbour(),"x","") + substr( &('vLibDefault'+GetSuffix()+'['+str(i)+']') , 4 ) ) .or. ;
+                              File( GetHarbourLibFolder()+DEF_SLASH+'lib' + if(QPM_IsXHarbour(),"x","") + substr( &('vLibDefault'+GetSuffix()+'['+str(i)+']') , 4 ) ) .or. ;
                               File( GetCppFolder() + DEF_SLASH + 'lib'+DEF_SLASH+'lib' + if(QPM_IsXHarbour(),"x","") + substr( &('vLibDefault'+GetSuffix()+'['+str(i)+']') , 4 ) )
                               w_hay := .t.
                               w_group += '-l' + if(QPM_IsXHarbour(),"x","") + substr( US_FileNameOnlyName( &( 'vLibDefault'+GetSuffix()+'['+str(i)+']' ) ) , 4 ) + ' '
                            else
                               if QPM_IsXHarbour()
-                                 if File( US_ShortName( GetHarbourFolder() ) + DEF_SLASH + 'lib'+DEF_SLASH+'lib' + substr( &('vLibDefault'+GetSuffix()+'['+str(i)+']') , 4 ) )
+                                 if File( GetHarbourLibFolder()+DEF_SLASH+'lib' + substr( &('vLibDefault'+GetSuffix()+'['+str(i)+']') , 4 ) )
                                     w_hay := .t.
                                     w_group += '-l' + substr( US_FileNameOnlyName( &( 'vLibDefault'+GetSuffix()+'['+str(i)+']' ) ) , 4 ) + ' '
                                  endif
@@ -6057,7 +6065,7 @@ Function QPM_Build2()
                            endif
                         else
                            if File( GetMiniGuiFolder() + DEF_SLASH + 'lib' + DEF_SLASH + &('vLibDefault'+GetSuffix()+'['+str(i)+']') ) .or. ;
-                              File( US_ShortName( GetHarbourFolder() ) + DEF_SLASH + 'lib' + DEF_SLASH + &('vLibDefault'+GetSuffix()+'['+str(i)+']') ) .or. ;
+                              File( GetHarbourLibFolder() + DEF_SLASH + &('vLibDefault'+GetSuffix()+'['+str(i)+']') ) .or. ;
                               File( GetCppFolder() + DEF_SLASH + 'lib' + DEF_SLASH + &('vLibDefault'+GetSuffix()+'['+str(i)+']') )
                               if ( ( !PUB_bDebugActive .and. GetCppSuffix() == DefineMinGW .and. US_Upper( &('vLibDefault'+GetSuffix()+'['+str(i)+']') ) == "LIBCNL.A" ) .and. ;
                                    ( !bConsole .and. GetCppSuffix() == DefineMinGW .and. US_Upper( &('vLibDefault'+GetSuffix()+'['+str(i)+']') ) == "LIBCNL.A" ) ) .or. ;
@@ -6097,13 +6105,13 @@ Function QPM_Build2()
                   // search folders
 
                   Out := Out + PUB_cCharTab + 'echo SEARCH_DIR( $(DIR_MINIGUI)'+DEF_SLASH+'lib ) >> _'+PUB_cSecu+'Script.ld ' + Hb_OsNewLine()
-                  Out := Out + PUB_cCharTab + 'echo SEARCH_DIR( $(DIR_HARBOUR)'+DEF_SLASH+'lib ) >> _'+PUB_cSecu+'Script.ld ' + Hb_OsNewLine()
+                  Out := Out + PUB_cCharTab + 'echo SEARCH_DIR( $(DIR_HARBOUR_LIB) ) >> _'+PUB_cSecu+'Script.ld ' + Hb_OsNewLine()
                   Out := Out + PUB_cCharTab + 'echo SEARCH_DIR( $(DIR_COMPC)'+DEF_SLASH+'lib ) >> _'+PUB_cSecu+'Script.ld ' + Hb_OsNewLine()
                   For i := 1 To Len( &("vExtraFoldersForLibs"+GetSuffix()) )
                      if !empty( &("vExtraFoldersForLibs"+GetSuffix()+"["+str(i)+"]") ) .and. ;
                          !(&("vExtraFoldersForLibs"+GetSuffix()+"["+str(i)+"]") == upper( GetCppFolder()+DEF_SLASH + 'lib' ) ) .and. ;
                          !(&("vExtraFoldersForLibs"+GetSuffix()+"["+str(i)+"]") == upper( GetMiniGuiSuffix()+DEF_SLASH + 'lib' ) ) .and. ;
-                         !(&("vExtraFoldersForLibs"+GetSuffix()+"["+str(i)+"]") == upper( GetHarbourFolder()+DEF_SLASH + 'LIB' ) )
+                         !(&("vExtraFoldersForLibs"+GetSuffix()+"["+str(i)+"]") == upper( GetHarbourFolder( .T. ) ) )
                         Out := Out + PUB_cCharTab + 'echo SEARCH_DIR( ' + US_ShortName( &("vExtraFoldersForLibs"+GetSuffix()+"["+str(i)+"]") ) + ' ) >> _'+PUB_cSecu+'Script.ld ' + Hb_OsNewLine()
                      endif
                   next
@@ -6147,21 +6155,21 @@ Function QPM_Build2()
                               Out := Out + PUB_cCharTab + 'echo $(DIR_MINIGUI_LIB)' + DEF_SLASH + if(QPM_IsXHarbour(),"x","") + &('vLibDefault'+GetSuffix()+'['+str(i)+']') + ' >> _'+PUB_cSecu+'Script.ld' + HB_OsNewLine()
                            else
                               if QPM_IsXHarbour()
-                                 if File( US_ShortName( GetHarbourFolder() ) + DEF_SLASH + 'lib' + DEF_SLASH + "x" + &('vLibDefault'+GetSuffix()+'['+str(i)+']') )
+                                 if File( GetHarbourLibFolder() + DEF_SLASH + "x" + &('vLibDefault'+GetSuffix()+'['+str(i)+']') )
                                     Out := Out + PUB_cCharTab + 'echo $(DIR_HARBOUR_LIB)' + DEF_SLASH + "x" + &('vLibDefault'+GetSuffix()+'['+str(i)+']') + ' >> _'+PUB_cSecu+'Script.ld' + HB_OsNewLine()
                                  else
-                                    if File( US_ShortName( GetHarbourFolder() ) + DEF_SLASH + 'lib' + DEF_SLASH + &('vLibDefault'+GetSuffix()+'['+str(i)+']') )
+                                    if File( GetHarbourLibFolder() + DEF_SLASH + &('vLibDefault'+GetSuffix()+'['+str(i)+']') )
                                        Out := Out + PUB_cCharTab + 'echo $(DIR_HARBOUR_LIB)' + DEF_SLASH + &('vLibDefault'+GetSuffix()+'['+str(i)+']') + ' >> _'+PUB_cSecu+'Script.ld' + HB_OsNewLine()
                                     endif
                                  endif
                               else
-                                 if File( US_ShortName( GetHarbourFolder() ) + DEF_SLASH + 'lib' + DEF_SLASH + &('vLibDefault'+GetSuffix()+'['+str(i)+']') )
+                                 if File( GetHarbourLibFolder() + DEF_SLASH + &('vLibDefault'+GetSuffix()+'['+str(i)+']') )
                                     Out := Out + PUB_cCharTab + 'echo $(DIR_HARBOUR_LIB)' + DEF_SLASH + &('vLibDefault'+GetSuffix()+'['+str(i)+']') + ' >> _'+PUB_cSecu+'Script.ld' + HB_OsNewLine()
                                  endif
                               endif
                            endif
                         else
-                           if File( US_ShortName( GetHarbourFolder() ) + DEF_SLASH + 'lib' + DEF_SLASH + &('vLibDefault'+GetSuffix()+'['+str(i)+']') )
+                           if File( GetHarbourLibFolder() + DEF_SLASH + &('vLibDefault'+GetSuffix()+'['+str(i)+']') )
                               /* Este parche es para evitar que dentro de la DLL esten todas las funciones de ZIP */
                               if cOutputType == "SRCDLL" .and. US_Upper( &('vLibDefault'+GetSuffix()+'['+str(i)+']') ) == "ZIPARCHIVE.LIB"
                                  US_Nop()
@@ -6270,21 +6278,21 @@ Function QPM_Build2()
                               Out := Out + PUB_cCharTab + 'echo $(DIR_MINIGUI_LIB)' + DEF_SLASH + if(QPM_IsXHarbour(),"x","") + &('vLibDefault'+GetSuffix()+'['+str(i)+']') + ' + >> _'+PUB_cSecu+'Script.ld' + HB_OsNewLine()
                            else
                               if QPM_IsXHarbour()
-                                 if File( US_ShortName( GetHarbourFolder() ) + DEF_SLASH + 'lib' + DEF_SLASH + "x" + &('vLibDefault'+GetSuffix()+'['+str(i)+']') )
+                                 if File( GetHarbourLibFolder() + DEF_SLASH + "x" + &('vLibDefault'+GetSuffix()+'['+str(i)+']') )
                                     Out := Out + PUB_cCharTab + 'echo $(DIR_HARBOUR_LIB)' + DEF_SLASH + "x" + &('vLibDefault'+GetSuffix()+'['+str(i)+']') + ' + >> _'+PUB_cSecu+'Script.ld' + HB_OsNewLine()
                                  else
-                                    if File( US_ShortName( GetHarbourFolder() ) + DEF_SLASH + 'lib' + DEF_SLASH + &('vLibDefault'+GetSuffix()+'['+str(i)+']') )
+                                    if File( GetHarbourLibFolder() + DEF_SLASH + &('vLibDefault'+GetSuffix()+'['+str(i)+']') )
                                        Out := Out + PUB_cCharTab + 'echo $(DIR_HARBOUR_LIB)' + DEF_SLASH + &('vLibDefault'+GetSuffix()+'['+str(i)+']') + ' + >> _'+PUB_cSecu+'Script.ld' + HB_OsNewLine()
                                     endif
                                  endif
                               else
-                                 if File( US_ShortName( GetHarbourFolder() ) + DEF_SLASH + 'lib' + DEF_SLASH + &('vLibDefault'+GetSuffix()+'['+str(i)+']') )
+                                 if File( GetHarbourLibFolder() + DEF_SLASH + &('vLibDefault'+GetSuffix()+'['+str(i)+']') )
                                     Out := Out + PUB_cCharTab + 'echo $(DIR_HARBOUR_LIB)' + DEF_SLASH + &('vLibDefault'+GetSuffix()+'['+str(i)+']') + ' + >> _'+PUB_cSecu+'Script.ld' + HB_OsNewLine()
                                  endif
                               endif
                            endif
                         else
-                           if File( US_ShortName( GetHarbourFolder() ) + DEF_SLASH + 'lib' + DEF_SLASH + &('vLibDefault'+GetSuffix()+'['+str(i)+']') )
+                           if File( GetHarbourLibFolder() + DEF_SLASH + &('vLibDefault'+GetSuffix()+'['+str(i)+']') )
                            /* lolo */
                               /* Este parche es para algunas versiones de Harbour */
                               Do Case
@@ -6525,7 +6533,11 @@ Function QPM_Build2()
             Out := Out + PUB_cCharTab + if(!bLogActivity,'@','')+'$(US_SHELL_EXE) '+if(!bLogActivity,'-OFF','')+ ' COPYZAP $** $@' + Hb_OsNewLine()
          else
             Out := Out + PUB_cCharTab + if(!bLogActivity,'@','')+'-$(US_SHELL_EXE) '+if(!bLogActivity,'-OFF','')+' DELETE $@ ' + Hb_OsNewLine()
-            Out := Out + PUB_cCharTab + '$(REDIR) $(HARBOUR_EXE) $(HARBOUR_FLAGS) ' + if( QPM_IsXHarbour() , '/p' , '/p$(DIR_OBJECTS)' + DEF_SLASH + US_FileNameOnlyName( PRGFILES[i] ) ) + ' $** -o$@' + Hb_OsNewLine()
+            IF Prj_Check_HarbourIs31
+               Out := Out + PUB_cCharTab + '$(HARBOUR_EXE) $(HARBOUR_FLAGS) ' + if( QPM_IsXHarbour() , '/p' , '/p$(DIR_OBJECTS)' + DEF_SLASH + US_FileNameOnlyName( PRGFILES[i] ) ) + ' $** -o$@' + Hb_OsNewLine()
+            ELSE
+               Out := Out + PUB_cCharTab + '$(REDIR) $(HARBOUR_EXE) $(HARBOUR_FLAGS) ' + if( QPM_IsXHarbour() , '/p' , '/p$(DIR_OBJECTS)' + DEF_SLASH + US_FileNameOnlyName( PRGFILES[i] ) ) + ' $** -o$@' + Hb_OsNewLine()
+            ENDIF
             if QPM_IsXHarbour()
                Out := Out + PUB_cCharTab + if(!bLogActivity,'@','')+'-$(US_SHELL_EXE) '+if(!bLogActivity,'-OFF','')+' MOVE ' + US_ShortName( US_FileNameOnlyPath( PRGFILES[i] ) ) + DEF_SLASH + US_FileNameOnlyName( PRGFILES[i] ) + '.ppo $(DIR_OBJECTS)' + DEF_SLASH + US_FileNameOnlyName( PRGFILES[i] ) + '.ppo' + Hb_OsNewLine()
                Out := Out + PUB_cCharTab + if(!bLogActivity,'@','')+'-$(US_SHELL_EXE) '+if(!bLogActivity,'-OFF','')+' DELETE ' + US_ShortName( US_FileNameOnlyPath( PRGFILES[i] ) ) + DEF_SLASH + US_FileNameOnlyName( PRGFILES[i] ) + '.ppo.MOVED.TXT ' + Hb_OsNewLine()
