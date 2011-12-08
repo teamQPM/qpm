@@ -8,6 +8,25 @@
  * See "How to format your ChangeLog entries" in howtosvn.txt file.
  */
 
+2011-12-08 23:15:00 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * ./QPM_Functions.prg
+   * ./QPM_Libraries.prg
+     + Added support for libraries in harbour/lib/win/mingw
+       for HMG Oficial 3.x
+   * ./QPM_ProjectSettings.prg
+     + Added new setting to differentiate Harbour 3.0 from 3.1, this
+       setting is needed because the error output was changed in the
+       new version.
+   * ./QPM.prg
+     + Added new project configuration entry CHECKHARBOURIS31.
+     + Added support for libraries in harbour/lib/win/mingw
+       for HMG Oficial 3.x
+     ! Fixed: error output of Harbour.exe 3.0 it's not being redirected to log.
+   * ./QPM.exe
+   * ./QPM.iss
+   * ./QPM_AutoProject.qpm
+     * Updated to version 05_03_03.
+
 2011-12-06 23:15:00 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * ./QPM.exe
    * ./QPM_AutoProject.qpm
@@ -27,9 +46,9 @@
    * ./QPM.exe
    * ./QPM.iss
    * ./QPM_AutoProject.qpm
-     * Update to version 05_03_02.
+     * Updated to version 05_03_02.
    * ./QPM.prg
-     ! Fixed: error output of Harbour.exe it's not being redirected to log.
+     ! Fixed: error output of Harbour.exe 3.1 it's not being redirected to log.
 
 2011-12-05 10:17:00 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * ./RTFtoHTML/VB rtf2htm3/FGS_ConsoleRtf2Html3_BR_.exe
@@ -57,7 +76,7 @@
 
 2011-12-04 22:00:00 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * ./QPM.exe
-     * Update to version 05_03_01.
+     * Updated to version 05_03_01.
    * ./QPM.prg
      ! Fixed: building aborted with UPX option is checked.
      * Process log improved (added blank lines).
@@ -82,14 +101,14 @@
    * ./qpm_us_slash.qpm
    * ./doc/howtosvn.txt
    * ./ToDo
-     * Updated
+     * Updated.
    * ./buildall.bat
      * Changed to avoid compiling ./QPM_AutoProjectOnlyHelp.qpm
    * ./QPM_AUTOPROJECT.QPM
      - Excluded ziparchive.lib
      + Added hbziparc.lib
      ! Images not shown in java tree in htmlhelp.
-     * Updated
+     * Updated.
    * ./QPM_Resources.ch
      + Added arrow bitmaps used in SHG.
      + Added bitmaps used to build HTML help pages index.

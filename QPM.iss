@@ -29,14 +29,14 @@
 
 [Setup]
 AppName=QPM (QAC based Project Manager)
-AppVerName=QPM v05.03 build 02
+AppVerName=QPM v05.03 build 03
 AppPublisher=fernando.yurisich
-DefaultDirName=C:\QPM_05_03_02
+DefaultDirName=C:\QPM_05_03_03
 UsePreviousAppDir=no
 DefaultGroupName=QPM (QAC based Project Manager)
 AllowNoIcons=yes
 OutputDir=..\QPM Distribution
-OutputBaseFilename=QPM_05_03_0002_Install
+OutputBaseFilename=QPM_05_03_0003_Install
 SetupIconFile=.\Resource\QPM_Install.ico
 Compression=lzma
 SolidCompression=yes

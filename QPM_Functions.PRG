@@ -262,7 +262,6 @@ Function QPM_CreateNewFile( cType , cFile )
 Return bReto
 
 Function QPM_DirValid( cDir , cTipo )
-   // QPM_DirValid2
    Local bReto:=.F.
    if US_IsDirectory( cDir )
       do case
@@ -338,7 +337,11 @@ Function QPM_DirValid( cDir , cTipo )
                bReto:=.T.
             endif
          case cTipo == DefineMiniGui3+DefineMinGW+DefineHarbour
-            if File( cDir+DEF_SLASH + "BIN" + DEF_SLASH + "HARBOUR.exe" ) .and. ( File( cDir+DEF_SLASH + "LIB" + DEF_SLASH + "librtl.a" ) .or. File( cDir+DEF_SLASH + "LIB" + DEF_SLASH + "libhbrtl.a" ) )
+            if File( cDir+DEF_SLASH + "BIN" + DEF_SLASH + "HARBOUR.exe" ) .and. ;
+               ( File( cDir+DEF_SLASH + "LIB" + DEF_SLASH + "librtl.a" ) .or. ;
+                 File( cDir+DEF_SLASH + "LIB" + DEF_SLASH + "libhbrtl.a" ) .or. ;
+                 File( cDir+DEF_SLASH + "LIB" + DEF_SLASH + "WIN" + DEF_SLASH + "MINGW" + DEF_SLASH + "librtl.a" ) .or. ;
+                 File( cDir+DEF_SLASH + "LIB" + DEF_SLASH + "WIN" + DEF_SLASH + "MINGW" + DEF_SLASH + "libhbrtl.a" ) )
                bReto:=.T.
             endif
          case cTipo == DefineExtended1+DefineBorland+DefineHarbour
@@ -451,6 +454,22 @@ Function GetHarbourFolder()
       reto:=&( "Gbl_T_X_"+GetMiniGuiSuffix()+GetCppSuffix() )
    endif
 Return reto
+
+Function GetHarbourLibFolder( lLong )
+   Local cDir
+
+   DEFAULT lLong TO .F.
+   if lLong
+     cDir := GetHarbourFolder() + DEF_SLASH + 'LIB'
+   else
+     cDir := US_ShortName( GetHarbourFolder() ) + DEF_SLASH + 'LIB'
+   endif
+
+   if File( cDir + DEF_SLASH + "WIN" + DEF_SLASH + "MINGW" + DEF_SLASH + "librtl.a" ) .or. ;
+      File( cDir + DEF_SLASH + "WIN" + DEF_SLASH + "MINGW" + DEF_SLASH + "libhbrtl.a" )
+      cDir += DEF_SLASH + "WIN" + DEF_SLASH + "MINGW"
+   endif
+Return cDir
 
 Function GetCppFolder()
 Return &( "Gbl_T_C_"+GetMiniGuiSuffix()+GetCppSuffix() )
