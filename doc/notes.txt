@@ -2,10 +2,6 @@
  * $Id$
  */
 
-QPM version 5.0 build 01 and the US*.exe tools were generated using Extended
-Minigui 1.6 build 62 libraries and xHarbour 1.0.0 beta1 and Borland C 5.5.1
-compilers.
-
 Al regenerar el help, va a decir que no encuentra la ruta de las imágenes y
 archivos zip de ejemplo, eso es porque no le había podido encontrar la vuelta a
 los paths relativos en dicho proceso.
@@ -17,5 +13,11 @@ Descargar desde http://www.jrsoftware.org/isinfo.php
 
 El Help está generado desde QPM con la utilidad SHG, al igual que el sitio de
 internet (excepto el index.htm que está hecho a mano).
+
+us_dlltool.exe es una herramienta de MinGW que sirve para convertir una DLL
+a libreria.
+
+us_r2h.exe es un programita que convierte texto rtf a html, se usa para el
+help, el fuente es Visual Basic y esta en el paquete de QPM.
 
 /* eof */

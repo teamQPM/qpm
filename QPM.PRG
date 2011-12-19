@@ -35,7 +35,7 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
    Local Folder , FileName , i , nPos , LogIni := 0 , nIndx
    Local LOC_cParam := ""
 
-   PUBLIC PUB_cQPM_Version      := "05 03 03"
+   PUBLIC PUB_cQPM_Version      := "05 03 04"
 
    PUBLIC PUB_QPM_bHigh := .F.
    QPM_SetProcessPriority( "HIGH" )
@@ -559,7 +559,7 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
    PUBLIC Tmp_ExtraRunCmdQPMParm := ""
    PUBLIC Tmp_ExtraRunCmdEXEParm := ""
    PUBLIC Tmp_ExtraRunCmdFREEParm := ""
-   PUBLIC Tmp_ExtraRunType        := ""
+   PUBLIC Tmp_ExtraRunType        := "NONE"
    PUBLIC Tmp_ExtraRunQPMRadio         := ""
    PUBLIC Tmp_ExtraRunQPMLite          := .T.
    PUBLIC Tmp_ExtraRunQPMForceFull     := .F.
@@ -2047,7 +2047,7 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
                  DEFINE LABEL LWWWHlp
                          ROW             70
                          COL             12
-                         VALUE           'You Link for Foot:'
+                         VALUE           'Your Link for Foot:'
                          TRANSPARENT     if( IsXPThemeActive() , .T. , .F. )
                  END LABEL
 
@@ -4629,9 +4629,9 @@ Function QPM_OpenProject2()
                  Prj_ExtraRunCmdFREEParm := US_WordSubStr( LOC_cLine , 2 )
          ElseIf  US_Upper( US_Word( LOC_cLine , 1 ) ) == 'EXTRARUNTYPE'
                  Prj_ExtraRunType := US_WordSubStr( LOC_cLine , 2 )
-              // if Prj_ExtraRunType == ""
-              //    Prj_ExtraRunType := "NONE"
-              // endif
+                 if Prj_ExtraRunType == ""
+                    Prj_ExtraRunType := "NONE"
+                 endif
          ElseIf  US_Upper( US_Word( LOC_cLine , 1 ) ) == 'EXTRARUNQPMRADIO'
                  Prj_ExtraRunQPMRadio := US_WordSubStr( LOC_cLine , 2 )
          ElseIf  US_Upper( US_Word( LOC_cLine , 1 ) ) == 'EXTRARUNQPMLITE'

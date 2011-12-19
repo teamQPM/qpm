@@ -11,6 +11,15 @@
 /******************************************************************************/
 
 Assigned to: <nobody>
+Added by...: 2011-12-19 09:32:00 UTC-0300 Fernando Yurisich <fyurisich>
+Status.....: Open.
+Details....: Use a table to code libraries and other options of each minigui,
+             so the user can add multiple version. Clean code so libraries
+             are no longer hardwired.
+
+/******************************************************************************/
+
+Assigned to: <nobody>
 Added by...: 2011-12-02 09:32:00 UTC-0300 Fernando Yurisich <fyurisich>
 Status.....: Open.
 Details....: Add option to compress/uncompress US_*.exe
@@ -27,8 +36,7 @@ Details....: Remove US_dtree.im, US_dtree.js and US_dtree.css
 Assigned to: <nobody>
 Added by...: 2011-11-29 12:20:00 UTC-0300 Fernando Yurisich <fyurisich>
 Status.....: Open.
-Details....: Delete ./FuentesComunes/US_K.ch, ./FuentesComunes/US.ch and
-             ./QPM_CompatibilityHotRecovery.ch
+Details....: Delete ./FuentesComunes/US_K.ch and ./FuentesComunes/US.ch
 
 /******************************************************************************/
 
@@ -97,7 +105,6 @@ Status.....: Open.
 Details....: Migrate to last version of OOHG.
              Some function must be rewritten completely because rely on certain
              features of Extended version. Example: the editor in SHG module.
-             Must be done after Extended migration.
 
 /******************************************************************************/
 /* eof */
