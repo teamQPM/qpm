@@ -8,6 +8,25 @@
  * See "How to format your ChangeLog entries" in howtosvn.txt file.
  */
 
+2011-12-19 20:45:00 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * ./QPM.prg
+     ! Fixed EXTRARUNTYPE parameter lost when updating settings.
+   * ./doc/notes.txt
+   * ./TODO
+     * Updated.
+   * ./QPM.chm
+   * ./htmlhelp/*.htm
+   * ./htmlhelp/*.bmp
+     * Minor changes.
+   * ./QPM.exe
+   * ./QPM.iss
+   * ./QPM_AutoProject.qpm
+   * ./QPM_AutoProjectOnlyHelp.qpm
+   * ./HelpQPM/QPM_SHG.fpt
+   * ./HelpQPM/QPM_SHG.dbf
+   * ./HelpQPM/QPM_SHG.cdx
+     * Updated to version 05_03_04.
+
 2011-12-08 23:15:00 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * ./QPM_Functions.prg
    * ./QPM_Libraries.prg
@@ -78,7 +97,7 @@
    * ./QPM.exe
      * Updated to version 05_03_01.
    * ./QPM.prg
-     ! Fixed: building aborted with UPX option is checked.
+     ! Fixed: building aborted when UPX option is checked.
      * Process log improved (added blank lines).
      - Removed US_A*.EXE from list of needed files.
      - Removed US_S*.EXE from list of needed files.
@@ -363,7 +382,7 @@
    + ./FuentesComunes/TAxPrg.prg
      * Substitutes ./FuentesComunes/US_ActiveX.prg and
        ./FuentesComunes/US_ActiveX_Eventos.c because old function
-       do not compile with Harbour 3.x
+       doesn't compiles with Harbour 3.x
    * ./FuentesComunes/US_ActiveX.prg
      * Substituted by ./FuentesComunes/TAxPrg.prg
    * ./FuentesComunes/US_ActiveX_Eventos.c
