@@ -8,6 +8,17 @@
  * See "How to format your ChangeLog entries" in howtosvn.txt file.
  */
 
+2011-12-20 10:05:00 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * ./US_UPX.EXE
+     * Updated to version 3.08w due to an error packing HMG Oficial 3.0.40
+       executables.
+   * ./QPM.iss
+   * ./QPM.exe
+   * ./QPM.prg
+   * ./QPM.chm
+   * ./QPM_AutoProject.qpm
+     * Updated to version 05_03_05.
+
 2011-12-19 20:45:00 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * ./QPM.prg
      ! Fixed EXTRARUNTYPE parameter lost when updating settings.

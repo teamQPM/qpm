@@ -35,7 +35,7 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
    Local Folder , FileName , i , nPos , LogIni := 0 , nIndx
    Local LOC_cParam := ""
 
-   PUBLIC PUB_cQPM_Version      := "05 03 04"
+   PUBLIC PUB_cQPM_Version      := "05 03 05"
 
    PUBLIC PUB_QPM_bHigh := .F.
    QPM_SetProcessPriority( "HIGH" )
