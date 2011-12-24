@@ -48,11 +48,21 @@ Function US_ListAlias()
    next
 Return aLista
 
-Function US_DBUseArea( bNew , cDriver , cName , cAlias , ExclusiveShared , WriteRead )
-   DbUseArea( bNew , cDriver , cName , cAlias , ExclusiveShared , WriteRead )
-   if DBF() == cAlias
-      Return .T.
-   endif
+Function US_Use( bNew , cDriver , cName , cAlias , ExclusiveShared , WriteRead )
+
+   Local w_espera := 5
+
+   do while w_espera > 0
+      DBUseArea( bNew , cDriver , cName , cAlias , ExclusiveShared , WriteRead )
+
+      if ! neterr()
+         return .T.
+      endif
+
+      inkey(0.5)
+      w_espera -= 0.5
+   enddo
+
 Return .F.
 
 Function US_At( par_cSearch , par_cString , par_nStart , par_nEnd )
@@ -113,7 +123,7 @@ FUNCTION US_DB_CMP(cTabla,cModo,CAMPO,TIPO,LONGI,DEC)
    DO CASE
       CASE cModo=="ADD"
          IF FILE(cTabla+".DBF")
-            DbUseArea( .T. , cDriver , cTabla )
+            US_Use( .T. , cDriver , cTabla )
             REGISTROS:=RECCOUNT()
             vStruct:=DBSTRUCT()
             DbCloseArea( cTabla )
@@ -136,7 +146,7 @@ FUNCTION US_DB_CMP(cTabla,cModo,CAMPO,TIPO,LONGI,DEC)
          AADD(vStruct,{CAMPO,TIPO,LONGI,DEC})
          DBCREATE(cTabla+".DBF",vStruct)
          IF REGISTROS > 0
-            DbUseArea( .T. , cDriver , cTabla )
+            US_Use( .T. , cDriver , cTabla )
             APPEND FROM (cTablaBAK)
             DbCloseArea( cTabla )
          ENDIF
@@ -152,7 +162,7 @@ FUNCTION US_DB_CMP(cTabla,cModo,CAMPO,TIPO,LONGI,DEC)
          RETURN 0
       CASE cModo=="DEL"
          IF FILE(cTabla+".DBF")
-            DbUseArea( .T. , cDriver , cTabla )
+            US_Use( .T. , cDriver , cTabla )
             REGISTROS:=RECCOUNT()
             vStructDelete:=DBSTRUCT()
             DbCloseArea( cTabla )
@@ -191,7 +201,7 @@ FUNCTION US_DB_CMP(cTabla,cModo,CAMPO,TIPO,LONGI,DEC)
          DBCREATE(cTabla+".DBF",vStruct)
          IF REGISTROS > 0
          // cuidado cuando cancela aca, puede ser porque la base estaba abierta de antes o porque el campo que borrarmos era clave de un indice en CDX mode y el indice existe...
-            DbUseArea( .T. , cDriver , cTabla )
+            US_Use( .T. , cDriver , cTabla )
             APPEND FROM (cTablaBAK)
             DbCloseArea( cTabla )
          ENDIF
@@ -207,12 +217,12 @@ FUNCTION US_DB_CMP(cTabla,cModo,CAMPO,TIPO,LONGI,DEC)
          RETURN 0
       CASE cModo=="MOD"
          US_DB_CMP(cTabla,"ADD","A________A",TIPO,LONGI,DEC)
-         DbUseArea( .T. , cDriver , cTabla )
+         US_Use( .T. , cDriver , cTabla )
          REPLACE A________A WITH &(CAMPO) ALL
          DbCloseArea( cTabla )
          US_DB_CMP(cTabla,"DEL",CAMPO)
          US_DB_CMP(cTabla,"ADD",CAMPO,TIPO,LONGI,DEC)
-         DbUseArea( .T. , cDriver , cTabla )
+         US_Use( .T. , cDriver , cTabla )
          REPLACE &(CAMPO) WITH A________A ALL
          DbCloseArea( cTabla )
          US_DB_CMP(cTabla,"DEL","A________A")
@@ -278,7 +288,7 @@ Function US_DBConvert( cBaseIn , cBaseOut , cFrom , cTarget )
          US_Log( "Target Database already exists: " + cBaseOut )
          return .F.
       endif
-      dbusearea( .t. , cFrom , cBaseIn , "cBaseIn" )
+      US_Use( .t. , cFrom , cBaseIn , "cBaseIn" )
       vStruct := dbstruct()
       dbclosearea( "cBaseIn" )
       dbCreate( cBaseOut , vStruct , cTarget , .t. , "cBaseOut" )
@@ -1577,7 +1587,7 @@ FUNCTION US_IsDBF(cDBF)
    bSaveHandler := errorblock( { |x| break(x) } )
    BEGIN SEQUENCE
       /*                      Shared , Read   */
-      DBUSEAREA( .T. , , cDBF , , .T. , .T. )
+      DBUseArea( .T. , , cDBF , , .T. , .T. )
       USE
       RECOVER USING oError
          nUsError = oError:genCode
@@ -1606,7 +1616,7 @@ FUNCTION US_OKDBF(DBF)
    // Lazy man's error checking
    bSaveHandler := errorblock( { |x| break(x) } )
    BEGIN SEQUENCE
-      DBUSEAREA(.T.,,DBF)
+      DBUseArea(.T., , DBF)
       USE
       RECOVER USING oError
       USERROR = oError:genCode
@@ -2051,7 +2061,7 @@ Function US_DB_CodePage( cbase , cNewCode )
       inkey(0)
       Return .F.
    endif
-   DbUsearea( .t. , , cBase , .f. )
+   US_Use( .t. , , cBase , .f. )
    vEstructura:=DbStruct()
    for i=1 to len(vEstructura)
       if vEstructura[i][2] == "C" .or. vEstructura[i][2] == "M"

@@ -31,9 +31,9 @@
 #include "minigui.ch"
 #include "US_i_richeditbox.ch"
 
-//==================================================================================\\
-//= CLASE US_RichEdit                                                              =\\
-//----------------------------------------------------------------------------------\\
+//==================================================================================
+//= CLASE US_RichEdit                                                              
+//----------------------------------------------------------------------------------
 
 CLASS US_RichEdit
 
@@ -65,12 +65,12 @@ CLASS US_RichEdit
    METHOD US_EditSeteoTeclas()            HIDDEN
    METHOD US_EditLiberoTeclas()           HIDDEN
    METHOD US_EditEscape()                 HIDDEN
-   METHOD US_EditViewClipBoard()          HIDDEN
+   METHOD US_EditViewClipBoard()
    METHOD US_EditLoad()                   HIDDEN
    METHOD US_EditExport()                 HIDDEN
    METHOD US_EditMaximize()               HIDDEN
    METHOD US_EditReadFonts()              HIDDEN  && Lee los fuentes instalados en el sistema operativo
-   METHOD US_EditRefreshButtons()         HIDDEN  && Metodo que se ejecuta al mover el cursor y sirve para actualizar el estado de los botones
+   METHOD US_EditRefreshButtons()                 && Metodo que se ejecuta al mover el cursor y sirve para actualizar el estado de los botones
    METHOD US_EditSetButtonsFonts( vFont ) HIDDEN  && Establece el valor de los botones de fuente (Bold, Italic, etc.)
    METHOD US_EditSetTextFonts()           HIDDEN  && Cambia el formato del texto seleccionado (Bold, Italic, etc.)
    METHOD US_EditSetButtonsAlign()        HIDDEN  && Establece el valor de los botones de alineacion (left, center, right)
@@ -100,9 +100,11 @@ CLASS US_RichEdit
 // METHOD US_EditSeteoSpace()             HIDDEN
 // METHOD US_EditLiberoSpace()            HIDDEN
    METHOD US_EditCargoTextos()            HIDDEN
+   METHOD US_IsFocused
+   METHOD US_WasChanged
 
 // DATA cSkin              HIDDEN              init ""                             && Aspecto visual, valid: "VP" o ""
-   DATA US_WinEdit         HIDDEN              init US_WindowNameRandom("US_Edit") && Nombre de la window
+   DATA US_WinEdit                             init US_WindowNameRandom("US_Edit") && Nombre de la window
  //DATA cRichControlName   HIDDEN              init US_WindowNameRandom("RichControl") && Nombre del control RichEdit
    DATA US_Edit_oTB        HIDDEN              init NIL                            && Para posible USER title bar
    DATA US_Edit_oSB        HIDDEN              init NIL                            && Para posible USER status bar
@@ -140,6 +142,8 @@ CLASS US_RichEdit
    DATA vText              HIDDEN              init {}             // Tabla e Textos
    // Para subsanar un problema con el Timer y OOHG
 // DATA bFlagEnableTimer   HIDDEN              init .T.
+   DATA l_EditSetFont      HIDDEN              init .F.
+   DATA lChanged                               init .F.
 
    /*- Propiedades ----------------------------------------------------*/
 
@@ -166,6 +170,12 @@ CLASS US_RichEdit
    /*- Fin Propiedades ------------------------------------------------*/
 
 ENDCLASS
+
+METHOD US_WasChanged() CLASS US_RichEdit
+return ::lChanged
+
+METHOD US_IsFocused() CLASS US_RichEdit
+return ( ::hEd == GetFocus() )
 
 METHOD New() CLASS US_RichEdit
 return Self
@@ -267,7 +277,6 @@ METHOD Init( cMemo ) CLASS US_RichEdit
          NOSYSMENU ;
          NOCAPTION ;
          BACKCOLOR ::vBackColor ;
-         ON GOTFOCUS RN_OnGotFocus() ;
          ON INIT ::US_EditInicial() ;
          ON SIZE ::US_EditRedraw() ;
          ON RELEASE ::US_EditLiberoTeclas()
@@ -406,7 +415,7 @@ METHOD Init( cMemo ) CLASS US_RichEdit
 
       if !( ::bWin )
 
-         @ US_TFil( if( GetDesktopWidth() < 1024 , 1.4 , 1.3 ) ) , GetProperty( ::US_WinEdit , "CB_Redo" , "col" ) + ( ( ::nButtonWidth + ::nEspacio ) * 3 ) BUTTON CB_Norm ;
+         @ US_TFil( if( GetDesktopWidth() < 1024 , 1.4 , 1.3 ) ), GetProperty( ::US_WinEdit , "CB_Redo" , "col" ) + ( ( ::nButtonWidth + ::nEspacio ) * 3 ) BUTTON CB_Norm ;
             OF &(::US_WinEdit) ;
             CAPTION ::lan( "Normalice" ) ;
             HEIGHT ::nButtonHeight ;
@@ -414,7 +423,7 @@ METHOD Init( cMemo ) CLASS US_RichEdit
             TOOLTIP ::Lan( "NormaliceToolTip" ) ;
             ACTION ::US_EditRtfNormalize()
 
-         @ US_TFil( if( GetDesktopWidth() < 1024 , 1.4 , 1.3 ) ) , GetProperty( ::US_WinEdit , "CB_Norm" , "col" ) + ( ( ::nButtonWidth + ::nEspacio ) * 3 ) BUTTON CB_Sele ;
+         @ US_TFil( if( GetDesktopWidth() < 1024 , 1.4 , 1.3 ) ), GetProperty( ::US_WinEdit , "CB_Norm" , "col" ) + ( ( ::nButtonWidth + ::nEspacio ) * 3 ) BUTTON CB_Sele ;
             OF &(::US_WinEdit) ;
             CAPTION ::lan( "SeleTodo" ) ;
             HEIGHT ::nButtonHeight ;
@@ -422,6 +431,13 @@ METHOD Init( cMemo ) CLASS US_RichEdit
             TOOLTIP ::Lan( "SeleTodoToolTip" ) ;
             ACTION ( DoMethod( ::US_WinEdit , ::cRichControlName, "SetFocus" ) , US_Send_SelectAll( ::cRichControlName , ::US_WinEdit ) ) ;
 
+         @ US_TFil( if( GetDesktopWidth() < 1024 , 1.4 , 1.3 ) ), GetProperty( ::US_WinEdit , "CB_Sele" , "col" ) + ( ( ::nButtonWidth + ::nEspacio ) * 3 ) BUTTON BVerPortapapeles ;
+            OF &(::US_WinEdit) ;
+            CAPTION ::lan( "Portapapeles" ) ;
+            HEIGHT ::nButtonHeight ;
+            WIDTH ( ::nButtonWidth * 3.2 ) ;
+            TOOLTIP ::Lan( "Ver" ) ;
+            ACTION ::US_EditViewClipBoard()
       endif
 
       if ::bButtonFind
@@ -454,9 +470,9 @@ METHOD Init( cMemo ) CLASS US_RichEdit
          HEIGHT US_Fils( 10 ) ;
          WIDTH US_Cols( if( GetDesktopWidth() < 1024 , 16 , 20 ) ) ;
          TOOLTIP ::Lan( "Fuentes" ) ;
-         ON GOTFOCUS ::US_EditSuspendTimer() ;
-         ON LOSTFOCUS ::US_EditActiveTimer() ;
          ON CHANGE ::US_EditSetFontName()
+*         ON GOTFOCUS ::US_EditSuspendTimer() ;
+*         ON LOSTFOCUS ::US_EditActiveTimer() ;
 
      //  WIDTH US_Cols( 5 ) ;
       @ US_TFil( 2.5 ) , GetProperty( ::US_WinEdit , "C_Font" , "col" ) + GetProperty( ::US_WinEdit , "C_Font" , "width" ) + ::nEspacio  COMBOBOX C_Size ;
@@ -466,9 +482,9 @@ METHOD Init( cMemo ) CLASS US_RichEdit
          HEIGHT US_Fils( 5 ) ;
          WIDTH US_Cols( if( GetDesktopWidth() < 1024 , 08 , 06 ) ) ;
          TOOLTIP ::Lan( "TamañodeFuentes" ) ;
-         ON GOTFOCUS ::US_EditSuspendTimer() ;
-         ON LOSTFOCUS ::US_EditActiveTimer() ;
          ON CHANGE ::US_EditSetFontSize()
+*         ON GOTFOCUS ::US_EditSuspendTimer() ;
+*         ON LOSTFOCUS ::US_EditActiveTimer() ;
 
       @ US_TFIL( 2.6 ) , GetProperty( ::US_WinEdit , "C_Size" , "col" ) + GetProperty( ::US_WinEdit , "C_Size" , "width" ) + ( ::nEspacio * 2.0 ) CHECKBUTTON CB_Bold ;
          OF &(::US_WinEdit) ;
@@ -559,8 +575,10 @@ METHOD Init( cMemo ) CLASS US_RichEdit
          FONT ::cDefaultFont ;
          FONTCOLOR ::vEditFontColor ;
          SIZE ::cDefaultFontSize ;
-         BACKCOLOR ::vEditBackColor
-      // ON SELECT ::US_EditRefreshButtons()
+         BACKCOLOR ::vEditBackColor ;
+         ON CHANGE ::lChanged := .T. ;
+         ON SELECT ::US_EditRefreshButtons()
+
       // El siguiente Timer simula la accion de ON SELECT que en la version Extended de MiniGUI esta
       // codificado en h_windows.prg en un parrafo similar a este:
       //    If GetNotifyCode ( lParam ) = EN_SELCHANGE  //For change text
@@ -572,11 +590,13 @@ METHOD Init( cMemo ) CLASS US_RichEdit
       //          _HMG_ThisType := ''
       //       EndIf
       //    EndIf
+
+/*
       DEFINE TIMER TTexto ;
          OF &( ::US_WinEdit ) ;
          INTERVAL  500 ;     && 1000 ciclos=1 segundo
          ACTION ::US_EditRefreshButtons()
-
+*/
    else
 
       @ US_TFIL( 1.2 ) , 1 EDITBOX &(::cRichControlName + "ClipBoard" ) ;
@@ -806,12 +826,14 @@ METHOD US_EditRtfNormalize() CLASS US_RichEdit
    cSel  := substr( cTxt , nDesde , nLen )
    cPost := substr( cTxt , nHasta )
 //us_log(cSel   )
+/*
    if at( "\sb100\sa100" , cTxt ) > 0
       cSel  := strtran( cSel  , "\par"+chr(13) , "\par\par " )
       cPrev := strtran( cPrev , "\sb100\sa100" , "" )
       cSel  := strtran( cSel  , "\sb100\sa100" , "" )
       cPost := strtran( cPost , "\sb100\sa100" , "" )
    endif
+*/
    cSel := strtran( cSel , "\pard\li360" , "\pard{\pntext\f1\'B7\tab}{\*\pn\pnlvlblt\pnf1\pnindent0{\pntxtb\'B7}}\fi-320\li640" )
    cSel := strtran( cSel , "\trowd\trqc" , "\xxxx" )
    cSel := strtran( cSel , "\pard\intbl" , "\pard" )
@@ -953,6 +975,7 @@ Return Nil
 // pepe
 METHOD US_EditRefreshButtons() CLASS US_RichEdit
    Local aFont
+
 // if ::bFlagEnableTimer    // para resolver el problema de que no funciona el enable del timer en oohg
       aFont := GetFontRTF( ::hEd, 1 )
       ::US_EditSetButtonsFonts( aFont )
@@ -964,6 +987,9 @@ Return NIL
 
 METHOD US_EditSetButtonsFonts( vGetFont ) CLASS US_RichEdit
    Local poz
+
+   ::l_EditSetFont := .T.
+
    if ( poz := ASCAN( ::vFonts, vGetFont[1] ) ) > 0 .and. ;
       GetProperty( ::US_WinEdit , "C_Font" , "value" ) != poz
       SetProperty( ::US_WinEdit , "C_Font" , "value" , poz )
@@ -985,6 +1011,9 @@ METHOD US_EditSetButtonsFonts( vGetFont ) CLASS US_RichEdit
    if GetProperty( ::US_WinEdit , "CB_StrikeOut" , "value" ) !=  vGetFont[7]
       SetProperty( ::US_WinEdit , "CB_StrikeOut" , "value" , vGetFont[7] )
    endif
+
+   ::l_EditSetFont := .F.
+
 Return NIL
 
 METHOD US_EditSetTextFonts( boton ) CLASS US_RichEdit
@@ -1037,6 +1066,13 @@ Return NIL
 
 METHOD US_EditSetFontName() CLASS US_RichEdit
    Local nPos, cName
+   
+   if ::l_EditSetFont
+      Return NIL
+   endif
+   
+   ::l_EditSetFont := .T.
+   
    nPos := GetProperty( ::US_WinEdit , "C_Font" , "value" )
    if nPos > 0
       cName := ::vFonts[nPos]
@@ -1044,22 +1080,35 @@ METHOD US_EditSetFontName() CLASS US_RichEdit
 //         US_Log("No se pudieron cambiar las fuentes")
       endif
    endif
+
+   ::l_EditSetFont := .F.
+
 Return NIL
 // INI Metodo Original
-//\\METHOD US_EditSetFontSize() CLASS US_RichEdit
-//\\   Local nPos, nSize
-//\\   nPos := GetProperty( ::US_WinEdit , "C_Size" , "value" )
-//\\   if nPos > 0
-//\\      nSize := val( ::vFontSizes[nPos] )
-//\\      if !_SetFontSizeRTF( ::US_WinEdit , ::cRichControlName , nSize )
-//\\         US_Log("No se pudieron cambiar los tamaños de fuentes")
-//\\      endif
-//\\   endif
-//\\Return NIL
+//METHOD US_EditSetFontSize() CLASS US_RichEdit
+//   Local nPos, nSize
+//   nPos := GetProperty( ::US_WinEdit , "C_Size" , "value" )
+//   if nPos > 0
+//      nSize := val( ::vFontSizes[nPos] )
+//      if !_SetFontSizeRTF( ::US_WinEdit , ::cRichControlName , nSize )
+//         US_Log("No se pudieron cambiar los tamaños de fuentes")
+//      endif
+//   endif
+//Return NIL
 // FIN Metodo Original
 METHOD US_EditSetFontSize() CLASS US_RichEdit
    Local nPos, cSize , cRTF , aRange , nDesde , nHasta , nLen , cPrev , cSel , cPost
-   Local cSizeNext := "" , nCaretPos := GetProperty( ::US_WinEdit , ::cRichControlName , "caretpos" )
+   Local cSizeNext, nCaretPos
+
+   if ::l_EditSetFont
+     Return NIL
+   endif
+
+   ::l_EditSetFont := .T.
+
+   cSizeNext := ""
+   nCaretPos := GetProperty( ::US_WinEdit , ::cRichControlName , "caretpos" )
+
    aRange := GetSelRange( ::hEd )
    nPos := GetProperty( ::US_WinEdit , "C_Size" , "value" )
    if nPos > 0
@@ -1089,7 +1138,7 @@ METHOD US_EditSetFontSize() CLASS US_RichEdit
          enddo
       endif
       if !( cSizeNext == "" )
-         cSizeNext := "\" + US_Word( strtran( cSizeNext , "\" , " " ) , 1 ) + " "
+         cSizeNext := '\' + US_Word( strtran( cSizeNext , '\' , ' ' ) , 1 ) + ' '
       endif
       // FIN busco el font para el bloque posterior al seleccionado
       cSel := strtran( cSel , "\fs" , "\xx" )       // Pongo codigo inexistente para que lo ignore
@@ -1099,22 +1148,24 @@ METHOD US_EditSetFontSize() CLASS US_RichEdit
       DoMethod( ::US_WinEdit , ::cRichControlName , "setfocus" )
       SetProperty( ::US_WinEdit , ::cRichControlName , "caretpos" , nCaretPos )
    endif
+
+   ::l_EditSetFont := .F.
 Return NIL
 // FIN Modificacion
 
 // INI Metodo Original
-//\\METHOD US_EditSetFontColor() CLASS US_RichEdit
-//\\   Local sel, aFont, tmp
-//\\   Sel := RangeSelRTF(::hEd)
-//\\   aFont := GetFontRTF( ::hEd, 1 )
-//\\   tmp := aFont[5]
-//\\   tmp := { GetRed(tmp) , GetGreen(tmp) , GetBlue(tmp) }
-//\\   tmp := GetColor( tmp )
-//\\   If tmp[1] != NIL .and. tmp[2] != NIL .and. tmp[3] != NIL
-//\\      aFont[5] := RGB( tmp[1] , tmp[2] , tmp[3] )
-//\\   endif
-//\\   SetFontRTF(::hEd, Sel, aFont[1], aFont[2], aFont[3], aFont[4], aFont[5], aFont[6], aFont[7])
-//\\Return NIL
+//METHOD US_EditSetFontColor() CLASS US_RichEdit
+//   Local sel, aFont, tmp
+//   Sel := RangeSelRTF(::hEd)
+//   aFont := GetFontRTF( ::hEd, 1 )
+//   tmp := aFont[5]
+//   tmp := { GetRed(tmp) , GetGreen(tmp) , GetBlue(tmp) }
+//   tmp := GetColor( tmp )
+//   If tmp[1] != NIL .and. tmp[2] != NIL .and. tmp[3] != NIL
+//      aFont[5] := RGB( tmp[1] , tmp[2] , tmp[3] )
+//   endif
+//   SetFontRTF(::hEd, Sel, aFont[1], aFont[2], aFont[3], aFont[4], aFont[5], aFont[6], aFont[7])
+//Return NIL
 // FIN Metodo Original
 METHOD US_EditSetFontColor() CLASS US_RichEdit
    Local sel, aFont, tmp
@@ -1160,7 +1211,7 @@ METHOD US_EditSetFontColor() CLASS US_RichEdit
       enddo
    endif
    if !( cColorNext == "" )
-      cColorNext := "\" + US_Word( strtran( cColorNext , "\" , " " ) , 1 ) + " "
+      cColorNext := '\' + US_Word( strtran( cColorNext , '\' , ' ' ) , 1 ) + ' '
    endif
    // FIN busco el font color para el bloque posterior al seleccionado
    if substr( cSel , 1 , 3 ) == "\cf"
@@ -1231,13 +1282,13 @@ METHOD US_EditRtfCut() CLASS US_RichEdit
 Return NIL
 
 METHOD US_EditRtfPaste() CLASS US_RichEdit
-   Local R
+*   Local R
    DoMethod( ::US_WinEdit , ::cRichControlName , "setfocus" )
    PasteRTF(::hEd)
-   if ::cFunctionPostPaste != NIL
-   // eval( { || ::cFunctionPostPaste } )
-      R := &( ::cFunctionPostPaste )
-   endif
+*   if ::cFunctionPostPaste != NIL
+*      eval( { || ::cFunctionPostPaste } )
+*      R := &( ::cFunctionPostPaste )
+*   endif
 Return NIL
 
 METHOD US_EditRtfDelete() CLASS US_RichEdit
@@ -1370,7 +1421,6 @@ METHOD US_EditFind() CLASS US_RichEdit
       NOCAPTION ;
       FONT "VPArial" SIZE US_WFont( 11 ) ;
       BACKCOLOR ::vBackColor ;
-      ON GOTFOCUS RN_OnGotFocus() ;
       ON SIZE US_Redraw( ::US_WinFindEdit , @nOldWinWidth , @nOldWinHeight ) ;
       ON INIT ::US_EditFindInit()
 
@@ -1602,36 +1652,37 @@ METHOD Lan( cGuia ) CLASS US_RichEdit
 Return ::vText[ nPos ][ nLan + 1 ]
 
 METHOD US_EditCargoTextos() CLASS US_RichEdit
-   //                Guia          ESpanol       ENglish
-   AADD( ::vText , { "Copiar"    , "Copiar"    , "Copy"      } )
-   AADD( ::vText , { "Pegar"     , "Pegar"     , "Paste"     } )
-   AADD( ::vText , { "Cortar"    , "Cortar"    , "Cut"       } )
-   AADD( ::vText , { "Borrar"    , "Borrar"    , "Delete"    } )
-   AADD( ::vText , { "Revertir"  , "Deshacer"  , "Undo"      } )
-   AADD( ::vText , { "Rehacer"   , "Rehacer"   , "Redo"      } )
-   AADD( ::vText , { "Normalice" , "Normalice" , "Normalize" } )
+   //                Guia                 ESpanol                                         ENglish
+   AADD( ::vText , { "Copiar"           , "Copiar"                                      , "Copy"      } )
+   AADD( ::vText , { "Pegar"            , "Pegar"                                       , "Paste"     } )
+   AADD( ::vText , { "Cortar"           , "Cortar"                                      , "Cut"       } )
+   AADD( ::vText , { "Borrar"           , "Borrar"                                      , "Delete"    } )
+   AADD( ::vText , { "Revertir"         , "Deshacer"                                    , "Undo"      } )
+   AADD( ::vText , { "Rehacer"          , "Rehacer"                                     , "Redo"      } )
+   AADD( ::vText , { "Normalice"        , "Normalizar"                                  , "Normalize" } )
    AADD( ::vText , { "NormaliceToolTip" , "Convierte el texto seleccionado en Arial 10" , "Change Selected Text to Arial 10" } )
-   AADD( ::vText , { "Negrita"   , "Negrita"   , "Bold"      } )
-   AADD( ::vText , { "Italica"   , "Italica"   , "Italic"    } )
-   AADD( ::vText , { "Subrayado" , "Subrayado" , "Underline" } )
-   AADD( ::vText , { "Tachado"   , "Tachado"   , "Strike"    } )
-   AADD( ::vText , { "Izquierda" , "Justificado a Izquierda" , "Left" } )
-   AADD( ::vText , { "Centrado"  , "Centrado"  , "Center" } )
-   AADD( ::vText , { "Derecha"   , "Justificado a Derecha" , "Rigth" } )
-   AADD( ::vText , { "Colores"   , "Colores"   , "Colors"    } )
-   AADD( ::vText , { "Viñetas"   , "Viñetas"   , "Normalize" } )
-   AADD( ::vText , { "Fuentes"   , "Fuentes"   , "Fonts" } )
-   AADD( ::vText , { "TamañodeFuentes" , "Tamaño de Fuentes" , "Font Size" } )
-   AADD( ::vText , { "SeleTodo"  , "Selec. Todo" , "Select All" } )
-   AADD( ::vText , { "SeleTodoToolTip" , "Seleccionar Todo el texto" , "Select all Text" } )
-   AADD( ::vText , { "Reemplazar" , "Buscar y Reemplazar" , "Find and Replace" } )
-   AADD( ::vText , { "Ver"       , "Ver el contenido del portapapeles" , "View Clipboard" } )
-   AADD( ::vText , { "Salir"     , "Salir del Editor" , "Quit editor" } )
+   AADD( ::vText , { "Negrita"          , "Negrita"                                     , "Bold"      } )
+   AADD( ::vText , { "Italica"          , "Italica"                                     , "Italic"    } )
+   AADD( ::vText , { "Subrayado"        , "Subrayado"                                   , "Underline" } )
+   AADD( ::vText , { "Tachado"          , "Tachado"                                     , "Strike"    } )
+   AADD( ::vText , { "Izquierda"        , "Justificado a Izquierda"                     , "Left" } )
+   AADD( ::vText , { "Centrado"         , "Centrado"                                    , "Center" } )
+   AADD( ::vText , { "Derecha"          , "Justificado a Derecha"                       , "Rigth" } )
+   AADD( ::vText , { "Colores"          , "Colores"                                     , "Colors"    } )
+   AADD( ::vText , { "Viñetas"          , "Viñetas"                                     , "Bullets" } )
+   AADD( ::vText , { "Fuentes"          , "Fuentes"                                     , "Fonts" } )
+   AADD( ::vText , { "TamañodeFuentes"  , "Tamaño de Fuentes"                           , "Font Size" } )
+   AADD( ::vText , { "SeleTodo"         , "Selec. Todo"                                 , "Select All" } )
+   AADD( ::vText , { "SeleTodoToolTip"  , "Seleccionar Todo el texto"                   , "Select All Text" } )
+   AADD( ::vText , { "Reemplazar"       , "Buscar y Reemplazar"                         , "Find and Replace" } )
+   AADD( ::vText , { "Ver"              , "Ver el contenido del portapapeles"           , "View Clipboard" } )
+   AADD( ::vText , { "Portapapeles"     , "Ver Portapapeles"                            , "View Clipboard" } )
+   AADD( ::vText , { "Salir"            , "Salir del Editor"                            , "Quit Editor" } )
 Return .T.
 
-//----------------------------------------------------------------------------------\\
-//= END CLASE US_RichEdit                                                          =\\
-//==================================================================================\\
+//----------------------------------------------------------------------------------
+//= END CLASE US_RichEdit                                                          
+//==================================================================================
 
 Function PageSetupRTF_Click()
 Return .T.
@@ -1730,9 +1781,10 @@ HB_FUNC ( GETDEVCAPS ) // GetDevCaps ( hwnd )
 
 #pragma ENDDUMP
 
-*//========================================================================\\*
-*// Funcion para Activar el anotador personal
-*//========================================================================\\*
+//========================================================================
+// Funcion para Activar el anotador personal
+//========================================================================
+/*
 Function RN_Notas(Ventana)
    LOCAL oEdit:=US_RichEdit():New() , cFile := PRESYS+"_NOTAS.TXT"
    RELEASE KEY ALT+A OF &(Ventana)
@@ -1751,6 +1803,7 @@ Function RN_Notas(Ventana)
 
    ON KEY ALT+A OF &(Ventana) ACTION RN_NOTAS(Ventana)
 RETURN
+*/
 
 /*
  * Función para Convertir caretpos de RTF a posicion de RTF contando los  controles
