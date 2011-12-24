@@ -143,7 +143,7 @@ Function QPM_HotRecovery( cFun , cSubFun , cType , cFileName , cRecoveryFile )
       case cFun == "ADD"
          OPEN_cAreaOld := dbf()
          OPEN_cOldTxt := GetMGWaitTxt()
-         Do While !US_DBUseArea( .T. , "DBFCDX" , QPM_HR_Database , "HOTREC" , DEF_DBF_EXCLUSIVE , DEF_DBF_WRITE ) .and. ( seconds() - OPEN_nSecondsInit ) < HR_nLookTimeOut
+         Do While !US_Use( .T. , "DBFCDX" , QPM_HR_Database , "HOTREC" , DEF_DBF_EXCLUSIVE , DEF_DBF_WRITE ) .and. ( seconds() - OPEN_nSecondsInit ) < HR_nLookTimeOut
             SetMGWaitTxt( "Waiting for Hot Recovery Database: " + alltrim( str( int( HR_nLookTimeOut - ( seconds() - OPEN_nSecondsInit ) ) ) ) + " seconds..." )
             DO EVENTS
          enddo
@@ -987,7 +987,7 @@ Function QPM_HotCargoVersions( cType )
    Local cFileType := "" , cFileDateTime := "" , LOC_cVersionDateTime := "" , LOC_cVersionComputer := "" , LOC_cVersionUser := ""
    Local i := 0
    $US_Log()
-   Do While !US_DBUseArea( .T. , "DBFCDX" , QPM_HR_Database , "HOTREC" , DEF_DBF_EXCLUSIVE , DEF_DBF_WRITE ) .and. ( seconds() - OPEN_nSecondsInit ) < HR_nLookTimeOut
+   Do While !US_Use( .T. , "DBFCDX" , QPM_HR_Database , "HOTREC" , DEF_DBF_EXCLUSIVE , DEF_DBF_WRITE ) .and. ( seconds() - OPEN_nSecondsInit ) < HR_nLookTimeOut
       SetMGWaitTxt( "Waiting for Hot Recovery Database: " + alltrim( str( int( HR_nLookTimeOut - ( seconds() - OPEN_nSecondsInit ) ) ) ) + " seconds..." )
       DO EVENTS
    enddo
@@ -1107,7 +1107,7 @@ Function QPM_HotObtengo( cCode )
    Local OPEN_cOldTxt := GetMGWaitTxt()
    Local OPEN_nSecondsInit := Seconds()
    $US_Log()
-   Do While !US_DBUseArea( .T. , "DBFCDX" , QPM_HR_Database , "HOTREC" , DEF_DBF_EXCLUSIVE , DEF_DBF_WRITE ) .and. ( seconds() - OPEN_nSecondsInit ) < HR_nLookTimeOut
+   Do While !US_Use( .T. , "DBFCDX" , QPM_HR_Database , "HOTREC" , DEF_DBF_EXCLUSIVE , DEF_DBF_WRITE ) .and. ( seconds() - OPEN_nSecondsInit ) < HR_nLookTimeOut
       SetMGWaitTxt( "Waiting for Hot Recovery Database: " + alltrim( str( int( HR_nLookTimeOut - ( seconds() - OPEN_nSecondsInit ) ) ) ) + " seconds..." )
       DO EVENTS
    enddo
@@ -1451,7 +1451,7 @@ Function HotRecoverySaveOptionsClear( cCampo , nLimit )
    Local OPEN_nSecondsInit := Seconds()
    Local OPEN_cOldTxt := GetMGWaitTxt()
    $US_Log()
-   Do While !US_DBUseArea( .T. , "DBFCDX" , QPM_HR_Database , "HOTREC" , DEF_DBF_EXCLUSIVE , DEF_DBF_WRITE ) .and. ( seconds() - OPEN_nSecondsInit ) < HR_nLookTimeOut
+   Do While !US_Use( .T. , "DBFCDX" , QPM_HR_Database , "HOTREC" , DEF_DBF_EXCLUSIVE , DEF_DBF_WRITE ) .and. ( seconds() - OPEN_nSecondsInit ) < HR_nLookTimeOut
       SetMGWaitTxt( "Waiting for Hot Recovery Database: " + alltrim( str( int( HR_nLookTimeOut - ( seconds() - OPEN_nSecondsInit ) ) ) ) + " seconds..." )
       DO EVENTS
    enddo
@@ -1472,7 +1472,7 @@ Function HotRecoveryReindex()
    Local OPEN_nSecondsInit := Seconds()
    Local OPEN_cOldTxt := GetMGWaitTxt()
    $US_Log()
-   Do While !US_DBUseArea( .T. , "DBFCDX" , QPM_HR_Database , "HOTREC" , DEF_DBF_EXCLUSIVE , DEF_DBF_WRITE ) .and. ( seconds() - OPEN_nSecondsInit ) < HR_nLookTimeOut
+   Do While !US_Use( .T. , "DBFCDX" , QPM_HR_Database , "HOTREC" , DEF_DBF_EXCLUSIVE , DEF_DBF_WRITE ) .and. ( seconds() - OPEN_nSecondsInit ) < HR_nLookTimeOut
       SetMGWaitTxt( "Waiting for Hot Recovery Database: " + alltrim( str( int( HR_nLookTimeOut - ( seconds() - OPEN_nSecondsInit ) ) ) ) + " seconds..." )
       DO EVENTS
    enddo
@@ -1638,7 +1638,7 @@ Function HotGetComment( cType , bOnlyDbf , nRecCode )
    endif
    if bActualizar
       OPEN_nSecondsInit := Seconds()
-      Do While !US_DBUseArea( .T. , "DBFCDX" , QPM_HR_Database , "HOTREC" , DEF_DBF_EXCLUSIVE , DEF_DBF_WRITE ) .and. ( seconds() - OPEN_nSecondsInit ) < HR_nLookTimeOut
+      Do While !US_Use( .T. , "DBFCDX" , QPM_HR_Database , "HOTREC" , DEF_DBF_EXCLUSIVE , DEF_DBF_WRITE ) .and. ( seconds() - OPEN_nSecondsInit ) < HR_nLookTimeOut
          SetMGWaitTxt( "Waiting for Hot Recovery Database: " + alltrim( str( int( HR_nLookTimeOut - ( seconds() - OPEN_nSecondsInit ) ) ) ) + " seconds..." )
          DO EVENTS
       enddo
@@ -1737,7 +1737,7 @@ Function HotPutCommentWithOutImage( cComment )
    Local OPEN_nSecondsInit := 0
    $US_Log()
    OPEN_nSecondsInit := Seconds()
-   Do While !US_DBUseArea( .T. , "DBFCDX" , QPM_HR_Database , "HOTREC" , DEF_DBF_EXCLUSIVE , DEF_DBF_WRITE ) .and. ( seconds() - OPEN_nSecondsInit ) < HR_nLookTimeOut
+   Do While !US_Use( .T. , "DBFCDX" , QPM_HR_Database , "HOTREC" , DEF_DBF_EXCLUSIVE , DEF_DBF_WRITE ) .and. ( seconds() - OPEN_nSecondsInit ) < HR_nLookTimeOut
       SetMGWaitTxt( "Waiting for Hot Recovery Database: " + alltrim( str( int( HR_nLookTimeOut - ( seconds() - OPEN_nSecondsInit ) ) ) ) + " seconds..." )
       DO EVENTS
    enddo
@@ -1825,7 +1825,7 @@ us_log( cTemp_Database,.F.)
    DO EVENTS
    OPEN_cAreaOld := dbf()
    OPEN_cOldTxt := GetMGWaitTxt()
-   Do While !US_DBUseArea( .T. , "DBFCDX" , QPM_HR_Database , "HOTREC" , DEF_DBF_EXCLUSIVE , DEF_DBF_WRITE ) .and. ( seconds() - OPEN_nSecondsInit ) < HR_nLookTimeOut
+   Do While !US_Use( .T. , "DBFCDX" , QPM_HR_Database , "HOTREC" , DEF_DBF_EXCLUSIVE , DEF_DBF_WRITE ) .and. ( seconds() - OPEN_nSecondsInit ) < HR_nLookTimeOut
       SetMGWaitTxt( "Waiting for Hot Recovery Database: " + alltrim( str( int( HR_nLookTimeOut - ( seconds() - OPEN_nSecondsInit ) ) ) ) + " seconds..." )
       DO EVENTS
    enddo
@@ -1855,7 +1855,7 @@ us_log( cTemp_Database,.F.)
       US_DB_CMP( US_FileNameOnlyPathAndName( cTemp_HR_Database ) , "ADD" , "___UNIQUE"  , "C" , 32 , 0 )
       SetMGWaitTxt( "Importing Records (Fase 4 of 16)" )
       US_DB_CMP( US_FileNameOnlyPathAndName( cTemp_HR_Database ) , "ADD" , "___DATETIM" , "C" , 13 , 0 )
-      if !US_DbUseArea( .T. , "DBFCDX" , cTemp_HR_Database , "__HOTCOMPAT" )
+      if !US_Use( .T. , "DBFCDX" , cTemp_HR_Database , "__HOTCOMPAT" )
          US_Log( "Error opening Temporary Hor Recovery Versions Database in sharde mode: " + cTemp_HR_Database )
          DbClosearea( "HOTREC" )
          if !empty( OPEN_cAreaOld )
@@ -1876,7 +1876,7 @@ us_log( cTemp_Database,.F.)
       DbCloseArea( "__HOTCOMPAT" )
       SetMGWaitTxt( "Importing Records (Fase 10 of 16)" )
       US_DB_CMP( US_FileNameOnlyPathAndName( cTemp_Database ) , "ADD" , "___UNIQUE" , "C" , 32 , 0 )
-      if !US_DbUseArea( .T. , "DBFCDX" , cTemp_Database , "__IMPCOMPAT" )
+      if !US_Use( .T. , "DBFCDX" , cTemp_Database , "__IMPCOMPAT" )
          US_Log( "Error opening Temporary Import Database in sharde mode: " + cTemp_Database )
          DbClosearea( "__HOTCOMPAT" )
          DbClosearea( "HOTREC" )
@@ -1889,7 +1889,7 @@ us_log( cTemp_Database,.F.)
       REPLACE ___UNIQUE with HB_MD5( HR_HASH + HB_MD5( upper( US_ExtractMemoKey( HR_DATA , "VERSION_COMPUTER" ) ) ) + HB_MD5( upper( US_ExtractMemoKey( HR_DATA , "VERSION_USER" ) ) ) + HB_MD5( US_ExtractMemoKey( HR_DATA , "VERSION_DATETIME" ) ) ) ALL
       DbCloseArea( "__IMPCOMPAT" )
       //
-      DbUseArea( .T. , "DBFCDX" , cTemp_HR_Database , "__HOTDB" )
+      US_Use( .T. , "DBFCDX" , cTemp_HR_Database , "__HOTDB" )
 us_log( "abrio base local" , .f. )
       OrdSetFocus( "___COD" )
       DbGoBottom()
@@ -1898,7 +1898,7 @@ us_log( __HOTDB->hr_cod , .f. )
       OrdSetFocus( "___UNIQUE" )
       DbGoTop()
       vStruct := DbStruct()
-      DbUseArea( .t. , "DBFCDX" , cTemp_Database , "__IMPDB" )
+      US_Use( .t. , "DBFCDX" , cTemp_Database , "__IMPDB" )
 us_log( "abrio base __IMPDB" , .f. )
       nCont_Total := RecCount()
       SetMGWaitTxt( "Importing Records (Fase 12 of 16)" )

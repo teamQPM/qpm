@@ -119,7 +119,7 @@ Function SHG_CreateDatabase( cFile )
    CREATE ( cFile ) FROM ( auxName )
    USE
    SHG_Database := cFile
-   DBUseArea( .T. , , SHG_Database , "SHG" , DEF_DBF_EXCLUSIVE , DEF_DBF_WRITE )
+   US_Use( .T. , , SHG_Database , "SHG" , DEF_DBF_EXCLUSIVE , DEF_DBF_WRITE )
    DbGoTop()
    SHG_IndexON( SHG_Database )
    DBCloseArea( "SHG" )
@@ -149,6 +149,7 @@ Function SHG_Close()
          SetProperty( "VentanaMain" , "THlpDataBase" , "Value" , "" )
          SHG_BaseOK := .F.
          SetProperty( "VentanaMain" , "RichEditHlp" , "value" , "" )
+         oHlpRichEdit:lChanged := .F.
          SetProperty( "VentanaMain" , "RichEditHlp" , "readonly" , .T. )
       else
          Return .F.
@@ -159,7 +160,7 @@ Return .T.
 Function SHG_PackDatabase()
    Local cTmpDb := US_FileNameOnlyPathAndName( SHG_Database ) + "_" + PUB_cSecu + ".dbf"
    if !file( cTmpDb )
-      DBUseArea( .T. , , SHG_Database , "SHG" , DEF_DBF_EXCLUSIVE , DEF_DBF_WRITE )
+      US_Use( .T. , , SHG_Database , "SHG" , DEF_DBF_EXCLUSIVE , DEF_DBF_WRITE )
       COPY TO ( cTmpDb )
       DBClosearea( "SHG" )
       if file( cTmpDb )
@@ -167,7 +168,7 @@ Function SHG_PackDatabase()
          ferase( US_FileNameOnlyPathAndName( SHG_Database ) + ".dbt" )
       endif
       if !file( SHG_Database )
-         DBUseArea( .T. , , cTmpDb , "SHG" , DEF_DBF_EXCLUSIVE , DEF_DBF_WRITE )
+         US_Use( .T. , , cTmpDb , "SHG" , DEF_DBF_EXCLUSIVE , DEF_DBF_WRITE )
          COPY TO ( SHG_Database )
          DBClosearea( "SHG" )
       endif
@@ -223,11 +224,11 @@ Return .T.
 
 Function SHG_AddRecord( cType , nSecu , cTopic , cNick , cMemo , cKeys )
    DEFAULT cKeys TO ""
-//\\ cMemo := "{\rtf1\ansi\ansicpg1252\deff0\deflang3082{\fonttbl{\f0\froman\fcharset0 Arial;}{\f1\fnil\fcharset0 MS Sans Serif;}}" + HB_OsNewline() + ;
-//\\        "{\colortbl ;\red0\green0\blue0;}" + HB_OsNewline() + ;
-//\\        "\viewkind4\uc1\pard\sb100\sa100\cf1\f0\fs20 " + cMemo + HB_OsNewline() + ;
-//\\        "\par \pard\cf0\f1\fs17 " + HB_OsNewline() + ;
-//\\        "\par }"
+// cMemo := "{\rtf1\ansi\ansicpg1252\deff0\deflang3082{\fonttbl{\f0\froman\fcharset0 Arial;}{\f1\fnil\fcharset0 MS Sans Serif;}}" + HB_OsNewline() + ;
+//        "{\colortbl ;\red0\green0\blue0;}" + HB_OsNewline() + ;
+//        "\viewkind4\uc1\pard\sb100\sa100\cf1\f0\fs20 " + cMemo + HB_OsNewline() + ;
+//        "\par \pard\cf0\f1\fs17 " + HB_OsNewline() + ;
+//        "\par }"
    cMemo := "{\rtf1\ansi\ansicpg1252\deff0\deflang3082{\fonttbl{\f0\froman\fcharset0 Arial;}{\f1\fnil\fcharset0 MS Sans Serif;}}" + HB_OsNewline() + ;
             "{\colortbl ;\red0\green0\blue0;}" + HB_OsNewline() + ;
             "\viewkind4\uc1\cf1\f0\fs20 " + cMemo + HB_OsNewline() + ;
@@ -239,7 +240,8 @@ Function SHG_AddRecord( cType , nSecu , cTopic , cNick , cMemo , cKeys )
  //SetProperty( "VentanaMain" , "RichEditHlp" , "Value" , cMemo )
  //cMemo := US_GetRichEditValue( "VentanaMain" , "RichEditHlp" , "RTF" )
  //SetProperty( "VentanaMain" , "RichEditHlp" , "Value" , cAuxMemo )
-   DBUseArea( .T. , , SHG_Database , "SHG" , DEF_DBF_EXCLUSIVE , DEF_DBF_WRITE )
+ //oHlpRichEdit:lChanged := .F.
+   US_Use( .T. , , SHG_Database , "SHG" , DEF_DBF_EXCLUSIVE , DEF_DBF_WRITE )
    DBSetIndex( US_FileNameOnlyPathAndName( SHG_Database ) )
    APPEND BLANK
 // REPLACE SHG_TYPET WITH cType , SHG_ORDER WITH nSecu , SHG_TOPICT WITH cTopic , SHG_MEMOT WITH cMemo , SHG_KEYST WITH cKeys
@@ -251,7 +253,7 @@ Function SHG_AddRecord( cType , nSecu , cTopic , cNick , cMemo , cKeys )
 Return .T.
 
 Function SHG_DeleteRecord( nRec )
-   DBUseArea( .T. , , SHG_Database , "SHG" , DEF_DBF_EXCLUSIVE , DEF_DBF_WRITE )
+   US_Use( .T. , , SHG_Database , "SHG" , DEF_DBF_EXCLUSIVE , DEF_DBF_WRITE )
    DBSetIndex( US_FileNameOnlyPathAndName( SHG_Database ) )
    DBGoTop()
    if !DbSeek( nRec )
@@ -265,7 +267,8 @@ Return .T.
 
 Function SHG_GetField( cField , nRow )
    Local cAux := "Record " + US_TodoStr( nRow ) + " not found.  Contact with QPM Support for Assistance"
-   DBUseArea( .T. , , SHG_Database , "SHG" , DEF_DBF_EXCLUSIVE , DEF_DBF_WRITE )
+
+   US_Use( .T. , , SHG_Database , "SHG" , DEF_DBF_EXCLUSIVE , DEF_DBF_WRITE )
    DBSetIndex( US_FileNameOnlyPathAndName( SHG_Database ) )
    DBGoTop()
    if !DbSeek( nRow )
@@ -278,7 +281,7 @@ Return cAux
 
 Function SHG_SetField( cField , nRow , xValue )
    Local bReto := .F.
-   DBUseArea( .T. , , SHG_Database , "SHG" , DEF_DBF_EXCLUSIVE , DEF_DBF_WRITE )
+   US_Use( .T. , , SHG_Database , "SHG" , DEF_DBF_EXCLUSIVE , DEF_DBF_WRITE )
    DBSetIndex( US_FileNameOnlyPathAndName( SHG_Database ) )
    DBGoTop()
    if !DbSeek( nRow )
@@ -299,7 +302,6 @@ Function SHG_CheckSave()
    LostRichEdit( "HLP" , nActual )
    SetMGWaitTxt( "Checking changes in Hlp Topics..." )
    For nInx := 1 to GetProperty( "VentanaMain" , "GHlpFiles" , "ItemCount" )
-      DO EVENTS
       if GetProperty( "VentanaMain" , "GHlpFiles" , "Cell" , nInx , NCOLHLPEDIT ) == "D"
          aadd( vDiff , nInx )
       endif
@@ -348,7 +350,6 @@ Return .T.
 Function SHG_SaveAll()
    Local nInx
    For nInx := 1 to GetProperty( "VentanaMain" , "GHlpFiles" , "ItemCount" )
-      DO EVENTS
       if GetProperty( "VentanaMain" , "GHlpFiles" , "Cell" , nInx , NCOLHLPEDIT ) == "D"
          SetMGWaitTxt( "Saving: " + alltrim( GetProperty( "VentanaMain" , "GHlpFiles" , "Cell" , nInx , NCOLHLPTOPIC ) ) + " ..." )
          SHG_SetField( "SHG_TYPE"  , nInx , SHG_GetField( "SHG_TYPET"  , nInx ) )
@@ -406,7 +407,7 @@ Function SHG_Generate( cBase , bGenHtml , PUB_cSecu , cWWW )
       return .F.
    endif
    Prefijo     := US_FileNameOnlyName( SHG_GetOutputName() )
-   DBUseArea( .T. , , cBase , "SHG" , DEF_DBF_EXCLUSIVE , DEF_DBF_WRITE )
+   US_Use( .T. , , cBase , "SHG" , DEF_DBF_EXCLUSIVE , DEF_DBF_WRITE )
    DbGoTo( 2 )
    cAux := SHG_TYPE
    DbGoTop()
@@ -527,7 +528,7 @@ Function SHG_Generate( cBase , bGenHtml , PUB_cSecu , cWWW )
       endif
    endif
 
-   DBUseArea( .T. , , cBase , "HlpAlias" , DEF_DBF_EXCLUSIVE , DEF_DBF_WRITE )
+   US_Use( .T. , , cBase , "HlpAlias" , DEF_DBF_EXCLUSIVE , DEF_DBF_WRITE )
    DBSetIndex( US_FileNameOnlyPathAndName( cBase ) )
    nRegistros := Reccount()
    DbSeek( 1 )
@@ -598,7 +599,7 @@ Function SHG_Generate( cBase , bGenHtml , PUB_cSecu , cWWW )
             US_FileCopy( cDirOutCHM + DEF_SLASH + cName + ".htm" , cDirOutHTML + DEF_SLASH + cName + ".htm" )
          endif
       endif
-//\\  ferase( cDirOutCHM + DEF_SLASH + cName + ".rtf" )
+//  ferase( cDirOutCHM + DEF_SLASH + cName + ".rtf" )
       DBSkip()
    enddo
    DBCloseArea( "HlpAlias" )
@@ -616,12 +617,12 @@ Function SHG_Generate( cBase , bGenHtml , PUB_cSecu , cWWW )
    SHG_CompileToCHM( US_ShortName( cDirOutCHM + DEF_SLASH + Prefijo + ".hhp" ) , US_ShortName( cDirOutCHM ) )
    for i := 1 to len( vFiles )
       DO EVENTS
- //\\ ferase( cDirOutCHM + DEF_SLASH + vFiles[i][3] )
- //\\ ferase( vFiles[i][4] )
+ // ferase( cDirOutCHM + DEF_SLASH + vFiles[i][3] )
+ // ferase( vFiles[i][4] )
    next
-//\\ ferase( cDirOutCHM + DEF_SLASH + Prefijo + ".hhp" )
-//\\ ferase( cDirOutCHM + DEF_SLASH + Prefijo + ".hhc" )
-//\\ ferase( cDirOutCHM + DEF_SLASH + Prefijo + ".hhk" )
+// ferase( cDirOutCHM + DEF_SLASH + Prefijo + ".hhp" )
+// ferase( cDirOutCHM + DEF_SLASH + Prefijo + ".hhc" )
+// ferase( cDirOutCHM + DEF_SLASH + Prefijo + ".hhk" )
    if !empty( cOldDll )
       SHG_RestoreDllItcc( cOldDll )
    else
@@ -923,11 +924,11 @@ Function SHG_Togle()
       Return .F.
    endif
    if GetProperty( "VentanaMain" , "GHlpFiles" , "Value" ) == 1
-      MsgInfo( "Global foot not toggled !!!, this is a system Topic." )
+      MsgInfo( "Global foot can't be toggled, it's a system Topic !!!" )
       Return .F.
    endif
    if GetProperty( "VentanaMain" , "GHlpFiles" , "Value" ) == 2
-      MsgInfo( "Welcome page not toggled !!!, this is a system Topic." )
+      MsgInfo( "Welcome page can't be toggled, it's a system Topic !!!" )
       Return .F.
    endif
    if GridImage( "VentanaMain" , "GHlpFiles" , GetProperty( "VentanaMain" , "GHlpFiles" , "Value" ) , NCOLHLPSTATUS , "?" , PUB_nGridImgHlpBook )
@@ -950,17 +951,17 @@ Return .T.
 
 Function SHG_NewSecuence()
    Local nInx := 0
-   DBUseArea( .T. , , SHG_Database , "SHG" , DEF_DBF_EXCLUSIVE , DEF_DBF_WRITE )
+   US_Use( .T. , , SHG_Database , "SHG" , DEF_DBF_EXCLUSIVE , DEF_DBF_WRITE )
    DBSetIndex( US_FileNameOnlyPathAndName( SHG_Database ) )
    DBGoTop()
    do while !eof()
-      DO EVENTS
       nInx++
       REPLACE SHG_ORDER WITH nInx
       DBSkip()
    enddo
    DBCloseArea( "SHG" )
-//   DBUseArea( .T. , , SHG_Database , "SHG" , DEF_DBF_EXCLUSIVE , DEF_DBF_WRITE )
+   DO EVENTS
+//   US_Use( .T. , , SHG_Database , "SHG" , DEF_DBF_EXCLUSIVE , DEF_DBF_WRITE )
 //   DBGoTop()
 //   do while !eof()
 //      DO EVENTS
@@ -1009,13 +1010,13 @@ Function SHG_LoadDatabase( cDataBase )
       endif
       
       SetMGWaitTxt( "Packing Help Database ..." )
-      DBUseArea( .T. , , cDataBase , "SHG" , DEF_DBF_EXCLUSIVE , DEF_DBF_WRITE )
+      US_Use( .T. , , cDataBase , "SHG" , DEF_DBF_EXCLUSIVE , DEF_DBF_WRITE )
       vStructure := DBStruct()
       if ascan( vStructure , {|aval| aval[1] == "SHG_NICK" } ) == 0
          DBCloseArea( "SHG" )
          US_DB_CMP( US_FileNameOnlyPathAndName( cDataBase ) , "ADD" , "SHG_NICK" , "C" , 255 , 0 )
          US_DB_CMP( US_FileNameOnlyPathAndName( cDataBase ) , "ADD" , "SHG_NICKT" , "C" , 255 , 0 )
-         DBUseArea( .T. , , cDataBase , "SHG" , DEF_DBF_EXCLUSIVE , DEF_DBF_WRITE )
+         US_Use( .T. , , cDataBase , "SHG" , DEF_DBF_EXCLUSIVE , DEF_DBF_WRITE )
       endif
       PACK
       ferase( US_FileNameOnlyPathAndName( cDataBase ) + ".bak" )
@@ -1034,14 +1035,19 @@ Function SHG_LoadDatabase( cDataBase )
       enddo
       DbGoTop()
 
+      DO EVENTS
+
       SetMGWaitTxt( "Reindex Help Database ..." )
       SHG_IndexON( cDatabase )
       DBCloseArea( "SHG" )
 
+      DO EVENTS
+
       SetMGWaitTxt( "New Secuence Database ..." )
       SHG_NewSecuence()
-      DBUseArea( .T. , , cDataBase , "SHG" , DEF_DBF_EXCLUSIVE , DEF_DBF_WRITE )
-      DBSetIndex( US_FileNameOnlyPathAndName( SHG_Database ) )
+
+      US_Use( .T. , , cDataBase , "SHG" , DEF_DBF_EXCLUSIVE , DEF_DBF_WRITE )
+      DBSetIndex( US_FileNameOnlyPathAndName( cDataBase ) )
       DbGoTo( 2 )
       cAux := SHG_TYPE
       DbGoTop()
@@ -1064,6 +1070,9 @@ Function SHG_LoadDatabase( cDataBase )
       enddo
       DoMethod( "VentanaMain" , "GHlpFiles" , "EnableUpdate" )
       DBCloseArea( "SHG" )
+
+      DO EVENTS
+
       SetProperty( "VentanaMain" , "GHlpFiles" , "Value" , 1 )
       SetMGWaitTxt( "Display Help Topic ..." )
       RichEditDisplay( "HLP" )
@@ -1182,6 +1191,7 @@ Function SHG_AddHlpHTML( accion )
      //     nHastaRtf := US_Rtf2MemoPos( cMemoRtf , vDesdeLen[1][1] + vDesdeLen[1][2] )
      //     cMemoRtfAux := substr( cMemoRtf , 1 , nDesdeRtf - 1 ) + cTagAux + substr( cMemoRtf , nHastaRtf )
      //     SetProperty( "VentanaMain" , "RichEditHlp" , "Value" , cMemoRtfAux )
+     //     oHlpRichEdit:lChanged := .F.
      //     SetProperty( "VentanaMain" , "RichEditHlp" , "caretpos" , nCaretTxt )
         //  vDesdeLen[1][1] := vDesdeLen[1][1] - Occurs( HB_OsNewLine() , substr( cMemoTxt , 1 , vDesdeLen[1][1] ) )
             if vDesdeLen[1][2] > 0
@@ -1215,7 +1225,7 @@ Function SHG_AddHlpHTML( accion )
          CopyToClipboard( '<A href="mailto:qpm-users@lists.sourceforge.net">Mail to QPM_Support</A>' )
          SHG_Send_Paste()
    otherwise
-      MsgInfo( "Invalid accion into function SHG_AddHlpHTML: " + us_todostr( accion ) )
+      MsgInfo( "Invalid accion in function SHG_AddHlpHTML: " + us_todostr( accion ) )
    endcase
    CopyRtfToClipboard( cClip )
 Return .T.
@@ -1228,24 +1238,43 @@ Function SHG_LimpioRtf( cRtf )
 Return .F.
 
 Function SHG_Send_Copy()
-   if GetProperty( "VentanaMain" , "TabFiles" , "Value" ) == nPageHlp
+   RELEASE KEY CONTROL+C OF VentanaMain
+   if GetProperty( "VentanaMain" , "TabFiles" , "Value" ) == nPageHlp .and. ;
+      oHlpRichEdit:US_IsFocused()
       oHlpRichEdit:US_EditRtfCopy()
+
+      SetProperty( oHlpRichEdit:US_WinEdit , oHlpRichEdit:cRichControlName + "ClipBoard" , "value" , "" )
+      DoMethod( oHlpRichEdit:US_WinEdit , oHlpRichEdit:cRichControlName + "ClipBoard" , "SetFocus" )
+      US_Send_Paste()
+      DO EVENTS
+      DoMethod( oHlpRichEdit:US_WinEdit , oHlpRichEdit:cRichControlName, "SetFocus" )
    else
       US_Send_Copy()
    endif
+   ON KEY CONTROL+C OF VentanaMain ACTION SHG_Send_Copy()
 Return .T.
 
 Function SHG_Send_Cut()
-   if GetProperty( "VentanaMain" , "TabFiles" , "Value" ) == nPageHlp
+   RELEASE KEY CONTROL+X OF VentanaMain
+   if GetProperty( "VentanaMain" , "TabFiles" , "Value" ) == nPageHlp .and. ;
+      oHlpRichEdit:US_IsFocused()
       oHlpRichEdit:US_EditRtfCut()
+
+      SetProperty( oHlpRichEdit:US_WinEdit , oHlpRichEdit:cRichControlName + "ClipBoard" , "value" , "" )
+      DoMethod( oHlpRichEdit:US_WinEdit , oHlpRichEdit:cRichControlName + "ClipBoard" , "SetFocus" )
+      US_Send_Paste()
+      DO EVENTS
+      DoMethod( oHlpRichEdit:US_WinEdit , oHlpRichEdit:cRichControlName, "SetFocus" )
    else
       US_Send_Cut()
    endif
+   ON KEY CONTROL+X OF VentanaMain ACTION SHG_Send_Cut()
 Return .T.
 
 Function SHG_Send_Paste()
    RELEASE KEY CONTROL+V OF VentanaMain
-   if GetProperty( "VentanaMain" , "TabFiles" , "Value" ) == nPageHlp
+   if GetProperty( "VentanaMain" , "TabFiles" , "Value" ) == nPageHlp .and. ;
+      oHlpRichEdit:US_IsFocused()
       oHlpRichEdit:US_EditRtfPaste()
    else
       US_Send_Paste()
@@ -1254,13 +1283,14 @@ Function SHG_Send_Paste()
 Return .T.
 
 Function SHG_Post_Paste()
-   Local cAuxMemo , nCaret
-   cAuxMemo := US_GetRichEditValue( "VentanaMain" , "RichEditHlp" , "RTF" )
-   if SHG_LimpioRtf( @cAuxMemo )
-      nCaret := GetProperty( "VentanaMain" , "RichEditHlp" , "caretpos" )
-      SetProperty( "VentanaMain" , "RichEditHlp" , "value" , cAuxMemo )
-      SetProperty( "VentanaMain" , "RichEditHlp" , "caretpos" , nCaret )
-   endif
+*   Local cAuxMemo , nCaret
+*   cAuxMemo := US_GetRichEditValue( "VentanaMain" , "RichEditHlp" , "RTF" )
+*   if SHG_LimpioRtf( @cAuxMemo )
+*      nCaret := GetProperty( "VentanaMain" , "RichEditHlp" , "caretpos" )
+*      SetProperty( "VentanaMain" , "RichEditHlp" , "value" , cAuxMemo )
+*      oHlpRichEdit:lChanged := .F.
+*      SetProperty( "VentanaMain" , "RichEditHlp" , "caretpos" , nCaret )
+*   endif
 Return .T.
 
 Function SHG_GetDatabaseName( model )

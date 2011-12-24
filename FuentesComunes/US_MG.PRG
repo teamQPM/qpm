@@ -3882,7 +3882,7 @@ Function US_MGIndex(cBase, cClave, cNombre, cPack)
 RETURN NIL
 
 FUNCTION US_MGIndex_Creacion(cBase,cClave,cNombre,bPack)
-   dbusearea(.T. , , cBase, , .F.)  && not shared
+   US_Use(.T. , , cBase, , .F.)  && not shared
    if reccount() < 101
       Incremento:=int(reccount() / 100)
    endif
@@ -4243,7 +4243,7 @@ FUNCTION US_MSGUP(MSG_PREFIX,MSG_VERSION,MSG_RELEASE,MSG_DISPLAY)
    CLOSE
    CREATE MSG_TEMP FROM ESTRTEMP
 
-   *DBUSEAREA(.T.,,"MSG_TEMP","TEM")
+   *US_Use(.T.,,"MSG_TEMP","TEM")
    USE MSG_TEMP ALIAS TEM
    ZAP
    FOR I=1 TO LEN(MSG_DIR)
@@ -4251,7 +4251,7 @@ FUNCTION US_MSGUP(MSG_PREFIX,MSG_VERSION,MSG_RELEASE,MSG_DISPLAY)
       APPEND FROM &MSG_ARC2 SDF
    NEXT
    GO TOP
-   DBUSEAREA(.T.,,MSG_BASE,"BAS")
+   US_Use(.T.,,MSG_BASE,"BAS")
    *USE &MSG_BASE ALIAS BAS
    ZAP
    INDEX ON MSG_NUM TO &MSG_IND
@@ -4531,7 +4531,7 @@ FUNCTION US_MSG(M99SISTEMA,M99NUM,M99FILPOS,M99MODO)
    // AREA ACTUAL 
    M99AREAA = DBF()
    // ABRE LA BASE DE MENSAJES Y EL INDICE 
-   DBUSEAREA(.T.,,M99BASE,"MSG")
+   US_Use(.T.,,M99BASE,"MSG")
    DBSETINDEX(M99BASE+"01")
    // PROCESO EL MENSAJE 
    M99I = 0

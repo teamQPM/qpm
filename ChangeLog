@@ -9,6 +9,73 @@
  */
 
 2011-12-20 10:05:00 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * ./FuentesComunes/US_Edit_CharFijo.prg
+     ! Fixed: added extra lines when pasting from another topic's text.
+     - Deleted RN_ONGOTFOCUS() calls.
+   * ./FuentesComunes/US_HB.prg
+     + US_Use() function to retry dbf's open operations.
+     * DBUseArea() calls replaced by US_Use() calls.
+   * ./FuentesComunes/US_MG.prg
+     * DBUseArea() calls replaced by US_Use() calls.
+   * ./HelpQPM/QPM_SHG.dbf
+   * ./HelpQPM/QPM_SHG.fpt
+     * Some typos corrected.
+     * Some topic's names slightly changed.
+     * Some topic's texts changed.
+     * Updated MiniGui's information.
+   * ./htmlhelp/*.htm
+   * ./QPM.chm
+     * Updated.
+   * ./QPM.prg
+     ! Fixed: error messages not shown in processing log for Harbour 3.1
+       build with Borland C++ Compiler.
+     * DBUseArea() calls replaced by US_Use() calls.
+     * RN_ONGOTFOCUS() function commented out.
+     * US_MP3() function commented out.
+     + Added options to compress/uncompress some US_*.exe utilities.
+       Note that US_ImpDef.EXE, US_PExports.EXE, US_Reimp.EXE,
+       US_ImpLib.EXE, US_DllTool.EXE, US_ObjDump.EXE and US_Tdump.EXE
+       can't be packed or unpacked by UPX.
+   * ./QPM_CompatibilityHotRecovery.ch
+     * US_DBUseArea() calls replaced by US_Use() calls.
+   * ./QPM_Environment.prg
+     - Deleted some comments.
+     * Minor formatting.
+     * Scope of variable vConfig changed to local.
+   * ./QPM_Functions.prg
+     ! Fixed: libraries not linked for ooHg and Borland C.
+       GetHarbourLibFolder() checks for libraries in "LIB\BCC" or
+       "LIB\MINGW" or "LIB\PELLES" if they are not in "LIB".
+     * Minor formatting.
+   * ./QPM_HotRecovery.prg
+     * Some DBUseArea() calls replaced by US_Use() calls.
+     * US_DBUseArea() calls replaced by US_Use() calls.
+   * ./QPM_SHG_SimpleHelpGenerator.prg
+     * DBUseArea() calls replaced by US_Use() calls.
+     ! Fixed: Help topic is marked as changed when no change was made.
+     ! Fixed: Can't copy/cut text from first help topic.
+     ! Fixed: Can´t paste in search box from richedit box.
+     ! Fixed: index not found error.
+   * ./ToDo
+     * Updated.
+   * ./us_dif.exe
+   * ./us_hhc.exe
+   * ./us_make.exe
+   * ./us_podump.exe
+   * ./us_polib.exe
+   * ./us_r2h.exe
+   * ./us_run.exe
+   * ./us_tlib.exe
+   * ./us_upx.exe
+   * ./us_windres.exe
+     * Unpacked with new upx version.
+   * ./QPM.iss
+   * ./QPM.exe
+   * ./QPM_AutoProject.qpm
+   * ./QPM_AutoProjectOnlyHelp.qpm
+     * Updated to version 05_03_06.
+
+2011-12-20 10:05:00 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * ./US_UPX.EXE
      * Updated to version 3.08w due to an error packing HMG Oficial 3.0.40
        executables.
@@ -23,7 +90,7 @@
    * ./QPM.prg
      ! Fixed EXTRARUNTYPE parameter lost when updating settings.
    * ./doc/notes.txt
-   * ./TODO
+   * ./ToDo
      * Updated.
    * ./QPM.chm
    * ./htmlhelp/*.htm
@@ -280,7 +347,7 @@
      * Compiler references updated.
    * ./QPM_AutoProjectOnlyHelp.qpm
      * Updated.
-   * ./TODO
+   * ./ToDo
      * Updated.
    * ./us_dbfview.exe
      * Updated to version 0.78.
@@ -457,7 +524,7 @@
      * Version updated.
 
 2011-10-18 09:07:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
-   * ./TODO
+   * ./ToDo
      + Updated.
 
 2011-09-25 00:57:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
@@ -479,7 +546,7 @@
 
 2011-09-25 00:45:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * ./QPM.EXE
-   * ./TODO
+   * ./ToDo
    * ./HelpQPM/QPM_SHG.fpt
    * ./QPM_AutoProject.qpm
      * Updated.
@@ -687,7 +754,7 @@
      + Added to keep track of changes.
    + ./LICENSE
      + Added GNU General Public License version 3.
-   + ./TODO
+   + ./ToDo
      + Added to keep track of things to do.
    * ./helpQPM/SHG_Change.prg
      * Changed default path to files used in QPM.chm

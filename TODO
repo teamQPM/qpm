@@ -13,16 +13,16 @@
 Assigned to: <nobody>
 Added by...: 2011-12-19 09:32:00 UTC-0300 Fernando Yurisich <fyurisich>
 Status.....: Open.
-Details....: Use a table to code libraries and other options of each minigui,
-             so the user can add multiple version. Clean code so libraries
-             are no longer hardwired.
+Details....: Update sourcefourge help.
 
 /******************************************************************************/
 
 Assigned to: <nobody>
-Added by...: 2011-12-02 09:32:00 UTC-0300 Fernando Yurisich <fyurisich>
+Added by...: 2011-12-19 09:32:00 UTC-0300 Fernando Yurisich <fyurisich>
 Status.....: Open.
-Details....: Add option to compress/uncompress US_*.exe
+Details....: Use a table to code libraries and other options of each minigui,
+             so the user can add multiple version. Clean code so libraries
+             are no longer hardwired.
 
 /******************************************************************************/
 
@@ -55,36 +55,20 @@ Details....: F3 key not released when application is minimized.
 /******************************************************************************/
 
 Assigned to: <nobody>
-Added by...: 2011-10-17 15:00:00 UTC-0300 Fernando Yurisich <fyurisich>
-Status.....: Open.
-Details....: Cut and paste not working properly between help design richedit
-             box and global search textbox.
-
-/******************************************************************************/
-
-Assigned to: <nobody>
 Added by...: 2011-09-23 15:00:00 UTC-0300 Fernando Yurisich <fyurisich>
 Status.....: Open.
 Details....: In HELP:
-             - Topic: Qué versiones de librerías gráficas soporta
-               Update versions and add support for MinGW with Extended.
              - Topic: Cómo compilar con OOHG y MinGW o Pelles C
                Substitute MINGW by BCC.
-               Change topic name.
              - Change references to previous topic.
              - Update links.
+             - Spell check from "¿Cómo se hace?"" topic.
 
 /******************************************************************************/
 Assigned to: <nobody>
 Added by...: 2011-09-19 22:30:00 UTC-0300 Fernando Yurisich <fyurisich>
 Status.....: Open.
 Details....: Add ./doc/dirstruc.txt file describing the SVN structure.
-
-/******************************************************************************/
-Assigned to: <nobody>
-Added by...: 2011-09-22 22:30:00 UTC-0300 Fernando Yurisich <fyurisich>
-Status.....: Open.
-Details....: Spellcheck the help files.
 
 /******************************************************************************/
 Assigned to: <nobody>

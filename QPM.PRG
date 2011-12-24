@@ -29,13 +29,14 @@
 #include "minigui.ch"
 #include <QPM.ch>
 
+#define QPM_VERSION_NUMBER "05 03 06"
 #define DEF_INCLUDE_GT  '#include "QPM_gt.ch"'
 
 Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PAR_cP9,PAR_cP10,PAR_cP11,PAR_cP12,PAR_cP13,PAR_cP14,PAR_cP15,PAR_cP16,PAR_cP17,PAR_cP18,PAR_cP19,PAR_cP20)
    Local Folder , FileName , i , nPos , LogIni := 0 , nIndx
    Local LOC_cParam := ""
 
-   PUBLIC PUB_cQPM_Version      := "05 03 05"
+   PUBLIC PUB_cQPM_Version := QPM_VERSION_NUMBER
 
    PUBLIC PUB_QPM_bHigh := .F.
    QPM_SetProcessPriority( "HIGH" )
@@ -2202,7 +2203,7 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
                     HEADERS { 'I' , 'Topic' , 'Nick Name' , 'Offset' , 'Control Edit' } ;
                     WIDTHS { 25 , 1000 , 0 , 20 , 20 };
                     ITEMS aGridHlp ;
-                    VALUE 1 ;
+                    VALUE 0 ;
                     IMAGE vImagesGrid ;
                     TOOLTIP '' ;
                     BACKCOLOR DEF_COLORBACKHLP ;
@@ -2292,6 +2293,7 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
                      WIDTH           GetDesktopRealWidth() - 348 ;
                      HEIGHT          GetDesktopRealHeight() - 217 ;
                      STRETCH
+
                  @ 35, 10 RICHEDITBOX RichEditPRG ;
                          WIDTH           GetDesktopRealWidth() - 364 ;
                          HEIGHT          GetDesktopRealHeight() - 272 ;
@@ -2299,21 +2301,6 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
                          FONT            'Courier New' ;
                          SIZE            9 ;
                          BACKCOLOR DEF_COLORBACKPRG
-         //   ** oHlpRichEdit:vBackColor := DEF_COLORPan
-         //   ** oHlpRichEdit:vFontColor := DEF_COLOREdit
-         //      oHlpRichEdit:cWindowName      := "VentanaMain"
-         //      oHlpRichEdit:cRichControlName := "RichEditPrg"
-         //      if PUB_bW800
-         //         oHlpRichEdit:nPorcentajeAncho := 55.0
-         //         oHlpRichEdit:nPorcentajeAlto  := 72
-         //      else
-         //         oHlpRichEdit:nPorcentajeAncho := 60.0
-         //         oHlpRichEdit:nPorcentajeAlto  := 81
-         //      endif
-         //      oHlpRichEdit:bEdit       := .T.
-         //      oHlpRichEdit:bRTF        := .F.
-         //      oHlpRichEdit:bButtonFind := .F.
-         //      oHlpRichEdit:Init( "" )
 
                  DEFINE CHECKBOX Check_NumberOnPrg
                          CAPTION         "Line Number"
@@ -2636,8 +2623,8 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
                //        FONT            'Courier New' ;
                //        SIZE            9 ;
                //        BACKCOLOR DEF_COLORBACKHLP
-              ** oHlpRichEdit:vBackColor := DEF_COLORPan
-              ** oHlpRichEdit:vFontColor := DEF_COLOREdit
+              // oHlpRichEdit:vBackColor := DEF_COLORPan
+              // oHlpRichEdit:vFontColor := DEF_COLOREdit
                  oHlpRichEdit:cWindowName      := "VentanaMain"
                  oHlpRichEdit:cRichControlName := "RichEditHlp"
                  oHlpRichEdit:cLanguage        := "EN"
@@ -2957,13 +2944,15 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
                   INTERVAL 500 ;
                   ACTION QPM_Timer_Run()
 
-
 #ifdef QPM_SHG
            ON KEY CONTROL+V  ACTION SHG_Send_Paste()
+           ON KEY CONTROL+C  ACTION SHG_Send_Copy()
+           ON KEY CONTROL+X  ACTION SHG_Send_Cut()
 #else
            ON KEY CONTROL+V  ACTION US_Send_Paste()
+           ON KEY CONTROL+C  ACTION US_Send_Copy()
+           ON KEY CONTROL+X  ACTION SHG_Send_Cut()
 #endif
-
    END WINDOW
 #ifdef QPM_KILLER
    QPM_DefinoKillerWindow()
@@ -3933,7 +3922,7 @@ Return .T.
 Function QPM_EditHLP()
    Local cAuxTopic := "" , cAuxNick
    if VentanaMain.GHlpFiles.Value == 1
-      MsgInfo( "Global foot not edited !!!, this is a system Topic" )
+      MsgInfo( "Global foot can't be edited, it's a system Topic !!!" )
       Return .T.
    endif
    if VentanaMain.GHlpFiles.Value > 1
@@ -4377,6 +4366,7 @@ Function QPM_OpenProject2()
       VentanaMain.RichEditLib.Value := ''
 #ifdef QPM_SHG
       VentanaMain.RichEditHlp.Value := ''
+      oHlpRichEdit:lChanged := .F.
 #endif
       VentanaMain.RichEditSysout.Value := ''
       VentanaMain.RichEditOut.Value := ''
@@ -4691,7 +4681,7 @@ Function QPM_OpenProject2()
                     case US_Word ( LOC_cLine , 2 ) == "DBU"
                        Prj_Radio_DbfTool := 2
                     case US_Word ( LOC_cLine , 2 ) == "OTHER"
-                 //\\  Prj_Radio_DbfTool := 3
+                 //    Prj_Radio_DbfTool := 3
                        Prj_Radio_DbfTool := 2  // DBU
                  endcase
                  ActDbfToolSet()
@@ -6533,7 +6523,7 @@ Function QPM_Build2()
             Out := Out + PUB_cCharTab + if(!bLogActivity,'@','')+'$(US_SHELL_EXE) '+if(!bLogActivity,'-OFF','')+ ' COPYZAP $** $@' + Hb_OsNewLine()
          else
             Out := Out + PUB_cCharTab + if(!bLogActivity,'@','')+'-$(US_SHELL_EXE) '+if(!bLogActivity,'-OFF','')+' DELETE $@ ' + Hb_OsNewLine()
-            IF Prj_Check_HarbourIs31
+            IF Prj_Check_HarbourIs31 .and. IsBorland
                Out := Out + PUB_cCharTab + '$(HARBOUR_EXE) $(HARBOUR_FLAGS) ' + if( QPM_IsXHarbour() , '/p' , '/p$(DIR_OBJECTS)' + DEF_SLASH + US_FileNameOnlyName( PRGFILES[i] ) ) + ' $** -o$@' + Hb_OsNewLine()
             ELSE
                Out := Out + PUB_cCharTab + '$(REDIR) $(HARBOUR_EXE) $(HARBOUR_FLAGS) ' + if( QPM_IsXHarbour() , '/p' , '/p$(DIR_OBJECTS)' + DEF_SLASH + US_FileNameOnlyName( PRGFILES[i] ) ) + ' $** -o$@' + Hb_OsNewLine()
@@ -6714,7 +6704,7 @@ Function QPM_Build2()
 
    DO EVENTS
 
-   QPM_MemoWrit ( PUB_cProjectFolder + DEF_SLASH + '_'+PUB_cSecu+'Temp.Bc' , Out )
+   QPM_MemoWrit( PUB_cProjectFolder + DEF_SLASH + '_'+PUB_cSecu+'Temp.Bc' , Out )
    if US_FileChar26Zap( PUB_cProjectFolder + DEF_SLASH + '_'+PUB_cSecu+'Temp.Bc' ) == 2
       US_Log( "Error in US_FileChar26Zap for file: " + PUB_cProjectFolder + DEF_SLASH + '_'+PUB_cSecu+'Temp.Bc' )
    endif
@@ -6761,7 +6751,7 @@ Function QPM_Build2()
          endif
 
 // NOTE: added support for MINGW and Extended: the resource file in Extended with MinGW is named hmg.rc
-         QPM_MemoWrit ( PUB_cProjectFolder + DEF_SLASH + '_'+PUB_cSecu+'Build.Bat' , '@ECHO OFF' + Hb_OsNewLine() + ;
+         QPM_MemoWrit( PUB_cProjectFolder + DEF_SLASH + '_'+PUB_cSecu+'Build.Bat' , '@ECHO OFF' + Hb_OsNewLine() + ;
            if( !bConvert .and. !bConsole , 'if exist "' + US_FileNameOnlyPathAndName( PRGFILES[1] ) + '.RC" del "' + US_ShortName(PUB_cProjectFolder) + DEF_SLASH + '_Temp.rc" > NUL ' + Hb_OsNewLine() , '' ) + ;
            if( !bConvert .and. !bConsole , 'if exist "' + US_FileNameOnlyPathAndName( PRGFILES[1] ) + '.RC1.ERROR" del "' + US_FileNameOnlyPathAndName( PRGFILES[1] ) + '.RC1.ERROR" > NUL ' + Hb_OsNewLine() , '' ) + ;
            if( !bConvert .and. !bConsole , 'if exist "' + US_ShortName(OBJFOLDER)     + DEF_SLASH + US_FileNameOnlyName( PRGFILES[1] ) + '.RC2.ERROR" del ' + US_ShortName(OBJFOLDER) + DEF_SLASH + US_FileNameOnlyName( PRGFILES[1] ) + '.RC2.ERROR > NUL ' + Hb_OsNewLine() , '' ) + ;
@@ -6801,7 +6791,7 @@ Function QPM_Build2()
            if( !bConvert .and. !bConsole , 'if exist "' + US_ShortName(OBJFOLDER)     + DEF_SLASH + cResourceFileName + '.RC4.ERROR" del ' + US_ShortName(OBJFOLDER) + DEF_SLASH + cResourceFileName + '.RC4.ERROR > NUL ' + Hb_OsNewLine() , '' ) + ;
            "" )
       case ( IsBorland .or. IsPelles )
-         QPM_MemoWrit ( PUB_cProjectFolder + DEF_SLASH + '_'+PUB_cSecu+'Build.Bat' , '@ECHO OFF' + Hb_OsNewLine() + ;
+         QPM_MemoWrit( PUB_cProjectFolder + DEF_SLASH + '_'+PUB_cSecu+'Build.Bat' , '@ECHO OFF' + Hb_OsNewLine() + ;
            substr(US_ShortName(GetCppFolder()),1,2) + Hb_OsNewLine() + ;
            'CD' + substr(US_ShortName(GetCppFolder()),3) + DEF_SLASH + "BIN "+ Hb_OsNewLine() + ;
            MakeName + ' ' + ParamString + Hb_OsNewLine() + ;
@@ -7118,14 +7108,14 @@ Function QPM_Timer_StatusRefresh()
          if estado == "OK" .and. !empty( Prj_ExtraRunCmdFINAL )
             QPM_ExecuteExtraRun()
          endif
-         // ini BUG ====================================================================================== \\
+         // ini BUG ======================================================================================
          // No pone enable el boton build
          if !GetProperty( "VentanaMain" , "build" , "enabled" )
             SetProperty( "VentanaMain" , "build" , "enabled" , .F. )
             SetProperty( "VentanaMain" , "build" , "enabled" , .T. )
             US_Log( "Boton Build sigue disable" , .F. )
          endif
-         // fin BUG ====================================================================================== \\
+         // fin BUG ======================================================================================
          DELETE FILE ( PUB_cProjectFolder + DEF_SLASH + OutName + '.TDS' )
          DELETE FILE ( PUB_cProjectFolder + DEF_SLASH + '_' + PUB_cSecu + 'Progress.Log' )
          DELETE FILE ( PUB_cProjectFolder + DEF_SLASH + TopName + '.RES' )
@@ -7420,11 +7410,11 @@ Function QPM_RemoveFileHLP()
       EndIf
    else
       if VentanaMain.GHlpFiles.Value == 1
-         MsgInfo( "Global foot not deleted !!!, this is a system Topic" )
+         MsgInfo( "Global foot can't be edited, it's a system Topic !!!" )
          Return .F.
       endif
       if VentanaMain.GHlpFiles.Value == 2
-         MsgInfo( "Welcome page not deleted !!!, this is a system Topic" )
+         MsgInfo( "Welcome page can't be deleted, it's a system Topic !!!" )
          Return .F.
       endif
    EndIf
@@ -7628,7 +7618,7 @@ Function SwitchDebug()
    Else
       PUB_bDebugActive := .T.
       VentanaMain.Debug.Checked := .T.
-   // QPM_MemoWrit ( PUB_cProjectFolder + DEF_SLASH + 'Init.Cld' , 'OPTIONS NORUNATSTARTUP' )
+   // QPM_MemoWrit( PUB_cProjectFolder + DEF_SLASH + 'Init.Cld' , 'OPTIONS NORUNATSTARTUP' )
    EndIf
    EraseOBJ()
    if PUB_bLite
@@ -7738,9 +7728,9 @@ Function ActDbfToolSet()
    do case
       case Prj_Radio_DbfTool = 1
          cDbfTool := "DBFVIEW"
-//\\  case Prj_Radio_DbfTool = 2
-//\\     cDbfTool := "DBU"
-//\\  case Prj_Radio_DbfTool = 3
+//    case Prj_Radio_DbfTool = 2
+//       cDbfTool := "DBU"
+//    case Prj_Radio_DbfTool = 3
       case Prj_Radio_DbfTool = 2
          cDbfTool := "OTHER"
    endcase
@@ -8599,7 +8589,7 @@ Function UpHlp()
    Local cAux := GetProperty( "VentanaMain" , "GHlpFiles" , "item" , i )
    Local cAux2 := GetProperty( "VentanaMain" , "GHlpFiles" , "item" , i - 1 )
    if i = 3
-      MsgInfo( "Global Foot and Welcome Topic is not valid for move" )
+      MsgInfo( "Global foot and Welcome Topic can't be moved, they're system Topics !!!" )
    endif
    if i > 3
       bHlpMoving := .T.
@@ -8621,10 +8611,10 @@ Function DownHlp()
    Local cAux := GetProperty( "VentanaMain" , "GHlpFiles" , "item" , i )
    Local cAux2 := GetProperty( "VentanaMain" , "GHlpFiles" , "item" , i + 1 )
    if i = 1
-      MsgInfo( "Global Foot Topic is not valid for move" )
+      MsgInfo( "Global foot can't be moved, it's a system Topic !!!" )
    endif
    if i = 2
-      MsgInfo( "Welcome Page is not valid for move" )
+      MsgInfo( "Welcome page can't be moved, it's a system Topic !!!" )
    endif
    if i < GetProperty( "VentanaMain" , "GHlpFiles" , "itemcount" ) .and. i > 2
       bHlpMoving := .T.
@@ -8804,6 +8794,8 @@ Function TabSync()
 Return .T.
 
 Function TabChange( cTabGroups )
+   Local w_antes
+   
    if !PUB_RunTabChange
       PUB_RunTabChange := .T.
       Return .F.
@@ -8940,6 +8932,13 @@ Function TabChange( cTabGroups )
          GBL_TabGridNameFocus := "LIB"
       case VentanaMain.TabGrids.Value == nPageHLP
          GBL_TabGridNameFocus := "HLP"
+
+         if VentanaMain.GHlpFiles.ItemCount > 0
+            VentanaMain.GHlpFiles.SetFocus
+            w_antes := GetProperty( "VentanaMain" , "GHlpFiles" , "Value" )
+            SetProperty( "VentanaMain" , "GHlpFiles" , "Value" , 0 )
+            SetProperty( "VentanaMain" , "GHlpFiles" , "Value" , w_antes )
+         endif
       otherwise
          GBL_TabGridNameFocus := "OTHER"
    endcase
@@ -9201,7 +9200,7 @@ Function RichEditDisplay( tipo , bReload , nRow , bForce )
                                              replicate( " " , 22 ) + padr( "Field" , 15 )     + padr( "Type"      , 4 ) + padl( "Length"    , 8 )+ padl( "Decimal"  , 8 ) + HB_osNewLine() + ;
                                              replicate( " " , 22 ) + replicate( "=" , 35 )
 
-            DBUseArea( .T. , , DbfName , "DbfAlias" , DEF_DBF_SHARED , DEF_DBF_READ ) /* si lo pongo exclusive y write no funciona el search, revisarlo */
+            US_Use( .T. , , DbfName , "DbfAlias" , DEF_DBF_SHARED , DEF_DBF_READ ) /* si lo pongo exclusive y write no funciona el search, revisarlo */
             aStru:=DBSTRUCT()
             vDbfJustify := {}
             vDbfHeaders := {}
@@ -9350,6 +9349,7 @@ Function RichEditDisplay( tipo , bReload , nRow , bForce )
       case tipo == "HLP"
          if nRow == 0
             VentanaMain.RichEditHlp.Value := ""
+            oHlpRichEdit:lChanged := .F.
             Return .F.
          endif
          if bReload .and. bGlobalSearch
@@ -9387,6 +9387,8 @@ Function RichEditDisplay( tipo , bReload , nRow , bForce )
          endif
          VentanaMain.RichEditHlp.Value := SHG_GetField( "SHG_MEMOT" , nRow )
          VentanaMain.RichEditHlp.CaretPos := val( GetProperty( "VentanaMain" , "GHlpFiles" , "Cell" , nRow , NCOLHLPOFFSET ) )
+         oHlpRichEdit:US_EditRefreshButtons()
+         oHlpRichEdit:lChanged := .F.
          VentanaMain.GHlpKeys.DeleteAllItems
          MemoKeys := SHG_GetField( "SHG_KEYST" , VentanaMain.GHlpFiles.Value )
          LinesKeys := MLCount( MEmoKeys , 254 )
@@ -9397,7 +9399,7 @@ Function RichEditDisplay( tipo , bReload , nRow , bForce )
          DoMethod( "VentanaMain" , "GHlpKeys" , "ColumnsAutoFitH" )
 #endif
       otherwise
-         MsgInfo( "Invalid tipo in RicheditDisplay: " + us_todostr( tipo ) )
+         MsgInfo( "Invalid type in RicheditDisplay: " + us_todostr( tipo ) )
    endcase
 Return
 
@@ -9608,7 +9610,7 @@ Function LocalSearch( Txt , bFunc )
    endif
    if Resultado[3] < 0
       if CaretAnt == 0
-  //\\   SetMGWaitHide()
+  //    SetMGWaitHide()
          MsgOk( 'QPM (QAC Based Project Manager)' , "Text not Found" , 'E' , .T. , 2 )
       else
        //FindChr( GetControlHandle( "RichEdit"+cTab , "VentanaMain" ) , "main" , .F. , .F. , .F. , .T. )
@@ -9617,7 +9619,7 @@ Function LocalSearch( Txt , bFunc )
          //SendMessage( GetControlHandle( "RichEdit"+cTab , "VentanaMain" ) , EM_SETSEL , 1 , 1 )
          //DoMethod( "VentanaMain" , "RichEdit"+cTab , "refresh" )
          //RichEditDisplay( cTab , .T. )
-   //\\  SetMGWaitHide()
+   //    SetMGWaitHide()
          MsgOk( 'QPM (QAC Based Project Manager)' , "Text not Found"+HB_OsNewLine()+"Re-Search from Top" , 'W' , .T. , 2 )
          //LocalSearch( Txt )
       endif
@@ -9646,7 +9648,7 @@ Function DbfDataSearch( Txt )
    cTab := "DBF"
  //if US_Word( GetProperty( "VentanaMain" , "GDbfFiles" , "Cell" , VentanaMain.GDbfFiles.Value , NCOLDBFSEARCH ) , 1 ) == "0"
    if bAvisoDbfDataSearchLow .or. !( val( US_Word( GetProperty( "VentanaMain" , "GDbfFiles" , "Cell" , VentanaMain.GDbfFiles.Value , NCOLDBFSEARCH ) , 1 ) ) == nOldRecord )
-      if ! MyMsgYesNo( "Search 'Dbf Data' is very slow.  Do you want continue ?" )
+      if ! MyMsgYesNo( "Search 'Dbf Data' is very slow.  Do you want to continue ?" )
          Return .F.
       endif
       bAvisoDbfDataSearchLow := .F.
@@ -9787,7 +9789,7 @@ Function GlobalSearch( Txt )
 // VentanaMain.Check_SearchDbf.value := bSearchDbfData
    TotCaption( "DBF" , 0 )
    if bSearchDbfData
-      if ! MyMsgYesNo( "Global Search with 'Dbf Data' set true is very slow.  Do you want continue ?" )
+      if ! MyMsgYesNo( "Global Search with 'Dbf Data' set true is very slow.  Do you want to continue ?" )
          VentanaMain.Check_SearchDbf.value := .F.
          bLastGlobalSearchDbf := .F.
          Return .F.
@@ -9817,7 +9819,7 @@ Function GlobalSearch( Txt )
    nFound := 0
    TotCaption( "HLP" , 0 )
    if SHG_BaseOk
-      if ! MyMsgYesNo( "Skip search of Help Topics ?" )
+      if ! MyMsgYesNo( "Skip search of Help Topics ?", nil, .T. )
          For i:=1 to VentanaMain.GHlpFiles.ItemCount
             if GlobalSearch2( "HLP" , Txt , i )
                nFound++
@@ -9938,7 +9940,7 @@ Function GlobalSearch2( cType , Txt , nRow , bFunc , bDbfData , DBFcBaseType , n
             DbfName := ChgPathToReal( GetProperty( "VentanaMain" , "GDbfFiles" , "Cell" , nRow , NCOLDBFFULLNAME ) )
             DbfCode := US_IsDBF( DbfName )
             If DbfCode = 0
-               DBUsearea( .T. , , DbfName , "DSearch" , DEF_DBF_SHARED , DEF_DBF_READ ) /* si pongo exclusive y write no funciona el search, revisarlo */
+               US_Use( .T. , , DbfName , "DSearch" , DEF_DBF_SHARED , DEF_DBF_READ ) /* si pongo exclusive y write no funciona el search, revisarlo */
                aStru:=DBSTRUCT()
                if !bDbfData
                   FOR x:=1 TO LEN(aStru)
@@ -10068,7 +10070,6 @@ Function ResetImgGrid( cGrid )
 
    if cGrid == "HEA" .or. cGrid == "*"
       For i:=1 to VentanaMain.GHeaFiles.ItemCount
-         DO EVENTS
          if GridImage( "VentanaMain" , "GHeaFiles" , i , NCOLHEASTATUS , "?" , PUB_nGridImgSearchOk )
             GridImage( "VentanaMain" , "GHeaFiles" , i , NCOLHEASTATUS , "-" , PUB_nGridImgSearchOk )
          endif
@@ -10205,14 +10206,26 @@ Function LostRichEdit( tipo , nRecord )
          if nRecord > 0
             SetProperty( "VentanaMain" , "GHlpFiles" , "Cell" , nGridHlpLastRow , NCOLHLPOFFSET , alltrim( str( VentanaMain.RichEditHlp.CaretPos ) ) )
             cAuxMemo := US_GetRichEditValue( "VentanaMain" , "RichEditHlp" , "RTF" )
-            SHG_LimpioRtf( @cAuxMemo )
+*            SHG_LimpioRtf( @cAuxMemo )
             SHG_SetField( "SHG_MEMOT"  , nRecord , cAuxMemo )
+
+/*
             if !( SHG_GetField( "SHG_TYPE"  , nRecord ) == SHG_GetField( "SHG_TYPET"  , nRecord ) ) .or. ;
                !( SHG_GetField( "SHG_TOPIC" , nRecord ) == SHG_GetField( "SHG_TOPICT" , nRecord ) ) .or. ;
                !( SHG_GetField( "SHG_NICK"  , nRecord ) == SHG_GetField( "SHG_NICKT"  , nRecord ) ) .or. ;
                !( cAuxMemo == SHG_GetField( "SHG_MEMO" , nRecord ) ) .or. ;
                !( SHG_GetField( "SHG_KEYS"  , nRecord ) == SHG_GetField( "SHG_KEYST"  , nRecord ) )
                SetProperty( "VentanaMain" , "GHlpFiles" , "Cell" , nGridHlpLastRow , NCOLHLPEDIT , "D" )
+            endif
+*/
+            if !( SHG_GetField( "SHG_TYPE"  , nRecord ) == SHG_GetField( "SHG_TYPET"  , nRecord ) ) .or. ;
+               !( SHG_GetField( "SHG_TOPIC" , nRecord ) == SHG_GetField( "SHG_TOPICT" , nRecord ) ) .or. ;
+               !( SHG_GetField( "SHG_NICK"  , nRecord ) == SHG_GetField( "SHG_NICKT"  , nRecord ) ) .or. ;
+               oHlpRichEdit:lChanged .or. ;
+               !( SHG_GetField( "SHG_KEYS"  , nRecord ) == SHG_GetField( "SHG_KEYST"  , nRecord ) )
+               
+               SetProperty( "VentanaMain" , "GHlpFiles" , "Cell" , nGridHlpLastRow , NCOLHLPEDIT , "D" )
+               oHlpRichEdit:lChanged := .F.
             endif
             DoMethod( "VentanaMain" , "GHlpFiles" , "ColumnsAutoFitH" )
          endif
@@ -10343,7 +10356,6 @@ Function QPM_Timer_Edit()
          endif
       endif
    Next i
-   DO EVENTS
 Return .T.
 
 Function CloseDbfAutoView()
@@ -10550,6 +10562,9 @@ Function QPM_DefinoMainMenu()
                    SEPARATOR
                    ITEM 'Hot Recovery &Options'  ACTION QPM_HotRecoveryOptions()
 #endif
+                   SEPARATOR
+                   ITEM 'Compress QPM Utilities'  ACTION QPM_CompressUtilities()
+                   ITEM 'Decompress QPM Utilities'  ACTION QPM_DecompressUtilities()
            END POPUP
 
 #ifdef QPM_HOTRECOVERYWINDOW
@@ -10848,15 +10863,86 @@ Return .T.
 Function VP_MGWAIT()
    MsgInfo( "La funcion VP_MGWAIT fue reemplazada por Nula en QPM.PRG" )
 Return .T.
-*/
 Function RN_ONGOTFOCUS()
    MsgInfo( "La funcion RN_ONGOTFOCUS fue reemplazada por Nula en QPM.PRG" )
 Return .T.
 Function US_MP3()
    MsgInfo( "La funcion "+procname()+" fue reemplazada por Nula en QPM.PRG" )
 Return .T.
+*/
 //------------------------------------------------------------------------------------------------//
 //- FIN Funciones para compatibilidad ------------------------------------------------------------//
 //================================================================================================//
+
+Function QPM_CompressUtilities()
+   Local i, Out
+
+   QPM_Execute( PUB_cQPM_Folder + DEF_SLASH + 'US_UPX.EXE ' + US_ShortName(PUB_cQPM_Folder) + DEF_SLASH + "US_RUN.EXE", "", DEF_QPM_EXEC_NOWAIT, DEF_QPM_EXEC_HIDE )
+   DO EVENTS
+
+   Out := "@ECHO OFF" + hb_osnewline()
+   Out += "COPY " + US_ShortName(PUB_cQPM_Folder) + DEF_SLASH + "US_UPX.EXE " + US_ShortName(PUB_cQPM_Folder) + DEF_SLASH + "XYZ_UPX.EXE" + hb_osnewline()
+   For i := 1 to len(vExeList)
+      do case
+      case ! upper(right(vExeList[i], 4)) == ".EXE"
+      case upper(right(vExeList[i], 7)) == "QPM.EXE"
+      case upper(right(vExeList[i], 10)) == "US_RUN.EXE"
+      case upper(right(vExeList[i], 13)) == "US_IMPDEF.EXE"
+      case upper(right(vExeList[i], 15)) == "US_PEXPORTS.EXE"
+      case upper(right(vExeList[i], 12)) == "US_REIMP.EXE"
+      case upper(right(vExeList[i], 13)) == "US_IMPLIB.EXE"
+      case upper(right(vExeList[i], 14)) == "US_DLLTOOL.EXE"
+      case upper(right(vExeList[i], 14)) == "US_OBJDUMP.EXE"
+      case upper(right(vExeList[i], 12)) == "US_TDUMP.EXE"
+      otherwise
+         Out += US_ShortName(PUB_cQPM_Folder) + DEF_SLASH + "XYZ_UPX.EXE --no-progress " + vExeList[i] + hb_osnewline()
+      endcase
+   Next
+   Out += "DEL " + US_ShortName(PUB_cQPM_Folder) + DEF_SLASH + "XYZ_UPX.EXE" + hb_osnewline()
+//   Out += "PAUSE" + hb_osnewline()
+
+   QPM_MemoWrit( PUB_cQPM_Folder + DEF_SLASH + 'Compress.bat', Out )
+   QPM_Execute( PUB_cQPM_Folder + DEF_SLASH + 'Compress.bat', "", DEF_QPM_EXEC_WAIT, DEF_QPM_EXEC_NORMAL )
+
+   MsgInfo("Compression finished !!!" + hb_osnewline() + ;
+           "To compress QPM.EXE, close it first and do it manually using:" + hb_osnewline() + ;
+           "us_upx QPM.EXE")
+Return Nil
+
+Function QPM_DecompressUtilities()
+   Local i, Out
+
+   QPM_Execute( PUB_cQPM_Folder + DEF_SLASH + 'US_UPX.EXE -d ' + US_ShortName(PUB_cQPM_Folder) + DEF_SLASH + "US_RUN.EXE", "", DEF_QPM_EXEC_NOWAIT, DEF_QPM_EXEC_HIDE )
+   DO EVENTS
+
+   Out := "@ECHO OFF" + hb_osnewline()
+   Out += "COPY " + US_ShortName(PUB_cQPM_Folder) + DEF_SLASH + "US_UPX.EXE " + US_ShortName(PUB_cQPM_Folder) + DEF_SLASH + "XYZ_UPX.EXE" + hb_osnewline()
+   For i := 1 to len(vExeList)
+      do case
+      case ! upper(right(vExeList[i], 4)) == ".EXE"
+      case upper(right(vExeList[i], 7)) == "QPM.EXE"
+      case upper(right(vExeList[i], 10)) == "US_RUN.EXE"
+      case upper(right(vExeList[i], 13)) == "US_IMPDEF.EXE"
+      case upper(right(vExeList[i], 15)) == "US_PEXPORTS.EXE"
+      case upper(right(vExeList[i], 12)) == "US_REIMP.EXE"
+      case upper(right(vExeList[i], 13)) == "US_IMPLIB.EXE"
+      case upper(right(vExeList[i], 14)) == "US_DLLTOOL.EXE"
+      case upper(right(vExeList[i], 14)) == "US_OBJDUMP.EXE"
+      case upper(right(vExeList[i], 12)) == "US_TDUMP.EXE"
+      otherwise
+         Out += US_ShortName(PUB_cQPM_Folder) + DEF_SLASH + "XYZ_UPX.EXE -d --no-progress " + vExeList[i] + hb_osnewline()
+      endcase
+   Next
+   Out += "DEL " + US_ShortName(PUB_cQPM_Folder) + DEF_SLASH + "XYZ_UPX.EXE" + hb_osnewline()
+//   Out += "PAUSE" + hb_osnewline()
+
+   QPM_MemoWrit( PUB_cQPM_Folder + DEF_SLASH + 'Decompress.bat', Out )
+
+   QPM_Execute( PUB_cQPM_Folder + DEF_SLASH + 'Decompress.bat', "", DEF_QPM_EXEC_WAIT, DEF_QPM_EXEC_NORMAL )
+
+   MsgInfo("Decompression finished !!!" + hb_osnewline() + ;
+           "To decompress QPM.EXE, close it first and do it manually using:" + hb_osnewline() + ;
+           "us_upx -d QPM.EXE")
+Return nil
 
 /* eof */
