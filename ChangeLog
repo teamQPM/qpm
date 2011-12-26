@@ -8,7 +8,17 @@
  * See "How to format your ChangeLog entries" in howtosvn.txt file.
  */
 
-2011-12-25 11:45:00 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2011-12-25 23:45:00 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * ./htmlhelp/_Index_QPM.htm
+   * ./htmlhelp/_Index_QPM_Java.htm
+     + Added "Fernando Yurisich" as site keyword.
+   * ./QPM.chm
+   * ./htmlhelp/QPM.htm
+   * ./HelpQPM/QPM_SHG.dbf
+   * ./HelpQPM/QPM_SHG.fpt
+     + Added comment in welcome page.
+
+2011-12-25 23:25:00 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * ./doc/howtosvn.txt
      + Added section "How to update Internet Help".
    * ./ToDo
