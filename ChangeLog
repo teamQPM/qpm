@@ -8,7 +8,20 @@
  * See "How to format your ChangeLog entries" in howtosvn.txt file.
  */
 
-2011-12-20 10:05:00 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2011-12-25 11:45:00 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * ./doc/howtosvn.txt
+     + Added section "How to update Internet Help".
+   * ./ToDo
+   * ./QPM.chm
+   * ./htmlhelp/*.htm
+   * ./QPM_AutoProjectOnlyHelp.qpm
+     * Updated.
+   * ./HelpQPM/QPM_SHG.dbf
+   * ./HelpQPM/QPM_SHG.fpt
+     * Some typos corrected.
+     * Some topic's texts changed.
+
+2011-12-24 20:30:00 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * ./FuentesComunes/US_Edit_CharFijo.prg
      ! Fixed: added extra lines when pasting from another topic's text.
      - Deleted RN_ONGOTFOCUS() calls.

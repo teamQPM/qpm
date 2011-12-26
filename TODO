@@ -11,6 +11,13 @@
 /******************************************************************************/
 
 Assigned to: <nobody>
+Added by...: 2011-12-25 11:35:00 UTC-0300 Fernando Yurisich <fyurisich>
+Status.....: Open.
+Details....: Enable ESC to quit from Topic Description dialog.
+
+/******************************************************************************/
+
+Assigned to: <nobody>
 Added by...: 2011-12-19 09:32:00 UTC-0300 Fernando Yurisich <fyurisich>
 Status.....: Open.
 Details....: Update sourcefourge help.
@@ -62,7 +69,8 @@ Details....: In HELP:
                Substitute MINGW by BCC.
              - Change references to previous topic.
              - Update links.
-             - Spell check from "¿Cómo se hace?"" topic.
+             - Spell check from topic
+               "¿Cómo se configuran los parámetros o seteos globales?"
 
 /******************************************************************************/
 Assigned to: <nobody>
