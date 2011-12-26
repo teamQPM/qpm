@@ -8,6 +8,33 @@
  * See "How to format your ChangeLog entries" in howtosvn.txt file.
  */
 
+2011-12-26 21:20:00 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   - ./HelpQPM/QPM_GlobalSettings_Dbf Tool.png
+   + ./HelpQPM/QPM_GlobalSettings_DbfTool.png
+     * Renamed to get rid of the space.
+   - ./HelpQPM/QPM_GlobalSettings_OficialMiniGUI_1x.png
+   - ./HelpQPM/QPM_GlobalSettings_OficialMiniGUI_3x.png
+   - ./HelpQPM/QPM_GlobalSettings_OOHG_3x_Borland.png
+   - ./HelpQPM/QPM_GlobalSettings_OOHG_3x_MinGW.png
+   - ./HelpQPM/QPM_GlobalSettings_OOHG_3x_Pelles.png
+     * No longer needed.
+   * ./HelpQPM/QPM_ProjectSettings.png
+     * Updated to show new setting.
+   * ./HelpQPM/QPM_Img_001.png
+   * ./HelpQPM/QPM_Img_002.png
+     * Updated.
+   * ./htmlhelp/*.*
+     - All content deleted because it's not needed, just the folder.
+   * ./HelpQPM/QPM_SHG.dbf
+   * ./HelpQPM/QPM_SHG.fpt
+   * ./QPM.chm
+     * Some typos corrected.
+     * Some topic's texts changed.
+     * Some images changed.
+   * ./ToDo
+   * ./QPM_AutoProjectOnlyHelp.qpm
+     * Updated.
+
 2011-12-25 23:45:00 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * ./htmlhelp/_Index_QPM.htm
    * ./htmlhelp/_Index_QPM_Java.htm
