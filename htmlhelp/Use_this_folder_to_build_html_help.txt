@@ -1,7 +1,7 @@
 /*
- * $Id: Use_this_folder_to_build_html_help.txt 18 2011-09-25 03:47:55Z fyurisich $
+ * $Id$
  */
 
-See ./doc/howtosvn.txt
+See ./doc/howtosvn.txt and ./doc/notes.txt
 
 /* eof */
