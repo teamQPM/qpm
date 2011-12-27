@@ -1,3 +1,7 @@
+/*
+ * $Id$
+ */
+
                                      redir
                                        
    DOS, in its many flavors and versions, lacks a decent I/O redirection
@@ -59,3 +63,5 @@ redir -e errors.lst command ...
    To redirect output to a file, and errors through a pipe:
 redir -eo -o prog.out command ... | pipe
 
+
+/* eof */
