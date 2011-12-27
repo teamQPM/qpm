@@ -11,6 +11,13 @@
 /******************************************************************************/
 
 Assigned to: <nobody>
+Added by...: 2011-12-27 11:35:00 UTC-0300 Fernando Yurisich <fyurisich>
+Status.....: Open.
+Details....: Agregar funcionalidad Sync Recovery.
+
+/******************************************************************************/
+
+Assigned to: <nobody>
 Added by...: 2011-12-25 11:35:00 UTC-0300 Fernando Yurisich <fyurisich>
 Status.....: Open.
 Details....: Enable ESC to quit from Topic Description dialog.
@@ -65,13 +72,8 @@ Assigned to: <nobody>
 Added by...: 2011-09-23 15:00:00 UTC-0300 Fernando Yurisich <fyurisich>
 Status.....: Open.
 Details....: In HELP:
-             - Topic: Cómo compilar con OOHG y MinGW o Pelles C
-               Substitute MINGW by BCC.
-             - Change references to previous topic.
-             - Update links.
-
              - Spell check and refresh images from topic
-               "Recovey"
+               "¿Cómo construir MiniGui para xHarbour?"
 
 /******************************************************************************/
 Assigned to: <nobody>

@@ -8,6 +8,16 @@
  * See "How to format your ChangeLog entries" in howtosvn.txt file.
  */
 
+2011-12-27 11:40:00 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * ./HelpQPM/QPM_SHG.dbf
+   * ./HelpQPM/QPM_SHG.fpt
+   * ./QPM.chm
+     * Some typos corrected.
+     * Some topic's texts and names changed.
+   * ./ToDo
+   * ./QPM_AutoProjectOnlyHelp.qpm
+     * Updated.
+
 2011-12-26 22:03:00 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
    + ./helphtml/readme.txt
      + Added so the folder is mantained in the SVN.
