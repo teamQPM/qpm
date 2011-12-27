@@ -8,7 +8,16 @@
  * See "How to format your ChangeLog entries" in howtosvn.txt file.
  */
 
-2011-12-26 21:20:00 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2011-12-26 22:03:00 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   + ./helphtml/readme.txt
+     + Added so the folder is mantained in the SVN.
+   ! ./doc/readme.txt
+     ! Fixed SVN Id.
+   + ./doc/us_redir.txt
+   + ./index.htm
+     + Added SVN Id.
+     
+2011-12-26 21:47:00 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
    - ./HelpQPM/QPM_GlobalSettings_Dbf Tool.png
    + ./HelpQPM/QPM_GlobalSettings_DbfTool.png
      * Renamed to get rid of the space.
