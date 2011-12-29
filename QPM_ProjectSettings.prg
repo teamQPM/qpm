@@ -454,7 +454,7 @@ Function CheckCombinationRadio(cFrom)
                   SetProperty( "WinPSettings" , "Radio_Cpp"     , "value" , DEF_RG_BORLAND )
             endcase
          Otherwise
-            US_Log( "Invalid cFrom value: " + US_TodoStr( cFrom ) )
+            US_Log( "Invalid cFrom value: " + US_VarToStr( cFrom ) )
             Return .F.
       endcase
    else
@@ -485,7 +485,7 @@ Function ActRadioCpp( nMiniGui , nCpp , nHarbour )
          SetProperty( "WinPSettings" , "Radio_Cpp"     , "enabled" , DEF_RG_MINGW , .T. )
          SetProperty( "WinPSettings" , "Radio_Cpp"     , "enabled" , DEF_RG_PELLES , .T. )
       otherwise
-         msgstop( "Invalid Value in function " + procname() + ": " + US_TodoStr( nMiniGui ) + " " + US_TodoStr( nCpp ) + " " + US_TodoStr( nHarbour ) )
+         msgstop( "Invalid Value in function " + procname() + ": " + US_VarToStr( nMiniGui ) + " " + US_VarToStr( nCpp ) + " " + US_VarToStr( nHarbour ) )
          Return .F.
    endcase
 Return .T.

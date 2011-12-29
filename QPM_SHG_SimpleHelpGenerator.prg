@@ -257,7 +257,7 @@ Function SHG_DeleteRecord( nRec )
    DBSetIndex( US_FileNameOnlyPathAndName( SHG_Database ) )
    DBGoTop()
    if !DbSeek( nRec )
-      MsgInfo( "Error locating record number " + US_TodoStr( nRec ) + " in function SHG_DeleteRecord. Please, contact support." )
+      MsgInfo( "Error locating record number " + US_VarToStr( nRec ) + " in function SHG_DeleteRecord. Please, contact support." )
    else
       DELETE
    endif
@@ -266,13 +266,13 @@ Function SHG_DeleteRecord( nRec )
 Return .T.
 
 Function SHG_GetField( cField , nRow )
-   Local cAux := "Record " + US_TodoStr( nRow ) + " not found.  Contact with QPM Support for Assistance"
+   Local cAux := "Record " + US_VarToStr( nRow ) + " not found.  Contact with QPM Support for Assistance"
 
    US_Use( .T. , , SHG_Database , "SHG" , DEF_DBF_EXCLUSIVE , DEF_DBF_WRITE )
    DBSetIndex( US_FileNameOnlyPathAndName( SHG_Database ) )
    DBGoTop()
    if !DbSeek( nRow )
-      MsgInfo( "Error locating record number " + US_TodoStr( nRow ) + " in function SHG_GetField. Please, contact support." )
+      MsgInfo( "Error locating record number " + US_VarToStr( nRow ) + " in function SHG_GetField. Please, contact support." )
    else
       cAux := &( cField )
    endif
@@ -285,7 +285,7 @@ Function SHG_SetField( cField , nRow , xValue )
    DBSetIndex( US_FileNameOnlyPathAndName( SHG_Database ) )
    DBGoTop()
    if !DbSeek( nRow )
-      MsgInfo( "Error locating record number " + US_TodoStr( nRow ) + " in function SHG_SetField. Please, contact support." )
+      MsgInfo( "Error locating record number " + US_VarToStr( nRow ) + " in function SHG_SetField. Please, contact support." )
    else
       if &cField == xValue
       else
@@ -998,10 +998,10 @@ Function SHG_LoadDatabase( cDataBase )
             ferase( US_FileNameOnlyPathAndName( cDatabase ) + ".dbt" )
             ferase( US_FileNameOnlyPathAndName( cDatabase ) + ".ntx" )
             if frename( US_FileNameOnlyPathAndName( cDatabase ) + "_" + PUB_cSecu + ".dbf" , cDatabase ) < 0
-               US_Log( "Error renaming SHG Database '"+ US_FileNameOnlyPathAndName( cDatabase ) + "_" + PUB_cSecu + ".dbf" + "' in Migration process, ferror: " + US_TodoStr( fError() ) )
+               US_Log( "Error renaming SHG Database '"+ US_FileNameOnlyPathAndName( cDatabase ) + "_" + PUB_cSecu + ".dbf" + "' in Migration process, ferror: " + US_VarToStr( fError() ) )
             else
                if frename( US_FileNameOnlyPathAndName( cDatabase ) + "_" + PUB_cSecu + ".fpt" , US_FileNameOnlyPathAndName( cDatabase ) + ".fpt" ) < 0
-                  US_Log( "Error renaming SHG Database '" + US_FileNameOnlyPathAndName( cDatabase ) + "_" + PUB_cSecu + ".fpt" + "' in Migration process, ferror: " + US_TodoStr( fError() ) )
+                  US_Log( "Error renaming SHG Database '" + US_FileNameOnlyPathAndName( cDatabase ) + "_" + PUB_cSecu + ".fpt" + "' in Migration process, ferror: " + US_VarToStr( fError() ) )
            //  else
            //     SHG_IndexON( cDatabase )
                endif
@@ -1225,7 +1225,7 @@ Function SHG_AddHlpHTML( accion )
          CopyToClipboard( '<A href="mailto:qpm-users@lists.sourceforge.net">Mail to QPM_Support</A>' )
          SHG_Send_Paste()
    otherwise
-      MsgInfo( "Invalid accion in function SHG_AddHlpHTML: " + us_todostr( accion ) )
+      MsgInfo( "Invalid accion in function SHG_AddHlpHTML: " + US_VarToStr( accion ) )
    endcase
    CopyRtfToClipboard( cClip )
 Return .T.

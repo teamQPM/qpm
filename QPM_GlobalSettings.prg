@@ -994,8 +994,8 @@ Function SelectTab
          case Prj_Radio_MiniGui == DEF_RG_OOHG3 .and. Prj_Radio_Cpp == DEF_RG_PELLES
             WinGSettings.TabGSettings.value := 9
          otherwise
-            US_Log( "Invalid combination: Prj_Radio_MiniGui: " + US_TodoStr( Prj_Radio_MiniGui ) + HB_OsNewLine() + ;
-                    "                     Prj_Radio_Cpp: " + US_TodoStr( Prj_Radio_Cpp ) )
+            US_Log( "Invalid combination: Prj_Radio_MiniGui: " + US_VarToStr( Prj_Radio_MiniGui ) + HB_OsNewLine() + ;
+                    "                     Prj_Radio_Cpp: " + US_VarToStr( Prj_Radio_Cpp ) )
       endcase
    endif
 

@@ -1503,7 +1503,7 @@ METHOD Ejecutar( cFun ) CLASS US_MGWait
       ::bFila := .T.
       ::nRow := ::nFila
       ::nCol := ( GetDesktopRealWidth() - ::nAncho ) / 2
-    //US_LOG("   Fila: " + US_TodoSTR( ::nFila ) , .F. )
+    //US_LOG("   Fila: " + US_VarToStr( ::nFila ) , .F. )
    endif
 
    DO EVENTS
@@ -1530,7 +1530,7 @@ METHOD Ejecutar( cFun ) CLASS US_MGWait
       US_WinStackDel( @RN_WinStack , ::MGWaitPan )
    endif
 
-// US_LOG("   despues de Window, retorno: " + US_TodoSTR( ::Reto ) , .F. )
+// US_LOG("   despues de Window, retorno: " + US_VarToStr( ::Reto ) , .F. )
 return ::Reto
 
 //----------------------------------------------------------------------------------\\
@@ -1724,7 +1724,7 @@ METHOD Ejecutar( cFun ) CLASS US_MGWaitNew
       ::bFila := .T.
       ::nRow := ::nFila
       ::nCol := ( GetDesktopRealWidth() - ::nAncho ) / 2
-    //US_LOG("   Fila: " + US_TodoSTR( ::nFila ) , .F. )
+    //US_LOG("   Fila: " + US_VarToStr( ::nFila ) , .F. )
    endif
 
    DO EVENTS
@@ -1755,7 +1755,7 @@ METHOD Ejecutar( cFun ) CLASS US_MGWaitNew
       US_WinStackDel( @RN_WinStack , ::MGWaitPan )
    endif
 
-// US_LOG("   despues de Window, retorno: " + US_TodoSTR( ::Reto ) , .F. )
+// US_LOG("   despues de Window, retorno: " + US_VarToStr( ::Reto ) , .F. )
 return ::Reto
 
 //----------------------------------------------------------------------------------\\

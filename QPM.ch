@@ -35,12 +35,12 @@
 
 //#DEFINE QPM_SYNCRECOVERY
 
-#translate MyMsgWarning( <txt> )       => MyMsg( "QPM - Warning"   , US_TodoStr( <txt> ) , "W" , bAutoExit )
-#translate MsgInfo( <txt> )            => MyMsg( "QPM - Notify"    , US_TodoStr( <txt> ) , "N" , bAutoExit )
-#translate MsgStop( <txt> )            => MyMsg( "QPM - Error"     , US_TodoStr( <txt> ) , "E" , bAutoExit )
+#translate MyMsgWarning( <txt> )       => MyMsg( "QPM - Warning"   , US_VarToStr( <txt> ) , "W" , bAutoExit )
+#translate MsgInfo( <txt> )            => MyMsg( "QPM - Notify"    , US_VarToStr( <txt> ) , "N" , bAutoExit )
+#translate MsgStop( <txt> )            => MyMsg( "QPM - Error"     , US_VarToStr( <txt> ) , "E" , bAutoExit )
 
-//#translate ? <txt>                   => MyMsg( "QPM - Notify"    , US_TodoStr( <txt> ) , "N" , bAutoExit )
-//#translate ?? <txt>                  => MyMsg( "QPM - Notify"    , US_TodoStr( <txt> ) , "N" , bAutoExit )
+//#translate ? <txt>                   => MyMsg( "QPM - Notify"    , US_VarToStr( <txt> ) , "N" , bAutoExit )
+//#translate ?? <txt>                  => MyMsg( "QPM - Notify"    , US_VarToStr( <txt> ) , "N" , bAutoExit )
 //#translate MsgYesNoCancel( <txt> )   => MyMsgYesNoCancel( <txt> , "QPM - Confirm" )
 //#translate MsgYesNo( <txt> )         => MyMsgYesNo( <txt> , "QPM - Confirm" )
 //#translate MsgOkCancel( <txt> )      => MyMsgOkCancel( <txt> , "QPM - Confirm" )

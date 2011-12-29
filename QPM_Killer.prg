@@ -248,7 +248,7 @@ Function RefreshGrid( cPId , nPIDExclude , bForce )
    late()
    if !bForce .and. ;
       ( len( aProcessInfo ) == len( QPM_KillerProcessLast ) ) .and. ;
-      ( US_TodoStr( aProcessInfo ) == US_TodoStr( QPM_KillerProcessLast ) )
+      ( US_VarToStr( aProcessInfo ) == US_VarToStr( QPM_KillerProcessLast ) )
       WinKiller.GGrid.EnableUpdate
       Return .F.
    else

@@ -462,7 +462,7 @@ Function SHG_LinkAssistantGetVector( cMemo , nCaretPos )
                   case upper( vKeys[i][2] ) == "RIGHT"
                      PanInputLink.CAlign.Value := 6
                   otherwise
-                     MsgInfo( "Invalid CAlign: " + US_TodoStr( vKeys[i][2] ) )
+                     MsgInfo( "Invalid CAlign: " + US_VarToStr( vKeys[i][2] ) )
                endcase
             otherwise
                MsgInfo( "Invalid key in function " + procname() + " :" + vKeys[i][1] )

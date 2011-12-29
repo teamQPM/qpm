@@ -151,7 +151,7 @@ Function US_RunInit()
    DO EVENTS
    if Reto > 8
       MsgInfo( "US_Run 333: Error Running: " + cCMD + HB_OsNewLine() + ;
-               "Code: "+US_TodoStr( Reto ) )                          // This is not translated
+               "Code: "+US_VarToStr( Reto ) )                          // This is not translated
       // Code 0019798320 = File Not Found
       bOk := .F.
    endif

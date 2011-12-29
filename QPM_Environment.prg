@@ -228,8 +228,8 @@ Function SaveEnvironment
    Local c := ''
    c := c + 'VERSION ' + PUB_cQPM_Version + Hb_OsNewLine()
    c := c + 'PROGRAMEDITOR ' + alltrim(Gbl_TEditor) + Hb_OsNewLine()
-   c := c + 'EDITLONGNAME ' + US_TodoStr( bEditorLongName ) + Hb_OsNewLine()
-   c := c + 'EDITSUSPENDCONTROL ' + US_TodoStr( bSuspendControlEdit ) + Hb_OsNewLine()
+   c := c + 'EDITLONGNAME ' + US_VarToStr( bEditorLongName ) + Hb_OsNewLine()
+   c := c + 'EDITSUSPENDCONTROL ' + US_VarToStr( bSuspendControlEdit ) + Hb_OsNewLine()
    c := c + 'FORMTOOLHMI ' + alltrim(Gbl_Text_HMI) + Hb_OsNewLine()
    c := c + 'FORMTOOLHMGSIDE ' + alltrim(Gbl_Text_HMGSIDE) + Hb_OsNewLine()
    c := c + 'DBFTOOL ' + alltrim(Gbl_Text_Dbf) + Hb_OsNewLine()

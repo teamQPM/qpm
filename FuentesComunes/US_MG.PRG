@@ -36,7 +36,7 @@ Return _HMG_ActiveHelpFile
 
 /*
 Function US_MsgInfo(parm,win)
-Return MsgInfo( us_todoStr(parm) , win )
+Return MsgInfo( US_VarToStr(parm) , win )
 */
 /*
 Function GetModuleFileName()
@@ -178,7 +178,7 @@ Function US_AddFont( cNameFont , bCompartida )
    if R=NIL
       R:=0
    endif
-   US_LOG("AddFont: "+cNameFont+", compartida: "+us_todostr(bCompartida)+", RC="+us_todostr(R)+", "+if(r<>0,"OK","ERROR") , .F. )
+   US_LOG("AddFont: "+cNameFont+", compartida: "+US_VarToStr(bCompartida)+", RC="+US_VarToStr(R)+", "+if(r<>0,"OK","ERROR") , .F. )
 Return if(R<>0,0,-1)
 */
 
@@ -197,7 +197,7 @@ Function US_RemoveFont(cNameFont,bCompartida)
    if R=NIL
       R:=0
    endif
-   US_LOG("RemoveFont: "+cNameFont+", compartida: "+us_todostr(bCompartida)+", RC="+us_todostr(R)+", "+if(r<>0,"OK","ERROR") , .F. )
+   US_LOG("RemoveFont: "+cNameFont+", compartida: "+US_VarToStr(bCompartida)+", RC="+US_VarToStr(R)+", "+if(r<>0,"OK","ERROR") , .F. )
 Return if(R<>0,0,-1)
 
 // compartidas por otras aplicaciones
@@ -541,7 +541,7 @@ FUNCTION USROpcion(OPCION)
 RETURN &(Ventana).Release()
 
 FUNCTION US_SETKEY(TECLA,VENTANA,ACCION)
-*us_log("tecla,ventana,accion "+us_todostr(tecla)+"<"+us_todostr(ventana)+"<"+us_todostr(accion))
+*us_log("tecla,ventana,accion "+US_VarToStr(tecla)+"<"+US_VarToStr(ventana)+"<"+US_VarToStr(accion))
 DO CASE
 *   CASE TECLA = "ADD"
 *      IF ACCION = NIL
@@ -3054,7 +3054,7 @@ DO CASE
 *         ENDIF
 *      ENDIF
    OTHERWISE
-      US_LOG("TECLA NO CONTEMPLADA EN US_SETKEY(), VALOR RECIBIDO: "+US_TODOSTR(TECLA),.T.)
+      US_LOG("TECLA NO CONTEMPLADA EN US_SETKEY(), VALOR RECIBIDO: "+US_VarToStr(TECLA),.T.)
 ENDCASE
 RETURN
 
@@ -3134,14 +3134,14 @@ DO CASE
       US_SETKEY("K_8",VENTANA,"USASETALLKEY('"+VARIABLE+"','8','"+ACCION+"')")
       US_SETKEY("K_9",VENTANA,"USASETALLKEY('"+VARIABLE+"','9','"+ACCION+"')")
    OTHERWISE
-      US_LOG("TIPO NO CONTEMPLADA EN US_SETALLKEY(), VALOR RECIBIDO: "+US_TODOSTR(TIPO)+".  Valores aceptados: 0 para Letras y Numeros, 1 para Letras solas y 2 para Numeros solos",.T.)
+      US_LOG("TIPO NO CONTEMPLADA EN US_SETALLKEY(), VALOR RECIBIDO: "+US_VarToStr(TIPO)+".  Valores aceptados: 0 para Letras y Numeros, 1 para Letras solas y 2 para Numeros solos",.T.)
 ENDCASE
 RETURN
 FUNCTION USASETALLKEY(VAR,CARACTER,ACCION)
 LOCAL R
 *US_LOG("VAR: "+VAR)
 *US_LOG("CAR: "+CARACTER)
-*US_LOG("ACC: "+US_TODOSTR(ACCION))
+*US_LOG("ACC: "+US_VarToStr(ACCION))
 &(VAR+":='"+CARACTER+"'")
 R=&ACCION
 RETURN
@@ -3222,7 +3222,7 @@ DO CASE
       US_SETKEY("K_8",VENTANA)
       US_SETKEY("K_9",VENTANA)
    OTHERWISE
-      US_LOG("TIPO NO CONTEMPLADA EN US_RELALLKEY(), VALOR RECIBIDO: "+US_TODOSTR(TIPO)+".  Valores aceptados: 0 para Letras y Numeros, 1 para Letras solas y 2 para Numeros solos",.T.)
+      US_LOG("TIPO NO CONTEMPLADA EN US_RELALLKEY(), VALOR RECIBIDO: "+US_VarToStr(TIPO)+".  Valores aceptados: 0 para Letras y Numeros, 1 para Letras solas y 2 para Numeros solos",.T.)
 ENDCASE
 RETURN
 */
@@ -4015,8 +4015,8 @@ Function US_Execute(cFile,cParm)
       Case Reto = SE_ERR_SHARE              && A sharing violation occurred.
          MsgInfo("Error al interntar compartir el recurso o archivo")
       otherwise
-         US_Log("Función "+Procname()+": Error desconocido al intentar ver el Reporte, RC="+us_todostr(Reto))
-         MsgInfo("Función "+Procname()+": Error desconocido al intentar ver el Reporte, RC="+us_todostr(Reto))
+         US_Log("Función "+Procname()+": Error desconocido al intentar ver el Reporte, RC="+US_VarToStr(Reto))
+         MsgInfo("Función "+Procname()+": Error desconocido al intentar ver el Reporte, RC="+US_VarToStr(Reto))
    endcase
 Return if( Reto > 32 , 0 , -1 )
 */
