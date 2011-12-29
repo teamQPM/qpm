@@ -1356,6 +1356,7 @@ Function SHG_InputTopic( cTopic , cNick )
              CAPTION         'OK'
              TOOLTIP         'Confirm Selection'
              ONCLICK         if( bReto := SHG_InputTopicOK() , DoMethod( "PanInputTopic" , "Release" ) , US_Nop() )
+             DEFAULT         .T.
       END BUTTON
 
       DEFINE BUTTON PanInputTopicCANCEL
@@ -1367,14 +1368,23 @@ Function SHG_InputTopic( cTopic , cNick )
              TOOLTIP         'Cancel Selection'
              ONCLICK         ( bReto := .F. , DoMethod( "PanInputTopic" , "Release" ) )
       END BUTTON
+      
+      ON KEY ESCAPE OF ( PanInputTopic ) ACTION ( bReto := .F. , DoMethod( "PanInputTopic" , "Release" ) )
 
    END WINDOW
+
    Center Window PanInputTopic
-// US_Log( "pre activate " , .F. )
    Activate Window PanInputTopic
-// US_Log( "post release " , .F. )
-   cTopic := cPTopic
-   cNick := cPNick
+
+   if bReto
+      if cTopic == cPTopic .and. cNick == cPNick
+         bReto := .f.
+      else
+         cTopic := cPTopic
+         cNick := cPNick
+      endif
+   endif
+   
 Return bReto
 
 Function SHG_InputTopicOK()
