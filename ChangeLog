@@ -8,6 +8,47 @@
  * See "How to format your ChangeLog entries" in howtosvn.txt file.
  */
 
+2011-12-27 18:00:00 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * ./QPM.prg
+     * Some messages improved.
+     ! Fixed: message not shown when compiler warnings exist.
+     ! Fixed: incorrect message (warning) when compiling is not successful.
+     + Added existence check of moved/copied output file in BUILD.BAT.
+     + Added QPM_CopyFile() function.
+     + Added QPM_ProjectOutputExistence() function.
+   * ./FuentesComunes/US_HB.prg
+   * ./FuentesComunes/US_Clases.prg
+   * ./FuentesComunes/US_Edit_CharFijo.prg
+   * ./FuentesComunes/US_MG.PRG
+   * ./QPM.ch
+   * ./QPM_Environment.prg
+   * ./QPM_ExtraRun.prg
+   * ./QPM_Functions.PRG
+   * ./QPM_GlobalSettings.prg
+   * ./QPM_HotRecovery.prg
+   * ./QPM_Killer.prg
+   * ./QPM_ProjectSettings.prg
+   * ./QPM_SHG_AssistImage.prg
+   * ./QPM_SHG_AssistLink.prg
+   * ./QPM_SHG_SimpleHelpGenerator.prg
+   * ./us_run.prg
+   * ./us_shell.prg
+     * Changed US_TodoStr() to US_VarToStr() so we can search for TODO
+       to locate things to do.
+   * ./HelpQPM/QPM_SHG.dbf
+   * ./HelpQPM/QPM_SHG.fpt
+   * ./QPM.chm
+     * Some typos corrected.
+     * Some topic's texts changed.
+   * ./QPM.exe
+   * ./QPM_AutoProject.qpm
+   * ./QPM_Us_Run.qpm
+   * ./QPM_Us_Shell.qpm
+   * ./us_run.exe
+   * ./us_shell.exe
+   * ./TODO
+     * Updated.
+
 2011-12-27 11:40:00 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * ./HelpQPM/QPM_SHG.dbf
    * ./HelpQPM/QPM_SHG.fpt

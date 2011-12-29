@@ -873,7 +873,7 @@ METHOD US_EditViewClipBoard() CLASS US_RichEdit
    DoMethod( ::US_WinEdit , ::cRichControlName + "ClipBoard" , "SetFocus" )
    US_Send_Paste()
    DO EVENTS
-   MsgInfo( US_TodoStr( GetProperty( ::US_WinEdit , ::cRichControlName + "ClipBoard" , "value" ) ) , "Portapapeles", NIL, .F. )
+   MsgInfo( US_VarToStr( GetProperty( ::US_WinEdit , ::cRichControlName + "ClipBoard" , "value" ) ) , "Portapapeles", NIL, .F. )
    DoMethod( ::US_WinEdit , ::cRichControlName, "SetFocus" )
 Return
 
@@ -1904,13 +1904,13 @@ Function US_Redraw2( cFormName , nOldWidth , nOldHeight )
                   ****        SetProperty( cFormName , _HMG_aControlnames[inx] , "fontsize" , ( GetProperty( cFormName , _HMG_aControlnames[inx] , "fontsize" )  * nHeight ) / nOldHeight )
                   ****     endif
                   ****  endif
-                        //US_LOG("SetFont for: "+US_TodoStr(_HMG_aControlnames[inx]))
+                        //US_LOG("SetFont for: "+US_VarToStr(_HMG_aControlnames[inx]))
                      endif
                      SetProperty( cFormName , _HMG_aControlnames[inx] , "row"      , ( GetProperty( cFormName , _HMG_aControlnames[inx] , "row"      )  * nHeight ) / nOldHeight )
                      SetProperty( cFormName , _HMG_aControlnames[inx] , "col"      , ( GetProperty( cFormName , _HMG_aControlnames[inx] , "col"      )  * nWidth  ) / nOldWidth  )
                      SetProperty( cFormName , _HMG_aControlnames[inx] , "width"    , ( GetProperty( cFormName , _HMG_aControlnames[inx] , "width"    )  * nWidth  ) / nOldWidth  )
                      SetProperty( cFormName , _HMG_aControlnames[inx] , "height"   , ( GetProperty( cFormName , _HMG_aControlnames[inx] , "height"   )  * nHeight ) / nOldHeight )
-                     // US_LOG("Post SetSize for: "+US_TodoStr(_HMG_aControlnames[inx]) , .t. )
+                     // US_LOG("Post SetSize for: "+US_VarToStr(_HMG_aControlnames[inx]) , .t. )
                   endif
                endif
             next

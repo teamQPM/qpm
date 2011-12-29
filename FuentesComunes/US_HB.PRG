@@ -98,7 +98,7 @@ FUNCTION US_DB_CMP(cTabla,cModo,CAMPO,TIPO,LONGI,DEC)
    cModo:=UPPER(cModo)
    IF (cModo == "ADD") .AND. (TIPO=="C" .OR. TIPO=="N") .AND. (LONGI==NIL .OR. LONGI < 1)
       ? "ERROR EN PARAMETRO LONGITUD DE FUNCION US_DB_CMP PARA CAMPO: "+CAMPO
-      ? "SE HA RECIBIDO: "+US_TODOSTR(LONGI)
+      ? "SE HA RECIBIDO: "+US_VarToStr(LONGI)
       INKEY(0)
       RETURN 8
    ENDIF
@@ -231,7 +231,7 @@ FUNCTION US_DB_CMP(cTabla,cModo,CAMPO,TIPO,LONGI,DEC)
          endif
          RETURN 0
       OTHERWISE
-         ? "ERROR EN FUNCION US_DB_CMP, PARAMETRO 'MODO' ES INVALIDO: "+US_TODOSTR(cModo)
+         ? "ERROR EN FUNCION US_DB_CMP, PARAMETRO 'MODO' ES INVALIDO: "+US_VarToStr(cModo)
          INKEY(0)
    ENDCASE
    if !empty( cDbfOld )
@@ -1094,7 +1094,7 @@ endif
 
 if ((longitud_de_salida * ( cant_arch_sal -1 ) ) + longitud_last) != longitud_de_entrada
    cMsgRetorno:="Error en calculo de longitud de salida, Ver Log"
-   US_LOG("Homogeneo         : " + us_todostr(bHomogeneo) , .F. )
+   US_LOG("Homogeneo         : " + US_VarToStr(bHomogeneo) , .F. )
    US_LOG("Longitud de entrad: " + alltrim(str(longitud_de_entrada)) , .F. )
    US_LOG("Longitud de salida: " + alltrim(str(longitud_de_salida)) , .F. )
    US_LOG("cant arch         : " + alltrim(str(cant_arch_sal)) , .F. )
@@ -1322,7 +1322,7 @@ RETURN PADR(REPLICATE(" ",INT((LONGI-LEN(ESTRING))/2))+ESTRING,LONGI," ")
 Function US_PosCenter(ESTRING)
 Return ( ( 80 - LEN( ESTRING ) ) / 2 )
 
-Function US_TodoStr(X)
+Function US_VarToStr(X)
    Local T, StringAux:="" , i:=0
    if X == NIL
       X := "*NIL*"
@@ -1348,10 +1348,10 @@ Function US_TodoStr(X)
          return StringAux
       case T='A'
          for i=1 to ( len(x) - 1 )
-            StringAux:=StringAux + US_TodoStr( x[i] ) + HB_OSNewLine()
+            StringAux:=StringAux + US_VarToStr( x[i] ) + HB_OSNewLine()
          next
          if len(x) > 0
-            StringAux:=StringAux + US_TodoStr( x[len(x)] )
+            StringAux:=StringAux + US_VarToStr( x[len(x)] )
          endif
          return StringAux
    endcase
@@ -2325,7 +2325,7 @@ Function US_FileChar26Zap( cFile )
         //  -----
          else
             fclose( nHndIn )
-            US_Log( "Error in create file '"+cFileOut+"', fError=" + US_TodoStr( fError() ) )
+            US_Log( "Error in create file '"+cFileOut+"', fError=" + US_VarToStr( fError() ) )
             return -1
          endif
          reto := 1

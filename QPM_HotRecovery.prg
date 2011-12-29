@@ -154,8 +154,8 @@ Function QPM_HotRecovery( cFun , cSubFun , cType , cFileName , cRecoveryFile )
             // HB_ZipFile( <cFile>, <cFileToCompress> | <aFiles>, <nLevel>, <bBlock>, <lOverwrite>, <cPassword>, <lWithPath>, <lWithDrive>, <pFileProgress> ) --> lCompress
     us_log( "INI - ZIIIIIIIIIIIIIIIIP" , .F. )
     us_log( hb_osnewline() + cRecoveryFileZip + hb_osnewline() + cRecoveryFile , .F. )
-    us_log( hb_osnewline() + us_todostr( file( cRecoveryFileZip ) ) + hb_osnewline() + us_todostr( file( cRecoveryFile ) ) , .F. )
-    us_log( hb_osnewline() + us_todostr( us_filesize( cRecoveryFileZip ) ) + hb_osnewline() + us_todostr( us_filesize( cRecoveryFile ) ) , .F. )
+    us_log( hb_osnewline() + US_VarToStr( file( cRecoveryFileZip ) ) + hb_osnewline() + US_VarToStr( file( cRecoveryFile ) ) , .F. )
+    us_log( hb_osnewline() + US_VarToStr( us_filesize( cRecoveryFileZip ) ) + hb_osnewline() + US_VarToStr( us_filesize( cRecoveryFile ) ) , .F. )
     us_log( "END - ZIIIIIIIIIIIIIIIIP" , .F. )
             if !HB_ZipFile( cRecoveryFileZip , cRecoveryFile )
 //  us_log( "error" )
@@ -224,7 +224,7 @@ Function QPM_HotRecovery( cFun , cSubFun , cType , cFileName , cRecoveryFile )
             DBSelectArea( OPEN_cAreaOld )
          endif
       otherwise
-         US_Log( "Invalid Function: " + us_todostr( cFun ) )
+         US_Log( "Invalid Function: " + US_VarToStr( cFun ) )
    endcase
 Return nNewCod
 
@@ -1700,7 +1700,7 @@ Function HotGridImage( cWin , cGrid , nRow , nCol , cOper , nBitImage )
       Return .F.
    endif
    if ( nAux := aScan( vHotImagesTranslateGrid , { |x| x[2] == GetProperty( cWin , cGrid , "Cell" , nRow , nCol ) } ) ) == 0
-      MsgInfo( "Error en posicionamiento en Funcion HotGridImage para el valor: " + us_todoStr( GetProperty( cWin , cGrid , "Cell" , nRow , nCol ) ) )
+      MsgInfo( "Error en posicionamiento en Funcion HotGridImage para el valor: " + US_VarToStr( GetProperty( cWin , cGrid , "Cell" , nRow , nCol ) ) )
       Return .F.
    endif
    cString := NTOC( vHotImagesTranslateGrid[ nAux ][ 1 ] , 2 , nBits , "0" )
@@ -1726,7 +1726,7 @@ Function HotGridImage( cWin , cGrid , nRow , nCol , cOper , nBitImage )
       endcase
    Next i
    if ( nAux := aScan( vHotImagesTranslateGrid , { |x| x[1] == CTON( cString , 2 ) } ) ) == 0
-      MsgInfo( "Error en posicionamiento (2) en Funcion HotGridImage para el valor: " + us_todoStr( CTON( cString , 2 ) ) )
+      MsgInfo( "Error en posicionamiento (2) en Funcion HotGridImage para el valor: " + US_VarToStr( CTON( cString , 2 ) ) )
       Return .F.
    endif
    SetProperty( cWin , cGrid , "Cell" , nRow , nCol , vHotImagesTranslateGrid[ nAux ][ 2 ] )
@@ -1911,7 +1911,7 @@ us_log( "abrio base __IMPDB" , .f. )
             for nInx := 1 to len( vStruct )
                if vStruct[nInx][1] == "HR_COD"
                   REPLACE &(vStruct[nInx][1]) with nNewCod
-        us_log( "puse cod: " + us_todostr( nNewCod ) , .f. )
+        us_log( "puse cod: " + US_VarToStr( nNewCod ) , .f. )
                   nNewCod++
                else
                   if !( vStruct[nInx][1] == "___DATETIM" )
@@ -1943,7 +1943,7 @@ us_log( "hay agregados" , .f. )
                nInx++
             endif
             if !( nInx == HR_SECU )
-     us_log( "cambio secu a hr_cod " + us_todostr( hr_cod ) , .f. )
+     us_log( "cambio secu a hr_cod " + US_VarToStr( hr_cod ) , .f. )
                REPLACE HR_SECU with nInx
             endif
             dbskip(-1)
@@ -1967,8 +1967,8 @@ us_log( "hay agregados" , .f. )
       ferase( cTemp_HR_Database )
       ferase( US_FileNameOnlyPathAndName( cTemp_HR_Database ) + ".fpt" )
       ferase( US_FileNameOnlyPathAndName( cTemp_HR_Database ) + ".cdx" )
-      us_log( HB_OsNewLine() + "Added: " + US_TodoStr( nCont_Added ) + HB_OsNewLine() + "Skipped: " + US_TodoStr( nCont_Skipped ) + HB_OsNewLine() + "Total Read: " + US_TodoStr( nCont_Total ),.f. )
-      MsgInfo( "Import finished OK." + HB_OsNewLine() + HB_OsNewLine() + "Added: " + US_TodoStr( nCont_Added ) + HB_OsNewLine() + "Skipped: " + US_TodoStr( nCont_Skipped ) + HB_OsNewLine() + "Total Read: " + US_TodoStr( nCont_Total ) )
+      us_log( HB_OsNewLine() + "Added: " + US_VarToStr( nCont_Added ) + HB_OsNewLine() + "Skipped: " + US_VarToStr( nCont_Skipped ) + HB_OsNewLine() + "Total Read: " + US_VarToStr( nCont_Total ),.f. )
+      MsgInfo( "Import finished OK." + HB_OsNewLine() + HB_OsNewLine() + "Added: " + US_VarToStr( nCont_Added ) + HB_OsNewLine() + "Skipped: " + US_VarToStr( nCont_Skipped ) + HB_OsNewLine() + "Total Read: " + US_VarToStr( nCont_Total ) )
       if !empty( OPEN_cAreaOld )
          DBSelectArea( OPEN_cAreaOld )
       endif

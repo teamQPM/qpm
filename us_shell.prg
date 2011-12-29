@@ -786,7 +786,7 @@ return .T.
 
 Function Say( txt )
    if bSay
-      __Run( "ECHO " + Tab + US_TodoStr( txt ) )
+      __Run( "ECHO " + Tab + US_VarToStr( txt ) )
    endif
 Return .T.
 

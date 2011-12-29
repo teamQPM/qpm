@@ -549,7 +549,7 @@ Function GetMiniGuiName( cForceCompiler )
                case cForceCompiler == DefineXHarbour
                   nombre := "xOOHG.lib"
                otherwise
-                  US_Log( "Error 1 in cForceCompiler of function GetMiniGuiName: " + us_todostr( cForceCompiler ) )
+                  US_Log( "Error 1 in cForceCompiler of function GetMiniGuiName: " + US_VarToStr( cForceCompiler ) )
             endcase
          else
             nombre:="OOHG.lib"
@@ -565,7 +565,7 @@ Function GetMiniGuiName( cForceCompiler )
                case cForceCompiler == DefineXHarbour
                   nombre := "LibXOOHG.a"
                otherwise
-                  US_Log( "Error 1b in cForceCompiler of function GetMiniGuiName: " + us_todostr( cForceCompiler ) )
+                  US_Log( "Error 1b in cForceCompiler of function GetMiniGuiName: " + US_VarToStr( cForceCompiler ) )
             endcase
          else
             nombre:="LibOOHG.a"
@@ -581,7 +581,7 @@ Function GetMiniGuiName( cForceCompiler )
                case cForceCompiler == DefineXHarbour
                   nombre := "xOOHG.lib"
                otherwise
-                  US_Log( "Error 1c in cForceCompiler of function GetMiniGuiName: " + us_todostr( cForceCompiler ) )
+                  US_Log( "Error 1c in cForceCompiler of function GetMiniGuiName: " + US_VarToStr( cForceCompiler ) )
             endcase
          else
             nombre:="OOHG.lib"
@@ -597,7 +597,7 @@ Function GetMiniGuiName( cForceCompiler )
                case cForceCompiler == DefineXHarbour
                   nombre := "LibXhmg.a"
                otherwise
-                  US_Log( "Error 2 in cForceCompiler of function GetMiniGuiName: " + us_todostr( cForceCompiler ) )
+                  US_Log( "Error 2 in cForceCompiler of function GetMiniGuiName: " + US_VarToStr( cForceCompiler ) )
             endcase
          else
             nombre:="Libhmg.a"
@@ -613,7 +613,7 @@ Function GetMiniGuiName( cForceCompiler )
                case cForceCompiler == DefineXHarbour
                   nombre := "LibXminigui.a"
                otherwise
-                  US_Log( "Error 2 in cForceCompiler of function GetMiniGuiName: " + us_todostr( cForceCompiler ) )
+                  US_Log( "Error 2 in cForceCompiler of function GetMiniGuiName: " + US_VarToStr( cForceCompiler ) )
             endcase
          else
             nombre:="libminigui.a"
@@ -629,7 +629,7 @@ Function GetMiniGuiName( cForceCompiler )
                case cForceCompiler == DefineXHarbour
                   nombre := "xMinigui.lib"
                otherwise
-                  US_Log( "Error 3 in cForceCompiler of function GetMiniGuiName: " + us_todostr( cForceCompiler ) )
+                  US_Log( "Error 3 in cForceCompiler of function GetMiniGuiName: " + US_VarToStr( cForceCompiler ) )
             endcase
          else
             nombre := "MiniGui.lib"
@@ -1018,7 +1018,7 @@ Function ViewLog()
       Return .T.
    endif
    If Empty( Gbl_TEditor )
-      MyMsg( 'Operation Aborted', US_TodoStr( 'Program Editor Not Defined. Look at ' + PUB_MenuGblOptions + ' of Settings menu.' ) , "E" , bAutoExit )
+      MyMsg( 'Operation Aborted', US_VarToStr( 'Program Editor Not Defined. Look at ' + PUB_MenuGblOptions + ' of Settings menu.' ) , "E" , bAutoExit )
       Return .T.
    Else
       Editor := US_ShortName( AllTrim( Gbl_TEditor ) )
@@ -1129,7 +1129,7 @@ Function QPM_Execute( cCMD , cParms , bWait , nSize , RunWaitFileStop )
          case nSize == 2            // maximized
             EXECUTE FILE ( cCMD ) PARAMETERS ( cParms ) MAXIMIZE
          otherwise
-            MsgInfo( "Invalid nSize parm in function QPM_Execute: " + US_TodoStr( nSize ) )
+            MsgInfo( "Invalid nSize parm in function QPM_Execute: " + US_VarToStr( nSize ) )
       endcase
    else
       do case
@@ -1142,7 +1142,7 @@ Function QPM_Execute( cCMD , cParms , bWait , nSize , RunWaitFileStop )
          case nSize == 2            // maximized
             cSize := "MAXIMIZE"
          otherwise
-            MsgInfo( "Invalid nSize parm in function QPM_Execute (2): " + US_TodoStr( nSize ) )
+            MsgInfo( "Invalid nSize parm in function QPM_Execute (2): " + US_VarToStr( nSize ) )
       endcase
       RunWaitControlFile := US_ShortName( PUB_cProjectFolder ) + DEF_SLASH + "_" + PUB_cSecu + "RWCF" + US_DateTimeCen() + ".cnt"
       RunWaitParms       := US_ShortName( PUB_cProjectFolder ) + DEF_SLASH + "_" + PUB_cSecu + "RWP" + US_DateTimeCen() + ".cng"
