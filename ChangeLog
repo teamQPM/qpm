@@ -8,7 +8,23 @@
  * See "How to format your ChangeLog entries" in howtosvn.txt file.
  */
 
-2011-12-27 18:00:00 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2011-12-29 21:50:00 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * ./QPM.prg
+   * ./QPM_SHG_SimpleHelpGenerator.prg
+     + Added ESC key to cancel PanInputTopic window.
+     ! Fixed: Topic is marked as changed when no change was made to it's 
+       name or nickname in PanInputTopic window.
+   * ./HelpQPM/QPM_SHG.dbf
+   * ./HelpQPM/QPM_SHG.fpt
+   * ./QPM.chm
+     * Some typos corrected.
+     * Some topic's texts changed.
+   * ./QPM.exe
+   * ./QPM_AutoProject.qpm
+   * ./TODO
+     * Updated.
+
+2011-12-29 20:25:00 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * ./QPM.prg
      * Some messages improved.
      ! Fixed: message not shown when compiler warnings exist.
@@ -162,7 +178,7 @@
      * US_DBUseArea() calls replaced by US_Use() calls.
    * ./QPM_SHG_SimpleHelpGenerator.prg
      * DBUseArea() calls replaced by US_Use() calls.
-     ! Fixed: Help topic is marked as changed when no change was made.
+     ! Fixed: Topic is marked as changed when no change was made to it's text.
      ! Fixed: Can't copy/cut text from first help topic.
      ! Fixed: Can´t paste in search box from richedit box.
      ! Fixed: index not found error.
