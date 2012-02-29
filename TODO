@@ -11,6 +11,15 @@
 /******************************************************************************/
 
 Assigned to: <nobody>
+Added by...: 2012-02-29 19:53:00 UTC-0300 Fernando Yurisich <fyurisich>
+Status.....: Open.
+Details....: Agregar opción para que la búsqueda global se haga sobre los
+             textos originales y no sobre el UPPER() de los mismos.
+             Ver función GlobalSearch2().
+
+/******************************************************************************/
+
+Assigned to: <nobody>
 Added by...: 2011-12-27 11:35:00 UTC-0300 Fernando Yurisich <fyurisich>
 Status.....: Open.
 Details....: Agregar funcionalidad Sync Recovery.
@@ -20,7 +29,7 @@ Details....: Agregar funcionalidad Sync Recovery.
 Assigned to: <nobody>
 Added by...: 2011-12-19 09:32:00 UTC-0300 Fernando Yurisich <fyurisich>
 Status.....: Open.
-Details....: Update sourcefourge help.
+Details....: Update sourceforge help.
 
 /******************************************************************************/
 
