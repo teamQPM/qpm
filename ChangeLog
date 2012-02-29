@@ -8,6 +8,15 @@
  * See "How to format your ChangeLog entries" in howtosvn.txt file.
  */
 
+2012-02-29 20:00:00 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * ./QPM.prg
+     * Some typos corrected.
+     * Some comments added and others improved.
+   * ./QPM.exe
+   * ./QPM_AutoProject.qpm
+   * ./TODO
+     * Updated.
+
 2011-12-29 21:50:00 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * ./QPM.prg
    * ./QPM_SHG_SimpleHelpGenerator.prg

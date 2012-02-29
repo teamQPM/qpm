@@ -5345,10 +5345,9 @@ Function QPM_Build2()
    Local w_hay, w_group
    Local nLastExtraFolderSearchAdded := 0
    Local bExtraFolderSearchRoot      := .F.
-   //
    Local RUNFOLDER         := alltrim(US_FileNameOnlyPath(VentanaMain.TRunProjectFolder.Value))
    Local XHARBOURSUPPORT   := if(Prj_Radio_Harbour==DEF_RG_HARBOUR,.F.,.T.)
-   * No Borrar  Local XHARBOURMTSUPPORT := Prj_Check_34
+// No Borrar  Local XHARBOURMTSUPPORT := Prj_Check_34
    Local MemoAux := ""
    Local MemoObj := ""
    Local cInputReImpName := ""
@@ -5539,15 +5538,16 @@ Function QPM_Build2()
          bIsCpp := .T.
       endif
       if ascan( PRGFILES , { |x| US_Upper( US_FileNameOnlyName( x ) ) == US_Upper( US_FileNameOnlyName( alltrim(GetProperty( "VentanaMain" , "GPrgFiles" , "Cell" , i , NCOLPRGFULLNAME )) ) ) } ) > 0
-         MsgStop( "Duplicate file name '"+US_FileNameOnlyName( alltrim(GetProperty( "VentanaMain" , "GPrgFiles" , "Cell" , i , NCOLPRGFULLNAME )) )+"' in diferents directories or with diferents extents (.PRG and .C)"+HB_OsNewLine()+"The object generated for this file will be override the object of previus PRG file." )
+         MsgStop( "Duplicate file name '"+US_FileNameOnlyName( alltrim(GetProperty( "VentanaMain" , "GPrgFiles" , "Cell" , i , NCOLPRGFULLNAME )) )+"' in diferent directories or with diferent extensions (.PRG and .C)."+HB_OsNewLine()+"The object generated for the second file will override the object of the previous file." )
          Return .F.
       endif
       aadd ( PRGFILES , ChgPathToReal( GetProperty( "VentanaMain" , "GPrgFiles" , "Cell" , i , NCOLPRGFULLNAME ) ) )
 
-      if !file( PRGFILES[ i ] )
-         MsgStop( "File '"+PRGFILES[ i ]+"' not found." )
+      if ! file( PRGFILES[ i ] )
+         MsgStop( "File '" + PRGFILES[ i ] + "' not found !!!" )
          Return .F.
       endif
+      
       if PUB_bDebugActive
          if ascan( vDebugPath , { |x| US_Upper( x ) == US_Upper( alltrim( US_FileNameOnlyPath( PRGFILES[ i ] ) ) ) } ) == 0
             aadd ( vDebugPath , alltrim( US_FileNameOnlyPath( PRGFILES[ i ] ) ) )
@@ -5748,6 +5748,11 @@ Function QPM_Build2()
 
    cOutputName        := GetOutputModuleName( .F. )
    cOutputNameDisplay := GetOutputModuleName( .T. )
+   
+/*
+ * Out contiene los comandos que luego se grabarán en
+ * Temp.Bc para ser ejecutados por MAKE.EXE desde Build.bat
+ */
    Out := Out + 'APP_NAME = ' + cOutputName + Hb_OsNewLine()
 
    if substr( cOutputType , 1 , 3 ) == "SRC"
@@ -5764,6 +5769,9 @@ Function QPM_Build2()
 
    DO EVENTS
 
+/*
+ * Variables y aplicaciones a utilizar en Temp.Bc
+ */
    do case
       case IsMinGW
          Out := Out + 'DEF_SLASH = ' + US_ShortName(PUB_cQPM_Folder) + DEF_SLASH + 'US_SLASH.EXE QPM' + Hb_OsNewLine()
@@ -5854,6 +5862,10 @@ Function QPM_Build2()
          endcase
       endif
       Out := Out + Hb_OsNewLine()
+
+/*
+ * Objetos de los que depende el ejecutable
+ */
       do case
          case IsMinGW
             Out := Out + '$(APP_NAME) : $(DIR_OBJECTS)' + DEF_SLASH + US_FileNameOnlyName( PRGFILES[1] ) + '.o ' + if( VentanaMain.GPrgFiles.ItemCount > 1 , DEF_SLASH , '' ) + Hb_OsNewLine()
@@ -5880,8 +5892,16 @@ Function QPM_Build2()
             endcase
          EndIf
       Next i
-//makeOut := Out + Hb_OsNewLine()
-      if !bConsole
+      
+/*
+ * Comandos para generar el ejecutable.
+ * Esta lista NO debe estar separada de la anterior por renglones en blanco.
+ */
+ 
+ /*
+  * Comandos para compilar el archivo de recursos
+  */
+      if ! bConsole
          If File ( US_FileNameOnlyPathAndName( PRGFILES[1] ) + '.RC' )
             do case
                case IsMinGW
@@ -5901,28 +5921,57 @@ Function QPM_Build2()
 
       DO EVENTS
 
-// build _script.ld
-
+/*
+ * Comandos para generar el ejecutable (van en Out) y para generar el
+ * script de linkedición (van en script.ld)
+ */
       do case
          case cOutputType == "SRCEXE" .or. ;
               cOutputType == "SRCDLL"
             Out := Out + PUB_cCharTab + '$(US_MSG_EXE) $(DIR_PROJECT)' + DEF_SLASH + '_'+PUB_cSecu+'Progress.Log -MSG:Making script for link process ...' + Hb_OsNewLine()
 
+/*
+ * Grabo lista de objetos incluidos en las Include Libraries (estos objetos
+ * deben estar en la carpeta Resources), y que estén marcados *FIRST*, en script.ld
+ */
+            For i := 1 To Len ( vLibIncludeFiles )
+               if US_Upper( US_Word( GetProperty( "VentanaMain" , "GIncFiles" , "Cell" , i , NCOLINCFULLNAME ) , 2 ) ) == "*FIRST*"
+                  if file( GetMiniGuiFolder() + DEF_SLASH + "Resources" + DEF_SLASH + substr( US_FileNameOnlyName( vLibIncludeFiles[i] ) , 4 ) + '.o' )
+                     do case
+                     case IsMinGW
+                        Out := Out + PUB_cCharTab + 'echo INPUT( $(DIR_MINIGUI_RES)' + DEF_SLASH + substr( US_FileNameOnlyName( vLibIncludeFiles[i] ) , 4 ) + '.o ) >> _'+PUB_cSecu+'Script.ld' + Hb_OsNewLine()
+                     case IsPelles
+                        Out := Out + PUB_cCharTab + 'echo $(DIR_MINIGUI_RES)' + DEF_SLASH + substr( US_FileNameOnlyName( vLibIncludeFiles[i] ) , 4 ) + '.obj >> _'+PUB_cSecu+'Script.ld' + Hb_OsNewLine()
+                     case IsBorland
+                        Out := Out + PUB_cCharTab + 'echo $(DIR_MINIGUI_RES)' + DEF_SLASH + substr( US_FileNameOnlyName( vLibIncludeFiles[i] ) , 4 ) + '.obj >> _'+PUB_cSecu+'Script.ld' + Hb_OsNewLine()
+                     otherwise
+                        US_Log( "Error 5671" )
+                     endcase
+                  endif
+               endif
+            Next i
+
+/*
+ * Grabo lista de objetos derivados de los .prg en script.ld
+ */
             For i := 1 To Len ( PrgFiles )
                do case
-                  case IsMinGW
-                     Out := Out + PUB_cCharTab + 'echo INPUT( $(DIR_OBJECTS)' + DEF_SLASH + US_FileNameOnlyName( PRGFILES[i] ) + '.o ) >' + if(i>1,'>','') + ' _'+PUB_cSecu+'Script.ld ' + Hb_OsNewLine()
-                  case IsPelles
-                     Out := Out + PUB_cCharTab + 'echo $(DIR_OBJECTS)' + DEF_SLASH + US_FileNameOnlyName( PRGFILES[i] ) + '.obj >' + if(i>1,'>','') +' _'+PUB_cSecu+'Script.ld ' + Hb_OsNewLine()
-                  case IsBorland
-                     Out := Out + PUB_cCharTab + 'echo $(DIR_OBJECTS)' + DEF_SLASH + US_FileNameOnlyName( PRGFILES[i] ) + '.obj + >' + if(i>1,'>','') +' _'+PUB_cSecu+'Script.ld ' + Hb_OsNewLine()
-                  otherwise
-                     US_Log( "Error 5672" )
+               case IsMinGW
+                  Out := Out + PUB_cCharTab + 'echo INPUT( $(DIR_OBJECTS)' + DEF_SLASH + US_FileNameOnlyName( PRGFILES[i] ) + '.o ) >> _'+PUB_cSecu+'Script.ld ' + Hb_OsNewLine()
+               case IsPelles
+                  Out := Out + PUB_cCharTab + 'echo $(DIR_OBJECTS)' + DEF_SLASH + US_FileNameOnlyName( PRGFILES[i] ) + '.obj >> _'+PUB_cSecu+'Script.ld ' + Hb_OsNewLine()
+               case IsBorland
+                  Out := Out + PUB_cCharTab + 'echo $(DIR_OBJECTS)' + DEF_SLASH + US_FileNameOnlyName( PRGFILES[i] ) + '.obj + >> _'+PUB_cSecu+'Script.ld ' + Hb_OsNewLine()
+               otherwise
+                  US_Log( "Error 5672" )
                endcase
             Next i
             
             do case
                case IsMinGW
+/*
+ * Grabo objeto generado a partir del archivo de recursos en script.ld
+ */
                   If !bConsole
                      If File( US_FileNameOnlyPathAndName( PRGFILES[1] ) + '.RC' )
                         Out := Out + PUB_cCharTab + 'echo INPUT( $(DIR_OBJECTS)'+DEF_SLASH+'_Temp.o ) >> _'+PUB_cSecu+'Script.ld' + Hb_OsNewLine()
@@ -5937,11 +5986,18 @@ Function QPM_Build2()
                   endif
 
                   DO EVENTS
-
+                  
+/*
+ * Grabo objetos incluidos en las Default Libraries (estos objetos deben estar
+ * en la carpeta Resources) en script.ld
+ */
                   For i=1 to len( &( 'vLibDefault'+GetSuffix() ) )
                      if Getminiguisuffix() == DefineOohg3 .and. ;
                         ( US_Upper( &('vLibDefault'+GetSuffix()+'['+str(i)+']') ) == "LIBHBPRINTER.A" .or. ;
                           US_Upper( &('vLibDefault'+GetSuffix()+'['+str(i)+']') ) == "LIBMINIPRINT.A" )
+/*
+ * TODO: Investigar la necesidad de esta sentencia.
+ */
                          US_Nop()
                      else
                         if ascan( vLibExcludeFiles , US_Upper( &( 'vLibDefault'+GetSuffix()+'['+str(i)+']' ) ) ) = 0
@@ -5954,6 +6010,10 @@ Function QPM_Build2()
 
                   DO EVENTS
 
+/*
+ * Grabo objetos incluidos en las Include Libraries (estos objetos deben estar
+ * en la carpeta Resources), y que estén marcados *LAST*, en script.ld
+ */
                   For i := 1 To Len ( vLibIncludeFiles )
                      if US_Upper( US_Word( GetProperty( "VentanaMain" , "GIncFiles" , "Cell" , i , NCOLINCFULLNAME ) , 2 ) ) == "*LAST*" && for .res
                         if file( GetMiniGuiFolder() + DEF_SLASH + "Resources" + DEF_SLASH + substr( US_FileNameOnlyName( vLibIncludeFiles[i] ) , 4 ) + '.o' )
@@ -5985,8 +6045,9 @@ Function QPM_Build2()
                   US_Log( "Error 5746" )
             endcase
 
-// libraries
-
+/*
+ * Grabo libraries en script.ld
+ */
             if QPM_IsXHarbour() .and. !IsMinGW .and. file( GetHarbourLibFolder()+DEF_SLASH+'bcc640'+PUB_xHarbourMT+'.lib' )
                Out := Out + PUB_cCharTab + 'echo $(DIR_HARBOUR_LIB)'+DEF_SLASH+'bcc640'+PUB_xHarbourMT+'.lib + >> _'+PUB_cSecu+'Script.ld' + HB_OsNewLine()
             endif
@@ -6014,7 +6075,7 @@ Function QPM_Build2()
                   Next
 
 /*
- * MINGW: add MiniGui libraries
+ * MINGW: add MiniGui main library
  */
                   if bConsole
                      if ascan( vLibExcludeFiles , US_Upper( GetMiniGuiName() ) ) = 0
@@ -6099,8 +6160,9 @@ Function QPM_Build2()
                      Out := Out + PUB_cCharTab + 'echo ' + w_group + ' >> _'+PUB_cSecu+'Script.ld ' + Hb_OsNewLine()
                   endif
 
-                  // search folders
-
+/*
+ * Add search folders to script.ld
+ */
                   Out := Out + PUB_cCharTab + 'echo SEARCH_DIR( $(DIR_MINIGUI)'+DEF_SLASH+'lib ) >> _'+PUB_cSecu+'Script.ld ' + Hb_OsNewLine()
                   Out := Out + PUB_cCharTab + 'echo SEARCH_DIR( $(DIR_HARBOUR_LIB) ) >> _'+PUB_cSecu+'Script.ld ' + Hb_OsNewLine()
                   Out := Out + PUB_cCharTab + 'echo SEARCH_DIR( $(DIR_COMPC)'+DEF_SLASH+'lib ) >> _'+PUB_cSecu+'Script.ld ' + Hb_OsNewLine()
@@ -6414,22 +6476,15 @@ Function QPM_Build2()
 
       DO EVENTS
 
-// Linking
-      
+/*
+ * Add command for linking to script.ld
+ */
       do case
          case IsMinGw
             do case
                case cOutputType == "SRCEXE"
                   Out := Out + PUB_cCharTab + '$(US_MSG_EXE) $(DIR_PROJECT)' + DEF_SLASH + '_'+PUB_cSecu+'Progress.Log -MSG:Linking to make ' + cOutputNameDisplay + ' ...' + Hb_OsNewLine()
                   Out := Out + PUB_cCharTab + '$(REDIR) $(ILINK_EXE) -Wall -mno-cygwin $(USER_FLAGS_LINK) -o $(APP_NAME) ' + (CCOMPILERFOLDER+DEF_SLASH+'_'+PUB_cSecu+'Script.ld') + if( bConsole , ' -mconsole ' , if( PUB_bDebugActive , ' ' , ' -mwindows ') ) + Hb_OsNewLine()
-//TODO: Is this the right place for this?
-                  For i := 1 To Len ( vLibIncludeFiles )
-                     if US_Upper( US_Word( GetProperty( "VentanaMain" , "GIncFiles" , "Cell" , i , NCOLINCFULLNAME ) , 2 ) ) == "*FIRST*"
-                        if file( GetMiniGuiFolder() + DEF_SLASH + "Resources" + DEF_SLASH + substr( US_FileNameOnlyName( vLibIncludeFiles[i] ) , 4 ) + '.o' )
-                           Out := Out + PUB_cCharTab + '$(DIR_MINIGUI_RES)' + DEF_SLASH + substr( US_FileNameOnlyName( vLibIncludeFiles[i] ) , 4 ) + '.o'
-                        endif
-                     endif
-                  Next i
                   if bUpx
                      Out := Out + PUB_cCharTab + '$(US_MSG_EXE) $(DIR_PROJECT)' + DEF_SLASH + '_'+PUB_cSecu+'Progress.Log -MSG:Compressing ' + cOutputNameDisplay + ' with UPX ...' + Hb_OsNewLine()
                      Out := Out + PUB_cCharTab + '$(US_UPX_EXE) ' + cUpxOpt + ' ' + cOutputName + ' ' + Hb_OsNewLine()
@@ -7149,12 +7204,10 @@ La existencia del ejecutable se hace en BUILD.BAT teniendo en cuenta el COPY/MOV
 //       QPM_CopyFile( US_ShortName( PUB_cProjectFolder ) + DEF_SLASH + '_' + PUB_cSecu + 'Temp.Log', 'C:\Proj_Temp.Log' )
          DELETE FILE ( US_ShortName( PUB_cProjectFolder ) + DEF_SLASH + '_' + PUB_cSecu + 'Temp.Log' )
 //       DELETE FILE ( SubStr( CCOMPILERFOLDER , 1 , 2 ) + DEF_SLASH + '_' + PUB_cSecu + 'Temp.Log' ) /* Lo genera REDIR pero no se porque */
-       QPM_CopyFile( PUB_cProjectFolder + DEF_SLASH + '_' + PUB_cSecu + 'Temp.Bc', 'C:\Temp.Bc' )
          DELETE FILE ( PUB_cProjectFolder + DEF_SLASH + '_' + PUB_cSecu + 'Temp.Bc' )
 //       QPM_CopyFile( PUB_cProjectFolder + DEF_SLASH + '_' + PUB_cSecu + 'End.Txt', 'C:\End.Txt' )
          DELETE FILE ( PUB_cProjectFolder + DEF_SLASH + '_' + PUB_cSecu + 'End.Txt' )
          DELETE FILE ( CCOMPILERFOLDER + DEF_SLASH + TopName + '.MAP' )
-       QPM_CopyFile( CCOMPILERFOLDER + DEF_SLASH + '_' + PUB_cSecu + 'Script.ld', 'C:\CComp_Script.ld' )
          DELETE FILE ( CCOMPILERFOLDER + DEF_SLASH + '_' + PUB_cSecu + 'Script.ld' )
          // los dos siguientes solo aparecen desde pendrive
          DELETE FILE ( PUB_cQPM_Folder + DEF_SLASH + TopName + '.MAP' )
