@@ -8,6 +8,24 @@
  * See "How to format your ChangeLog entries" in howtosvn.txt file.
  */
 
+2012-02-29 20:20:00 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * ./qpm.exe
+   * ./qpm_autoproject.qpm
+   * ./us_msg.exe
+   * ./qpm_us_msg.qpm
+   * ./us_redir.exe
+   * ./qpm_us_redir.qpm
+   * ./us_res.exe
+   * ./qpm_us_res.qpm
+   * ./us_run.exe
+   * ./qpm_us_run.qpm
+   * ./us_shell.exe
+   * ./qpm_us_shell.qpm
+   * ./compileall.log
+   * ./us_slash.exe
+   * ./qpm_us_slash.qpm
+     * Updated.
+
 2012-02-29 20:00:00 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * ./QPM.prg
      * Some typos corrected.
