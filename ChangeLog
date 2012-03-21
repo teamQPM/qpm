@@ -8,6 +8,17 @@
  * See "How to format your ChangeLog entries" in howtosvn.txt file.
  */
 
+2012-03-21 15:15:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * ./QPM_Libraries.prg
+     ! Can't compile in DEBUG mode with OOHG + MinGW + Harbour
+       (GTGUI must be placed before GTWIN in list of libraries).
+   * ./qpm.exe
+     * Updated.
+
+2012-03-21 13:33:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * ./QPM_Libraries.prg
+     * Changed default libraries for OOHG + MinGW + Harbour.
+
 2012-03-21 14:07:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * ./qpm.exe
    * ./qpm_autoproject.qpm
