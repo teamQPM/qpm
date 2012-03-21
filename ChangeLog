@@ -8,6 +8,10 @@
  * See "How to format your ChangeLog entries" in howtosvn.txt file.
  */
 
+2012-03-21 13:33:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * ./QPM_Libraries.prg
+     * Changed default libraries for OOHG + MinGW + Harbour.
+
 2012-02-29 20:20:00 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * ./qpm.exe
    * ./qpm_autoproject.qpm
