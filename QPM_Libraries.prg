@@ -628,19 +628,16 @@ Function QPM_CargoLibraries()
    cPre := "LIB"
    cExt := ".a"
    &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineHarbour ) := {}
-   // oohg libs
-   aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineHarbour ) , cPre+'hbprinter'+cExt )
-   aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineHarbour ) , cPre+'miniprint'+cExt )
    // harbour core libs
+   aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineHarbour ) , cPre+'gtgui'+cExt )     /* MUST BE FIRST */
+   aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineHarbour ) , cPre+'gtwin'+cExt )     /* Excluido a partir de build 20, se deja para debug, es controlado mas abajo */
    aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineHarbour ) , cPre+'hbextern'+cExt )
    aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineHarbour ) , cPre+'hbdebug'+cExt )
-   aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineHarbour ) , cPre+'hbvm'+cExt ) // hbvmmt for MT
+   aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineHarbour ) , cPre+'hbvm'+cExt )      /* hbvmmt for MT */
    aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineHarbour ) , cPre+'hbrtl'+cExt )
    aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineHarbour ) , cPre+'hblang'+cExt )
    aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineHarbour ) , cPre+'hbcpage'+cExt )
-   aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineHarbour ) , cPre+'gtwin'+cExt ) /* Excluido a partir de build 20, se deja para debug, es controlado mas abajo */
-   aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineHarbour ) , cPre+'gtgui'+cExt )
-// aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineHarbour ) , cPre+'hbnulrdd'+cExt )        // user selected
+// aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineHarbour ) , cPre+'hbnulrdd'+cExt )  /* user selected */
    aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineHarbour ) , cPre+'hbrdd'+cExt )
    aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineHarbour ) , cPre+'hbuddall'+cExt )
    aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineHarbour ) , cPre+'hbusrrdd'+cExt )
@@ -656,6 +653,9 @@ Function QPM_CargoLibraries()
    aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineHarbour ) , cPre+'hbcommon'+cExt )
    aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineHarbour ) , cPre+'hbpcre'+cExt )
    aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineHarbour ) , cPre+'hbzlib'+cExt )
+   // oohg libs
+   aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineHarbour ) , cPre+'hbprinter'+cExt )
+   aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineHarbour ) , cPre+'miniprint'+cExt )
    // other harbour libs
    aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineHarbour ) , cPre+'hbct'+cExt )
    aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineHarbour ) , cPre+'hbmisc'+cExt )
@@ -674,7 +674,7 @@ Function QPM_CargoLibraries()
    aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineHarbour ) , cPre+'odbc32'+cExt )
    aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineHarbour ) , cPre+'ole32'+cExt )
    aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineHarbour ) , cPre+'oleaut32'+cExt )
-   aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineHarbour ) , cPre+'stdc++'+cExt ) /* for c++ */
+   aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineHarbour ) , cPre+'stdc++'+cExt )       /* for c++ */
    aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineHarbour ) , cPre+'user32'+cExt )
    aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineHarbour ) , cPre+'uuid'+cExt )
    aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineHarbour ) , cPre+'vfw32'+cExt )
