@@ -8,6 +8,10 @@
  * See "How to format your ChangeLog entries" in howtosvn.txt file.
  */
 
+2012-08-11 16:10:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * ./qpm.exe
+     * Updated to version 05_03_07.
+
 2012-08-11 16:05:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * ./QPM_SHG_AssistImage.prg
    * ./QPM_SHG_AssistLink.prg
@@ -19,7 +23,6 @@
    * ./QPM.iss
    * ./QPM_AutoProjectOnlyHelp.qpm
    * ./qpm_autoproject.qpm
-   * ./qpm.exe
      * Updated to version 05_03_07.
 
 2012-08-11 13:30:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
