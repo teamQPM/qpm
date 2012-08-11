@@ -8,6 +8,20 @@
  * See "How to format your ChangeLog entries" in howtosvn.txt file.
  */
 
+2012-08-11 16:05:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * ./QPM_SHG_AssistImage.prg
+   * ./QPM_SHG_AssistLink.prg
+   * ./QPM_SHG_SimpleHelpGenerator.prg
+     ! Some typos.
+   * ./HelpQPM/QPM_SHG.dbf
+   * ./HelpQPM/QPM_SHG.fpt
+   * ./QPM.chm
+   * ./QPM.iss
+   * ./QPM_AutoProjectOnlyHelp.qpm
+   * ./qpm_autoproject.qpm
+   * ./qpm.exe
+     * Updated to version 05_03_07.
+
 2012-08-11 13:30:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * ./QPM.prg
      ! In certain cases, when compiling with BCC, the .obj file is not
@@ -15,9 +29,6 @@
        and the .exe is linked with the old .obj file.
    * ./QPM_SHG_SimpleHelpGenerator.prg
      - Validation of filename to allow accented characters.
-   * ./qpm.exe
-   * ./qpm_autoproject.qpm
-     * Updated to version 05_03_07.
 
 2012-03-21 15:15:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * ./QPM_Libraries.prg
