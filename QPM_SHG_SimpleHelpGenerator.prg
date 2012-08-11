@@ -1695,6 +1695,7 @@ Return .T.
 
 Function SHG_StrTran( cFullName )
    Local cAux , nInx , cName := US_FileNameOnlyNameAndExt( cFullName )
+/*
    for nInx := 1 to len( cName )
       cAux := Substr( cName , nInx , 1 )
       if !IsAlpha( cAux ) .and. ;
@@ -1704,6 +1705,7 @@ Function SHG_StrTran( cFullName )
          cName := StrTran( cName , cAux , "_" )
       endif
    next
+*/
 Return US_FileNameOnlyPath( cFullName ) + DEF_SLASH + cName
 
 Function SHG_Commands( cIn , cPos )
