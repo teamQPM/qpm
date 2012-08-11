@@ -183,7 +183,7 @@ Function SHG_LinkAssistant( cMemo , nCaretPos )
           AT 0 , 0 ;
           WIDTH 540 ;
           HEIGHT 295 ;
-          TITLE "Link Descripcion" ;
+          TITLE "Link Description" ;
           MODAL ;
           NOSYSMENU ;
           ON INTERACTIVECLOSE US_NOP() ;

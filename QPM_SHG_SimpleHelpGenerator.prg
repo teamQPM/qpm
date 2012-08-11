@@ -1311,7 +1311,7 @@ Function SHG_InputTopic( cTopic , cNick )
           AT 0 , 0 ;
           WIDTH 540 ;
           HEIGHT 170 ;
-          TITLE "Topic Descripcion" ;
+          TITLE "Topic Description" ;
           MODAL ;
           NOSYSMENU ;
           ON INTERACTIVECLOSE US_NOP()

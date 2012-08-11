@@ -178,7 +178,7 @@ Function SHG_ImageAssistant( cMemo , nCaretPos )
           AT 0 , 0 ;
           WIDTH 540 ;
           HEIGHT 295 ;
-          TITLE "Image Descripcion" ;
+          TITLE "Image Description" ;
           MODAL ;
           NOSYSMENU ;
           ON INTERACTIVECLOSE US_NOP() ;
