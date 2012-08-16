@@ -8,6 +8,12 @@
  * See "How to format your ChangeLog entries" in howtosvn.txt file.
  */
 
+2012-08-15 23:10:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * doc/howtosvn.txt
+     + Added how to update index.htm in online help.
+   * ./index.htm
+     * Updated last version date.
+
 2012-08-11 16:10:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * ./qpm.exe
      * Updated to version 05_03_07.
