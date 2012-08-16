@@ -245,5 +245,6 @@ HOW TO UPDATE INTERNET HELP
     f) select "htdocs" folder,
     g) select "QPM" folder,
     h) upload files from "htmlhelp" local folder to "QPM" server folder.
+    i) upload "index.htm" from "QPM" local folder to "htdocs" folder.
 
 /* eof */
