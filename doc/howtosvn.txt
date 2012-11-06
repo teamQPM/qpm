@@ -242,9 +242,10 @@ HOW TO UPDATE INTERNET HELP
     c) set "sftp" as transfer protocol,
     d) set "normal" as access mode,
     e) use your SourceForge's username and password to connect,
-    f) select "htdocs" folder,
-    g) select "QPM" folder,
-    h) upload files from "htmlhelp" local folder to "QPM" server folder.
-    i) upload "index.htm" from "QPM" local folder to "htdocs" folder.
+    f) list "/home/project-web/qpm/htdocs" directory,
+    g) select "htdocs" folder,
+    h) upload "index.htm" from "QPM" local folder to "htdocs" folder,
+    i) select "QPM" folder,
+    j) upload files from "htmlhelp" local folder to "QPM" server folder.
 
 /* eof */

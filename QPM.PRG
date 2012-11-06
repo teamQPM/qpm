@@ -5840,7 +5840,11 @@ Function QPM_Build2()
                   case cOutputType == "SRCDLL"
                      Out := Out + 'COBJFLAGS =  -I$(DIR_C_INCLUDE) -c ' + Hb_OsNewLine()
                   otherwise
+/*
+ Las versiones nuevas de gcc no soportan el flag -mno-cygwin
                      Out := Out + 'COBJFLAGS =  -I$(DIR_C_INCLUDE) -mno-cygwin -Wall -c ' + Hb_OsNewLine()
+*/
+                     Out := Out + 'COBJFLAGS =  -I$(DIR_C_INCLUDE) -Wall -c ' + Hb_OsNewLine()
 // For GTK           Out := Out + 'COBJFLAGS =  -I$(DIR_C_INCLUDE) -mms-bitfields -Wall -c ' + Hb_OsNewLine()
                endcase
             case IsPelles
@@ -6484,7 +6488,11 @@ Function QPM_Build2()
             do case
                case cOutputType == "SRCEXE"
                   Out := Out + PUB_cCharTab + '$(US_MSG_EXE) $(DIR_PROJECT)' + DEF_SLASH + '_'+PUB_cSecu+'Progress.Log -MSG:Linking to make ' + cOutputNameDisplay + ' ...' + Hb_OsNewLine()
+/*
+ * Las versiones nuevas de gcc no suportan el flag -mno-cygwin
                   Out := Out + PUB_cCharTab + '$(REDIR) $(ILINK_EXE) -Wall -mno-cygwin $(USER_FLAGS_LINK) -o $(APP_NAME) ' + (CCOMPILERFOLDER+DEF_SLASH+'_'+PUB_cSecu+'Script.ld') + if( bConsole , ' -mconsole ' , if( PUB_bDebugActive , ' ' , ' -mwindows ') ) + Hb_OsNewLine()
+ */
+                  Out := Out + PUB_cCharTab + '$(REDIR) $(ILINK_EXE) -Wall $(USER_FLAGS_LINK) -o $(APP_NAME) ' + (CCOMPILERFOLDER+DEF_SLASH+'_'+PUB_cSecu+'Script.ld') + if( bConsole , ' -mconsole ' , if( PUB_bDebugActive , ' ' , ' -mwindows ') ) + Hb_OsNewLine()
                   if bUpx
                      Out := Out + PUB_cCharTab + '$(US_MSG_EXE) $(DIR_PROJECT)' + DEF_SLASH + '_'+PUB_cSecu+'Progress.Log -MSG:Compressing ' + cOutputNameDisplay + ' with UPX ...' + Hb_OsNewLine()
                      Out := Out + PUB_cCharTab + '$(US_UPX_EXE) ' + cUpxOpt + ' ' + cOutputName + ' ' + Hb_OsNewLine()
