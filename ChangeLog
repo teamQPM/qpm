@@ -8,6 +8,16 @@
  * See "How to format your ChangeLog entries" in howtosvn.txt file.
  */
 
+2012-11-26 14:27:00 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * ./changelog
+     * Updated.
+
+2012-11-26 14:25:00 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * ./qpm.exe
+   * ./QPM.prg
+     ! Internal version number not updated.
+     + Some comments.
+
 2012-11-05 23:51:00 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * doc/howtosvn.txt
      + Added how to update online help.
