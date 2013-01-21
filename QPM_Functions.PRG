@@ -1236,7 +1236,7 @@ Function US_ViewErrorLog()
    Local nTopLenLog := 100000
 // Local nTopLenLog := 2000
    if cErrorLog == "*RUNFOLDER*"
-      Return "Program Running from another Folder that Project Folder" + HB_OsNewLine() + "MiniGui do't produce file 'ErrorLog'. This is a MiniGui limitation or bug"
+      Return "Program Running from another Folder that Project Folder" + HB_OsNewLine() + "MiniGui don't produce file 'ErrorLog'. This is a MiniGui limitation or bug"
    endif
    if !file( cErrorLog )
       Return "Error Log Not Found: " + cErrorLog
@@ -1259,6 +1259,7 @@ Function US_ViewErrorLog()
             '{\colortbl ;\red0\green0\blue255;\red221\green0\blue0;}' + HB_OsNewLine() + ;
             '\viewkind4\uc1\pard\keepn\qc\cf1\kerning36\b\f0\fs28 '
    cMemoHtml := substr( cMemoHtml , at( '<BODY>' , cMemoHtml ) + 6 )
+   cMemoHtml := strtran( cMemoHtml , '\' , '\\' )
    cMemoHtml := US_StrTran( cMemoHtml , '<p class="updated">', '\par\cf2 ' )
    cMemoHtml := US_StrTran( cMemoHtml , '</p>', '\cf0\par' )
    cMemoHtml := US_StrTran( cMemoHtml , '<br>', '\line ' )

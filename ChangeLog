@@ -8,6 +8,12 @@
  * See "How to format your ChangeLog entries" in howtosvn.txt file.
  */
 
+2013-01-21 12:35:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * ./qpm.exe
+     * Updated to version 05_03_09.
+   * ./QPM.prg
+     ! Filepaths with backslahes are not shown in Output Error tab.
+
 2012-11-26 14:27:00 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * ./changelog
      * Updated.
