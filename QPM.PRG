@@ -29,7 +29,7 @@
 #include "minigui.ch"
 #include <QPM.ch>
 
-#define QPM_VERSION_NUMBER "05 03 09"
+#define QPM_VERSION_NUMBER "05 03 10"
 #define DEF_INCLUDE_GT  '#include "QPM_gt.ch"'
 
 Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PAR_cP9,PAR_cP10,PAR_cP11,PAR_cP12,PAR_cP13,PAR_cP14,PAR_cP15,PAR_cP16,PAR_cP17,PAR_cP18,PAR_cP19,PAR_cP20)
@@ -392,8 +392,8 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
                      , { DefineMiniGui1+DefineBorland+DefineXHarbour  , "MiniGUI Oficial 1.x with Borland C and xHarbour" } ;
                      , { DefineExtended1+DefineBorland+DefineHarbour  , "MiniGUI Extended 1.x with Borland C and Harbour" } ;
                      , { DefineExtended1+DefineBorland+DefineXHarbour , "MiniGUI Extended 1.x with Borland C and xHarbour" } ;
-                     , { DefineExtended1+DefineMinGW+DefineHarbour    , "MiniGUI Extended 1.x with Borland C and Harbour" } ;
-                     , { DefineExtended1+DefineMinGW+DefineXHarbour   , "MiniGUI Extended 1.x with Borland C and xHarbour" } ;
+                     , { DefineExtended1+DefineMinGW+DefineHarbour    , "MiniGUI Extended 1.x with MinGW and Harbour" } ;
+                     , { DefineExtended1+DefineMinGW+DefineXHarbour   , "MiniGUI Extended 1.x with MinGW and xHarbour" } ;
                      , { DefineOohg3+DefineBorland+DefineHarbour      , "OOHG 3.x with Borland C and Harbour" } ;
                      , { DefineOohg3+DefineBorland+DefineXHarbour     , "OOHG 3.x with Borland C and xHarbour" } ;
                      , { DefineOohg3+DefineMinGW+DefineHarbour        , "OOHG 3.x with MinGW and Harbour" } ;

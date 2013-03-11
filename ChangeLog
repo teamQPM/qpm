@@ -8,6 +8,14 @@
  * See "How to format your ChangeLog entries" in howtosvn.txt file.
  */
 
+2013-03-10 20:51:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * ./qpm.exe
+   * ./qpm_autoproject.qpm
+     * Updated to version 05_03_10.
+   * ./QPM.prg
+     ! C compiler in use is not shown correctly when Minigui Extended 1.x and
+       MinGW are selected in Project Options.
+
 2013-01-21 12:35:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * ./qpm.exe
      * Updated to version 05_03_09.
