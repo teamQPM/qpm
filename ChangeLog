@@ -8,6 +8,10 @@
  * See "How to format your ChangeLog entries" in howtosvn.txt file.
  */
 
+2013-03-16 17:55:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * ./US_UPX.EXE
+     * Updated to version 3.09w.
+
 2013-03-10 20:51:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * ./qpm.exe
    * ./qpm_autoproject.qpm
