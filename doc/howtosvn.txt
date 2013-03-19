@@ -10,7 +10,7 @@ HOW TO USE THE SVN
 
      http://tortoisesvn.net/downloads.html
      http://subversion.tigris.org
-   
+
 [02] If you don´t have one, create a sourceforge user:
 
      https://sourceforge.net/user/registration
@@ -18,11 +18,11 @@ HOW TO USE THE SVN
 [03] Create a folder in your local disk (e.g. DUMMY) and do a complete
      checkout to get the whole tree.  When it's done you can move the qpm
      folder created by the checkout to any place you like.
-    
+
 [04] To upload changes you'll need Developer (RW) status.  Please ask one
      of the Administrators to grant you such status. Note that the process
      of granting this status is not an automatic process.  Be patient.
-    
+
 [05] Do the changes needed (remember to keep track of your changes in a
      temporary file so you can later update the ChangeLog).
      Always do your development using your local SVN tree. Do not modify
@@ -44,13 +44,13 @@ HOW TO USE THE SVN
 [10] Do a commit.  When the SVN pops up a window with the changed files,
      check if all of them are referred in the ChangeLog.  If not, abort
      the commit, make the corrections and start over.
-     
+
 [11] Paste the ChangeLog's entries to the SVN window, save and exit.
      * ALWAYS * add a ChangeLog entry when committing changes.
 
 [12] Wait until the process is finished and check that ended without errors.
      If there are any errors, make de corrections and start over.
-     
+
 
 HOW TO FORMAT YOUR CHANGELOG ENTRIES
 ====================================
@@ -138,7 +138,10 @@ Para configurar el ambiente de trabajo por primera vez:
     "Borland C Folder" and "xHarbour Folder" so they point to the folders
     created in step [2].
 
-[4] Download the SVN from https://qpm.svn.sourceforge.net/svnroot/qpm
+[4] Download the SVN from:
+    svn://svn.code.sf.net/p/qpm/code (read/write access using SVN client)
+    https://svn.code.sf.net/p/qpm/code/ (read access using web browser)
+    svn+ssh://USERNAME@svn.code.sf.net/p/qpm/code (read/write access using SVN client)
 
 [5] If you didn´t downloaded the SVN in C:\QPM folder, you must modify, build
     and execute ./HelpQPM/SHG_Change.prg to change the path to files used in
@@ -159,7 +162,7 @@ HOW TO BUILD A NEW RELEASE
 [3] Change version, release and build to one less than the release to build.
     E.G. if you want to build 5.01.10, set QPM to 5.01.09
     if you want to build 5.01.00, set QPM to 5.00.9999
-    
+
 [4] Build the project.
 
 [5] To publish a patch or upgrade release:
