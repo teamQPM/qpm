@@ -8,6 +8,14 @@
  * See "How to format your ChangeLog entries" in howtosvn.txt file.
  */
 
+2013-03-18 23:15:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * ./changelog
+   * doc/howtosvn.txt
+     * Repository changed to:
+       svn://svn.code.sf.net/p/qpm/code (read access using SVN client)
+       https://svn.code.sf.net/p/qpm/code/ (read access using web browser)
+       svn+ssh://USERNAME@svn.code.sf.net/p/qpm/code (write access using SVN client)
+
 2013-03-16 17:55:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * ./US_UPX.EXE
      * Updated to version 3.09w.
