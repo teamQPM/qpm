@@ -29,7 +29,7 @@
 #include "minigui.ch"
 #include <QPM.ch>
 
-#define QPM_VERSION_NUMBER "05 03 10"
+#define QPM_VERSION_NUMBER "05 03 11"
 #define DEF_INCLUDE_GT  '#include "QPM_gt.ch"'
 
 Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PAR_cP9,PAR_cP10,PAR_cP11,PAR_cP12,PAR_cP13,PAR_cP14,PAR_cP15,PAR_cP16,PAR_cP17,PAR_cP18,PAR_cP19,PAR_cP20)
@@ -4093,8 +4093,9 @@ Return US_GetFile( { {"Dbf's files (*.DBF)",'*.dbf'} } , "Select Dbf's Files" , 
 
 Function QPM_GetExcludeFilesLIB()
    local RetVal := {}
+   local vAux
    QPM_CargoLibraries()
-   Private vAux[ len( &( 'vLibDefault'+GetSuffix() ) ) ]
+   vAux := array( len( &( 'vLibDefault'+GetSuffix() ) ) )
    If Empty ( PUB_cProjectFolder )
       MsgStop('You must open project first')
       Return ( {} )
@@ -9957,10 +9958,10 @@ Return .T.
 
 Function GlobalSearch2( cType , Txt , nRow , bFunc , bDbfData , DBFcBaseType , nRecordBase , nRecordFound , cFieldNameFound , nFieldPosFound , cFieldTxtFound )
    Local Pos := 0 , MemoAux := "" , x := 0 , LineAux := "" , nWord := 1 , vAux := {} , nPosition := 1
-   Local bSalir := .F. , bDigit:=.F. , nPosAux
+   Local bSalir := .F. , nPosAux
    Local bFound := .F. , bChangeImg
    Local aStru , DbfName , DbfCode
-   Local cFieldBase := "" , nPosBase := 0 , columnValid := .F. , AuxPosition := 0
+   Local cFieldBase := "" , nPosBase := 0 , columnValid := .F. , AuxPosition
    DEFAULT bFunc       TO .F.
    DEFAULT bDbfData    TO .F.
    DEFAULT DBFcBaseType TO "R" /* R : Record , F : Filed , P : Position */
@@ -10073,7 +10074,6 @@ Function GlobalSearch2( cType , Txt , nRow , bFunc , bDbfData , DBFcBaseType , n
                      endif
                   Next x
                else
-                //bDigit := IsDigit( Txt )
                 //nRecordBase := val( US_Word( GetProperty( "VentanaMain" , "GDbfFiles" , "Cell" , nRow , NCOLDBFSEARCH ) , 1 ) )
                 //nRecordBase := VentanaMain.DbfBrowse.value
                   cFieldBase  := ""
@@ -10631,7 +10631,7 @@ Return RPTA
 
 Function CargoSearch()
    aeval( vLastSearch , { |x| VentanaMain.CSearch.AddItem( x ) } )
-Return
+Return nil
 
 Function QPM_DefinoMainMenu()
    Local i , cAux , r_Null

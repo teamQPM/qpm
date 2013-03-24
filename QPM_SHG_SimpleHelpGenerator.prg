@@ -450,29 +450,24 @@ Function SHG_Generate( cBase , bGenHtml , PUB_cSecu , cWWW )
       Return .F.
    endif
    if bGenHtml
-      if empty( SHG_HtmlFolder )
+      if Empty( SHG_HtmlFolder )
          SHG_HtmlFolder := cDirOutHTML
-      endif
-      if !US_IsDirectory( SHG_HtmlFolder )
+      Endif
+      If Empty( Folder := GetFolder( "Select Folder for HTML Output", SHG_HtmlFolder ) )
+         MsgInfo( "Folder required for HTML output." )
+         Return .F.
+      Else
+         SHG_HtmlFolder := Folder
+      Endif
+      if ! US_IsDirectory( SHG_HtmlFolder )
          bCreateDir := .T.
          cCreateDir := SHG_HtmlFolder
-         if !US_CreateFolder( SHG_HtmlFolder )
+         if ! US_CreateFolder( SHG_HtmlFolder )
             US_Log( "Unable to create HTML folder: " + SHG_HtmlFolder )
             return .F.
          endif
       endif
-      If !Empty( Folder := GetFolder( "Select Folder for HTML Output" , if( empty( SHG_HtmlFolder ) , PUB_cProjectFolder + DEF_SLASH + "HtmlHelp" , SHG_HtmlFolder ) ) )
-         SHG_HtmlFolder := Folder
-         if bCreateDir .and. !( upper( SHG_HtmlFolder ) == upper( cCreateDir ) )
-            US_DirRemoveLoop( cCreateDir , 2 )
-         endif
-      else
-         if bCreateDir
-            US_DirRemoveLoop( cCreateDir , 2 )
-         endif
-         MsgInfo( "Folder required for output type CHM and HTML." )
-         Return .F.
-      endif
+      cDirOutHTML := SHG_HtmlFolder
    endif
    cDllWithCancel := alltrim( memoline( memoread( PUB_cQPM_Folder + DEF_SLASH + "itcc_dll.tmp" ) , 254 , 1 ) )
    cOldDll := SHG_PutDllItcc()
