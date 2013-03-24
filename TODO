@@ -11,6 +11,23 @@
 /******************************************************************************/
 
 Assigned to: <nobody>
+Added by...: 2013-02-24 03:37:00 UTC-0200 Fernando Yurisich <fyurisich>
+Status.....: Open.
+Details....: Al usar QPM en modo comando, si la compilación da errores no los
+             guarda en el log. Esto está bueno para usarlo conjuntamente con
+             la opción –EXIT y -RUN. Si todo va ok, se cierra QMP y se ejecuta
+             el EXE. Si hay un error, avisa y abro el log con los errores.
+
+/******************************************************************************/
+
+Assigned to: <nobody>
+Added by...: 2013-03-24 03:37:00 UTC-0200 Fernando Yurisich <fyurisich>
+Status.....: Open.
+Details....: Cuando se marca la opción UPX, se deshabilita el autorun.
+
+/******************************************************************************/
+
+Assigned to: <nobody>
 Added by...: 2012-02-29 19:53:00 UTC-0300 Fernando Yurisich <fyurisich>
 Status.....: Open.
 Details....: Agregar opción para que la búsqueda global se haga sobre los
@@ -77,12 +94,6 @@ Details....: In HELP:
              - Spell check and refresh images from topic
              - Update KEYS
                "¿Cómo construir MiniGui para xHarbour?"
-
-/******************************************************************************/
-Assigned to: <nobody>
-Added by...: 2011-09-19 22:30:00 UTC-0300 Fernando Yurisich <fyurisich>
-Status.....: Open.
-Details....: Add ./doc/dirstruc.txt file describing the SVN structure.
 
 /******************************************************************************/
 Assigned to: <nobody>
