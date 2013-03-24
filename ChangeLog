@@ -8,6 +8,23 @@
  * See "How to format your ChangeLog entries" in howtosvn.txt file.
  */
 
+2013-03-24 02:33:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * ./FuentesComunes/US_HB.prg
+     * Changed DirRemove() by HB_DIRDELETE().
+   * ./QPM_SHG_SimpleHelpGenerator.prg
+     ! Changed the way SHG_HtmlFolder is handled when HTML output is selected,
+       so a RTE is avoided when the project folder is changed.
+   * ./QPM.ch
+     + Added some memvar declarations to pacify some -w3 Harbour warnings.
+   * ./QPM.prg
+     * Updated to version 05_03_11.
+     * Changed private variable to local.
+     * Some -w3 Harbour warnings cleared.
+   * ./qpm_autoproject.qpm
+     * Updated to version 05_03_11.
+   * ./qpm.exe
+     * Updated to version 05_03_11.
+
 2013-03-18 23:15:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * ./changelog
    * doc/howtosvn.txt

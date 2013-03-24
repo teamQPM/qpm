@@ -2257,7 +2257,7 @@ Function US_DirRemove( dire )
             endif
          endif
       next f
-      if DirRemove( dire ) != 0
+      if HB_DIRDELETE( dire ) != 0
          reto := .F.
       endif
    endif
