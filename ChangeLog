@@ -8,7 +8,13 @@
  * See "How to format your ChangeLog entries" in howtosvn.txt file.
  */
 
-2013-03-24 03:15:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2013-03-24 03:40:00 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   + doc/dirstruc.txt
+     + Added a description of the folders used by QPM project.
+   * ./TODO
+     * Updated.
+
+2013-03-24 03:15:00 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
    - ./RTFtoHTML/VB rtf2htm3
      - Folder deleted.
    - ./RTFtoHTML/VB rtf2htm3/*.*
@@ -16,7 +22,7 @@
        deleted.
    + ./RTFtoHTML/VB_rtf2htm3.zip
 
-2013-03-24 02:33:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2013-03-24 02:33:00 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * ./FuentesComunes/US_HB.prg
      * Changed DirRemove() by HB_DIRDELETE().
    * ./QPM_SHG_SimpleHelpGenerator.prg
@@ -33,7 +39,7 @@
    * ./qpm.exe
      * Updated to version 05_03_11.
 
-2013-03-18 23:15:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2013-03-18 23:15:00 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * ./changelog
    * doc/howtosvn.txt
      * Repository changed to:
@@ -41,11 +47,11 @@
        https://svn.code.sf.net/p/qpm/code/ (read access using web browser)
        svn+ssh://USERNAME@svn.code.sf.net/p/qpm/code (write access using SVN client)
 
-2013-03-16 17:55:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2013-03-16 17:55:00 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * ./US_UPX.EXE
      * Updated to version 3.09w.
 
-2013-03-10 20:51:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2013-03-10 20:51:00 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * ./qpm.exe
    * ./qpm_autoproject.qpm
      * Updated to version 05_03_10.
