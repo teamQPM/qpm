@@ -378,6 +378,28 @@ Function ProjectSettingsSave()
 Return .T.
 
 Function WinPSettingsInit()
+   Prj_ExtraRunCmdFINAL        := Prj_ExtraRunCmdFINAL
+   Prj_ExtraRunProjQPM         := Prj_ExtraRunProjQPM
+   Prj_ExtraRunCmdEXE          := Prj_ExtraRunCmdEXE
+   Prj_ExtraRunCmdFREE         := Prj_ExtraRunCmdFREE
+   Prj_ExtraRunCmdQPMParm      := Prj_ExtraRunCmdQPMParm
+   Prj_ExtraRunCmdEXEParm      := Prj_ExtraRunCmdEXEParm
+   Prj_ExtraRunCmdFREEParm     := Prj_ExtraRunCmdFREEParm
+   Prj_ExtraRunType            := Prj_ExtraRunType
+   Prj_ExtraRunQPMRadio        := Prj_ExtraRunQPMRadio
+   Prj_ExtraRunQPMLite         := Prj_ExtraRunQPMLite
+   Prj_ExtraRunQPMForceFull    := Prj_ExtraRunQPMForceFull
+   Prj_ExtraRunQPMRun          := Prj_ExtraRunQPMRun
+   Prj_ExtraRunQPMButtonRun    := Prj_ExtraRunQPMButtonRun
+   Prj_ExtraRunQPMClear        := Prj_ExtraRunQPMClear
+   Prj_ExtraRunQPMLog          := Prj_ExtraRunQPMLog
+   Prj_ExtraRunQPMLogOnlyError := Prj_ExtraRunQPMLogOnlyError
+   Prj_ExtraRunQPMAutoExit     := Prj_ExtraRunQPMAutoExit
+   Prj_ExtraRunExeWait         := Prj_ExtraRunExeWait
+   Prj_ExtraRunExePause        := Prj_ExtraRunExePause
+   Prj_ExtraRunFreeWait        := Prj_ExtraRunFreeWait
+   Prj_ExtraRunFreePause       := Prj_ExtraRunFreePause
+
    SwitchRadioOutputCopyMove()
    SwitchRadioOutputRename()
 Return .T.
