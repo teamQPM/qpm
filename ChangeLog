@@ -8,6 +8,14 @@
  * See "How to format your ChangeLog entries" in howtosvn.txt file.
  */
 
+2013-03-25 17:45:00 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * ./QPM_ProjectSettings.prg
+     ! Fixed: extra run options are lost when saving project settings.
+   * ./QPM.prg
+   * ./qpm_autoproject.qpm
+   * ./qpm.exe
+     * Updated to version 05_03_12.
+
 2013-03-24 03:40:00 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
    + doc/dirstruc.txt
      + Added a description of the folders used by QPM project.
