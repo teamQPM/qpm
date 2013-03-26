@@ -21,13 +21,6 @@ Details....: Al usar QPM en modo comando, si la compilación da errores no los
 /******************************************************************************/
 
 Assigned to: <nobody>
-Added by...: 2013-03-24 03:37:00 UTC-0200 Fernando Yurisich <fyurisich>
-Status.....: Open.
-Details....: Cuando se marca la opción UPX, se deshabilita el autorun.
-
-/******************************************************************************/
-
-Assigned to: <nobody>
 Added by...: 2012-02-29 19:53:00 UTC-0300 Fernando Yurisich <fyurisich>
 Status.....: Open.
 Details....: Agregar opción para que la búsqueda global se haga sobre los
@@ -81,13 +74,6 @@ Details....: US_FileDate( cRecoveryFile ) is not returning DATE value.
 /******************************************************************************/
 
 Assigned to: <nobody>
-Added by...: 2011-10-17 15:00:00 UTC-0300 Fernando Yurisich <fyurisich>
-Status.....: Open.
-Details....: F3 key not released when application is minimized.
-
-/******************************************************************************/
-
-Assigned to: <nobody>
 Added by...: 2011-09-23 15:00:00 UTC-0300 Fernando Yurisich <fyurisich>
 Status.....: Open.
 Details....: In HELP:
@@ -111,7 +97,7 @@ Details....: Localize entire proyect.
 Assigned to: <nobody>
 Added by...: 2011-09-22 22:30:00 UTC-0300 Fernando Yurisich <fyurisich>
 Status.....: Open.
-Details....: Migrate to last version of OOHG.
+Details....: Migrate to OOHG.
              Some function must be rewritten completely because rely on certain
              features of Extended version. Example: the editor in SHG module.
 
