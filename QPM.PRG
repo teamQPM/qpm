@@ -38,6 +38,9 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
 
    PUBLIC PUB_cQPM_Version := QPM_VERSION_NUMBER
 
+   PUBLIC BUILD_IN_PROGRESS := .F.
+   PUBLIC MAIN_HAS_FOCUS := .F.
+
    PUBLIC PUB_QPM_bHigh := .F.
    QPM_SetProcessPriority( "HIGH" )
 
@@ -929,9 +932,9 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
            TITLE PUB_cQPM_Title+' [ Project not opened !!! ]' ;
            ICON "QPM" ;
            MAIN ;
-           ON GOTFOCUS DefinoWindowsHotKeys( "VentanaMain" ) ;
-           ON LOSTFOCUS LiberoWindowsHotKeys( "VentanaMain" ) ;
-           ON MINIMIZE LiberoWindowsHotKeys( "VentanaMain" ) ;
+           ON GOTFOCUS DefinoWindowsHotKeys(.T.) ;
+           ON LOSTFOCUS LiberoWindowsHotKeys(.T.) ;
+           ON MINIMIZE LiberoWindowsHotKeys(.T.) ;
            ON INIT MainInitAutoRun() ;
            ON RELEASE if( !PUB_bLite , SaveEnvironment() , ) ;
            ON INTERACTIVECLOSE QPM_Exit()
@@ -3078,12 +3081,9 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
                       TOOLTIP 'Exit QPM and Return to caller'
                       ONCLICK if( !PUB_bIsProcessing , DoMethod( "VentanaLite" , "release" ) , )
               END BUTTON
-
-              ON KEY F5     ACTION QPM_Run( bRunParm )
-
       END WINDOW
 
-      CENTER   WINDOW VentanaLite
+      CENTER WINDOW VentanaLite
 
       VentanaMain.Minimize()
 
@@ -4264,6 +4264,7 @@ Function QPM_OpenProject( cParmProjectFileName )
    EndIf
    PUB_cThisFolder := US_FileNameOnlyPath( cProjectFileName )
 Return QPM_Wait( "QPM_OpenProject2()" , "Opening..." )
+
 Function QPM_OpenProject2()
    Local cForceRecomp := " " , LOC_nOpenError := 0
    DoMethod( "VentanaMain" , "GPrgFiles" , "DisableUpdate" )
@@ -5359,6 +5360,16 @@ Function QPM_Build2()
    Local cResourceFileName
    Local CCOMPILERFOLDER := US_ShortName( &( "Gbl_T_C_"+GetMiniGuiSuffix()+GetCppSuffix() ) ) + DEF_SLASH + "BIN"
 
+   BUILD_IN_PROGRESS := .T.
+   LiberoWindowsHotKeys(.F.)
+
+   if Empty ( PUB_cProjectFile )
+      MsgStop('You must save project first !!!')
+      BUILD_IN_PROGRESS := .F.
+      DefinoWindowsHotKeys( .F. )
+      Return .T.
+   EndIf
+
    QPM_CargoLibraries()
 
    Private UOW                := dtos(date())+US_strCero(int(seconds()),5)
@@ -5386,6 +5397,8 @@ Function QPM_Build2()
 
    if bRunApp
       MsgStop( 'Program Running !!!!, you need to stop or kill the process before rebuild.' )
+      BUILD_IN_PROGRESS := .F.
+      DefinoWindowsHotKeys( .F. )
       Return .F.
    endif
 
@@ -5422,6 +5435,8 @@ Function QPM_Build2()
       if GetProperty( "VentanaMain" , "Check_Reimp" , "Value" )
          if !file( ChgPathToReal( GetProperty( "VentanaMain" , "TReimportLib" , "Value" ) ) )
             MsgStop( 'Library for ReImport Not Found: ' + ChgPathToReal( GetProperty( "VentanaMain" , "TReimportLib" , "Value" ) ) )
+            BUILD_IN_PROGRESS := .F.
+            DefinoWindowsHotKeys( .F. )
             Return .F.
          endif
          cInputReImpName := US_ShortName( ChgPathToReal( GetProperty( "VentanaMain" , "TReimportLib" , "Value" ) ) )
@@ -5433,6 +5448,8 @@ Function QPM_Build2()
    if OutputExt() == "LIB" .and. at( "-" , US_ShortName( PUB_cProjectFolder ) ) > 0
       MsgStop( "Utility TLIB.exe of Borland don't work correctly with a file path with slash characters ('-')." + HB_OsNewLine() + ;
                "Please, change name of Project Folder: " + PUB_cProjectFolder )
+      BUILD_IN_PROGRESS := .F.
+      DefinoWindowsHotKeys( .F. )
       Return .F.
    endif
 
@@ -5440,6 +5457,8 @@ Function QPM_Build2()
       at( ")" , US_ShortName( PUB_cProjectFolder ) ) > 0
       MsgStop( "Utility US_MAKE.exe don't work correctly with a file path with this characters: ( )" + HB_OsNewLine() + ;
                "Please, change name folders." )
+      BUILD_IN_PROGRESS := .F.
+      DefinoWindowsHotKeys( .F. )
       Return .F.
    endif
    
@@ -5475,10 +5494,6 @@ Function QPM_Build2()
       otherwise
          US_Log( "Error 5288" )
    endcase
-   if Empty ( PUB_cProjectFile )
-      MsgStop('You must save project first !!!')
-      Return .T.
-   EndIf
 
 // NOTE: added support for MINGW and Extended: the resource file in Extended with MinGW is named hmg.rc
    if Getminiguisuffix() == DefineExtended1 .and. IsMinGW
@@ -5490,45 +5505,73 @@ Function QPM_Build2()
    do case
       case cOutputRename == "NEWNAME" .and. Empty ( Prj_Text_OutputRenameNewName )
          MsgStop ( 'Name for New Output file Name is empty.  Look at ' + PUB_MenuPrjOptions + ' of Settings menu.')
+         BUILD_IN_PROGRESS := .F.
+         DefinoWindowsHotKeys( .F. )
          Return .F.
       case !( cOutputCopyMove == "NONE" ) .and. Empty ( Prj_Text_OutputCopyMoveFolder )
          MsgStop ( 'Folder for Copy / Move output file is empty.  Look at ' + PUB_MenuPrjOptions + ' of Settings menu.')
+         BUILD_IN_PROGRESS := .F.
+         DefinoWindowsHotKeys( .F. )
          Return .F.
       case !( cOutputCopyMove == "NONE" ) .and. !US_IsDirectory( Prj_Text_OutputCopyMoveFolder )
          MsgStop ( 'Folder for Copy / Move not valid: ' + Prj_Text_OutputCopyMoveFolder + '. Look at ' + PUB_MenuPrjOptions + ' of Settings menu.')
+         BUILD_IN_PROGRESS := .F.
+         DefinoWindowsHotKeys( .F. )
          Return .F.
       case Empty ( PUB_cProjectFolder )
          MsgStop ( 'Project Folder is empty. Look at ' + PagePRG)
+         BUILD_IN_PROGRESS := .F.
+         DefinoWindowsHotKeys( .F. )
          Return .F.
       case Empty ( GetProperty( "VentanaMain" , "GPrgFiles" , "Cell" , 1 , NCOLPRGFULLNAME ) )
          MsgStop ( 'PRG List is empty. Look at ' + PagePRG)
+         BUILD_IN_PROGRESS := .F.
+         DefinoWindowsHotKeys( .F. )
          Return .F.
       case !Empty( PUB_cProjectFolder ) .and. !US_IsDirectory( US_ShortName( PUB_cProjectFolder ) )
          MsgStop ( 'ProjectFolder '+PUB_cProjectFolder+' not found !!!!. Look at ' + PagePRG)
+         BUILD_IN_PROGRESS := .F.
+         DefinoWindowsHotKeys( .F. )
          Return .F.
       case empty( GetMiniGuiFolder() )
          MsgStop ( 'Folder for Minigui in ' + vSuffix[ AScan( vSuffix , { |x| x[1] == GetSuffix() } ) ][2] + ' is empty. Look at ' + PUB_MenuGblOptions + ' of Settings menu.')
+         BUILD_IN_PROGRESS := .F.
+         DefinoWindowsHotKeys( .F. )
          Return .F.
       case empty( GetCppFolder() )
          MsgStop ( 'Folder for C++ Compiler in ' + vSuffix[ AScan( vSuffix , { |x| x[1] == GetSuffix() } ) ][2] + ' is empty. Look at ' + PUB_MenuGblOptions + ' of Settings menu.')
+         BUILD_IN_PROGRESS := .F.
+         DefinoWindowsHotKeys( .F. )
          Return .F.
       case !QPM_IsXHarbour() .and. empty( GetHarbourFolder() )
          MsgStop ( 'Folder for Harbour in ' + vSuffix[ AScan( vSuffix , { |x| x[1] == GetSuffix() } ) ][2] + ' is empty. Look at ' + PUB_MenuGblOptions + ' of Settings menu.')
+         BUILD_IN_PROGRESS := .F.
+         DefinoWindowsHotKeys( .F. )
          Return .F.
       case QPM_IsXHarbour() .and. empty( GetHarbourFolder() )
          MsgStop ( 'Folder for xHarbour in ' + vSuffix[ AScan( vSuffix , { |x| x[1] == GetSuffix() } ) ][2] + ' is empty. Look at ' + PUB_MenuGblOptions + ' of Settings menu.')
+         BUILD_IN_PROGRESS := .F.
+         DefinoWindowsHotKeys( .F. )
          Return .F.
       case !Empty(  GetMiniGuiFolder() ) .and. !QPM_DirValid( US_ShortName( GetMiniGuiFolder() ) , GetMiniGuiSuffix()+GetCppSuffix() )
          MsgStop ( 'Minigui Folder is not valid. Look at ' + PUB_MenuGblOptions + ' of Settings menu.')
+         BUILD_IN_PROGRESS := .F.
+         DefinoWindowsHotKeys( .F. )
          Return .F.
       case !Empty(  GetCppFolder() ) .and. !QPM_DirValid( US_ShortName( GetCppFolder() ) , "C_"+GetMiniGuiSuffix()+GetCppSuffix() )
          MsgStop ( 'C++ Compiler Folder is not valid. Look at ' + PUB_MenuGblOptions + ' of Settings menu.')
+         BUILD_IN_PROGRESS := .F.
+         DefinoWindowsHotKeys( .F. )
          Return .F.
       case !Empty(  GetHarbourFolder() ) .and. !QPM_IsXHarbour() .and. !QPM_DirValid( US_ShortName( GetHarbourFolder() ) , GetSuffix() )
          MsgStop ( 'Harbour Folder is not valid. Look at ' + PUB_MenuGblOptions + ' of Settings menu.')
+         BUILD_IN_PROGRESS := .F.
+         DefinoWindowsHotKeys( .F. )
          Return .F.
       case !Empty(  GetHarbourFolder() ) .and. QPM_IsXHarbour() .and. !QPM_DirValid( US_ShortName( GetHarbourFolder() ) , GetSuffix() )
          MsgStop ( 'xHarbour Folder is not valid. Look at ' + PUB_MenuGblOptions + ' of Settings menu.')
+         BUILD_IN_PROGRESS := .F.
+         DefinoWindowsHotKeys( .F. )
          Return .F.
    endcase
 
@@ -5540,12 +5583,16 @@ Function QPM_Build2()
       endif
       if ascan( PRGFILES , { |x| US_Upper( US_FileNameOnlyName( x ) ) == US_Upper( US_FileNameOnlyName( alltrim(GetProperty( "VentanaMain" , "GPrgFiles" , "Cell" , i , NCOLPRGFULLNAME )) ) ) } ) > 0
          MsgStop( "Duplicate file name '"+US_FileNameOnlyName( alltrim(GetProperty( "VentanaMain" , "GPrgFiles" , "Cell" , i , NCOLPRGFULLNAME )) )+"' in diferent directories or with diferent extensions (.PRG and .C)."+HB_OsNewLine()+"The object generated for the second file will override the object of the previous file." )
+         BUILD_IN_PROGRESS := .F.
+         DefinoWindowsHotKeys( .F. )
          Return .F.
       endif
       aadd ( PRGFILES , ChgPathToReal( GetProperty( "VentanaMain" , "GPrgFiles" , "Cell" , i , NCOLPRGFULLNAME ) ) )
 
       if ! file( PRGFILES[ i ] )
          MsgStop( "File '" + PRGFILES[ i ] + "' not found !!!" )
+         BUILD_IN_PROGRESS := .F.
+         DefinoWindowsHotKeys( .F. )
          Return .F.
       endif
       
@@ -5565,6 +5612,8 @@ Function QPM_Build2()
    if !bAutoExit
       if bIsCpp .and. GetCppSuffix() == DefinePelles
          MsgStop( "Error, your project include C++ files and Pelles C does not support it." )
+         BUILD_IN_PROGRESS := .F.
+         DefinoWindowsHotKeys( .F. )
          Return .F.
       endif
       if bIsCpp .and. bWarningCpp .and. GetCppSuffix() == DefineMinGW
@@ -5578,11 +5627,15 @@ Function QPM_Build2()
    For i := 1 To VentanaMain.GPanFiles.ItemCount
       if ascan( PanFILES , { |x| US_Upper( US_FileNameOnlyNameAndExt( x ) ) == US_Upper( US_FileNameOnlyNameAndExt( alltrim(GetProperty( "VentanaMain" , "GPanFiles" , "Cell" , i , NCOLPANFULLNAME )) ) ) } ) > 0
          MsgStop( "Duplicate Form name '"+US_FileNameOnlyNameAndExt( alltrim(GetProperty( "VentanaMain" , "GPanFiles" , "Cell" , i , NCOLPANFULLNAME )) )+"' in diferents directories"+HB_OsNewLine()+"Process canceled." )
+         BUILD_IN_PROGRESS := .F.
+         DefinoWindowsHotKeys( .F. )
          Return .F.
       endif
       aadd ( PANFILES , ChgPathToReal( GetProperty( "VentanaMain" , "GPanFiles" , "Cell" , i , NCOLPANFULLNAME ) ) )
       if !file( PanFILES[ i ] )
          MsgStop( "Form '"+PanFILES[ i ]+"' not found" )
+         BUILD_IN_PROGRESS := .F.
+         DefinoWindowsHotKeys( .F. )
          Return .F.
       endif
    Next i
@@ -5592,11 +5645,15 @@ Function QPM_Build2()
    For i := 1 To VentanaMain.GHeaFiles.ItemCount
       if ascan( HeaFILES , { |x| US_Upper( US_FileNameOnlyNameAndExt( x ) ) == US_Upper( US_FileNameOnlyNameAndExt( alltrim(GetProperty( "VentanaMain" , "GHeaFiles" , "Cell" , i , NCOLHEAFULLNAME )) ) ) } ) > 0
          MsgStop( "Duplicate Header name '"+US_FileNameOnlyNameAndExt( alltrim(GetProperty( "VentanaMain" , "GHeaFiles" , "Cell" , i , NCOLHEAFULLNAME )) )+"' in diferents directories"+HB_OsNewLine()+"Process canceled." )
+         BUILD_IN_PROGRESS := .F.
+         DefinoWindowsHotKeys( .F. )
          Return .F.
       endif
       aadd ( HeaFILES , ChgPathToReal( GetProperty( "VentanaMain" , "GHeaFiles" , "Cell" , i , NCOLHEAFULLNAME ) ) )
       if !file( HeaFILES[ i ] )
          MsgStop( "Header (Include) '"+HeaFILES[ i ]+"' not found." )
+         BUILD_IN_PROGRESS := .F.
+         DefinoWindowsHotKeys( .F. )
          Return .F.
       endif
    Next i
@@ -5607,6 +5664,8 @@ Function QPM_Build2()
       aadd ( vLibIncludeFiles , ChgPathToReal( US_WordSubStr( GetProperty( "VentanaMain" , "GIncFiles" , "Cell" , i , NCOLINCFULLNAME ) , 3 ) ) )
       if ! file( vLibIncludeFiles[ i ] )
          MsgStop( "File '" + vLibIncludeFiles[ i ] + "' not found !!!" )
+         BUILD_IN_PROGRESS := .F.
+         DefinoWindowsHotKeys( .F. )
          Return .F.
       endif
    Next i
@@ -5725,10 +5784,8 @@ Function QPM_Build2()
    SetProperty( "VentanaMain" , "BVerChange" , "enabled" , .F. )
    SetProperty( "VentanaMain" , "OverrideCompile" , "enabled" , .F. )
    SetProperty( "VentanaMain" , "OverrideLink" , "enabled" , .F. )
-   RELEASE KEY F4 OF VentanaMain
    if cOutputType == "SRCEXE"
       SetProperty( "VentanaMain" , "run" , "enabled" , .F. )
-      RELEASE KEY F5 OF VentanaMain
    endif
 
    PUB_bIsProcessing := .t.
@@ -5743,6 +5800,8 @@ Function QPM_Build2()
    SetCurrentFolder(PUB_cProjectFolder)
    if !US_CreateFolder( PUB_cProjectFolder + DEF_SLASH + GetObjName() )
       US_Log( "Unable to create OBJ folder: " + PUB_cProjectFolder + DEF_SLASH + GetObjName() )
+      BUILD_IN_PROGRESS := .F.
+      DefinoWindowsHotKeys( .F. )
       Return .F.
    endif
    SetCurrentFolder(PUB_cQPM_Folder)
@@ -6476,6 +6535,8 @@ Function QPM_Build2()
             Next i
          otherwise
             MsgInfo( "Invalid Output Type: "+cOutputType )
+            BUILD_IN_PROGRESS := .F.
+            DefinoWindowsHotKeys( .F. )
             Return .F.
       endcase
 
@@ -6878,7 +6939,9 @@ Function QPM_Build2()
            'Echo OK > ' + US_ShortName(PUB_cProjectFolder) + DEF_SLASH + '_'+PUB_cSecu+'End.Txt' + Hb_OsNewLine() + ;
            ':END' + Hb_OsNewLine() )
       otherwise
-         US_Log( "Error in Compiler C type.  QPME06607" )
+         US_Log( "Error in Compiler C type." )
+         BUILD_IN_PROGRESS := .F.
+         DefinoWindowsHotKeys( .F. )
          Return .F.
    endcase
 
@@ -7181,14 +7244,12 @@ La existencia del ejecutable se hace en BUILD.BAT teniendo en cuenta el COPY/MOV
          SetProperty( "VentanaMain" , "EraseALL" , "enabled" , .T. )
          SetProperty( "VentanaMain" , "EraseOBJ" , "enabled" , .T. )
          SetProperty( "VentanaMain" , "open" , "enabled" , .T. )
-         ON KEY F4 OF VentanaMain ACTION QPM_Build()
          SetProperty( "VentanaMain" , "build" , "enabled" , .T. )
          SetProperty( "VentanaMain" , "BVerChange" , "enabled" , .T. )
          SetProperty( "VentanaMain" , "OverrideCompile" , "enabled" , .T. )
          SetProperty( "VentanaMain" , "OverrideLink" , "enabled" , .T. )
          if cOutputType == "SRCEXE"
             SetProperty( "VentanaMain" , "run" , "enabled" , .T. )
-            ON KEY F5 OF VentanaMain ACTION QPM_Run( bRunParm )
          endif
 
          DO EVENTS
@@ -7257,6 +7318,9 @@ La existencia del ejecutable se hace en BUILD.BAT teniendo en cuenta el COPY/MOV
          if ( bBuildRun .or. PUB_bForceRunFromMsgOk ) .and. ( estado == "OK" .or. estado == "WARNING" )
             QPM_Run( bRunParm )
          endif
+
+         BUILD_IN_PROGRESS := .F.
+         DefinoWindowsHotKeys( .F. )
       else
          lenAux := US_FileSize( PUB_cProjectFolder + DEF_SLASH + '_'+PUB_cSecu+'Progress.Log' )
          if lenAux > ProgLength
@@ -7613,22 +7677,33 @@ Function LibPos( item , pos )
    VentanaMain.GIncFiles.setfocus
 Return .t.
 
-Function DefinoWindowsHotKeys( ven )
-   ON KEY F1 OF &( ven ) ACTION US_DisplayHelpTopic( GetActiveHelpFile() , 1 )
-   ON KEY F2 OF &( ven ) ACTION QPM_OpenProject()
-   ON KEY F3 OF &( ven ) ACTION QPM_SaveProject()
-   ON KEY F4 OF &( ven ) ACTION QPM_Build()
-// ON KEY F5 OF &( ven ) ACTION QPM_Run( bRunParm )
-   ON KEY F10 OF &( ven ) ACTION QPM_Exit()
+Function DefinoWindowsHotKeys( w_foco )
+   LiberoWindowsHotKeys( w_foco )
+   If w_foco
+     MAIN_HAS_FOCUS := .T.
+   EndIf
+   If MAIN_HAS_FOCUS
+     ON KEY F1 OF VentanaMain ACTION US_DisplayHelpTopic( GetActiveHelpFile() , 1 )
+     ON KEY F2 OF VentanaMain ACTION QPM_OpenProject()
+     ON KEY F3 OF VentanaMain ACTION QPM_SaveProject()
+     ON KEY F4 OF VentanaMain ACTION QPM_Build()
+     If ! BUILD_IN_PROGRESS .and. cOutputType == "SRCEXE"
+        ON KEY F5 OF VentanaMain ACTION QPM_Run( bRunParm )
+     EndIf
+     ON KEY F10 OF VentanaMain ACTION QPM_Exit()
+   EndIf
 Return .T.
 
-Function LiberoWindowsHotKeys( ven )
-   RELEASE KEY F1 OF &( ven )
-   RELEASE KEY F2 OF &( ven )
-   RELEASE KEY F3 OF &( ven )
-   RELEASE KEY F4 OF &( ven )
-// RELEASE KEY F5 OF &( ven )
-   RELEASE KEY F10 OF &( ven )
+Function LiberoWindowsHotKeys( w_foco )
+   RELEASE KEY F1 OF VentanaMain
+   RELEASE KEY F2 OF VentanaMain
+   RELEASE KEY F3 OF VentanaMain
+   RELEASE KEY F4 OF VentanaMain
+   RELEASE KEY F5 OF VentanaMain
+   RELEASE KEY F10 OF VentanaMain
+   If w_foco
+     MAIN_HAS_FOCUS := .F.
+   EndIf
 Return .T.
 
 Function TranslateLog(Log)
@@ -7939,28 +8014,28 @@ Function ActOutputTypeSet()
          bBuildRun := bBuildRunBack
          SetProperty( "VentanaMain" , "bDropDownBandR" , "enabled" , .T. )
          SetProperty( "VentanaMain" , "run" , "enabled" , .T. )
-         ON KEY F5 OF VentanaMain ACTION QPM_Run( bRunParm )
+         DefinoWindowsHotKeys( .F. )
       case Prj_Radio_OutputType == DEF_RG_LIB
          cOutputType := "SRCLIB"
          bBuildRunBack := bBuildRun
          bBuildRun := .F.
          SetProperty( "VentanaMain" , "bDropDownBandR" , "enabled" , .F. )
          SetProperty( "VentanaMain" , "run" , "enabled" , .F. )
-         RELEASE KEY F5 OF VentanaMain
+         DefinoWindowsHotKeys( .F. )
   //  case Prj_Radio_OutputType == DEF_RG_DLL
   //     cOutputType := "SRCDLL"
   //     bBuildRunBack := bBuildRun
   //     bBuildRun := .F.
   //     SetProperty( "VentanaMain" , "bDropDownBandR" , "enabled" , .F. )
   //     SetProperty( "VentanaMain" , "run" , "enabled" , .F. )
-  //     RELEASE KEY F5 OF VentanaMain
+  //     DefinoWindowsHotKeys( .F. )
       case Prj_Radio_OutputType == DEF_RG_IMPORT
          cOutputType := "DLLLIB"
          bBuildRunBack := bBuildRun
          bBuildRun := .F.
          SetProperty( "VentanaMain" , "bDropDownBandR" , "enabled" , .F. )
          SetProperty( "VentanaMain" , "run" , "enabled" , .F. )
-         RELEASE KEY F5 OF VentanaMain
+         DefinoWindowsHotKeys( .F. )
    endcase
 Return .T.
 

@@ -8,6 +8,15 @@
  * See "How to format your ChangeLog entries" in howtosvn.txt file.
  */
 
+2013-03-26 00:12:00 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * ./TODO
+     * Updated.
+   * ./QPM.prg
+     ! Fixed: Fx keys not released when QPM lost focus.
+   * ./qpm_autoproject.qpm
+   * ./qpm.exe
+     * Updated to version 05_03_13.
+
 2013-03-25 17:45:00 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * ./QPM_ProjectSettings.prg
      ! Fixed: extra run options are lost when saving project settings.
