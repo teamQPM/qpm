@@ -29,7 +29,7 @@
 #include "minigui.ch"
 #include <QPM.ch>
 
-#define QPM_VERSION_NUMBER "05 03 12"
+#define QPM_VERSION_NUMBER "05 03 14"
 #define DEF_INCLUDE_GT  '#include "QPM_gt.ch"'
 
 Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PAR_cP9,PAR_cP10,PAR_cP11,PAR_cP12,PAR_cP13,PAR_cP14,PAR_cP15,PAR_cP16,PAR_cP17,PAR_cP18,PAR_cP19,PAR_cP20)
@@ -139,6 +139,7 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
    PUBLIC vXRefPrgFmg              := {}
    PUBLIC cLastProjectFolder       := ""
    PUBLIC bLogActivity             := .F.
+   PUBLIC PUB_DeleteAux            := .T.
    PUBLIC PUB_vAutoRun             := {}
    PUBLIC RunControlFile           := {}
    PUBLIC bRunApp                  := .F.
@@ -7265,33 +7266,28 @@ La existencia del ejecutable se hace en BUILD.BAT teniendo en cuenta el COPY/MOV
             US_Log( "Boton Build sigue disable" , .F. )
          endif
          // fin BUG ======================================================================================
-// COPIAR ARCHIVOS GENERADOS
-         DELETE FILE ( PUB_cProjectFolder + DEF_SLASH + OutName + '.TDS' )
-//       QPM_CopyFile( PUB_cProjectFolder + DEF_SLASH + '_' + PUB_cSecu + 'Progress.Log', 'C:\Progress.Log' )
-         DELETE FILE ( PUB_cProjectFolder + DEF_SLASH + '_' + PUB_cSecu + 'Progress.Log' )
-         DELETE FILE ( PUB_cProjectFolder + DEF_SLASH + TopName + '.RES' )
-//       QPM_CopyFile( CCOMPILERFOLDER + DEF_SLASH + '_' + PUB_cSecu + 'Temp.Log', 'C:\CComp_Temp.Log' )
-         DELETE FILE ( CCOMPILERFOLDER + DEF_SLASH + '_' + PUB_cSecu + 'Temp.Log' )
-//       QPM_CopyFile( US_ShortName( PUB_cProjectFolder ) + DEF_SLASH + '_' + PUB_cSecu + 'Temp.Log', 'C:\Proj_Temp.Log' )
-         DELETE FILE ( US_ShortName( PUB_cProjectFolder ) + DEF_SLASH + '_' + PUB_cSecu + 'Temp.Log' )
-//       DELETE FILE ( SubStr( CCOMPILERFOLDER , 1 , 2 ) + DEF_SLASH + '_' + PUB_cSecu + 'Temp.Log' ) /* Lo genera REDIR pero no se porque */
-         DELETE FILE ( PUB_cProjectFolder + DEF_SLASH + '_' + PUB_cSecu + 'Temp.Bc' )
-//       QPM_CopyFile( PUB_cProjectFolder + DEF_SLASH + '_' + PUB_cSecu + 'End.Txt', 'C:\End.Txt' )
-         DELETE FILE ( PUB_cProjectFolder + DEF_SLASH + '_' + PUB_cSecu + 'End.Txt' )
-         DELETE FILE ( CCOMPILERFOLDER + DEF_SLASH + TopName + '.MAP' )
-         DELETE FILE ( CCOMPILERFOLDER + DEF_SLASH + '_' + PUB_cSecu + 'Script.ld' )
-         // los dos siguientes solo aparecen desde pendrive
-         DELETE FILE ( PUB_cQPM_Folder + DEF_SLASH + TopName + '.MAP' )
-         DELETE FILE ( PUB_cQPM_Folder + DEF_SLASH + '_' + PUB_cSecu + 'Script.ld' )
-         //
-//       QPM_CopyFile( PUB_cProjectFolder + DEF_SLASH + '_' + PUB_cSecu + 'Build.Bat', 'C:\Build.Bat' )
-         DELETE FILE ( PUB_cProjectFolder + DEF_SLASH + '_' + PUB_cSecu + 'Build.Bat' )
-         DELETE FILE ( PUB_cProjectFolder + DEF_SLASH + "_Temp.RC" )
 
-         // INI for PellesC and xHarbour
-//       DELETE FILE ( PUB_cProjectFolder + DEF_SLASH + OutName + '.exp' )
-//       DELETE FILE ( PUB_cProjectFolder + DEF_SLASH + OutName + '.lib' )
-         // END for PellesC
+         if PUB_DeleteAux
+            DELETE FILE ( PUB_cProjectFolder + DEF_SLASH + OutName + '.TDS' )
+            DELETE FILE ( PUB_cProjectFolder + DEF_SLASH + '_' + PUB_cSecu + 'Progress.Log' )
+            DELETE FILE ( PUB_cProjectFolder + DEF_SLASH + TopName + '.RES' )
+            DELETE FILE ( CCOMPILERFOLDER + DEF_SLASH + '_' + PUB_cSecu + 'Temp.Log' )
+            DELETE FILE ( US_ShortName( PUB_cProjectFolder ) + DEF_SLASH + '_' + PUB_cSecu + 'Temp.Log' )
+            DELETE FILE ( SubStr( CCOMPILERFOLDER , 1 , 2 ) + DEF_SLASH + '_' + PUB_cSecu + 'Temp.Log' ) /* Lo genera REDIR pero no se porque */
+            DELETE FILE ( PUB_cProjectFolder + DEF_SLASH + '_' + PUB_cSecu + 'Temp.Bc' )
+            DELETE FILE ( PUB_cProjectFolder + DEF_SLASH + '_' + PUB_cSecu + 'End.Txt' )
+            DELETE FILE ( CCOMPILERFOLDER + DEF_SLASH + TopName + '.MAP' )
+            DELETE FILE ( CCOMPILERFOLDER + DEF_SLASH + '_' + PUB_cSecu + 'Script.ld' )
+            DELETE FILE ( PUB_cProjectFolder + DEF_SLASH + '_' + PUB_cSecu + 'Build.Bat' )
+            DELETE FILE ( PUB_cProjectFolder + DEF_SLASH + "_Temp.RC" )
+            // los dos siguientes solo aparecen desde pendrive
+            DELETE FILE ( PUB_cQPM_Folder + DEF_SLASH + TopName + '.MAP' )
+            DELETE FILE ( PUB_cQPM_Folder + DEF_SLASH + '_' + PUB_cSecu + 'Script.ld' )
+            // los dos siguiente solo aparecen para PellesC y xHarbour
+            DELETE FILE ( PUB_cProjectFolder + DEF_SLASH + OutName + '.exp' )
+            DELETE FILE ( PUB_cProjectFolder + DEF_SLASH + OutName + '.lib' )
+         endif
+
 //       TabChange( "FILES" )   // esto es para que refresque los botones frizados durante el build
 
          if estado == "OK" .or. estado == "WARNING"
@@ -10801,6 +10797,8 @@ Function QPM_DefinoMainMenu()
                    ITEM "Record Activity in Log "+PUB_cQPM_Folder+DEF_SLASH + "QPM.log" ACTION ( bLogActivity := !bLogActivity , VentanaMain.MLog.Checked := bLogActivity ) NAME MLog
                    ITEM "Clear Log File "+PUB_cQPM_Folder+DEF_SLASH + "QPM.log" ACTION ClearLog()
                    ITEM "View Log File "+PUB_cQPM_Folder+DEF_SLASH + "QPM.log" ACTION ViewLog()
+                   SEPARATOR
+                   ITEM "Do not delete auxiliary files" ACTION ( PUB_DeleteAux := ! PUB_DeleteAux, VentanaMain.MDelete.Checked := ! PUB_DeleteAux ) NAME MDelete
                    SEPARATOR
                    ITEM "Go To QPM Home Site: "+PUB_cQPM_Support_Link            ACTION ShellExecute(0, "open", "rundll32.exe", "url.dll,FileProtocolHandler " + PUB_cQPM_Support_Link    , ,1)
                    ITEM '&Mail to QPM_Support <'+PUB_cQPM_Support_eMail+'>...' ACTION ShellExecute(0, "open", "rundll32.exe", ;

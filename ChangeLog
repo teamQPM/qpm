@@ -8,6 +8,14 @@
  * See "How to format your ChangeLog entries" in howtosvn.txt file.
  */
 
+2013-04-09 20:53:00 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * ./QPM.prg
+     + Added "Do not delete auxiliary files" option to "Only for support"
+       menu. Prevents QPM from deleting auxiliary files used during build.
+   * ./qpm_autoproject.qpm
+   * ./qpm.exe
+     * Updated to version 05_03_14.
+
 2013-03-26 00:12:00 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * ./TODO
      * Updated.
