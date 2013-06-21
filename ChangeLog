@@ -8,6 +8,42 @@
  * See "How to format your ChangeLog entries" in howtosvn.txt file.
  */
 
+2013-06-20 20:53:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * ./FuentesComunes/US_HB.prg
+     * Changed comment about return values of US_FileChar26Zap() function.
+   * ./QPM.prg
+     ! US_FileChar26Zap() function result was being compared with 2 instead
+       of -1 to check for errors during processing.
+     - Calls to US_FileChar26Zap() deleted.
+   * ./QPM_Functions.PRG
+     * MEMOWRIT() changed by HB_MEMOWRIT() in QPM_MemoWrit() to get rid of
+       EOF marker, so US_FileChar26Zap() is not needed anymore.
+   * ./us_res.prg
+     - Deleted unneeded comment.
+     * MEMOWRIT() changed by HB_MEMOWRIT() in Main()
+     - Calls to US_FileChar26Zap() deleted.
+   * ./QPM_SHG_AssistImage.prg
+     - Call to US_FileChar26Zap() deleted.
+   * ./QPM_SHG_AssistLink.prg
+     - Call to US_FileChar26Zap() deleted.
+   * ./QPM_SHG_SimpleHelpGenerator.prg
+     - Deleted unneeded comment.
+     - Calls to US_FileChar26Zap() deleted.
+   * ./qpm_autoproject.qpm
+   * ./qpm.exe
+     * Updated to version 05_03_15.
+   * Note: if when you build an app, using BCC and HMG Extended 2.2.3a or
+     upper, the building ends with "Error: Unresolved external 'TransparentBlt'
+     referenced from C:\MINIGUI\LIB\MINIGUI.LIB|c_image", please update
+     your BCC32.CFG and ILINK32.CFG (BCC configuration files located at the
+     same folder than BCC32.EXE and ILINK32.EXE) so they look like:
+     for BCC32.CFG:
+       -I"C:\Borland\BCC55\include"
+       -L"C:\Borland\Bcc55\lib;C:\Borland\Bcc55\lib\psdk"
+       -lj"C:\Borland\Bcc55\lib"
+     for ILINK32.CFG:
+       -L"C:\Borland\Bcc55\lib;C:\Borland\Bcc55\lib\psdk"
+
 2013-04-09 20:53:00 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * ./QPM.prg
      + Added "Do not delete auxiliary files" option to "Only for support"

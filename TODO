@@ -11,6 +11,14 @@
 /******************************************************************************/
 
 Assigned to: <nobody>
+Added by...: 2013-06-05 09:24:00 UTC-0300 Fernando Yurisich <fyurisich>
+Status.....: Open.
+Details....: No se genera el ejecutable cuando algún nombre de archivo o
+             carpeta contiene el caracter &.
+
+/******************************************************************************/
+
+Assigned to: <nobody>
 Added by...: 2013-02-24 03:37:00 UTC-0200 Fernando Yurisich <fyurisich>
 Status.....: Open.
 Details....: Al usar QPM en modo comando, si la compilación da errores no los

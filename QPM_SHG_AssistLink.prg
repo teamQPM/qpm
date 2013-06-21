@@ -95,7 +95,7 @@ Function SHG_LinkGenerateList( cIn , cTopic )
    enddo
    if bCambio
       QPM_MemoWrit( cIn , cMemoHtm )
-      US_FileChar26Zap( cIn )
+//      US_FileChar26Zap( cIn )
    endif
 Return .T.
 

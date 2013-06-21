@@ -529,7 +529,7 @@ Function SHG_Generate( cBase , bGenHtml , PUB_cSecu , cWWW )
    DbSeek( 1 )
    SetMGWaitTxt( "Generating foot for pages..." )
    QPM_MemoWrit( cDirOutCHM + DEF_SLASH + "Footer.rtf" , SHG_MEMO )
-   US_FileChar26Zap( cDirOutCHM + DEF_SLASH + "Footer.rtf" )
+//   US_FileChar26Zap( cDirOutCHM + DEF_SLASH + "Footer.rtf" )
    SHG_RtfToHtml( cDirOutCHM + DEF_SLASH + "Footer.rtf" , cDirOutCHM + DEF_SLASH + "Footer.htm" , "Global Foot" )
    cFooterHTML := SHG_HTML_GetFooter( cDirOutCHM + DEF_SLASH + "Footer.htm" )
    DBSeek( 3 )
@@ -581,7 +581,7 @@ Function SHG_Generate( cBase , bGenHtml , PUB_cSecu , cWWW )
       endif
       aadd( vFiles , { alltrim( SHG_TYPE ) , strtran( strtran( alltrim( SHG_TOPIC ) , "<" , "&lt;" ) , ">" , "&gt;" ) , cName + ".htm" , cDirOutCHM + DEF_SLASH + cName + ".Inx" , cPrev , cTop , cNext } )
       QPM_MemoWrit( cDirOutCHM + DEF_SLASH + cName + ".rtf" , SHG_Memo )
-      US_FileChar26Zap( cDirOutCHM + DEF_SLASH + cName + ".rtf" )
+//      US_FileChar26Zap( cDirOutCHM + DEF_SLASH + cName + ".rtf" )
    // SetMGWaitTxt( "Generating: " + cName + ".htm ..." )
       SetMGWaitTxt( "Generating: " + alltrim( SHG_TOPIC ) + " ..." )
       SHG_RtfToHtml( cDirOutCHM + DEF_SLASH + cName + ".rtf" , cDirOutCHM + DEF_SLASH + cName + ".htm" , alltrim( SHG_TOPIC ) )
@@ -711,7 +711,7 @@ Function SHG_HTML_AddHeader( cFile , cHeader )
 // MemoAux := cHeader + substr( MemoAux , at( "</head><body>" , MemoAux ) + 13 )
    MemoAux := cHeader + MemoAux
    QPM_MemoWrit( cFile , MemoAux )
-   US_FileChar26Zap( cFile )
+//   US_FileChar26Zap( cFile )
 Return .T.
 
 Function SHG_HTML_AddFooter( cFile , cFooter )
@@ -719,7 +719,7 @@ Function SHG_HTML_AddFooter( cFile , cFooter )
 // MemoAux := substr( MemoAux , 1 , rat( "</body></html>" , MemoAux ) - 1 ) + cFooter
    MemoAux := MemoAux + cFooter
    QPM_MemoWrit( cFile , MemoAux )
-   US_FileChar26Zap( cFile )
+//   US_FileChar26Zap( cFile )
 Return .T.
 
 Function SHG_RtfToHtml( cIn , cOut , cTopic )
@@ -1578,7 +1578,7 @@ Function SHG_GenHtmlIndexHTML( cIndexName , cDirSalida , vTopic , cClaves , cWWW
    cLinea := cLinea + '</body>' + HB_OsNewLine() + ;
       '</html>'
    QPM_MemoWrit( cDirSalida + DEF_SLASH + US_FileNameOnlyName( cIndexName ) + "_FrameLeft.htm" , cLinea )
-   US_FileChar26Zap( cDirSalida + DEF_SLASH + US_FileNameOnlyName( cIndexName ) + "_FrameLeft.htm" )
+//   US_FileChar26Zap( cDirSalida + DEF_SLASH + US_FileNameOnlyName( cIndexName ) + "_FrameLeft.htm" )
    /* */
    cLinea := '<html>' + HB_OsNewLine() + ;
       '<head><meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">' + HB_OsNewLine() + ;
@@ -1605,7 +1605,7 @@ Function SHG_GenHtmlIndexHTML( cIndexName , cDirSalida , vTopic , cClaves , cWWW
       '</frameset>' + HB_OsNewLine() + ;
       '</html>'
    QPM_MemoWrit( cDirSalida + DEF_SLASH + "_Index_" + cIndexName , cLinea )
-   US_FileChar26Zap( cDirSalida + DEF_SLASH + "_Index_" + cIndexName )
+//   US_FileChar26Zap( cDirSalida + DEF_SLASH + "_Index_" + cIndexName )
 Return .T.
 
 Function SHG_GenHtmlIndexJava( cIndexName , cDirSalida , vTopic , cClaves , cWWW )
@@ -1658,8 +1658,8 @@ Function SHG_GenHtmlIndexJava( cIndexName , cDirSalida , vTopic , cClaves , cWWW
    cLinea := cLinea + '</body>' + HB_OsNewLine() + ;
       '</html>'
    QPM_MemoWrit( cDirSalida + DEF_SLASH + US_FileNameOnlyName( cIndexName ) + "_FrameLeft_Java.htm" , cLinea )
-   US_FileChar26Zap( cDirSalida + DEF_SLASH + US_FileNameOnlyName( cIndexName ) + "_FrameLeft_Java.htm" )
-   /* */
+//   US_FileChar26Zap( cDirSalida + DEF_SLASH + US_FileNameOnlyName( cIndexName ) + "_FrameLeft_Java.htm" )
+   
    cLinea := '<html>' + HB_OsNewLine() + ;
       '<head><meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">' + HB_OsNewLine() + ;
       '   <meta name="keywords" ' + HB_OsNewLine() + ;
@@ -1685,7 +1685,7 @@ Function SHG_GenHtmlIndexJava( cIndexName , cDirSalida , vTopic , cClaves , cWWW
       '</frameset>' + HB_OsNewLine() + ;
       '</html>'
    QPM_MemoWrit( cDirSalida + DEF_SLASH + "_Index_" + US_FileNameOnlyName( cIndexName ) + "_Java." + US_FileNameOnlyExt( cIndexName ) , cLinea )
-   US_FileChar26Zap( cDirSalida + DEF_SLASH + "_Index_" + US_FileNameOnlyName( cIndexName ) + "_Java." + US_FileNameOnlyExt( cIndexName ) )
+//   US_FileChar26Zap( cDirSalida + DEF_SLASH + "_Index_" + US_FileNameOnlyName( cIndexName ) + "_Java." + US_FileNameOnlyExt( cIndexName ) )
 Return .T.
 
 Function SHG_StrTran( cFullName )
@@ -1767,7 +1767,7 @@ Function SHG_Commands( cIn , cPos )
    if !empty( cMemoOut ) .and. !bError
       cMemoOut := cMemoOut + substr( cMemoIn , nBase )
       QPM_MemoWrit( cIn , cMemoOut )
-      US_FileChar26Zap( cIn )
+//      US_FileChar26Zap( cIn )
    endif
 Return .T.
 

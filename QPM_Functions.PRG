@@ -408,7 +408,7 @@ Function QPM_MemoWrit( p1 , p2 , bMute )
    if bMute == NIL
       bMute := .F.
    endif
-   if !MemoWrit( p1 , p2 )
+   if ! HB_MemoWrit( p1 , p2 )
       if !bMute
          US_Log( "Error in write file to: " + p1 + HB_OsNewLine() + "Requered from: " + US_StackList() )
       endif
