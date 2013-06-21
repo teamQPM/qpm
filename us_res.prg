@@ -129,7 +129,6 @@ FUNCTION MAIN(cP1,cP2,cP3,cP4,cP5,cP6,cP7,cP8,cP9,cP10,cP11,cP12,cP13,cP14,cP15,
                   cMemoSal := cMemoSal + if( nInx > 1 , HB_OsNewLine() , "" ) + "// " + replicate( "=" , 80 )
                   cMemoSal := cMemoSal + HB_OsNewLine() + "// INI - Include file: " + cFileInclude
                   cMemoSal := cMemoSal + HB_OsNewLine() + "// " + replicate( "-" , 80 )
-            //    US_FileChar26zap( cFileInclude )   // esto lo suspendi porque me cambia la fecha del archivo, habria que probar con US_MemoChar26Zap, o sea revisar que esa funcion haga lo que tiene que hacer
                   cMemoSal := cMemoSal + HB_OsNewLine() + MemoRead( cFileInclude )
                   cMemoSal := cMemoSal + HB_OsNewLine() + "// " + replicate( "-" , 80 )
                   cMemoSal := cMemoSal + HB_OsNewLine() + "// END - Include file: " + cFileInclude
@@ -140,11 +139,11 @@ FUNCTION MAIN(cP1,cP2,cP3,cP4,cP5,cP6,cP7,cP8,cP9,cP10,cP11,cP12,cP13,cP14,cP15,
             endif
          enddo
          fclose( hFiIn )
-         memowrit( cFileOut , cMemoSal )
-         US_FileChar26Zap( cFileOut )
+         hb_memowrit( cFileOut , cMemoSal )
+//         US_FileChar26Zap( cFileOut )
          if len( cMemoError ) > 0
-            memowrit( cFileOut+".Error" , "Processing Include of RC file: " + cFileIn + HB_OsNewLine() + cMemoError )
-            US_FileChar26Zap( cFileOut+".Error" )
+            hb_memowrit( cFileOut+".Error" , "Processing Include of RC file: " + cFileIn + HB_OsNewLine() + cMemoError )
+//            US_FileChar26Zap( cFileOut+".Error" )
          endif
       else
          QPM_Log( "US_Res 555E: Error open Input File "+cFileIn )

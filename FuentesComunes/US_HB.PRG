@@ -2286,7 +2286,7 @@ Return .F.
 *// $ini funcion para eliminar el caracter x'1A' que deja el memowrit al final del campo generado
 *// Retorna: 0 si el caracter no existe (no hace nada)
 *//          1 si pudo reemplazar el caracter
-*//          2 si tubo algun problema
+*//          -1 si se produjo algun problema
 *//------------------------------------------------------------------------\\*
 Function US_FileChar26Zap( cFile )
    Local nHndIn , reto := -1 , cAux := " " , cLinea := Space( 1024 ) , nLeidosTotal := 0 , nLenFileOut := 0 , nLeidosLoop := 0

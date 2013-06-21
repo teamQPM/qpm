@@ -29,7 +29,7 @@
 #include "minigui.ch"
 #include <QPM.ch>
 
-#define QPM_VERSION_NUMBER "05 03 14"
+#define QPM_VERSION_NUMBER "05 03 15"
 #define DEF_INCLUDE_GT  '#include "QPM_gt.ch"'
 
 Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PAR_cP9,PAR_cP10,PAR_cP11,PAR_cP12,PAR_cP13,PAR_cP14,PAR_cP15,PAR_cP16,PAR_cP17,PAR_cP18,PAR_cP19,PAR_cP20)
@@ -6838,9 +6838,13 @@ Function QPM_Build2()
    DO EVENTS
 
    QPM_MemoWrit( PUB_cProjectFolder + DEF_SLASH + '_'+PUB_cSecu+'Temp.Bc' , Out )
-   if US_FileChar26Zap( PUB_cProjectFolder + DEF_SLASH + '_'+PUB_cSecu+'Temp.Bc' ) == 2
+/*
+   Unneeded because of change in QPM_MemoWrit()
+
+   if US_FileChar26Zap( PUB_cProjectFolder + DEF_SLASH + '_'+PUB_cSecu+'Temp.Bc' ) == -1
       US_Log( "Error in US_FileChar26Zap for file: " + PUB_cProjectFolder + DEF_SLASH + '_'+PUB_cSecu+'Temp.Bc' )
    endif
+*/
 
    if IsMinGW
       MakeName := US_ShortName(PUB_cQPM_Folder) + If( !( Right( PUB_cQPM_Folder , 1 ) == DEF_SLASH ) , DEF_SLASH , '' ) + 'US_MAKE.EXE'
@@ -6869,9 +6873,11 @@ Function QPM_Build2()
             else
                QPM_Memowrit( US_ShortName(GetMiniGuiFolder()) + DEF_SLASH + "include" + DEF_SLASH + "QPM_gt.ch" , "REQUEST HB_GT_WIN_DEFAULT" )
             endif
-            if US_FileChar26Zap( US_ShortName(GetMiniGuiFolder()) + DEF_SLASH + "include" + DEF_SLASH + "minigui.ch" ) == 2
+/*
+            if US_FileChar26Zap( US_ShortName(GetMiniGuiFolder()) + DEF_SLASH + "include" + DEF_SLASH + "minigui.ch" ) == -1
                US_Log( "Error in US_FileChar26Zap for file: " + US_ShortName(GetMiniGuiFolder()) + DEF_SLASH + "include" + DEF_SLASH + "minigui.ch" )
             endif
+*/
          endif
 
 // NOTE: added support for MINGW and Extended: the resource file in Extended with MinGW is named hmg.rc
