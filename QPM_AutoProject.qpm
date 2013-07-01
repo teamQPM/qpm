@@ -1,5 +1,5 @@
-VERSION 05 03 14
-PRJ_VERSION 05 03 0015
+VERSION 05 03 15
+PRJ_VERSION 05 03 0016
 PROJECTFOLDER <ThisFolder>
 LASTLIBFOLDERM1BH 
 LASTLIBFOLDERM1BX 
@@ -132,4 +132,3 @@ INCLUDEE1BH *Last* C:\MiniGUI203\Harbour\lib\hbziparc.lib
 INCLUDEE1BX *Last* C:\MiniGUI203\xHarbour\lib\calldll.lib 
 INCLUDEE1BX *Last* C:\MiniGUI203\xHarbour\lib\zlib.lib 
 EXCLUDEE1BH ziparchive.lib
-
