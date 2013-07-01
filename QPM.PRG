@@ -29,7 +29,7 @@
 #include "minigui.ch"
 #include <QPM.ch>
 
-#define QPM_VERSION_NUMBER "05 03 15"
+#define QPM_VERSION_NUMBER "05 03 16"
 #define DEF_INCLUDE_GT  '#include "QPM_gt.ch"'
 
 Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PAR_cP9,PAR_cP10,PAR_cP11,PAR_cP12,PAR_cP13,PAR_cP14,PAR_cP15,PAR_cP16,PAR_cP17,PAR_cP18,PAR_cP19,PAR_cP20)
@@ -6589,7 +6589,7 @@ Function QPM_Build2()
                   endif
                case cOutputType == "SRCDLL"
                   Out := Out + PUB_cCharTab + '$(US_MSG_EXE) $(DIR_PROJECT)' + DEF_SLASH + '_'+PUB_cSecu+'Progress.Log -MSG:Making Dynamic Library (DLL) ' + cOutputNameDisplay + ' ...' + Hb_OsNewLine()
-                  Out := Out + PUB_cCharTab + '$(ILINK_EXE) ' + if( !bConsole , ' -Gn -Tpd '+If(PUB_bDebugActive,' -ap ',' -aa ') , ' -x -Gn -Tpd ' ) +' -L'+ US_ShortName(GetCppFolder()) + DEF_SLASH + 'LIB' + ' @_'+PUB_cSecu+'Script.ld' + Hb_OsNewLine()
+                  Out := Out + PUB_cCharTab + '$(ILINK_EXE) ' + if( !bConsole , ' -Gn -Tpd '+If(PUB_bDebugActive,' -ap ',' -aa ') , ' -x -Gn -Tpd ' ) +' -L'+ US_ShortName(GetCppFolder()) + DEF_SLASH + 'LIB;' + US_ShortName(GetCppFolder()) + DEF_SLASH + 'LIB' + DEF_SLASH + 'PSDK' + ' @_'+PUB_cSecu+'Script.ld' + Hb_OsNewLine()
                case cOutputType == "SRCLIB"
                   Out := Out + PUB_cCharTab + '$(US_MSG_EXE) $(DIR_PROJECT)' + DEF_SLASH + '_'+PUB_cSecu+'Progress.Log -MSG:Making Library ' + cOutputNameDisplay + ' ...' + Hb_OsNewLine()
                   Out := Out + PUB_cCharTab + '$(TLIB_EXE) @_'+PUB_cSecu+'Script.ld' + Hb_OsNewLine()
@@ -6600,14 +6600,14 @@ Function QPM_Build2()
             do case
                case cOutputType == "SRCEXE"
                   Out := Out + PUB_cCharTab + '$(US_MSG_EXE) $(DIR_PROJECT)' + DEF_SLASH + '_'+PUB_cSecu+'Progress.Log -MSG:Linking to make ' + cOutputNameDisplay + ' ...' + Hb_OsNewLine()
-                  Out := Out + PUB_cCharTab + '$(ILINK_EXE) ' + if( !bConsole , ' -Gn -Tpe '+If(PUB_bDebugActive,' -ap ',' -aa ') , ' -x -Gn ' ) +' $(USER_FLAGS_LINK) -L'+ US_ShortName(GetCppFolder()) + DEF_SLASH + 'LIB' + ' @_'+PUB_cSecu+'Script.ld' + Hb_OsNewLine()
+                  Out := Out + PUB_cCharTab + '$(ILINK_EXE) ' + if( !bConsole , ' -Gn -Tpe '+If(PUB_bDebugActive,' -ap ',' -aa ') , ' -x -Gn ' ) +' $(USER_FLAGS_LINK) -L'+ US_ShortName(GetCppFolder()) + DEF_SLASH + 'LIB;' + US_ShortName(GetCppFolder()) + DEF_SLASH + 'LIB' + DEF_SLASH + 'PSDK' + ' @_'+PUB_cSecu+'Script.ld' + Hb_OsNewLine()
                   if bUpx
                      Out := Out + PUB_cCharTab + '$(US_MSG_EXE) $(DIR_PROJECT)' + DEF_SLASH + '_'+PUB_cSecu+'Progress.Log -MSG:Compressing ' + cOutputNameDisplay + ' with UPX ...' + Hb_OsNewLine()
                      Out := Out + PUB_cCharTab + '$(US_UPX_EXE) ' + cUpxOpt + ' ' + cOutputName + Hb_OsNewLine()
                   endif
                case cOutputType == "SRCDLL"
                   Out := Out + PUB_cCharTab + '$(US_MSG_EXE) $(DIR_PROJECT)' + DEF_SLASH + '_'+PUB_cSecu+'Progress.Log -MSG:Making Dynamic Library (DLL) ' + cOutputNameDisplay + ' ...' + Hb_OsNewLine()
-                  Out := Out + PUB_cCharTab + '$(ILINK_EXE) ' + if( !bConsole , ' -Gn -Tpd '+If(PUB_bDebugActive,' -ap ',' -aa ') , ' -x -Gn -Tpd ' ) +' -L'+ US_ShortName(GetCppFolder()) + DEF_SLASH + 'LIB' + ' @_'+PUB_cSecu+'Script.ld' + Hb_OsNewLine()
+                  Out := Out + PUB_cCharTab + '$(ILINK_EXE) ' + if( !bConsole , ' -Gn -Tpd '+If(PUB_bDebugActive,' -ap ',' -aa ') , ' -x -Gn -Tpd ' ) +' -L'+ US_ShortName(GetCppFolder()) + DEF_SLASH + 'LIB;' + US_ShortName(GetCppFolder()) + DEF_SLASH + 'LIB' + DEF_SLASH + 'PSDK' + ' @_'+PUB_cSecu+'Script.ld' + Hb_OsNewLine()
                case cOutputType == "SRCLIB"
                   Out := Out + PUB_cCharTab + '$(US_MSG_EXE) $(DIR_PROJECT)' + DEF_SLASH + '_'+PUB_cSecu+'Progress.Log -MSG:Making Library ' + cOutputNameDisplay + ' ...' + Hb_OsNewLine()
                   // La siguiente linea tiene el string *AMPERSAND* porque en el sistema operativo Windows 2003 Server Enterprise Edition si codifico el & no funciona el PIPE (>)
@@ -6766,7 +6766,7 @@ Function QPM_Build2()
             // Out := Out + PUB_cCharTab + '$(PAUSE_EXE)' + Hb_OsNewLine()
             //
             Out := Out + PUB_cCharTab + '$(US_MSG_EXE) $(DIR_PROJECT)' + DEF_SLASH + '_'+PUB_cSecu+'Progress.Log -MSG:Making DLL from Modules Object of Library (.' + US_Word( cConvert , 1 ) + ') in ' + cOutputNameDisplay + ' ...' + Hb_OsNewLine()
-            Out := Out + PUB_cCharTab + '$(ILINK_EXE) ' + if( !bConsole , ' -Gn -Tpd '+If(PUB_bDebugActive,' -ap ',' -aa ') , ' -x -Gn -Tpd ' ) +' -L'+ US_ShortName(GetCppFolder()) + DEF_SLASH + 'LIB '
+            Out := Out + PUB_cCharTab + '$(ILINK_EXE) ' + if( !bConsole , ' -Gn -Tpd '+If(PUB_bDebugActive,' -ap ',' -aa ') , ' -x -Gn -Tpd ' ) +' -L'+ US_ShortName(GetCppFolder()) + DEF_SLASH + 'LIB;' + US_ShortName(GetCppFolder()) + DEF_SLASH + 'LIB' + DEF_SLASH + 'PSDK'
             For i:=1 to MLCount( MemoObj , 254 )
                Out := Out + ' ' + US_ShortNAme(OBJFOLDER) + DEF_SLASH + alltrim( memoline( MemoObj , 254 , i ) ) + ".obj"
             next

@@ -8,10 +8,21 @@
  * See "How to format your ChangeLog entries" in howtosvn.txt file.
  */
 
+2013-07-01 19:31:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * ./Changelog
+     - Deleted note in previous entry.
+     * Some filenames corrected.
+   * ./QPM.PRG
+     + Added support for libs in PSDK folder when using BCC, because in
+       some cases BCC configuration files are ignored.
+   * ./QPM_AutoProject.qpm
+   * ./QPM.EXE
+     * Updated to version 05_03_16.
+
 2013-06-20 20:53:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * ./FuentesComunes/US_HB.prg
      * Changed comment about return values of US_FileChar26Zap() function.
-   * ./QPM.prg
+   * ./QPM.PRG
      ! US_FileChar26Zap() function result was being compared with 2 instead
        of -1 to check for errors during processing.
      - Calls to US_FileChar26Zap() deleted.
@@ -29,44 +40,33 @@
    * ./QPM_SHG_SimpleHelpGenerator.prg
      - Deleted unneeded comment.
      - Calls to US_FileChar26Zap() deleted.
-   * ./qpm_autoproject.qpm
-   * ./qpm.exe
+   * ./QPM_AutoProject.qpm
+   * ./QPM.EXE
      * Updated to version 05_03_15.
-   * Note: if when you build an app, using BCC and HMG Extended 2.2.3a or
-     upper, the building ends with "Error: Unresolved external 'TransparentBlt'
-     referenced from C:\MINIGUI\LIB\MINIGUI.LIB|c_image", please update
-     your BCC32.CFG and ILINK32.CFG (BCC configuration files located at the
-     same folder than BCC32.EXE and ILINK32.EXE) so they look like:
-     for BCC32.CFG:
-       -I"C:\Borland\BCC55\include"
-       -L"C:\Borland\Bcc55\lib;C:\Borland\Bcc55\lib\psdk"
-       -lj"C:\Borland\Bcc55\lib"
-     for ILINK32.CFG:
-       -L"C:\Borland\Bcc55\lib;C:\Borland\Bcc55\lib\psdk"
 
 2013-04-09 20:53:00 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
-   * ./QPM.prg
+   * ./QPM.PRG
      + Added "Do not delete auxiliary files" option to "Only for support"
        menu. Prevents QPM from deleting auxiliary files used during build.
-   * ./qpm_autoproject.qpm
-   * ./qpm.exe
+   * ./QPM_AutoProject.qpm
+   * ./QPM.EXE
      * Updated to version 05_03_14.
 
 2013-03-26 00:12:00 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * ./TODO
      * Updated.
-   * ./QPM.prg
+   * ./QPM.PRG
      ! Fixed: Fx keys not released when QPM lost focus.
-   * ./qpm_autoproject.qpm
-   * ./qpm.exe
+   * ./QPM_AutoProject.qpm
+   * ./QPM.EXE
      * Updated to version 05_03_13.
 
 2013-03-25 17:45:00 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * ./QPM_ProjectSettings.prg
      ! Fixed: extra run options are lost when saving project settings.
-   * ./QPM.prg
-   * ./qpm_autoproject.qpm
-   * ./qpm.exe
+   * ./QPM.PRG
+   * ./QPM_AutoProject.qpm
+   * ./QPM.EXE
      * Updated to version 05_03_12.
 
 2013-03-24 03:40:00 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
@@ -91,17 +91,17 @@
        so a RTE is avoided when the project folder is changed.
    * ./QPM.ch
      + Added some memvar declarations to pacify some -w3 Harbour warnings.
-   * ./QPM.prg
+   * ./QPM.PRG
      * Updated to version 05_03_11.
      * Changed private variable to local.
      * Some -w3 Harbour warnings cleared.
-   * ./qpm_autoproject.qpm
+   * ./QPM_AutoProject.qpm
      * Updated to version 05_03_11.
-   * ./qpm.exe
+   * ./QPM.EXE
      * Updated to version 05_03_11.
 
 2013-03-18 23:15:00 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
-   * ./changelog
+   * ./Changelog
    * doc/howtosvn.txt
      * Repository changed to:
        svn://svn.code.sf.net/p/qpm/code (read access using SVN client)
@@ -113,26 +113,26 @@
      * Updated to version 3.09w.
 
 2013-03-10 20:51:00 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
-   * ./qpm.exe
-   * ./qpm_autoproject.qpm
+   * ./QPM.EXE
+   * ./QPM_AutoProject.qpm
      * Updated to version 05_03_10.
-   * ./QPM.prg
+   * ./QPM.PRG
      ! C compiler in use is not shown correctly when Minigui Extended 1.x and
        MinGW are selected in Project Options.
 
 2013-01-21 12:35:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
-   * ./qpm.exe
+   * ./QPM.EXE
      * Updated to version 05_03_09.
-   * ./QPM.prg
+   * ./QPM.PRG
      ! Filepaths with backslahes are not shown in Output Error tab.
 
 2012-11-26 14:27:00 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
-   * ./changelog
+   * ./Changelog
      * Updated.
 
 2012-11-26 14:25:00 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
-   * ./qpm.exe
-   * ./QPM.prg
+   * ./QPM.EXE
+   * ./QPM.PRG
      ! Internal version number not updated.
      + Some comments.
 
@@ -145,10 +145,10 @@
    * ./HelpQPM/QPM_SHG.fpt
    * ./QPM.chm
    * ./QPM.iss
-   * ./qpm_autoproject.qpm
-   * ./qpm.exe
+   * ./QPM_AutoProject.qpm
+   * ./QPM.EXE
      * Updated to version 05_03_08.
-   * ./QPM.prg
+   * ./QPM.PRG
      - Removed -mno-cygwin flag from default link line for MinGW compiler.
        If you have Cygwin installed and you want to build an exe with
        native Windows libraries, you must add "-mno-cygwin" in "Override
@@ -161,7 +161,7 @@
      * Updated last version date.
 
 2012-08-11 16:10:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
-   * ./qpm.exe
+   * ./QPM.EXE
      * Updated to version 05_03_07.
 
 2012-08-11 16:05:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
@@ -174,11 +174,11 @@
    * ./QPM.chm
    * ./QPM.iss
    * ./QPM_AutoProjectOnlyHelp.qpm
-   * ./qpm_autoproject.qpm
+   * ./QPM_AutoProject.qpm
      * Updated to version 05_03_07.
 
 2012-08-11 13:30:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
-   * ./QPM.prg
+   * ./QPM.PRG
      ! In certain cases, when compiling with BCC, the .obj file is not
        deleted when a .c file can't be compiled because it has errors,
        and the .exe is linked with the old .obj file.
@@ -189,7 +189,7 @@
    * ./QPM_Libraries.prg
      ! Can't compile in DEBUG mode with OOHG + MinGW + Harbour
        (GTGUI must be placed before GTWIN in list of libraries).
-   * ./qpm.exe
+   * ./QPM.EXE
      * Updated.
 
 2012-03-21 13:33:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
@@ -197,8 +197,8 @@
      * Changed default libraries for OOHG + MinGW + Harbour.
 
 2012-03-21 14:07:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
-   * ./qpm.exe
-   * ./qpm_autoproject.qpm
+   * ./QPM.EXE
+   * ./QPM_AutoProject.qpm
      * Updated.
 
 2012-03-21 13:33:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
@@ -206,8 +206,8 @@
      * Changed default libraries for OOHG + MinGW + Harbour.
 
 2012-02-29 20:20:00 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
-   * ./qpm.exe
-   * ./qpm_autoproject.qpm
+   * ./QPM.EXE
+   * ./QPM_AutoProject.qpm
    * ./us_msg.exe
    * ./qpm_us_msg.qpm
    * ./us_redir.exe
@@ -224,16 +224,16 @@
      * Updated.
 
 2012-02-29 20:00:00 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
-   * ./QPM.prg
+   * ./QPM.PRG
      * Some typos corrected.
      * Some comments added and others improved.
-   * ./QPM.exe
+   * ./QPM.EXE
    * ./QPM_AutoProject.qpm
    * ./TODO
      * Updated.
 
 2011-12-29 21:50:00 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
-   * ./QPM.prg
+   * ./QPM.PRG
    * ./QPM_SHG_SimpleHelpGenerator.prg
      + Added ESC key to cancel PanInputTopic window.
      ! Fixed: Topic is marked as changed when no change was made to it's 
@@ -243,13 +243,13 @@
    * ./QPM.chm
      * Some typos corrected.
      * Some topic's texts changed.
-   * ./QPM.exe
+   * ./QPM.EXE
    * ./QPM_AutoProject.qpm
    * ./TODO
      * Updated.
 
 2011-12-29 20:25:00 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
-   * ./QPM.prg
+   * ./QPM.PRG
      * Some messages improved.
      ! Fixed: message not shown when compiler warnings exist.
      ! Fixed: incorrect message (warning) when compiling is not successful.
@@ -280,7 +280,7 @@
    * ./QPM.chm
      * Some typos corrected.
      * Some topic's texts changed.
-   * ./QPM.exe
+   * ./QPM.EXE
    * ./QPM_AutoProject.qpm
    * ./QPM_Us_Run.qpm
    * ./QPM_Us_Shell.qpm
@@ -376,7 +376,7 @@
    * ./htmlhelp/*.htm
    * ./QPM.chm
      * Updated.
-   * ./QPM.prg
+   * ./QPM.PRG
      ! Fixed: error messages not shown in processing log for Harbour 3.1
        build with Borland C++ Compiler.
      * DBUseArea() calls replaced by US_Use() calls.
@@ -420,7 +420,7 @@
    * ./us_windres.exe
      * Unpacked with new upx version.
    * ./QPM.iss
-   * ./QPM.exe
+   * ./QPM.EXE
    * ./QPM_AutoProject.qpm
    * ./QPM_AutoProjectOnlyHelp.qpm
      * Updated to version 05_03_06.
@@ -430,14 +430,14 @@
      * Updated to version 3.08w due to an error packing HMG Oficial 3.0.40
        executables.
    * ./QPM.iss
-   * ./QPM.exe
-   * ./QPM.prg
+   * ./QPM.EXE
+   * ./QPM.PRG
    * ./QPM.chm
    * ./QPM_AutoProject.qpm
      * Updated to version 05_03_05.
 
 2011-12-19 20:45:00 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
-   * ./QPM.prg
+   * ./QPM.PRG
      ! Fixed EXTRARUNTYPE parameter lost when updating settings.
    * ./doc/notes.txt
    * ./ToDo
@@ -446,7 +446,7 @@
    * ./htmlhelp/*.htm
    * ./htmlhelp/*.bmp
      * Minor changes.
-   * ./QPM.exe
+   * ./QPM.EXE
    * ./QPM.iss
    * ./QPM_AutoProject.qpm
    * ./QPM_AutoProjectOnlyHelp.qpm
@@ -464,25 +464,25 @@
      + Added new setting to differentiate Harbour 3.0 from 3.1, this
        setting is needed because the error output was changed in the
        new version.
-   * ./QPM.prg
+   * ./QPM.PRG
      + Added new project configuration entry CHECKHARBOURIS31.
      + Added support for libraries in harbour/lib/win/mingw
        for HMG Oficial 3.x
      ! Fixed: error output of Harbour.exe 3.0 it's not being redirected to log.
-   * ./QPM.exe
+   * ./QPM.EXE
    * ./QPM.iss
    * ./QPM_AutoProject.qpm
      * Updated to version 05_03_03.
 
 2011-12-06 23:15:00 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
-   * ./QPM.exe
+   * ./QPM.EXE
    * ./QPM_AutoProject.qpm
      * Updated.
-   * ./QPM.prg
+   * ./QPM.PRG
      ! Fixed: run not working when exe is not moved from project folder.
 
 2011-12-05 19:10:00 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
-   * ./QPM_AUTOPROJECT.QPM
+   * ./QPM_AutoProject.qpm
      + QPM_CompatibilityHotRecovery.ch
    * ./QPM_HotRecovery.prg
      * Commented code in HotRecoveryDatabaseCompatibility() function, that
@@ -490,11 +490,11 @@
        QPM_CompatibilityHotRecovery.ch file, due to Carozo's advice.
 
 2011-12-05 15:00:00 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
-   * ./QPM.exe
+   * ./QPM.EXE
    * ./QPM.iss
    * ./QPM_AutoProject.qpm
      * Updated to version 05_03_02.
-   * ./QPM.prg
+   * ./QPM.PRG
      ! Fixed: error output of Harbour.exe 3.1 it's not being redirected to log.
 
 2011-12-05 10:17:00 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
@@ -522,9 +522,9 @@
      * Unchecked upx option because it was slowing down my machine.
 
 2011-12-04 22:00:00 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
-   * ./QPM.exe
+   * ./QPM.EXE
      * Updated to version 05_03_01.
-   * ./QPM.prg
+   * ./QPM.PRG
      ! Fixed: building aborted when UPX option is checked.
      * Process log improved (added blank lines).
      - Removed US_A*.EXE from list of needed files.
@@ -538,7 +538,7 @@
    * ./us_run.exe
    * ./us_shell.exe
    * ./us_slash.exe
-   * ./qpm_autoproject.qpm
+   * ./QPM_AutoProject.qpm
    * ./qpm_autoprojectonlyhelp.qpm
    * ./qpm_us_msg.qpm
    * ./qpm_us_redir.qpm
@@ -551,7 +551,7 @@
      * Updated.
    * ./buildall.bat
      * Changed to avoid compiling ./QPM_AutoProjectOnlyHelp.qpm
-   * ./QPM_AUTOPROJECT.QPM
+   * ./QPM_AutoProject.qpm
      - Excluded ziparchive.lib
      + Added hbziparc.lib
      ! Images not shown in java tree in htmlhelp.
@@ -596,10 +596,10 @@
      * Updated section HOW TO BUILD A NEW RELEASE.
    * ./QPM_SHG_SimpleHelpGenerator.prg
      - Some comments deleted.
-   * ./QPM_AUTOPROJECT.QPM
+   * ./QPM_AutoProject.qpm
      - QPM_CompatibilityHotRecovery.ch
      - US.ch
-   * ./QPM.prg
+   * ./QPM.PRG
      * msgwarning() modified to MsgWarning() because of #translate
      * msgstop() modified to MsgStop() because of #translate
      - Some DO EVENTS deleted (mostly inside FOR/NEXT loops for performance).
@@ -682,7 +682,7 @@
 2011-11-27 12:24:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * ./QPM.PRG
      + Can run builded application even if it was moved and/or renamed.
-   * ./QPM_AUTOPROJECT.QPM
+   * ./QPM_AutoProject.qpm
      * Updated.
    * ./QPM.EXE
      * Updated.
@@ -722,7 +722,7 @@
      * Updated to new release 05_02_04.
    * ./QPM.iss
      * Updated to new release 05_02_04.
-   * ./QPM.exe
+   * ./QPM.EXE
      * Changed release number to 05_02_04.
      + Added option "Clear list" to File menu.
      - QPM_CartelCancelByBug() no longer needed in US_GetFile().
@@ -738,10 +738,10 @@
        the errorsys module reports a wrong number).
 
 2011-11-16 12:00:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
-   * ./QPM.exe
+   * ./QPM.EXE
      * Updated.
    * ./FuentesComunes/US_Edit_CharFijo.prg
-   * ./QPM.prg
+   * ./QPM.PRG
      * Changed direction parameter in FindChr calls from numeric to logical.
    * ./FuentesComunes/US_l_richeditbox.prg
      * Formatting
@@ -761,9 +761,9 @@
      * Some typos corrected.
    * ./FuentesComunes/US_HB.PRG
      * Some unused functions commented out.
-   * ./QPM.prg
-   * ./QPM.exe
-   * ./QPM.prg
+   * ./QPM.PRG
+   * ./QPM.EXE
+   * ./QPM.PRG
    * ./QPM_HotRecovery.prg
    * ./QPM_AutoProject.qpm
      ! Fixed: grids display wrong images (NTOC function changed in Harbour).
@@ -790,7 +790,7 @@
      * Commented out unused classes.
    * ./FuentesComunes/US_Edit_CharFijo.prg
      + Added function US_CARTEL.
-   * ./QPM.prg
+   * ./QPM.PRG
      - Deleted commented out functions US_MGLog, US_Opcion and US_MGMenu.
 
 2011-10-31 21:30:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
@@ -820,7 +820,7 @@
    * ./QPM_SHG_AssistImage.prg
      * Added #IFDEF __XHARBOUR__ to isolate at() extended function, in
        #ELSE added hb_at() instead of at()
-   * ./QPM.prg
+   * ./QPM.PRG
      + Added NOXPSTYLE to buttons with PICTURE but no CAPTION, so
        they look the same way as before changing compilers.
      + Added 5 pixels to first columun of grids GPrgFiles, GHeaFiles,
@@ -1073,7 +1073,7 @@
    + ./LICENSE
    + ./helpQPM/SHG_Change.prg
    + ./QPM.ch
-   + ./QPM.prg
+   + ./QPM.PRG
    + ./QPM_Functions.prg
    + ./BuildAll.bat
      + Added SVN property keywords
@@ -1099,7 +1099,7 @@
    - ./_ClearAll.bat
    - ./Errorlog.htm
    + ./BuildAll.bat
-     + Use this batch to build QPM.exe, us_*.exe and QPM.chm files.
+     + Use this batch to build QPM.EXE, us_*.exe and QPM.chm files.
    + ./ChangeLog
      + Added to keep track of changes.
    + ./LICENSE
@@ -1119,7 +1119,7 @@
      * Changed default path to files used in QPM.chm
      * Changed default path to files used in QPM.chm
    + ./QPM.ch
-   + ./QPM.prg
+   + ./QPM.PRG
    + ./QPM_Functions.prg
    + ./QPM_SHG_SimpleHelpGenerator.prg
      + Added license info and SVN ID.
