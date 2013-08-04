@@ -8,6 +8,28 @@
  * See "How to format your ChangeLog entries" in howtosvn.txt file.
  */
 
+2013-08-04 19:20:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * ./QPM.EXE
+   * ./QPM.PRG
+   * ./QPM_AutoProject.qpm
+   * ./QPM_AutoProjectOnlyHelp.qpm
+   * ./QPM_US_Msg.qpm
+   * ./QPM_US_Redir.qpm
+   * ./QPM_US_Res.qpm
+   * ./QPM_US_Run.qpm
+   * ./QPM_US_Shell.qpm
+   * ./QPM_US_Slash.qpm
+   * ./US_Msg.exe
+   * ./US_Redir.exe
+   * ./US_Res.exe
+   * ./US_Run.exe
+   * ./US_Shell.exe
+   * ./US_Slash.exe
+   * ./helpQPM/SHG_CHANGE.qpm
+     ! Fixed support for PSDK\msimg32.lib when using BCC.
+     * Updated to version 05_03_17.
+     * Updated to HMG Extended version 2.2.4
+
 2013-07-01 19:31:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * ./Changelog
      - Deleted note in previous entry.

@@ -29,7 +29,7 @@
 #include "minigui.ch"
 #include <QPM.ch>
 
-#define QPM_VERSION_NUMBER "05 03 16"
+#define QPM_VERSION_NUMBER "05 03 17"
 #define DEF_INCLUDE_GT  '#include "QPM_gt.ch"'
 
 Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PAR_cP9,PAR_cP10,PAR_cP11,PAR_cP12,PAR_cP13,PAR_cP14,PAR_cP15,PAR_cP16,PAR_cP17,PAR_cP18,PAR_cP19,PAR_cP20)
@@ -5892,7 +5892,7 @@ Function QPM_Build2()
       Out := Out + 'HARBOUR_FLAGS = /D__QPM_VERSION__="'+"'"+PUB_cQPM_Version2+"'"+'" /D__PRJ_VERSION__="'+"'"+cPrj_Version+"'"+'" /n '+If(PUB_bDebugActive,'/b','')+' $(USER_FLAGS_HARBOUR) /i$(DIR_HB_INCLUDE) ' + Hb_OsNewLine()
       if PUB_xHarbourMT = "MT"
          if !IsMinGW
-            Out := Out + 'COBJFLAGS =  -c -O2 -tWM -M  -I$(DIR_C_INCLUDE) -L' + US_ShortName(GetCppFolder()) + DEF_SLASH + 'LIB' + Hb_OsNewLine()
+            Out := Out + 'COBJFLAGS =  -c -O2 -tWM -M  -I$(DIR_C_INCLUDE) -L'+ US_ShortName(GetCppFolder()) + DEF_SLASH + 'LIB' + Hb_OsNewLine()
          endif
       else
          do case
@@ -6457,6 +6457,7 @@ Function QPM_Build2()
                      endif
                   Next i
                   Out := Out + PUB_cCharTab + 'echo $(DIR_COMPC_LIB)'+DEF_SLASH+'import32.lib + >> _'+PUB_cSecu+'Script.ld' + HB_OsNewLine()
+                  Out := Out + PUB_cCharTab + 'echo $(DIR_COMPC_LIB)'+DEF_SLASH+'PSDK'+DEF_SLASH+'msimg32.lib + >> _'+PUB_cSecu+'Script.ld' + HB_OsNewLine()
             //    if cOutputType == "SRCEXE"
                      Out := Out + PUB_cCharTab + 'echo $(DIR_COMPC_LIB)'+DEF_SLASH+'cw32.lib, >> _'+PUB_cSecu+'Script.ld' + HB_OsNewLine()
             //    endif
@@ -6589,7 +6590,7 @@ Function QPM_Build2()
                   endif
                case cOutputType == "SRCDLL"
                   Out := Out + PUB_cCharTab + '$(US_MSG_EXE) $(DIR_PROJECT)' + DEF_SLASH + '_'+PUB_cSecu+'Progress.Log -MSG:Making Dynamic Library (DLL) ' + cOutputNameDisplay + ' ...' + Hb_OsNewLine()
-                  Out := Out + PUB_cCharTab + '$(ILINK_EXE) ' + if( !bConsole , ' -Gn -Tpd '+If(PUB_bDebugActive,' -ap ',' -aa ') , ' -x -Gn -Tpd ' ) +' -L'+ US_ShortName(GetCppFolder()) + DEF_SLASH + 'LIB;' + US_ShortName(GetCppFolder()) + DEF_SLASH + 'LIB' + DEF_SLASH + 'PSDK' + ' @_'+PUB_cSecu+'Script.ld' + Hb_OsNewLine()
+                  Out := Out + PUB_cCharTab + '$(ILINK_EXE) ' + if( !bConsole , ' -Gn -Tpd '+If(PUB_bDebugActive,' -ap ',' -aa ') , ' -x -Gn -Tpd ' ) +' -L'+ US_ShortName(GetCppFolder()) + DEF_SLASH + 'LIB' + ' @_'+PUB_cSecu+'Script.ld' + Hb_OsNewLine()
                case cOutputType == "SRCLIB"
                   Out := Out + PUB_cCharTab + '$(US_MSG_EXE) $(DIR_PROJECT)' + DEF_SLASH + '_'+PUB_cSecu+'Progress.Log -MSG:Making Library ' + cOutputNameDisplay + ' ...' + Hb_OsNewLine()
                   Out := Out + PUB_cCharTab + '$(TLIB_EXE) @_'+PUB_cSecu+'Script.ld' + Hb_OsNewLine()
@@ -6600,14 +6601,14 @@ Function QPM_Build2()
             do case
                case cOutputType == "SRCEXE"
                   Out := Out + PUB_cCharTab + '$(US_MSG_EXE) $(DIR_PROJECT)' + DEF_SLASH + '_'+PUB_cSecu+'Progress.Log -MSG:Linking to make ' + cOutputNameDisplay + ' ...' + Hb_OsNewLine()
-                  Out := Out + PUB_cCharTab + '$(ILINK_EXE) ' + if( !bConsole , ' -Gn -Tpe '+If(PUB_bDebugActive,' -ap ',' -aa ') , ' -x -Gn ' ) +' $(USER_FLAGS_LINK) -L'+ US_ShortName(GetCppFolder()) + DEF_SLASH + 'LIB;' + US_ShortName(GetCppFolder()) + DEF_SLASH + 'LIB' + DEF_SLASH + 'PSDK' + ' @_'+PUB_cSecu+'Script.ld' + Hb_OsNewLine()
+                  Out := Out + PUB_cCharTab + '$(ILINK_EXE) ' + if( !bConsole , ' -Gn -Tpe '+If(PUB_bDebugActive,' -ap ',' -aa ') , ' -x -Gn ' ) +' $(USER_FLAGS_LINK) -L'+ US_ShortName(GetCppFolder()) + DEF_SLASH + 'LIB' + ' @_'+PUB_cSecu+'Script.ld' + Hb_OsNewLine()
                   if bUpx
                      Out := Out + PUB_cCharTab + '$(US_MSG_EXE) $(DIR_PROJECT)' + DEF_SLASH + '_'+PUB_cSecu+'Progress.Log -MSG:Compressing ' + cOutputNameDisplay + ' with UPX ...' + Hb_OsNewLine()
                      Out := Out + PUB_cCharTab + '$(US_UPX_EXE) ' + cUpxOpt + ' ' + cOutputName + Hb_OsNewLine()
                   endif
                case cOutputType == "SRCDLL"
                   Out := Out + PUB_cCharTab + '$(US_MSG_EXE) $(DIR_PROJECT)' + DEF_SLASH + '_'+PUB_cSecu+'Progress.Log -MSG:Making Dynamic Library (DLL) ' + cOutputNameDisplay + ' ...' + Hb_OsNewLine()
-                  Out := Out + PUB_cCharTab + '$(ILINK_EXE) ' + if( !bConsole , ' -Gn -Tpd '+If(PUB_bDebugActive,' -ap ',' -aa ') , ' -x -Gn -Tpd ' ) +' -L'+ US_ShortName(GetCppFolder()) + DEF_SLASH + 'LIB;' + US_ShortName(GetCppFolder()) + DEF_SLASH + 'LIB' + DEF_SLASH + 'PSDK' + ' @_'+PUB_cSecu+'Script.ld' + Hb_OsNewLine()
+                  Out := Out + PUB_cCharTab + '$(ILINK_EXE) ' + if( !bConsole , ' -Gn -Tpd '+If(PUB_bDebugActive,' -ap ',' -aa ') , ' -x -Gn -Tpd ' ) +' -L'+ US_ShortName(GetCppFolder()) + DEF_SLASH + 'LIB' + ' @_'+PUB_cSecu+'Script.ld' + Hb_OsNewLine()
                case cOutputType == "SRCLIB"
                   Out := Out + PUB_cCharTab + '$(US_MSG_EXE) $(DIR_PROJECT)' + DEF_SLASH + '_'+PUB_cSecu+'Progress.Log -MSG:Making Library ' + cOutputNameDisplay + ' ...' + Hb_OsNewLine()
                   // La siguiente linea tiene el string *AMPERSAND* porque en el sistema operativo Windows 2003 Server Enterprise Edition si codifico el & no funciona el PIPE (>)
@@ -6766,11 +6767,11 @@ Function QPM_Build2()
             // Out := Out + PUB_cCharTab + '$(PAUSE_EXE)' + Hb_OsNewLine()
             //
             Out := Out + PUB_cCharTab + '$(US_MSG_EXE) $(DIR_PROJECT)' + DEF_SLASH + '_'+PUB_cSecu+'Progress.Log -MSG:Making DLL from Modules Object of Library (.' + US_Word( cConvert , 1 ) + ') in ' + cOutputNameDisplay + ' ...' + Hb_OsNewLine()
-            Out := Out + PUB_cCharTab + '$(ILINK_EXE) ' + if( !bConsole , ' -Gn -Tpd '+If(PUB_bDebugActive,' -ap ',' -aa ') , ' -x -Gn -Tpd ' ) +' -L'+ US_ShortName(GetCppFolder()) + DEF_SLASH + 'LIB;' + US_ShortName(GetCppFolder()) + DEF_SLASH + 'LIB' + DEF_SLASH + 'PSDK'
+            Out := Out + PUB_cCharTab + '$(ILINK_EXE) ' + if( !bConsole , ' -Gn -Tpd '+If(PUB_bDebugActive,' -ap ',' -aa ') , ' -x -Gn -Tpd ' ) +' -L'+ US_ShortName(GetCppFolder()) + DEF_SLASH + 'LIB'
             For i:=1 to MLCount( MemoObj , 254 )
                Out := Out + ' ' + US_ShortNAme(OBJFOLDER) + DEF_SLASH + alltrim( memoline( MemoObj , 254 , i ) ) + ".obj"
             next
-            Out := Out + ' c0d32.obj , ' + cOutputName + ' , , import32.lib cw32.lib , '
+            Out := Out + ' c0d32.obj , ' + cOutputName + ' , , import32.lib msimg32.lib cw32.lib , '
             Out := Out + ' ' + US_ShortNAme(OBJFOLDER) + DEF_SLASH + US_FileNameOnlyNameAndExt( cInputName ) + '.Lst.ExpLst' + Hb_OsNewLine()
             //
             Out := Out + PUB_cCharTab + '$(US_MSG_EXE) $(DIR_PROJECT)' + DEF_SLASH + '_'+PUB_cSecu+'Progress.Log -MSG:DLL Function List for ' + cOutputNameDisplay + ' ...' + Hb_OsNewLine()
