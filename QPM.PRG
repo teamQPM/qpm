@@ -3752,7 +3752,7 @@ Function QPM_EditPAN( bForceEditor )
                   Return .F.
                endif
             else
-               MsgStop("Form was builder with tool '"+toolMake+"', the selected tool 'HMI+' is not compatibility with '"+toolMake+"'" )
+               MsgStop("Form was builded with tool '"+toolMake+"', the selected tool 'HMI+' is not compatibility with '"+toolMake+"'" )
                Return .F.
             endif
          endif
@@ -3798,7 +3798,7 @@ Function QPM_EditPAN( bForceEditor )
                   Return .F.
                endif
             else
-               MsgStop("Form was builder with tool '"+toolMake+"', the selected tool 'HMGSIDE' is not compatibility with '"+toolMake+"'" )
+               MsgStop("Form was builded with tool '"+toolMake+"', the selected tool 'HMGSIDE' is not compatibility with '"+toolMake+"'" )
                Return .F.
             endif
          endif
@@ -5456,7 +5456,7 @@ Function QPM_Build2()
 
    if at( "(" , US_ShortName( PUB_cProjectFolder ) ) > 0 .or. ;
       at( ")" , US_ShortName( PUB_cProjectFolder ) ) > 0
-      MsgStop( "Utility US_MAKE.exe don't work correctly with a file path with this characters: ( )" + HB_OsNewLine() + ;
+      MsgStop( "Utility US_MAKE.exe doesn't work correctly with a file path with this characters: ( )" + HB_OsNewLine() + ;
                "Please, change name folders." )
       BUILD_IN_PROGRESS := .F.
       DefinoWindowsHotKeys( .F. )
