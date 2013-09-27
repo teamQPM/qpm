@@ -38,4 +38,7 @@ Return __DATE__
 Function GetLinkTime()
 Return __TIME__
 
+Function GetProjectFolder()
+Return __PROJECT_FOLDER__
+
 /* eof */

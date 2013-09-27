@@ -29,7 +29,7 @@
 #include "minigui.ch"
 #include <QPM.ch>
 
-#define QPM_VERSION_NUMBER "05 03 17"
+#define QPM_VERSION_NUMBER "05 03 18"
 #define DEF_INCLUDE_GT  '#include "QPM_gt.ch"'
 
 Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PAR_cP9,PAR_cP10,PAR_cP11,PAR_cP12,PAR_cP13,PAR_cP14,PAR_cP15,PAR_cP16,PAR_cP17,PAR_cP18,PAR_cP19,PAR_cP20)
@@ -5889,7 +5889,7 @@ Function QPM_Build2()
 
    if !bConvert
       cPrj_Version := GetPrjVersion()
-      Out := Out + 'HARBOUR_FLAGS = /D__QPM_VERSION__="'+"'"+PUB_cQPM_Version2+"'"+'" /D__PRJ_VERSION__="'+"'"+cPrj_Version+"'"+'" /n '+If(PUB_bDebugActive,'/b','')+' $(USER_FLAGS_HARBOUR) /i$(DIR_HB_INCLUDE) ' + Hb_OsNewLine()
+      Out := Out + 'HARBOUR_FLAGS = /D__QPM_VERSION__="'+"'"+PUB_cQPM_Version2+"'"+'" /D__PRJ_VERSION__="'+"'"+cPrj_Version+"'"+'" /D__PROJECT_FOLDER__="'+"'"+VentanaMain.TProjectFolder.Value+"'"+'" /n '+If(PUB_bDebugActive,'/b','')+' $(USER_FLAGS_HARBOUR) /i$(DIR_HB_INCLUDE) ' + Hb_OsNewLine()
       if PUB_xHarbourMT = "MT"
          if !IsMinGW
             Out := Out + 'COBJFLAGS =  -c -O2 -tWM -M  -I$(DIR_C_INCLUDE) -L'+ US_ShortName(GetCppFolder()) + DEF_SLASH + 'LIB' + Hb_OsNewLine()
