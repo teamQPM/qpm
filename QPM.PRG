@@ -7728,6 +7728,7 @@ Function TranslateLog(Log)
    Local myredir      := US_ShortName(PUB_cQPM_Folder) + DEF_SLASH + 'US_REDIR.EXE' + PUB_cUS_RedirOpt + US_ShortName( PUB_cProjectFolder ) + DEF_SLASH + '_'+PUB_cSecu+'Temp.Log '
    Local QPM_Ver      := '/D__QPM_VERSION__="'+"'"+PUB_cQPM_Version2+"'"+'"'
    Local PRJ_Ver      := '/D__PRJ_VERSION__="'+"'"+cPrj_Version+"'"+'"'
+   Local PRJ_Folder   := '/D__PROJECT_FOLDER__="'+"'"+VentanaMain.TProjectFolder.Value+"'"+'"'
    Local cEcho2       := '>> _'+PUB_cSecu+'Script.ld'
    Local cEcho        := '> _'+PUB_cSecu+'Script.ld'
    Local cDelete      := '** error 1 ** '
@@ -7780,6 +7781,7 @@ Function TranslateLog(Log)
    NewLog := StrTran( NewLog , "_Temp.RC:" , US_FileNameOnlyName( GetProperty( "VentanaMain" , "GPrgFiles" , "Cell" , 1 , NCOLPRGFULLNAME ) ) + '.RC:' )
    NewLog := StrTran( NewLog , QPM_Ver , "" )
    NewLog := StrTran( NewLog , PRJ_Ver , "" )
+   NewLog := StrTran( NewLog , PRJ_Folder , "" )
    NewLog := StrTran( NewLog , cDelete , "" )
    if US_Word( memoread( PUB_cProjectFolder + DEF_SLASH + '_'+PUB_cSecu+'End.Txt' ) , 1 ) == "OK"
       For w:=1 to len( vWarnings )
