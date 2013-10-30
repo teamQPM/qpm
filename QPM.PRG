@@ -29,7 +29,7 @@
 #include "minigui.ch"
 #include <QPM.ch>
 
-#define QPM_VERSION_NUMBER "05 03 18"
+#define QPM_VERSION_NUMBER "05 03 19"
 #define DEF_INCLUDE_GT  '#include "QPM_gt.ch"'
 
 Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PAR_cP9,PAR_cP10,PAR_cP11,PAR_cP12,PAR_cP13,PAR_cP14,PAR_cP15,PAR_cP16,PAR_cP17,PAR_cP18,PAR_cP19,PAR_cP20)
@@ -7187,7 +7187,7 @@ Function QPM_Timer_StatusRefresh()
          QPM_MemoWrit( CCOMPILERFOLDER + DEF_SLASH + '_'+PUB_cSecu+'Temp.Log' , TranslateLog( MemoRead( CCOMPILERFOLDER + DEF_SLASH + '_'+PUB_cSecu+'Temp.Log' ) ) )
          TopName       := US_FileNameOnlyName(GetProperty( "VentanaMain" , "GPrgFiles" , "Cell" , 1 , NCOLPRGNAME ))
          OutName       := US_FileNameOnlyName( GetOutputModuleName() )
-         estado := US_Word( memoread( PUB_cProjectFolder + DEF_SLASH + '_'+PUB_cSecu+'End.Txt' ) , 1 )
+         estado        := US_Word( memoread( PUB_cProjectFolder + DEF_SLASH + '_'+PUB_cSecu+'End.Txt' ) , 1 )
 
 /*
 La existencia del ejecutable se hace en BUILD.BAT teniendo en cuenta el COPY/MOVE
@@ -7290,9 +7290,8 @@ La existencia del ejecutable se hace en BUILD.BAT teniendo en cuenta el COPY/MOV
             // los dos siguientes solo aparecen desde pendrive
             DELETE FILE ( PUB_cQPM_Folder + DEF_SLASH + TopName + '.MAP' )
             DELETE FILE ( PUB_cQPM_Folder + DEF_SLASH + '_' + PUB_cSecu + 'Script.ld' )
-            // los dos siguiente solo aparecen para PellesC y xHarbour
+            // el siguiente solo aparece para PellesC y xHarbour
             DELETE FILE ( PUB_cProjectFolder + DEF_SLASH + OutName + '.exp' )
-            DELETE FILE ( PUB_cProjectFolder + DEF_SLASH + OutName + '.lib' )
          endif
 
 //       TabChange( "FILES" )   // esto es para que refresque los botones frizados durante el build
