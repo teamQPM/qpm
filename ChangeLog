@@ -8,6 +8,15 @@
  * See "How to format your ChangeLog entries" in howtosvn.txt file.
  */
 
+2013-10-29 22:36:00 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * ./QPM.PRG
+     ! .LIB file wrongly erased.
+   * ./QPM.EXE
+   * ./QPM_AutoProject.qpm
+     * Updated to version 05_03_19.
+   + ./ToDo
+     * Updated.
+
 2013-10-19 19:48:00 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * ./Changelog
      * Missed in previous commit.

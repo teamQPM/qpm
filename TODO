@@ -11,6 +11,13 @@
 /******************************************************************************/
 
 Assigned to: <nobody>
+Added by...: 2013-10-29 09:04:00 UTC-0300 Fernando Yurisich <fyurisich>
+Status.....: Open.
+Details....: Agregar lib\win\mingw como path para libs de harbour.
+
+/******************************************************************************/
+
+Assigned to: <nobody>
 Added by...: 2013-09-26 23:03:00 UTC-0300 Fernando Yurisich <fyurisich>
 Status.....: Open.
 Details....: Agregar ayuda para __PROJECT_FOLDER__
