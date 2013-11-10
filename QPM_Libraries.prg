@@ -683,10 +683,10 @@ Function QPM_CargoLibraries()
    aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineHarbour ) , cPre+'ws2_32'+cExt )
    aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineHarbour ) , cPre+'wsock32'+cExt )
    // unknown
-*   aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineHarbour ) , cPre+'dll'+cExt )
-*   aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineHarbour ) , cPre+'mysqldll'+cExt )
-*   aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineHarbour ) , cPre+'socket'+cExt )
-*   aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineHarbour ) , cPre+'tip'+cExt )
+   aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineHarbour ) , cPre+'dll'+cExt )
+   aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineHarbour ) , cPre+'mysqldll'+cExt )
+   aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineHarbour ) , cPre+'socket'+cExt )
+   aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineHarbour ) , cPre+'tip'+cExt )
 
    // OOHG 3.x con MinGW and xHarbour ( Syncronized to prerelease 2006/07/29 )
    cPre := "LIB"
