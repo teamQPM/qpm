@@ -8,6 +8,15 @@
  * See "How to format your ChangeLog entries" in howtosvn.txt file.
  */
 
+2013-12-05 20:28:00 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * ./QPM.PRG
+   * ./QPM.EXE
+   * ./QPM_AutoProject.qpm
+     * Updated to version 05_03_21.
+   * ./QPM_Libraries.prg
+     * ziparchive library is no more included by default.
+       It generates GPF when compiling with HMG Extended, BCC and Harbour 3.2.
+
 2013-11-09 22:26:00 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * ./QPM.PRG
    * ./QPM.EXE
