@@ -8,8 +8,12 @@
  * See "How to format your ChangeLog entries" in howtosvn.txt file.
  */
 
+2014-05-07 22:39:00 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * ./Changelog
+     ! Previous entry.
+
 2014-05-07 22:38:00 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
-   * .doc/UpgradeReadme.txt
+   * ./doc/UpgradeReadme.txt
      + Portuguese translation.
 
 2014-05-07 22:04:00 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
