@@ -32,3 +32,19 @@ COMO DESINSTALAR ESTE UPGRADE
 
 [1] Borre el archivo QPM.EXE
 [2] Renombre el archivo QPM.EXE.OLD como QPM.EXE
+
+
+
+COMO INSTALAR ESSE UPGRADE
+==========================
+
+[1] Na pasta de instalação atual, renomeie o arquivo QPM.EXE
+    como QPM.EXE.05_03_22
+[2] Copie o novo QPM.EXE a pasta de instalação atual.
+
+
+COMO REMOVER ESSE UPGRADE
+=========================
+
+[1] Exclua o arquivo QPM.EXE
+[2] Renomeie o arquivo QPM.EXE.05_03_22 como QPM.EXE
