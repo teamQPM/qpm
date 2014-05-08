@@ -26,34 +26,19 @@
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-FUNCTION MAIN(cP1,cP2,cP3,cP4,cP5,cP6,cP7,cP8,cP9,cP10,cP11,cP12,cP13,cP14,cP15,cP16,cP17,cP18,cP19,cP20)
+FUNCTION MAIN( ... )
+   Local aParams := hb_aParams(), n
    Local Version:="01.03" , bLoop:=.T. , cLinea , cFines := { Chr(13) + Chr(10) , Chr(10) } , hFiIn , cont:=0 , hFiOut
    Local cFileOut , nBytesSalida:=0 , cFileIn , cParam , cFileTMP , cmd , cmdbat , bList:=.F. , gccbat := "_GCCbat.bat"
    Local estado:="_Status.tmp"
 // Local cProgress := "" , cFileProgress := "_Progress.log"
    Private cQPMDir:=""
 
-   cP1 =IIF(cP1 =NIL,"",cP1 )
-   cP2 =IIF(cP2 =NIL,"",cP2 )
-   cP3 =IIF(cP3 =NIL,"",cP3 )
-   cP4 =IIF(cP4 =NIL,"",cP4 )
-   cP5 =IIF(cP5 =NIL,"",cP5 )
-   cP6 =IIF(cP6 =NIL,"",cP6 )
-   cP7 =IIF(cP7 =NIL,"",cP7 )
-   cP8 =IIF(cP8 =NIL,"",cP8 )
-   cP9 =IIF(cP9 =NIL,"",cP9 )
-   cP10=IIF(cP10=NIL,"",cP10)
-   cP11=IIF(cP11=NIL,"",cP11)
-   cP12=IIF(cP12=NIL,"",cP12)
-   cP13=IIF(cP13=NIL,"",cP13)
-   cP14=IIF(cP14=NIL,"",cP14)
-   cP15=IIF(cP15=NIL,"",cP15)
-   cP16=IIF(cP16=NIL,"",cP16)
-   cP17=IIF(cP17=NIL,"",cP17)
-   cP18=IIF(cP18=NIL,"",cP18)
-   cP19=IIF(cP19=NIL,"",cP19)
-   cP20=IIF(cP20=NIL,"",cP20)
-   cParam:=ALLTRIM(cP1+" "+cP2+" "+cP3+" "+cP4+" "+cP5+" "+cP6+" "+cP7+" "+cP8+" "+cP9+" "+cP10+" "+cP11+" "+cP12+" "+cP13+" "+cP14+" "+cP15+" "+cP16+" "+cP17+" "+cP18+" "+cP19+" "+cP20)
+   cParam := ""
+   For n := 1 to Len( aParams )
+      cParam += ( aParams[ n ] + " " )
+   Next n
+   cParam := AllTrim( cParam )
 
    if Upper( US_Word( cParam , 1 ) ) == "-VER" .or. Upper( US_Word( cParam , 1 ) ) == "-VERSION"
       MemoWrit( "US_Slash.version" , Version )

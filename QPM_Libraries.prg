@@ -300,7 +300,7 @@ Function QPM_CargoLibraries()
    aadd( &( "vLibDefault"+DefineMiniGui3+DefineMinGW+DefineXHarbour ) , cPre+'xRegistry'+cExt )
    aadd( &( "vLibDefault"+DefineMiniGui3+DefineMinGW+DefineXHarbour ) , cPre+'stdc++'+cExt ) /* for c++ */
 
-// Minigui Extended 1.x con BorlandC and Harbour ( Syncronized to 1.2 build 18b )
+// Minigui Extended 1.x con BorlandC and Harbour
    cPre := ""
    cExt := ".lib"
    &( "vLibDefault"+DefineExtended1+DefineBorland+DefineHarbour ) := {}
@@ -328,6 +328,7 @@ Function QPM_CargoLibraries()
    aadd( &( "vLibDefault"+DefineExtended1+DefineBorland+DefineHarbour ) , if( bOldNamesLib , cPre+'common'+cExt , cPre+'hbcommon'+cExt ) )
    aadd( &( "vLibDefault"+DefineExtended1+DefineBorland+DefineHarbour ) , if( bOldNamesLib , cPre+'debug'+cExt , cPre+'hbdebug'+cExt ) )
    aadd( &( "vLibDefault"+DefineExtended1+DefineBorland+DefineHarbour ) , if( bOldNamesLib , cPre+'pp'+cExt , cPre+'hbpp'+cExt ) )
+   aadd( &( "vLibDefault"+DefineExtended1+DefineBorland+DefineHarbour ) , if( bOldNamesLib , cPre+'ct'+cExt , cPre+'hbct'+cExt ) )
    aadd( &( "vLibDefault"+DefineExtended1+DefineBorland+DefineHarbour ) , cPre+'libct'+cExt )
    aadd( &( "vLibDefault"+DefineExtended1+DefineBorland+DefineHarbour ) , cPre+'libmisc'+cExt )
    aadd( &( "vLibDefault"+DefineExtended1+DefineBorland+DefineHarbour ) , cPre+'hbole'+cExt )
