@@ -702,11 +702,15 @@ FUNCTION MAIN(cP1,cP2,cP3,cP4,cP5,cP6,cP7,cP8,cP9,cP10,cP11,cP12,cP13,cP14,cP15,
             bError:=.T.
          else
             Say( "US_Shell 000I: Processing: "+cParam )
-            if ferase( US_Word(cParam,2) ) == -1
-               Say( "US_Shell 064E: Error in Delete file !!!" )
-               bError:=.T.
+            if file( US_Word(cParam,2) )
+               if ferase( US_Word(cParam,2) ) == -1
+                  Say( "US_Shell 064E: Error in Delete file !!!" )
+                  bError:=.T.
+               else
+                  Say( "US_Shell 065I: File Deleted OK" )
+               endif
             else
-               Say( "US_Shell 065I: File Deleted OK" )
+               Say( "US_Shell 066E: File not found" )
             endif
          endif
       case Upper( US_Word( cParam , 1 ) ) == "CHANGE"

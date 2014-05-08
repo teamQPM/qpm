@@ -8,6 +8,25 @@
  * See "How to format your ChangeLog entries" in howtosvn.txt file.
  */
 
+2014-05-07 22:04:00 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * ./QPM.PRG
+   * ./QPM.EXE
+   * ./QPM_AutoProject.qpm
+     * Updated to version 05_03_22.
+   * ./QPM_Libraries.prg
+     + hbct library as default when using Extended 1.x with BCC and Harbour.
+   * ./QPM_US_Shell.qpm
+   * ./QPM_US_Slash.qpm
+     - hbct library from list of additional included libraries.
+   * ./US_Shell.exe
+   * ./US_Slash.exe
+     * Updated.
+   * ./us_shell.prg
+     * Message when a file scheduled for deletion is not found.
+   * ./us_slash.prg
+     ! Errors when building a project which uses files from more than 14
+       different folders.
+
 2013-12-05 20:28:00 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * ./QPM.PRG
    * ./QPM.EXE
