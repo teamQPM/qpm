@@ -28,6 +28,7 @@
 
 #include "US_ENV.H"
 #include "minigui.ch"
+#include "i_pseudofunc.ch"
 
 #translate MsgInfo(<texto>) => US_LOG( <texto> , .T. )
 

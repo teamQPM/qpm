@@ -29,7 +29,7 @@
 #include "minigui.ch"
 #include <QPM.ch>
 
-#define QPM_VERSION_NUMBER "05 03 22"
+#define QPM_VERSION_NUMBER "05 03 23"
 #define DEF_INCLUDE_GT  '#include "QPM_gt.ch"'
 
 Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PAR_cP9,PAR_cP10,PAR_cP11,PAR_cP12,PAR_cP13,PAR_cP14,PAR_cP15,PAR_cP16,PAR_cP17,PAR_cP18,PAR_cP19,PAR_cP20)
@@ -782,7 +782,7 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
                   PUB_cAutoLog := US_WordSubStr( LOC_cParam , nPos )
                   PUB_cAutoLog := SubStr( PUB_cAutoLog , 6 , at( ")" , PUB_cAutoLog ) - 6 )
                   if empty( PUB_cAutoLog )
-                     MsgInfo( "Error detecting Log Archuive: " + LOC_cParam )
+                     MsgInfo( "Error detecting Log Archive: " + LOC_cParam )
                   else
                      LOC_cParam := substr( LOC_cParam , 1 , LogIni - 1 ) + substr( LOC_cParam , LogIni + len( PUB_cAutoLog ) + 6 )
                      if ( nPos := US_WordPos( "-LOGONLYERROR" , US_Upper( LOC_cParam ) ) ) > 0
@@ -824,7 +824,7 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
                   PUB_cAutoLog := US_WordSubStr( LOC_cParam , nPos )
                   PUB_cAutoLog := SubStr( PUB_cAutoLog , 6 , at( ")" , PUB_cAutoLog ) - 6 )
                   if empty( PUB_cAutoLog )
-                     MsgInfo( "Error detecting Log Archuive: " + LOC_cParam )
+                     MsgInfo( "Error detecting Log Archive: " + LOC_cParam )
                   else
                      LOC_cParam := substr( LOC_cParam , 1 , LogIni - 1 ) + substr( LOC_cParam , LogIni + len( PUB_cAutoLog ) + 6 )
                      if ( nPos := US_WordPos( "-LOGONLYERROR" , US_Upper( LOC_cParam ) ) ) > 0
@@ -864,7 +864,7 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
                   PUB_cAutoLog := US_WordSubStr( LOC_cParam , nPos )
                   PUB_cAutoLog := SubStr( PUB_cAutoLog , 6 , at( ")" , PUB_cAutoLog ) - 6 )
                   if empty( PUB_cAutoLog )
-                     MsgInfo( "Error detecting Log Archuive: " + LOC_cParam )
+                     MsgInfo( "Error detecting Log Archive: " + LOC_cParam )
                   else
                      LOC_cParam := substr( LOC_cParam , 1 , LogIni - 1 ) + substr( LOC_cParam , LogIni + len( PUB_cAutoLog ) + 6 )
                      if ( nPos := US_WordPos( "-LOGONLYERROR" , US_Upper( LOC_cParam ) ) ) > 0

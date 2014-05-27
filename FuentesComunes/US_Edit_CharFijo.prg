@@ -30,6 +30,7 @@
 #include "hbclass.ch"
 #include "minigui.ch"
 #include "US_i_richeditbox.ch"
+#include "i_pseudofunc.ch"
 
 //==================================================================================
 //= CLASE US_RichEdit                                                              

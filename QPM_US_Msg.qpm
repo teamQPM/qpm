@@ -1,9 +1,9 @@
-VERSION 05 03 17
-PRJ_VERSION 00 00 0015
+VERSION 05 03 23
+PRJ_VERSION 00 00 0016
 PROJECTFOLDER <ThisFolder>
 LASTLIBFOLDERM1BH 
 LASTLIBFOLDERM1BX 
-LASTLIBFOLDERE1BH C:\MiniGUI203\Harbour\lib
+LASTLIBFOLDERE1BH C:\MiniGUI\Harbour\lib
 LASTLIBFOLDERE1BX 
 LASTLIBFOLDERE1GH 
 LASTLIBFOLDERE1GX 
@@ -98,4 +98,4 @@ SOURCE <ProjectFolder>\us_msg.prg
 SOURCE <ProjectFolder>\FuentesComunes\US_HB.PRG
 SOURCE <ProjectFolder>\FuentesComunes\US_Log.prg
 SOURCE <ProjectFolder>\FuentesComunes\US_MG_Null.prg
-INCLUDEE1BH *Last* C:\MiniGUI203\Harbour\lib\hbct.lib 
+INCLUDEE1BH *Last* C:\MiniGUI\Harbour\lib\hbct.lib 
