@@ -8,6 +8,33 @@
  * See "How to format your ChangeLog entries" in howtosvn.txt file.
  */
 
+2014-05-27 20:35:00 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * ./QPM_AutoProject.qpm
+   * ./QPM.EXE
+     * Updated to version 05_03_23.
+     * Updated to HMG Extended version 2.3.5
+   * ./QPM_SHG_SimpleHelpGenerator.prg
+   * FuentesComunes/US_Edit_CharFijo.prg
+   * FuentesComunes/US_MG.PRG
+     + i_pseudofunc.ch
+   * ./QPM.PRG
+     ! Typo.
+   * ./QPM_US_Msg.qpm
+   * ./QPM_US_Res.qpm
+   * ./QPM_US_Run.qpm
+   * ./QPM_US_Shell.qpm
+   * ./QPM_US_Slash.qpm
+   * ./*.EXE
+     * Updated.
+   * ./Changelog
+     ! UTC in previous entries.
+   * ./us_shell.prg
+   * ./us_slash.prg
+     * Parameter handling.
+     * Format.
+     - Unneeded comments.
+     * Messages.
+
 2014-05-07 22:39:00 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * ./Changelog
      ! Previous entry.
@@ -148,7 +175,7 @@
    * ./QPM.EXE
      * Updated to version 05_03_15.
 
-2013-04-09 20:53:00 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2013-04-09 20:53:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * ./QPM.PRG
      + Added "Do not delete auxiliary files" option to "Only for support"
        menu. Prevents QPM from deleting auxiliary files used during build.
@@ -156,7 +183,7 @@
    * ./QPM.EXE
      * Updated to version 05_03_14.
 
-2013-03-26 00:12:00 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2013-03-26 00:12:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * ./TODO
      * Updated.
    * ./QPM.PRG
@@ -165,7 +192,7 @@
    * ./QPM.EXE
      * Updated to version 05_03_13.
 
-2013-03-25 17:45:00 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2013-03-25 17:45:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * ./QPM_ProjectSettings.prg
      ! Fixed: extra run options are lost when saving project settings.
    * ./QPM.PRG
@@ -173,13 +200,13 @@
    * ./QPM.EXE
      * Updated to version 05_03_12.
 
-2013-03-24 03:40:00 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2013-03-24 03:40:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    + doc/dirstruc.txt
      + Added a description of the folders used by QPM project.
    * ./TODO
      * Updated.
 
-2013-03-24 03:15:00 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2013-03-24 03:15:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    - ./RTFtoHTML/VB rtf2htm3
      - Folder deleted.
    - ./RTFtoHTML/VB rtf2htm3/*.*
@@ -187,7 +214,7 @@
        deleted.
    + ./RTFtoHTML/VB_rtf2htm3.zip
 
-2013-03-24 02:33:00 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2013-03-24 02:33:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * ./FuentesComunes/US_HB.prg
      * Changed DirRemove() by HB_DIRDELETE().
    * ./QPM_SHG_SimpleHelpGenerator.prg
@@ -204,7 +231,7 @@
    * ./QPM.EXE
      * Updated to version 05_03_11.
 
-2013-03-18 23:15:00 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2013-03-18 23:15:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * ./Changelog
    * doc/howtosvn.txt
      * Repository changed to:
@@ -212,11 +239,11 @@
        https://svn.code.sf.net/p/qpm/code/ (read access using web browser)
        svn+ssh://USERNAME@svn.code.sf.net/p/qpm/code (write access using SVN client)
 
-2013-03-16 17:55:00 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2013-03-16 17:55:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * ./US_UPX.EXE
      * Updated to version 3.09w.
 
-2013-03-10 20:51:00 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2013-03-10 20:51:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * ./QPM.EXE
    * ./QPM_AutoProject.qpm
      * Updated to version 05_03_10.
@@ -224,7 +251,7 @@
      ! C compiler in use is not shown correctly when Minigui Extended 1.x and
        MinGW are selected in Project Options.
 
-2013-01-21 12:35:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2013-01-21 12:35:00 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * ./QPM.EXE
      * Updated to version 05_03_09.
    * ./QPM.PRG
@@ -683,7 +710,7 @@
    * ./resource/SHG_ArrowBottom.bmp
      + Added.
 
-2011-12-02 00:50:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2011-12-02 00:50:00 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * ./QPM.EXE
      * Compilation with MinGW now uses command file to avoid limitations
        in the number of objects you can include in the command line.
@@ -779,7 +806,7 @@
      * Changed to Harbour compiler and HMG Extended 2.0.3
      * Added hbct library.
 
-2011-11-27 12:24:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2011-11-27 12:24:00 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * ./QPM.PRG
      + Can run builded application even if it was moved and/or renamed.
    * ./QPM_AutoProject.qpm
@@ -791,7 +818,7 @@
    * ./SAMPLES/MAKELIB/CHECK.PRG
      * Some typos corrected.
 
-2011-11-27 01:40:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2011-11-27 01:40:00 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * ./QPM.chm
      * Some typos corrected.
      * Compiler references updated.
@@ -813,7 +840,7 @@
    * ./htmlhelp/*.htm
      * Updated.
 
-2011-11-26 21:00:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2011-11-26 21:00:00 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * ./doc/howtosvn.txt
      * Updated HOW TO BUILD A NEW RELEASE section.
    * ./doc/notes.txt
@@ -837,7 +864,7 @@
        messes up the source's lines numbers and, when an error occurs,
        the errorsys module reports a wrong number).
 
-2011-11-16 12:00:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2011-11-16 12:00:00 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * ./QPM.EXE
      * Updated.
    * ./FuentesComunes/US_Edit_CharFijo.prg
@@ -850,7 +877,7 @@
        3.1.0 and Extended 2.0.3. Caused by FINDCHR function that, now,
        expects an unicode string as target to lookup.
 
-2011-11-13 16:40:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2011-11-13 16:40:00 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
    - ./QPM_05020000.cfg
    * ./doc/howtosvn.txt
      * Updated HOW TO BUILD A NEW RELEASE section.
@@ -868,7 +895,7 @@
    * ./QPM_AutoProject.qpm
      ! Fixed: grids display wrong images (NTOC function changed in Harbour).
 
-2011-11-10 17:36:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2011-11-10 17:36:00 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
    - ./hmi.INI
    * ./doc/notes.txt
      + Added list of files to include in a distribution.
@@ -893,7 +920,7 @@
    * ./QPM.PRG
      - Deleted commented out functions US_MGLog, US_Opcion and US_MGMenu.
 
-2011-10-31 21:30:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2011-10-31 21:30:00 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * ./QPM_HotRecovery.prg
      * Changed US_ActiveX() by TActiveX()
    * ./QPM_AutoProjectOnlyHelp.qpm
@@ -953,15 +980,15 @@
    * ./FuentesComunes/US_MG.prg
      * Added some casting to pacify C compiler.
 
-2011-10-29 20:27:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2011-10-29 20:27:00 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * ./doc/howtosvn.txt
      * Typos corrected.
 
-2011-10-29 20:20:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2011-10-29 20:20:00 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * ./doc/howtosvn.txt
      * Typos corrected.
 
-2011-10-29 20:15:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2011-10-29 20:15:00 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * ./QPM.EXE
    * ./QPM.PRG
      ! Changed version to 5.2.1
@@ -973,7 +1000,7 @@
    * HelpQPM/QPM_SHG.fpt
      * Version updated.
 
-2011-10-18 09:07:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2011-10-18 09:07:00 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * ./ToDo
      + Updated.
 

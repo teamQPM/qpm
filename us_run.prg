@@ -27,88 +27,70 @@
 */
 
 #include "minigui.ch"
-#include "Fileio.ch"
+#include "fileio.ch"
 
-// Codigos de error en: http://msdn2.microsoft.com/en-us/library/ms681382(VS.85).aspx
+// For error codes see: http://msdn2.microsoft.com/en-us/library/ms681382(VS.85).aspx
 
-FUNCTION MAIN(cP1,cP2,cP3,cP4,cP5,cP6,cP7,cP8,cP9,cP10,cP11,cP12,cP13,cP14,cP15,cP16,cP17,cP18,cP19,cP20)
-   Local Version:="01.01" , bOk:=.T. , nLineSize := 1024
-   Local cParam , MemoAux := "" , i , cLineaAux := ""
-   Private cCMD , cControlFile , cDefaultPath , cCurrentPath , cMode:="NORMAL"                // , cFileStop := ""
+FUNCTION MAIN( ... )
+   Local aParams := hb_aParams(), n
+   Local Version := "01.02", bOk := .T., nLineSize := 1024
+   Local cParam, MemoAux := "", i, cLineaAux := ""
+   Private cCMD, cControlFile, cDefaultPath, cCurrentPath, cMode := "NORMAL"
 
-   cP1 =IIF(cP1 =NIL,"",cP1 )
-   cP2 =IIF(cP2 =NIL,"",cP2 )
-   cP3 =IIF(cP3 =NIL,"",cP3 )
-   cP4 =IIF(cP4 =NIL,"",cP4 )
-   cP5 =IIF(cP5 =NIL,"",cP5 )
-   cP6 =IIF(cP6 =NIL,"",cP6 )
-   cP7 =IIF(cP7 =NIL,"",cP7 )
-   cP8 =IIF(cP8 =NIL,"",cP8 )
-   cP9 =IIF(cP9 =NIL,"",cP9 )
-   cP10=IIF(cP10=NIL,"",cP10)
-   cP11=IIF(cP11=NIL,"",cP11)
-   cP12=IIF(cP12=NIL,"",cP12)
-   cP13=IIF(cP13=NIL,"",cP13)
-   cP14=IIF(cP14=NIL,"",cP14)
-   cP15=IIF(cP15=NIL,"",cP15)
-   cP16=IIF(cP16=NIL,"",cP16)
-   cP17=IIF(cP17=NIL,"",cP17)
-   cP18=IIF(cP18=NIL,"",cP18)
-   cP19=IIF(cP19=NIL,"",cP19)
-   cP20=IIF(cP20=NIL,"",cP20)
-   cParam:=ALLTRIM(cP1+" "+cP2+" "+cP3+" "+cP4+" "+cP5+" "+cP6+" "+cP7+" "+cP8+" "+cP9+" "+cP10+" "+cP11+" "+cP12+" "+cP13+" "+cP14+" "+cP15+" "+cP16+" "+cP17+" "+cP18+" "+cP19+" "+cP20)
+   cParam := ""
+   For n := 1 To Len( aParams )
+      cParam += ( aParams[ n ] + " " )
+   Next n
+   cParam := AllTrim( cParam )
 
-   if ( Upper( US_Word( cParam , 1 ) ) == "-VER" .or. Upper( US_Word( cParam , 1 ) ) == "-VERSION" )
-      MemoWrit( "US_Run.version" , Version )
+   If Upper( US_Word( cParam, 1 ) ) == "-VER" .or. Upper( US_Word( cParam, 1 ) ) == "-VERSION"
+      MemoWrit( "US_Run.version", Version )
       Return bOk
-   endif
+   EndIf
 
-   if Upper( US_Word( cParam , 1 ) ) != "QPM"
-      MsgInfo( "US_Run 999E: Running out System" )       // This is not translated
-      ERRORLEVEL(1)
+   If Upper( US_Word( cParam, 1 ) ) != "QPM"
+      MsgInfo( "US_Run 999E: Running Outside System" )
+      ERRORLEVEL( 1 )
       bOk := .F.
-      return bOk
-   else
-      cParam := US_WordDel( cParam , 1 )
-   endif
+      Return bOk
+   Else
+      cParam := US_WordDel( cParam, 1 )
+   EndIf
 
-   if empty( cParam )
-      MsgInfo( "US_Run 123: Missing Parameters" )        // This is not translated
-      ERRORLEVEL(1)
+   If Empty( cParam )
+      MsgInfo( "US_Run 123: Missing Parameters" )     
+      ERRORLEVEL( 1 )
       bOk := .F.
-      return bOk
-   endif
+      Return bOk
+   EndIf
 
-   if !file( cParam )
-      MsgInfo( "US_Run 124: Paramters File not Found: " + cParam )         // This is not translated
-      ERRORLEVEL(1)
+   If ! File( cParam )
+      MsgInfo( "US_Run 124: Paramters File Not Found: " + cParam )
+      ERRORLEVEL( 1 )
       bOk := .F.
-      return bOk
-   else
+      Return bOk
+   Else
       MemoAux := MemoRead( cParam )
-      for i := 1 to MLCount( MemoAux , nLineSize )
-         cLineaAux := alltrim( MemoLine( MemoAux , nLineSize , i ) )
-         if Upper( US_Word( cLineaAux , 1 ) ) == "COMMAND"
-            cCMD := US_WordSubStr( cLineaAux , 2 )
-         endif
-         if Upper( US_Word( cLineaAux , 1 ) ) == "CONTROL"
-            cControlFile := US_WordSubStr( cLineaAux , 2 )
-         endif
-         if Upper( US_Word( cLineaAux , 1 ) ) == "DEFAULTPATH"
-            cDefaultPath := US_WordSubStr( cLineaAux , 2 )
-         endif
-//       if Upper( US_Word( cLineaAux , 1 ) ) == "FILESTOP"
-//          cFileStop := US_WordSubStr( cLineaAux , 2 )
-//       endif
-         if Upper( US_Word( cLineaAux , 1 ) ) == "MODE"
-            cMode := US_WordSubStr( cLineaAux , 2 )
-         endif
-      next i
-      ferase( cParam )
-   endif
+      For i := 1 To MLCount( MemoAux, nLineSize )
+         cLineaAux := AllTrim( MemoLine( MemoAux, nLineSize, i ) )
+         If Upper( US_Word( cLineaAux, 1 ) ) == "COMMAND"
+            cCMD := US_WordSubStr( cLineaAux, 2 )
+         EndIf
+         If Upper( US_Word( cLineaAux, 1 ) ) == "CONTROL"
+            cControlFile := US_WordSubStr( cLineaAux, 2 )
+         EndIf
+         If Upper( US_Word( cLineaAux, 1 ) ) == "DEFAULTPATH"
+            cDefaultPath := US_WordSubStr( cLineaAux, 2 )
+         EndIf
+         If Upper( US_Word( cLineaAux, 1 ) ) == "MODE"
+            cMode := US_WordSubStr( cLineaAux, 2 )
+         EndIf
+      Next i
+      FErase( cParam )
+   EndIf
 
    DEFINE WINDOW VentanaMain ;
-      AT 0,0 ;
+      AT 0, 0 ;
       WIDTH GetDesktopWidth() ;
       HEIGHT GetDesktopHeight() ;
       TITLE '' ;
@@ -120,67 +102,43 @@ FUNCTION MAIN(cP1,cP2,cP3,cP4,cP5,cP6,cP7,cP8,cP9,cP10,cP11,cP12,cP13,cP14,cP15,
 
    ACTIVATE WINDOW VentanaMain
 
-   if !bOk
-      ERRORLEVEL(1)
-   endif
+   If ! bOk
+      ERRORLEVEL( 1 )
+   EndIf
 Return bOk
 
 Function US_RunInit()
-   Local Reto , nHandle
+   Local Reto, nHandle
+
    DO EVENTS
-// memowrit( cFileStop , "Run Wait File Stop" )
-   nHandle := FOpen( cControlFile , FO_WRITE + FO_EXCLUSIVE )
-   if !empty( cDefaultPath )
+   nHandle := FOpen( cControlFile, FO_WRITE + FO_EXCLUSIVE )
+   If ! Empty( cDefaultPath )
       cCurrentPath := GetCurrentFolder()
       SetCurrentFolder( cDefaultPath )
-   endif
+   EndIf
    DO EVENTS
-   do case
-      case cMode == "HIDE"
-         Reto := WaitRun( cCMD , 0 )            // EXECUTE FILE ( cCMD ) WAIT HIDE
-      case cMode == "MINIMIZE"
-         Reto := WaitRun( cCMD , 6 )            // EXECUTE FILE ( cCMD ) WAIT MINIMIZE
-      case cMode == "MAXIMIZE"
-         Reto := WaitRun( cCMD , 3 )            // EXECUTE FILE ( cCMD ) WAIT MAXIMIZE
-      otherwise
-         Reto := WaitRun( cCMD , 5 )            // EXECUTE FILE ( cCMD ) WAIT
-   endcase
-   if !empty( cDefaultPath )
+   Do Case
+   Case cMode == "HIDE"
+      Reto := WaitRun( cCMD, 0 )            // EXECUTE FILE ( cCMD ) WAIT HIDE
+   Case cMode == "MINIMIZE"
+      Reto := WaitRun( cCMD, 6 )            // EXECUTE FILE ( cCMD ) WAIT MINIMIZE
+   Case cMode == "MAXIMIZE"
+      Reto := WaitRun( cCMD, 3 )            // EXECUTE FILE ( cCMD ) WAIT MAXIMIZE
+   Otherwise
+      Reto := WaitRun( cCMD, 5 )            // EXECUTE FILE ( cCMD ) WAIT
+   EndCase
+   If ! Empty( cDefaultPath )
       SetCurrentFolder( cCurrentPath )
-   endif
+   EndIf
    DO EVENTS
-   if Reto > 8
-      MsgInfo( "US_Run 333: Error Running: " + cCMD + HB_OsNewLine() + ;
-               "Code: "+US_VarToStr( Reto ) )                          // This is not translated
-      // Code 0019798320 = File Not Found
+   If Reto > 8
+      MsgInfo( "US_Run 333: Error Running: " + cCMD + HB_OsNewLine() + "Code: " + US_VarToStr( Reto ) )
       bOk := .F.
-   endif
-   fClose( nHandle )
-   ferase( cControlFile )
-// ferase( cFileStop )
+   EndIf
+   FClose( nHandle )
+   FErase( cControlFile )
    DO EVENTS
    VentanaMain.Release()
-Return
-
-/*
-Function STREAMOUT()
-   MsgInfo( "Function " + procname() + " suspend from US_Run" )           // This is not translated
-Return
-Function PASTERTF()
-   MsgInfo( "Function " + procname() + " suspend from US_Run" )           // This is not translated
-Return
-Function GETCONTROLINDEX()
-   MsgInfo( "Function " + procname() + " suspend from US_Run" )           // This is not translated
-Return
-Function VP_MGWAIT()
-   MsgInfo( "Function " + procname() + " suspend from US_Run" )           // This is not translated
-Return
-Function COPYTOCLIPBOARD()
-   MsgInfo( "Function " + procname() + " suspend from US_Run" )           // This is not translated
-Return
-Function COPYRTFTOCLIPBOARD()
-   MsgInfo( "Function " + procname() + " suspend from US_Run" )           // This is not translated
-Return
-*/
+Return Nil
 
 /* eof */

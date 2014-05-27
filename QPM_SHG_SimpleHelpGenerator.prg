@@ -27,6 +27,7 @@
 */
 
 #include "minigui.ch"
+#include "i_pseudofunc.ch"
 #include <QPM.ch>
 
 #ifdef QPM_SHG

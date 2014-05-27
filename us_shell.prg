@@ -26,785 +26,656 @@
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-FUNCTION MAIN(cP1,cP2,cP3,cP4,cP5,cP6,cP7,cP8,cP9,cP10,cP11,cP12,cP13,cP14,cP15,cP16,cP17,cP18,cP19,cP20, ;
-              cP21,cP22,cP23,cP24,cP25,cP26,cP27,cP28,cP29,cP30,cP31,cP32,cP33,cP34,cP35,cP36,cP37,cP38,cP39,cP40)
-   Local Version:="01.03" , cTxtAux := "" , cTxtAux2 := "" , i := 0
-   Local cModuleNameAux := "?" , cLineaAux := "" , cLineaAux2 := "" , bEncontroValido := .F.
-   Local nPos := 0 , bObjLst := .F. , bExpLst := .F. , cObjExt := ".ObjLst" , cExpExt := ".ExpLst"
-   Local MemoObjLst := "" , MemoExpLst := "EXPORTS"
-   Local bDelete := .F. , cLastModuleFound := "" , nZap := 0
+// Use US_Log( cVar, .F. ) to write info to the log
+
+FUNCTION MAIN( ... )
+   Local aParams := hb_aParams()
+   Local Version := "01.04", cTxtAux := "", cTxtAux2 := "", i := 0
+   Local cModuleNameAux := "?", cLineaAux := "", cLineaAux2 := "", bEncontroValido := .F.
+   Local nPos := 0, bObjLst := .F., bExpLst := .F., cObjExt := ".ObjLst", cExpExt := ".ExpLst"
+   Local MemoObjLst := "", MemoExpLst := "EXPORTS"
+   Local bDelete := .F., cLastModuleFound := "", nZap := 0
    Local bPellesDynamic := .F.
    Local bBorlandDynamic := .F.
    Local bMinGWDynamic := .F.
-   Local cDLL_Name     := ""
+   Local cDLL_Name := ""
    Local nDLL_NameAux := 0
    Local cDLL_NameFunAux := ""
    Local cDLL_NameMemoAux := ""
-   Local nLineaBaseExport := 0 , vObjectsPelles := {} , vFuncionesPelles := {} , bFunList := .F.
-   Private Tab:=Replicate(" ",0) , vFun := {} , j := 0 , bSay := .T. , bError:=.F. , bWarning:=.F. , cFileStop := ""
+   Local cParam, cPar1, cPar2, cPar3, cPar4
+   Local nLineaBaseExport := 0, vObjectsPelles := {}, vFuncionesPelles := {}, bFunList := .F.
+   Private Tab := Replicate(" ", 0), vFun := {}, j := 0, bSay := .T., bError := .F., bWarning := .F., cFileStop := ""
    Private cTimeStamp := ""
 
-   cP1 =IIF(cP1 ==NIL,"",cP1 )
-   cP2 =IIF(cP2 ==NIL,"",cP2 )
-   cP3 =IIF(cP3 ==NIL,"",cP3 )
-   cP4 =IIF(cP4 ==NIL,"",cP4 )
-   cP5 =IIF(cP5 ==NIL,"",cP5 )
-   cP6 =IIF(cP6 ==NIL,"",cP6 )
-   cP7 =IIF(cP7 ==NIL,"",cP7 )
-   cP8 =IIF(cP8 ==NIL,"",cP8 )
-   cP9 =IIF(cP9 ==NIL,"",cP9 )
-   cP10=IIF(cP10==NIL,"",cP10)
-   cP11=IIF(cP11==NIL,"",cP11)
-   cP12=IIF(cP12==NIL,"",cP12)
-   cP13=IIF(cP13==NIL,"",cP13)
-   cP14=IIF(cP14==NIL,"",cP14)
-   cP15=IIF(cP15==NIL,"",cP15)
-   cP16=IIF(cP16==NIL,"",cP16)
-   cP17=IIF(cP17==NIL,"",cP17)
-   cP18=IIF(cP18==NIL,"",cP18)
-   cP19=IIF(cP19==NIL,"",cP19)
-   cP20=IIF(cP20==NIL,"",cP20)
-   cP21=IIF(cP21==NIL,"",cP21)
-   cP22=IIF(cP22==NIL,"",cP22)
-   cP23=IIF(cP23==NIL,"",cP23)
-   cP24=IIF(cP24==NIL,"",cP24)
-   cP25=IIF(cP25==NIL,"",cP25)
-   cP26=IIF(cP26==NIL,"",cP26)
-   cP27=IIF(cP27==NIL,"",cP27)
-   cP28=IIF(cP28==NIL,"",cP28)
-   cP29=IIF(cP29==NIL,"",cP29)
-   cP30=IIF(cP30==NIL,"",cP30)
-   cP31=IIF(cP31==NIL,"",cP31)
-   cP32=IIF(cP32==NIL,"",cP32)
-   cP33=IIF(cP33==NIL,"",cP33)
-   cP34=IIF(cP34==NIL,"",cP34)
-   cP35=IIF(cP35==NIL,"",cP35)
-   cP36=IIF(cP36==NIL,"",cP36)
-   cP37=IIF(cP37==NIL,"",cP37)
-   cP38=IIF(cP38==NIL,"",cP38)
-   cP39=IIF(cP39==NIL,"",cP39)
-   cP40=IIF(cP40==NIL,"",cP40)
-   cParam:=ALLTRIM(cP1+" "+cP2+" "+cP3+" "+cP4+" "+cP5+" "+cP6+" "+cP7+" "+cP8+" "+cP9+" "+cP10+" "+cP11+" "+cP12+" "+cP13+" "+cP14+" "+cP15+" "+cP16+" "+cP17+" "+cP18+" "+cP19+" "+cP20+" "+ ;
-                   cP21+" "+cP22+" "+cP23+" "+cP24+" "+cP25+" "+cP26+" "+cP27+" "+cP28+" "+cP29+" "+cP30+" "+cP31+" "+cP32+" "+cP33+" "+cP34+" "+cP35+" "+cP36+" "+cP37+" "+cP38+" "+cP39+" "+cP40)
+   cParam := ""
+   For i := 1 To Len( aParams )
+      cParam += ( aParams[ i ] + " " )
+   Next i
+   cParam := AllTrim( cParam )
 
-   if ( Upper( US_Word( cParam , 1 ) ) == "-VER" .or. Upper( US_Word( cParam , 1 ) ) == "-VERSION" )
-      MemoWrit( "US_Shell.version" , Version )
+   cPar1 := Upper( US_Word( cParam, 1 ) )
+   If cPar1 == "-VER" .or. cPar1 == "-VERSION"
+      MemoWrit( "US_Shell.version", Version )
       Return .T.
-   endif
+   ElseIf cPar1 != "QPM"
+      Say( "US_Shell 999E: Running Outside System" )
+      ERRORLEVEL( 1 )
+      Return -1
+   Else
+      cParam := US_WordDel( cParam, 1 )
+   EndIf
 
-   if Upper( US_Word( cParam , 1 ) ) != "QPM"
-      Say( "US_Shell 999E: Running out System" )
-      ERRORLEVEL(1)
-      return -1
-   else
-      cParam := US_WordDel( cParam , 1 )
-   endif
-
-// us_log( cParam , .F. )
-   if ( nPos := US_WordPos( "-FILESTOP" , US_Upper( cParam ) ) ) > 0
-      if US_Words( cParam ) == nPos
-         Say( "US_Shell 934E: FILESTOP Whitout FileName, USE: -FILESTOP cDisc:\cPath\cFileName.ext" )
-         ERRORLEVEL(1)
-         return -1
-      endif
-      cFileStop := US_Word( cParam , nPos + 1 )
- //us_log( cFileStop , .F. )
+   If ( nPos := US_WordPos( "-FILESTOP", US_Upper( cParam ) ) ) > 0
+      If US_Words( cParam ) == nPos
+         Say( "US_Shell 934E: FILESTOP without FileName, USE: -FILESTOP cDisc:\cPath\cFileName.ext" )
+         ERRORLEVEL( 1 )
+         Return -1
+      EndIf
+      cFileStop := StrTran( US_Word( cParam, nPos + 1 ), "|", " " )
       Say( "US_Shell 933I: FILESTOP: " + cFileStop )
-      cParam := US_WordDel( cParam , nPos + 1 )
-      cParam := US_WordDel( cParam , nPos )
-   endif
+      cParam := US_WordDel( cParam, nPos + 1 )
+      cParam := US_WordDel( cParam, nPos )
+   EndIf
 
-   if ( nPos := US_WordPos( "-OFF" , US_Upper( cParam ) ) ) > 0
-      cParam := US_WordDel( cParam , nPos )
+   If ( nPos := US_WordPos( "-OFF", US_Upper( cParam ) ) ) > 0
+      cParam := US_WordDel( cParam, nPos )
       bSay := .F.
-   endif
+   EndIf
 
-   do case
-      case Upper( US_Word( cParam , 1 ) ) == "CHECKRC"
-         if US_Words( cParam ) < 2
-            Say( "US_Shell 410E: Invalid parm (count): " + cParam )
-            bError:=.T.
-         else
-            Say( "US_Shell 000I: Processing: "+cParam )
-            Say( "US_Shell 300I: CheckRC" )
-            Say( "       Option: " + US_Word(cParam,2) )
-            do case
-               case upper( US_Word( cParam , 2 ) ) == "NOTFILE"
-                  Say( "         File: " + US_Word(cParam,3) )
-                  if !file( US_Word(cParam,3) )
-                     Say( "US_Shell 380I: File Not Found: " + US_Word(cParam,3) )
-                     Say( "US_Shell 381E: Stop Processing" )
-                     bError:=.T.
-                  else
-                     Say( "US_Shell 386I: File Found: " + US_Word(cParam,3) + ' (' + alltrim( str( US_FileSize( US_Word(cParam,3) ) ) ) + ' bytes)' )
-                  endif
-               otherwise
-                  Say( "US_Shell 401E: Invalid parm (options 2): " + US_Word( cParam , 2 ) )
-                  bError:=.T.
-            endcase
-         endif
-      case Upper( US_Word( cParam , 1 ) ) == "COPY" .or. ;
-           Upper( US_Word( cParam , 1 ) ) == "COPYZAP"
-         if US_Words( cParam ) < 3
-            Say( "US_Shell 010E: Invalid parm (count): " + cParam )
-            bError:=.T.
-         else
-            Say( "US_Shell 000I: Processing: "+cParam )
-            Say( "US_Shell 011I: Copy file" )
-            Say( "         File In: " + US_Word(cParam,2) )
-            Say( "         File Out: " + US_Word(cParam,3) )
-            if !file( US_Word(cParam,2) )
-               Say( "US_Shell 012E: Input file not found: " + US_Word(cParam,2) )
-               bError:=.T.
-            else
-               if !US_IsDirectory( US_FileNameOnlyPath( US_Word( cParam , 3 ) ) )
-                  Say( "US_Shell 015E: Output Folder not found: " + US_Word(cParam,3) )
-                  bError:=.T.
-               else
-                  if filecopy( US_Word(cParam,2) , US_Word(cParam,3) ) == US_FileSize( US_Word(cParam,2) )
-              //\\COPY FILE ( US_Word(cParam,2) ) TO ( US_Word(cParam,3) )
-              //\\if ferror() = 0
-                     Say( "US_Shell 013I: Copy file OK" )
-                     if Upper( US_Word( cParam , 1 ) ) == "COPYZAP"
-                        nZap := US_FileChar26Zap( US_Word(cParam,3) )
-                        do case
-                           case nZap == -1
-                              Say( "US_Shell 234W: Warning, char x'1A' not removed" )
-                           case nZap == 1
-                              Say( "US_Shell 235I: Char x'1A' removed" )
-                        endcase
-                     endif
-                  else
-                     Say( "US_Shell 014E: Error in Copy file !!!" )
-               //    if upper( US_FileNameOnlyExt( US_Word(cParam,3) ) ) == "EXE"
-               //       Say( "               " + US_Word(cParam,3) + " Is Running ?" )
-               //    else
-               //       Say( "               " + US_Word(cParam,3) + " Is Open by Another Application ?" )
-               //    endif
-                     Say( "               " + US_Word(cParam,3) + " Is Running or Open by Another Application ???" )
-                     bError:=.T.
-                  endif
-               endif
-            endif
-         endif
-      case Upper( US_Word( cParam , 1 ) ) == "MOVE" .or. ;
-           Upper( US_Word( cParam , 1 ) ) == "MOVEZAP"
-         if US_Words( cParam ) < 3
-             Say( "US_Shell 020E: Invalid parm (count): " + cParam )
-            bError:=.T.
-         else
-            Say( "US_Shell 000I: Processing: "+cParam )
-            Say( "US_Shell 021I: Move file" )
-            Say( "         File In: " + US_Word(cParam,2) )
-            Say( "         File Out: " + US_Word(cParam,3) )
-            if !file( US_Word(cParam,2) )
-               Say( "US_Shell 022E: Input file not found: " + US_Word(cParam,2) )
-               bError:=.T.
-            else
-               if !US_IsDirectory( US_FileNameOnlyPath( US_Word( cParam , 3 ) ) )
-                  Say( "US_Shell 025E: Output Folder not found: " + US_Word(cParam,3) )
-                  bError:=.T.
-               else
-              //\\COPY FILE ( US_Word(cParam,2) ) TO ( US_Word(cParam,3) )
-              //\\if ferror() != 0
-                  if filecopy( US_Word(cParam,2) , US_Word(cParam,3) ) != US_FileSize( US_Word(cParam,2) )
-                     Say( "US_Shell 023E: Error in Move file (Copy error !!!)" )
-                  // if upper( US_FileNameOnlyExt( US_Word(cParam,3) ) ) == "EXE"
-                  //    Say( "               " + US_Word(cParam,3) + " Is Running ?" )
-                  // else
-                  //    Say( "               " + US_Word(cParam,3) + " Is Open by Another Application ?" )
-                  // endif
-                     Say( "               " + US_Word(cParam,3) + " Is Running or Open by Another Application ???" )
-                     bError:=.T.
-                  else
-                     if ferase( US_Word(cParam,2) ) == -1
-                        Say( "US_Shell 026E: Error in Move file (Original file not deleted !!! )" )
-                        bError:=.T.
-                     else
-                        Say( "US_Shell 024I: Move file OK" )
-                        if Upper( US_Word( cParam , 1 ) ) == "MOVEZAP"
-                           nZap := US_FileChar26Zap( US_Word(cParam,3) )
-                           do case
-                              case nZap == -1
-                                 Say( "US_Shell 234W: Warning, char x'1A' not removed" )
-                              case nZap == 1
-                                 Say( "US_Shell 235I: Char x'1A' removed" )
-                           endcase
-                        endif
-                        memowrit( US_Word(cParam,2)+".MOVED.TXT" , "File "+US_Word(cParam,2)+" has been moved to: "+US_Word(cParam,3) )
-                     endif
-                  endif
-               endif
-            endif
-         endif
-      case Upper( US_Word( cParam , 1 ) ) == "LIST_TXT"
-         if US_Words( cParam ) < 2
-             Say( "US_Shell 080E: Invalid parm (count): " + cParam )
-            bError:=.T.
-         else
-            Say( "US_Shell 000I: Processing: "+cParam )
-            if ( nPos := US_WordPos( "-DELETE" , US_Upper( cParam ) ) ) > 0
-               cParam := US_WordDel( cParam , nPos )
-               bDelete := .T.
-            endif
-            Say( "US_Shell 081I: Listing Content File" )
-            Say( "US_Shell 087I: File to List: " + US_Word(cParam,2) )
-            if !file( US_Word(cParam,2) )
-               Say( "US_Shell 082E: Input file not found: " + US_Word(cParam,2) )
-               bError:=.T.
-            else
-               cTxtAux := MemoRead( US_Word(cParam,2) )
-               for i:=1 to MLCount( cTxtAux , 254 )
-                  Say( memoline( cTxtAux , 254 , i ) )
-                  if US_Shell_bStop()
-                     Say( "US_Shell 930W: User Stop" )
-                     bWarning := .T.
-                     exit
-                  endif
-               next
-               Say( "US_Shell 088I: End List" )
-               if bDelete
-                  ferase( US_Word(cParam,2) )
-               endif
-            endif
-         endif
-      case Upper( US_Word( cParam , 1 ) ) == "ANALIZE_DLL"
-         if US_Words( cParam ) < 2
-             Say( "US_Shell 030E: Invalid parm (count): " + cParam )
-            bError:=.T.
-         else
-            Say( "US_Shell 000I: Processing: "+cParam )
-            if ( nPos := US_WordPos( "-DELETE" , US_Upper( cParam ) ) ) > 0
-               cParam := US_WordDel( cParam , nPos )
-               bDelete := .T.
-            endif
-            Say( "US_Shell 031I: Analizing Definition File for Dynamic Library (DLL)" )
-            Say( "         File In: " + US_Word(cParam,2) )
-            if !file( US_Word(cParam,2) )
-               Say( "US_Shell 032E: Input file not found: " + US_Word(cParam,2) )
-               bError:=.T.
-            else
-               Say( "Function Exported for this DLL: " )
-               cTxtAux := MemoRead( US_Word(cParam,2) )
-               nLineaBaseExport := MLCount( cTxtAux , 254 )
-               for i:=1 to MLCount( cTxtAux , 254 )
-                  if alltrim( memoline( cTxtAux , 254 , i ) ) == "EXPORTS"
-                     nLineaBaseExport := i + 1
-                  endif
-               next
-               for i:=nLineaBaseExport to MLCount( cTxtAux , 254 )
-                  cLineaAux := US_Word( memoline( cTxtAux , 254 , i ) , 1 )
-               // aadd( vFun , "             " + padl( alltrim( str( i - nLineaBaseExport + 1 ) ) , 5 ) + ": " + ;
-               //          cLineaAux )
-                  say( "             " + padl( alltrim( str( i - nLineaBaseExport + 1 ) ) , 5 ) + ": " + ;
-                           cLineaAux )
-                  if US_Shell_bStop()
-                     Say( "US_Shell 930W: User Stop" )
-                     bWarning := .T.
-                     exit
-                  endif
-               next
-         //    asort( vFun , {|x,y| US_Word( x , 1 ) < US_Word( y , 1 ) } )
-         //    For i:=1 to len( vFun )
-         //       Say( vFun[i] )
-         //    Next i
-               Say( "End Function List" )
-               if bDelete
-                  ferase( US_Word(cParam,2) )
-               endif
-            endif
-         endif
- //   case Upper( US_Word( cParam , 1 ) ) == "ANALIZE_DLL"
- //      if US_Words( cParam ) < 2
- //          Say( "US_Shell 030E: Invalid parm (count): " + cParam )
- //         bError:=.T.
- //      else
- //         Say( "US_Shell 000I: Processing: "+cParam )
- //         if ( nPos := US_WordPos( "-DELETE" , US_Upper( cParam ) ) ) > 0
- //            cParam := US_WordDel( cParam , nPos )
- //            bDelete := .T.
- //         endif
- //         Say( "US_Shell 031I: Analizing Definition File for Dynamic Library (DLL)" )
- //         Say( "         File In: " + US_Word(cParam,2) )
- //         if !file( US_Word(cParam,2) )
- //            Say( "US_Shell 032E: Input file not found: " + US_Word(cParam,2) )
- //            bError:=.T.
- //         else
- //            Say( "Function Exported for this DLL: " )
- //            cTxtAux := MemoRead( US_Word(cParam,2) )
- //            for i:=1 to MLCount( cTxtAux , 254 )
- //               cLineaAux := memoline( cTxtAux , 254 , i )
- //               if at( " @" , cLineaAux ) > 0 .and. ;
- //                  at( " ; " , cLineaAux ) > 0
- //                  aadd( vFun , "             " + padl( strtran( US_Word( cLineaAux , 2 ) , "@" , "" ) , 5 ) + ": " + ;
- //                        US_WordSubStr( cLineaAux , 4 ) )
- //               endif
- //            next
- //            asort( vFun , {|x,y| US_Word( x , 1 ) < US_Word( y , 1 ) } )
- //            For i:=1 to len( vFun )
- //               Say( vFun[i] )
- //            Next i
- //            Say( "End Function List" )
- //            if bDelete
- //               ferase( US_Word(cParam,2) )
- //            endif
- //         endif
- //      endif
-      case Upper( US_Word( cParam , 1 ) ) == "ANALIZE_LIB_PELLES"
-         if US_Words( cParam ) < 2
-            Say( "US_Shell 040E: Invalid parm (count): " + cParam )
-            bError:=.T.
-         else
-            Say( "US_Shell 000I: Processing: "+cParam )
-            if ( nPos := US_WordPos( "-DELETE" , US_Upper( cParam ) ) ) > 0
-               cParam := US_WordDel( cParam , nPos )
-               bDelete := .T.
-            endif
-            if ( nPos := US_WordPos( "-OBJLST" , US_Upper( cParam ) ) ) > 0
-               cParam := US_WordDel( cParam , nPos )
-               bObjLst := .T.
-            endif
-            if ( nPos := US_WordPos( "-EXPLST" , US_Upper( cParam ) ) ) > 0
-               cParam := US_WordDel( cParam , nPos )
-               bExpLst := .T.
-            endif
-            Say( "US_Shell 041I: Analizing Definition File for Pelles Static Library" )
-            Say( "         File In: " + US_Word(cParam,2) )
-            if bObjLst
-               Say( "         File Out: " + US_Word(cParam,2) + cObjExt )
-            endif
-            if bExpLst
-               Say( "         File Out: " + US_Word(cParam,2) + cExpExt )
-            endif
-            if !file( US_Word(cParam,2) )
-               Say( "US_Shell 042E: Input file not found: " + US_Word(cParam,2) )
-               bError:=.T.
-            else
-               Say( "Function List for this LIB: " )
-               bPellesDynamic := .F.
-               cTxtAux := MemoRead( US_Word(cParam,2) )
-               for i:=1 to MLCount( cTxtAux , 254 )
-                  cLineaAux := memoline( cTxtAux , 254 , i )
-                  if at( "Long name: " , cLineaAux ) == 1
-                     aadd( vObjectsPelles , US_FileNameOnlyName( substr( cLineaAux , 12 ) ) )
-                  endif
-               next
-               if len( vObjectsPelles ) == 0
-                  bPellesDynamic := .t.
-                  cDLL_Name := strtran( US_Word( substr( cTxtAux , rat( "Member at offset" , cTxtAux ) ) , 5 ) , "/" , "" )
-               endif
-               bFunList := .F.
-               for i:=1 to MLCount( cTxtAux , 254 )
-                  cLineaAux := memoline( cTxtAux , 254 , i )
-                  if US_Word( cLineaAux , 2 ) == "global" .and. ;
-                     US_Word( cLineaAux , 3 ) == "symbols" .and. ;
-                     US_Words( cLineaAux ) == 3
-                     bFunList := .T.
-                  // loop
-                  endif
-                  if bFunList .and. ;
-                     US_Word( cLineaAux , 1 ) == "Member" .and. ;
-                     US_Word( cLineaAux , 2 ) == "at" .and. ;
-                     US_Word( cLineaAux , 3 ) == "offset"
-                     exit
-                  endif
-                  if bFunList .and. ;
-                     US_Words( cLineaAux ) == 2
-                     if bPellesDynamic
-                        aadd( vFuncionesPelles , "DYNAMIC " + cDLL_Name + " " + US_Word( cLineaAux , 2 ) )
-                     else
-                        aadd( vFuncionesPelles , "STATIC " + vObjectsPelles[ VAL(NTOC(US_Word( cLineaAux , 1 ),10)) ] + " " + US_Word( cLineaAux , 2 ) )
-                     endif
-                  endif
-               next
-               asort( vFuncionesPelles , {|x,y| x < y } )
-               if len( vFuncionesPelles ) == 0
-                  cTxtAux2 := 'No public symbols exist.'
-               else
-                  for i:=1 to len( vFuncionesPelles )
-                     cTxtAux2 := cTxtAux2 + vFuncionesPelles[i] + HB_OsNewLine()
-                  next
-               endif
-               cTxtAux := cTxtAux2
-               if alltrim( memoline( cTxtAux , 254 , 1 ) ) == 'No public symbols exist.'
-                  Say( "US_Shell 048W: " + alltrim( memoline( cTxtAux , 254 , 1 ) ) )
+   cPar1 := Upper( US_Word( cParam, 1 ) )
+
+   Do Case
+   Case cPar1 == "CHECKRC"
+      If US_Words( cParam ) < 2
+         Say( "US_Shell 410E: Invalid parm (count): " + cParam )
+         bError := .T.
+      Else
+         Say( "US_Shell 000I: Processing: " + cParam )
+         Say( "US_Shell 300I: CheckRC" )
+         cPar2 := US_Word( cParam, 2 )
+         Say( "       Option: " + cPar2 )
+         If Upper( cPar2 ) == "NOTFILE"
+            cPar3 := StrTran( US_Word( cParam, 3 ), "|", " " )
+            Say( "         File: " + cPar3 )
+            If ! File( cPar3 )
+               Say( "US_Shell 380I: File Not Found: " + cPar3 )
+               Say( "US_Shell 381E: Stop Processing" )
+               bError := .T.
+            Else
+               Say( "US_Shell 386I: File Found: " + cPar3 + ' (' + AllTrim( Str( US_FileSize( cPar3 ) ) ) + ' bytes)' )
+            EndIf
+         Else
+            Say( "US_Shell 401E: Invalid parm (options 2): " + cPar2 )
+            bError := .T.
+         EndIf
+      EndIf
+   case cPar1 == "COPY" .or. cPar1 == "COPYZAP"
+      If US_Words( cParam ) < 3
+         Say( "US_Shell 010E: Invalid parm (count): " + cParam )
+         bError := .T.
+      Else
+         Say( "US_Shell 000I: Processing: " + cParam )
+         Say( "US_Shell 011I: Copy file" )
+         cPar2 := StrTran( US_Word( cParam, 2 ), "|", " " )
+         Say( "         File In: " + cPar2 )
+         cPar3 := StrTran( US_Word( cParam, 3 ), "|", " " )
+         Say( "         File Out: " + cPar3 )
+         If ! File( cPar2 )
+            Say( "US_Shell 012E: Input file not found: " + cPar2 )
+            bError := .T.
+         Else
+            If ! US_IsDirectory( US_FileNameOnlyPath( cPar3 ) )
+               Say( "US_Shell 015E: Output Folder not found: " + cPar3 )
+               bError := .T.
+            Else
+               If FileCopy( cPar2, cPar3 ) == US_FileSize( cPar2 )
+                  Say( "US_Shell 013I: Copy file OK" )
+                  If cPar1 == "COPYZAP"
+                     nZap := US_FileChar26Zap( cPar3 )
+                     Do Case
+                     Case nZap == -1
+                        Say( "US_Shell 234W: Warning, char x'1A' not removed" )
+                     Case nZap == 1
+                        Say( "US_Shell 235I: Char x'1A' removed" )
+                     EndCase
+                  EndIf
+               Else
+                  Say( "US_Shell 014E: Error in File Copy !!!" )
+                  Say( "               " + cPar3 + " Is Running or Open by Another Application ???" )
+                  bError := .T.
+               EndIf
+            EndIf
+         EndIf
+      EndIf
+   Case cPar1 == "MOVE" .or. cPar1 == "MOVEZAP"
+      If US_Words( cParam ) < 3
+         Say( "US_Shell 020E: Invalid parm (count): " + cParam )
+         bError := .T.
+      Else
+         Say( "US_Shell 000I: Processing: " + cParam )
+         Say( "US_Shell 021I: Move file" )
+         cPar2 := StrTran( US_Word( cParam, 2 ), "|", " " )
+         Say( "         File In: " + cPar2 )
+         cPar3 := StrTran( US_Word( cParam, 3 ), "|", " " )
+         Say( "         File Out: " + cPar3 )
+         If ! File( cPar2 )
+            Say( "US_Shell 022E: Input file not found: " + cPar2 )
+            bError := .T.
+         Else
+            If ! US_IsDirectory( US_FileNameOnlyPath( cPar3 ) )
+               Say( "US_Shell 025E: Output Folder not found: " + cPar3 )
+               bError := .T.
+            Else
+               If FileCopy( cPar2, cPar3 ) != US_FileSize( cPar2 )
+                  Say( "US_Shell 023E: Error in File Move (File Copy error !!!)" )
+                  Say( "               " + cPar3 + " Is Running or Open by Another Application ???" )
+                  bError := .T.
+               Else
+                  If FErase( cPar2 ) == -1
+                     Say( "US_Shell 026E: Error in Move file (Original file not deleted !!! )" )
+                     bError := .T.
+                  Else
+                     Say( "US_Shell 024I: Move file OK" )
+                     If cPar1 == "MOVEZAP"
+                        nZap := US_FileChar26Zap( cPar3 )
+                        Do Case
+                        Case nZap == -1
+                           Say( "US_Shell 234W: Warning, char x'1A' not removed" )
+                        Case nZap == 1
+                           Say( "US_Shell 235I: Char x'1A' removed" )
+                        EndCase
+                     EndIf
+                     MemoWrit( cPar2 + ".MOVED.TXT", "File " + cPar2 + " has been moved to: " + cPar3 )
+                  EndIf
+               EndIf
+            EndIf
+         EndIf
+      EndIf
+   Case cPar1 == "LIST_TXT"
+      If US_Words( cParam ) < 2
+         Say( "US_Shell 080E: Invalid parm (count): " + cParam )
+         bError := .T.
+      Else
+         Say( "US_Shell 000I: Processing: " + cParam )
+         If ( nPos := US_WordPos( "-DELETE", US_Upper( cParam ) ) ) > 0
+            cParam := US_WordDel( cParam, nPos )
+            bDelete := .T.
+         EndIf
+         Say( "US_Shell 081I: Listing Content File" )
+         cPar2 := StrTran( US_Word( cParam, 2 ), "|", " " )
+         Say( "US_Shell 087I: File to List: " + cPar2 )
+         If ! File( cPar2 )
+            Say( "US_Shell 082E: Input file not found: " + cPar2 )
+            bError := .T.
+         Else
+            cTxtAux := MemoRead( cPar2 )
+            For i := 1 To MLCount( cTxtAux, 254 )
+               Say( MemoLine( cTxtAux, 254, i ) )
+               If US_Shell_bStop()
+                  Say( "US_Shell 930W: User Stop" )
                   bWarning := .T.
-               else
-                  cModuleNameAux := "."
-                  for i:=1 to MLCount( cTxtAux , 254 )
-                     cLineaAux := memoline( cTxtAux , 254 , i )
-                     if US_Word( cLineaAux , 2 ) != cModuleNameAux               // .and. ;
-              //        cModuleNameAux != "."
-                        US_Shell_Listo()
-                        cModuleNameAux := US_Word( cLineaAux , 2 )
-                        if US_Word( cLineaAux , 1 ) == "DYNAMIC"
-                           Say( "    Dynamic link import (IMPDEF) From " + cModuleNameAux )
-                        else
-                           Say( "    Static Module " + cModuleNameAux )
-                           if bObjLst
-                              MemoObjLst := MemoObjLst + if( !empty( MemoObjLst ) , hb_OsNewLine() , "" ) + cModuleNameAux
-                           endif
-                        endif
-                     endif
-                     if !empty( cLineaAux )
-                        cModuleNameAux := US_Word( cLineaAux , 2 )
-                        aadd( vFun , "             " + substr( US_Word( cLineaAux , 3 ) , 1 ) )
-                        if bExpLst
-                           MemoExpLst := MemoExpLst + hb_OsNewLine() + substr( US_Word( cLineaAux , 3 ) , 1 )
-                        endif
-                     endif
-                     if US_Shell_bStop()
-                        Say( "US_Shell 930W: User Stop" )
-                        bWarning := .T.
-                        exit
-                     endif
-                  next
-                  US_Shell_Listo()
-                  Say( "End Function List" )
-                  if bObjLst
-                     MemoWrit( US_Word(cParam,2) + cObjExt , MemoObjLst )
-                  endif
-                  if bExpLst
-                     MemoWrit( US_Word(cParam,2) + cExpExt , MemoExpLst )
-                  endif
-               endif
-               if bDelete
-                  ferase( US_Word(cParam,2) )
-               endif
-            endif
-         endif
-      case Upper( US_Word( cParam , 1 ) ) == "ANALIZE_LIB_BORLAND"
-         if US_Words( cParam ) < 2
-            Say( "US_Shell 140E: Invalid parm (count): " + cParam )
-            bError:=.T.
-         else
-            Say( "US_Shell 000I: Processing: "+cParam )
-            if ( nPos := US_WordPos( "-DELETE" , US_Upper( cParam ) ) ) > 0
-               cParam := US_WordDel( cParam , nPos )
-               bDelete := .T.
-            endif
-            if ( nPos := US_WordPos( "-OBJLST" , US_Upper( cParam ) ) ) > 0
-               cParam := US_WordDel( cParam , nPos )
-               bObjLst := .T.
-            endif
-            if ( nPos := US_WordPos( "-EXPLST" , US_Upper( cParam ) ) ) > 0
-               cParam := US_WordDel( cParam , nPos )
-               bExpLst := .T.
-            endif
-            Say( "US_Shell 141I: Analizing Definition File for Borland Static Library" )
-            Say( "         File In: " + US_Word(cParam,2) )
-            if bObjLst
-               Say( "         File Out: " + US_Word(cParam,2) + cObjExt )
-            endif
-            if bExpLst
-               Say( "         File Out: " + US_Word(cParam,2) + cExpExt )
-            endif
-            if !file( US_Word(cParam,2) )
-               Say( "US_Shell 142E: Input file not found: " + US_Word(cParam,2) )
-               bError:=.T.
-            else
-               Say( "Function List for this LIB: " )
-               cTxtAux := MemoRead( US_Word(cParam,2) )
-               if alltrim( memoline( cTxtAux , 254 , 1 ) ) == 'No public symbols exist.'
-                  Say( "US_Shell 148W: " + alltrim( memoline( cTxtAux , 254 , 1 ) ) )
+                  Exit
+               EndIf
+            Next i
+            Say( "US_Shell 088I: End List" )
+            If bDelete
+               FErase( cPar2 )
+            EndIf
+         EndIf
+      EndIf
+   Case cPar1 == "ANALIZE_DLL"
+      If US_Words( cParam ) < 2
+         Say( "US_Shell 030E: Invalid parm (count): " + cParam )
+         bError := .T.
+      Else
+         Say( "US_Shell 000I: Processing: " + cParam )
+         If ( nPos := US_WordPos( "-DELETE", US_Upper( cParam ) ) ) > 0
+            cParam := US_WordDel( cParam, nPos )
+            bDelete := .T.
+         EndIf
+         Say( "US_Shell 031I: Analizing Definition File For Dynamic Library (DLL)" )
+         cPar2 := StrTran( US_Word( cParam, 2 ), "|", " " )
+         Say( "         File In: " + cPar2 )
+         If ! File( cPar2 )
+            Say( "US_Shell 032E: Input file not found: " + cPar2 )
+            bError := .T.
+         Else
+            Say( "Functions Exported For this DLL: " )
+            cTxtAux := MemoRead( cPar2 )
+            nLineaBaseExport := MLCount( cTxtAux, 254 )
+            For i := 1 To MLCount( cTxtAux, 254 )
+               If AllTrim( MemoLine( cTxtAux, 254, i ) ) == "EXPORTS"
+                  nLineaBaseExport := i + 1
+               EndIf
+            Next i
+            For i := nLineaBaseExport To MLCount( cTxtAux, 254 )
+               cLineaAux := US_Word( MemoLine( cTxtAux, 254, i ), 1 )
+               Say( "             " + PadL( AllTrim( Str( i - nLineaBaseExport + 1 ) ), 5 ) + ": " + cLineaAux )
+               If US_Shell_bStop()
+                  Say( "US_Shell 930W: User Stop" )
                   bWarning := .T.
-               else
-                  bBorlandDynamic := .F.
-                  for i:=1 to MLCount( cTxtAux , 254 )
-                     cLineaAux := memoline( cTxtAux , 254 , i )
-                     if US_Word( cLineaAux , 2 ) == "size" .and. ;
-                        US_Word( cLineaAux , 3 ) == "="
-                        US_Shell_Listo()
-                        cModuleNameAux := US_Word( cLineaAux , 1 )
-                        if val( US_Word( cLineaAux , 4 ) ) = 0
-                           if !bBorlandDynamic
-                              cDLL_NameFunAux  := US_Word( cLineaAux , 1 )
-                              cDLL_NameMemoAux := memoread( US_FileNameOnlyPathAndName( US_Word(cParam,2) ) )
-                              cDLL_NameMemoAux := substr( cDLL_NameMemoAux , at( chr( 14 ) + cDLL_NameFunAux + chr( 12 ) , cDLL_NameMemoAux ) )
-                              cDLL_NameMemoAux := strtran( cDLL_NameMemoAux , chr( 12 ) , " " )
-                        //    cDLL_NameMemoAux := strtran( cDLL_NameMemoAux , chr(  0 ) , " " )
-                              cDLL_NameMemoAux := US_Word( cDLL_NameMemoAux , 2 )
-                              cDLL_Name        := substr( cDLL_NameMemoAux , 1 , rat( ".DLL" , upper( cDLL_NameMemoAux ) ) + 3 )
-                //      us_log( cDLL_Name )
-                              Say( "    Dynamic link import (IMPDEF) From " + cDLL_Name )
-                              bBorlandDynamic := .T.
-                           endif
-                        else
-                           Say( "    Static Module " + cModuleNameAux )
-                           if bObjLst
-                              MemoObjLst := MemoObjLst + if( !empty( MemoObjLst ) , hb_OsNewLine() , "" ) + cModuleNameAux
-                           endif
-                        endif
-                     else
-                        if !empty( cLineaAux ) .and. cLineaAux != "Publics by module"
-                           aadd( vFun , "             " + substr( US_Word( cLineaAux , 1 ) , 1 ) )
-                           if bExpLst
-                              MemoExpLst := MemoExpLst + hb_OsNewLine() + substr( US_Word( cLineaAux , 1 ) , 1 )
-                           endif
-                           if US_Words( cLineaAux ) == 2
-                              aadd( vFun , "             " + substr( US_Word( cLineaAux , 2 ) , 1 ) )
-                              if bExpLst
-                                 MemoExpLst := MemoExpLst + hb_OsNewLine() + substr( US_Word( cLineaAux , 2 ) , 1 )
-                              endif
-                           endif
-                        endif
-                     endif
-                     if US_Shell_bStop()
-                        Say( "US_Shell 930W: User Stop" )
-                        bWarning := .T.
-                        exit
-                     endif
-                  next
-                  US_Shell_Listo()
-                  Say( "End Function List" )
-                  if bObjLst
-                     MemoWrit( US_Word(cParam,2) + cObjExt , MemoObjLst )
-                  endif
-                  if bExpLst
-                     MemoWrit( US_Word(cParam,2) + cExpExt , MemoExpLst )
-                  endif
-               endif
-               if bDelete
-                  ferase( US_Word(cParam,2) )
-               endif
-            endif
-         endif
-      case Upper( US_Word( cParam , 1 ) ) == "ANALIZE_LIB_MINGW"
-         if US_Words( cParam ) < 2
-             Say( "US_Shell 050E: Invalid parm (count): " + cParam )
-            bError:=.T.
-         else
-            Say( "US_Shell 000I: Processing: "+cParam )
-            if ( nPos := US_WordPos( "-DELETE" , US_Upper( cParam ) ) ) > 0
-               cParam := US_WordDel( cParam , nPos )
-               bDelete := .T.
-            endif
-            if ( nPos := US_WordPos( "-OBJLST" , US_Upper( cParam ) ) ) > 0
-               cParam := US_WordDel( cParam , nPos )
-               bObjLst := .T.
-            endif
-            if ( nPos := US_WordPos( "-EXPLST" , US_Upper( cParam ) ) ) > 0
-               cParam := US_WordDel( cParam , nPos )
-               bExpLst := .T.
-            endif
-            Say( "US_Shell 051I: Analizing Definition File for MinGW Static Library" )
-            Say( "         File In: " + US_Word(cParam,2) )
-            if bObjLst
-               Say( "         File Out: " + US_Word(cParam,2) + cObjExt )
-            endif
-            if bExpLst
-               Say( "         File Out: " + US_Word(cParam,2) + cExpExt )
-            endif
-            if !file( US_Word(cParam,2) )
-               Say( "US_Shell 052E: Input file not found: " + US_Word(cParam,2) )
-               bError:=.T.
-            else
-               Say( "Function List for this LIB (.A): " )
-               cTxtAux := MemoRead( US_Word(cParam,2) )
-               bMinGWDynamic := .F.
-               for i:=1 to MLCount( cTxtAux , 254 )
-                  cLineaAux := memoline( cTxtAux , 254 , i )
-                  cLineaAux2 := memoline( cTxtAux , 254 , i + 1 )
-                  if US_Words( cLineaAux ) > 3
-                     if alltrim( US_WordSubStr( cLineaAux , 2 ) ) == "file format pe-i386"
-                        cLastModuleFound := US_Word( cLineaAux , 1 )
-                        cLastModuleFound := alltrim( strtran( cLastModuleFound , ":" , "" ) )
-                     endif
-                  endif
-                  if US_Word( cLineaAux , 1 ) == "SYMBOL" .and. ;
-                     US_Word( cLineaAux , 2 ) == "TABLE:"
-                     cModuleNameAux := US_Word( cLineaAux2 , US_Words( cLineaAux2 ) )
-                     // dos primeros files en librerias originadas por import (no interesan)
-                     if cModuleNameAux == "fake"
-                        bEncontroValido := .F.
-                        loop
-                     endif
-                     // es modulo originado por import
-                     if cModuleNameAux == ".text"
-                     // US_Shell_Listo()
-                        bEncontroValido := .F.
-                        cModuleNameAux := cLastModuleFound
-                        if !bMinGWDynamic
-                           cDLL_Name := substr( cTxtAux , at( "Contents of section" , cTxtAux ) )
-                           nDLL_NameAux := rat( " " , substr( cDLL_Name , 1 , at( ".DLL...." , upper( cDLL_Name ) ) ) ) + 1
-                           cDLL_Name := strtran( US_Word( substr( cDLL_Name , nDLL_NameAux ) , 1 ) , "...." , "" )
-                           Say( "    Dynamic link import (IMPDEF) From " + cDLL_Name )
-                           bMinGWDynamic := .T.
-                        endif
-                        aadd( vFun , "             " + US_Word( memoline( cTxtAux , 254 , i + 8 ) , US_Words( memoline( cTxtAux , 254 , i + 8 ) ) ) )
-                        loop
-                     else
-                        // Modulo estandard
-                        US_Shell_Listo()
-                        bEncontroValido := .T.
-                        cModuleNameAux := substr( cModuleNameAux , 1 , rat( "." , cModuleNameAux ) - 1 )
+                  Exit
+               EndIf
+            Next i
+            Say( "End Functions List" )
+            If bDelete
+               FErase( cPar2 )
+            EndIf
+         EndIf
+      EndIf
+   Case cPar1 == "ANALIZE_LIB_PELLES"
+      If US_Words( cParam ) < 2
+         Say( "US_Shell 040E: Invalid parm (count): " + cParam )
+         bError := .T.
+      Else
+         Say( "US_Shell 000I: Processing: " + cParam )
+         If ( nPos := US_WordPos( "-DELETE", US_Upper( cParam ) ) ) > 0
+            cParam := US_WordDel( cParam, nPos )
+            bDelete := .T.
+         EndIf
+         If ( nPos := US_WordPos( "-OBJLST", US_Upper( cParam ) ) ) > 0
+            cParam := US_WordDel( cParam, nPos )
+            bObjLst := .T.
+         EndIf
+         If ( nPos := US_WordPos( "-EXPLST", US_Upper( cParam ) ) ) > 0
+            cParam := US_WordDel( cParam, nPos )
+            bExpLst := .T.
+         EndIf
+         Say( "US_Shell 041I: Analizing Definition File For Pelles Static Library" )
+         cPar2 := StrTran( US_Word( cParam, 2 ), "|", " " )
+         Say( "         File In: " + cPar2 )
+         If bObjLst
+            Say( "         File Out: " + cPar2 + cObjExt )
+         EndIf
+         If bExpLst
+            Say( "         File Out: " + cPar2 + cExpExt )
+         EndIf
+         If ! File( cPar2 )
+            Say( "US_Shell 042E: Input file not found: " + cPar2 )
+            bError := .T.
+         Else
+            Say( "Functions List For this LIB: " )
+            bPellesDynamic := .F.
+            cTxtAux := MemoRead( cPar2 )
+            For i := 1 To MLCount( cTxtAux, 254 )
+               cLineaAux := MemoLine( cTxtAux, 254, i )
+               If at( "Long name: ", cLineaAux ) == 1
+                  aAdd( vObjectsPelles, US_FileNameOnlyName( SubStr( cLineaAux, 12 ) ) )
+               EndIf
+            Next i
+            If Len( vObjectsPelles ) == 0
+               bPellesDynamic := .T.
+               cDLL_Name := StrTran( US_Word( SubStr( cTxtAux, RAt( "Member at offset", cTxtAux ) ), 5 ), "/", "" )
+            EndIf
+            bFunList := .F.
+            For i := 1 To MLCount( cTxtAux, 254 )
+               cLineaAux := MemoLine( cTxtAux, 254, i )
+               If US_Word( cLineaAux, 2 ) == "global" .and. ;
+                  US_Word( cLineaAux, 3 ) == "symbols" .and. ;
+                  US_Words( cLineaAux ) == 3
+                  bFunList := .T.
+               EndIf
+               If bFunList .and. ;
+                  US_Word( cLineaAux, 1 ) == "Member" .and. ;
+                  US_Word( cLineaAux, 2 ) == "at" .and. ;
+                  US_Word( cLineaAux, 3 ) == "offset"
+                  exit
+               EndIf
+               If bFunList .and. ;
+                  US_Words( cLineaAux ) == 2
+                  If bPellesDynamic
+                     aAdd( vFuncionesPelles, "DYNAMIC " + cDLL_Name + " " + US_Word( cLineaAux, 2 ) )
+                  Else
+                     aAdd( vFuncionesPelles, "STATIC " + vObjectsPelles[ Val( NToC( US_Word( cLineaAux, 1 ), 10 ) ) ] + " " + US_Word( cLineaAux, 2 ) )
+                  EndIf
+               EndIf
+            Next i
+            aSort( vFuncionesPelles, { |x, y| x < y } )
+            If Len( vFuncionesPelles ) == 0
+               cTxtAux2 := 'No public symbols exist.'
+            Else
+               For i := 1 To len( vFuncionesPelles )
+                  cTxtAux2 := cTxtAux2 + vFuncionesPelles[i] + HB_OsNewLine()
+               Next i
+            EndIf
+            cTxtAux := cTxtAux2
+            If AllTrim( MemoLine( cTxtAux, 254, 1 ) ) == 'No public symbols exist.'
+               Say( "US_Shell 048W: " + AllTrim( MemoLine( cTxtAux, 254, 1 ) ) )
+               bWarning := .T.
+            Else
+               cModuleNameAux := "."
+               For i := 1 To MLCount( cTxtAux, 254 )
+                  cLineaAux := MemoLine( cTxtAux, 254, i )
+                  If US_Word( cLineaAux, 2 ) != cModuleNameAux
+                     US_Shell_Listo()
+                     cModuleNameAux := US_Word( cLineaAux, 2 )
+                     If US_Word( cLineaAux, 1 ) == "DYNAMIC"
+                        Say( "    Dynamic link import (IMPDEF) From " + cModuleNameAux )
+                     Else
                         Say( "    Static Module " + cModuleNameAux )
-                        if bObjLst
-                           MemoObjLst := MemoObjLst + if( !empty( MemoObjLst ) , hb_OsNewLine() , "" ) + cModuleNameAux
-                        endif
-                     endif
-                  else
-                     // funcion en modulo estandard
-                     if alltrim( cLineaAux ) == "File" .and. bEncontroValido
-          //            if US_Word( cLineaAux2 , US_Words( cLineaAux2 ) ) == "_symbols"
-                           for j := i+1 to MLCount( cTxtAux , 254 )
-                              cLineaAux = memoline( cTxtAux , 254 , j )
-                              if substr( US_Word( cLineaAux , US_Words( cLineaAux ) ) , 1 , 7 ) == "_HB_FUN"
-                                 aadd( vFun , "             " + US_Word( cLineaAux , US_Words( cLineaAux ) ) )
-                                 if bExpLst
-                                    MemoExpLst := MemoExpLst + hb_OsNewLine() + US_Word( cLineaAux , US_Words( cLineaAux ) )
-                                 endif
-                                 i := j
-                              // exit
-                              endif
-                              if substr( US_Word( cLineaAux , US_Words( cLineaAux ) ) , 1 , 1 ) == "." .or. ;
-                                 ( !( substr( US_Word( cLineaAux , 1 ) , 1 , 1 ) == "[" ) .and. !( US_Word( cLineaAux , 1 ) == "AUX" ) )
-                                 i := j
-                                 exit
-                              endif
-                              if US_Shell_bStop()
-                              // Say( "US_Shell 930W: User Stop" )
-                              // bWarning := .T.
-                                 exit
-                              endif
-                           next
-         //             else
-         //                aadd( vFun , "             " + US_Word( cLineaAux2 , US_Words( cLineaAux2 ) ) )
-         //                if bExpLst
-         //                   MemoExpLst := MemoExpLst + hb_OsNewLine() + US_Word( cLineaAux2 , US_Words( cLineaAux2 ) )
-         //                endif
-         //             endif
-                        bEncontroValido := .F.
-                     endif
-                  endif
-                  if US_Shell_bStop()
+                        If bObjLst
+                           MemoObjLst := MemoObjLst + If( ! Empty( MemoObjLst ), hb_OsNewLine(), "" ) + cModuleNameAux
+                        EndIf
+                     EndIf
+                  EndIf
+                  If ! Empty( cLineaAux )
+                     cModuleNameAux := US_Word( cLineaAux, 2 )
+                     aadd( vFun, "             " + SubStr( US_Word( cLineaAux, 3 ), 1 ) )
+                     If bExpLst
+                        MemoExpLst := MemoExpLst + hb_OsNewLine() + SubStr( US_Word( cLineaAux, 3 ), 1 )
+                     EndIf
+                  EndIf
+                  If US_Shell_bStop()
                      Say( "US_Shell 930W: User Stop" )
                      bWarning := .T.
                      exit
-                  endif
-               next
+                  EndIf
+               Next i
                US_Shell_Listo()
-               Say( "End Function List" )
-               if bObjLst
-                  MemoWrit( US_Word(cParam,2) + cObjExt , MemoObjLst )
-               endif
-               if bExpLst
-                  MemoWrit( US_Word(cParam,2) + cExpExt , MemoExpLst )
-               endif
-               if bDelete
-                  ferase( US_Word(cParam,2) )
-               endif
-            endif
-         endif
-      case Upper( US_Word( cParam , 1 ) ) == "DELETE"
-         if US_Words( cParam ) < 2
-             Say( "US_Shell 060E: Invalid parm (count): " + cParam )
-            bError:=.T.
-         else
-            Say( "US_Shell 000I: Processing: "+cParam )
-            if file( US_Word(cParam,2) )
-               if ferase( US_Word(cParam,2) ) == -1
-                  Say( "US_Shell 064E: Error in Delete file !!!" )
-                  bError:=.T.
-               else
-                  Say( "US_Shell 065I: File Deleted OK" )
-               endif
-            else
-               Say( "US_Shell 066E: File not found" )
-            endif
-         endif
-      case Upper( US_Word( cParam , 1 ) ) == "CHANGE"
-         if US_Words( cParam ) != 4
-            Say( "US_Shell 070E: Invalid parm (count): " + cParam )
-            bError:=.T.
-         else
-            Say( "US_Shell 071I: Change into File" )
-            Say( "               File: " + US_Word(cParam,2) )
-            Say( "               Old String: " + if( US_Word( cParam , 3 ) == "&" , "(Character ampersand)" , US_Word( cParam , 3 ) ) )
-            Say( "               New String: " + if( US_Word( cParam , 4 ) == "&" , "(Character ampersand)" , US_Word( cParam , 4 ) ) )
-            if !file( US_Word(cParam,2) )
-               Say( "US_Shell 072E: Input file not found: " + US_Word(cParam,2) )
-               bError:=.T.
-            else
-               if MemoWrit( US_Word( cParam , 2 ) , strtran( MemoRead( US_Word( cParam , 2 ) ) , US_Word( cParam , 3 ) , US_Word( cParam , 4 ) ) )
-                  Say( "US_Shell 073I: Change OK" )
-               else
-                  Say( "US_Shell 074E: Error in Change File !!!" )
-                  bError:=.T.
-               endif
-            endif
-         endif
-      case Upper( US_Word( cParam , 1 ) ) == "CHANGE_CHR"
-         if US_Words( cParam ) != 4
-            Say( "US_Shell 070E: Invalid parm (count): " + cParam )
-            bError:=.T.
-         else
-            Say( "US_Shell 071I: Change CHR into File" )
-            Say( "               File: " + US_Word(cParam,2) )
-            Say( "               Old String: " + if( US_Word( cParam , 3 ) == "&" , "(Character ampersand)" , US_Word( cParam , 3 ) ) )
-            Say( "               New String: " + if( Chr( val( US_Word( cParam , 4 ) ) ) == "&" , "(Character ampersand)" , Chr( val( US_Word( cParam , 4 ) ) ) ) )
-            if !file( US_Word(cParam,2) )
-               Say( "US_Shell 072E: Input file not found: " + US_Word(cParam,2) )
-               bError:=.T.
-            else
-               if MemoWrit( US_Word( cParam , 2 ) , strtran( MemoRead( US_Word( cParam , 2 ) ) , US_Word( cParam , 3 ) , Chr( val( US_Word( cParam , 4 ) ) ) ) )
-                  Say( "US_Shell 073I: Change OK" )
-               else
-                  Say( "US_Shell 074E: Error in Change File !!!" )
-                  bError:=.T.
-               endif
-            endif
-         endif
-      otherwise
-         Say( "US_Shell 002E: Invalid parm: "+cParam )
-         bError:=.T.
-   endcase
-// inkey(0)
-   ferase( cFileStop )
-   if bWarning
-      ERRORLEVEL(2)
-   endif
-   if bError
-      ERRORLEVEL(1)
-   endif
-return .T.
+               Say( "End Functions List" )
+               If bObjLst
+                  MemoWrit( cPar2 + cObjExt, MemoObjLst )
+               EndIf
+               If bExpLst
+                  MemoWrit( cPar2 + cExpExt, MemoExpLst )
+               EndIf
+            EndIf
+            If bDelete
+               FErase( cPar2 )
+            EndIf
+         EndIf
+      EndIf
+   Case cPar1 == "ANALIZE_LIB_BORLAND"
+      If US_Words( cParam ) < 2
+         Say( "US_Shell 140E: Invalid parm (count): " + cParam )
+         bError := .T.
+      Else
+         Say( "US_Shell 000I: Processing: " + cParam )
+         If ( nPos := US_WordPos( "-DELETE", US_Upper( cParam ) ) ) > 0
+            cParam := US_WordDel( cParam, nPos )
+            bDelete := .T.
+         EndIf
+         If ( nPos := US_WordPos( "-OBJLST", US_Upper( cParam ) ) ) > 0
+            cParam := US_WordDel( cParam, nPos )
+            bObjLst := .T.
+         EndIf
+         If ( nPos := US_WordPos( "-EXPLST", US_Upper( cParam ) ) ) > 0
+            cParam := US_WordDel( cParam, nPos )
+            bExpLst := .T.
+         EndIf
+         Say( "US_Shell 141I: Analizing Definition File For Borland Static Library" )
+         cPar2 := StrTran( US_Word( cParam, 2 ), "|", " " )
+         Say( "         File In: " + cPar2 )
+         If bObjLst
+            Say( "         File Out: " + cPar2 + cObjExt )
+         EndIf
+         If bExpLst
+            Say( "         File Out: " + cPar2 + cExpExt )
+         EndIf
+         If ! File( cPar2 )
+            Say( "US_Shell 142E: Input file not found: " + cPar2 )
+            bError := .T.
+         Else
+            Say( "Functions List For this LIB: " )
+            cTxtAux := MemoRead( cPar2 )
+            If AllTrim( MemoLine( cTxtAux, 254, 1 ) ) == 'No public symbols exist.'
+               Say( "US_Shell 148W: " + AllTrim( MemoLine( cTxtAux, 254, 1 ) ) )
+               bWarning := .T.
+            Else
+               bBorlandDynamic := .F.
+               For i := 1 To MLCount( cTxtAux, 254 )
+                  cLineaAux := MemoLine( cTxtAux, 254, i )
+                  If US_Word( cLineaAux, 2 ) == "size" .and. ;
+                     US_Word( cLineaAux, 3 ) == "="
+                     US_Shell_Listo()
+                     cModuleNameAux := US_Word( cLineaAux, 1 )
+                     If Val( US_Word( cLineaAux, 4 ) ) = 0
+                        If ! bBorlandDynamic
+                           cDLL_NameFunAux := US_Word( cLineaAux, 1 )
+                           cDLL_NameMemoAux := MemoRead( US_FileNameOnlyPathAndName( cPar2 ) )
+                           cDLL_NameMemoAux := SubStr( cDLL_NameMemoAux, At( Chr( 14 ) + cDLL_NameFunAux + Chr( 12 ), cDLL_NameMemoAux ) )
+                           cDLL_NameMemoAux := StrTran( cDLL_NameMemoAux, Chr( 12 ), " " )
+                           cDLL_NameMemoAux := US_Word( cDLL_NameMemoAux, 2 )
+                           cDLL_Name := SubStr( cDLL_NameMemoAux, 1, RAt( ".DLL", Upper( cDLL_NameMemoAux ) ) + 3 )
+                           Say( "    Dynamic link import (IMPDEF) From " + cDLL_Name )
+                           bBorlandDynamic := .T.
+                        EndIf
+                     Else
+                        Say( "    Static Module " + cModuleNameAux )
+                        If bObjLst
+                           MemoObjLst := MemoObjLst + If( ! Empty( MemoObjLst ), hb_OsNewLine(), "" ) + cModuleNameAux
+                        EndIf
+                     EndIf
+                  Else
+                     If ! Empty( cLineaAux ) .and. cLineaAux != "Publics by module"
+                        aAdd( vFun, "             " + SubStr( US_Word( cLineaAux, 1 ), 1 ) )
+                        If bExpLst
+                           MemoExpLst := MemoExpLst + hb_OsNewLine() + SubStr( US_Word( cLineaAux, 1 ), 1 )
+                        EndIf
+                        If US_Words( cLineaAux ) == 2
+                           aAdd( vFun, "             " + SubStr( US_Word( cLineaAux, 2 ), 1 ) )
+                           If bExpLst
+                              MemoExpLst := MemoExpLst + hb_OsNewLine() + SubStr( US_Word( cLineaAux, 2 ), 1 )
+                           EndIf
+                        EndIf
+                     EndIf
+                  EndIf
+                  If US_Shell_bStop()
+                     Say( "US_Shell 930W: User Stop" )
+                     bWarning := .T.
+                     Exit
+                  EndIf
+               Next i
+               US_Shell_Listo()
+               Say( "End Functions List" )
+               If bObjLst
+                  MemoWrit( cPar2 + cObjExt, MemoObjLst )
+               EndIf
+               If bExpLst
+                  MemoWrit( cPar2 + cExpExt, MemoExpLst )
+               EndIf
+            EndIf
+            If bDelete
+               FErase( cPar2 )
+            EndIf
+         EndIf
+      EndIf
+   Case cPar1 == "ANALIZE_LIB_MINGW"
+      If US_Words( cParam ) < 2
+         Say( "US_Shell 050E: Invalid parm (count): " + cParam )
+         bError := .T.
+      Else
+         Say( "US_Shell 000I: Processing: " + cParam )
+         If ( nPos := US_WordPos( "-DELETE", US_Upper( cParam ) ) ) > 0
+            cParam := US_WordDel( cParam, nPos )
+            bDelete := .T.
+         EndIf
+         If ( nPos := US_WordPos( "-OBJLST", US_Upper( cParam ) ) ) > 0
+            cParam := US_WordDel( cParam, nPos )
+            bObjLst := .T.
+         EndIf
+         If ( nPos := US_WordPos( "-EXPLST", US_Upper( cParam ) ) ) > 0
+            cParam := US_WordDel( cParam, nPos )
+            bExpLst := .T.
+         EndIf
+         Say( "US_Shell 051I: Analizing Definition File For MinGW Static Library" )
+         cPar2 := StrTran( US_Word( cParam, 2 ), "|", " " )
+         Say( "         File In: " + cPar2 )
+         If bObjLst
+            Say( "         File Out: " + cPar2 + cObjExt )
+         EndIf
+         If bExpLst
+            Say( "         File Out: " + cPar2 + cExpExt )
+         EndIf
+         If ! File( cPar2 )
+            Say( "US_Shell 052E: Input file not found: " + cPar2 )
+            bError := .T.
+         Else
+            Say( "Functions List For this LIB (.A): " )
+            cTxtAux := MemoRead( cPar2 )
+            bMinGWDynamic := .F.
+            For i := 1 To MLCount( cTxtAux, 254 )
+               cLineaAux := MemoLine( cTxtAux, 254, i )
+               cLineaAux2 := MemoLine( cTxtAux, 254, i + 1 )
+               If US_Words( cLineaAux ) > 3
+                  If AllTrim( US_WordSubStr( cLineaAux, 2 ) ) == "file format pe-i386"
+                     cLastModuleFound := US_Word( cLineaAux, 1 )
+                     cLastModuleFound := AllTrim( StrTran( cLastModuleFound, ":", "" ) )
+                  EndIf
+               EndIf
+               If US_Word( cLineaAux, 1 ) == "SYMBOL" .and. ;
+                  US_Word( cLineaAux, 2 ) == "TABLE:"
+                  cModuleNameAux := US_Word( cLineaAux2, US_Words( cLineaAux2 ) )
+                  // ignore first two files in import originated libraries
+                  If cModuleNameAux == "fake"
+                     bEncontroValido := .F.
+                     Loop
+                  EndIf
+                  // is a module originated by import
+                  If cModuleNameAux == ".text"
+                     bEncontroValido := .F.
+                     cModuleNameAux := cLastModuleFound
+                     If ! bMinGWDynamic
+                        cDLL_Name := SubStr( cTxtAux, at( "Contents of section", cTxtAux ) )
+                        nDLL_NameAux := RAt( " ", SubStr( cDLL_Name, 1, At( ".DLL....", Upper( cDLL_Name ) ) ) ) + 1
+                        cDLL_Name := StrTran( US_Word( SubStr( cDLL_Name, nDLL_NameAux ), 1 ), "....", "" )
+                        Say( "    Dynamic link import (IMPDEF) From " + cDLL_Name )
+                        bMinGWDynamic := .T.
+                     EndIf
+                     aAdd( vFun, "             " + US_Word( MemoLine( cTxtAux, 254, i + 8 ), US_Words( MemoLine( cTxtAux, 254, i + 8 ) ) ) )
+                     Loop
+                  Else
+                     // standard module
+                     US_Shell_Listo()
+                     bEncontroValido := .T.
+                     cModuleNameAux := SubStr( cModuleNameAux, 1, RAt( ".", cModuleNameAux ) - 1 )
+                     Say( "    Static Module " + cModuleNameAux )
+                     If bObjLst
+                        MemoObjLst := MemoObjLst + If( ! Empty( MemoObjLst ), hb_OsNewLine(), "" ) + cModuleNameAux
+                     EndIf
+                  EndIf
+               Else
+                  // function in standard module
+                  If AllTrim( cLineaAux ) == "File" .and. bEncontroValido
+                     For j := i + 1 To MLCount( cTxtAux, 254 )
+                        cLineaAux = MemoLine( cTxtAux, 254, j )
+                        If SubStr( US_Word( cLineaAux, US_Words( cLineaAux ) ), 1, 7 ) == "_HB_FUN"
+                           aAdd( vFun, "             " + US_Word( cLineaAux, US_Words( cLineaAux ) ) )
+                           If bExpLst
+                              MemoExpLst := MemoExpLst + hb_OsNewLine() + US_Word( cLineaAux, US_Words( cLineaAux ) )
+                           EndIf
+                           i := j
+                        EndIf
+                        If SubStr( US_Word( cLineaAux, US_Words( cLineaAux ) ), 1, 1 ) == "." .or. ;
+                           ( !( SubStr( US_Word( cLineaAux, 1 ), 1, 1 ) == "[" ) .and. !( US_Word( cLineaAux, 1 ) == "AUX" ) )
+                           i := j
+                           Exit
+                        EndIf
+                        If US_Shell_bStop()
+                           Exit
+                        EndIf
+                     Next j
+                     bEncontroValido := .F.
+                  EndIf
+               EndIf
+               If US_Shell_bStop()
+                  Say( "US_Shell 930W: User Stop" )
+                  bWarning := .T.
+                  Exit
+               EndIf
+            Next i
+            US_Shell_Listo()
+            Say( "End Functions List" )
+            If bObjLst
+               MemoWrit( cPar2 + cObjExt, MemoObjLst )
+            EndIf
+            If bExpLst
+               MemoWrit( cPar2 + cExpExt, MemoExpLst )
+            EndIf
+            If bDelete
+               FErase( cPar2 )
+            EndIf
+         EndIf
+      EndIf
+   Case cPar1 == "DELETE"
+      If US_Words( cParam ) < 2
+         Say( "US_Shell 060E: Invalid parm (count): " + cParam )
+         bError := .T.
+      Else
+         Say( "US_Shell 000I: Processing: " + cParam )
+         cPar2 := StrTran( US_Word( cParam, 2 ), "|", " " )
+         If File( cPar2 )
+            If FErase( cPar2 ) == -1
+               Say( "US_Shell 064E: Error in Delete file !!!" )
+               bError := .T.
+            Else
+               Say( "US_Shell 065I: File Deleted OK" )
+            EndIf
+         Else
+            Say( "US_Shell 066E: File not found" )
+         EndIf
+      EndIf
+   Case cPar1 == "CHANGE"
+      If US_Words( cParam ) != 4
+         Say( "US_Shell 070E: Invalid parm (count): " + cParam )
+         bError := .T.
+      Else
+         cPar2 := StrTran( US_Word( cParam, 2 ), "|", " " )
+         cPar3 := US_Word( cParam, 3 )
+         cPar4 := US_Word( cParam, 4 )
+         Say( "US_Shell 071I: Change into File" )
+         Say( "               File: " + cPar2 )
+         Say( "               Old String: " + if( cPar3 == "&", "(Character ampersand)", cPar3 ) )
+         Say( "               New String: " + if( cPar4 == "&", "(Character ampersand)", cPar4 ) )
+         If ! File( cPar2 )
+            Say( "US_Shell 072E: Input file not found: " + cPar2 )
+            bError := .T.
+         Else
+            If MemoWrit( cPar2, StrTran( MemoRead( cPar2 ), cPar3, cPar4 ) )
+               Say( "US_Shell 073I: Change OK" )
+            Else
+               Say( "US_Shell 074E: Error in Change File !!!" )
+               bError := .T.
+            EndIf
+         EndIf
+      EndIf
+   Otherwise
+      Say( "US_Shell 002E: Invalid parm: " + cParam )
+      bError := .T.
+   EndCase
+
+   FErase( cFileStop )
+   If bWarning
+      ERRORLEVEL( 2 )
+   EndIf
+   If bError
+      ERRORLEVEL( 1 )
+   EndIf
+Return .T.
 
 Function US_Shell_bStop()
-   if file( cFileStop )
+   If File( cFileStop )
       Return .T.
-   endif
+   EndIf
 Return .F.
 
 Function US_Shell_Listo()
-   asort( vFun , {|x,y| US_Word( x , 1 ) < US_Word( y , 1 ) } )
-   For j:=1 to len( vFun )
+   asort( vFun, {|x, y| US_Word( x, 1 ) < US_Word( y, 1 ) } )
+   For j := 1 To len( vFun )
       Say( vFun[j] )
-      if US_Shell_bStop()
+      If US_Shell_bStop()
          Say( "US_Shell 930W: User Stop" )
          bWarning := .T.
          exit
-      endif
+      EndIf
    Next
    vFun := {}
-return .T.
+Return .T.
 
 Function Say( txt )
-   if bSay
+   If bSay
       __Run( "ECHO " + Tab + US_VarToStr( txt ) )
-   endif
-Return .T.
-
-Function GetSuffix()
-//   US_Log( "Function " + procname() + " Suspend from US_Shell" )
-Return .T.
-Function GetMiniGuiSuffix()
-//   US_Log( "Function " + procname() + " Suspend from US_Shell" )
-Return .T.
-Function GetHarbourSuffix()
-//   US_Log( "Function " + procname() + " Suspend from US_Shell" )
-Return .T.
-Function GetCppSuffix()
-//   US_Log( "Function " + procname() + " Suspend from US_Shell" )
+   EndIf
 Return .T.
 
 /* eof */
