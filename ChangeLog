@@ -8,6 +8,13 @@
  * See "How to format your ChangeLog entries" in howtosvn.txt file.
  */
 
+2014-05-27 21:15:00 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * ./QPM_AutoProject.qpm
+   * ./QPM.EXE
+     * Updated to version 05_03_24.
+   * ./QPM_Libraries.prg
+     + hbwin.lib for Extended 2.x with Harbour 3.2 and BCC.
+
 2014-05-27 20:35:00 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * ./QPM_AutoProject.qpm
    * ./QPM.EXE
