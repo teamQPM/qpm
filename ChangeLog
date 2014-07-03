@@ -8,14 +8,90 @@
  * See "How to format your ChangeLog entries" in howtosvn.txt file.
  */
 
-2014-05-27 21:15:00 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2014-05-27 22:38:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * ./Changelog
+     ! UTC in previous entries.
+   + ./ToDo
+     * Updated.
+   * ./QPM_US_Shell.qpm
+   * ./us_shell.prg
+     * To version 01.05
+     * Messages.
+     + Parameter to Say function for improved control.
+   * ./QPM_Functions.PRG
+     + ESCAPE key to "Change Project Version" window.
+   * ./QPM.PRG
+     * QPM_VERSION_NUMBER TO "05 03 25".
+     + SET NAVIGATION EXTENDED.
+     * Batch log is saved to current folder if no path has been specified.
+     * Format of batch log.
+     + Build result to batch log.
+     ! Typo.
+     - Commented code.
+     * Format of build log.
+     + Support for ooHG IDE Plus generated forms.
+   * ./us_redir.c
+     ! Warnings.
+   * ./QPM_Libraries.prg
+     + Library msimg32 to OOHG+MinGW builds.
+   * ./QPM_AutoProject.qpm
+   * ./QPM.EXE
+     * Updated to version 05_03_25.
+   * ./doc/codestyl.txt
+   * ./FuentesComunes/TAxPrg.prg
+   * ./FuentesComunes/US.CH
+   * ./FuentesComunes/US_ActiveX.prg
+   * ./FuentesComunes/US_ActiveX_Eventos.c
+   * ./FuentesComunes/US_Clases.prg
+   * ./FuentesComunes/US_Edit_CharFijo.prg
+   * ./FuentesComunes/US_Env.h
+   * ./FuentesComunes/US_HB.PRG
+   * ./FuentesComunes/US_i_richeditbox.ch
+   * ./FuentesComunes/US_K.CH
+   * ./FuentesComunes/US_l_richeditbox.prg
+   * ./FuentesComunes/US_Log.h
+   * ./FuentesComunes/US_Log.prg
+   * ./FuentesComunes/US_MG.PRG
+   * ./FuentesComunes/US_MG_Null.prg
+   * ./FuentesComunes/US_ProcessWin.prg
+   * ./HelpQPM/SHG_Change.prg
+   * ./QPM.ch
+   * ./QPM.PRG
+   * ./QPM_CompatibilityHotRecovery.ch
+   * ./QPM_CompatibilityOpenGlobal.CH
+   * ./QPM_CompatibilityOpenProject.CH
+   * ./QPM_CompatibilityStatistics.ch
+   * ./QPM_Environment.prg
+   * ./QPM_ExtraRun.prg
+   * ./QPM_Functions.PRG
+   * ./QPM_GlobalSettings.prg
+   * ./QPM_HotRecovery.prg
+   * ./QPM_Killer.prg
+   * ./QPM_Libraries.prg
+   * ./QPM_ProjectSettings.prg
+   * ./QPM_Resources.ch
+   * ./QPM_SHG_AssistImage.prg
+   * ./QPM_SHG_AssistLink.prg
+   * ./QPM_SHG_SimpleHelpGenerator.prg
+   * ./QPM_SyncRecovery.prg
+   * ./QPM_Version.PRG
+   * ./resource.h
+   * ./us_msg.prg
+   * ./us_redir.c
+   * ./us_res.prg
+   * ./us_run.prg
+   * ./us_shell.prg
+   * ./us_slash.prg
+     * Copyright.
+
+2014-05-27 21:15:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * ./QPM_AutoProject.qpm
    * ./QPM.EXE
      * Updated to version 05_03_24.
    * ./QPM_Libraries.prg
      + hbwin.lib for Extended 2.x with Harbour 3.2 and BCC.
 
-2014-05-27 20:35:00 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2014-05-27 20:35:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * ./QPM_AutoProject.qpm
    * ./QPM.EXE
      * Updated to version 05_03_23.
@@ -42,15 +118,15 @@
      - Unneeded comments.
      * Messages.
 
-2014-05-07 22:39:00 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2014-05-07 22:39:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * ./Changelog
      ! Previous entry.
 
-2014-05-07 22:38:00 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2014-05-07 22:38:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * ./doc/UpgradeReadme.txt
      + Portuguese translation.
 
-2014-05-07 22:04:00 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2014-05-07 22:04:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * ./QPM.PRG
    * ./QPM.EXE
    * ./QPM_AutoProject.qpm

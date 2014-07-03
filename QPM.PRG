@@ -5,7 +5,7 @@
 /*
  *    QPM - QAC Based Project Manager
  *
- *    Copyright 2011 Fernando Yurisich <fernando.yurisich@gmail.com>
+ *    Copyright 2011-2014 Fernando Yurisich <fernando.yurisich@gmail.com>
  *    http://qpm.sourceforge.net
  *
  *    Based on QAC - Project Manager for (x)Harbour
@@ -29,7 +29,7 @@
 #include "minigui.ch"
 #include <QPM.ch>
 
-#define QPM_VERSION_NUMBER "05 03 23"
+#define QPM_VERSION_NUMBER "05 03 25"
 #define DEF_INCLUDE_GT  '#include "QPM_gt.ch"'
 
 Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PAR_cP9,PAR_cP10,PAR_cP11,PAR_cP12,PAR_cP13,PAR_cP14,PAR_cP15,PAR_cP16,PAR_cP17,PAR_cP18,PAR_cP19,PAR_cP20)
@@ -664,6 +664,7 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
 
    SET LANGUAGE TO ENGLISH
    SET DELETED ON
+   SET NAVIGATION EXTENDED
 
 // if PUB_bW800
 //    MsgStop( "Sorry, QPM needs a minimun screen configuration of 1024x768." )
@@ -904,12 +905,22 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
       endif
    endif
 
-   if bAutoExit .and. !empty( PUB_cAutoLog )
+   if bAutoExit .and. ! empty( PUB_cAutoLog )
+      if RAt( DEF_SLASH, PUB_cAutoLog ) == 0
+         PUB_cAutoLog := GetCurrentFolder() + DEF_SLASH + PUB_cAutoLog
+      endif
       PUB_cAutoLogTmp := MemoRead( PUB_cAutoLog )
-      QPM_MemoWrit( PUB_cAutoLog , PUB_cAutoLogTmp + HB_OsNewLine() + Replicate( "=" , 80 ) + HB_OsNewLine() + ;
-                "Project file: " + PUB_cProjectFile + HB_OsNewLine() + ;
-                US_VarToStr( Date() ) + " " + US_VarToStr( Time() ) + HB_OsNewLine() + ;
-                "" )
+      if ( i := RAt( Replicate( "=" , 80 ) + HB_OsNewLine(), PUB_cAutoLogTmp ) ) > 0
+         if i # Len( PUB_cAutoLogTmp ) - 80 - Len( HB_OsNewLine() ) + 1
+           i := 0
+         endif
+      endif
+      if i == 0
+         PUB_cAutoLogTmp += HB_OsNewLine() + Replicate( "=" , 80 ) + HB_OsNewLine()
+      endif
+      PUB_cAutoLogTmp += "Project file: " + PUB_cProjectFile + HB_OsNewLine()
+      PUB_cAutoLogTmp += US_VarToStr( Date() ) + " " + US_VarToStr( Time() ) + HB_OsNewLine()
+      QPM_MemoWrit( PUB_cAutoLog , PUB_cAutoLogTmp )
    endif
 
    SET FONT TO 'Arial' , 9
@@ -3748,7 +3759,7 @@ Function QPM_EditPAN( bForceEditor )
          EndIf
          if !( us_word( toolMake := CheckMakeForm( US_ShortName( ChgPathToReal( GetProperty( "VentanaMain" , "GPanFiles" , "Cell" , VentanaMain.GPanFiles.Value , NCOLPANFULLNAME ) ) ) ) , 1 ) == "HMI" )
             if US_Upper( US_Word( toolMake , 1 ) ) == "UNKNOWN"
-               if ! MyMsgYesNo("Form was builder with tool '"+toolMake+"', do you want to edit with 'HMI+'?" )
+               if ! MyMsgYesNo("Form was builded with tool '"+toolMake+"', do you want to edit with 'HMI+'?" )
                   Return .F.
                endif
             else
@@ -3794,7 +3805,7 @@ Function QPM_EditPAN( bForceEditor )
          EndIf
          if !( us_word( toolMake := CheckMakeForm( US_ShortName( ChgPathToReal( GetProperty( "VentanaMain" , "GPanFiles" , "Cell" , VentanaMain.GPanFiles.Value , NCOLPANFULLNAME ) ) ) ) , 1 ) == "HMGSIDE" )
             if !( US_Upper( US_Word( toolMake , 1 ) ) == "HMI" )
-               if ! MyMsgYesNo("Form was builder with tool '"+toolMake+"', do you want edit with 'HMGSIDE'?" )
+               if ! MyMsgYesNo("Form was builded with tool '"+toolMake+"', do you want edit with 'HMGSIDE'?" )
                   Return .F.
                endif
             else
@@ -5334,6 +5345,13 @@ Function QPM_Exit()
 // ferase( PUB_cQPM_Folder + DEF_SLASH + "hmi.ini" )
 // ferase( PUB_cQPM_Folder + DEF_SLASH + "dbfview.ini" )
 // ferase( PUB_cQPM_Folder + DEF_SLASH + "dbfview.lng" )
+   if bAutoExit .and. ! empty( PUB_cAutoLog )
+      PUB_cAutoLogTmp := MemoRead( PUB_cAutoLog )
+      PUB_cAutoLogTmp += HB_OsNewLine()
+      PUB_cAutoLogTmp += Replicate( "=" , 80 )
+      PUB_cAutoLogTmp += HB_OsNewLine()
+      QPM_MemoWrit( PUB_cAutoLog , PUB_cAutoLogTmp )
+   endif
 Return .F.
 
 Function QPM_Build()
@@ -5883,13 +5901,12 @@ Function QPM_Build2()
    Out := Out + 'PAUSE_EXE = PAUSE' + Hb_OsNewLine()
    Out := Out + 'DIR_OBJECTS = ' + US_ShortName(PUB_cProjectFolder) + DEF_SLASH + GetObjName() + Hb_OsNewLine()
    Out := Out + 'C_DIR = ' + US_ShortName(PUB_cProjectFolder) + DEF_SLASH + GetObjName() + Hb_OsNewLine()
-// Out := Out + 'USER_FLAGS_HARBOUR = /p'+US_ShortName(PUB_cProjectFolder) + DEF_SLASH + GetObjName() + '' + Hb_OsNewLine() // ppo
    Out := Out + 'USER_FLAGS_HARBOUR = '+GetProperty( "VentanaMain" , "OverrideCompile" , "value" ) + Hb_OsNewLine()
    Out := Out + 'USER_FLAGS_LINK = '+GetProperty( "VentanaMain" , "OverrideLink" , "value" ) + Hb_OsNewLine()
 
    if !bConvert
       cPrj_Version := GetPrjVersion()
-      Out := Out + 'HARBOUR_FLAGS = /D__QPM_VERSION__="'+"'"+PUB_cQPM_Version2+"'"+'" /D__PRJ_VERSION__="'+"'"+cPrj_Version+"'"+'" /D__PROJECT_FOLDER__="'+"'"+VentanaMain.TProjectFolder.Value+"'"+'" /n '+If(PUB_bDebugActive,'/b','')+' $(USER_FLAGS_HARBOUR) /i$(DIR_HB_INCLUDE) ' + Hb_OsNewLine()
+      Out := Out + 'HARBOUR_FLAGS = /D__QPM_VERSION__="' + "'" + PUB_cQPM_Version2 + "'" + '" /D__PRJ_VERSION__="'+"'"+cPrj_Version+"'"+'" /D__PROJECT_FOLDER__="'+"'"+VentanaMain.TProjectFolder.Value+"'"+ '" /n' + If(PUB_bDebugActive,' /b','') + ' $(USER_FLAGS_HARBOUR) /i$(DIR_HB_INCLUDE) ' + Hb_OsNewLine()
       if PUB_xHarbourMT = "MT"
          if !IsMinGW
             Out := Out + 'COBJFLAGS =  -c -O2 -tWM -M  -I$(DIR_C_INCLUDE) -L'+ US_ShortName(GetCppFolder()) + DEF_SLASH + 'LIB' + Hb_OsNewLine()
@@ -6624,11 +6641,13 @@ Function QPM_Build2()
       // Copy or Move
       
       if cOutputCopyMove == "COPY" .or. cOutputCopyMove == "MOVE"
+/*
          if IsMinGW
             Out := Out + Hb_OsNewLine()
          endif
+*/
          Out := Out + PUB_cCharTab + '$(US_MSG_EXE) $(DIR_PROJECT)' + DEF_SLASH + '_'+PUB_cSecu+'Progress.Log -MSG:' + cOutputCopyMove + ' '+cOutputNameDisplay+' to ' + Prj_Text_OutputCopyMoveFolder + DEF_SLASH + US_FileNameOnlyNameAndExt( cOutputNameDisplay ) + ' ...' + Hb_OsNewLine()
-         Out := Out + PUB_cCharTab + '$(US_SHELL_EXE) ' + cOutputCopyMove + ' ' + cOutputName + ' ' + US_ShortName( Prj_Text_OutputCopyMoveFolder ) + DEF_SLASH + US_FileNameOnlyNameAndExt( cOutputName ) + Hb_OsNewLine()
+         Out := Out + PUB_cCharTab + if(! bLogActivity, '@', '') + '-$(US_SHELL_EXE) ' + if(! bLogActivity, '-OFF ','') + cOutputCopyMove + ' ' + cOutputName + ' ' + US_ShortName( Prj_Text_OutputCopyMoveFolder ) + DEF_SLASH + US_FileNameOnlyNameAndExt( cOutputName ) + Hb_OsNewLine()
       endif
 
       if PUB_bDebugActive
@@ -6647,30 +6666,34 @@ Function QPM_Build2()
 
       DO EVENTS
 
+/*
+ * Add commands for compiling to script.ld
+ */
       For i := 1 To Len ( PrgFiles )
          Out := Out + Hb_OsNewLine()
          Out := Out + '$(C_DIR)' + DEF_SLASH + US_FileNameOnlyName( PRGFILES[i] ) + '.' + if( upper( US_FileNameOnlyExt( PRGFILES[i] ) ) == "CPP" , 'cpp' , 'c' ) + ' : ' + US_ShortName( US_FileNameOnlyPath( PRGFILES[i] ) ) + DEF_SLASH + US_FileNameOnlyNameAndExt( PRGFILES[i] ) + Hb_OsNewLine()
          Out := Out + PUB_cCharTab + '$(US_MSG_EXE) $(DIR_PROJECT)' + DEF_SLASH + '_'+PUB_cSecu+'Progress.Log -MSG:Processing ' + PRGFILES[i] + ' ...' + Hb_OsNewLine()
          if US_Upper( US_FileNameOnlyExt( PRGFILES[i] ) ) == US_Upper( "C" ) .or. ;
             US_Upper( US_FileNameOnlyExt( PRGFILES[i] ) ) == US_Upper( "CPP" )
-            Out := Out + PUB_cCharTab + if(!bLogActivity,'@','')+'$(US_SHELL_EXE) '+if(!bLogActivity,'-OFF','')+ ' COPYZAP $** $@' + Hb_OsNewLine()
+            Out := Out + PUB_cCharTab + if(! bLogActivity, '@', '') + '-$(US_SHELL_EXE) ' + if(! bLogActivity, '-OFF ','') + 'COPYZAP $** $@' + Hb_OsNewLine()
          else
-            Out := Out + PUB_cCharTab + if(!bLogActivity,'@','')+'-$(US_SHELL_EXE) '+if(!bLogActivity,'-OFF','')+' DELETE $@ ' + Hb_OsNewLine()
+            Out := Out + PUB_cCharTab + if(! bLogActivity, '@', '') + '-$(US_SHELL_EXE) ' + if(! bLogActivity, '-OFF ', '') + 'DELETE $@' + Hb_OsNewLine()
             IF Prj_Check_HarbourIs31 .and. IsBorland
-               Out := Out + PUB_cCharTab + '$(HARBOUR_EXE) $(HARBOUR_FLAGS) ' + if( QPM_IsXHarbour() , '/p' , '/p$(DIR_OBJECTS)' + DEF_SLASH + US_FileNameOnlyName( PRGFILES[i] ) ) + ' $** -o$@' + Hb_OsNewLine()
+               Out := Out + PUB_cCharTab + '$(HARBOUR_EXE) $(HARBOUR_FLAGS) ' + if( QPM_IsXHarbour(), '/p', '/p$(DIR_OBJECTS)' + DEF_SLASH + US_FileNameOnlyName(PRGFILES[i]) ) + ' $** -o$@' + Hb_OsNewLine()
             ELSE
-               Out := Out + PUB_cCharTab + '$(REDIR) $(HARBOUR_EXE) $(HARBOUR_FLAGS) ' + if( QPM_IsXHarbour() , '/p' , '/p$(DIR_OBJECTS)' + DEF_SLASH + US_FileNameOnlyName( PRGFILES[i] ) ) + ' $** -o$@' + Hb_OsNewLine()
+               Out := Out + PUB_cCharTab + '$(REDIR) $(HARBOUR_EXE) $(HARBOUR_FLAGS) ' + if( QPM_IsXHarbour(), '/p', '/p$(DIR_OBJECTS)' + DEF_SLASH + US_FileNameOnlyName(PRGFILES[i]) ) + ' $** -o$@' + Hb_OsNewLine()
             ENDIF
             if QPM_IsXHarbour()
-               Out := Out + PUB_cCharTab + if(!bLogActivity,'@','')+'-$(US_SHELL_EXE) '+if(!bLogActivity,'-OFF','')+' MOVE ' + US_ShortName( US_FileNameOnlyPath( PRGFILES[i] ) ) + DEF_SLASH + US_FileNameOnlyName( PRGFILES[i] ) + '.ppo $(DIR_OBJECTS)' + DEF_SLASH + US_FileNameOnlyName( PRGFILES[i] ) + '.ppo' + Hb_OsNewLine()
-               Out := Out + PUB_cCharTab + if(!bLogActivity,'@','')+'-$(US_SHELL_EXE) '+if(!bLogActivity,'-OFF','')+' DELETE ' + US_ShortName( US_FileNameOnlyPath( PRGFILES[i] ) ) + DEF_SLASH + US_FileNameOnlyName( PRGFILES[i] ) + '.ppo.MOVED.TXT ' + Hb_OsNewLine()
+               Out := Out + PUB_cCharTab + if(! bLogActivity, '@', '') + '-$(US_SHELL_EXE) ' + if(! bLogActivity, '-OFF ', '') + 'MOVE ' + US_ShortName( US_FileNameOnlyPath( PRGFILES[i] ) ) + DEF_SLASH + US_FileNameOnlyName( PRGFILES[i] ) + '.ppo $(DIR_OBJECTS)' + DEF_SLASH + US_FileNameOnlyName( PRGFILES[i] ) + '.ppo' + Hb_OsNewLine()
+               Out := Out + PUB_cCharTab + if(! bLogActivity, '@', '') + '-$(US_SHELL_EXE) ' + if(! bLogActivity, '-OFF ', '') + 'DELETE ' + US_ShortName( US_FileNameOnlyPath( PRGFILES[i] ) ) + DEF_SLASH + US_FileNameOnlyName( PRGFILES[i] ) + '.ppo.MOVED.TXT' + Hb_OsNewLine()
             else
-               Out := Out + PUB_cCharTab + if(!bLogActivity,'@','')+'-$(US_SHELL_EXE) '+if(!bLogActivity,'-OFF','')+' MOVE $(DIR_OBJECTS)' + DEF_SLASH + US_FileNameOnlyName( PRGFILES[i] ) + ' $(DIR_OBJECTS)' + DEF_SLASH + US_FileNameOnlyName( PRGFILES[i] ) + '.ppo' + Hb_OsNewLine()
-               Out := Out + PUB_cCharTab + if(!bLogActivity,'@','')+'-$(US_SHELL_EXE) '+if(!bLogActivity,'-OFF','')+' DELETE $(DIR_OBJECTS)' + DEF_SLASH + US_FileNameOnlyName( PRGFILES[i] ) + '.MOVED.TXT ' + Hb_OsNewLine()
+               Out := Out + PUB_cCharTab + if(! bLogActivity, '@', '') + '-$(US_SHELL_EXE) '+ if(! bLogActivity, '-OFF ', '') + 'MOVE $(DIR_OBJECTS)' + DEF_SLASH + US_FileNameOnlyName( PRGFILES[i] ) + ' $(DIR_OBJECTS)' + DEF_SLASH + US_FileNameOnlyName( PRGFILES[i] ) + '.ppo' + Hb_OsNewLine()
+               Out := Out + PUB_cCharTab + if(! bLogActivity, '@', '') + '-$(US_SHELL_EXE) '+ if(! bLogActivity, '-OFF ', '') + 'DELETE $(DIR_OBJECTS)' + DEF_SLASH + US_FileNameOnlyName( PRGFILES[i] ) + '.MOVED.TXT' + Hb_OsNewLine()
             endif
-            Out := Out + PUB_cCharTab + if(!bLogActivity,'@','')+'$(US_SHELL_EXE) '+if(!bLogActivity,'-OFF','')+' CHECKRC NOTFILE $@ ' + Hb_OsNewLine()
+            Out := Out + PUB_cCharTab + if(! bLogActivity, '@', '') + '$(US_SHELL_EXE) ' + if(! bLogActivity, '-OFF ', '') + 'CHECKRC NOTFILE $@' + Hb_OsNewLine()
          endif
          Out := Out + Hb_OsNewLine()
+         Out := Out + PUB_cCharTab + '$(US_MSG_EXE) $(DIR_PROJECT)' + DEF_SLASH + '_'+PUB_cSecu+'Progress.Log -MSG:Processing ' + US_FileNameOnlyName( PRGFILES[i] ) + '.o ...' + Hb_OsNewLine()
          if IsMinGW
             Out := Out + '$(DIR_OBJECTS)' + DEF_SLASH + US_FileNameOnlyName( PRGFILES[i] ) + '.o : $(C_DIR)' + DEF_SLASH + US_FileNameOnlyName( PRGFILES[i] ) + '.' + if( upper( US_FileNameOnlyExt( PRGFILES[i] ) ) == "CPP" , 'cpp' , 'c' ) + Hb_OsNewLine()
          else
@@ -6686,7 +6709,7 @@ Function QPM_Build2()
             case IsPelles
                Out := Out + PUB_cCharTab + '-$(COMPILATOR_C) $(COBJFLAGS) /Fo$@ $**' + Hb_OsNewLine()
             case IsBorland
-               Out := Out + PUB_cCharTab + '-$(US_SHELL_EXE) DELETE $@' + Hb_OsNewLine()
+               Out := Out + PUB_cCharTab + if(! bLogActivity, '@', '') + '-$(US_SHELL_EXE) ' + if(! bLogActivity, '-OFF ', '' ) + 'DELETE $@' + Hb_OsNewLine()
                Out := Out + PUB_cCharTab + '-$(COMPILATOR_C) $(COBJFLAGS) -o$@ $**' + Hb_OsNewLine()
             otherwise
                US_Log( "Error 6324" )
@@ -6709,9 +6732,9 @@ Function QPM_Build2()
                Out := Out + PUB_cCharTab + '-$(US_MSG_EXE) $(DIR_PROJECT)' + DEF_SLASH + '_'+PUB_cSecu+'Progress.Log -MSG:Generating Interface Library (.' + US_Word( cConvert , 2 ) + ') for ' + cInputNameDisplay + ' ...' + Hb_OsNewLine()
                Out := Out + PUB_cCharTab + '-$(REDIR) $(IMPLIB_MGW_EXE) -k -d ' + US_USlash( cInputReImpDef ) + ".def -D " + US_FileNameOnlyNameAndExt( cInputNameDisplay ) + " -l " + US_USlash( cOutputName ) + Hb_OsNewLine()
                //
-               Out := Out + PUB_cCharTab + if(!bLogActivity,'@','')+'-$(US_SHELL_EXE) '+if(!bLogActivity,'-OFF','')+' DELETE ' + cInputReImpDef + '.def ' + Hb_OsNewLine()
+               Out := Out + PUB_cCharTab + if(! bLogActivity, '@', '') + '-$(US_SHELL_EXE) ' + if(! bLogActivity, '-OFF ', '') + 'DELETE ' + cInputReImpDef + '.def' + Hb_OsNewLine()
             else
-               Out := Out + PUB_cCharTab + '$(US_MSG_EXE) $(DIR_PROJECT)' + DEF_SLASH + '_'+PUB_cSecu+'Progress.Log -MSG:DLL Function List for ' + cInputNameDisplay + ' ...' + Hb_OsNewLine()
+               Out := Out + PUB_cCharTab + '$(US_MSG_EXE) $(DIR_PROJECT)' + DEF_SLASH + '_'+PUB_cSecu + 'Progress.Log -MSG:DLL Function List for ' + cInputNameDisplay + ' ...' + Hb_OsNewLine()
                *NO BORRAROut := Out + PUB_cCharTab + '$(IMPDEF_MGW_EXE) ' + cInputNameLong + ".def " + cInputNameLong + Hb_OsNewLine()
                Out := Out + PUB_cCharTab + '-$(IMPDEF_MGW_EXE) ' + cInputNameLong + ' > ' + cInputNameLong + ".def " + Hb_OsNewLine()
                Out := Out + PUB_cCharTab + '-$(US_SHELL_EXE) ANALIZE_DLL ' + cInputNameLong + ".def " + Hb_OsNewLine()
@@ -6719,7 +6742,7 @@ Function QPM_Build2()
                Out := Out + PUB_cCharTab + '-$(US_MSG_EXE) $(DIR_PROJECT)' + DEF_SLASH + '_'+PUB_cSecu+'Progress.Log -MSG:Generating Interface Library (.' + US_Word( cConvert , 2 ) + ') for ' + cInputNameDisplay + ' ...' + Hb_OsNewLine()
                Out := Out + PUB_cCharTab + '-$(REDIR) $(IMPLIB_MGW_EXE) -d ' + US_USlash( cInputNameLong ) + ".def -D " + US_FileNameOnlyNameAndExt( cInputNameDisplay ) + " -l " + US_USlash( cOutputName ) + Hb_OsNewLine()
                //
-               Out := Out + PUB_cCharTab + if(!bLogActivity,'@','')+'-$(US_SHELL_EXE) '+if(!bLogActivity,'-OFF','')+' DELETE ' + cInputNameLong + '.def ' + Hb_OsNewLine()
+               Out := Out + PUB_cCharTab + if(! bLogActivity, '@', '') + '-$(US_SHELL_EXE) ' + if(! bLogActivity, '-OFF ', '') + 'DELETE ' + cInputNameLong + '.def' + Hb_OsNewLine()
             endif
          case cConvert == "DLL LIB"
             do case
@@ -6731,7 +6754,7 @@ Function QPM_Build2()
                   Out := Out + PUB_cCharTab + '-$(US_MSG_EXE) $(DIR_PROJECT)' + DEF_SLASH + '_'+PUB_cSecu+'Progress.Log -MSG:Generating Interface Library (.' + US_Word( cConvert , 2 ) + ') for ' + cInputNameDisplay + ' ...' + Hb_OsNewLine()
                   Out := Out + PUB_cCharTab + '-$(IMPLIB_PC_EXE) ' + if( GetProperty( "VentanaMain" , "Check_GuionA" , "Value" ) , '' , '-NOUND ' ) + cInputNameLong + " -OUT:" + cOutputName + Hb_OsNewLine()
                   //
-                  Out := Out + PUB_cCharTab + if(!bLogActivity,'@','')+'-$(US_SHELL_EXE) '+if(!bLogActivity,'-OFF','')+' DELETE ' + cInputNameLong + '.def ' + Hb_OsNewLine()
+                  Out := Out + PUB_cCharTab + if(! bLogActivity, '@', '') + '-$(US_SHELL_EXE) ' + if(! bLogActivity, '-OFF ', '') + 'DELETE ' + cInputNameLong + '.def' + Hb_OsNewLine()
                case Prj_Radio_Cpp == DEF_RG_BORLAND
                   Out := Out + PUB_cCharTab + '$(US_MSG_EXE) $(DIR_PROJECT)' + DEF_SLASH + '_'+PUB_cSecu+'Progress.Log -MSG:DLL Function List for ' + cInputNameDisplay + ' ...' + Hb_OsNewLine()
                   Out := Out + PUB_cCharTab + '-$(IMPDEF_BCC_EXE) ' + cInputNameLong + ".def " + cInputNameLong + Hb_OsNewLine()
@@ -6740,7 +6763,7 @@ Function QPM_Build2()
                   Out := Out + PUB_cCharTab + '-$(US_MSG_EXE) $(DIR_PROJECT)' + DEF_SLASH + '_'+PUB_cSecu+'Progress.Log -MSG:Generating Interface Library (.' + US_Word( cConvert , 2 ) + ') for ' + cInputNameDisplay + ' ...' + Hb_OsNewLine()
                   Out := Out + PUB_cCharTab + '-$(IMPLIB_BCC_EXE) ' + if( GetProperty( "VentanaMain" , "Check_GuionA" , "Value" ) , '-a ' , '' ) + cOutputName + " " + cInputNameLong + Hb_OsNewLine()
                   //
-                  Out := Out + PUB_cCharTab + if(!bLogActivity,'@','')+'-$(US_SHELL_EXE) '+if(!bLogActivity,'-OFF','')+' DELETE ' + cInputNameLong + '.def ' + Hb_OsNewLine()
+                  Out := Out + PUB_cCharTab + if(! bLogActivity, '@', '') + '-$(US_SHELL_EXE) ' + if(! bLogActivity, '-OFF ', '') + 'DELETE ' + cInputNameLong + '.def' + Hb_OsNewLine()
                otherwise
                   US_Log( "Error in Convert DLL to LIB, Invalid C Compiler: " + US_VarToStr( Prj_Radio_Cpp ) )
             endcase
@@ -6753,7 +6776,7 @@ Function QPM_Build2()
             Out := Out + PUB_cCharTab + '$(US_SHELL_EXE) ANALIZE_LIB_BORLAND ' + US_ShortNAme(OBJFOLDER) + DEF_SLASH + US_FileNameOnlyNameAndExt( cInputName ) + ".lst " + Hb_OsNewLine()
             //
             QPM_Execute( US_ShortName(PUB_cQPM_Folder) + DEF_SLASH + 'US_TLIB.EXE' , cInputName + ', ' + US_ShortNAme(OBJFOLDER) + DEF_SLASH + US_FileNameOnlyNameAndExt( cInputName ) + '.lst' , DEF_QPM_EXEC_WAIT , DEF_QPM_EXEC_MINIMIZE )
-            QPM_Execute( US_ShortName(PUB_cQPM_Folder) + DEF_SLASH + 'US_SHELL.EXE' , 'QPM ANALIZE_LIB_BORLAND ' + US_ShortNAme(OBJFOLDER) + DEF_SLASH + US_FileNameOnlyNameAndExt( cInputName ) + '.lst -OBJLST -EXPLST -OFF' , DEF_QPM_EXEC_WAIT , DEF_QPM_EXEC_MINIMIZE )
+            QPM_Execute( US_ShortName(PUB_cQPM_Folder) + DEF_SLASH + 'US_SHELL.EXE', 'QPM ANALIZE_LIB_BORLAND ' + US_ShortNAme(OBJFOLDER) + DEF_SLASH + US_FileNameOnlyNameAndExt( cInputName ) + '.lst -OBJLST -EXPLST -OFF' , DEF_QPM_EXEC_WAIT , DEF_QPM_EXEC_MINIMIZE )
             //
             MemoObj := MemoRead( US_ShortNAme(OBJFOLDER) + DEF_SLASH + US_FileNameOnlyNameAndExt( cInputName ) + '.Lst.ObjLst' )
             //
@@ -6763,9 +6786,6 @@ Function QPM_Build2()
                Out := Out + PUB_cCharTab + '*' + US_ShortNAme(OBJFOLDER) + DEF_SLASH + alltrim( memoline( MemoObj , 254 , i ) )
             next
             Out := Out + ' ' + Hb_OsNewLine()
-            //
-            // Out := Out + PUB_cCharTab + '$(PAUSE_EXE)' + Hb_OsNewLine()
-            //
             Out := Out + PUB_cCharTab + '$(US_MSG_EXE) $(DIR_PROJECT)' + DEF_SLASH + '_'+PUB_cSecu+'Progress.Log -MSG:Making DLL from Modules Object of Library (.' + US_Word( cConvert , 1 ) + ') in ' + cOutputNameDisplay + ' ...' + Hb_OsNewLine()
             Out := Out + PUB_cCharTab + '$(ILINK_EXE) ' + if( !bConsole , ' -Gn -Tpd '+If(PUB_bDebugActive,' -ap ',' -aa ') , ' -x -Gn -Tpd ' ) +' -L'+ US_ShortName(GetCppFolder()) + DEF_SLASH + 'LIB'
             For i:=1 to MLCount( MemoObj , 254 )
@@ -6779,14 +6799,13 @@ Function QPM_Build2()
             Out := Out + PUB_cCharTab + '$(US_SHELL_EXE) ANALIZE_DLL ' + cOutputName + ".def -DELETE" + Hb_OsNewLine()
             //
             Out := Out + PUB_cCharTab + '$(US_MSG_EXE) $(DIR_PROJECT)' + DEF_SLASH + '_'+PUB_cSecu+'Progress.Log -MSG:Cleaning Temporary Files' + ' ...' + Hb_OsNewLine()
-            Out := Out + PUB_cCharTab + '$(US_SHELL_EXE) DELETE ' + US_ShortNAme(OBJFOLDER) + DEF_SLASH + US_FileNameOnlyNameAndExt( cInputName ) + ' -OFF ' + Hb_OsNewLine()
-            Out := Out + PUB_cCharTab + '$(US_SHELL_EXE) DELETE ' + US_ShortNAme(OBJFOLDER) + DEF_SLASH + US_FileNameOnlyNameAndExt( cInputName ) + '.lst -OFF ' + Hb_OsNewLine()
+            Out := Out + PUB_cCharTab + '$(US_SHELL_EXE) DELETE ' + US_ShortNAme(OBJFOLDER) + DEF_SLASH + US_FileNameOnlyNameAndExt( cInputName ) + ' -OFF' + Hb_OsNewLine()
+            Out := Out + PUB_cCharTab + '$(US_SHELL_EXE) DELETE ' + US_ShortNAme(OBJFOLDER) + DEF_SLASH + US_FileNameOnlyNameAndExt( cInputName ) + '.lst -OFF' + Hb_OsNewLine()
             For i:=1 to MLCount( MemoObj , 254 )
-               Out := Out + PUB_cCharTab + '$(US_SHELL_EXE) DELETE ' + US_ShortNAme(OBJFOLDER) + DEF_SLASH + alltrim( memoline( MemoObj , 254 , i ) ) + '.obj -OFF ' + Hb_OsNewLine()
+               Out := Out + PUB_cCharTab + '$(US_SHELL_EXE) DELETE ' + US_ShortNAme(OBJFOLDER) + DEF_SLASH + alltrim( memoline( MemoObj , 254 , i ) ) + '.obj -OFF' + Hb_OsNewLine()
             next
-            Out := Out + PUB_cCharTab + '$(US_SHELL_EXE) DELETE ' + US_ShortNAme(OBJFOLDER) + DEF_SLASH + US_FileNameOnlyNameAndExt( cInputName ) + '.lst.ObjLst -OFF ' + Hb_OsNewLine()
-            Out := Out + PUB_cCharTab + '$(US_SHELL_EXE) DELETE ' + US_ShortNAme(OBJFOLDER) + DEF_SLASH + US_FileNameOnlyNameAndExt( cInputName ) + '.lst.ExpLst -OFF ' + Hb_OsNewLine()
-         // Out := Out + PUB_cCharTab + '$(US_SHELL_EXE) DELETE ' + cOutputName + '.def -OFF ' + Hb_OsNewLine()
+            Out := Out + PUB_cCharTab + '$(US_SHELL_EXE) DELETE ' + US_ShortNAme(OBJFOLDER) + DEF_SLASH + US_FileNameOnlyNameAndExt( cInputName ) + '.lst.ObjLst -OFF' + Hb_OsNewLine()
+            Out := Out + PUB_cCharTab + '$(US_SHELL_EXE) DELETE ' + US_ShortNAme(OBJFOLDER) + DEF_SLASH + US_FileNameOnlyNameAndExt( cInputName ) + '.lst.ExpLst -OFF' + Hb_OsNewLine()
          case cConvert == "A DLL"
             Out := Out + PUB_cCharTab + '$(US_MSG_EXE) $(DIR_PROJECT)' + DEF_SLASH + '_'+PUB_cSecu+'Progress.Log -MSG:Copying Library (.' + US_Word( cConvert , 1 ) + ') to Working Folder' + ' ...' + Hb_OsNewLine()
             Out := Out + PUB_cCharTab + '$(US_SHELL_EXE) COPY ' + cInputName + ' ' + US_ShortNAme(OBJFOLDER) + DEF_SLASH + US_FileNameOnlyNameAndExt( cInputName ) + Hb_OsNewLine()
@@ -6825,13 +6844,13 @@ Function QPM_Build2()
             Out := Out + PUB_cCharTab + '$(US_SHELL_EXE) ANALIZE_DLL ' + cOutputName + ".def -DELETE" + Hb_OsNewLine()
             //
             Out := Out + PUB_cCharTab + '$(US_MSG_EXE) $(DIR_PROJECT)' + DEF_SLASH + '_'+PUB_cSecu+'Progress.Log -MSG:Cleaning Temporary Files' + ' ...' + Hb_OsNewLine()
-            Out := Out + PUB_cCharTab + '$(US_SHELL_EXE) DELETE ' + US_ShortNAme(OBJFOLDER) + DEF_SLASH + US_FileNameOnlyNameAndExt( cInputName ) + ' -OFF ' + Hb_OsNewLine()
-            Out := Out + PUB_cCharTab + '$(US_SHELL_EXE) DELETE ' + US_ShortNAme(OBJFOLDER) + DEF_SLASH + US_FileNameOnlyNameAndExt( cInputName ) + '.lst -OFF ' + Hb_OsNewLine()
+            Out := Out + PUB_cCharTab + '$(US_SHELL_EXE) DELETE ' + US_ShortNAme(OBJFOLDER) + DEF_SLASH + US_FileNameOnlyNameAndExt( cInputName ) + ' -OFF' + Hb_OsNewLine()
+            Out := Out + PUB_cCharTab + '$(US_SHELL_EXE) DELETE ' + US_ShortNAme(OBJFOLDER) + DEF_SLASH + US_FileNameOnlyNameAndExt( cInputName ) + '.lst -OFF' + Hb_OsNewLine()
             For i:=1 to MLCount( MemoObj , 254 )
-               Out := Out + PUB_cCharTab + '$(US_SHELL_EXE) DELETE ' + US_ShortName(GetCppFolder()) + DEF_SLASH + 'BIN' + DEF_SLASH + alltrim( memoline( MemoObj , 254 , i ) ) + '.o -OFF ' + Hb_OsNewLine()
+               Out := Out + PUB_cCharTab + '$(US_SHELL_EXE) DELETE ' + US_ShortName(GetCppFolder()) + DEF_SLASH + 'BIN' + DEF_SLASH + alltrim( memoline( MemoObj , 254 , i ) ) + '.o -OFF' + Hb_OsNewLine()
             next
-            Out := Out + PUB_cCharTab + '$(US_SHELL_EXE) DELETE ' + US_ShortNAme(OBJFOLDER) + DEF_SLASH + US_FileNameOnlyNameAndExt( cInputName ) + '.lst.ObjLst -OFF ' + Hb_OsNewLine()
-            Out := Out + PUB_cCharTab + '$(US_SHELL_EXE) DELETE ' + US_ShortNAme(OBJFOLDER) + DEF_SLASH + US_FileNameOnlyNameAndExt( cInputName ) + '.lst.ExpLst -OFF ' + Hb_OsNewLine()
+            Out := Out + PUB_cCharTab + '$(US_SHELL_EXE) DELETE ' + US_ShortNAme(OBJFOLDER) + DEF_SLASH + US_FileNameOnlyNameAndExt( cInputName ) + '.lst.ObjLst -OFF' + Hb_OsNewLine()
+            Out := Out + PUB_cCharTab + '$(US_SHELL_EXE) DELETE ' + US_ShortNAme(OBJFOLDER) + DEF_SLASH + US_FileNameOnlyNameAndExt( cInputName ) + '.lst.ExpLst -OFF' + Hb_OsNewLine()
       endcase
    endif
 // Out := Out + Hb_OsNewLine()
@@ -7167,6 +7186,7 @@ Function QPM_Timer_StatusRefresh()
    Local cTopVerVer := Replicate( "9" , DEF_LEN_VER_VERSION )
    Local cTopVerRel := Replicate( "9" , DEF_LEN_VER_RELEASE )
    Local cTopVerBui := Replicate( "9" , DEF_LEN_VER_BUILD )
+   Local cLog
    If PUB_bIsProcessing
       If Empty( GetProperty( Venta , "LStatusLabel" , "value" ) )
          SetProperty( Venta , "LStatusLabel" , "value" , 'Building...' )
@@ -7184,7 +7204,7 @@ Function QPM_Timer_StatusRefresh()
          VentanaMain.TabFiles.Value := nPageSysout
          TabChange( "FILES" )
          CCOMPILERFOLDER := US_ShortName( &( "Gbl_T_C_"+GetMiniGuiSuffix()+GetCppSuffix() ) ) + DEF_SLASH + "BIN"
-         QPM_MemoWrit( CCOMPILERFOLDER + DEF_SLASH + '_'+PUB_cSecu+'Temp.Log' , TranslateLog( MemoRead( CCOMPILERFOLDER + DEF_SLASH + '_'+PUB_cSecu+'Temp.Log' ) ) )
+         QPM_MemoWrit( CCOMPILERFOLDER + DEF_SLASH + '_'+PUB_cSecu+'Temp.Log' , cLog := TranslateLog( MemoRead( CCOMPILERFOLDER + DEF_SLASH + '_'+PUB_cSecu+'Temp.Log' ) ) )
          TopName       := US_FileNameOnlyName(GetProperty( "VentanaMain" , "GPrgFiles" , "Cell" , 1 , NCOLPRGNAME ))
          OutName       := US_FileNameOnlyName( GetOutputModuleName() )
          estado        := US_Word( memoread( PUB_cProjectFolder + DEF_SLASH + '_'+PUB_cSecu+'End.Txt' ) , 1 )
@@ -7207,13 +7227,19 @@ La existencia del ejecutable se hace en BUILD.BAT teniendo en cuenta el COPY/MOV
          /* Fin Parche para cuando el EXE esta corriendo y queremos hacer build sin modificar ningun prg */
 
          if bAutoExit .and. ! empty( PUB_cAutoLog )
-            if ( PUB_bLogOnlyError .and. estado == "ERROR" ) .or. ! PUB_bLogOnlyError
-               PUB_cAutoLogTmp := MemoRead( PUB_cAutoLog )
-               QPM_MemoWrit( PUB_cAutoLog , PUB_cAutoLogTmp + HB_OsNewLine() + GetProperty( Venta , "RichEditSysout" , "value" ) + HB_OsNewLine() + Replicate( "=" , 80 ) )
-            else
-               PUB_cAutoLogTmp := MemoRead( PUB_cAutoLog )
-               QPM_MemoWrit( PUB_cAutoLog , PUB_cAutoLogTmp + HB_OsNewLine() + "OK" + HB_OsNewLine() + Replicate( "=" , 80 ) )
+            PUB_cAutoLogTmp := MemoRead( PUB_cAutoLog )
+            PUB_cAutoLogTmp += HB_OsNewLine()
+            PUB_cAutoLogTmp += "Result: " + estado
+            if estado == "ERROR" .or. ( ! PUB_bLogOnlyError .and. estado == "WARNING" )
+               if ! left(cLog, 1) == HB_OsNewLine()
+                  PUB_cAutoLogTmp += HB_OsNewLine()
+               endif
+               PUB_cAutoLogTmp += cLog
             endif
+            PUB_cAutoLogTmp += HB_OsNewLine()
+            PUB_cAutoLogTmp += Replicate( "=" , 80 )
+            PUB_cAutoLogTmp += HB_OsNewLine()
+            QPM_MemoWrit( PUB_cAutoLog , PUB_cAutoLogTmp )
          endif
 
          SetProperty( Venta , "RichEditSysout" , "value" , MemoRead( CCOMPILERFOLDER + DEF_SLASH + '_'+PUB_cSecu+'Temp.Log' ) )
@@ -7708,9 +7734,9 @@ Function LiberoWindowsHotKeys( w_foco )
    EndIf
 Return .T.
 
-Function TranslateLog(Log)
-   Local NewLog       := '' , i
-   Local msg          := PUB_cCharTab + US_ShortName(PUB_cQPM_Folder) + DEF_SLASH + 'US_MSG.EXE ' + US_ShortName(PUB_cProjectFolder) + DEF_SLASH + '_'+PUB_cSecu+'Progress.Log -MSG:'
+Function TranslateLog( Log )
+   Local NewLog       := '', i, e, w
+   Local msg          := PUB_cCharTab + US_ShortName(PUB_cQPM_Folder) + DEF_SLASH + 'US_MSG.EXE ' + US_ShortName(PUB_cProjectFolder) + DEF_SLASH + '_'+PUB_cSecu + 'Progress.Log -MSG:'
    Local slash        := US_ShortName(PUB_cQPM_Folder) + DEF_SLASH + 'US_SLASH.EXE QPM'
    Local shellCZ      := US_ShortName(PUB_cQPM_Folder) + DEF_SLASH + 'US_SHELL.EXE QPM COPYZAP '
    Local shellMZ      := US_ShortName(PUB_cQPM_Folder) + DEF_SLASH + 'US_SHELL.EXE QPM MOVEZAP '
@@ -7719,85 +7745,112 @@ Function TranslateLog(Log)
    Local implibPelles := US_ShortName(PUB_cQPM_Folder) + DEF_SLASH + 'US_POLIB.EXE'
    Local impdef       := US_ShortName(PUB_cQPM_Folder) + DEF_SLASH + 'US_IMPDEF.EXE'
    Local PExports     := US_ShortName(PUB_cQPM_Folder) + DEF_SLASH + 'US_PEXPORTS.EXE'
-   Local ImpLibBor    := HB_OsNewLine()+"Borland Implib Version 3.0.22 Copyright (c) 1991, 2000 Inprise Corporation"+HB_OsNewLine()
-   Local ImpDefBor    := HB_OsNewLine()+"Borland Impdef Version 3.0.22 Copyright (c) 1991, 2000 Inprise Corporation"+HB_OsNewLine()
+   Local Make         := "MAKE Version 5.2  Copyright (c) 1987, 2000 Borland" + HB_OsNewLine()
+   Local ImpLibBor    := HB_OsNewLine() + "Borland Implib Version 3.0.22 Copyright (c) 1991, 2000 Inprise Corporation" + HB_OsNewLine()
+   Local ImpDefBor    := HB_OsNewLine() + "Borland Impdef Version 3.0.22 Copyright (c) 1991, 2000 Inprise Corporation" + HB_OsNewLine()
    Local reimp        := US_ShortName(PUB_cQPM_Folder) + DEF_SLASH + 'US_REIMP.EXE'
-   Local gcc          := US_ShortName( &('Gbl_T_C_'+GetMiniGuiSuffix()+GetCppSuffix()) ) + DEF_SLASH + 'BIN'+DEF_SLASH+'GCC.EXE'
-   Local dlltool      := US_ShortName( &('Gbl_T_C_'+GetMiniGuiSuffix()+GetCppSuffix()) ) + DEF_SLASH + 'BIN'+DEF_SLASH+'US_DLLTOOL.EXE'
-   Local myredir      := US_ShortName(PUB_cQPM_Folder) + DEF_SLASH + 'US_REDIR.EXE' + PUB_cUS_RedirOpt + US_ShortName( PUB_cProjectFolder ) + DEF_SLASH + '_'+PUB_cSecu+'Temp.Log '
-   Local QPM_Ver      := '/D__QPM_VERSION__="'+"'"+PUB_cQPM_Version2+"'"+'"'
-   Local PRJ_Ver      := '/D__PRJ_VERSION__="'+"'"+cPrj_Version+"'"+'"'
-   Local PRJ_Folder   := '/D__PROJECT_FOLDER__="'+"'"+VentanaMain.TProjectFolder.Value+"'"+'"'
-   Local cEcho2       := '>> _'+PUB_cSecu+'Script.ld'
-   Local cEcho        := '> _'+PUB_cSecu+'Script.ld'
+   Local gcc          := US_ShortName( &( 'Gbl_T_C_' + GetMiniGuiSuffix() + GetCppSuffix() ) ) + DEF_SLASH + 'BIN' + DEF_SLASH + 'GCC.EXE'
+   Local dlltool      := US_ShortName( &( 'Gbl_T_C_' + GetMiniGuiSuffix() + GetCppSuffix() ) ) + DEF_SLASH + 'BIN' + DEF_SLASH + 'US_DLLTOOL.EXE'
+   Local myredir      := US_ShortName(PUB_cQPM_Folder) + DEF_SLASH + 'US_REDIR.EXE' + PUB_cUS_RedirOpt + US_ShortName(PUB_cProjectFolder) + DEF_SLASH + '_' + PUB_cSecu + 'Temp.Log '
+   Local QPM_Ver      := '/D__QPM_VERSION__="' + "'" + PUB_cQPM_Version2 + "'" + '" '
+   Local PRJ_Ver      := '/D__PRJ_VERSION__="' + "'" + cPrj_Version + "'" + '" '
+   Local PRJ_Folder   := '/D__PROJECT_FOLDER__="' + "'" + VentanaMain.TProjectFolder.Value + "'" + '" '
+   Local cEcho2       := '>> _' + PUB_cSecu + 'Script.ld'
+   Local cEcho        := '> _' + PUB_cSecu + 'Script.ld'
    Local cDelete      := '** error 1 ** '
-                          /* Texto ,  Position ( 0=Cualquiera ) , Producto */
-   Local vWarnings := { { ") Warning W"                                , 0 , DefineXHarbour } , ; // Warning en Compilaciones
-                        { "Warning W"                                  , 1 , "CBORLAND" } , ;     // Warning en funcion C
-                        { ": warning: "                                , 0 , "CMINGW" }   , ;     // Warning en funcion C
-                        { ": No such file or directory"                , 0 , "RMINGW" }   , ;     // Warning en Resource Compiler (include notFound)
-                        { "Duplicate resource:"                        , 1 , "RBORLAND" }   , ;   // Warning en Resource Compiler
-                        { "warning: "                                  , 1 , "LNKBORLAND" } , ;   // Warning en Linkeditor de Borland (No recuerdo si aparecia en minuscula por eso lo agrego
-                        { "Warning: "                                  , 1 , "LNKBORLAND" } , ;   // Warning en Linkeditor o TLIB de Borland
-                        { "POLIB: warning: "                           , 1 , "LIBPELLES" } , ;    // Warning en creacion de libreria Pelles C
-                        { "POLINK: warning: "                          , 1 , "LNKPELLES" } ;      // Warning en Linkeditor de Pelles C
-                      } , w:=0
-   Local vErrors   := { { "** error 1 **"                              , 1 , "LNKMINGW" } , ;     // Error en linkedicion MinGW
-                        { "** error 2 **"                              , 1 , "LNKBORLAND" } , ;   // Error en Linkeditor de Borland
-                        { "Error: Unresolved external"                 , 1 , "LNKBORLAND" } , ;   // Error en Linkeditor de Borland
-                        { "Fatal: Access violation.  Link terminated." , 1 , "LNKBORLAND" } , ;   // Error en Linkeditor de Borland
-                        { "Fatal: Could not open"                      , 1 , "LNKBORLAND" } , ;   // Error en Linkeditor de Borland
-                        { "POLIB: error: "                             , 1 , "LIBPELLES" } , ;    // Error en Libreria de Pelles C
-                        { "POLINK: error: "                            , 1 , "LNKPELLES" } , ;    // Error en Linkeditor de Pelles C
-                        { "POLINK: fatal error: "                      , 1 , "LNKPELLES" } , ;    // Error en Linkeditor de Pelles C
-                        { "Packed 0 files."                            , 1 , "UPX" } , ;          // Error en UPX
-                        { "Packed 1 file: 0 ok, 1 error."              , 1 , "UPX" } ;            // Error en UPX
-                      } , e:=0
-   VentanaMain.RichEditSysout.Value := VentanaMain.RichEditSysout.Value + HB_OsNewLine() + US_TimeDis( Time() ) + " - >>>>>>> Reading Output Process ..."
+                          /* Texto,  Position ( 0=Cualquiera ), Producto */
+   Local vWarnings := { { ") Warning W",                                0, DefineXHarbour }, ; // Warning en Compilaciones
+                        { "Warning W",                                  1, "CBORLAND" }, ;     // Warning en funcion C
+                        { ": warning: ",                                0, "CMINGW" }, ;       // Warning en funcion C
+                        { ": No such file or directory",                0, "RMINGW" }, ;       // Warning en Resource Compiler (include notFound)
+                        { "Duplicate resource:",                        1, "RBORLAND" }, ;     // Warning en Resource Compiler
+                        { "warning: ",                                  1, "LNKBORLAND" }, ;   // Warning en Linkeditor de Borland (No recuerdo si aparecia en minuscula por eso lo agrego
+                        { "Warning: ",                                  1, "LNKBORLAND" }, ;   // Warning en Linkeditor o TLIB de Borland
+                        { "POLIB: warning: ",                           1, "LIBPELLES" }, ;    // Warning en creacion de libreria Pelles C
+                        { "POLINK: warning: ",                          1, "LNKPELLES" } ;     // Warning en Linkeditor de Pelles C
+                      }
+   Local vErrors   := { { "** error 1 **",                              1, "LNKMINGW" }, ;     // Error en linkedicion MinGW
+                        { "** error 2 **",                              1, "LNKBORLAND" }, ;   // Error en Linkeditor de Borland
+                        { "Error: Unresolved external",                 1, "LNKBORLAND" }, ;   // Error en Linkeditor de Borland
+                        { "Fatal: Access violation.  Link terminated.", 1, "LNKBORLAND" }, ;   // Error en Linkeditor de Borland
+                        { "Fatal: Could not open",                      1, "LNKBORLAND" }, ;   // Error en Linkeditor de Borland
+                        { "POLIB: error: ",                             1, "LIBPELLES" }, ;    // Error en Libreria de Pelles C
+                        { "POLINK: error: ",                            1, "LNKPELLES" }, ;    // Error en Linkeditor de Pelles C
+                        { "POLINK: fatal error: ",                      1, "LNKPELLES" }, ;    // Error en Linkeditor de Pelles C
+                        { "Packed 0 files.",                            1, "UPX" }, ;          // Error en UPX
+                        { "Packed 1 file: 0 ok, 1 error.",              1, "UPX" } ;           // Error en UPX
+                      }
+   VentanaMain.RichEditSysout.Value := VentanaMain.RichEditSysout.Value + HB_OsNewLine() + US_TimeDis( Time() ) + " - >>>>>>> Reading Process Output ..."
    VentanaMain.RichEditSysout.SetFocus()
-   VentanaMain.RichEditSysout.CaretPos:=len(VentanaMain.RichEditSysout.Value)
-   NewLog := StrTran( Log , chr(13)+chr(13) , HB_OsNewLine() )
-   if bLogActivity
-      NewLog := StrTran( NewLog , myredir , "Sysout MinGW Family to " + US_ShortName( PUB_cProjectFolder ) + DEF_SLASH + '_'+PUB_cSecu+'Temp.Log' + HB_OsNewLine() )
-   else
-      NewLog := StrTran( NewLog , myredir , "" )
-   endif
-   NewLog := StrTran( NewLog , msg , HB_OsNewLine() + "==> " )
-   NewLog := StrTran( NewLog , slash , gcc )
-   NewLog := StrTran( NewLog , shellCZ, "COPY -z" )
-   NewLog := StrTran( NewLog , shellMZ, "MOVE -z" )
-   NewLog := StrTran( NewLog , shell , "" )
-   NewLog := StrTran( NewLog , implib , "GENERATE 'LIB'" )
-   NewLog := StrTran( NewLog , implibPelles , "GENERATE 'LIB'" )
-   NewLog := StrTran( NewLog , impdef , "LIST 'DLL'" )
-   NewLog := StrTran( NewLog , reimp , "ReIMPORT " )
-   NewLog := StrTran( NewLog , dlltool, "GENERATE 'A'" )
-   NewLog := StrTran( NewLog , PExports , "LIST 'DLL'" )
-   NewLog := StrTran( NewLog , cEcho2, "" )
-   NewLog := StrTran( NewLog , cEcho, "" )
-   NewLog := StrTran( NewLog , ImpLibBor, "" )
-   NewLog := StrTran( NewLog , ImpDefBor, "" )
-   NewLog := StrTran( NewLog , "_Temp.RC:" , US_FileNameOnlyName( GetProperty( "VentanaMain" , "GPrgFiles" , "Cell" , 1 , NCOLPRGFULLNAME ) ) + '.RC:' )
-   NewLog := StrTran( NewLog , QPM_Ver , "" )
-   NewLog := StrTran( NewLog , PRJ_Ver , "" )
-   NewLog := StrTran( NewLog , PRJ_Folder , "" )
-   NewLog := StrTran( NewLog , cDelete , "" )
-   if US_Word( memoread( PUB_cProjectFolder + DEF_SLASH + '_'+PUB_cSecu+'End.Txt' ) , 1 ) == "OK"
-      For w:=1 to len( vWarnings )
-         if at( vWarnings[w][1] , NewLog ) > 0
-            QPM_MemoWrit( PUB_cProjectFolder + DEF_SLASH + '_'+PUB_cSecu+'End.Txt' , "WARNING" )
-            EXIT
-         endif
-      next
-   endif
-   if !( US_Word( memoread( PUB_cProjectFolder + DEF_SLASH + '_'+PUB_cSecu+'End.Txt' ) , 1 ) == "ERROR" )
-      For e:=1 to len( vErrors )
-         if at( vErrors[e][1] , NewLog ) > 0
-            QPM_MemoWrit( PUB_cProjectFolder + DEF_SLASH + '_'+PUB_cSecu+'End.Txt' , "ERROR" )
-            EXIT
-         endif
-      next
-   endif
+   VentanaMain.RichEditSysout.CaretPos := Len( VentanaMain.RichEditSysout.Value )
+   NewLog := StrTran( Log,    chr(13) + chr(13), HB_OsNewLine() )
+   NewLog := StrTran( NewLog, myredir,           If( bLogActivity, "Sysout MinGW Family to " + US_ShortName(PUB_cProjectFolder) + DEF_SLASH + '_' + PUB_cSecu + 'Temp.Log' + HB_OsNewLine(), "" ) )
+   NewLog := StrTran( NewLog, Make,              "" )
+   NewLog := StrTran( NewLog, msg,               HB_OsNewLine() + "==> " )
+   NewLog := StrTran( NewLog, slash,             gcc )
+   NewLog := StrTran( NewLog, shellCZ,           "COPY -z" )
+   NewLog := StrTran( NewLog, shellMZ,           "MOVE -z" )
+   NewLog := StrTran( NewLog, shell,             "" )
+   NewLog := StrTran( NewLog, implib,            "GENERATE 'LIB'" )
+   NewLog := StrTran( NewLog, implibPelles,      "GENERATE 'LIB'" )
+   NewLog := StrTran( NewLog, impdef,            "LIST 'DLL'" )
+   NewLog := StrTran( NewLog, reimp,             "ReIMPORT " )
+   NewLog := StrTran( NewLog, dlltool,           "GENERATE 'A'" )
+   NewLog := StrTran( NewLog, PExports,          "LIST 'DLL'" )
+   NewLog := StrTran( NewLog, cEcho2,            "" )
+   NewLog := StrTran( NewLog, cEcho,             "" )
+   NewLog := StrTran( NewLog, ImpLibBor,         "" )
+   NewLog := StrTran( NewLog, ImpDefBor,         "" )
+   NewLog := StrTran( NewLog, "_Temp.RC:",       US_FileNameOnlyName( GetProperty( "VentanaMain", "GPrgFiles", "Cell", 1, NCOLPRGFULLNAME ) ) + '.RC:' )
+   NewLog := StrTran( NewLog, QPM_Ver,           "" )
+   NewLog := StrTran( NewLog, PRJ_Ver,           "" )
+   NewLog := StrTran( NewLog, PRJ_Folder,        "" )
+   NewLog := StrTran( NewLog, cDelete,           "" )
+   If US_Word( memoread( PUB_cProjectFolder + DEF_SLASH + '_' + PUB_cSecu + 'End.Txt' ), 1 ) == "OK"
+      For w := 1 to len( vWarnings )
+         If At( vWarnings[w][1], NewLog ) > 0
+            QPM_MemoWrit( PUB_cProjectFolder + DEF_SLASH + '_' + PUB_cSecu + 'End.Txt', "WARNING" )
+            Exit
+         Endif
+      Next
+   EndIf
+   If !( US_Word( MemoRead( PUB_cProjectFolder + DEF_SLASH + '_' + PUB_cSecu + 'End.Txt' ), 1 ) == "ERROR" )
+      For e := 1 To Len( vErrors )
+         If At( vErrors[e][1], NewLog ) > 0
+            QPM_MemoWrit( PUB_cProjectFolder + DEF_SLASH + '_'+PUB_cSecu + 'End.Txt', "ERROR" )
+            Exit
+         EndIf
+      Next
+   EndIf
+   NewLog := StrTran( NewLog, HB_OsNewLine(),                  chr(255) )
+   NewLog := StrTran( NewLog, chr(13),                         HB_OsNewLine() )
+   NewLog := StrTran( NewLog, HB_OsNewLine(),                  chr(255) )
+   NewLog := StrTran( NewLog, chr(10),                         HB_OsNewLine() )
+   NewLog := StrTran( NewLog, chr(255),                        HB_OsNewLine() )
+   NewLog := StrTran( NewLog, HB_OsNewLine() + HB_OsNewLine(), HB_OsNewLine() )
+   NewLog := StrTran( NewLog, HB_OsNewLine() + HB_OsNewLine(), HB_OsNewLine() )
+   NewLog := StrTran( NewLog, HB_OsNewLine(),                  HB_OsNewLine() + PUB_cCharTab )
+   NewLog := StrTran( NewLog, PUB_cCharTab + PUB_cCharTab,     PUB_cCharTab )
+   NewLog := StrTran( NewLog, PUB_cCharTab + "==> ",           "==> " )
+   If Left( NewLog, Len( HB_OsNewLine() ) ) == HB_OsNewLine()
+      NewLog := Substr( NewLog, Len( HB_OsNewLine() ) + 1 )
+   EndIf
+   NewLog := StrTran( NewLog, "==> ", HB_OsNewLine() + "==> " )
+   i := 1
+   Do While (e := At( ") Error E", SubStr( NewLog, i ) ) ) > 0
+      w := RAt( PUB_cCharTab, Left( NewLog, i - 1 + e ) )
+      NewLog := Left( NewLog, w - 1 ) + PUB_cCharTab + PUB_cCharTab + SubStr( NewLog, w + 1 )
+      i := i + e + 8
+   EndDo
+   i := 1
+   Do While (e := At( ") Warning W", SubStr( NewLog, i ) ) ) > 0
+      w := RAt( PUB_cCharTab, Left( NewLog, i - 1 + e ) )
+      NewLog := Left( NewLog, w - 1 ) + PUB_cCharTab + PUB_cCharTab + SubStr( NewLog, w + 1 )
+      i := i + e + 10
+   EndDo
+   If Right( NewLog, 1 ) == PUB_cCharTab
+      NewLog := Left( NewLog, Len( NewLog ) - 1 )
+   EndIf
 Return NewLog
 
 Function SwitchDebug()
@@ -8380,6 +8433,9 @@ Function CheckMakeForm( cForm )
                exit
             case at( "* HARBOUR MINIGUI IDE HMI+" , US_Upper( cLinea ) ) > 0
                reto := "HMI (by Ciro Vargas Clemow)"
+               exit
+            case at( "* ooHG IDE Plus" , US_Upper( cLinea ) ) > 0
+               reto := "ooHGIDE+ (by Ciro Vargas Clemow)"
                exit
             case at( "* OOHG IDE" , US_Upper( cLinea ) ) > 0
                reto := "HMI (by Ciro Vargas Clemow)"
