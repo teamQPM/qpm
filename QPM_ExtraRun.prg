@@ -5,7 +5,7 @@
 /*
  *    QPM - QAC Based Project Manager
  *
- *    Copyright 2011 Fernando Yurisich <fernando.yurisich@gmail.com>
+ *    Copyright 2011-2014 Fernando Yurisich <fernando.yurisich@gmail.com>
  *    http://qpm.sourceforge.net
  *
  *    Based on QAC - Project Manager for (x)Harbour

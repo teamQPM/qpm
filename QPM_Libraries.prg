@@ -5,7 +5,7 @@
 /*
  *    QPM - QAC Based Project Manager
  *
- *    Copyright 2011 Fernando Yurisich <fernando.yurisich@gmail.com>
+ *    Copyright 2011-2014 Fernando Yurisich <fernando.yurisich@gmail.com>
  *    http://qpm.sourceforge.net
  *
  *    Based on QAC - Project Manager for (x)Harbour
@@ -684,7 +684,8 @@ Function QPM_CargoLibraries()
    aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineHarbour ) , cPre+'winspool'+cExt )
    aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineHarbour ) , cPre+'ws2_32'+cExt )
    aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineHarbour ) , cPre+'wsock32'+cExt )
-   // unknown
+   aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineHarbour ) , cPre+'wsock32'+cExt )
+   aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineHarbour ) , cPre+'msimg32'+cExt )
    aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineHarbour ) , cPre+'dll'+cExt )
    aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineHarbour ) , cPre+'mysqldll'+cExt )
    aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineHarbour ) , cPre+'socket'+cExt )
@@ -748,6 +749,7 @@ Function QPM_CargoLibraries()
    aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineXHarbour ) , cPre+'winmm'+cExt )
    aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineXHarbour ) , cPre+'vfw32'+cExt )
    aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineXHarbour ) , cPre+'wsock32'+cExt )
+   aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineXHarbour ) , cPre+'msimg32'+cExt )
    // [x]Harbour Dependent
    aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineXHarbour ) , cPre+'xGraph'+cExt )
    aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineXHarbour ) , cPre+'xEdit'+cExt )
@@ -823,6 +825,7 @@ Function QPM_CargoLibraries()
    aadd( &( "vLibDefault"+DefineOohg3+DefinePelles+DefineHarbour ) , cPre+'vfw32'+cExt )
    aadd( &( "vLibDefault"+DefineOohg3+DefinePelles+DefineHarbour ) , cPre+'wsock32'+cExt )
    aadd( &( "vLibDefault"+DefineOohg3+DefinePelles+DefineHarbour ) , cPre+'xHB'+cExt )
+   aadd( &( "vLibDefault"+DefineOohg3+DefinePelles+DefineHarbour ) , cPre+'msimg32'+cExt )
 
    // OOHG 3.x con Pelles C and xHarbour ( Syncronized to prerelease 2006/07/29 )
    cPre := ""
@@ -884,6 +887,7 @@ Function QPM_CargoLibraries()
    aadd( &( "vLibDefault"+DefineOohg3+DefinePelles+DefineXHarbour ) , cPre+'winmm'+cExt )
    aadd( &( "vLibDefault"+DefineOohg3+DefinePelles+DefineXHarbour ) , cPre+'vfw32'+cExt )
    aadd( &( "vLibDefault"+DefineOohg3+DefinePelles+DefineXHarbour ) , cPre+'wsock32'+cExt )
+   aadd( &( "vLibDefault"+DefineOohg3+DefinePelles+DefineXHarbour ) , cPre+'msimg32'+cExt )
    //==========================================================================================
 Return .T.
 

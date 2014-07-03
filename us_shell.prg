@@ -5,7 +5,7 @@
 /*
  *    QPM - QAC Based Project Manager
  *
- *    Copyright 2011 Fernando Yurisich <fernando.yurisich@gmail.com>
+ *    Copyright 2011-2014 Fernando Yurisich <fernando.yurisich@gmail.com>
  *    http://qpm.sourceforge.net
  *
  *    Based on QAC - Project Manager for (x)Harbour
@@ -30,7 +30,7 @@
 
 FUNCTION MAIN( ... )
    Local aParams := hb_aParams()
-   Local Version := "01.04", cTxtAux := "", cTxtAux2 := "", i := 0
+   Local Version := "01.05", cTxtAux := "", cTxtAux2 := "", i := 0
    Local cModuleNameAux := "?", cLineaAux := "", cLineaAux2 := "", bEncontroValido := .F.
    Local nPos := 0, bObjLst := .F., bExpLst := .F., cObjExt := ".ObjLst", cExpExt := ".ExpLst"
    Local MemoObjLst := "", MemoExpLst := "EXPORTS"
@@ -129,7 +129,7 @@ FUNCTION MAIN( ... )
                bError := .T.
             Else
                If FileCopy( cPar2, cPar3 ) == US_FileSize( cPar2 )
-                  Say( "US_Shell 013I: Copy file OK" )
+                  Say( "US_Shell 013I: Copy file OK", .T. )
                   If cPar1 == "COPYZAP"
                      nZap := US_FileChar26Zap( cPar3 )
                      Do Case
@@ -146,6 +146,9 @@ FUNCTION MAIN( ... )
                EndIf
             EndIf
          EndIf
+      EndIf
+      If bError .and. ! bSay
+         Say( "US_Shell 016E: Error in File Copy !!!", .T. )
       EndIf
    Case cPar1 == "MOVE" .or. cPar1 == "MOVEZAP"
       If US_Words( cParam ) < 3
@@ -175,7 +178,7 @@ FUNCTION MAIN( ... )
                      Say( "US_Shell 026E: Error in Move file (Original file not deleted !!! )" )
                      bError := .T.
                   Else
-                     Say( "US_Shell 024I: Move file OK" )
+                     Say( "US_Shell 024I: Move file OK", .T. )
                      If cPar1 == "MOVEZAP"
                         nZap := US_FileChar26Zap( cPar3 )
                         Do Case
@@ -190,6 +193,9 @@ FUNCTION MAIN( ... )
                EndIf
             EndIf
          EndIf
+      EndIf
+      If bError .and. ! bSay
+         Say( "US_Shell 027E: Error in File Move !!!", .T. )
       EndIf
    Case cPar1 == "LIST_TXT"
       If US_Words( cParam ) < 2
@@ -606,14 +612,17 @@ FUNCTION MAIN( ... )
          cPar2 := StrTran( US_Word( cParam, 2 ), "|", " " )
          If File( cPar2 )
             If FErase( cPar2 ) == -1
-               Say( "US_Shell 064E: Error in Delete file !!!" )
+               Say( "US_Shell 064E: Error in File Delete !!!" )
                bError := .T.
             Else
-               Say( "US_Shell 065I: File Deleted OK" )
+               Say( "US_Shell 065I: File Deleted OK", .T. )
             EndIf
          Else
             Say( "US_Shell 066E: File not found" )
          EndIf
+      EndIf
+      If bError .and. ! bSay
+         Say( "US_Shell 067E: Error in File Delete !!!", .T. )
       EndIf
    Case cPar1 == "CHANGE"
       If US_Words( cParam ) != 4
@@ -638,6 +647,14 @@ FUNCTION MAIN( ... )
                bError := .T.
             EndIf
          EndIf
+      EndIf
+   Case cPar1 == "ECHO"
+      If US_Words( cParam ) < 2
+         Say( "" )
+         __Run( "@ECHO." )
+      Else
+         cPar2 := StrTran( US_Word( cParam, 2 ), "|", " " )
+         __Run( "@ECHO " + cPar2 )
       EndIf
    Otherwise
       Say( "US_Shell 002E: Invalid parm: " + cParam )
@@ -672,8 +689,8 @@ Function US_Shell_Listo()
    vFun := {}
 Return .T.
 
-Function Say( txt )
-   If bSay
+Function Say( txt, lSay )
+   If If( lSay == Nil, bSay, lSay )
       __Run( "ECHO " + Tab + US_VarToStr( txt ) )
    EndIf
 Return .T.

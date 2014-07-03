@@ -5,7 +5,7 @@
 /*
  *    QPM - QAC Based Project Manager
  *
- *    Copyright 2011 Fernando Yurisich <fernando.yurisich@gmail.com>
+ *    Copyright 2011-2014 Fernando Yurisich <fernando.yurisich@gmail.com>
  *    http://qpm.sourceforge.net
  *
  *    Based on QAC - Project Manager for (x)Harbour
@@ -45,6 +45,7 @@
 
 */
 
+#include <io.h>
 #include <ctype.h>
 #include <errno.h>
 #include <fcntl.h>
@@ -72,6 +73,8 @@ ar.exe rc libCRT_noglob.a CRT_noglob.o
 El utilitario ar.exe viene con MinGW
 
 */
+
+#define UNUSED(x) (void)(x)
 
 void xmalloc_failed(size_t size)
 {
@@ -190,13 +193,14 @@ unquoted_argv(int argc, char *argv[], char *reuse)
 static int
 run_program(int argc, char *argv[])
 {
+  UNUSED(argc);
   return spawnvp (P_WAIT, argv[1], argv+1);
 }
 
 int
 main(int argc, char **argv)
 {
-  char *arg1 = NULL, *arg2 = NULL;
+  char *arg1, *arg2 = NULL;
 
   if (argc < 2)
     usage();
