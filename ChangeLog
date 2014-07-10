@@ -8,17 +8,30 @@
  * See "How to format your ChangeLog entries" in howtosvn.txt file.
  */
 
-2014-05-27 22:57:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2014-07-10 16:42:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * ./Changelog
+     ! Wrong dates in previous entries.
+   * ./TODO
+     * Updated.
+   * ./QPM_GlobalSettings.prg
+     * Labels in global setting now reflect the minigui flavor.
+     ! Wrong color background in checkboxes.
+   * ./QPM.PRG
+   * ./QPM_AutoProject.qpm
+   * ./QPM.EXE
+     * Version to 05_04_01.
+
+2014-07-02 22:58:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * ./QPM.iss
      * Version to 05_04_00.
 
-2014-05-27 22:49:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2014-07-02 22:49:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * ./QPM.PRG
    * ./QPM_AutoProject.qpm
    * ./QPM.EXE
      * Version to 05_04_00.
 
-2014-05-27 22:38:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2014-07-02 22:38:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * ./Changelog
      ! UTC in previous entries.
    + ./ToDo

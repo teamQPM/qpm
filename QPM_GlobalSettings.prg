@@ -88,7 +88,6 @@ Function GlobalSettings()
                     VALUE           bEditorLongName
                     TOOLTIP "Use Long Name for Open Source Editor.  Default is Short Name (8.3)"
                     ON CHANGE       bEditorLongName := WinGSettings.Check_EditorLongName.Value
-                    TRANSPARENT     .T.
             END CHECKBOX
 
             DEFINE CHECKBOX Check_EditorSuspendControl
@@ -100,7 +99,6 @@ Function GlobalSettings()
                     VALUE           bSuspendControlEdit
                     TOOLTIP "Suspend control for edit process"
                     ON CHANGE       bSuspendControlEdit := WinGSettings.Check_EditorSuspendControl.Value
-                    TRANSPARENT     .T.
             END CHECKBOX
 
             @ 132 , 10 LABEL LDummy_Form ;
@@ -330,7 +328,7 @@ Function GlobalSettings()
                     ROW             70
                     COL             10
                     WIDTH           109
-                    VALUE           'MiniGUI Folder:'
+                    VALUE           'HMG Folder:'
                     TRANSPARENT     .T.
             END LABEL
             DEFINE TEXTBOX &("T_"+DefineMiniGui3+DefineMinGW)
@@ -643,7 +641,7 @@ Function GlobalSettings()
                     ROW             70
                     COL             10
                     WIDTH           109
-                    VALUE           'MiniGUI Folder:'
+                    VALUE           'OOHG Folder:'
                     TRANSPARENT     .T.
             END LABEL
             DEFINE TEXTBOX &("T_"+DefineOohg3+DefineBorland)
@@ -747,7 +745,7 @@ Function GlobalSettings()
                     ROW             70
                     COL             10
                     WIDTH           109
-                    VALUE           'MiniGUI Folder:'
+                    VALUE           'OOHG Folder:'
                     TRANSPARENT     .T.
             END LABEL
             DEFINE TEXTBOX &("T_"+DefineOohg3+DefineMinGW)
@@ -851,7 +849,7 @@ Function GlobalSettings()
                     ROW             70
                     COL             10
                     WIDTH           109
-                    VALUE           'MiniGUI Folder:'
+                    VALUE           'OOHG Folder:'
                     TRANSPARENT     .T.
             END LABEL
             DEFINE TEXTBOX &("T_"+DefineOohg3+DefinePelles)
