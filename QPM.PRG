@@ -6474,6 +6474,7 @@ Function QPM_Build2()
                      endif
                   Next i
                   Out := Out + PUB_cCharTab + 'echo $(DIR_COMPC_LIB)'+DEF_SLASH+'import32.lib + >> _'+PUB_cSecu+'Script.ld' + HB_OsNewLine()
+                  Out := Out + PUB_cCharTab + 'echo $(DIR_COMPC_LIB)'+DEF_SLASH+'PSDK'+DEF_SLASH+'iphlpapi.lib + >> _'+PUB_cSecu+'Script.ld' + HB_OsNewLine()
                   Out := Out + PUB_cCharTab + 'echo $(DIR_COMPC_LIB)'+DEF_SLASH+'PSDK'+DEF_SLASH+'msimg32.lib + >> _'+PUB_cSecu+'Script.ld' + HB_OsNewLine()
             //    if cOutputType == "SRCEXE"
                      Out := Out + PUB_cCharTab + 'echo $(DIR_COMPC_LIB)'+DEF_SLASH+'cw32.lib, >> _'+PUB_cSecu+'Script.ld' + HB_OsNewLine()

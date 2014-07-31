@@ -281,7 +281,7 @@ Function ProjectSettings()
 
     //@ 410 , 300 RADIOGROUP Radio_Form ;
       @ 440 , 300 RADIOGROUP Radio_Form ;
-         OPTIONS { 'Automatic' , 'HMI+ (by Ciro Vargas Clemow)' , 'HMGSIDE (by Walter Formigoni)' } ;
+         OPTIONS { 'Automatic' , 'ooHG IDE+ (by Ciro Vargas Clemow)' , 'HMGSIDE (by Walter Formigoni)' } ;
          VALUE Prj_Radio_FormTool ;
          WIDTH 200
 
