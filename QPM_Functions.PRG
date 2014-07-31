@@ -156,20 +156,20 @@ Function QPM_CreateNewFile( cType , cFile )
             case nOption == 0
                bReto := .F.
             case nOption == 1
-               cMemo := " " + HB_OsNewLine() + ;
-                         "* ooHG IDE plus form generated code" + HB_OsNewLine() + ;
-                         "* (c)2004 Ciro Vargas Clemow   pcman2010@yahoo.com" + HB_OsNewLine() + ;
-                         " " + HB_OsNewLine() + ;
-                         "DEFINE WINDOW  TEMPLATE ; " + HB_OsNewLine() + ;
-                         "AT 238 , 256 ; " + HB_OsNewLine() + ;
-                         " WIDTH 405 ; " + HB_OsNewLine() + ;
-                         " HEIGHT 218 ; " + HB_OsNewLine() + ;
-                         " TITLE 'QPM - HMI + - Empty Sample Form' ; " + HB_OsNewLine() + ;
-                         " ICON '' ; " + HB_OsNewLine() + ;
-                         "FONT 'MS Sans Serif' ; " + HB_OsNewLine() + ;
-                         "SIZE 10" + HB_OsNewLine() + ;
-                         " " + HB_OsNewLine() + ;
-                         "END WINDOW"
+               cMemo := HB_OsNewLine() + ;
+                        "* ooHG IDE Plus form generated code" + HB_OsNewLine() + ;
+                        "* (c)2003-2014 Ciro Vargas Clemow <pcman2010@yahoo.com >" + HB_OsNewLine() + ;
+                        HB_OsNewLine() + ;
+                        "DEFINE WINDOW TEMPLATE ;" + HB_OsNewLine() + ;
+                        "   AT 238, 256 ;" + HB_OsNewLine() + ;
+                        "   WIDTH 405 ;" + HB_OsNewLine() + ;
+                        "   HEIGHT 218; " + HB_OsNewLine() + ;
+                        "   TITLE 'QPM - Empty Sample Form' ;" + HB_OsNewLine() + ;
+                        "   FONT 'MS Sans Serif' ; " + HB_OsNewLine() + ;
+                        "   SIZE 10" + HB_OsNewLine() + ;
+                        "   FONTCOLOR {0, 0, 0}" + HB_OsNewLine() + ;
+                        HB_OsNewLine() + ;
+                        "END WINDOW" + HB_OsNewLine()
                bReto := QPM_MemoWrit( cFile , cMemo )
             case nOption == 2
                cMemo := "*HMGS-MINIGUI-IDE Two-Way Form Designer Generated Code" + HB_OsNewLine() + ;

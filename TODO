@@ -32,34 +32,10 @@ Details....: Agregar lib\win\mingw como path para libs de harbour.
 /******************************************************************************/
 
 Assigned to: <nobody>
-Added by...: 2013-09-26 23:03:00 UTC-0300 Fernando Yurisich <fyurisich>
-Status.....: Open.
-Details....: Agregar ayuda para __PROJECT_FOLDER__
-
-/******************************************************************************/
-
-Assigned to: <nobody>
-Added by...: 2013-09-26 13:18:00 UTC-0300 Fernando Yurisich <fyurisich>
-Status.....: Open.
-Details....: Actualizar copyright.
-
-/******************************************************************************/
-
-Assigned to: <nobody>
 Added by...: 2013-06-05 09:24:00 UTC-0300 Fernando Yurisich <fyurisich>
 Status.....: Open.
 Details....: No se genera el ejecutable cuando algún nombre de archivo o
              carpeta contiene el caracter &.
-
-/******************************************************************************/
-
-Assigned to: <nobody>
-Added by...: 2013-02-24 03:37:00 UTC-0200 Fernando Yurisich <fyurisich>
-Status.....: Open.
-Details....: Al usar QPM en modo comando, si la compilación da errores no los
-             guarda en el log. Esto está bueno para usarlo conjuntamente con
-             la opción –EXIT y -RUN. Si todo va ok, se cierra QMP y se ejecuta
-             el EXE. Si hay un error, avisa y abro el log con los errores.
 
 /******************************************************************************/
 

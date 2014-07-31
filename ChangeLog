@@ -8,6 +8,25 @@
  * See "How to format your ChangeLog entries" in howtosvn.txt file.
  */
 
+2014-07-31 19:14:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * ./QPM_AutoProjectOnlyHelp.qpm
+   * ./QPM.chm
+   * ./HelpQPM/QPM_SHG.dbf
+   * ./HelpQPM/QPM_SHG.fpt
+   * ./HelpQPM/QPM_SHG.cdx
+     + Page for __PROJECT_FOLDER constant.
+   * ./TODO
+     * Updated.
+   * ./QPM_Functions.PRG
+     * OOHG's FMG skeleton.
+     + ESCAPE key for closing project's version change form.
+   * ./QPM_ProjectSettings.prg
+     * HMI+ references to OOHG IDE+.
+   * ./QPM.PRG
+     + Borland library lib\psdk\iphlpapi.lib
+   * ./QPM.EXE
+     * Updated.
+
 2014-07-10 16:42:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * ./Changelog
      ! Wrong dates in previous entries.
