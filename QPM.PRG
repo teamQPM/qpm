@@ -35,6 +35,7 @@
 Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PAR_cP9,PAR_cP10,PAR_cP11,PAR_cP12,PAR_cP13,PAR_cP14,PAR_cP15,PAR_cP16,PAR_cP17,PAR_cP18,PAR_cP19,PAR_cP20)
    Local Folder , FileName , i , nPos , LogIni := 0 , nIndx
    Local LOC_cParam := ""
+   Local nRow, nCol, nWidth, nHeight
 
    PUBLIC PUB_cQPM_Version := QPM_VERSION_NUMBER
 
@@ -959,6 +960,8 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
 
            DEFINE CONTEXT MENU
 #ifdef QPM_SHG
+              ITEM '&Move Item'       ACTION SHG_Move_Item()  IMAGE 'US_EditCopy'  NAME ItC_Move
+              SEPARATOR
               ITEM '&Copy'            ACTION SHG_Send_Copy()  IMAGE 'US_EditCopy'  NAME ItC_Copy
               ITEM 'C&ut'             ACTION SHG_Send_Cut()   IMAGE 'US_EditCut'   NAME ItC_Cut
               ITEM '&Paste'           ACTION SHG_Send_Paste() IMAGE 'US_EditPaste' NAME ItC_Paste
@@ -993,6 +996,7 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
            VentanaMain.ItC_CutM.Enabled      := .F.
            VentanaMain.ItC_PasteM.Enabled    := .F.
 #ifdef QPM_SHG
+           VentanaMain.ItC_Move.Enabled      := .F.
            VentanaMain.ItC_AddHlpKey.Enabled := .F.
            VentanaMain.ItC_AddHlpHTMLAmpersand.Enabled := .F.
            VentanaMain.ItC_AddHlpHTMLMenor.Enabled := .F.
@@ -1011,53 +1015,49 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
 
 #ifndef QPM_SYNCRECOVERY
 
-           DEFINE BUTTON EraseALL
+           DEFINE BUTTONEX EraseALL
                    ROW     63
                    COL     10
                    WIDTH   135
                    HEIGHT  25
                    PICTURE "clearall"
-                   NOXPSTYLE .T.
                    TOOLTIP 'Delete ALL temporary objects folders and ALL Installer folders'
                    ONCLICK EraseALL()
-           END BUTTON
+           END BUTTONEX
 
 #else
 
-           DEFINE BUTTON BTakeSyncRecovery
+           DEFINE BUTTONEX BTakeSyncRecovery
                    ROW     63
                    COL     10
                    WIDTH   65
                    HEIGHT  25
                    PICTURE 'SyncRec'
-                   NOXPSTYLE .T.
                    TOOLTIP 'Force take Sync Recovery Point for this project'
                    ONCLICK QPM_ForceSyncRecovery()
-           END BUTTON
+           END BUTTONEX
 
-           DEFINE BUTTON EraseALL
+           DEFINE BUTTONEX EraseALL
                    ROW     63
                    COL     80
                    WIDTH   65
                    HEIGHT  25
                    PICTURE "clearall"
-                   NOXPSTYLE .T.
                    TOOLTIP 'Delete ALL temporary objects folders and ALL Installer folders'
                    ONCLICK EraseALL()
-           END BUTTON
+           END BUTTONEX
 
 #endif
 
-           DEFINE BUTTON EraseOBJ
+           DEFINE BUTTONEX EraseOBJ
                    ROW     63
                    COL     150
                    WIDTH   170
                    HEIGHT  25
                    PICTURE 'force'
-                   NOXPSTYLE .T.
                    TOOLTIP 'Force Recomp of all program in project'
                    ONCLICK EraseOBJ()
-           END BUTTON
+           END BUTTONEX
 
            // HEIGHT ( GetDesktopRealHeight() - 95 ) ;
            DEFINE TAB TabGrids ;
@@ -1084,16 +1084,15 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
                          ON CHANGE       PUB_cProjectFolder := alltrim( US_FileNameOnlyPath( GetProperty( "VentanaMain" , "TProjectFolder" , "Value" ) ) )
                  END TEXTBOX
 
-                 DEFINE BUTTON BProjectFolder
+                 DEFINE BUTTONEX BProjectFolder
                          ROW             40
                          COL             270
                          WIDTH           25
                          HEIGHT          25
                          PICTURE         'folderselect'
-                         NOXPSTYLE       .T.
                          TOOLTIP         'Select Folder'
                          ONCLICK         ( If ( !Empty( Folder := GetFolder( "Select Folder" , VentanaMain.TProjectFolder.Value ) ) , VentanaMain.TProjectFolder.Value := Folder , ) , QPM_CheckFiles() )
-                 END BUTTON
+                 END BUTTONEX
 
                  DEFINE LABEL LRunProjectFolder
                          ROW             70
@@ -1109,122 +1108,112 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
                          WIDTH           160
                  END TEXTBOX
 
-                 DEFINE BUTTON BRunProjectFolder
+                 DEFINE BUTTONEX BRunProjectFolder
                          ROW             70
                          COL             270
                          WIDTH           25
                          HEIGHT          25
                          PICTURE         'folderselect'
-                         NOXPSTYLE       .T.
                          TOOLTIP         'Select Folder'
                          ONCLICK         If ( !Empty( Folder := GetFolder( "Select Folder" , VentanaMain.TRunProjectFolder.Value ) ) , VentanaMain.TRunProjectFolder.Value := Folder , )
-                 END BUTTON
+                 END BUTTONEX
 
-                 DEFINE BUTTON BPrgAdd
+                 DEFINE BUTTONEX BPrgAdd
                          ROW     100
                          COL     12
                          WIDTH   65
                          HEIGHT  25
                          PICTURE 'add'
-                         NOXPSTYLE .T.
                          TOOLTIP 'Add File'
                          ONCLICK QPM_AddFilesPRG()
-                 END BUTTON
+                 END BUTTONEX
 
 #ifndef QPM_HOTRECOVERYWINDOW
 
-                 DEFINE BUTTON BPrgRemove
+                 DEFINE BUTTONEX BPrgRemove
                          ROW     100
                          COL     85
                          WIDTH   65
                          HEIGHT          25
                          PICTURE 'remove'
-                         NOXPSTYLE .T.
                          TOOLTIP 'Remove File'
                          ONCLICK QPM_RemoveFilePRG()
-                 END BUTTON
+                 END BUTTONEX
 
 #else
 
-                 DEFINE BUTTON BPrgRemove
+                 DEFINE BUTTONEX BPrgRemove
                          ROW     100
                          COL     85
                          WIDTH   30
                          HEIGHT  25
                          PICTURE 'remove'
-                         NOXPSTYLE .T.
                          TOOLTIP 'Remove File'
                          ONCLICK QPM_RemoveFilePRG()
-                 END BUTTON
+                 END BUTTONEX
 
-                 DEFINE BUTTON BPrgHotRecovery
+                 DEFINE BUTTONEX BPrgHotRecovery
                          ROW     100
                          COL     120
                          WIDTH   30
                          HEIGHT  25
                          PICTURE 'hotrec'
-                         NOXPSTYLE .T.
                          TOOLTIP 'Force take Hot Recovery Version for this source'
                          ONCLICK QPM_ForceHotRecovery( "PRG" )
-                 END BUTTON
+                 END BUTTONEX
                  //      ONCLICK QPM_ForceHotRecovery( GBL_TabGridNameFocus )   // esto tambien funciona
 
 #endif
 
-                 DEFINE BUTTON BPrgEdit
+                 DEFINE BUTTONEX BPrgEdit
                          ROW     100
                          COL     158
                          WIDTH   65
                          HEIGHT  25
                          PICTURE 'Edit'
-                         NOXPSTYLE .T.
                          TOOLTIP 'Edit File'
                          ONCLICK QPM_EditPRG ()
-                 END BUTTON
+                 END BUTTONEX
 
-                 DEFINE BUTTON SetTopPRG
+                 DEFINE BUTTONEX SetTopPRG
                          ROW     100
                          COL     230
                          WIDTH   30
                          HEIGHT  25
                          PICTURE 'SetTop'
-                         NOXPSTYLE .T.
                          TOOLTIP 'Set Top Project File'
                          ONCLICK QPM_SetTopPRG()
-                 END BUTTON
+                 END BUTTONEX
 
-                 DEFINE BUTTON ForceRecompPRG
+                 DEFINE BUTTONEX ForceRecompPRG
                          ROW     100
                          COL     265
                          WIDTH   30
                          HEIGHT  25
                          PICTURE 'ForceRecomp'
-                         NOXPSTYLE .T.
                          TOOLTIP 'Force Source Recomp (Togle On/Off)'
                          ONCLICK QPM_ForceRecompPRG()
-                 END BUTTON
+                 END BUTTONEX
 
-                 DEFINE BUTTON BSortPRG
+                 DEFINE BUTTONEX BSortPRG
                          ROW     130
                          COL     12
                          WIDTH   65
                          HEIGHT  25
                          PICTURE "Sort"
-                         NOXPSTYLE .T.
                          TOOLTIP 'Sort PRG and C files in alfabetical order, except top File'
                          ONCLICK SortPRG( "VentanaMain" , "GPrgFiles" , NCOLPRGNAME )
-                 END BUTTON
+                 END BUTTONEX
 
-                 DEFINE BUTTON BVerChange
+                 DEFINE BUTTONEX BVerChange
                          ROW     130
                          COL     85
                          WIDTH   55
                          HEIGHT  25
                          PICTURE 'ChangeVersion'
-                         NOXPSTYLE .T.
                          TOOLTIP 'Change Version, Release and Build'
                          ONCLICK QPM_ChangePrjVersion()
-                 END BUTTON
+                 END BUTTONEX
 
                  DEFINE LABEL LVerTitle
                          ROW             135
@@ -1289,60 +1278,55 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
                          TRANSPARENT     if( IsXPThemeActive() , .T. , .F. )
                  END LABEL
 
-                 DEFINE BUTTON BSyncPrg
+                 DEFINE BUTTONEX BSyncPrg
                          ROW     312
                          COL     296
                          WIDTH   11
                          HEIGHT  21
                          PICTURE 'SYNC'
-                         NOXPSTYLE .T.
                          TOOLTIP 'Syncronize Tabs'
                          ONCLICK TabSync()
-                 END BUTTON
+                 END BUTTONEX
 
-                 DEFINE BUTTON BUpPrg
+                 DEFINE BUTTONEX BUpPrg
                          ROW     160
                          COL     12
                          WIDTH   11
                          HEIGHT  21
                          PICTURE 'UP'
-                         NOXPSTYLE .T.
                          TOOLTIP 'Up PRG or C file in List'
                          ONCLICK UpPrg()
-                 END BUTTON
+                 END BUTTONEX
 
-                 DEFINE BUTTON BDownPrg
+                 DEFINE BUTTONEX BDownPrg
                          ROW     190
                          COL     12
                          WIDTH   11
                          HEIGHT  21
                          PICTURE 'DOWN'
-                         NOXPSTYLE .T.
                          TOOLTIP 'Down PRG or C file in List'
                          ONCLICK DownPrg()
-                 END BUTTON
+                 END BUTTONEX
 
-                 DEFINE BUTTON BUpPrg2
+                 DEFINE BUTTONEX BUpPrg2
                          ROW     GetDesktopRealHeight() - 237
                          COL     12
                          WIDTH   11
                          HEIGHT  21
                          PICTURE 'UP'
-                         NOXPSTYLE .T.
                          TOOLTIP 'Up PRG or C file in List'
                          ONCLICK UpPrg()
-                 END BUTTON
+                 END BUTTONEX
 
-                 DEFINE BUTTON BDownPrg2
+                 DEFINE BUTTONEX BDownPrg2
                          ROW     GetDesktopRealHeight() - 207
                          COL     12
                          WIDTH   11
                          HEIGHT  21
                          PICTURE 'DOWN'
-                         NOXPSTYLE .T.
                          TOOLTIP 'Down PRG or C file in List'
                          ONCLICK DownPrg()
-                 END BUTTON
+                 END BUTTONEX
 
                  // OJO, la altura de este grid se controla tembien desde la funcion ActLibReimp()
                  @ 160, 25 GRID GPrgFiles ;
@@ -1357,7 +1341,10 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
                     BACKCOLOR DEF_COLORBACKPRG ;
                     ON HEADCLICK { {||SortPRG( "VentanaMain" , "GPrgFiles" , 1 )} , {||SortPRG( "VentanaMain" , "GPrgFiles" , 2 )} , {||SortPRG( "VentanaMain" , "GPrgFiles" , 3 )} , {||SortPRG( "VentanaMain" , "GPrgFiles" , 4 )} } ;
                     ON DBLCLICK { QPM_EditPRG() } ;
-                    ON CHANGE { || if( !bPrgSorting .and. !PUB_bLite , if( bNumberOnPrg , QPM_Wait( "RichEditDisplay('PRG')" , "Reloading" ) , RichEditDisplay('PRG') ) , US_NOP() ) } ;
+                    ON CHANGE { || if( ! bPrgSorting .and. ! PUB_bLite, ;
+                                       if( bNumberOnPrg, ;
+                                           QPM_Wait( "RichEditDisplay('PRG')", "Reloading" ), ;
+                                           RichEditDisplay('PRG') ), US_NOP() ) } ;
                     JUSTIFY { BROWSE_JTFY_LEFT }
 
                  DEFINE CHECKBOX Check_Reimp
@@ -1387,16 +1374,15 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
                          WIDTH           220
                  END TEXTBOX
 
-                 DEFINE BUTTON BReImportLib
+                 DEFINE BUTTONEX BReImportLib
                          ROW             if( PUB_bW800 , 350 , 390 )
                          COL             270
                          WIDTH           25
                          HEIGHT          25
                          PICTURE         'folderselect'
-                         NOXPSTYLE .T.
                          TOOLTIP         'Select Library'
                          ONCLICK         If( !Empty( FileName := BugGetFile( { {'Library (*.lib)','*.lib'} } , 'Select Library for ReImport' , US_FileNameOnlyPath( ChgPathToReal( VentanaMain.TReImportLib.Value ) ) , .F. , .T. ) ) , VentanaMain.TReImportLib.Value := ChgPathToRelative( FileName ) , )
-                 END BUTTON
+                 END BUTTONEX
 
                  DEFINE CHECKBOX Check_GuionA
                          CAPTION         "Add '_' alias (Not for MinGW)"
@@ -1415,132 +1401,121 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
 
               DEFINE PAGE PageHEA
 
-                 DEFINE BUTTON BHeaAdd
+                 DEFINE BUTTONEX BHeaAdd
                          ROW     40
                          COL     12
                          WIDTH   65
                          HEIGHT  25
                          PICTURE 'add'
-                         NOXPSTYLE .T.
                          TOOLTIP 'Add Header'
                          ONCLICK QPM_AddFilesHEA()
-                 END BUTTON
+                 END BUTTONEX
 
 #ifndef QPM_HOTRECOVERYWINDOW
 
-                 DEFINE BUTTON BHeaRemove
+                 DEFINE BUTTONEX BHeaRemove
                          ROW     40
                          COL     85
                          WIDTH   65
                          HEIGHT          25
                          PICTURE 'remove'
-                         NOXPSTYLE .T.
                          TOOLTIP 'Remove Header'
                          ONCLICK QPM_RemoveFileHEA()
-                 END BUTTON
+                 END BUTTONEX
 
 #else
 
-                 DEFINE BUTTON BHeaRemove
+                 DEFINE BUTTONEX BHeaRemove
                          ROW     40
                          COL     85
                          WIDTH   30
                          HEIGHT  25
                          PICTURE 'remove'
-                         NOXPSTYLE .T.
                          TOOLTIP 'Remove Header'
                          ONCLICK QPM_RemoveFileHEA()
-                 END BUTTON
+                 END BUTTONEX
 
-                 DEFINE BUTTON BHeaHotRecovery
+                 DEFINE BUTTONEX BHeaHotRecovery
                          ROW     40
                          COL     120
                          WIDTH   30
                          HEIGHT  25
                          PICTURE 'hotrec'
-                         NOXPSTYLE .T.
                          TOOLTIP 'Force take Hot Recovery Version for this header'
                          ONCLICK QPM_ForceHotRecovery( "HEA" )
-                 END BUTTON
+                 END BUTTONEX
 
 #endif
 
-                 DEFINE BUTTON BHeaEdit
+                 DEFINE BUTTONEX BHeaEdit
                          ROW     40
                          COL     158
                          WIDTH   65
                          HEIGHT  25
                          PICTURE 'Edit'
-                         NOXPSTYLE .T.
                          TOOLTIP 'Modify Header'
                          ONCLICK QPM_EditHEA ()
-                 END BUTTON
+                 END BUTTONEX
 
-                 DEFINE BUTTON BSortHea
+                 DEFINE BUTTONEX BSortHea
                          ROW     70
                          COL     12
                          WIDTH   65
                          HEIGHT  25
                          PICTURE "Sort"
-                         NOXPSTYLE .T.
                          TOOLTIP 'Sort Headers in alfabetical order'
                          ONCLICK SortHEA( "VentanaMain" , "GHeaFiles" , NCOLHEANAME )
-                 END BUTTON
+                 END BUTTONEX
 
-                 DEFINE BUTTON BSyncHea
+                 DEFINE BUTTONEX BSyncHea
                          ROW     312
                          COL     296
                          WIDTH   11
                          HEIGHT  21
                          PICTURE 'SYNC'
-                         NOXPSTYLE .T.
                          TOOLTIP 'Syncronize Tabs'
                          ONCLICK TabSync()
-                 END BUTTON
+                 END BUTTONEX
 
-                 DEFINE BUTTON BUpHea
+                 DEFINE BUTTONEX BUpHea
                          ROW     100
                          COL     12
                          WIDTH   11
                          HEIGHT  21
                          PICTURE 'UP'
-                         NOXPSTYLE .T.
                          TOOLTIP 'Up Headers in List'
                          ONCLICK UpHea()
-                 END BUTTON
+                 END BUTTONEX
 
-                 DEFINE BUTTON BDownHea
+                 DEFINE BUTTONEX BDownHea
                          ROW     130
                          COL     12
                          WIDTH   11
                          HEIGHT  21
                          PICTURE 'DOWN'
-                         NOXPSTYLE .T.
                          TOOLTIP 'Down Headers in List'
                          ONCLICK DownHea()
-                 END BUTTON
+                 END BUTTONEX
 
-                 DEFINE BUTTON BUpHea2
+                 DEFINE BUTTONEX BUpHea2
                          ROW     GetDesktopRealHeight() - 237
                          COL     12
                          WIDTH   11
                          HEIGHT  21
                          PICTURE 'UP'
-                         NOXPSTYLE .T.
                          TOOLTIP 'Up Headers in List'
                          ONCLICK UpHea()
-                 END BUTTON
+                 END BUTTONEX
 
-                 DEFINE BUTTON BDownHea2
+                 DEFINE BUTTONEX BDownHea2
                          ROW     GetDesktopRealHeight() - 207
                          COL     12
                          WIDTH   11
                          HEIGHT  21
                          PICTURE 'DOWN'
-                         NOXPSTYLE .T.
                          TOOLTIP 'Down Headers in List'
                          ONCLICK DownHea()
-                 END BUTTON
+                 END BUTTONEX
 
                  @ 100, 25 GRID GHeaFiles ;
                     WIDTH 270 ;
@@ -1561,57 +1536,53 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
 
               DEFINE PAGE PagePAN
 
-                 DEFINE BUTTON BPanAdd
+                 DEFINE BUTTONEX BPanAdd
                          ROW     40
                          COL     12
                          WIDTH   65
                          HEIGHT  25
                          PICTURE 'add'
-                         NOXPSTYLE .T.
                          TOOLTIP 'Add Form'
                          ONCLICK QPM_AddFilesPAN()
-                 END BUTTON
+                 END BUTTONEX
 
 #ifndef QPM_HOTRECOVERYWINDOW
 
-                 DEFINE BUTTON BPanRemove
+                 DEFINE BUTTONEX BPanRemove
                          ROW     40
                          COL     85
                          WIDTH   65
                          HEIGHT          25
                          PICTURE 'remove'
-                         NOXPSTYLE .T.
                          TOOLTIP 'Remove Form'
                          ONCLICK QPM_RemoveFilePAN()
-                 END BUTTON
+                 END BUTTONEX
 
 #else
 
-                 DEFINE BUTTON BPanRemove
+                 DEFINE BUTTONEX BPanRemove
                          ROW     40
                          COL     85
                          WIDTH   30
                          HEIGHT  25
                          PICTURE 'remove'
-                         NOXPSTYLE .T.
                          TOOLTIP 'Remove Form'
                          ONCLICK QPM_RemoveFilePAN()
-                 END BUTTON
+                 END BUTTONEX
 
-                 DEFINE BUTTON BPanHotRecovery
+                 DEFINE BUTTONEX BPanHotRecovery
                          ROW     40
                          COL     120
                          WIDTH   30
                          HEIGHT  25
                          PICTURE 'hotrec'
-                         NOXPSTYLE .T.
                          TOOLTIP 'Force take Hot Recovery Version for this form'
                          ONCLICK QPM_ForceHotRecovery( "PAN" )
-                 END BUTTON
+                 END BUTTONEX
 
 #endif
 
-                 DEFINE BUTTON BPanEditTool
+                 DEFINE BUTTONEX BPanEditTool
                          ROW     40
                          COL     158
                          WIDTH   65
@@ -1619,9 +1590,9 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
                          CAPTION 'With-Tool'
                          TOOLTIP 'Modify Form with associated Tool'
                          ONCLICK QPM_EditPAN()
-                 END BUTTON
+                 END BUTTONEX
 
-                 DEFINE BUTTON BPanEditEditor
+                 DEFINE BUTTONEX BPanEditEditor
                          ROW     40
                          COL     230
                          WIDTH   65
@@ -1629,20 +1600,19 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
                          CAPTION 'With-Edit'
                          TOOLTIP 'Open Form with Editor'
                          ONCLICK QPM_EditPAN( .T. )
-                 END BUTTON
+                 END BUTTONEX
 
-                 DEFINE BUTTON BSortPan
+                 DEFINE BUTTONEX BSortPan
                          ROW     70
                          COL     12
                          WIDTH   65
                          HEIGHT  25
                          PICTURE "Sort"
-                         NOXPSTYLE .T.
                          TOOLTIP 'Sort Forms in alfabetical order'
                          ONCLICK SortPAN( "VentanaMain" , "GPanFiles" , NCOLPANNAME )
-                 END BUTTON
+                 END BUTTONEX
 
-                 DEFINE BUTTON BEditRC
+                 DEFINE BUTTONEX BEditRC
                          ROW     70
                          COL     85
                          WIDTH   209
@@ -1650,62 +1620,57 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
                          CAPTION 'Edit Main .RC'
                          TOOLTIP 'Edit the Main Resource File of Project'
                          ONCLICK QPM_EditRES()
-                 END BUTTON
+                 END BUTTONEX
 
-                 DEFINE BUTTON BSyncPan
+                 DEFINE BUTTONEX BSyncPan
                          ROW     312
                          COL     296
                          WIDTH   11
                          HEIGHT  21
                          PICTURE 'SYNC'
-                         NOXPSTYLE .T.
                          TOOLTIP 'Syncronize Tabs'
                          ONCLICK TabSync()
-                 END BUTTON
+                 END BUTTONEX
 
-                 DEFINE BUTTON BUpPan
+                 DEFINE BUTTONEX BUpPan
                          ROW     100
                          COL     12
                          WIDTH   11
                          HEIGHT  21
                          PICTURE 'UP'
-                         NOXPSTYLE .T.
                          TOOLTIP 'Up Forms in List'
                          ONCLICK UpPan()
-                 END BUTTON
+                 END BUTTONEX
 
-                 DEFINE BUTTON BDownPan
+                 DEFINE BUTTONEX BDownPan
                          ROW     130
                          COL     12
                          WIDTH   11
                          HEIGHT  21
                          PICTURE 'DOWN'
-                         NOXPSTYLE .T.
                          TOOLTIP 'Down Forms in List'
                          ONCLICK DownPan()
-                 END BUTTON
+                 END BUTTONEX
 
-                 DEFINE BUTTON BUpPan2
+                 DEFINE BUTTONEX BUpPan2
                          ROW     GetDesktopRealHeight() - 237
                          COL     12
                          WIDTH   11
                          HEIGHT  21
                          PICTURE 'UP'
-                         NOXPSTYLE .T.
                          TOOLTIP 'Up Forms in List'
                          ONCLICK UpPan()
-                 END BUTTON
+                 END BUTTONEX
 
-                 DEFINE BUTTON BDownPan2
+                 DEFINE BUTTONEX BDownPan2
                          ROW     GetDesktopRealHeight() - 207
                          COL     12
                          WIDTH   11
                          HEIGHT  21
                          PICTURE 'DOWN'
-                         NOXPSTYLE .T.
                          TOOLTIP 'Down Forms in List'
                          ONCLICK DownPan()
-                 END BUTTON
+                 END BUTTONEX
 
                  @ 100, 25 GRID GPanFiles ;
                     WIDTH 270 ;
@@ -1726,104 +1691,95 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
 
               DEFINE PAGE PageDBF
 
-                 DEFINE BUTTON BDbfAdd
+                 DEFINE BUTTONEX BDbfAdd
                          ROW     40
                          COL     12
                          WIDTH   65
                          HEIGHT  25
                          PICTURE 'add'
-                         NOXPSTYLE .T.
                          TOOLTIP 'Add Dbf'
                          ONCLICK QPM_AddFilesDBF()
-                 END BUTTON
+                 END BUTTONEX
 
-                 DEFINE BUTTON BDbfRemove
+                 DEFINE BUTTONEX BDbfRemove
                          ROW     40
                          COL     85
                          WIDTH   65
                          HEIGHT  25
                          PICTURE 'remove'
-                         NOXPSTYLE .T.
                          TOOLTIP 'Remove Dbf'
                          ONCLICK QPM_RemoveFileDBF()
-                 END BUTTON
+                 END BUTTONEX
 
-                 DEFINE BUTTON BDbfEditTool
+                 DEFINE BUTTONEX BDbfEditTool
                          ROW     40
                          COL     158
                          WIDTH   65
                          HEIGHT  25
                          PICTURE 'Edit'
-                         NOXPSTYLE .T.
                          TOOLTIP 'Modify Dbf with associated Tool'
                          ONCLICK QPM_EditDBF()
-                 END BUTTON
+                 END BUTTONEX
 
-                 DEFINE BUTTON BSortDbf
+                 DEFINE BUTTONEX BSortDbf
                          ROW     70
                          COL     12
                          WIDTH   65
                          HEIGHT  25
                          PICTURE "Sort"
-                         NOXPSTYLE .T.
                          TOOLTIP "Sort Dbf's in alfabetical order"
                          ONCLICK SortDBF( "VentanaMain" , "GDbfFiles" , NCOLDBFNAME )
-                 END BUTTON
+                 END BUTTONEX
 
-                 DEFINE BUTTON BSyncDbf
+                 DEFINE BUTTONEX BSyncDbf
                          ROW     312
                          COL     296
                          WIDTH   11
                          HEIGHT  21
                          PICTURE 'SYNC'
-                         NOXPSTYLE .T.
                          TOOLTIP 'Syncronize Tabs'
                          ONCLICK TabSync()
-                 END BUTTON
+                 END BUTTONEX
 
-                 DEFINE BUTTON BUpDbf
+                 DEFINE BUTTONEX BUpDbf
                          ROW     100
                          COL     12
                          WIDTH   11
                          HEIGHT  21
                          PICTURE 'UP'
-                         NOXPSTYLE .T.
                          TOOLTIP "Up Dbf's in List"
                          ONCLICK UpDbf()
-                 END BUTTON
+                 END BUTTONEX
 
-                 DEFINE BUTTON BDownDbf
+                 DEFINE BUTTONEX BDownDbf
                          ROW     130
                          COL     12
                          WIDTH   11
                          HEIGHT  21
                          PICTURE 'DOWN'
-                         NOXPSTYLE .T.
                          TOOLTIP "Down Dbf's in List"
                          ONCLICK DownDbf()
-                 END BUTTON
+                 END BUTTONEX
 
-                 DEFINE BUTTON BUpDbf2
+                 DEFINE BUTTONEX BUpDbf2
                          ROW     GetDesktopRealHeight() - 237
                          COL     12
                          WIDTH   11
                          HEIGHT  21
                          PICTURE 'UP'
-                         NOXPSTYLE .T.
                          TOOLTIP "Up Dbf's in List"
                          ONCLICK UpDbf()
-                 END BUTTON
+                 END BUTTONEX
 
-                 DEFINE BUTTON BDownDbf2
+                 DEFINE BUTTONEX BDownDbf2
                          ROW     GetDesktopRealHeight() - 207
                          COL     12
                          WIDTH   11
                          HEIGHT  21
                          PICTURE 'DOWN'
-                         NOXPSTYLE .T.
                          TOOLTIP "Down Dbf's in List"
                          ONCLICK DownDbf()
-                 END BUTTON
+                 END BUTTONEX
 
                  @ 100, 25 GRID GDbfFiles ;
                     WIDTH 270 ;
@@ -1851,29 +1807,27 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
                     TRANSPARENT ;
                     FONTCOLOR DEF_COLORBLUE
 
-                 DEFINE BUTTON BLibAdd
+                 DEFINE BUTTONEX BLibAdd
                          ROW     70
                          COL     12
                          WIDTH   65
                          HEIGHT  25
                          PICTURE 'add'
-                         NOXPSTYLE .T.
                          TOOLTIP 'Add File'
                          ONCLICK QPM_AddFilesLIB()
-                 END BUTTON
+                 END BUTTONEX
 
-                 DEFINE BUTTON BLibRemove
+                 DEFINE BUTTONEX BLibRemove
                          ROW     70
                          COL     85
                          WIDTH   65
                          HEIGHT  25
                          PICTURE 'remove'
-                         NOXPSTYLE .T.
                          TOOLTIP 'Remove File'
                          ONCLICK QPM_RemoveFileLIB()
-                 END BUTTON
+                 END BUTTONEX
 
-                 DEFINE BUTTON BFirst
+                 DEFINE BUTTONEX BFirst
                          ROW     70
                          COL     158
                          WIDTH   65
@@ -1881,9 +1835,9 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
                          CAPTION "First"
                          TOOLTIP "Put Lib or Obj at First position in Lib's Concatenation"
                          ONCLICK LibPos( VentanaMain.GIncFiles.Value , "*First*" )
-                 END BUTTON
+                 END BUTTONEX
 
-                 DEFINE BUTTON BLast
+                 DEFINE BUTTONEX BLast
                          ROW     70
                          COL     231
                          WIDTH   65
@@ -1891,51 +1845,47 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
                          CAPTION "Last"
                          TOOLTIP "Put Lib or Obj at Last position in Lib's Concatenation (Default)"
                          ONCLICK LibPos( VentanaMain.GIncFiles.Value , "*Last*" )
-                 END BUTTON
+                 END BUTTONEX
 
-                 DEFINE BUTTON BSortInc
+                 DEFINE BUTTONEX BSortInc
                          ROW     100
                          COL     12
                          WIDTH   65
                          HEIGHT  25
                          PICTURE "Sort"
-                         NOXPSTYLE .T.
                          TOOLTIP 'Sort Libs and Objects Included in alfabetical order'
                          ONCLICK SortINC( "VentanaMain" , "GIncFiles" , NCOLINCNAME )
-                 END BUTTON
+                 END BUTTONEX
 
-                 DEFINE BUTTON BSyncLib
+                 DEFINE BUTTONEX BSyncLib
                          ROW     312
                          COL     296
                          WIDTH   11
                          HEIGHT  21
                          PICTURE 'SYNC'
-                         NOXPSTYLE .T.
                          TOOLTIP 'Syncronize Tabs'
                          ONCLICK TabSync()
-                 END BUTTON
+                 END BUTTONEX
 
-                 DEFINE BUTTON BUpLibInclude
+                 DEFINE BUTTONEX BUpLibInclude
                          ROW     130
                          COL     12
                          WIDTH   11
                          HEIGHT  21
                          PICTURE 'UP'
-                         NOXPSTYLE .T.
                          TOOLTIP 'Up Lib or Obj in Include List'
                          ONCLICK UpLibInclude()
-                 END BUTTON
+                 END BUTTONEX
 
-                 DEFINE BUTTON BDownLibInclude
+                 DEFINE BUTTONEX BDownLibInclude
                          ROW     160
                          COL     12
                          WIDTH   11
                          HEIGHT  21
                          PICTURE 'DOWN'
-                         NOXPSTYLE .T.
                          TOOLTIP 'Down Lib or Obj in Include List'
                          ONCLICK DownLibInclude()
-                 END BUTTON
+                 END BUTTONEX
 
                  @ 130, 25 GRID GIncFiles ;
                     WIDTH 270 ;
@@ -1959,60 +1909,55 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
                     TRANSPARENT ;
                     FONTCOLOR DEF_COLORBLUE
 
-                 DEFINE BUTTON BLibAdd_E
+                 DEFINE BUTTONEX BLibAdd_E
                          ROW     340
                          COL     12
                          WIDTH   65
                          HEIGHT  25
                          PICTURE 'add'
-                         NOXPSTYLE .T.
                          TOOLTIP 'Add File'
                          ONCLICK QPM_AddExcludeFilesLIB()
-                 END BUTTON
+                 END BUTTONEX
 
-                 DEFINE BUTTON BLibRemove_E
+                 DEFINE BUTTONEX BLibRemove_E
                          ROW     340
                          COL     85
                          WIDTH   65
                          HEIGHT  25
                          PICTURE 'remove'
-                         NOXPSTYLE .T.
                          TOOLTIP 'Remove File'
                          ONCLICK QPM_RemoveExcludeFileLIB()
-                 END BUTTON
+                 END BUTTONEX
 
-                 DEFINE BUTTON BSortExc
+                 DEFINE BUTTONEX BSortExc
                          ROW     370
                          COL     12
                          WIDTH   65
                          HEIGHT  25
                          PICTURE "Sort"
-                         NOXPSTYLE .T.
                          TOOLTIP 'Sort Libs Excluded in alfabetical order'
                          ONCLICK SortEXC( "VentanaMain" , "GExcFiles" , NCOLEXCNAME )
-                 END BUTTON
+                 END BUTTONEX
 
-                 DEFINE BUTTON BUpLibExclude
+                 DEFINE BUTTONEX BUpLibExclude
                          ROW     400
                          COL     12
                          WIDTH   11
                          HEIGHT  21
                          PICTURE 'UP'
-                         NOXPSTYLE .T.
                          TOOLTIP 'Up Libs in Exclude List'
                          ONCLICK UpLibExclude()
-                 END BUTTON
+                 END BUTTONEX
 
-                 DEFINE BUTTON BDownLibExclude
+                 DEFINE BUTTONEX BDownLibExclude
                          ROW     430
                          COL     12
                          WIDTH   11
                          HEIGHT  21
                          PICTURE 'DOWN'
-                         NOXPSTYLE .T.
                          TOOLTIP 'Down Libs in Exclude List'
                          ONCLICK DownLibExclude()
-                 END BUTTON
+                 END BUTTONEX
 
                  @ 400, 25 GRID GExcFiles ;
                     WIDTH 270 ;
@@ -2047,16 +1992,15 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
                          WIDTH           130
                  END TEXTBOX
 
-                 DEFINE BUTTON BHlpDataBase
+                 DEFINE BUTTONEX BHlpDataBase
                          ROW             40
                          COL             270
                          WIDTH           25
                          HEIGHT          25
                          PICTURE         'folderselect'
-                         NOXPSTYLE .T.
                          TOOLTIP         'Select QPM Help Generator Database'
                          ONCLICK         (            SHG_GetDatabase()                            , if( SHG_BaseOK , SetProperty( "VentanaMain" , "RichEditHlp" , "readonly" , .F. ) , US_NOP() ) )
-                 END BUTTON
+                 END BUTTONEX
                  //      ONCLICK         ( QPM_Wait( "SHG_GetDatabase()" , "Loading Database..." ) , if( SHG_BaseOK , SetProperty( "VentanaMain" , "RichEditHlp" , "readonly" , .F. ) , US_NOP() ) )
 
                  DEFINE LABEL LWWWHlp
@@ -2072,51 +2016,48 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
                          WIDTH           163
                  END TEXTBOX
 
-                 DEFINE BUTTON BHlpAdd
+                 DEFINE BUTTONEX BHlpAdd
                          ROW     100
                          COL     12
                          WIDTH   65
                          HEIGHT  25
                          PICTURE 'add'
-                         NOXPSTYLE .T.
                          TOOLTIP 'Add Topic'
                          ONCLICK QPM_AddFilesHLP()
-                 END BUTTON
+                 END BUTTONEX
 
-                 DEFINE BUTTON BHlpRemove
+                 DEFINE BUTTONEX BHlpRemove
                          ROW     100
                          COL     85
                          WIDTH   65
                          HEIGHT  25
                          PICTURE 'remove'
-                         NOXPSTYLE .T.
                          TOOLTIP 'Remove Topic'
                          ONCLICK QPM_RemoveFileHLP()
-                 END BUTTON
+                 END BUTTONEX
 
-                 DEFINE BUTTON BHlpEdit
+                 DEFINE BUTTONEX BHlpEdit
                          ROW     100
                          COL     158
                          WIDTH   65
                          HEIGHT  25
                          PICTURE 'Edit'
-                         NOXPSTYLE .T.
                          TOOLTIP 'Edit Topic Name'
                          ONCLICK QPM_EditHLP ()
-                 END BUTTON
+                 END BUTTONEX
 
-                 DEFINE BUTTON SetTestHlp
+                 DEFINE BUTTONEX SetTestHlp
                          ROW     100
                          COL     230
                          WIDTH   65
                          HEIGHT  25
                          PICTURE 'TEST'
-                         NOXPSTYLE .T.
                          TOOLTIP 'Test CHM file'
                          ONCLICK SHG_DisplayHelp( SHG_GetOutputName() )
-                 END BUTTON
+                         BACKCOLOR WHITE
+                 END BUTTONEX
 
-                 DEFINE BUTTON BTogle
+                 DEFINE BUTTONEX BTogle
                          ROW     130
                          COL     12
                          WIDTH   65
@@ -2124,9 +2065,9 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
                          CAPTION "Togle"
                          TOOLTIP 'Togle topic type (Book or Page)'
                          ONCLICK SHG_Togle()
-                 END BUTTON
+                 END BUTTONEX
 
-                 DEFINE BUTTON HlpCheckSave
+                 DEFINE BUTTONEX HlpCheckSave
                          ROW     130
                          COL     85
                          WIDTH   65
@@ -2134,9 +2075,9 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
                          CAPTION "Save All ?"
                          TOOLTIP 'Check for save topics'
                          ONCLICK QPM_WAIT( "SHG_CheckSave()" , "Checking for save..." )
-                 END BUTTON
+                 END BUTTONEX
 
-                 DEFINE BUTTON HlpClose
+                 DEFINE BUTTONEX HlpClose
                          ROW     130
                          COL     158
                          WIDTH   65
@@ -2144,9 +2085,9 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
                          CAPTION "Close"
                          TOOLTIP 'Close Help Database'
                          ONCLICK SHG_Close()
-                 END BUTTON
+                 END BUTTONEX
 
-                 DEFINE BUTTON HlpGenerate
+                 DEFINE BUTTONEX HlpGenerate
                          ROW     130
                          COL     230
                          WIDTH   65
@@ -2154,62 +2095,57 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
                          CAPTION "Generate"
                          TOOLTIP 'Genera help file in format CHM'
                          ONCLICK QPM_Wait( 'SHG_Generate( SHG_Database , SHG_CheckTypeOutput , PUB_cSecu , GetProperty( "VentanaMain" , "TWWWHlp" , "Value" ) )' ,"Generating Help..." )
-                 END BUTTON
+                 END BUTTONEX
 
-                 DEFINE BUTTON BSyncHlp
+                 DEFINE BUTTONEX BSyncHlp
                          ROW     312
                          COL     296
                          WIDTH   11
                          HEIGHT  21
                          PICTURE 'SYNC'
-                         NOXPSTYLE .T.
                          TOOLTIP 'Syncronize Tabs'
                          ONCLICK TabSync()
-                 END BUTTON
+                 END BUTTONEX
 
-                 DEFINE BUTTON BUpHlp
+                 DEFINE BUTTONEX BUpHlp
                          ROW     160
                          COL     12
                          WIDTH   11
                          HEIGHT  21
                          PICTURE 'UP'
-                         NOXPSTYLE .T.
                          TOOLTIP 'Up Hlp file in List'
                          ONCLICK UpHlp()
-                 END BUTTON
+                 END BUTTONEX
 
-                 DEFINE BUTTON BDownHlp
+                 DEFINE BUTTONEX BDownHlp
                          ROW     190
                          COL     12
                          WIDTH   11
                          HEIGHT  21
                          PICTURE 'DOWN'
-                         NOXPSTYLE .T.
                          TOOLTIP 'Down Hlp file in List'
                          ONCLICK DownHlp()
-                 END BUTTON
+                 END BUTTONEX
 
-                 DEFINE BUTTON BUpHlp2
+                 DEFINE BUTTONEX BUpHlp2
                          ROW     GetDesktopRealHeight() - 237
                          COL     12
                          WIDTH   11
                          HEIGHT  21
                          PICTURE 'UP'
-                         NOXPSTYLE .T.
                          TOOLTIP 'Up Hlp file in List'
                          ONCLICK UpHlp()
-                 END BUTTON
+                 END BUTTONEX
 
-                 DEFINE BUTTON BDownHlp2
+                 DEFINE BUTTONEX BDownHlp2
                          ROW     GetDesktopRealHeight() - 207
                          COL     12
                          WIDTH   11
                          HEIGHT  21
                          PICTURE 'DOWN'
-                         NOXPSTYLE .T.
                          TOOLTIP 'Down Hlp file in List'
                          ONCLICK DownHlp()
-                 END BUTTON
+                 END BUTTONEX
 
                  @ 160, 25 GRID GHlpFiles ;
                     WIDTH 270 ;
@@ -2222,8 +2158,18 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
                     TOOLTIP '' ;
                     BACKCOLOR DEF_COLORBACKHLP ;
                     ON DBLCLICK { QPM_EditHLP() } ;
-                    ON CHANGE { || if( !bHlpSorting .and. !PUB_bLite , ( RichEditDisplay('HLP') , OcultaHlpKeys() ) , US_NOP() ) } ;
+                    ON CHANGE { || SetProperty( "VentanaMain", "GHlpFilesItem", "value", "Current item: " + ltrim( str( VentanaMain.GHlpFiles.Value ) ) ), ;
+                                   if( ! bHlpSorting .and. ! PUB_bLite, ;
+                                       ( RichEditDisplay('HLP'), OcultaHlpKeys() ), ;
+                                       US_NOP() ) } ;
                     JUSTIFY { BROWSE_JTFY_LEFT }
+
+                 @ 160 + GetDesktopRealHeight() - 345 + 2, 25 LABEL GHlpFilesItem ;
+                    WIDTH 270 ;
+                    HEIGHT 20 ;
+                    VALUE "" ;
+                    FONT 'arial' SIZE 8 ;
+                    FONTCOLOR DEF_COLORBLUE
 
               END PAGE
 
@@ -2328,7 +2274,7 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
                  END CHECKBOX
                  //      TRANSPARENT     if( IsXPThemeActive() , .T. , .F. )
 
-                 DEFINE BUTTON bReLoadPpo
+                 DEFINE BUTTONEX bReLoadPpo
                          ROW             GetDesktopRealHeight() - 227
                          COL             110
                          WIDTH           95
@@ -2336,9 +2282,9 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
                          CAPTION "Browse PPO"
                          TOOLTIP 'Browse PreProcess for this PRG'
                          ONCLICK QPM_Wait( "PpoDisplay()" , "Reloading..." )
-                 END BUTTON
+                 END BUTTONEX
 
-                 DEFINE BUTTON bReLoadPrg
+                 DEFINE BUTTONEX bReLoadPrg
                          ROW             GetDesktopRealHeight() - 227
                          COL             210
                          WIDTH           GetDesktopRealWidth() - 630
@@ -2346,9 +2292,9 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
                          CAPTION "ReLoad Source"
                          TOOLTIP 'ReLoad Source form disk'
                          ONCLICK QPM_Wait( "RichEditDisplay( 'PRG' , .T. )" , "Reloading..." )
-                 END BUTTON
+                 END BUTTONEX
 
-                 DEFINE BUTTON BLocalSearchPrg
+                 DEFINE BUTTONEX BLocalSearchPrg
                          ROW             GetDesktopRealHeight() - 227
                          COL             GetDesktopRealWidth() - 415
                          WIDTH           60
@@ -2356,7 +2302,7 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
                          CAPTION "Search"
                          TOOLTIP 'Search text in displayed text'
                          ONCLICK LocalSearch( GetProperty( 'VentanaMain' , 'CSearch' , 'DisplayValue' ) )
-                 END BUTTON
+                 END BUTTONEX
 
               END PAGE
 
@@ -2399,7 +2345,7 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
                  END CHECKBOX
                  //      TRANSPARENT     if( IsXPThemeActive() , .T. , .F. )
 
-                 DEFINE BUTTON bReLoadHea
+                 DEFINE BUTTONEX bReLoadHea
                          ROW             GetDesktopRealHeight() - 227
                          COL             110
                          WIDTH           GetDesktopRealWidth() - 530
@@ -2407,9 +2353,9 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
                          CAPTION "ReLoad Header"
                          TOOLTIP 'ReLoad Header file form disk'
                          ONCLICK { || QPM_Wait( "RichEditDisplay( 'HEA' , .T. )" , "Reloading..." ) }
-                 END BUTTON
+                 END BUTTONEX
 
-                 DEFINE BUTTON BLocalSearchHea
+                 DEFINE BUTTONEX BLocalSearchHea
                          ROW             GetDesktopRealHeight() - 227
                          COL             GetDesktopRealWidth() - 415
                          WIDTH           60
@@ -2417,7 +2363,7 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
                          CAPTION "Search"
                          TOOLTIP 'Search text in displayed text'
                          ONCLICK LocalSearch( GetProperty( 'VentanaMain' , 'CSearch' , 'DisplayValue' ) )
-                 END BUTTON
+                 END BUTTONEX
 
               END PAGE
 
@@ -2459,7 +2405,7 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
                  END CHECKBOX
                  //      TRANSPARENT     if( IsXPThemeActive() , .T. , .F. )
 
-                 DEFINE BUTTON bReLoadPan
+                 DEFINE BUTTONEX bReLoadPan
                          ROW             GetDesktopRealHeight() - 227
                          COL             110
                          WIDTH           GetDesktopRealWidth() - 530
@@ -2467,9 +2413,9 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
                          CAPTION "ReLoad Form"
                          TOOLTIP 'ReLoad Form file form disk'
                          ONCLICK { || QPM_Wait( "RichEditDisplay( 'PAN' , .T. )" , "Reloading..." ) }
-                 END BUTTON
+                 END BUTTONEX
 
-                 DEFINE BUTTON BLocalSearchPan
+                 DEFINE BUTTONEX BLocalSearchPan
                          ROW             GetDesktopRealHeight() - 227
                          COL             GetDesktopRealWidth() - 415
                          WIDTH           60
@@ -2477,7 +2423,7 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
                          CAPTION "Search"
                          TOOLTIP 'Search text in displayed text'
                          ONCLICK LocalSearch( GetProperty( 'VentanaMain' , 'CSearch' , 'DisplayValue' ) )
-                 END BUTTON
+                 END BUTTONEX
 
               END PAGE
 
@@ -2530,7 +2476,7 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
                  END CHECKBOX
                  //      TRANSPARENT     if( IsXPThemeActive() , .T. , .F. )
 
-                 DEFINE BUTTON bReLoadDbf
+                 DEFINE BUTTONEX bReLoadDbf
                          ROW             GetDesktopRealHeight() - 227
                          COL             90
                          WIDTH           GetDesktopRealWidth() - 675
@@ -2538,9 +2484,9 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
                          CAPTION         if( PUB_bW800 , "(Re)Display DBF" , "Force (Re)Display DBF information y/o data" )
                          TOOLTIP 'ReDisplay DBF information from DBF file in disk'
                          ONCLICK { || QPM_Wait( "RichEditDisplay( 'DBF' , .T. , , .T. )" , "Reloading..." ) }
-                 END BUTTON
+                 END BUTTONEX
 
-                 DEFINE BUTTON BLocalSearchStructure
+                 DEFINE BUTTONEX BLocalSearchStructure
                          ROW             GetDesktopRealHeight() - 227
                          COL             GetDesktopRealWidth() - 580
                          WIDTH           110
@@ -2548,9 +2494,9 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
                          CAPTION "Search Struc."
                          TOOLTIP 'Search text in Structure of DBF'
                          ONCLICK LocalSearch( GetProperty( 'VentanaMain' , 'CSearch' , 'DisplayValue' ) )
-                 END BUTTON
+                 END BUTTONEX
 
-                 DEFINE BUTTON BLocalSearchDbf
+                 DEFINE BUTTONEX BLocalSearchDbf
                          ROW             GetDesktopRealHeight() - 227
                          COL             GetDesktopRealWidth() - 465
                          WIDTH           110
@@ -2558,7 +2504,7 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
                          CAPTION "Dbf Search"
                          TOOLTIP 'Search text in Dbf Data'
                          ONCLICK QPM_Wait( "DbfDataSearch( GetProperty( 'VentanaMain' , 'CSearch' , 'DisplayValue' ) )" , "Searching..." )
-                 END BUTTON
+                 END BUTTONEX
 
               END PAGE
 
@@ -2588,7 +2534,7 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
                          SIZE            9 ;
                          BACKCOLOR DEF_COLORBACKINC
 
-                 DEFINE BUTTON bReLoadLib
+                 DEFINE BUTTONEX bReLoadLib
                          ROW             GetDesktopRealHeight() - 227
                          COL             10
                          WIDTH           GetDesktopRealWidth() - 430
@@ -2596,9 +2542,9 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
                          CAPTION "List Library/Object (or Re-List)"
                          TOOLTIP 'List Library/Object Content'
                          ONCLICK SetProperty( "VentanaMain" , "RichEditLib" , "Value" , QPM_Wait( "ListModule( '" + ChgPathToReal( US_WordSubStr( GetProperty( "VentanaMain" , "GIncFiles" , "Cell" , VentanaMain.GIncFiles.Value , NCOLINCFULLNAME ) , 3 ) ) + "' )" , "Listing..." , , .T. ) )
-                 END BUTTON
+                 END BUTTONEX
 
-                 DEFINE BUTTON BLocalSearchLib
+                 DEFINE BUTTONEX BLocalSearchLib
                          ROW             GetDesktopRealHeight() - 227
                          COL             GetDesktopRealWidth() - 415
                          WIDTH           60
@@ -2606,7 +2552,7 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
                          CAPTION "Search"
                          TOOLTIP 'Search text in displayed text'
                          ONCLICK LocalSearch( GetProperty( 'VentanaMain' , 'CSearch' , 'DisplayValue' ) )
-                 END BUTTON
+                 END BUTTONEX
 
               END PAGE
 
@@ -2669,31 +2615,34 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
               // oHlpRichEdit:Activate()
                  SetProperty( "VentanaMain" , "RichEditHlp" , "readonly" , .T. )
 
-                 DEFINE BUTTON BAddHlpKey
-                         ROW             66
+                 DEFINE BUTTONEX BAddHlpKey
+                         ROW             GetProperty( "VentanaMain", "CB_Vinetas", "row" )
                          COL             GetDesktopRealWidth() - 416
                          WIDTH           28
                          HEIGHT          25
                          PICTURE 'add'
-                         NOXPSTYLE .T.
                          TOOLTIP 'Add Key for Automatic Index on Help'
                          ONCLICK SHG_AddHlpKey()
-                 END BUTTON
+                 END BUTTONEX
 
-                 DEFINE BUTTON BRemoveHlpKey
-                         ROW             66
+                 DEFINE BUTTONEX BRemoveHlpKey
+                         ROW             GetProperty( "VentanaMain", "CB_Vinetas", "row" )
                          COL             GetDesktopRealWidth() - 384
                          WIDTH           28
                          HEIGHT          25
                          PICTURE 'remove'
-                         NOXPSTYLE .T.
                          TOOLTIP 'Remove Key from Help'
                          ONCLICK QPM_RemoveKeyHLP()
-                 END BUTTON
+                 END BUTTONEX
 
-                 @ 95, ( GetDesktopRealWidth() - 480 ) GRID GHlpKeys ;
-                    WIDTH 124 ;
-                    HEIGHT GetDesktopRealHeight() - 332 ;
+                 nRow    := GetProperty( "VentanaMain", "RichEditHlp", "row" )  
+                 nCol    := GetProperty( "VentanaMain", "RichEditHlp", "col" ) + GetProperty( "VentanaMain", "RichEditHlp", "width" ) + 20
+                 nWidth  := ( GetDesktopRealWidth() - 480 ) + 124 - nCol
+                 nHeight := GetProperty( "VentanaMain", "RichEditHlp", "Height" )  
+
+                 @ nRow, nCol GRID GHlpKeys ;
+                    WIDTH nWidth ;
+                    HEIGHT nHeight ;
                     HEADERS { 'Keys' } ;
                     WIDTHS { 100 };
                     ITEMS {} ;
@@ -2703,7 +2652,7 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
                     ON DBLCLICK { QPM_EditKeyHLP() } ;
                     JUSTIFY { BROWSE_JTFY_LEFT }
 
-                 DEFINE BUTTON bReLoadHlp
+                 DEFINE BUTTONEX bReLoadHlp
                          ROW             GetDesktopRealHeight() - 227
                          COL             10
                          WIDTH           124
@@ -2711,7 +2660,7 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
                          CAPTION "Cancel Changes ?"
                          TOOLTIP 'Ask for Restore Topic before last save'
                          ONCLICK { || QPM_Wait( "SHG_CancelChangesTopic()" , "Checking for restore..." ) }
-                 END BUTTON
+                 END BUTTONEX
 
                  DEFINE CHECKBOX CH_SHG_TypeOutput
                          CAPTION         "Add HTML Output"
@@ -2724,7 +2673,7 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
                          ON CHANGE       ( SHG_CheckTypeOutput := GetProperty( "VentanaMain" , "CH_SHG_TypeOutput" , "value" ) )
                  END CHECKBOX
 
-                 DEFINE BUTTON BLocalSearchHlp
+                 DEFINE BUTTONEX BLocalSearchHlp
                          ROW             GetDesktopRealHeight() - 227
                          COL             GetDesktopRealWidth() - 480
                          WIDTH           124
@@ -2732,7 +2681,7 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
                          CAPTION "Search"
                          TOOLTIP 'Search text in displayed text'
                          ONCLICK LocalSearch( GetProperty( 'VentanaMain' , 'CSearch' , 'DisplayValue' ) )
-                 END BUTTON
+                 END BUTTONEX
 
               END PAGE
 
@@ -2777,7 +2726,7 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
                          FONT            'Courier New' ;
                          SIZE            9
 
-                 DEFINE BUTTON BLocalSearchSysOut
+                 DEFINE BUTTONEX BLocalSearchSysOut
                          ROW             GetDesktopRealHeight() - 227
                          COL             10
                          WIDTH           GetDesktopRealWidth() - 364
@@ -2785,7 +2734,7 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
                          CAPTION "Search"
                          TOOLTIP 'Search text in displayed text'
                          ONCLICK LocalSearch( GetProperty( 'VentanaMain' , 'CSearch' , 'DisplayValue' ) )
-                 END BUTTON
+                 END BUTTONEX
 
               END PAGE
 
@@ -2799,7 +2748,7 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
                          FONT            'Courier New' ;
                          SIZE            9
 
-                 DEFINE BUTTON bDeleteErrorLog
+                 DEFINE BUTTONEX bDeleteErrorLog
                          ROW             GetDesktopRealHeight() - 227
                          COL             10
                          WIDTH           120
@@ -2807,9 +2756,9 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
                          CAPTION "Delete Error Log"
                          TOOLTIP 'Delete Content of MiniGui Error Log'
                          ONCLICK QPM_DeleteErrorLog()
-                 END BUTTON
+                 END BUTTONEX
 
-                 DEFINE BUTTON bReLoadErrorLog
+                 DEFINE BUTTONEX bReLoadErrorLog
                          ROW             GetDesktopRealHeight() - 227
                          COL             140
                          WIDTH           GetDesktopRealWidth() - 780
@@ -2817,9 +2766,9 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
                          CAPTION "(Re)Browse Error Log"
                          TOOLTIP 'Browse Content of MiniGui Error Log'
                          ONCLICK MuestroErrorLog()
-                 END BUTTON
+                 END BUTTONEX
 
-                 DEFINE BUTTON bReLoadOut
+                 DEFINE BUTTONEX bReLoadOut
                          ROW             GetDesktopRealHeight() - 227
                          COL             GetDesktopRealWidth() - 620
                          WIDTH           184
@@ -2827,9 +2776,9 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
                          CAPTION "List Output File (or ReList)"
                          TOOLTIP 'List Content of output file for project'
                          ONCLICK ( SetProperty( "VentanaMain" , "RichEditOut" , "Value" , QPM_Wait( "ListModuleMoved( '" + GetOutputModuleName() + "' )" , "Listing..." ) ) , SetProperty( "VentanaMain" , "RichEditOut" , "caretpos" , 1 ) )
-                 END BUTTON
+                 END BUTTONEX
 
-                 DEFINE BUTTON BLocalSearchOut
+                 DEFINE BUTTONEX BLocalSearchOut
                          ROW             GetDesktopRealHeight() - 227
                          COL             GetDesktopRealWidth() - 415
                          WIDTH           60
@@ -2837,7 +2786,7 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
                          CAPTION "Search"
                          TOOLTIP 'Search text in displayed text'
                          ONCLICK LocalSearch( GetProperty( 'VentanaMain' , 'CSearch' , 'DisplayValue' ) )
-                 END BUTTON
+                 END BUTTONEX
 
               END PAGE
 
@@ -2845,28 +2794,26 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
            END TAB
 
 
-           DEFINE BUTTON BStop
+           DEFINE BUTTONEX BStop
                    ROW             GetDesktopRealHeight() - 118
                    COL             328
                    WIDTH           85
                    HEIGHT          25
                    PICTURE "STOP"
-                   NOXPSTYLE .T.
                    TOOLTIP 'Stop BUILD Process'
                    ONCLICK QPM_Wait( "BuildStop()" , "Stopping, please wait ..." )
-           END BUTTON
+           END BUTTONEX
 
 #ifdef QPM_KILLER
-           DEFINE BUTTON BKill
+           DEFINE BUTTONEX BKill
                    ROW             GetDesktopRealHeight() - 118
                    COL             418
                    WIDTH           85
                    HEIGHT          25
                    PICTURE "KILL"
-                   NOXPSTYLE .T.
                    TOOLTIP 'Open Process Manager'
                    ONCLICK ( SetProperty( "VentanaMain" , "bKill" , "Enabled" , .F. ) , DoMethod( "WinKiller" , "restore" ) , QPM_bKiller := .T. , if( !PUB_QPM_bHigh , QPM_SetProcessPriority( "HIGH" ) , ) , SetProperty( "WinKiller" , "TimerRefresh" , "Enabled" , GetProperty( "WinKiller" , "Check_AutoRefresh" , "value" ) ) , DoMethod( "VentanaMain" , "minimize" ) )
-           END BUTTON
+           END BUTTONEX
 #endif
 
            @ GetDesktopRealHeight() - 118 , 510 COMBOBOX CSearch ;
@@ -2878,7 +2825,7 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
               ON ENTER ( AddSearchTxt() , QPM_Wait( "GlobalSearch( GetProperty( 'VentanaMain' , 'CSearch' , 'DisplayValue' ) )" , "Searching..." ) )
               ON LOSTFOCUS AddSearchTxt()
 
-           DEFINE BUTTON BGlobalSearch
+           DEFINE BUTTONEX BGlobalSearch
                    ROW             GetDesktopRealHeight() - 118
                    COL             GetDesktopRealWidth() - if( PUB_bW800 , 220 , 290 )
                    WIDTH           90
@@ -2886,9 +2833,9 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
                    CAPTION "Global Search"
                    TOOLTIP 'Search text in project'
                    ONCLICK ( AddSearchTxt() , QPM_Wait( "GlobalSearch( GetProperty( 'VentanaMain' , 'CSearch' , 'DisplayValue' ) )" , "Searching..." ) )
-           END BUTTON
+           END BUTTONEX
 
-           DEFINE BUTTON BGlobalReset
+           DEFINE BUTTONEX BGlobalReset
                    ROW             GetDesktopRealHeight() - 118
                    COL             GetDesktopRealWidth() - if( PUB_bW800 , 125 , 190 )
                    WIDTH           if( PUB_bW800 , 15 , 50 )
@@ -2896,7 +2843,7 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
                    CAPTION if( PUB_bW800 , "R" , "Reset" )
                    TOOLTIP 'Reset Global Search Indicators and Counts'
                    ONCLICK QPM_Wait( "ResetImgGrid( '*' )" , "Reseting Search Indicators..." )
-           END BUTTON
+           END BUTTONEX
            VentanaMain.BGlobalReset.Enabled := .F.
 
            DEFINE CHECKBOX Check_SearchFun
@@ -3040,18 +2987,17 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
               END LABEL
               VentanaLite.Label_3.enabled := .F.
 
-              DEFINE BUTTON BStop
+              DEFINE BUTTONEX BStop
                       ROW             ( ( GetDesktopRealHeight() * 85 ) / 100 )
                       COL             ( ( GetDesktopRealWidth() * 18 ) / 100 )
                       WIDTH           75
                       HEIGHT          25
                       PICTURE "STOP"
-                      NOXPSTYLE .T.
                       TOOLTIP 'Stop BUILD Process'
                       ONCLICK QPM_Wait( "BuildStop()" , "Stopping, please wait ..." )
-              END BUTTON
+              END BUTTONEX
 
-              DEFINE BUTTON BAbout
+              DEFINE BUTTONEX BAbout
                       ROW             ( ( GetDesktopRealHeight() * 85 ) / 100 )
                       COL             ( ( GetDesktopRealWidth() * 28 ) / 100 )
                       WIDTH           75
@@ -3059,9 +3005,9 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
                       CAPTION "About"
                       TOOLTIP 'QPM Autor'
                       ONCLICK QPM_About()
-              END BUTTON
+              END BUTTONEX
 
-              DEFINE BUTTON BRunP
+              DEFINE BUTTONEX BRunP
                       ROW             ( ( GetDesktopRealHeight() * 85 ) / 100 )
                       COL             ( ( GetDesktopRealWidth() * 38 ) / 100 )
                       WIDTH           75
@@ -3069,9 +3015,9 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
                       CAPTION "Run Parm"
                       TOOLTIP 'Run Program with Parameters'
                       ONCLICK ( bRunParm := .T. , QPM_Run( bRunParm ) )
-              END BUTTON
+              END BUTTONEX
               
-              DEFINE BUTTON BRun
+              DEFINE BUTTONEX BRun
                       ROW             ( ( GetDesktopRealHeight() * 85 ) / 100 )
                       COL             ( ( GetDesktopRealWidth() * 48 ) / 100 )
                       WIDTH           75
@@ -3079,12 +3025,12 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
                       CAPTION "Run"
                       TOOLTIP 'Run Program Without Parameters'
                       ONCLICK ( bRunParm := .F. , QPM_Run( bRunParm ) )
-              END BUTTON
+              END BUTTONEX
               
               VentanaLite.BRunP.enabled := .F.
               VentanaLite.BRun.enabled := .F.
 
-              DEFINE BUTTON BExit
+              DEFINE BUTTONEX BExit
                       ROW             ( ( GetDesktopRealHeight() * 85 ) / 100 )
                       COL             ( ( GetDesktopRealWidth() * 58 ) / 100 )
                       WIDTH           75
@@ -3092,7 +3038,7 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
                       CAPTION "Exit"
                       TOOLTIP 'Exit QPM and Return to caller'
                       ONCLICK if( !PUB_bIsProcessing , DoMethod( "VentanaLite" , "release" ) , )
-              END BUTTON
+              END BUTTONEX
       END WINDOW
 
       CENTER WINDOW VentanaLite
@@ -4131,18 +4077,18 @@ Function QPM_GetExcludeFilesLIB()
                    HEIGHT          300
                    MULTISELECT     .T.
            END LISTBOX
-           DEFINE BUTTON OK
+           DEFINE BUTTONEX OK
                    ROW 320
                    COL 45
                    CAPTION 'Ok'
                    ONCLICK ( RetVal := QPM_GetExcludeFilesOkLIB( vAux , GetExcludeLibFiles.List_1.Value ) , DoMethod( "GetExcludeLibFiles" , "Release" ) )
-           END BUTTON
-           DEFINE BUTTON CANCEL
+           END BUTTONEX
+           DEFINE BUTTONEX CANCEL
                    ROW 320
                    COL 160
                    CAPTION 'Cancel'
                    ONCLICK ( RetVal := {} , DoMethod( "GetExcludeLibFiles" , "Release" ) )
-           END BUTTON
+           END BUTTONEX
 
    END WINDOW
    CENTER WINDOW GetExcludeLibFiles
@@ -7893,46 +7839,20 @@ Function ClearLog()
 Return .T.
 
 Function FormToolCheck( tool )
-   local versionBase := 0 , ver:=0
+Local versionBase := 0, ver:=0
    do case
-      case tool == "HMI"
-         versionBase := "1.63"
-         If !Empty( FileName := BugGetFile( { {'MGIde by Ciro (MGIde.exe or oIDE*.exe)','MGIde.exe;oIDE*.exe'} } , 'Select Form Tool by Ciro Vargas Clemow' , US_FileNameOnlyPath( GetProperty( "WinGSettings" , "Text_HMI" , "value" ) ) , .F. , .T. ) )
-         // if DTOS( US_FileDate( FileName ) ) < "20060204"   && Primera version de HMI+ con parámetro
-         //    MsgInfo( "Note: Only HMI+ version "+versionBase+" or higher work fine with QPM" )
-         // endif
-            SetProperty( "WinGSettings" , "Text_HMI" , "value" , FileName )
-         endif
-      case tool == "HMGSIDE"
-         versionBase := "0.0.7"
-      // MsgInfo( "Note: Only HMGsIde version "+versionBase+" or higher work fine with QPM" )
-         If !Empty( FileName := BugGetFile( { {'HMGSIDE by Walter (HMGSIDE.exe or IDE.exe)','HMGSIDE.exe;IDE.exe'} } , 'Select Form Tool by Walter Formigoni (Open Source)' , US_FileNameOnlyPath( GetProperty( "WinGSettings" , "Text_HMGSIDE" , "value" ) ) , .F. , .T. ) )
-            SetProperty( "WinGSettings" , "Text_HMGSIDE" , "value" , FileName )
-         endif
-      otherwise
-         MsgStop( "Tool inválida en funcion FormToolCheck: "+tool )
-   endcase
-Return .T.
-
-Function DbfToolCheck( tool )
-   local versionBase := 0 , ver:=0
-   do case
-      case tool == "HMI"
-         versionBase := "1.63"
-         If !Empty( FileName := BugGetFile( { {'MGIde by Ciro (MGIde.exe)','MGIde.exe'} } , 'Select Dbf Tool by Ciro Vargas Clemow' , US_FileNameOnlyPath( GetProperty( "WinGSettings" , "Text_Dbf" , "value" ) ) , .F. , .T. ) )
-            if DTOS( US_FileDate( FileName ) ) < "20060204"   && Primera version de HMI+ con parámetro
-               MsgInfo( "Note: Only HMI+ version "+versionBase+" or higher work fine with QPM" )
-            endif
-            SetProperty( "WinGSettings" , "Text_Dbf" , "value" , FileName )
-         endif
-      case tool == "HMGSIDE"
-         versionBase := "0.0.7"
-         MsgInfo( "Note: Only HMGsIde version "+versionBase+" or higher work fine with QPM" )
-         If !Empty( FileName := BugGetFile( { {'HMGSIDE by Walter (HMGSIDE.exe)','HMGSIDE.exe'} } , 'Select Dbf Tool by Walter Formigoni (Open Source)' , US_FileNameOnlyPath( GetProperty( "WinGSettings" , "Text_HMGSIDE" , "value" ) ) , .F. , .T. ) )
-            SetProperty( "WinGSettings" , "Text_HMGSIDE" , "value" , FileName )
-         endif
-      otherwise
-         MsgStop( "Tool inválida en funcion DbfToolCheck: "+tool )
+   case tool == "HMI"
+      versionBase := "1.63"
+      If !Empty( FileName := BugGetFile( { {'IDE+ by Ciro (MGIde.exe or oIDE*.exe)','MGIde.exe;oIDE*.exe'} } , 'Select Form Tool' , US_FileNameOnlyPath( GetProperty( "WinGSettings" , "Text_HMI" , "value" ) ) , .F. , .T. ) )
+         SetProperty( "WinGSettings" , "Text_HMI" , "value" , FileName )
+      endif
+   case tool == "HMGSIDE"
+      versionBase := "0.0.7"
+      If !Empty( FileName := BugGetFile( { {'HMGS-IDE by Walter (HMGSIDE.exe or IDE.exe)','HMGSIDE.exe;IDE.exe'} } , 'Select Form Tool' , US_FileNameOnlyPath( GetProperty( "WinGSettings" , "Text_HMGSIDE" , "value" ) ) , .F. , .T. ) )
+         SetProperty( "WinGSettings" , "Text_HMGSIDE" , "value" , FileName )
+      endif
+   otherwise
+      MsgStop( "Tool inválida en función FormToolCheck: "+tool )
    endcase
 Return .T.
 
@@ -8849,7 +8769,7 @@ Function UpHlp()
    Local cAux := GetProperty( "VentanaMain" , "GHlpFiles" , "item" , i )
    Local cAux2 := GetProperty( "VentanaMain" , "GHlpFiles" , "item" , i - 1 )
    if i = 3
-      MsgInfo( "Global foot and Welcome Topic can't be moved, they're system Topics !!!" )
+      MsgInfo( "Global foot and Welcome page can't be moved, they're system topics !!!" )
    endif
    if i > 3
       bHlpMoving := .T.
@@ -8871,10 +8791,10 @@ Function DownHlp()
    Local cAux := GetProperty( "VentanaMain" , "GHlpFiles" , "item" , i )
    Local cAux2 := GetProperty( "VentanaMain" , "GHlpFiles" , "item" , i + 1 )
    if i = 1
-      MsgInfo( "Global foot can't be moved, it's a system Topic !!!" )
+      MsgInfo( "Global foot can't be moved, it's a system topic !!!" )
    endif
    if i = 2
-      MsgInfo( "Welcome page can't be moved, it's a system Topic !!!" )
+      MsgInfo( "Welcome page can't be moved, it's a system topic !!!" )
    endif
    if i < GetProperty( "VentanaMain" , "GHlpFiles" , "itemcount" ) .and. i > 2
       bHlpMoving := .T.
@@ -9134,11 +9054,13 @@ Function TabChange( cTabGroups )
       VentanaMain.ItC_Paste.Enabled     := .T.
       VentanaMain.ItC_CutM.Enabled      := .T.
       VentanaMain.ItC_PasteM.Enabled    := .T.
+      VentanaMain.ItC_Move.Enabled      := .T.
    else
       VentanaMain.ItC_Cut.Enabled       := .F.
       VentanaMain.ItC_Paste.Enabled     := .F.
       VentanaMain.ItC_CutM.Enabled      := .F.
       VentanaMain.ItC_PasteM.Enabled    := .F.
+      VentanaMain.ItC_Move.Enabled      := .F.
    endif
    if !PUB_bIsProcessing
       if VentanaMain.TabGrids.Value == nPageHlp
@@ -9678,6 +9600,7 @@ Function OcultaHlpKeys()
          VentanaMain.ItC_AddHlpKey.Enabled := .T.
    endcase
    if GetProperty( "VentanaMain" , "TabFiles" , "Value" ) == nPageHlp
+      VentanaMain.ItC_Move.Enabled                := .T.
       VentanaMain.ItC_AddHlpHTMLAmpersand.Enabled := .T.
       VentanaMain.ItC_AddHlpHTMLMenor.Enabled := .T.
       VentanaMain.ItC_AddHlpHTMLMayor.Enabled := .T.
@@ -9692,6 +9615,7 @@ Function OcultaHlpKeys()
       VentanaMain.ItC_CutM.Enabled      := .T.
       VentanaMain.ItC_PasteM.Enabled    := .T.
    else
+      VentanaMain.ItC_Move.Enabled                := .F.
       VentanaMain.ItC_AddHlpHTMLAmpersand.Enabled := .F.
       VentanaMain.ItC_AddHlpHTMLMenor.Enabled := .F.
       VentanaMain.ItC_AddHlpHTMLMayor.Enabled := .F.
@@ -10707,7 +10631,7 @@ FUNCTION LocalSearchContinue()
              VALUE     'Continue DBF Data Search at NEXT:'
       END LABEL
 
-      DEFINE BUTTON BPosition
+      DEFINE BUTTONEX BPosition
               ROW     40
               COL     20
               WIDTH   65
@@ -10715,9 +10639,9 @@ FUNCTION LocalSearchContinue()
               CAPTION "Position"
               ACTION ( RPTA := "P" , DoMethod( Ventana , "Release" ) )
               TOOLTIP 'Next occurs beginning in the last text found'
-      END BUTTON
+      END BUTTONEX
 
-      DEFINE BUTTON BField
+      DEFINE BUTTONEX BField
               ROW     40
               COL     100
               WIDTH   65
@@ -10725,9 +10649,9 @@ FUNCTION LocalSearchContinue()
               CAPTION "Column"
               ACTION ( RPTA := "F" , DoMethod( Ventana , "Release" ) )
               TOOLTIP 'Next occurs beginning in the next column'
-      END BUTTON
+      END BUTTONEX
 
-      DEFINE BUTTON BRecord
+      DEFINE BUTTONEX BRecord
               ROW     40
               COL     180
               WIDTH   65
@@ -10735,7 +10659,7 @@ FUNCTION LocalSearchContinue()
               CAPTION "Record"
               ACTION ( RPTA := "R" , DoMethod( Ventana , "Release" ) )
               TOOLTIP 'Next occurs beginning in the next Record'
-      END BUTTON
+      END BUTTONEX
 
       DEFINE CHECKBOX Check_Continue
               CAPTION         "Remember my election"
@@ -10747,7 +10671,7 @@ FUNCTION LocalSearchContinue()
               ON CHANGE       ( bDbfDataSearchAsk := ! ( GetProperty( Ventana , "Check_Continue" , "value" ) ) )
       END CHECKBOX
 
-      DEFINE BUTTON BCancel
+      DEFINE BUTTONEX BCancel
               ROW     110
               COL     90
               WIDTH   85
@@ -10755,7 +10679,7 @@ FUNCTION LocalSearchContinue()
               CAPTION "Cancel"
               ACTION ( RPTA := "" , DoMethod( Ventana , "Release" ) )
               TOOLTIP 'Cancel Search'
-      END BUTTON
+      END BUTTONEX
 
    END WINDOW
 

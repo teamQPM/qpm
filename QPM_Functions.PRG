@@ -124,7 +124,7 @@ Function QPM_CreateNewFile( cType , cFile )
                FONTCOLOR DEF_COLORBLUE
 
             @ 40 , 50 RADIOGROUP EditPanNewR ;
-               OPTIONS { 'HMI+ by Ciro Vargas Clemow' , 'HMGSIde by Walter Formigoni' } ;
+               OPTIONS { 'IDE+ by Ciro Vargas', 'HMGS-Ide by Walter Formigoni' } ;
                WIDTH 200 ;
                VALUE nOption ;
                TOOLTIP "Select Tool"

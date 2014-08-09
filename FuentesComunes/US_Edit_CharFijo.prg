@@ -343,7 +343,7 @@ METHOD Init( cMemo ) CLASS US_RichEdit
       ::nEspacio      := US_Cols( 0.35 )
    // ::nEspacio      := US_Cols( 0.3 )
 
-   // @ US_TFil( if( GetDesktopWidth() < 1024 , 1.4 , 1.3 ) ) , US_LCol( 1.0 ) BUTTON CB_Print ;
+   // @ US_TFil( if( GetDesktopWidth() < 1024 , 1.4 , 1.3 ) ) , US_LCol( 1.0 ) BUTTONEX CB_Print ;
    //    OF &(::US_WinEdit) ;
    //    PICTURE "US_EditPrint" ;
    //    HEIGHT ::nButtonHeight ;
@@ -351,7 +351,7 @@ METHOD Init( cMemo ) CLASS US_RichEdit
    //    TOOLTIP ::Lan( "Imprimir" ) ;
    //    ACTION printRTF_click( 1 )
 
-   // @ US_TFil( if( GetDesktopWidth() < 1024 , 1.4 , 1.3 ) ) , GetProperty( ::US_WinEdit , "CB_Print" , "col" ) + ( ( ::nButtonWidth + ::nEspacio ) * 1 ) BUTTON CB_Preview ;
+   // @ US_TFil( if( GetDesktopWidth() < 1024 , 1.4 , 1.3 ) ) , GetProperty( ::US_WinEdit , "CB_Print" , "col" ) + ( ( ::nButtonWidth + ::nEspacio ) * 1 ) BUTTONEX CB_Preview ;
    //    OF &(::US_WinEdit) ;
    //    PICTURE "US_EditPreview" ;
    //    HEIGHT ::nButtonHeight ;
@@ -359,56 +359,50 @@ METHOD Init( cMemo ) CLASS US_RichEdit
    //    TOOLTIP ::Lan( "Vista Previa" ) ;
    //    ACTION previewRTF_click( 0 )
 
- //   @ US_TFil( if( GetDesktopWidth() < 1024 , 1.4 , 1.3 ) ) , GetProperty( ::US_WinEdit , "CB_Print" , "col" ) + ( ( ::nButtonWidth + ::nEspacio ) * 2.5 ) BUTTON CB_Copy ;
-      @ US_TFil( if( GetDesktopWidth() < 1024 , 1.4 , 1.3 ) ) , US_LCol( 1.0 ) + ( ( ::nButtonWidth + ::nEspacio ) * 2.5 ) BUTTON CB_Copy ;
+ //   @ US_TFil( if( GetDesktopWidth() < 1024 , 1.4 , 1.3 ) ) , GetProperty( ::US_WinEdit , "CB_Print" , "col" ) + ( ( ::nButtonWidth + ::nEspacio ) * 2.5 ) BUTTONEX CB_Copy ;
+      @ US_TFil( if( GetDesktopWidth() < 1024 , 1.4 , 1.3 ) ) , US_LCol( 1.0 ) + ( ( ::nButtonWidth + ::nEspacio ) * 2.5 ) BUTTONEX CB_Copy ;
          OF &(::US_WinEdit) ;
          PICTURE "US_EditCopy" ;
-         NOXPSTYLE ;
          HEIGHT ::nButtonHeight ;
          WIDTH ::nButtonWidth ;
          TOOLTIP ::Lan( "Copiar" ) ;
          ACTION ::US_EditRtfCopy()
 
-      @ US_TFil( if( GetDesktopWidth() < 1024 , 1.4 , 1.3 ) ) , GetProperty( ::US_WinEdit , "CB_Copy" , "col" ) + ( ( ::nButtonWidth + ::nEspacio ) * 1 ) BUTTON CB_Paste ;
+      @ US_TFil( if( GetDesktopWidth() < 1024 , 1.4 , 1.3 ) ) , GetProperty( ::US_WinEdit , "CB_Copy" , "col" ) + ( ( ::nButtonWidth + ::nEspacio ) * 1 ) BUTTONEX CB_Paste ;
          OF &(::US_WinEdit) ;
          PICTURE "US_EditPaste" ;
-         NOXPSTYLE ;
          HEIGHT ::nButtonHeight ;
          WIDTH ::nButtonWidth ;
          TOOLTIP ::Lan( "Pegar" ) ;
          ACTION ::US_EditRtfPaste()
 
-      @ US_TFil( if( GetDesktopWidth() < 1024 , 1.4 , 1.3 ) ) , GetProperty( ::US_WinEdit , "CB_Copy" , "col" ) + ( ( ::nButtonWidth + ::nEspacio ) * 2 ) BUTTON CB_Cut ;
+      @ US_TFil( if( GetDesktopWidth() < 1024 , 1.4 , 1.3 ) ) , GetProperty( ::US_WinEdit , "CB_Copy" , "col" ) + ( ( ::nButtonWidth + ::nEspacio ) * 2 ) BUTTONEX CB_Cut ;
          OF &(::US_WinEdit) ;
          PICTURE "US_EditCut" ;
-         NOXPSTYLE ;
          HEIGHT ::nButtonHeight ;
          WIDTH ::nButtonWidth ;
          TOOLTIP ::Lan( "Cortar" ) ;
          ACTION ::US_EditRtfCut()
 
-      @ US_TFil( if( GetDesktopWidth() < 1024 , 1.4 , 1.3 ) ) , GetProperty( ::US_WinEdit , "CB_Cut" , "col" ) + ( ( ::nButtonWidth + ::nEspacio ) * 1.5 ) BUTTON CB_Delete ;
+      @ US_TFil( if( GetDesktopWidth() < 1024 , 1.4 , 1.3 ) ) , GetProperty( ::US_WinEdit , "CB_Cut" , "col" ) + ( ( ::nButtonWidth + ::nEspacio ) * 1.5 ) BUTTONEX CB_Delete ;
          OF &(::US_WinEdit) ;
          PICTURE "US_EditDelete" ;
-         NOXPSTYLE ;
          HEIGHT ::nButtonHeight ;
          WIDTH ::nButtonWidth ;
          TOOLTIP ::Lan( "Borrar" ) ;
          ACTION ::US_EditRtfDelete()
 
-      @ US_TFil( if( GetDesktopWidth() < 1024 , 1.4 , 1.3 ) ) , GetProperty( ::US_WinEdit , "CB_Delete" , "col" ) + ( ( ::nButtonWidth + ::nEspacio ) * 1.5 ) BUTTON CB_Undo ;
+      @ US_TFil( if( GetDesktopWidth() < 1024 , 1.4 , 1.3 ) ) , GetProperty( ::US_WinEdit , "CB_Delete" , "col" ) + ( ( ::nButtonWidth + ::nEspacio ) * 1.5 ) BUTTONEX CB_Undo ;
          OF &(::US_WinEdit) ;
          PICTURE "US_EditUndo" ;
-         NOXPSTYLE ;
          HEIGHT ::nButtonHeight ;
          WIDTH ::nButtonWidth ;
          TOOLTIP ::Lan( "Revertir" ) ;
          ACTION ::US_EditRtfUndo()
 
-      @ US_TFil( if( GetDesktopWidth() < 1024 , 1.4 , 1.3 ) ) , GetProperty( ::US_WinEdit , "CB_Undo" , "col" ) + ( ( ::nButtonWidth + ::nEspacio ) * 1 ) BUTTON CB_Redo ;
+      @ US_TFil( if( GetDesktopWidth() < 1024 , 1.4 , 1.3 ) ) , GetProperty( ::US_WinEdit , "CB_Undo" , "col" ) + ( ( ::nButtonWidth + ::nEspacio ) * 1 ) BUTTONEX CB_Redo ;
          OF &(::US_WinEdit) ;
          PICTURE "US_EditRedo" ;
-         NOXPSTYLE ;
          HEIGHT ::nButtonHeight ;
          WIDTH ::nButtonWidth ;
          TOOLTIP ::Lan( "Rehacer" ) ;
@@ -416,7 +410,7 @@ METHOD Init( cMemo ) CLASS US_RichEdit
 
       if !( ::bWin )
 
-         @ US_TFil( if( GetDesktopWidth() < 1024 , 1.4 , 1.3 ) ), GetProperty( ::US_WinEdit , "CB_Redo" , "col" ) + ( ( ::nButtonWidth + ::nEspacio ) * 3 ) BUTTON CB_Norm ;
+         @ US_TFil( if( GetDesktopWidth() < 1024 , 1.4 , 1.3 ) ), GetProperty( ::US_WinEdit , "CB_Redo" , "col" ) + ( ( ::nButtonWidth + ::nEspacio ) * 3 ) BUTTONEX CB_Norm ;
             OF &(::US_WinEdit) ;
             CAPTION ::lan( "Normalice" ) ;
             HEIGHT ::nButtonHeight ;
@@ -424,7 +418,7 @@ METHOD Init( cMemo ) CLASS US_RichEdit
             TOOLTIP ::Lan( "NormaliceToolTip" ) ;
             ACTION ::US_EditRtfNormalize()
 
-         @ US_TFil( if( GetDesktopWidth() < 1024 , 1.4 , 1.3 ) ), GetProperty( ::US_WinEdit , "CB_Norm" , "col" ) + ( ( ::nButtonWidth + ::nEspacio ) * 3 ) BUTTON CB_Sele ;
+         @ US_TFil( if( GetDesktopWidth() < 1024 , 1.4 , 1.3 ) ), GetProperty( ::US_WinEdit , "CB_Norm" , "col" ) + ( ( ::nButtonWidth + ::nEspacio ) * 3 ) BUTTONEX CB_Sele ;
             OF &(::US_WinEdit) ;
             CAPTION ::lan( "SeleTodo" ) ;
             HEIGHT ::nButtonHeight ;
@@ -432,7 +426,7 @@ METHOD Init( cMemo ) CLASS US_RichEdit
             TOOLTIP ::Lan( "SeleTodoToolTip" ) ;
             ACTION ( DoMethod( ::US_WinEdit , ::cRichControlName, "SetFocus" ) , US_Send_SelectAll( ::cRichControlName , ::US_WinEdit ) ) ;
 
-         @ US_TFil( if( GetDesktopWidth() < 1024 , 1.4 , 1.3 ) ), GetProperty( ::US_WinEdit , "CB_Sele" , "col" ) + ( ( ::nButtonWidth + ::nEspacio ) * 3 ) BUTTON BVerPortapapeles ;
+         @ US_TFil( if( GetDesktopWidth() < 1024 , 1.4 , 1.3 ) ), GetProperty( ::US_WinEdit , "CB_Sele" , "col" ) + ( ( ::nButtonWidth + ::nEspacio ) * 3 ) BUTTONEX BVerPortapapeles ;
             OF &(::US_WinEdit) ;
             CAPTION ::lan( "Portapapeles" ) ;
             HEIGHT ::nButtonHeight ;
@@ -443,10 +437,9 @@ METHOD Init( cMemo ) CLASS US_RichEdit
 
       if ::bButtonFind
 
-         @ US_TFil( if( GetDesktopWidth() < 1024 , 1.4 , 1.3 ) ) , GetProperty( ::US_WinEdit , "CB_Redo" , "col" ) + ( ( ::nButtonWidth + ::nEspacio ) * 1.5 ) BUTTON CB_Find ;
+         @ US_TFil( if( GetDesktopWidth() < 1024 , 1.4 , 1.3 ) ) , GetProperty( ::US_WinEdit , "CB_Redo" , "col" ) + ( ( ::nButtonWidth + ::nEspacio ) * 1.5 ) BUTTONEX CB_Find ;
             OF &(::US_WinEdit) ;
             PICTURE "US_EditFind" ;
-            NOXPSTYLE ;
             HEIGHT ::nButtonHeight ;
             WIDTH ::nButtonWidth ;
             TOOLTIP ::Lan( "Reemplazar" ) ;
@@ -464,7 +457,7 @@ METHOD Init( cMemo ) CLASS US_RichEdit
          RIGHTALIGN ;
          TRANSPARENT
 
-      @ US_TFil( 2.5 ) , US_LCol( 1.0 ) COMBOBOX C_Font ;
+      @ US_TFil( 2.6 ) , US_LCol( 1.0 ) COMBOBOX C_Font ;
          OF &(::US_WinEdit) ;
          ITEMS ::vFonts ;
          VALUE 1 ;
@@ -476,7 +469,7 @@ METHOD Init( cMemo ) CLASS US_RichEdit
 *         ON LOSTFOCUS ::US_EditActiveTimer() ;
 
      //  WIDTH US_Cols( 5 ) ;
-      @ US_TFil( 2.5 ) , GetProperty( ::US_WinEdit , "C_Font" , "col" ) + GetProperty( ::US_WinEdit , "C_Font" , "width" ) + ::nEspacio  COMBOBOX C_Size ;
+      @ US_TFil( 2.6 ) , GetProperty( ::US_WinEdit , "C_Font" , "col" ) + GetProperty( ::US_WinEdit , "C_Font" , "width" ) + ::nEspacio  COMBOBOX C_Size ;
          OF &(::US_WinEdit) ;
          ITEMS ::vFontSizes ;
          VALUE ascan( ::vFontSizes , "10" ) ;
@@ -543,10 +536,9 @@ METHOD Init( cMemo ) CLASS US_RichEdit
          TOOLTIP ::Lan( "Derecha" ) ;
          ON CHANGE ::US_EditSetTextAlign( "CB_Right" )
 
-      @ US_TFIL( 2.6 ) , GetProperty( ::US_WinEdit , "CB_Right" , "col" ) + ( ( ::nButtonWidth + ::nEspacio ) * 1.5 ) BUTTON CB_Color ;
+      @ US_TFIL( 2.6 ) , GetProperty( ::US_WinEdit , "CB_Right" , "col" ) + ( ( ::nButtonWidth + ::nEspacio ) * 1.5 ) BUTTONEX CB_Color ;
          OF &(::US_WinEdit) ;
          PICTURE "US_EditColor" ;
-         NOXPSTYLE ;
          HEIGHT ::nButtonHeight ;
          WIDTH ::nButtonWidth ;
          TOOLTIP ::Lan( "Colores" ) ;
@@ -624,7 +616,7 @@ METHOD Init( cMemo ) CLASS US_RichEdit
 
    if !(::bRTF)
 
-      @ US_TFil(5.3),US_LCol(71.8) BUTTON BLoad ;
+      @ US_TFil(5.3),US_LCol(71.8) BUTTONEX BLoad ;
          OF &(::US_WinEdit) ;
          CAPTION "Cargar" ;
          WIDTH US_Cols(7) ;
@@ -633,7 +625,7 @@ METHOD Init( cMemo ) CLASS US_RichEdit
          TOOLTIP ::Lan( "Cargar desde un archivo" ) ;
          FONT "VPArial" SIZE US_WFont(9)
 
-      @ US_TFil(10.3),US_LCol(71.8) BUTTON BExport ;
+      @ US_TFil(10.3),US_LCol(71.8) BUTTONEX BExport ;
          OF &(::US_WinEdit) ;
          CAPTION "Exportar" ;
          WIDTH US_Cols(7) ;
@@ -642,7 +634,7 @@ METHOD Init( cMemo ) CLASS US_RichEdit
          TOOLTIP ::Lan( "Copiar el contenido en un archivo" ) ;
          FONT "VPArial" SIZE US_WFont(9)
 
-      @ US_TFil(20.0),US_LCol(01) BUTTON BCortar ;
+      @ US_TFil(20.0),US_LCol(01) BUTTONEX BCortar ;
          OF &(::US_WinEdit) ;
          CAPTION "Cortar (Ctrl+X)" ;
          WIDTH US_Cols(14) ;
@@ -651,7 +643,7 @@ METHOD Init( cMemo ) CLASS US_RichEdit
          TOOLTIP ::Lan( "Cortar el texto seleccionado" ) ;
          FONT "VPArial" SIZE US_WFont(9)
 
-      @ US_TFil(20.0),US_LCol(16) BUTTON BCopiar ;
+      @ US_TFil(20.0),US_LCol(16) BUTTONEX BCopiar ;
          OF &(::US_WinEdit) ;
          CAPTION "Copiar (Ctrl+C)" ;
          WIDTH US_Cols(14) ;
@@ -660,7 +652,7 @@ METHOD Init( cMemo ) CLASS US_RichEdit
          TOOLTIP ::Lan( "Copiar el texto seleccionado" ) ;
          FONT "VPArial" SIZE US_WFont(9)
 
-      @ US_TFil(20.0),US_LCol(31) BUTTON BPegar ;
+      @ US_TFil(20.0),US_LCol(31) BUTTONEX BPegar ;
          OF &(::US_WinEdit) ;
          CAPTION "Pegar (Ctrl+P)" ;
          WIDTH US_Cols(14) ;
@@ -669,7 +661,7 @@ METHOD Init( cMemo ) CLASS US_RichEdit
          TOOLTIP ::Lan( "Pegar texto desde el portapapeles" ) ;
          FONT "VPArial" SIZE US_WFont(9)
 
-      @ US_TFil(20.0),US_LCol(49.8) BUTTON BBorrar ;
+      @ US_TFil(20.0),US_LCol(49.8) BUTTONEX BBorrar ;
          OF &(::US_WinEdit) ;
          CAPTION "Borrar (Del)" ;
          WIDTH US_Cols(14) ;
@@ -678,7 +670,7 @@ METHOD Init( cMemo ) CLASS US_RichEdit
          TOOLTIP ::Lan( "Borrar el texto seleccionado" ) ;
          FONT "VPArial" SIZE US_WFont(9)
 
-      @ US_TFil(20.0),US_LCol(64.8) BUTTON BRevertir ;
+      @ US_TFil(20.0),US_LCol(64.8) BUTTONEX BRevertir ;
          OF &(::US_WinEdit) ;
          CAPTION "Revertir (Ctrl+Z)" ;
          WIDTH US_Cols(14) ;
@@ -691,7 +683,7 @@ METHOD Init( cMemo ) CLASS US_RichEdit
 
    if ::bWin
 
-      @ US_TFil(22.0),US_LCol(34.8) BUTTON BNormalizar ;
+      @ US_TFil(22.0),US_LCol(34.8) BUTTONEX BNormalizar ;
          OF &(::US_WinEdit) ;
          CAPTION "Normalizar Texto" ;
          WIDTH US_Cols(14) ;
@@ -701,7 +693,7 @@ METHOD Init( cMemo ) CLASS US_RichEdit
          FONT "VPArial" SIZE US_WFont(9)
 
          ** ACTION ( DoMethod( ::US_WinEdit , ::cRichControlName, "SetFocus" ) , US_Send_SelectAll() ) ;
-      @ US_TFil(22.0),US_LCol(49.8) BUTTON BSeleccionarTodo ;
+      @ US_TFil(22.0),US_LCol(49.8) BUTTONEX BSeleccionarTodo ;
          OF &(::US_WinEdit) ;
          CAPTION "SeleTodo" ;
          WIDTH US_Cols(14) ;
@@ -710,7 +702,7 @@ METHOD Init( cMemo ) CLASS US_RichEdit
          TOOLTIP ::Lan( "SeleTodoToolTip" ) ;
          FONT "VPArial" SIZE US_WFont(9)
 
-      @ US_TFil(22.0),US_LCol(64.8) BUTTON BVerPortapapeles ;
+      @ US_TFil(22.0),US_LCol(64.8) BUTTONEX BVerPortapapeles ;
          OF &(::US_WinEdit) ;
          CAPTION "Ver Portapapeles" ;
          WIDTH US_Cols(14) ;
@@ -724,7 +716,7 @@ METHOD Init( cMemo ) CLASS US_RichEdit
          SetProperty( ::US_WinEdit , "BVerPortapapeles" , "action" , "::US_EditViewClipBoard" )
       endif
 
-      @ US_TFil(22.0),US_LCol(01) BUTTON BEsc ;
+      @ US_TFil(22.0),US_LCol(01) BUTTONEX BEsc ;
          OF &(::US_WinEdit) ;
          CAPTION "Salir (Escape)" ;
          WIDTH US_Cols(32.0) ;
@@ -1337,7 +1329,7 @@ METHOD US_EditFilCol() CLASS US_RichEdit
    LOCAL  Poz := Linepos(::hEd)
    // el if previo al set es para prevenir muchos refresh en version 3.x
    if GetProperty( ::US_WinEdit , "LFilCol" , "value" ) != alltrim(str(poz[1]+1))+"/"+alltrim(str(poz[2]+1))
-      SetProperty( ::US_WinEdit , "LFilCol" , "value" , alltrim(str(poz[1]+1))+"/"+alltrim(str(poz[2]+1)) )
+      SetProperty( ::US_WinEdit , "LFilCol" , "value" , "Row/Col: " + alltrim(str(poz[1]+1))+"/"+alltrim(str(poz[2]+1)) )
    endif
 Return Nil
 
@@ -1507,25 +1499,25 @@ METHOD US_EditFind() CLASS US_RichEdit
          FONTCOLOR ::vTitleBackColor ;
          BACKCOLOR ::vBackColor
 
-      @ US_TFil( 3.5 ) , US_LCol( 62 ) BUTTON Btn_Find ;
+      @ US_TFil( 3.5 ) , US_LCol( 62 ) BUTTONEX Btn_Find ;
          CAPTION 'Buscar Siguiente';
          WIDTH US_Cols( 16 ) ;
          HEIGHT US_Fils( 4.0 ) ;
          ACTION ::US_EditFindNext(0)
 
-      @ US_TFil( 8.0 ) , US_LCol( 62 ) BUTTON Btn_Repl;
+      @ US_TFil( 8.0 ) , US_LCol( 62 ) BUTTONEX Btn_Repl;
          CAPTION 'Reemplazar';
          WIDTH US_Cols( 16 ) ;
          HEIGHT US_Fils( 4.0 ) ;
          ACTION ::US_EditFindNext(1)
 
-      @ US_TFil( 12.5 ) , US_LCol( 62 ) BUTTON Btn_ReplAll;
+      @ US_TFil( 12.5 ) , US_LCol( 62 ) BUTTONEX Btn_ReplAll;
          CAPTION 'Reemplazar Todo';
          WIDTH US_Cols( 16 ) ;
          HEIGHT US_Fils( 4.0 ) ;
          ACTION ::US_EditFindNext(2)
 
-      @ US_TFil( 17.0 ) , US_LCol( 62 ) BUTTON Btn_Cancel;
+      @ US_TFil( 17.0 ) , US_LCol( 62 ) BUTTONEX Btn_Cancel;
          CAPTION 'Cancelar';
          WIDTH US_Cols( 16 ) ;
          HEIGHT US_Fils( 4.0 ) ;

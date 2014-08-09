@@ -1117,7 +1117,7 @@ Function SHG_AddHlpKey()
    Local cSel := oHlpRichEdit:GetSelText()
    if SHG_BaseOK
       if empty( cSel )
-         cAux := InputBox( "New Key:" , "Keys for HElp" , "" )
+         cAux := InputBox( "New Key:" , "Keys for Help" , "" )
       else
          cAux := alltrim( substr( strtran( strtran( cSel , HB_OsNewLine() , "" ) , chr(13) , "" ) , 1 , 100 ) )
       endif
@@ -1231,6 +1231,62 @@ Function SHG_LimpioRtf( cRtf )
       cRtf := strtran( cRtf , "\sb100\sa100" , "" )
       Return .T.
    endif
+Return .F.
+
+Function SHG_Move_Item()
+   Local nCurrent, nNew, cCurItem, cAuxItem, i
+
+   nCurrent := GetProperty( "VentanaMain", "GHlpFiles", "value" )
+   if nCurrent < 1
+      Return .F.
+   elseif nCurrent == 1
+      MsgInfo( "Global foot can't be moved, it's a system topic !!!" )
+      Return .F.
+   elseif nCurrent == 2
+      MsgInfo( "Welcome page can't be moved, it's a system topic !!!" )
+      Return .F.
+   endif
+
+   nNew := Val( InputBox( "New Location:", "Move Item " + Ltrim( Str( nCurrent ) ) + " To", "" ) )
+   if nNew < 1
+      Return .F.
+   elseif nNew == 1
+      MsgInfo( "Global foot can't be moved, it's a system topic !!!" )
+      Return .F.
+   elseif nNew == 2
+      MsgInfo( "Welcome page can't be moved, it's a system topic !!!" )
+      Return .F.
+   elseif nNew == nCurrent
+      MsgInfo( "Nothing to do, origin and destination are the same !!!" )
+      Return .F.
+   endif
+   nNew := Min( nNew, GetProperty( "VentanaMain", "GHlpFiles", "ItemCount" ) )
+
+   bHlpMoving := .T.
+   if nNew > nCurrent
+      For i := nCurrent + 1 To nNew
+         cCurItem := GetProperty( "VentanaMain" , "GHlpFiles" , "item" , i - 1 )
+         cAuxItem := GetProperty( "VentanaMain" , "GHlpFiles" , "item" , i )
+         SHG_SetField( "SHG_ORDER", i - 1, 0 )
+         SHG_SetField( "SHG_ORDER", i , i - 1 )
+         SHG_SetField( "SHG_ORDER", 0 , i )
+         SetProperty( "VentanaMain" , "GHlpFiles" , "item" , i , cCurItem )
+         SetProperty( "VentanaMain" , "GHlpFiles" , "item" , i - 1 , cAuxItem )
+      Next i
+   else
+      For i := nCurrent - 1 To nNew Step -1
+         cCurItem := GetProperty( "VentanaMain" , "GHlpFiles" , "item" , i + 1 )
+         cAuxItem := GetProperty( "VentanaMain" , "GHlpFiles" , "item" , i )
+         SHG_SetField( "SHG_ORDER" , i + 1 , 0 )
+         SHG_SetField( "SHG_ORDER" , i , i + 1 )
+         SHG_SetField( "SHG_ORDER" , 0 , i )
+         SetProperty( "VentanaMain" , "GHlpFiles" , "item" , i , cCurItem )
+         SetProperty( "VentanaMain" , "GHlpFiles" , "item" , i + 1 , cAuxItem )
+      Next i
+   endif
+   SetProperty( "VentanaMain" , "GHlpFiles" , "value" , nNew )
+   DoMethod( "VentanaMain" , "GHlpFiles" , "setfocus" )
+   bHlpMoving := .F.
 Return .F.
 
 Function SHG_Send_Copy()

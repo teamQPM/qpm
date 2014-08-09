@@ -8,6 +8,33 @@
  * See "How to format your ChangeLog entries" in howtosvn.txt file.
  */
 
+2014-08-08 23:10:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * ./TODO
+     * Updated.
+   * ./QPM_AutoProject.qpm
+   * ./QPM.EXE
+   * ./QPM.PRG
+   * ./QPM_Functions.PRG
+   * ./QPM_ProjectSettings.prg
+   * ./QPM_GlobalSettings.prg
+   * ./QPM_SHG_SimpleHelpGenerator.prg
+   * ./FuentesComunes/US_Edit_CharFijo.prg
+     + "Move item" options to context menu. This options moves a help item
+       form one position in the topics list to another place.
+     ! Buttons with images are not displayed correctly.
+     + Label showing the item number in SHG tab.
+     * References to HMI+ by IDE+
+     - Unused function DbfToolCheck.
+     * Position of "Keys for help" related controls.
+     * Some messages.
+     * Some titles.
+   * ./Resource/UP.BMP
+     * Size to avoid misalignment.
+   * ./Resource/Down.BMP
+     * Size to avoid misalignment.
+   * ./Resource/Test.bmp
+     * Colors changed because old ones are not visible in new style.
+
 2014-07-31 19:14:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * ./QPM_AutoProjectOnlyHelp.qpm
    * ./QPM.chm
