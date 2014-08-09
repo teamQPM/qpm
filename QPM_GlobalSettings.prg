@@ -102,14 +102,14 @@ Function GlobalSettings()
             END CHECKBOX
 
             @ 132 , 10 LABEL LDummy_Form ;
-               VALUE 'Forms Tools Locate:' ;
+               VALUE 'Forms Tools Location:' ;
                WIDTH 275 ;
                FONT 'arial' SIZE 10 BOLD ;
                TRANSPARENT ;
                FONTCOLOR DEF_COLORBLUE
 
             DEFINE LABEL Label_HMI
-                    VALUE           'HMI+ (By Ciro Vargas Clemow):'
+                    VALUE           ' ooHG IDE+ (By Ciro Vargas):'
                     ROW             160
                     COL             10
                     AUTOSIZE        .T.
@@ -132,7 +132,7 @@ Function GlobalSettings()
             END BUTTON
 
             DEFINE LABEL Label_HMGSIDE
-                    VALUE           'HMGSIDE (By Walter Formigoni):'
+                    VALUE           'HMGS-IDE (By Walter Formigoni):'
                     ROW             190
                     COL             10
                     AUTOSIZE        .T.
@@ -159,7 +159,7 @@ Function GlobalSettings()
          DEFINE PAGE "DBF Tool"
 
             @ 102 , 10 LABEL LDummy_Dbf ;
-               VALUE 'Dbf Tools Locate:' ;
+               VALUE 'Dbf Tools Location:' ;
                WIDTH 275 ;
                FONT 'arial' SIZE 10 BOLD ;
                TRANSPARENT ;
@@ -237,7 +237,7 @@ Function GlobalSettings()
                        HEIGHT          25
                        PICTURE         'folderselect'
                        TOOLTIP         'Select Folder'
-                       ONCLICK         If ( !Empty( Folder := GetFolder( "Seleccione el Folder" , WinGSettings.&("T_"+DefineMiniGui1+DefineBorland).Value ) ) , WinGSettings.&("T_"+DefineMiniGui1+DefineBorland).Value := Folder , )
+                       ONCLICK         If ( !Empty( Folder := GetFolder( "Select Folder" , WinGSettings.&("T_"+DefineMiniGui1+DefineBorland).Value ) ) , WinGSettings.&("T_"+DefineMiniGui1+DefineBorland).Value := Folder , )
                END BUTTON
 
                DEFINE LABEL &("LC_"+DefineMiniGui1+DefineBorland)
@@ -260,7 +260,7 @@ Function GlobalSettings()
                        HEIGHT          25
                        PICTURE         'folderselect'
                        TOOLTIP         'Select Folder'
-                       ONCLICK         If ( !Empty( Folder := GetFolder( "Seleccione el Folder" , WinGSettings.&("TC_"+DefineMiniGui1+DefineBorland).Value ) ) , WinGSettings.&("TC_"+DefineMiniGui1+DefineBorland).Value := Folder , )
+                       ONCLICK         If ( !Empty( Folder := GetFolder( "Select Folder" , WinGSettings.&("TC_"+DefineMiniGui1+DefineBorland).Value ) ) , WinGSettings.&("TC_"+DefineMiniGui1+DefineBorland).Value := Folder , )
                END BUTTON
 
                DEFINE LABEL &("L_"+DefineMiniGui1+DefineBorland+DefineHarbour)
@@ -283,7 +283,7 @@ Function GlobalSettings()
                        HEIGHT          25
                        PICTURE         'folderselect'
                        TOOLTIP         'Select Folder'
-                       ONCLICK         If ( !Empty( Folder := GetFolder( "Seleccione el Folder" , WinGSettings.&("T_"+DefineMiniGui1+DefineBorland+DefineHarbour).Value ) ) , WinGSettings.&("T_"+DefineMiniGui1+DefineBorland+DefineHarbour).Value := Folder , )
+                       ONCLICK         If ( !Empty( Folder := GetFolder( "Select Folder" , WinGSettings.&("T_"+DefineMiniGui1+DefineBorland+DefineHarbour).Value ) ) , WinGSettings.&("T_"+DefineMiniGui1+DefineBorland+DefineHarbour).Value := Folder , )
                END BUTTON
 
                DEFINE LABEL &("L_"+DefineMiniGui1+DefineBorland+DefineXHarbour)
@@ -306,7 +306,7 @@ Function GlobalSettings()
                        HEIGHT          25
                        PICTURE         'folderselect'
                        TOOLTIP         'Select Folder'
-                       ONCLICK         If ( !Empty( Folder := GetFolder( "Seleccione el Folder" , WinGSettings.&("T_"+DefineMiniGui1+DefineBorland+DefineXHarbour).Value ) ) , WinGSettings.&("T_"+DefineMiniGui1+DefineBorland+DefineXHarbour).Value := Folder , )
+                       ONCLICK         If ( !Empty( Folder := GetFolder( "Select Folder" , WinGSettings.&("T_"+DefineMiniGui1+DefineBorland+DefineXHarbour).Value ) ) , WinGSettings.&("T_"+DefineMiniGui1+DefineBorland+DefineXHarbour).Value := Folder , )
                END BUTTON
 
             END PAGE
@@ -344,14 +344,14 @@ Function GlobalSettings()
                     HEIGHT          25
                     PICTURE         'folderselect'
                     TOOLTIP         'Select Folder'
-                    ONCLICK         If ( !Empty( Folder := GetFolder( "Seleccione el Folder" , WinGSettings.&("T_"+DefineMiniGui3+DefineMinGW).Value ) ) , WinGSettings.&("T_"+DefineMiniGui3+DefineMinGW).Value := Folder , )
+                    ONCLICK         If ( !Empty( Folder := GetFolder( "Select Folder" , WinGSettings.&("T_"+DefineMiniGui3+DefineMinGW).Value ) ) , WinGSettings.&("T_"+DefineMiniGui3+DefineMinGW).Value := Folder , )
             END BUTTON
 
             DEFINE LABEL &("LC_"+DefineMiniGui3+DefineMinGW)
                     ROW             100
                     COL             10
                     WIDTH           109
-                    VALUE           'Mingw C Folder:'
+                    VALUE           'MinGW C Folder:'
                     TRANSPARENT     .T.
             END LABEL
             DEFINE TEXTBOX &("TC_"+DefineMiniGui3+DefineMinGW)
@@ -367,7 +367,7 @@ Function GlobalSettings()
                     HEIGHT          25
                     PICTURE         'folderselect'
                     TOOLTIP         'Select Folder'
-                    ONCLICK         If ( !Empty( Folder := GetFolder( "Seleccione el Folder" , WinGSettings.&("TC_"+DefineMiniGui3+DefineMinGW).Value ) ) , WinGSettings.&("TC_"+DefineMiniGui3+DefineMinGW).Value := Folder , )
+                    ONCLICK         If ( !Empty( Folder := GetFolder( "Select Folder" , WinGSettings.&("TC_"+DefineMiniGui3+DefineMinGW).Value ) ) , WinGSettings.&("TC_"+DefineMiniGui3+DefineMinGW).Value := Folder , )
             END BUTTON
 
             DEFINE LABEL &("L_"+DefineMiniGui3+DefineMinGW+DefineHarbour)
@@ -390,7 +390,7 @@ Function GlobalSettings()
                     HEIGHT          25
                     PICTURE         'folderselect'
                     TOOLTIP         'Select Folder'
-                    ONCLICK         If ( !Empty( Folder := GetFolder( "Seleccione el Folder" , WinGSettings.&("T_"+DefineMiniGui3+DefineMinGW+DefineHarbour).Value ) ) , WinGSettings.&("T_"+DefineMiniGui3+DefineMinGW+DefineHarbour).Value := Folder , )
+                    ONCLICK         If ( !Empty( Folder := GetFolder( "Select Folder" , WinGSettings.&("T_"+DefineMiniGui3+DefineMinGW+DefineHarbour).Value ) ) , WinGSettings.&("T_"+DefineMiniGui3+DefineMinGW+DefineHarbour).Value := Folder , )
             END BUTTON
 
             DEFINE LABEL &("L_"+DefineMiniGui3+DefineMinGW+DefineXHarbour)
@@ -413,7 +413,7 @@ Function GlobalSettings()
                     HEIGHT          25
                     PICTURE         'folderselect'
                     TOOLTIP         'Select Folder'
-                    ONCLICK         If ( !Empty( Folder := GetFolder( "Seleccione el Folder" , WinGSettings.&("T_"+DefineMiniGui3+DefineMinGW+DefineXHarbour).Value ) ) , WinGSettings.&("T_"+DefineMiniGui3+DefineMinGW+DefineXHarbour).Value := Folder , )
+                    ONCLICK         If ( !Empty( Folder := GetFolder( "Select Folder" , WinGSettings.&("T_"+DefineMiniGui3+DefineMinGW+DefineXHarbour).Value ) ) , WinGSettings.&("T_"+DefineMiniGui3+DefineMinGW+DefineXHarbour).Value := Folder , )
             END BUTTON
 
          END PAGE
@@ -448,7 +448,7 @@ Function GlobalSettings()
                     HEIGHT          25
                     PICTURE         'folderselect'
                     TOOLTIP         'Select Folder'
-                    ONCLICK         If ( !Empty( Folder := GetFolder( "Seleccione el Folder" , WinGSettings.&("T_"+DefineExtended1+DefineBorland).Value ) ) , WinGSettings.&("T_"+DefineExtended1+DefineBorland).Value := Folder , )
+                    ONCLICK         If ( !Empty( Folder := GetFolder( "Select Folder" , WinGSettings.&("T_"+DefineExtended1+DefineBorland).Value ) ) , WinGSettings.&("T_"+DefineExtended1+DefineBorland).Value := Folder , )
             END BUTTON
 
             DEFINE LABEL &("LC_"+DefineExtended1+DefineBorland)
@@ -471,7 +471,7 @@ Function GlobalSettings()
                     HEIGHT          25
                     PICTURE         'folderselect'
                     TOOLTIP         'Select Folder'
-                    ONCLICK         If ( !Empty( Folder := GetFolder( "Seleccione el Folder" , WinGSettings.&("TC_"+DefineExtended1+DefineBorland).Value ) ) , WinGSettings.&("TC_"+DefineExtended1+DefineBorland).Value := Folder , )
+                    ONCLICK         If ( !Empty( Folder := GetFolder( "Select Folder" , WinGSettings.&("TC_"+DefineExtended1+DefineBorland).Value ) ) , WinGSettings.&("TC_"+DefineExtended1+DefineBorland).Value := Folder , )
             END BUTTON
 
             DEFINE LABEL &("L_"+DefineExtended1+DefineBorland+DefineHarbour)
@@ -494,7 +494,7 @@ Function GlobalSettings()
                     HEIGHT          25
                     PICTURE         'folderselect'
                     TOOLTIP         'Select Folder'
-                    ONCLICK         If ( !Empty( Folder := GetFolder( "Seleccione el Folder" , WinGSettings.&("T_"+DefineExtended1+DefineBorland+DefineHarbour).Value ) ) , WinGSettings.&("T_"+DefineExtended1+DefineBorland+DefineHarbour).Value := Folder , )
+                    ONCLICK         If ( !Empty( Folder := GetFolder( "Select Folder" , WinGSettings.&("T_"+DefineExtended1+DefineBorland+DefineHarbour).Value ) ) , WinGSettings.&("T_"+DefineExtended1+DefineBorland+DefineHarbour).Value := Folder , )
             END BUTTON
 
             DEFINE LABEL &("L_"+DefineExtended1+DefineBorland+DefineXHarbour)
@@ -517,7 +517,7 @@ Function GlobalSettings()
                     HEIGHT          25
                     PICTURE         'folderselect'
                     TOOLTIP         'Select Folder'
-                    ONCLICK         If ( !Empty( Folder := GetFolder( "Seleccione el Folder" , WinGSettings.&("T_"+DefineExtended1+DefineBorland+DefineXHarbour).Value ) ) , WinGSettings.&("T_"+DefineExtended1+DefineBorland+DefineXHarbour).Value := Folder , )
+                    ONCLICK         If ( !Empty( Folder := GetFolder( "Select Folder" , WinGSettings.&("T_"+DefineExtended1+DefineBorland+DefineXHarbour).Value ) ) , WinGSettings.&("T_"+DefineExtended1+DefineBorland+DefineXHarbour).Value := Folder , )
             END BUTTON
 
          END PAGE
@@ -553,7 +553,7 @@ Function GlobalSettings()
                     HEIGHT          25
                     PICTURE         'folderselect'
                     TOOLTIP         'Select Folder'
-                    ONCLICK         If ( !Empty( Folder := GetFolder( "Seleccione el Folder" , WinGSettings.&("T_"+DefineExtended1+DefineMinGW).Value ) ) , WinGSettings.&("T_"+DefineExtended1+DefineMinGW).Value := Folder , )
+                    ONCLICK         If ( !Empty( Folder := GetFolder( "Select Folder" , WinGSettings.&("T_"+DefineExtended1+DefineMinGW).Value ) ) , WinGSettings.&("T_"+DefineExtended1+DefineMinGW).Value := Folder , )
             END BUTTON
 
             DEFINE LABEL &("LC_"+DefineExtended1+DefineMinGW)
@@ -576,7 +576,7 @@ Function GlobalSettings()
                     HEIGHT          25
                     PICTURE         'folderselect'
                     TOOLTIP         'Select Folder'
-                    ONCLICK         If ( !Empty( Folder := GetFolder( "Seleccione el Folder" , WinGSettings.&("TC_"+DefineExtended1+DefineMinGW).Value ) ) , WinGSettings.&("TC_"+DefineExtended1+DefineMinGW).Value := Folder , )
+                    ONCLICK         If ( !Empty( Folder := GetFolder( "Select Folder" , WinGSettings.&("TC_"+DefineExtended1+DefineMinGW).Value ) ) , WinGSettings.&("TC_"+DefineExtended1+DefineMinGW).Value := Folder , )
             END BUTTON
 
             DEFINE LABEL &("L_"+DefineExtended1+DefineMinGW+DefineHarbour)
@@ -599,7 +599,7 @@ Function GlobalSettings()
                     HEIGHT          25
                     PICTURE         'folderselect'
                     TOOLTIP         'Select Folder'
-                    ONCLICK         If ( !Empty( Folder := GetFolder( "Seleccione el Folder" , WinGSettings.&("T_"+DefineExtended1+DefineMinGW+DefineHarbour).Value ) ) , WinGSettings.&("T_"+DefineExtended1+DefineMinGW+DefineHarbour).Value := Folder , )
+                    ONCLICK         If ( !Empty( Folder := GetFolder( "Select Folder" , WinGSettings.&("T_"+DefineExtended1+DefineMinGW+DefineHarbour).Value ) ) , WinGSettings.&("T_"+DefineExtended1+DefineMinGW+DefineHarbour).Value := Folder , )
             END BUTTON
 
             DEFINE LABEL &("L_"+DefineExtended1+DefineMinGW+DefineXHarbour)
@@ -622,7 +622,7 @@ Function GlobalSettings()
                     HEIGHT          25
                     PICTURE         'folderselect'
                     TOOLTIP         'Select Folder'
-                    ONCLICK         If ( !Empty( Folder := GetFolder( "Seleccione el Folder" , WinGSettings.&("T_"+DefineExtended1+DefineMinGW+DefineXHarbour).Value ) ) , WinGSettings.&("T_"+DefineExtended1+DefineMinGW+DefineXHarbour).Value := Folder , )
+                    ONCLICK         If ( !Empty( Folder := GetFolder( "Select Folder" , WinGSettings.&("T_"+DefineExtended1+DefineMinGW+DefineXHarbour).Value ) ) , WinGSettings.&("T_"+DefineExtended1+DefineMinGW+DefineXHarbour).Value := Folder , )
             END BUTTON
 
          END PAGE
@@ -657,7 +657,7 @@ Function GlobalSettings()
                     HEIGHT          25
                     PICTURE         'folderselect'
                     TOOLTIP         'Select Folder'
-                    ONCLICK         If ( !Empty( Folder := GetFolder( "Seleccione el Folder" , WinGSettings.&("T_"+DefineOohg3+DefineBorland).Value ) ) , WinGSettings.&("T_"+DefineOohg3+DefineBorland).Value := Folder , )
+                    ONCLICK         If ( !Empty( Folder := GetFolder( "Select Folder" , WinGSettings.&("T_"+DefineOohg3+DefineBorland).Value ) ) , WinGSettings.&("T_"+DefineOohg3+DefineBorland).Value := Folder , )
             END BUTTON
 
             DEFINE LABEL &("LC_"+DefineOohg3+DefineBorland)
@@ -680,7 +680,7 @@ Function GlobalSettings()
                     HEIGHT          25
                     PICTURE         'folderselect'
                     TOOLTIP         'Select Folder'
-                    ONCLICK         If ( !Empty( Folder := GetFolder( "Seleccione el Folder" , WinGSettings.&("TC_"+DefineOohg3+DefineBorland).Value ) ) , WinGSettings.&("TC_"+DefineOohg3+DefineBorland).Value := Folder , )
+                    ONCLICK         If ( !Empty( Folder := GetFolder( "Select Folder" , WinGSettings.&("TC_"+DefineOohg3+DefineBorland).Value ) ) , WinGSettings.&("TC_"+DefineOohg3+DefineBorland).Value := Folder , )
             END BUTTON
 
             DEFINE LABEL &("L_"+DefineOohg3+DefineBorland+DefineHarbour)
@@ -703,7 +703,7 @@ Function GlobalSettings()
                     HEIGHT          25
                     PICTURE         'folderselect'
                     TOOLTIP         'Select Folder'
-                    ONCLICK         If ( !Empty( Folder := GetFolder( "Seleccione el Folder" , WinGSettings.&("T_"+DefineOohg3+DefineBorland+DefineHarbour).Value ) ) , WinGSettings.&("T_"+DefineOohg3+DefineBorland+DefineHarbour).Value := Folder , )
+                    ONCLICK         If ( !Empty( Folder := GetFolder( "Select Folder" , WinGSettings.&("T_"+DefineOohg3+DefineBorland+DefineHarbour).Value ) ) , WinGSettings.&("T_"+DefineOohg3+DefineBorland+DefineHarbour).Value := Folder , )
             END BUTTON
 
             DEFINE LABEL &("L_"+DefineOohg3+DefineBorland+DefineXHarbour)
@@ -726,7 +726,7 @@ Function GlobalSettings()
                     HEIGHT          25
                     PICTURE         'folderselect'
                     TOOLTIP         'Select Folder'
-                    ONCLICK         If ( !Empty( Folder := GetFolder( "Seleccione el Folder" , WinGSettings.&("T_"+DefineOohg3+DefineBorland+DefineXHarbour).Value ) ) , WinGSettings.&("T_"+DefineOohg3+DefineBorland+DefineXHarbour).Value := Folder , )
+                    ONCLICK         If ( !Empty( Folder := GetFolder( "Select Folder" , WinGSettings.&("T_"+DefineOohg3+DefineBorland+DefineXHarbour).Value ) ) , WinGSettings.&("T_"+DefineOohg3+DefineBorland+DefineXHarbour).Value := Folder , )
             END BUTTON
 
          END PAGE
@@ -761,7 +761,7 @@ Function GlobalSettings()
                     HEIGHT          25
                     PICTURE         'folderselect'
                     TOOLTIP         'Select Folder'
-                    ONCLICK         If ( !Empty( Folder := GetFolder( "Seleccione el Folder" , WinGSettings.&("T_"+DefineOohg3+DefineMinGW).Value ) ) , WinGSettings.&("T_"+DefineOohg3+DefineMinGW).Value := Folder , )
+                    ONCLICK         If ( !Empty( Folder := GetFolder( "Select Folder" , WinGSettings.&("T_"+DefineOohg3+DefineMinGW).Value ) ) , WinGSettings.&("T_"+DefineOohg3+DefineMinGW).Value := Folder , )
             END BUTTON
 
             DEFINE LABEL &("LC_"+DefineOohg3+DefineMinGW)
@@ -784,7 +784,7 @@ Function GlobalSettings()
                     HEIGHT          25
                     PICTURE         'folderselect'
                     TOOLTIP         'Select Folder'
-                    ONCLICK         If ( !Empty( Folder := GetFolder( "Seleccione el Folder" , WinGSettings.&("TC_"+DefineOohg3+DefineMinGW).Value ) ) , WinGSettings.&("TC_"+DefineOohg3+DefineMinGW).Value := Folder , )
+                    ONCLICK         If ( !Empty( Folder := GetFolder( "Select Folder" , WinGSettings.&("TC_"+DefineOohg3+DefineMinGW).Value ) ) , WinGSettings.&("TC_"+DefineOohg3+DefineMinGW).Value := Folder , )
             END BUTTON
 
             DEFINE LABEL &("L_"+DefineOohg3+DefineMinGW+DefineHarbour)
@@ -807,7 +807,7 @@ Function GlobalSettings()
                     HEIGHT          25
                     PICTURE         'folderselect'
                     TOOLTIP         'Select Folder'
-                    ONCLICK         If ( !Empty( Folder := GetFolder( "Seleccione el Folder" , WinGSettings.&("T_"+DefineOohg3+DefineMinGW+DefineHarbour).Value ) ) , WinGSettings.&("T_"+DefineOohg3+DefineMinGW+DefineHarbour).Value := Folder , )
+                    ONCLICK         If ( !Empty( Folder := GetFolder( "Select Folder" , WinGSettings.&("T_"+DefineOohg3+DefineMinGW+DefineHarbour).Value ) ) , WinGSettings.&("T_"+DefineOohg3+DefineMinGW+DefineHarbour).Value := Folder , )
             END BUTTON
 
             DEFINE LABEL &("L_"+DefineOohg3+DefineMinGW+DefineXHarbour)
@@ -830,7 +830,7 @@ Function GlobalSettings()
                     HEIGHT          25
                     PICTURE         'folderselect'
                     TOOLTIP         'Select Folder'
-                    ONCLICK         If ( !Empty( Folder := GetFolder( "Seleccione el Folder" , WinGSettings.&("T_"+DefineOohg3+DefineMinGW+DefineXHarbour).Value ) ) , WinGSettings.&("T_"+DefineOohg3+DefineMinGW+DefineXHarbour).Value := Folder , )
+                    ONCLICK         If ( !Empty( Folder := GetFolder( "Select Folder" , WinGSettings.&("T_"+DefineOohg3+DefineMinGW+DefineXHarbour).Value ) ) , WinGSettings.&("T_"+DefineOohg3+DefineMinGW+DefineXHarbour).Value := Folder , )
             END BUTTON
 
          END PAGE
@@ -865,7 +865,7 @@ Function GlobalSettings()
                     HEIGHT          25
                     PICTURE         'folderselect'
                     TOOLTIP         'Select Folder'
-                    ONCLICK         If ( !Empty( Folder := GetFolder( "Seleccione el Folder" , WinGSettings.&("T_"+DefineOohg3+DefinePelles).Value ) ) , WinGSettings.&("T_"+DefineOohg3+DefinePelles).Value := Folder , )
+                    ONCLICK         If ( !Empty( Folder := GetFolder( "Select Folder" , WinGSettings.&("T_"+DefineOohg3+DefinePelles).Value ) ) , WinGSettings.&("T_"+DefineOohg3+DefinePelles).Value := Folder , )
             END BUTTON
 
             DEFINE LABEL &("LC_"+DefineOohg3+DefinePelles)
@@ -888,7 +888,7 @@ Function GlobalSettings()
                     HEIGHT          25
                     PICTURE         'folderselect'
                     TOOLTIP         'Select Folder'
-                    ONCLICK         If ( !Empty( Folder := GetFolder( "Seleccione el Folder" , WinGSettings.&("TC_"+DefineOohg3+DefinePelles).Value ) ) , WinGSettings.&("TC_"+DefineOohg3+DefinePelles).Value := Folder , )
+                    ONCLICK         If ( !Empty( Folder := GetFolder( "Select Folder" , WinGSettings.&("TC_"+DefineOohg3+DefinePelles).Value ) ) , WinGSettings.&("TC_"+DefineOohg3+DefinePelles).Value := Folder , )
             END BUTTON
 
             DEFINE LABEL &("L_"+DefineOohg3+DefinePelles+DefineHarbour)
@@ -911,7 +911,7 @@ Function GlobalSettings()
                     HEIGHT          25
                     PICTURE         'folderselect'
                     TOOLTIP         'Select Folder'
-                    ONCLICK         If ( !Empty( Folder := GetFolder( "Seleccione el Folder" , WinGSettings.&("T_"+DefineOohg3+DefinePelles+DefineHarbour).Value ) ) , WinGSettings.&("T_"+DefineOohg3+DefinePelles+DefineHarbour).Value := Folder , )
+                    ONCLICK         If ( !Empty( Folder := GetFolder( "Select Folder" , WinGSettings.&("T_"+DefineOohg3+DefinePelles+DefineHarbour).Value ) ) , WinGSettings.&("T_"+DefineOohg3+DefinePelles+DefineHarbour).Value := Folder , )
             END BUTTON
 
             DEFINE LABEL &("L_"+DefineOohg3+DefinePelles+DefineXHarbour)
@@ -934,7 +934,7 @@ Function GlobalSettings()
                     HEIGHT          25
                     PICTURE         'folderselect'
                     TOOLTIP         'Select Folder'
-                    ONCLICK         If ( !Empty( Folder := GetFolder( "Seleccione el Folder" , WinGSettings.&("T_"+DefineOohg3+DefinePelles+DefineXHarbour).Value ) ) , WinGSettings.&("T_"+DefineOohg3+DefinePelles+DefineXHarbour).Value := Folder , )
+                    ONCLICK         If ( !Empty( Folder := GetFolder( "Select Folder" , WinGSettings.&("T_"+DefineOohg3+DefinePelles+DefineXHarbour).Value ) ) , WinGSettings.&("T_"+DefineOohg3+DefinePelles+DefineXHarbour).Value := Folder , )
             END BUTTON
 
          END PAGE

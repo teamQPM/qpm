@@ -44,7 +44,7 @@ Function ProjectSettings()
    DEFINE WINDOW WinPSettings ;
           AT 0 , 0 ;
           WIDTH 560 ;
-          HEIGHT 600 ;
+          HEIGHT 610 ;
           TITLE "Project Options" ;
           MODAL ;
           NOSYSMENU ;
@@ -185,9 +185,8 @@ Function ProjectSettings()
               HEIGHT          25
               PICTURE         'folderselect'
               TOOLTIP         'Select Folder for Copy or Move output file'
-              ONCLICK         If ( !Empty( Folder := GetFolder( "Seleccione el Folder" , if( empty( WinPSettings.Text_CopyMove.Value ) , PUB_cProjectFolder , WinPSettings.Text_CopyMove.Value ) ) ) , WinPSettings.Text_CopyMove.Value := Folder , )
+              ONCLICK         If ( !Empty( Folder := GetFolder( "Select Folder" , if( empty( WinPSettings.Text_CopyMove.Value ) , PUB_cProjectFolder , WinPSettings.Text_CopyMove.Value ) ) ) , WinPSettings.Text_CopyMove.Value := Folder , )
       END BUTTON
-      *       ONCLICK         If ( !Empty( Folder := GetFolder( "Seleccione el Folder" , WinPSettings.Text_CopyMove.Value ) ) , WinPSettings.Text_CopyMove.Value := Folder , )
 
       @ 168 , 285 FRAME FOutputRename ;
          WIDTH 230 ;
@@ -227,7 +226,7 @@ Function ProjectSettings()
          HEIGHT 070
 
       @ 330 , 290 LABEL LExtraRun ;
-         VALUE 'Extra Run After Success Build:' ;
+         VALUE 'Extra Run After Successful Build:' ;
          WIDTH 350 ;
          FONT 'arial' SIZE 10 BOLD ;
          FONTCOLOR DEF_COLORBLUE
@@ -281,7 +280,7 @@ Function ProjectSettings()
 
     //@ 410 , 300 RADIOGROUP Radio_Form ;
       @ 440 , 300 RADIOGROUP Radio_Form ;
-         OPTIONS { 'Automatic' , 'ooHG IDE+ (by Ciro Vargas Clemow)' , 'HMGSIDE (by Walter Formigoni)' } ;
+         OPTIONS { 'Automatic' , 'ooHG IDE+ (by Ciro Vargas)' , 'HMGS-IDE (by Walter Formigoni)' } ;
          VALUE Prj_Radio_FormTool ;
          WIDTH 200
 
