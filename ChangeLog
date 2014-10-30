@@ -8,6 +8,10 @@
  * See "How to format your ChangeLog entries" in howtosvn.txt file.
  */
 
+2014-10-30 19:35:00 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * ./QPM.PRG
+     * Parameter changed to uppercase.
+
 2014-08-08 23:10:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * ./TODO
      * Updated.
