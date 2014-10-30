@@ -6649,7 +6649,7 @@ Function QPM_Build2()
          do case
             case IsMinGW
                if bLogActivity
-                  Out := Out + PUB_cCharTab + '-$(REDIR) $(DEF_SLASH) -List' + US_ShortName(PUB_cQPM_Folder) + ' $(COBJFLAGS) $** -o$@' + Hb_OsNewLine()
+                  Out := Out + PUB_cCharTab + '-$(REDIR) $(DEF_SLASH) -LIST' + US_ShortName(PUB_cQPM_Folder) + ' $(COBJFLAGS) $** -o$@' + Hb_OsNewLine()
                else
                   Out := Out + PUB_cCharTab + '-$(REDIR) $(DEF_SLASH) $(COBJFLAGS) $** -o$@' + Hb_OsNewLine()
                endif
