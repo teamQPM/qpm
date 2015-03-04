@@ -348,7 +348,11 @@ Function QPM_DirValid( cDir , cTipo )
                bReto:=.T.
             endif
          case cTipo == DefineExtended1 + DefineMinGW + DefineHarbour
-            if File( cDir + DEF_SLASH + "BIN" + DEF_SLASH + "HARBOUR.exe" ) .and. ( File( cDir + DEF_SLASH + "LIB" + DEF_SLASH + "librtl.a" ) .or. File( cDir + DEF_SLASH + "LIB" + DEF_SLASH + "libhbrtl.a" ) )
+            if File( cDir + DEF_SLASH + "BIN" + DEF_SLASH + "HARBOUR.exe" ) .and. ;
+               ( File( cDir + DEF_SLASH + "LIB" + DEF_SLASH + "librtl.a" ) .or. ;
+                 File( cDir + DEF_SLASH + "LIB" + DEF_SLASH + "libhbrtl.a" ) .or. ;
+                 File( cDir + DEF_SLASH + "LIB" + DEF_SLASH + "WIN" + DEF_SLASH + "MINGW" + DEF_SLASH + "librtl.a" ) .or. ;
+                 File( cDir + DEF_SLASH + "LIB" + DEF_SLASH + "WIN" + DEF_SLASH + "MINGW" + DEF_SLASH + "libhbrtl.a" ) )
                bReto:=.T.
             endif
          case cTipo == DefineOohg3 + DefineBorland + DefineHarbour
@@ -356,7 +360,11 @@ Function QPM_DirValid( cDir , cTipo )
                bReto:=.T.
             endif
          case cTipo == DefineOohg3 + DefineMinGW + DefineHarbour
-            if File( cDir + DEF_SLASH + "BIN" + DEF_SLASH + "HARBOUR.exe" ) .and. ( File( cDir + DEF_SLASH + "LIB" + DEF_SLASH + "librtl.a" ) .or. File( cDir + DEF_SLASH + "LIB" + DEF_SLASH + "libhbrtl.a" ) )
+            if File( cDir + DEF_SLASH + "BIN" + DEF_SLASH + "HARBOUR.exe" ) .and. ;
+               ( File( cDir + DEF_SLASH + "LIB" + DEF_SLASH + "librtl.a" ) .or. ;
+                 File( cDir + DEF_SLASH + "LIB" + DEF_SLASH + "libhbrtl.a" ) .or. ;
+                 File( cDir + DEF_SLASH + "LIB" + DEF_SLASH + "WIN" + DEF_SLASH + "MINGW" + DEF_SLASH + "librtl.a" ) .or. ;
+                 File( cDir + DEF_SLASH + "LIB" + DEF_SLASH + "WIN" + DEF_SLASH + "MINGW" + DEF_SLASH + "libhbrtl.a" ) )
                bReto:=.T.
             endif
          case cTipo == DefineOohg3 + DefinePelles + DefineHarbour
@@ -480,6 +488,39 @@ Function GetHarbourLibFolder( lLong )
          File( cDir + DEF_SLASH + "WIN" + DEF_SLASH + cCompDir + DEF_SLASH + "libhbrtl.a" )
          cDir += DEF_SLASH + "WIN" + DEF_SLASH + cCompDir
       endif
+   endif
+
+Return cDir
+
+Function GetMiniguiLibFolder( lLong )
+   Local cDir, cCompDir
+
+   DEFAULT lLong TO .F.
+   if lLong
+     cDir := GetMiniGuiFolder() + DEF_SLASH + 'LIB'
+   else
+     cDir := US_ShortName( GetMiniGuiFolder() ) + DEF_SLASH + 'LIB'
+   endif
+
+   if QPM_IsXHarbour()
+      cCompDir := "XHB"
+   else
+      cCompDir := "HB"
+   endif
+   cCompDir += DEF_SLASH
+   do case
+   case GetCppSuffix() == DefineBorland
+      cCompDir += "BCC"
+   case GetCppSuffix() == DefineMinGW
+      cCompDir += "MINGW"
+   case GetCppSuffix() == DefinePelles
+      cCompDir += "PELLES"
+   otherwise
+      cCompDir += "XXX"
+   endcase
+
+   if File( cDir + DEF_SLASH + cCompDir + DEF_SLASH + GetMiniGuiName() )
+      cDir += DEF_SLASH + cCompDir
    endif
 
 Return cDir

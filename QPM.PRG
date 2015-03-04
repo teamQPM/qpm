@@ -5324,6 +5324,7 @@ Function QPM_Build2()
    Local cExtraFoldersC := ""
    Local cResourceFileName
    Local CCOMPILERFOLDER := US_ShortName( &( "Gbl_T_C_"+GetMiniGuiSuffix()+GetCppSuffix() ) ) + DEF_SLASH + "BIN"
+   Local cAux
 
    BUILD_IN_PROGRESS := .T.
    LiberoWindowsHotKeys(.F.)
@@ -5698,19 +5699,32 @@ Function QPM_Build2()
      //  aadd( vConcatIncludeHB , vExtraFoldersForSearch[i] + if( bExtraFolderSearchRoot , DEF_SLASH , "" ) )
          aadd( vConcatIncludeC  , vExtraFoldersForSearch[i] )
      //  aadd( vConcatIncludeC  , vExtraFoldersForSearch[i] + if( bExtraFolderSearchRoot , DEF_SLASH , "" ) )
-         do case
+
+         cAux := US_ShortName( vExtraFoldersForSearch[i] ) + if( bExtraFolderSearchRoot , DEF_SLASH , "" )
+         if ! cAux $ cExtraFoldersHB
+            do case
             case IsMinGW
-               cExtraFoldersHB := cExtraFoldersHB + ";" + US_ShortName( vExtraFoldersForSearch[i] ) + if( bExtraFolderSearchRoot , DEF_SLASH , "" )
-               cExtraFoldersC  := cExtraFoldersC  + " -I" + US_ShortName( vExtraFoldersForSearch[i] ) + if( bExtraFolderSearchRoot , DEF_SLASH , "" )
+               cExtraFoldersHB := cExtraFoldersHB + ";" + cAux
             case IsPelles
-               cExtraFoldersHB := cExtraFoldersHB + ";" + US_ShortName( vExtraFoldersForSearch[i] ) + if( bExtraFolderSearchRoot , DEF_SLASH , "" )
-               cExtraFoldersC  := cExtraFoldersC  + " /I" + US_ShortName( vExtraFoldersForSearch[i] ) + if( bExtraFolderSearchRoot , DEF_SLASH , "" )
+               cExtraFoldersHB := cExtraFoldersHB + ";" + cAux
             case IsBorland
-               cExtraFoldersHB := cExtraFoldersHB + ";" + US_ShortName( vExtraFoldersForSearch[i] ) + if( bExtraFolderSearchRoot , DEF_SLASH , "" )
-               cExtraFoldersC  := cExtraFoldersC  + ";" + US_ShortName( vExtraFoldersForSearch[i] ) + if( bExtraFolderSearchRoot , DEF_SLASH , "" )
+               cExtraFoldersHB := cExtraFoldersHB + ";" + cAux
             otherwise
                US_Log( "Error 5464" )
-         endcase
+            endcase
+         endif
+         if ! cAux $ cExtraFoldersC
+            do case
+            case IsMinGW
+               cExtraFoldersC  := cExtraFoldersC  + " -I" + cAux
+            case IsPelles
+               cExtraFoldersC  := cExtraFoldersC  + " /I" + cAux
+            case IsBorland
+               cExtraFoldersC  := cExtraFoldersC  + ";" + cAux
+            otherwise
+               US_Log( "Error 5464" )
+            endcase
+         endif
       endif
    Next i
    // INI - El siguiente es un parche para cuando el ultimo folder a agregar en Search es del formato "C:",
@@ -5840,7 +5854,7 @@ Function QPM_Build2()
    Out := Out + 'US_SHELL_EXE = ' + US_ShortName(PUB_cQPM_Folder) + DEF_SLASH + 'US_SHELL.EXE QPM' + Hb_OsNewLine()
    Out := Out + 'DIR_HB_INCLUDE = ' + cExtraFoldersHB + Hb_OsNewLine()
    Out := Out + 'DIR_C_INCLUDE = ' + cExtraFoldersC + Hb_OsNewLine()
-   Out := Out + 'DIR_MINIGUI_LIB = ' + US_ShortName(GetMiniGuiFolder()+DEF_SLASH + 'lib') + Hb_OsNewLine()
+   Out := Out + 'DIR_MINIGUI_LIB = ' + GetMiniguiLibFolder( .F. ) + Hb_OsNewLine()
    Out := Out + 'DIR_COMPC_LIB = ' + US_ShortName(GetCppFolder()) + DEF_SLASH + 'LIB' + Hb_OsNewLine()
    Out := Out + 'DIR_HARBOUR_LIB = ' + GetHarbourLibFolder( .F. ) + Hb_OsNewLine()
    Out := Out + 'DIR_PROJECT = ' + US_ShortName(PUB_cProjectFolder) + Hb_OsNewLine()
@@ -5848,11 +5862,15 @@ Function QPM_Build2()
    Out := Out + 'DIR_OBJECTS = ' + US_ShortName(PUB_cProjectFolder) + DEF_SLASH + GetObjName() + Hb_OsNewLine()
    Out := Out + 'C_DIR = ' + US_ShortName(PUB_cProjectFolder) + DEF_SLASH + GetObjName() + Hb_OsNewLine()
    Out := Out + 'USER_FLAGS_HARBOUR = '+GetProperty( "VentanaMain" , "OverrideCompile" , "value" ) + Hb_OsNewLine()
-   Out := Out + 'USER_FLAGS_LINK = '+GetProperty( "VentanaMain" , "OverrideLink" , "value" ) + Hb_OsNewLine()
+   Out := Out + 'USER_FLAGS_LINK = '+ GetProperty( "VentanaMain" , "OverrideLink" , "value" ) + Hb_OsNewLine()
 
    if !bConvert
       cPrj_Version := GetPrjVersion()
-      Out := Out + 'HARBOUR_FLAGS = /D__QPM_VERSION__="' + "'" + PUB_cQPM_Version2 + "'" + '" /D__PRJ_VERSION__="'+"'"+cPrj_Version+"'"+'" /D__PROJECT_FOLDER__="'+"'"+VentanaMain.TProjectFolder.Value+"'"+ '" /n' + If(PUB_bDebugActive,' /b','') + ' $(USER_FLAGS_HARBOUR) /i$(DIR_HB_INCLUDE) ' + Hb_OsNewLine()
+      if Empty( GetProperty( "VentanaMain" , "OverrideCompile" , "value" ) )
+         Out := Out + 'HARBOUR_FLAGS = /D__QPM_VERSION__="' + "'" + PUB_cQPM_Version2 + "'" + '" /D__PRJ_VERSION__="'+"'"+cPrj_Version+"'"+'" /D__PROJECT_FOLDER__="'+"'"+VentanaMain.TProjectFolder.Value+"'"+ '" /n' + If(PUB_bDebugActive,' /b','') + ' /i$(DIR_HB_INCLUDE) ' + Hb_OsNewLine()
+      else
+         Out := Out + 'HARBOUR_FLAGS = /D__QPM_VERSION__="' + "'" + PUB_cQPM_Version2 + "'" + '" /D__PRJ_VERSION__="'+"'"+cPrj_Version+"'"+'" /D__PROJECT_FOLDER__="'+"'"+VentanaMain.TProjectFolder.Value+"'"+ '" /n' + If(PUB_bDebugActive,' /b','') + ' $(USER_FLAGS_HARBOUR) /i$(DIR_HB_INCLUDE) ' + Hb_OsNewLine()
+      endif
       if PUB_xHarbourMT = "MT"
          if !IsMinGW
             Out := Out + 'COBJFLAGS =  -c -O2 -tWM -M  -I$(DIR_C_INCLUDE) -L'+ US_ShortName(GetCppFolder()) + DEF_SLASH + 'LIB' + Hb_OsNewLine()
@@ -6191,9 +6209,9 @@ Function QPM_Build2()
 /*
  * Add search folders to script.ld
  */
-                  Out := Out + PUB_cCharTab + 'echo SEARCH_DIR( $(DIR_MINIGUI)'+DEF_SLASH+'lib ) >> _'+PUB_cSecu+'Script.ld ' + Hb_OsNewLine()
+                  Out := Out + PUB_cCharTab + 'echo SEARCH_DIR( $(DIR_MINIGUI_LIB) ) >> _'+PUB_cSecu+'Script.ld ' + Hb_OsNewLine()
                   Out := Out + PUB_cCharTab + 'echo SEARCH_DIR( $(DIR_HARBOUR_LIB) ) >> _'+PUB_cSecu+'Script.ld ' + Hb_OsNewLine()
-                  Out := Out + PUB_cCharTab + 'echo SEARCH_DIR( $(DIR_COMPC)'+DEF_SLASH+'lib ) >> _'+PUB_cSecu+'Script.ld ' + Hb_OsNewLine()
+                  Out := Out + PUB_cCharTab + 'echo SEARCH_DIR( $(DIR_COMPC_LIB) ) >> _'+PUB_cSecu+'Script.ld ' + Hb_OsNewLine()
                   For i := 1 To Len( &("vExtraFoldersForLibs"+GetSuffix()) )
                      if !empty( &("vExtraFoldersForLibs"+GetSuffix()+"["+str(i)+"]") ) .and. ;
                          !(&("vExtraFoldersForLibs"+GetSuffix()+"["+str(i)+"]") == upper( GetCppFolder()+DEF_SLASH + 'lib' ) ) .and. ;
@@ -6520,7 +6538,11 @@ Function QPM_Build2()
  * Las versiones nuevas de gcc no suportan el flag -mno-cygwin
                   Out := Out + PUB_cCharTab + '$(REDIR) $(ILINK_EXE) -Wall -mno-cygwin $(USER_FLAGS_LINK) -o $(APP_NAME) ' + (CCOMPILERFOLDER+DEF_SLASH+'_'+PUB_cSecu+'Script.ld') + if( bConsole , ' -mconsole ' , if( PUB_bDebugActive , ' ' , ' -mwindows ') ) + Hb_OsNewLine()
  */
-                  Out := Out + PUB_cCharTab + '$(REDIR) $(ILINK_EXE) -Wall $(USER_FLAGS_LINK) -o $(APP_NAME) ' + (CCOMPILERFOLDER+DEF_SLASH+'_'+PUB_cSecu+'Script.ld') + if( bConsole , ' -mconsole ' , if( PUB_bDebugActive , ' ' , ' -mwindows ') ) + Hb_OsNewLine()
+                  if Empty( GetProperty( "VentanaMain" , "OverrideLink" , "value" ) )
+                     Out := Out + PUB_cCharTab + '$(REDIR) $(ILINK_EXE) -Wall -o $(APP_NAME) ' + (CCOMPILERFOLDER+DEF_SLASH+'_'+PUB_cSecu+'Script.ld') + if( bConsole , ' -mconsole ' , if( PUB_bDebugActive , ' ' , ' -mwindows ') ) + Hb_OsNewLine()
+                  else
+                     Out := Out + PUB_cCharTab + '$(REDIR) $(ILINK_EXE) -Wall $(USER_FLAGS_LINK) -o $(APP_NAME) ' + (CCOMPILERFOLDER+DEF_SLASH+'_'+PUB_cSecu+'Script.ld') + if( bConsole , ' -mconsole ' , if( PUB_bDebugActive , ' ' , ' -mwindows ') ) + Hb_OsNewLine()
+                  endif
                   if bUpx
                      Out := Out + PUB_cCharTab + '$(US_MSG_EXE) $(DIR_PROJECT)' + DEF_SLASH + '_'+PUB_cSecu+'Progress.Log -MSG:Compressing ' + cOutputNameDisplay + ' with UPX ...' + Hb_OsNewLine()
                      Out := Out + PUB_cCharTab + '$(US_UPX_EXE) ' + cUpxOpt + ' ' + cOutputName + ' ' + Hb_OsNewLine()
@@ -6547,14 +6569,18 @@ Function QPM_Build2()
             do case
                case cOutputType == "SRCEXE"
                   Out := Out + PUB_cCharTab + '$(US_MSG_EXE) $(DIR_PROJECT)' + DEF_SLASH + '_'+PUB_cSecu+'Progress.Log -MSG:Linking to make ' + cOutputNameDisplay + ' ...' + Hb_OsNewLine()
-                  Out := Out + PUB_cCharTab + '$(ILINK_EXE) ' + if( !bConsole , If( !PUB_bDebugActive,' /SUBSYSTEM:WINDOWS ',' /SUBSYSTEM:CONSOLE ') , ' /SUBSYSTEM:CONSOLE ' ) +' $(USER_FLAGS_LINK) @_'+PUB_cSecu+'Script.ld' + Hb_OsNewLine()
+                  if Empty( GetProperty( "VentanaMain" , "OverrideLink" , "value" ) )
+                     Out := Out + PUB_cCharTab + '$(ILINK_EXE) ' + if( !bConsole, If( !PUB_bDebugActive,'/SUBSYSTEM:WINDOWS ','/SUBSYSTEM:CONSOLE ') , '/SUBSYSTEM:CONSOLE ' ) + '@_' + PUB_cSecu + 'Script.ld' + Hb_OsNewLine()
+                  else
+                     Out := Out + PUB_cCharTab + '$(ILINK_EXE) ' + if( !bConsole, If( !PUB_bDebugActive,'/SUBSYSTEM:WINDOWS ','/SUBSYSTEM:CONSOLE ') , '/SUBSYSTEM:CONSOLE ' ) + '$(USER_FLAGS_LINK) @_' + PUB_cSecu + 'Script.ld' + Hb_OsNewLine()
+                  endif
                   if bUpx
                      Out := Out + PUB_cCharTab + '$(US_MSG_EXE) $(DIR_PROJECT)' + DEF_SLASH + '_'+PUB_cSecu+'Progress.Log -MSG:Compressing ' + cOutputNameDisplay + ' with UPX ...' + Hb_OsNewLine()
                      Out := Out + PUB_cCharTab + '$(US_UPX_EXE) ' + cUpxOpt + ' ' + cOutputName + Hb_OsNewLine()
                   endif
                case cOutputType == "SRCDLL"
                   Out := Out + PUB_cCharTab + '$(US_MSG_EXE) $(DIR_PROJECT)' + DEF_SLASH + '_'+PUB_cSecu+'Progress.Log -MSG:Making Dynamic Library (DLL) ' + cOutputNameDisplay + ' ...' + Hb_OsNewLine()
-                  Out := Out + PUB_cCharTab + '$(ILINK_EXE) ' + if( !bConsole , ' -Gn -Tpd '+If(PUB_bDebugActive,' -ap ',' -aa ') , ' -x -Gn -Tpd ' ) +' -L'+ US_ShortName(GetCppFolder()) + DEF_SLASH + 'LIB' + ' @_'+PUB_cSecu+'Script.ld' + Hb_OsNewLine()
+                  Out := Out + PUB_cCharTab + '$(ILINK_EXE) ' + if( !bConsole, '-Gn -Tpd '+If(PUB_bDebugActive,'-ap ','-aa '), '-x -Gn -Tpd ' ) + '-L' + US_ShortName(GetCppFolder()) + DEF_SLASH + 'LIB ' + '@_'+PUB_cSecu+'Script.ld' + Hb_OsNewLine()
                case cOutputType == "SRCLIB"
                   Out := Out + PUB_cCharTab + '$(US_MSG_EXE) $(DIR_PROJECT)' + DEF_SLASH + '_'+PUB_cSecu+'Progress.Log -MSG:Making Library ' + cOutputNameDisplay + ' ...' + Hb_OsNewLine()
                   Out := Out + PUB_cCharTab + '$(TLIB_EXE) @_'+PUB_cSecu+'Script.ld' + Hb_OsNewLine()
@@ -6565,14 +6591,18 @@ Function QPM_Build2()
             do case
                case cOutputType == "SRCEXE"
                   Out := Out + PUB_cCharTab + '$(US_MSG_EXE) $(DIR_PROJECT)' + DEF_SLASH + '_'+PUB_cSecu+'Progress.Log -MSG:Linking to make ' + cOutputNameDisplay + ' ...' + Hb_OsNewLine()
-                  Out := Out + PUB_cCharTab + '$(ILINK_EXE) ' + if( !bConsole , ' -Gn -Tpe '+If(PUB_bDebugActive,' -ap ',' -aa ') , ' -x -Gn ' ) +' $(USER_FLAGS_LINK) -L'+ US_ShortName(GetCppFolder()) + DEF_SLASH + 'LIB' + ' @_'+PUB_cSecu+'Script.ld' + Hb_OsNewLine()
+                  if Empty( GetProperty( "VentanaMain" , "OverrideLink" , "value" ) )
+                     Out := Out + PUB_cCharTab + '$(ILINK_EXE) ' + if( !bConsole, '-Gn -Tpe '+If(PUB_bDebugActive,'-ap ','-aa '), '-x -Gn ' ) + '-L' + US_ShortName(GetCppFolder()) + DEF_SLASH + 'LIB ' + '@_'+PUB_cSecu+'Script.ld' + Hb_OsNewLine()
+                  else
+                     Out := Out + PUB_cCharTab + '$(ILINK_EXE) ' + if( !bConsole, '-Gn -Tpe '+If(PUB_bDebugActive,'-ap ','-aa '), '-x -Gn ' ) + '$(USER_FLAGS_LINK) -L' + US_ShortName(GetCppFolder()) + DEF_SLASH + 'LIB ' + '@_'+PUB_cSecu+'Script.ld' + Hb_OsNewLine()
+                  endif
                   if bUpx
                      Out := Out + PUB_cCharTab + '$(US_MSG_EXE) $(DIR_PROJECT)' + DEF_SLASH + '_'+PUB_cSecu+'Progress.Log -MSG:Compressing ' + cOutputNameDisplay + ' with UPX ...' + Hb_OsNewLine()
                      Out := Out + PUB_cCharTab + '$(US_UPX_EXE) ' + cUpxOpt + ' ' + cOutputName + Hb_OsNewLine()
                   endif
                case cOutputType == "SRCDLL"
                   Out := Out + PUB_cCharTab + '$(US_MSG_EXE) $(DIR_PROJECT)' + DEF_SLASH + '_'+PUB_cSecu+'Progress.Log -MSG:Making Dynamic Library (DLL) ' + cOutputNameDisplay + ' ...' + Hb_OsNewLine()
-                  Out := Out + PUB_cCharTab + '$(ILINK_EXE) ' + if( !bConsole , ' -Gn -Tpd '+If(PUB_bDebugActive,' -ap ',' -aa ') , ' -x -Gn -Tpd ' ) +' -L'+ US_ShortName(GetCppFolder()) + DEF_SLASH + 'LIB' + ' @_'+PUB_cSecu+'Script.ld' + Hb_OsNewLine()
+                  Out := Out + PUB_cCharTab + '$(ILINK_EXE) ' + if( !bConsole , '-Gn -Tpd '+If(PUB_bDebugActive,'-ap ','-aa '), '-x -Gn -Tpd ' ) + '-L' + US_ShortName(GetCppFolder()) + DEF_SLASH + 'LIB ' + '@_'+PUB_cSecu+'Script.ld' + Hb_OsNewLine()
                case cOutputType == "SRCLIB"
                   Out := Out + PUB_cCharTab + '$(US_MSG_EXE) $(DIR_PROJECT)' + DEF_SLASH + '_'+PUB_cSecu+'Progress.Log -MSG:Making Library ' + cOutputNameDisplay + ' ...' + Hb_OsNewLine()
                   // La siguiente linea tiene el string *AMPERSAND* porque en el sistema operativo Windows 2003 Server Enterprise Edition si codifico el & no funciona el PIPE (>)
@@ -6640,7 +6670,7 @@ Function QPM_Build2()
             Out := Out + PUB_cCharTab + if(! bLogActivity, '@', '') + '$(US_SHELL_EXE) ' + if(! bLogActivity, '-OFF ', '') + 'CHECKRC NOTFILE $@' + Hb_OsNewLine()
          endif
          Out := Out + Hb_OsNewLine()
-         Out := Out + PUB_cCharTab + '$(US_MSG_EXE) $(DIR_PROJECT)' + DEF_SLASH + '_'+PUB_cSecu+'Progress.Log -MSG:Processing ' + US_FileNameOnlyName( PRGFILES[i] ) + '.o ...' + Hb_OsNewLine()
+         Out := Out + PUB_cCharTab + '$(US_MSG_EXE) $(DIR_PROJECT)' + DEF_SLASH + '_'+PUB_cSecu+'Progress.Log -MSG:Processing ' + US_FileNameOnlyName( PRGFILES[i] ) + '.' + if( upper( US_FileNameOnlyExt( PRGFILES[i] ) ) == "CPP" , 'cpp' , 'c' ) + ' ...' + Hb_OsNewLine()
          if IsMinGW
             Out := Out + '$(DIR_OBJECTS)' + DEF_SLASH + US_FileNameOnlyName( PRGFILES[i] ) + '.o : $(C_DIR)' + DEF_SLASH + US_FileNameOnlyName( PRGFILES[i] ) + '.' + if( upper( US_FileNameOnlyExt( PRGFILES[i] ) ) == "CPP" , 'cpp' , 'c' ) + Hb_OsNewLine()
          else
@@ -7753,6 +7783,9 @@ Function TranslateLog( Log )
    NewLog := StrTran( NewLog, PRJ_Ver,           "" )
    NewLog := StrTran( NewLog, PRJ_Folder,        "" )
    NewLog := StrTran( NewLog, cDelete,           "" )
+   NewLog := StrTran( NewLog, "   -o",           " -o" )
+   NewLog := StrTran( NewLog, " -o",             "  -o" )
+   NewLog := StrTran( NewLog, "  -o ",           " -o " )
    If US_Word( memoread( PUB_cProjectFolder + DEF_SLASH + '_' + PUB_cSecu + 'End.Txt' ), 1 ) == "OK"
       For w := 1 to len( vWarnings )
          If At( vWarnings[w][1], NewLog ) > 0
@@ -8086,7 +8119,7 @@ Function xRefPrgFmg()
    Local f:=0 , c:=0 , p:=0 , Fol := PUB_cProjectFolder+DEF_SLASH , MemoAux:=""
    Private vScanned := {} , vPRGFiles := {} , vPANFiles := {}
    MemoAux := memoread( PUB_cProjectFolder + DEF_SLASH + '_'+PUB_cSecu+'Progress.Log' )
-   QPM_MemoWrit( PUB_cProjectFolder + DEF_SLASH + '_'+PUB_cSecu+'Progress.Log' , MemoAux + US_TimeDis( Time() ) + " - Checking cross reference between PRG files and FMG files..." + HB_OsNewLine() )
+   QPM_MemoWrit( PUB_cProjectFolder + DEF_SLASH + '_'+PUB_cSecu+'Progress.Log' , MemoAux + US_TimeDis( Time() ) + " - Checking cross references between PRG files and FMG files..." + HB_OsNewLine() )
    if bLogActivity
       QPM_MemoWrit( PUB_cQPM_Folder+DEF_SLASH + "QPM.log" , memoread( PUB_cQPM_Folder+DEF_SLASH + "QPM.log" ) + HB_OSNewLine() + "xRefPrgFmg Initialize" )
    endif
@@ -8192,7 +8225,7 @@ Return bLoadWindow
 Function xRefPrgHea()
    Local f:=0 , c:=0 , p:=0 , Fol := PUB_cProjectFolder+DEF_SLASH
    Private vScanned := {} , vPRGFiles := {} , vHEAFiles := {}
-   QPM_MemoWrit( PUB_cProjectFolder + DEF_SLASH + '_'+PUB_cSecu+'Progress.Log' , US_TimeDis( Time() ) + " - Checking cross reference between PRG files and Headers files..." + HB_OsNewLine() )
+   QPM_MemoWrit( PUB_cProjectFolder + DEF_SLASH + '_'+PUB_cSecu+'Progress.Log' , US_TimeDis( Time() ) + " - Checking cross references between PRG files and Header files..." + HB_OsNewLine() )
    if bLogActivity
       QPM_MemoWrit( PUB_cQPM_Folder+DEF_SLASH + "QPM.log" , memoread( PUB_cQPM_Folder+DEF_SLASH + "QPM.log" ) + HB_OSNewLine() + "xRefPrgHea Initialize" )
    endif
