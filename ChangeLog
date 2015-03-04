@@ -8,6 +8,16 @@
  * See "How to format your ChangeLog entries" in howtosvn.txt file.
  */
 
+2015-03-04 20:36:00 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * ./QPM_Functions.PRG
+     ! Support for Harbour 3.2 and MINGW.
+   * ./QPM.PRG
+     * Show "Processing file.c" instead of "Processing file.o".
+     ! Duplicate folders in DIR_HB_INCLUDE and DIR_C_INCLUDE.
+   * ./QPM_AutoProject.qpm
+   * ./QPM.EXE
+     * Updated.
+
 2014-10-30 19:35:00 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * ./QPM.PRG
      * Parameter changed to uppercase.
