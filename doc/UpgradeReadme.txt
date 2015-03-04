@@ -39,7 +39,7 @@ COMO INSTALAR ESSE UPGRADE
 ==========================
 
 [1] Na pasta de instalação atual, renomeie o arquivo QPM.EXE
-    como QPM.EXE.05_03_22
+    como QPM.EXE.OLD
 [2] Copie o novo QPM.EXE a pasta de instalação atual.
 
 
@@ -47,4 +47,4 @@ COMO REMOVER ESSE UPGRADE
 =========================
 
 [1] Exclua o arquivo QPM.EXE
-[2] Renomeie o arquivo QPM.EXE.05_03_22 como QPM.EXE
+[2] Renomeie o arquivo QPM.EXE.OLD como QPM.EXE
