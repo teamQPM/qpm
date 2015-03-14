@@ -1,5 +1,5 @@
 VERSION 05 04 01                                                                                                                                                                                                                                              
-PRJ_VERSION 05 04 0001
+PRJ_VERSION 05 04 0003
 PROJECTFOLDER <ThisFolder>                                                                                                                                                                                                                                    
 LASTLIBFOLDERM1BH                                                                                                                                                                                                                                             
 LASTLIBFOLDERM1BX                                                                                                                                                                                                                                             
@@ -58,6 +58,7 @@ EXTRARUNEXEWAIT .T.
 EXTRARUNEXEPAUSE .T.                                                                                                                                                                                                                                          
 EXTRARUNFREEWAIT .T.                                                                                                                                                                                                                                          
 EXTRARUNFREEPAUSE .T.                                                                                                                                                                                                                                         
+DEBUGACTIVE NO                                                                                                                                                                                                                                                
 MI_BEXEASSOCIATION .F.                                                                                                                                                                                                                                        
 MI_CEXEASSOCIATION                                                                                                                                                                                                                                            
 MI_NEXEASSOCIATIONICON 0000000001                                                                                                                                                                                                                             

@@ -502,25 +502,27 @@ Function GetMiniguiLibFolder( lLong )
      cDir := US_ShortName( GetMiniGuiFolder() ) + DEF_SLASH + 'LIB'
    endif
 
-   if QPM_IsXHarbour()
-      cCompDir := "XHB"
-   else
-      cCompDir := "HB"
-   endif
-   cCompDir += DEF_SLASH
-   do case
-   case GetCppSuffix() == DefineBorland
-      cCompDir += "BCC"
-   case GetCppSuffix() == DefineMinGW
-      cCompDir += "MINGW"
-   case GetCppSuffix() == DefinePelles
-      cCompDir += "PELLES"
-   otherwise
-      cCompDir += "XXX"
-   endcase
+   if Prj_Check_HarbourIs31
+      if QPM_IsXHarbour()
+         cCompDir := "XHB"
+      else
+         cCompDir := "HB"
+      endif
+      cCompDir += DEF_SLASH
+      do case
+      case GetCppSuffix() == DefineBorland
+         cCompDir += "BCC"
+      case GetCppSuffix() == DefineMinGW
+         cCompDir += "MINGW"
+      case GetCppSuffix() == DefinePelles
+         cCompDir += "PELLES"
+      otherwise
+         cCompDir += "XXX"
+      endcase
 
-   if File( cDir + DEF_SLASH + cCompDir + DEF_SLASH + GetMiniGuiName() )
-      cDir += DEF_SLASH + cCompDir
+      if File( cDir + DEF_SLASH + cCompDir + DEF_SLASH + GetMiniGuiName() )
+         cDir += DEF_SLASH + cCompDir
+      endif
    endif
 
 Return cDir
@@ -1502,6 +1504,21 @@ Function ReplacePrjVersion( cFile , cPrjVersion )
          US_Word( cLine , 1 ) == "PRJ_VERSION"
          bFound := .T.
          cMemoOut := cMemoOut + "PRJ_VERSION " + cPrjVersion + HB_OsNewLine()
+      else
+         cMemoOut := cMemoOut + cLine + HB_OsNewLine()
+      endif
+   Next
+   QPM_MemoWrit( cFile , cMemoOut )
+Return .T.
+
+Function ReplaceDebugActive( cFile , bDebugActive )
+   Local cMemo := MemoRead( cFile ) , nInx := 0 , cLine := "" , cMemoOut := "" , bFound := .F.
+   For nInx := 1 to MLCount( cMemo , 254 )
+      cLine := Memoline( cMemo , 254 , nInx )
+      if !bFound .and. ;
+         US_Word( cLine , 1 ) == "DEBUGACTIVE"
+         bFound := .T.
+         cMemoOut := cMemoOut + "DEBUGACTIVE " + IF( bDebugActive, "YES", "NO" ) + HB_OsNewLine()
       else
          cMemoOut := cMemoOut + cLine + HB_OsNewLine()
       endif
