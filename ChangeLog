@@ -8,9 +8,15 @@
  * See "How to format your ChangeLog entries" in howtosvn.txt file.
  */
 
-2015-03-04 20:58:00 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2015-03-14 18:30:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * ./QPM_AutoProject.qpm
+   * ./QPM.EXE
+   * ./QPM.PRG
+     ! Access to OOHG libraries for new releases.
+     * Version to 05_04_01.
    * doc/UpgradeReadme.txt
-     ! Wrong extension.
+   * ./QPM_Functions.PRG
+     ! Support for Harbour 3.2 and MINGW.
 
 2015-03-04 20:36:00 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * ./QPM_Functions.PRG
