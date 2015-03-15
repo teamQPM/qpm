@@ -627,11 +627,11 @@ Function GlobalSettings()
 
          END PAGE
 
-         //-- Object Oriented Harbour GUI 3.x with Borland ---------------------------------------//
-         DEFINE PAGE "OOHG 3.x with Borland C"
+         //-- Object Oriented Harbour GUI with Borland ---------------------------------------//
+         DEFINE PAGE "OOHG with Borland C"
 
             @ 43 , 10 LABEL &("LDummy_"+DefineOohg3+DefineBorland) ;
-               VALUE 'Folders for Object Oriented Harbour GUI 3.x with Borland C:' ;
+               VALUE 'Folders for Object Oriented Harbour GUI with Borland C:' ;
                WIDTH 601 ;
                FONT 'arial' SIZE 10 BOLD ;
                TRANSPARENT ;
@@ -731,11 +731,11 @@ Function GlobalSettings()
 
          END PAGE
 
-         //-- Object Oriented Harbour GUI 3.x with MinGW -----------------------------------------//
-         DEFINE PAGE "OOHG 3.x with MinGW"
+         //-- Object Oriented Harbour GUI with MinGW -----------------------------------------//
+         DEFINE PAGE "OOHG with MinGW"
 
             @ 43 , 10 LABEL &("LDummy_"+DefineOohg3+DefineMinGW) ;
-               VALUE 'Folders for Object Oriented Harbour GUI 3.x and MinGW:' ;
+               VALUE 'Folders for Object Oriented Harbour GUI and MinGW:' ;
                WIDTH 601 ;
                FONT 'arial' SIZE 10 BOLD ;
                TRANSPARENT ;
@@ -835,11 +835,11 @@ Function GlobalSettings()
 
          END PAGE
 
-         //-- Object Oriented Harbour GUI 3.x with Pelles C --------------------------------------//
-         DEFINE PAGE "OOHG 3.x with Pelles C"
+         //-- Object Oriented Harbour GUI with Pelles C --------------------------------------//
+         DEFINE PAGE "OOHG with Pelles C"
 
             @ 43 , 10 LABEL &("LDummy_"+DefineOohg3+DefinePelles) ;
-               VALUE 'Folders for Object Oriented Harbour GUI 3.x wth Pelles C:' ;
+               VALUE 'Folders for Object Oriented Harbour GUI with Pelles C:' ;
                WIDTH 601 ;
                FONT 'arial' SIZE 10 BOLD ;
                TRANSPARENT ;

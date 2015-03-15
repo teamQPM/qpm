@@ -386,7 +386,7 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
    QPM_VAR0 Public DefineMiniGui1  := DEF_MG_MINIGUI1     // Oficial MiniGui 1.x
    QPM_VAR0 Public DefineMiniGui3  := DEF_MG_MINIGUI3     // Oficial MiniGui 3.x
    QPM_VAR0 Public DefineExtended1 := DEF_MG_EXTENDED1    // Extended MiniGui 1.x
-   QPM_VAR0 Public DefineOohg3     := DEF_MG_OOHG3        // oohg 3.x
+   QPM_VAR0 Public DefineOohg3     := DEF_MG_OOHG3        // oohg
    QPM_VAR0 Public DefineHarbour   := DEF_MG_HARBOUR      // Harbour
    QPM_VAR0 Public DefineXHarbour  := DEF_MG_XHARBOUR     // xHarbour
    QPM_VAR0 Public DefineBorland   := DEF_MG_BORLAND      // Borland C
@@ -400,12 +400,12 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
                      , { DefineExtended1+DefineBorland+DefineXHarbour , "MiniGUI Extended 1.x with Borland C and xHarbour" } ;
                      , { DefineExtended1+DefineMinGW+DefineHarbour    , "MiniGUI Extended 1.x with MinGW and Harbour" } ;
                      , { DefineExtended1+DefineMinGW+DefineXHarbour   , "MiniGUI Extended 1.x with MinGW and xHarbour" } ;
-                     , { DefineOohg3+DefineBorland+DefineHarbour      , "OOHG 3.x with Borland C and Harbour" } ;
-                     , { DefineOohg3+DefineBorland+DefineXHarbour     , "OOHG 3.x with Borland C and xHarbour" } ;
-                     , { DefineOohg3+DefineMinGW+DefineHarbour        , "OOHG 3.x with MinGW and Harbour" } ;
-                     , { DefineOohg3+DefineMinGW+DefineXHarbour       , "OOHG 3.x with MinGW and xHarbour" } ;
-                     , { DefineOohg3+DefinePelles+DefineHarbour       , "OOHG 3.x with Pelles C and Harbour" } ;
-                     , { DefineOohg3+DefinePelles+DefineXHarbour      , "OOHG 3.x with Pelles C and xHarbour" } ;
+                     , { DefineOohg3+DefineBorland+DefineHarbour      , "OOHG with Borland C and Harbour" } ;
+                     , { DefineOohg3+DefineBorland+DefineXHarbour     , "OOHG with Borland C and xHarbour" } ;
+                     , { DefineOohg3+DefineMinGW+DefineHarbour        , "OOHG with MinGW and Harbour" } ;
+                     , { DefineOohg3+DefineMinGW+DefineXHarbour       , "OOHG with MinGW and xHarbour" } ;
+                     , { DefineOohg3+DefinePelles+DefineHarbour       , "OOHG with Pelles C and Harbour" } ;
+                     , { DefineOohg3+DefinePelles+DefineXHarbour      , "OOHG with Pelles C and xHarbour" } ;
                      , { DefineMiniGui3+DefineMinGW+DefineHarbour     , "MiniGUI Oficial 3.x with MinGW and Harbour" } ;
                      , { DefineMiniGui3+DefineMinGW+DefineXHarbour    , "MiniGUI Oficial 3.x with MinGW and xHarbour" } ;
                      }
@@ -470,7 +470,7 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
    QPM_VAR1 Public vExtraFoldersForLibs DEF_MG_EXTENDED1 DEF_MG_MINGW DEF_MG_XHARBOUR := {}
    QPM_VAR1 Public cLastLibFolder       DEF_MG_EXTENDED1 DEF_MG_MINGW DEF_MG_XHARBOUR := ""
    QPM_VAR1 Public vLibDefault          DEF_MG_EXTENDED1 DEF_MG_MINGW DEF_MG_XHARBOUR := {}
-   /* oohg 1 */
+   /* oohg */
    QPM_VAR2 Public Gbl_T_M_ DEF_MG_OOHG3 DEF_MG_BORLAND := ""
    QPM_VAR2 Public Gbl_T_C_ DEF_MG_OOHG3 DEF_MG_BORLAND := ""
    QPM_VAR2 Public Gbl_T_H_ DEF_MG_OOHG3 DEF_MG_BORLAND := ""
@@ -4240,8 +4240,8 @@ Function QPM_OpenProject2()
       bWarningCpp := .T.
       Prj_Radio_Harbour := DEF_RG_HARBOUR
       Prj_Check_HarbourIs31 := .T.
-      * No Borrar           Prj_Check_34 := .F.
-      Prj_Radio_Cpp      := DEF_RG_BORLAND
+      // No Borrar           Prj_Check_34 := .F.
+      Prj_Radio_Cpp      := DEF_RG_MINGW
       Prj_Radio_MiniGui  := DEF_RG_OOHG3
       Prj_Radio_OutputType := DEF_RG_EXE
       Prj_Radio_OutputCopyMove := 1
