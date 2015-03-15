@@ -537,7 +537,7 @@ Function QPM_CargoLibraries()
    aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineXHarbour ) , cPre+'xRegistry'+cExt )
    aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineXHarbour ) , cPre+'stdc++'+cExt ) /* for c++ */
 
-   // OOHG 3.x con BorlandC and Harbour ( Syncronized to prerelease 2006/07/29 )
+   // OOHG con BorlandC and Harbour ( Syncronized to prerelease 2006/07/29 )
    cPre := ""
    cExt := ".lib"
    &( "vLibDefault"+DefineOohg3+DefineBorland+DefineHarbour ) := {}
@@ -583,7 +583,7 @@ Function QPM_CargoLibraries()
    aadd( &( "vLibDefault"+DefineOohg3+DefineBorland+DefineHarbour ) , cPre+'libmysql'+cExt )
    aadd( &( "vLibDefault"+DefineOohg3+DefineBorland+DefineHarbour ) , cPre+'xHB'+cExt )
 
-   // OOHG 3.x con BorlandC and xHarbour ( Syncronized to prerelease 2006/07/29 )
+   // OOHG con BorlandC and xHarbour ( Syncronized to prerelease 2006/07/29 )
    cPre := ""
    cExt := ".lib"
    &( "vLibDefault"+DefineOohg3+DefineBorland+DefineXHarbour ) := {}
@@ -691,7 +691,7 @@ Function QPM_CargoLibraries()
    aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineHarbour ) , cPre+'socket'+cExt )
    aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineHarbour ) , cPre+'tip'+cExt )
 
-   // OOHG 3.x con MinGW and xHarbour ( Syncronized to prerelease 2006/07/29 )
+   // OOHG con MinGW and xHarbour ( Syncronized to prerelease 2006/07/29 )
    cPre := "LIB"
    cExt := ".a"
    &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineXHarbour ) := {}
@@ -760,7 +760,7 @@ Function QPM_CargoLibraries()
    aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineXHarbour ) , cPre+'xRegistry'+cExt )
    aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineXHarbour ) , cPre+'stdc++'+cExt ) /* for c++ */
 
-   // OOHG 3.x con Pelles C and Harbour ( Syncronized to prerelease 2006/07/29 )
+   // OOHG con Pelles C and Harbour ( Syncronized to prerelease 2006/07/29 )
    cPre := ""
    cExt := ".lib"
    &( "vLibDefault"+DefineOohg3+DefinePelles+DefineHarbour ) := {}
@@ -827,7 +827,7 @@ Function QPM_CargoLibraries()
    aadd( &( "vLibDefault"+DefineOohg3+DefinePelles+DefineHarbour ) , cPre+'xHB'+cExt )
    aadd( &( "vLibDefault"+DefineOohg3+DefinePelles+DefineHarbour ) , cPre+'msimg32'+cExt )
 
-   // OOHG 3.x con Pelles C and xHarbour ( Syncronized to prerelease 2006/07/29 )
+   // OOHG con Pelles C and xHarbour ( Syncronized to prerelease 2006/07/29 )
    cPre := ""
    cExt := ".lib"
    &( "vLibDefault"+DefineOohg3+DefinePelles+DefineXHarbour ) := {}

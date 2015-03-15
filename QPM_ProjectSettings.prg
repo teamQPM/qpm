@@ -106,7 +106,7 @@ Function ProjectSettings()
          FONTCOLOR DEF_COLORBLUE
 
       @ 30 , 300 RADIOGROUP Radio_MiniGui ;
-         OPTIONS { 'MiniGUI Oficial 1.x' , 'MiniGUI Oficial 3.x' , 'MiniGUI Extended 1.x or later' , 'Object Oriented Harbour GUI 3.x' } ;
+         OPTIONS { 'MiniGUI Oficial 1.x' , 'MiniGUI Oficial 3.x' , 'MiniGUI Extended 1.x or later' , 'Object Oriented Harbour GUI' } ;
          VALUE Prj_Radio_MiniGui ;
          WIDTH 200 ;
          TOOLTIP "Select GUI Library Version" ;

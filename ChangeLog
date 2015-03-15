@@ -8,12 +8,27 @@
  * See "How to format your ChangeLog entries" in howtosvn.txt file.
  */
 
+2015-03-15 16:17:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * ./QPM_ProjectSettings.prg
+   * ./QPM_GlobalSettings.prg
+   * ./QPM_Libraries.prg
+   * FuentesComunes/US_Env.h
+     * "OOHG 3.x" by "OOHG".
+   * ./QPM_AutoProject.qpm
+   * ./QPM.EXE
+     * Updated.
+   * ./QPM.PRG
+     * Default value for C Compiler is MinGW.
+     * "OOHG 3.x" by "OOHG".
+   * ./Changelog
+     * Previous entry.
+
 2015-03-14 18:30:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * ./QPM_AutoProject.qpm
    * ./QPM.EXE
    * ./QPM.PRG
      ! Access to OOHG libraries for new releases.
-     * Version to 05_04_01.
+     * Version to 05_04_03.
    * doc/UpgradeReadme.txt
    * ./QPM_Functions.PRG
      ! Support for Harbour 3.2 and MINGW.

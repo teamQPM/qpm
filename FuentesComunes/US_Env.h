@@ -76,10 +76,10 @@
       #define __O3__
       #define __MINIGUI__
       #ifdef __MINGW32__
-         // Object Oriented Harbour Gui 3.x con MinGW
+         // Object Oriented Harbour Gui con MinGW
          #define __O1MINGW32__
       #else
-         // Object Oriented Harbour Gui 3.x con Borland
+         // Object Oriented Harbour Gui con Borland
          #define __O1BORLAND__
       #endif
    #endif
