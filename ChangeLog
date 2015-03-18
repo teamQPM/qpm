@@ -8,6 +8,11 @@
  * See "How to format your ChangeLog entries" in howtosvn.txt file.
  */
 
+2015-03-17 22:32:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * ./QPM.EXE
+   * ./QPM.PRG
+     * Version to 05_04_03.
+
 2015-03-17 22:29:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * ./QPM_Libraries.prg
      + iphlpapi.a to OOHG + MinGW + Harbour builds.
