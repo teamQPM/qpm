@@ -8,6 +8,27 @@
  * See "How to format your ChangeLog entries" in howtosvn.txt file.
  */
 
+2015-03-22 21:56:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * ./QPM.EXE
+   * ./us_shell.exe
+     * Updated.
+   * ./QPM.PRG
+     * Use GetCppFolder() instead of var Gbl_T_C_.
+     * All output to CompilerFolder/BIN/_Temp.log is now directed to
+       ProjectFolder/nnn_Temp.log
+     * Script.ld moved to ProjectFolder.
+     * Use defines for auxiliary filenames.
+     * Some format for readability.
+     + SET MENUSTYLE EXTENDED
+     * Use GridTilde for checkable items in main menu.
+   * ./us_shell.prg
+     * Do not force echo of OK messages.
+   * ./QPM_AutoProject.qpm
+   * ./QPM_US_Shell.qpm
+     * Updated.
+   * resource/GridEquis.bmp
+     * Background color changed to white for better display.
+
 2015-03-17 22:32:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * ./QPM.EXE
    * ./QPM.PRG
