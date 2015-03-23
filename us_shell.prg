@@ -129,7 +129,7 @@ FUNCTION MAIN( ... )
                bError := .T.
             Else
                If FileCopy( cPar2, cPar3 ) == US_FileSize( cPar2 )
-                  Say( "US_Shell 013I: Copy file OK", .T. )
+                  Say( "US_Shell 013I: Copy file OK" )
                   If cPar1 == "COPYZAP"
                      nZap := US_FileChar26Zap( cPar3 )
                      Do Case
@@ -178,7 +178,7 @@ FUNCTION MAIN( ... )
                      Say( "US_Shell 026E: Error in Move file (Original file not deleted !!! )" )
                      bError := .T.
                   Else
-                     Say( "US_Shell 024I: Move file OK", .T. )
+                     Say( "US_Shell 024I: Move file OK" )
                      If cPar1 == "MOVEZAP"
                         nZap := US_FileChar26Zap( cPar3 )
                         Do Case
@@ -615,7 +615,7 @@ FUNCTION MAIN( ... )
                Say( "US_Shell 064E: Error in File Delete !!!" )
                bError := .T.
             Else
-               Say( "US_Shell 065I: File Deleted OK", .T. )
+               Say( "US_Shell 065I: File Deleted OK" )
             EndIf
          Else
             Say( "US_Shell 066E: File not found" )
