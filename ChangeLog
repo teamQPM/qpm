@@ -8,7 +8,20 @@
  * See "How to format your ChangeLog entries" in howtosvn.txt file.
  */
 
-2015-03-22 21:56:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2015-03-24 23:10:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * ./Changelog
+     * Previous entry.
+   * ./QPM.EXE
+     * Updated.
+   * ./QPM.PRG
+     * Some messages.
+     ! Linking with Borland.
+     + /q flag to Harbour compiling.
+     + Redirection of stderr to stdout to make.bat file.
+     * Use short filenames in some ferase commands.
+     ! "-MSG:" strings are not cleaned when translating log.
+
+2015-03-23 21:56:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * ./QPM.EXE
    * ./us_shell.exe
      * Updated.
@@ -32,7 +45,7 @@
 2015-03-17 22:32:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * ./QPM.EXE
    * ./QPM.PRG
-     * Version to 05_04_03.
+     * Version to 05_04_04.
 
 2015-03-17 22:29:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * ./QPM_Libraries.prg
