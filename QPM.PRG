@@ -2693,7 +2693,7 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
                          ROW             40
                          COL             10
                          WIDTH           150
-                         VALUE           'Override Compile Parm:'
+                         VALUE           'Extra Compile Params'
                          TRANSPARENT     if( IsXPThemeActive() , .T. , .F. )
                  END LABEL
                  
@@ -2708,7 +2708,7 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
                          ROW             40
                          COL             145 + ( ( GetDesktopRealWidth() - 620 ) / 2 )
                          WIDTH           150
-                         VALUE           'Override Link Parm:'
+                         VALUE           'Extra Link Params:'
                          TRANSPARENT     if( IsXPThemeActive() , .T. , .F. )
                  END LABEL
                  
@@ -5970,7 +5970,7 @@ Function QPM_Build2()
             do case
                case IsMinGW
                   Out := Out + PUB_cCharTab + '$(US_MSG_EXE) ' + PROGRESS_LOG + ' -MSG:Compiling Resource File (.RC file has been copied to _Temp.rc file for build the _temp.o) ...' + HB_OsNewLine()
-                  Out := Out + PUB_cCharTab + '$(REDIR) $(RESOURCE_COMP) -I ' + US_ShortName( GetMiniGuiFolder() + DEF_SLASH + 'Resources' ) + ' -i ' + US_ShortName(PUB_cProjectFolder) + DEF_SLASH + '_Temp.RC -o $(DIR_OBJECTS)'+DEF_SLASH+'_Temp.o' + Hb_OsNewLine()
+                  Out := Out + PUB_cCharTab + '$(RESOURCE_COMP) -I ' + US_ShortName( GetMiniGuiFolder() + DEF_SLASH + 'Resources' ) + ' -i ' + US_ShortName(PUB_cProjectFolder) + DEF_SLASH + '_Temp.RC -o $(DIR_OBJECTS)'+DEF_SLASH+'_Temp.o' + Hb_OsNewLine()
                case IsPelles
                   Out := Out + PUB_cCharTab + '$(US_MSG_EXE) ' + PROGRESS_LOG + ' -MSG:Compiling Resource File ' + US_FileNameOnlyPathAndName( PRGFILES[1] ) + '.rc' + ' ...' + Hb_OsNewLine()
                   Out := Out + PUB_cCharTab + '$(RESOURCE_COMP) /Fo' + US_ShortName(PUB_cProjectFolder) + DEF_SLASH + US_FileNameOnlyName( PRGFILES[1] ) + '.Res ' + US_ShortName( US_FileNameOnlyPathAndName( PRGFILES[1] ) + '.RC' ) + ' ' + Hb_OsNewLine()
@@ -6104,7 +6104,7 @@ Function QPM_Build2()
                      Out := Out + PUB_cCharTab + 'echo ' + US_ShortName(GetCppFolder()) + DEF_SLASH + 'LIB'+DEF_SLASH+'c0x32.obj, + >> ' + SCRIPT_FILE + Hb_OsNewLine()
                   endif
 
-                  Out := Out + PUB_cCharTab + 'echo $(APP_NAME), ' + US_ShortName(PUB_cQPM_Folder) + DEF_SLASH + US_FileNameOnlyName( GetOutputModuleName() ) + '.MAP' + ', + >> ' + SCRIPT_FILE + Hb_OsNewLine()
+                  Out := Out + PUB_cCharTab + 'echo $(APP_NAME), ' + US_ShortName(PUB_cProjectFolder) + DEF_SLASH + US_FileNameOnlyName( GetOutputModuleName() ) + '.MAP' + ', + >> ' + SCRIPT_FILE + Hb_OsNewLine()
                otherwise
                   US_Log( 'Error 5746' )
             endcase
@@ -6553,15 +6553,15 @@ Function QPM_Build2()
          case IsMinGw
             do case
                case cOutputType == 'SRCEXE'
-                  Out := Out + PUB_cCharTab + '$(US_MSG_EXE) ' + PROGRESS_LOG + ' -MSG:Linking to make ' + cOutputNameDisplay + ' ...' + Hb_OsNewLine()
+                  Out := Out + PUB_cCharTab + '$(US_MSG_EXE) ' + PROGRESS_LOG + ' -MSG:Linking ' + cOutputNameDisplay + ' ...' + Hb_OsNewLine()
 /*
  * Las versiones nuevas de gcc no suportan el flag -mno-cygwin
-                  Out := Out + PUB_cCharTab + '$(REDIR) $(ILINK_EXE) -Wall -mno-cygwin $(USER_FLAGS_LINK) -o $(APP_NAME) ' + SCRIPT_FILE + if( bConsole , ' -mconsole ' , if( PUB_bDebugActive , ' ' , ' -mwindows ') ) + Hb_OsNewLine()
+                  Out := Out + PUB_cCharTab + '$(ILINK_EXE) -Wall -mno-cygwin $(USER_FLAGS_LINK) -o $(APP_NAME) ' + SCRIPT_FILE + if( bConsole , ' -mconsole ' , if( PUB_bDebugActive , ' ' , ' -mwindows ') ) + Hb_OsNewLine()
  */
                   if Empty( GetProperty( 'VentanaMain' , 'OverrideLink' , 'value' ) )
-                     Out := Out + PUB_cCharTab + '$(REDIR) $(ILINK_EXE) -Wall -o $(APP_NAME) ' + SCRIPT_FILE + if( bConsole , ' -mconsole ' , if( PUB_bDebugActive , ' ' , ' -mwindows ') ) + Hb_OsNewLine()
+                     Out := Out + PUB_cCharTab + '$(ILINK_EXE) -Wall -o $(APP_NAME) ' + SCRIPT_FILE + if( bConsole , ' -mconsole ' , if( PUB_bDebugActive , ' ' , ' -mwindows ') ) + Hb_OsNewLine()
                   else
-                     Out := Out + PUB_cCharTab + '$(REDIR) $(ILINK_EXE) -Wall $(USER_FLAGS_LINK) -o $(APP_NAME) ' + SCRIPT_FILE + if( bConsole , ' -mconsole ' , if( PUB_bDebugActive , ' ' , ' -mwindows ') ) + Hb_OsNewLine()
+                     Out := Out + PUB_cCharTab + '$(ILINK_EXE) -Wall $(USER_FLAGS_LINK) -o $(APP_NAME) ' + SCRIPT_FILE + if( bConsole , ' -mconsole ' , if( PUB_bDebugActive , ' ' , ' -mwindows ') ) + Hb_OsNewLine()
                   endif
                   if bUpx
                      Out := Out + PUB_cCharTab + '$(US_MSG_EXE) ' + PROGRESS_LOG + ' -MSG:Compressing ' + cOutputNameDisplay + ' with UPX ...' + Hb_OsNewLine()
@@ -6569,7 +6569,7 @@ Function QPM_Build2()
                   endif
                case cOutputType == 'SRCDLL'
                   Out := Out + PUB_cCharTab + '$(US_MSG_EXE) ' + PROGRESS_LOG + ' -MSG:Making Dynamic Library (DLL) ' + cOutputNameDisplay + ' ...' + Hb_OsNewLine()
-                  Out := Out + PUB_cCharTab + '$(REDIR) $(ILINK_EXE) -shared -o $(APP_NAME) ' + SCRIPT_FILE
+                  Out := Out + PUB_cCharTab + '$(ILINK_EXE) -shared -o $(APP_NAME) ' + SCRIPT_FILE
                   For i := 1 To Len ( vLibIncludeFiles )
                      if US_Upper( US_Word( GetProperty( 'VentanaMain' , 'GIncFiles' , 'Cell' , i , NCOLINCFULLNAME ) , 2 ) ) == '*FIRST*'
                         if file( GetMiniGuiFolder() + DEF_SLASH + 'Resources' + DEF_SLASH + substr( US_FileNameOnlyName( vLibIncludeFiles[i] ) , 4 ) + '.o' )
@@ -6580,7 +6580,7 @@ Function QPM_Build2()
                case cOutputType == 'SRCLIB'
                   Out := Out + PUB_cCharTab + '$(US_MSG_EXE) ' + PROGRESS_LOG + ' -MSG:Making Library ' + cOutputNameDisplay + ' ...' + Hb_OsNewLine()
                   For i := 1 To Len ( PrgFiles )
-                     Out := Out + PUB_cCharTab + '$(REDIR) $(TLIB_EXE) rc ' + cOutputName + ' $(DIR_OBJECTS)' + DEF_SLASH + US_FileNameOnlyName( PRGFILES[i] ) + '.o ' + Hb_OsNewLine()
+                     Out := Out + PUB_cCharTab + '$(TLIB_EXE) rc ' + cOutputName + ' $(DIR_OBJECTS)' + DEF_SLASH + US_FileNameOnlyName( PRGFILES[i] ) + '.o ' + Hb_OsNewLine()
                   Next i
                otherwise
                   Out := Out + PUB_cCharTab + '$(US_MSG_EXE) ' + PROGRESS_LOG + ' -MSG:Output Type Invalid: '+cOutputType + Hb_OsNewLine()
@@ -6588,7 +6588,7 @@ Function QPM_Build2()
          case IsPelles
             do case
                case cOutputType == 'SRCEXE'
-                  Out := Out + PUB_cCharTab + '$(US_MSG_EXE) ' + PROGRESS_LOG + ' -MSG:Linking to make ' + cOutputNameDisplay + ' ...' + Hb_OsNewLine()
+                  Out := Out + PUB_cCharTab + '$(US_MSG_EXE) ' + PROGRESS_LOG + ' -MSG:Linking ' + cOutputNameDisplay + ' ...' + Hb_OsNewLine()
                   if Empty( GetProperty( 'VentanaMain' , 'OverrideLink' , 'value' ) )
                      Out := Out + PUB_cCharTab + '$(ILINK_EXE) ' + if( !bConsole, If( !PUB_bDebugActive,'/SUBSYSTEM:WINDOWS ','/SUBSYSTEM:CONSOLE ') , '/SUBSYSTEM:CONSOLE ' ) + '@' + SCRIPT_FILE + Hb_OsNewLine()
                   else
@@ -6610,7 +6610,7 @@ Function QPM_Build2()
          case IsBorland
             do case
                case cOutputType == 'SRCEXE'
-                  Out := Out + PUB_cCharTab + '$(US_MSG_EXE) ' + PROGRESS_LOG + ' -MSG:Linking to make ' + cOutputNameDisplay + ' ...' + Hb_OsNewLine()
+                  Out := Out + PUB_cCharTab + '$(US_MSG_EXE) ' + PROGRESS_LOG + ' -MSG:Linking ' + cOutputNameDisplay + ' ...' + Hb_OsNewLine()
                   if Empty( GetProperty( 'VentanaMain' , 'OverrideLink' , 'value' ) )
                      Out := Out + PUB_cCharTab + '$(ILINK_EXE) -x ' + if( !bConsole, '-Gn -Tpe '+If(PUB_bDebugActive,'-ap ','-aa '), '-Gn ' ) + '-L' + US_ShortName(GetCppFolder()) + DEF_SLASH + 'LIB ' + '@' + SCRIPT_FILE + Hb_OsNewLine()
                   else
@@ -6644,7 +6644,7 @@ Function QPM_Build2()
          endif
 */
          Out := Out + PUB_cCharTab + '$(US_MSG_EXE) ' + PROGRESS_LOG + ' -MSG:' + cOutputCopyMove + ' '+cOutputNameDisplay+' to ' + Prj_Text_OutputCopyMoveFolder + DEF_SLASH + US_FileNameOnlyNameAndExt( cOutputNameDisplay ) + ' ...' + Hb_OsNewLine()
-         Out := Out + PUB_cCharTab + if(! bLogActivity, '@', '') + '-$(US_SHELL_EXE) ' + if(! bLogActivity, '-OFF ','') + cOutputCopyMove + ' ' + cOutputName + ' ' + US_ShortName( Prj_Text_OutputCopyMoveFolder ) + DEF_SLASH + US_FileNameOnlyNameAndExt( cOutputName ) + Hb_OsNewLine()
+         Out := Out + PUB_cCharTab + if(! bLogActivity, '@', '') + '$(US_SHELL_EXE) ' + if(! bLogActivity, '-OFF ','') + cOutputCopyMove + ' ' + cOutputName + ' ' + US_ShortName( Prj_Text_OutputCopyMoveFolder ) + DEF_SLASH + US_FileNameOnlyNameAndExt( cOutputName ) + Hb_OsNewLine()
       endif
 
       if PUB_bDebugActive
@@ -6672,20 +6672,20 @@ Function QPM_Build2()
          Out := Out + PUB_cCharTab + '$(US_MSG_EXE) ' + PROGRESS_LOG + ' -MSG:Processing ' + PRGFILES[i] + ' ...' + Hb_OsNewLine()
          if US_Upper( US_FileNameOnlyExt( PRGFILES[i] ) ) == US_Upper( 'C' ) .or. ;
             US_Upper( US_FileNameOnlyExt( PRGFILES[i] ) ) == US_Upper( 'CPP' )
-            Out := Out + PUB_cCharTab + if(! bLogActivity, '@', '') + '-$(US_SHELL_EXE) ' + if(! bLogActivity, '-OFF ','') + 'COPYZAP $** $@' + Hb_OsNewLine()
+            Out := Out + PUB_cCharTab + if(! bLogActivity, '@', '') + '$(US_SHELL_EXE) ' + if(! bLogActivity, '-OFF ','') + 'COPYZAP $** $@' + Hb_OsNewLine()
          else
-            Out := Out + PUB_cCharTab + if(! bLogActivity, '@', '') + '-$(US_SHELL_EXE) ' + if(! bLogActivity, '-OFF ', '') + 'DELETE $@' + Hb_OsNewLine()
-            IF Prj_Check_HarbourIs31 .and. IsBorland
+            Out := Out + PUB_cCharTab + if(! bLogActivity, '@', '') + '$(US_SHELL_EXE) ' + if(! bLogActivity, '-OFF ', '') + 'DELETE $@' + Hb_OsNewLine()
+//          IF Prj_Check_HarbourIs31 .and. IsBorland
+//             Out := Out + PUB_cCharTab + '$(HARBOUR_EXE) $(HARBOUR_FLAGS) /q ' + if( QPM_IsXHarbour(), '/p', '/p$(DIR_OBJECTS)' + DEF_SLASH + US_FileNameOnlyName(PRGFILES[i]) ) + ' $** -o$@' + Hb_OsNewLine()
+//          ELSE
                Out := Out + PUB_cCharTab + '$(HARBOUR_EXE) $(HARBOUR_FLAGS) /q ' + if( QPM_IsXHarbour(), '/p', '/p$(DIR_OBJECTS)' + DEF_SLASH + US_FileNameOnlyName(PRGFILES[i]) ) + ' $** -o$@' + Hb_OsNewLine()
-            ELSE
-               Out := Out + PUB_cCharTab + '$(REDIR) $(HARBOUR_EXE) $(HARBOUR_FLAGS) /q ' + if( QPM_IsXHarbour(), '/p', '/p$(DIR_OBJECTS)' + DEF_SLASH + US_FileNameOnlyName(PRGFILES[i]) ) + ' $** -o$@' + Hb_OsNewLine()
-            ENDIF
+//          ENDIF
             if QPM_IsXHarbour()
-               Out := Out + PUB_cCharTab + if(! bLogActivity, '@', '') + '-$(US_SHELL_EXE) ' + if(! bLogActivity, '-OFF ', '') + 'MOVE ' + US_ShortName( US_FileNameOnlyPath( PRGFILES[i] ) ) + DEF_SLASH + US_FileNameOnlyName( PRGFILES[i] ) + '.ppo $(DIR_OBJECTS)' + DEF_SLASH + US_FileNameOnlyName( PRGFILES[i] ) + '.ppo' + Hb_OsNewLine()
-               Out := Out + PUB_cCharTab + if(! bLogActivity, '@', '') + '-$(US_SHELL_EXE) ' + if(! bLogActivity, '-OFF ', '') + 'DELETE ' + US_ShortName( US_FileNameOnlyPath( PRGFILES[i] ) ) + DEF_SLASH + US_FileNameOnlyName( PRGFILES[i] ) + '.ppo.MOVED.TXT' + Hb_OsNewLine()
+               Out := Out + PUB_cCharTab + if(! bLogActivity, '@', '') + '$(US_SHELL_EXE) ' + if(! bLogActivity, '-OFF ', '') + 'MOVE ' + US_ShortName( US_FileNameOnlyPath( PRGFILES[i] ) ) + DEF_SLASH + US_FileNameOnlyName( PRGFILES[i] ) + '.ppo $(DIR_OBJECTS)' + DEF_SLASH + US_FileNameOnlyName( PRGFILES[i] ) + '.ppo' + Hb_OsNewLine()
+               Out := Out + PUB_cCharTab + if(! bLogActivity, '@', '') + '$(US_SHELL_EXE) ' + if(! bLogActivity, '-OFF ', '') + 'DELETE ' + US_ShortName( US_FileNameOnlyPath( PRGFILES[i] ) ) + DEF_SLASH + US_FileNameOnlyName( PRGFILES[i] ) + '.ppo.MOVED.TXT' + Hb_OsNewLine()
             else
-               Out := Out + PUB_cCharTab + if(! bLogActivity, '@', '') + '-$(US_SHELL_EXE) ' + if(! bLogActivity, '-OFF ', '') + 'MOVE $(DIR_OBJECTS)' + DEF_SLASH + US_FileNameOnlyName( PRGFILES[i] ) + ' $(DIR_OBJECTS)' + DEF_SLASH + US_FileNameOnlyName( PRGFILES[i] ) + '.ppo' + Hb_OsNewLine()
-               Out := Out + PUB_cCharTab + if(! bLogActivity, '@', '') + '-$(US_SHELL_EXE) ' + if(! bLogActivity, '-OFF ', '') + 'DELETE $(DIR_OBJECTS)' + DEF_SLASH + US_FileNameOnlyName( PRGFILES[i] ) + '.MOVED.TXT' + Hb_OsNewLine()
+               Out := Out + PUB_cCharTab + if(! bLogActivity, '@', '') + '$(US_SHELL_EXE) ' + if(! bLogActivity, '-OFF ', '') + 'MOVE $(DIR_OBJECTS)' + DEF_SLASH + US_FileNameOnlyName( PRGFILES[i] ) + ' $(DIR_OBJECTS)' + DEF_SLASH + US_FileNameOnlyName( PRGFILES[i] ) + '.ppo' + Hb_OsNewLine()
+               Out := Out + PUB_cCharTab + if(! bLogActivity, '@', '') + '$(US_SHELL_EXE) ' + if(! bLogActivity, '-OFF ', '') + 'DELETE $(DIR_OBJECTS)' + DEF_SLASH + US_FileNameOnlyName( PRGFILES[i] ) + '.MOVED.TXT' + Hb_OsNewLine()
             endif
             Out := Out + PUB_cCharTab + if(! bLogActivity, '@', '') + '$(US_SHELL_EXE) ' + if(! bLogActivity, '-OFF ', '') + 'CHECKRC NOTFILE $@' + Hb_OsNewLine()
          endif
@@ -6699,15 +6699,15 @@ Function QPM_Build2()
          do case
             case IsMinGW
                if bLogActivity
-                  Out := Out + PUB_cCharTab + '-$(REDIR) $(DEF_SLASH) -LIST' + US_ShortName(PUB_cQPM_Folder) + ' $(COBJFLAGS) $** -o$@' + Hb_OsNewLine()
+                  Out := Out + PUB_cCharTab + '$(DEF_SLASH) -LIST' + US_ShortName(PUB_cQPM_Folder) + ' $(COBJFLAGS) $** -o$@' + Hb_OsNewLine()
                else
-                  Out := Out + PUB_cCharTab + '-$(REDIR) $(DEF_SLASH) $(COBJFLAGS) $** -o$@' + Hb_OsNewLine()
+                  Out := Out + PUB_cCharTab + '$(DEF_SLASH) $(COBJFLAGS) $** -o$@' + Hb_OsNewLine()
                endif
             case IsPelles
-               Out := Out + PUB_cCharTab + '-$(COMPILATOR_C) $(COBJFLAGS) /Fo$@ $**' + Hb_OsNewLine()
+               Out := Out + PUB_cCharTab + '$(COMPILATOR_C) $(COBJFLAGS) /Fo$@ $**' + Hb_OsNewLine()
             case IsBorland
-               Out := Out + PUB_cCharTab + if(! bLogActivity, '@', '') + '-$(US_SHELL_EXE) ' + if(! bLogActivity, '-OFF ', '' ) + 'DELETE $@' + Hb_OsNewLine()
-               Out := Out + PUB_cCharTab + '-$(COMPILATOR_C) $(COBJFLAGS) -o$@ $**' + Hb_OsNewLine()
+               Out := Out + PUB_cCharTab + if(! bLogActivity, '@', '') + '$(US_SHELL_EXE) ' + if(! bLogActivity, '-OFF ', '' ) + 'DELETE $@' + Hb_OsNewLine()
+               Out := Out + PUB_cCharTab + '$(COMPILATOR_C) $(COBJFLAGS) -o$@ $**' + Hb_OsNewLine()
             otherwise
                US_Log( 'Error 6324' )
          endcase
@@ -6723,44 +6723,44 @@ Function QPM_Build2()
                Out := Out + PUB_cCharTab + '$(US_MSG_EXE) ' + PROGRESS_LOG + ' -MSG:Option ReImport Activate' + Hb_OsNewLine()
                Out := Out + PUB_cCharTab + '$(US_MSG_EXE) ' + PROGRESS_LOG + ' -MSG:ReImport From Library ' + cInputReImpNameDisplay + Hb_OsNewLine()
                Out := Out + PUB_cCharTab + '$(REIMPORT_EXE) -d ' + cInputReImpName + Hb_OsNewLine()
-               Out := Out + PUB_cCharTab + '-$(US_MSG_EXE) ' + PROGRESS_LOG + ' -MSG:DLL Function List for ' + cInputNameDisplay + ' ...' + Hb_OsNewLine()
-               Out := Out + PUB_cCharTab + '-$(US_SHELL_EXE) ANALIZE_DLL ' + cInputReImpDef + '.def ' + Hb_OsNewLine()
+               Out := Out + PUB_cCharTab + '$(US_MSG_EXE) ' + PROGRESS_LOG + ' -MSG:DLL Function List for ' + cInputNameDisplay + ' ...' + Hb_OsNewLine()
+               Out := Out + PUB_cCharTab + '$(US_SHELL_EXE) ANALIZE_DLL ' + cInputReImpDef + '.def ' + Hb_OsNewLine()
                //
-               Out := Out + PUB_cCharTab + '-$(US_MSG_EXE) ' + PROGRESS_LOG + ' -MSG:Generating Interface Library (.' + US_Word( cConvert , 2 ) + ') for ' + cInputNameDisplay + ' ...' + Hb_OsNewLine()
-               Out := Out + PUB_cCharTab + '-$(REDIR) $(IMPLIB_MGW_EXE) -k -d ' + US_USlash( cInputReImpDef ) + '.def -D ' + US_FileNameOnlyNameAndExt( cInputNameDisplay ) + ' -l ' + US_USlash( cOutputName ) + Hb_OsNewLine()
+               Out := Out + PUB_cCharTab + '$(US_MSG_EXE) ' + PROGRESS_LOG + ' -MSG:Generating Interface Library (.' + US_Word( cConvert , 2 ) + ') for ' + cInputNameDisplay + ' ...' + Hb_OsNewLine()
+               Out := Out + PUB_cCharTab + '$(IMPLIB_MGW_EXE) -k -d ' + US_USlash( cInputReImpDef ) + '.def -D ' + US_FileNameOnlyNameAndExt( cInputNameDisplay ) + ' -l ' + US_USlash( cOutputName ) + Hb_OsNewLine()
                //
-               Out := Out + PUB_cCharTab + if(! bLogActivity, '@', '') + '-$(US_SHELL_EXE) ' + if(! bLogActivity, '-OFF ', '') + 'DELETE ' + cInputReImpDef + '.def' + Hb_OsNewLine()
+               Out := Out + PUB_cCharTab + if(! bLogActivity, '@', '') + '$(US_SHELL_EXE) ' + if(! bLogActivity, '-OFF ', '') + 'DELETE ' + cInputReImpDef + '.def' + Hb_OsNewLine()
             else
                Out := Out + PUB_cCharTab + '$(US_MSG_EXE) ' + PROGRESS_LOG + ' -MSG:DLL Function List for ' + cInputNameDisplay + ' ...' + Hb_OsNewLine()
                *NO BORRAROut := Out + PUB_cCharTab + '$(IMPDEF_MGW_EXE) ' + cInputNameLong + '.def ' + cInputNameLong + Hb_OsNewLine()
-               Out := Out + PUB_cCharTab + '-$(IMPDEF_MGW_EXE) ' + cInputNameLong + ' > ' + cInputNameLong + '.def ' + Hb_OsNewLine()
-               Out := Out + PUB_cCharTab + '-$(US_SHELL_EXE) ANALIZE_DLL ' + cInputNameLong + '.def ' + Hb_OsNewLine()
+               Out := Out + PUB_cCharTab + '$(IMPDEF_MGW_EXE) ' + cInputNameLong + ' > ' + cInputNameLong + '.def ' + Hb_OsNewLine()
+               Out := Out + PUB_cCharTab + '$(US_SHELL_EXE) ANALIZE_DLL ' + cInputNameLong + '.def ' + Hb_OsNewLine()
                //
-               Out := Out + PUB_cCharTab + '-$(US_MSG_EXE) ' + PROGRESS_LOG + ' -MSG:Generating Interface Library (.' + US_Word( cConvert , 2 ) + ') for ' + cInputNameDisplay + ' ...' + Hb_OsNewLine()
-               Out := Out + PUB_cCharTab + '-$(REDIR) $(IMPLIB_MGW_EXE) -d ' + US_USlash( cInputNameLong ) + '.def -D ' + US_FileNameOnlyNameAndExt( cInputNameDisplay ) + ' -l ' + US_USlash( cOutputName ) + Hb_OsNewLine()
+               Out := Out + PUB_cCharTab + '$(US_MSG_EXE) ' + PROGRESS_LOG + ' -MSG:Generating Interface Library (.' + US_Word( cConvert , 2 ) + ') for ' + cInputNameDisplay + ' ...' + Hb_OsNewLine()
+               Out := Out + PUB_cCharTab + '$(IMPLIB_MGW_EXE) -d ' + US_USlash( cInputNameLong ) + '.def -D ' + US_FileNameOnlyNameAndExt( cInputNameDisplay ) + ' -l ' + US_USlash( cOutputName ) + Hb_OsNewLine()
                //
-               Out := Out + PUB_cCharTab + if(! bLogActivity, '@', '') + '-$(US_SHELL_EXE) ' + if(! bLogActivity, '-OFF ', '') + 'DELETE ' + cInputNameLong + '.def' + Hb_OsNewLine()
+               Out := Out + PUB_cCharTab + if(! bLogActivity, '@', '') + '$(US_SHELL_EXE) ' + if(! bLogActivity, '-OFF ', '') + 'DELETE ' + cInputNameLong + '.def' + Hb_OsNewLine()
             endif
          case cConvert == 'DLL LIB'
             do case
                case Prj_Radio_Cpp == DEF_RG_PELLES
                   Out := Out + PUB_cCharTab + '$(US_MSG_EXE) ' + PROGRESS_LOG + ' -MSG:DLL Function List for ' + cInputNameDisplay + ' ...' + Hb_OsNewLine()
-                  Out := Out + PUB_cCharTab + '-$(IMPDEF_PC_EXE) ' + cInputNameLong + '.def ' + cInputNameLong + Hb_OsNewLine()
-                  Out := Out + PUB_cCharTab + '-$(US_SHELL_EXE) ANALIZE_DLL ' + cInputNameLong + '.def ' + Hb_OsNewLine()
+                  Out := Out + PUB_cCharTab + '$(IMPDEF_PC_EXE) ' + cInputNameLong + '.def ' + cInputNameLong + Hb_OsNewLine()
+                  Out := Out + PUB_cCharTab + '$(US_SHELL_EXE) ANALIZE_DLL ' + cInputNameLong + '.def ' + Hb_OsNewLine()
                   //
-                  Out := Out + PUB_cCharTab + '-$(US_MSG_EXE) ' + PROGRESS_LOG + ' -MSG:Generating Interface Library (.' + US_Word( cConvert , 2 ) + ') for ' + cInputNameDisplay + ' ...' + Hb_OsNewLine()
-                  Out := Out + PUB_cCharTab + '-$(IMPLIB_PC_EXE) ' + if( GetProperty( 'VentanaMain' , 'Check_GuionA' , 'Value' ) , '' , '-NOUND ' ) + cInputNameLong + ' -OUT:' + cOutputName + Hb_OsNewLine()
+                  Out := Out + PUB_cCharTab + '$(US_MSG_EXE) ' + PROGRESS_LOG + ' -MSG:Generating Interface Library (.' + US_Word( cConvert , 2 ) + ') for ' + cInputNameDisplay + ' ...' + Hb_OsNewLine()
+                  Out := Out + PUB_cCharTab + '$(IMPLIB_PC_EXE) ' + if( GetProperty( 'VentanaMain' , 'Check_GuionA' , 'Value' ) , '' , '-NOUND ' ) + cInputNameLong + ' -OUT:' + cOutputName + Hb_OsNewLine()
                   //
-                  Out := Out + PUB_cCharTab + if(! bLogActivity, '@', '') + '-$(US_SHELL_EXE) ' + if(! bLogActivity, '-OFF ', '') + 'DELETE ' + cInputNameLong + '.def' + Hb_OsNewLine()
+                  Out := Out + PUB_cCharTab + if(! bLogActivity, '@', '') + '$(US_SHELL_EXE) ' + if(! bLogActivity, '-OFF ', '') + 'DELETE ' + cInputNameLong + '.def' + Hb_OsNewLine()
                case Prj_Radio_Cpp == DEF_RG_BORLAND
                   Out := Out + PUB_cCharTab + '$(US_MSG_EXE) ' + PROGRESS_LOG + ' -MSG:DLL Function List for ' + cInputNameDisplay + ' ...' + Hb_OsNewLine()
-                  Out := Out + PUB_cCharTab + '-$(IMPDEF_BCC_EXE) ' + cInputNameLong + '.def ' + cInputNameLong + Hb_OsNewLine()
-                  Out := Out + PUB_cCharTab + '-$(US_SHELL_EXE) ANALIZE_DLL ' + cInputNameLong + '.def ' + Hb_OsNewLine()
+                  Out := Out + PUB_cCharTab + '$(IMPDEF_BCC_EXE) ' + cInputNameLong + '.def ' + cInputNameLong + Hb_OsNewLine()
+                  Out := Out + PUB_cCharTab + '$(US_SHELL_EXE) ANALIZE_DLL ' + cInputNameLong + '.def ' + Hb_OsNewLine()
                   //
-                  Out := Out + PUB_cCharTab + '-$(US_MSG_EXE) ' + PROGRESS_LOG + ' -MSG:Generating Interface Library (.' + US_Word( cConvert , 2 ) + ') for ' + cInputNameDisplay + ' ...' + Hb_OsNewLine()
-                  Out := Out + PUB_cCharTab + '-$(IMPLIB_BCC_EXE) ' + if( GetProperty( 'VentanaMain' , 'Check_GuionA' , 'Value' ) , '-a ' , '' ) + cOutputName + ' ' + cInputNameLong + Hb_OsNewLine()
+                  Out := Out + PUB_cCharTab + '$(US_MSG_EXE) ' + PROGRESS_LOG + ' -MSG:Generating Interface Library (.' + US_Word( cConvert , 2 ) + ') for ' + cInputNameDisplay + ' ...' + Hb_OsNewLine()
+                  Out := Out + PUB_cCharTab + '$(IMPLIB_BCC_EXE) ' + if( GetProperty( 'VentanaMain' , 'Check_GuionA' , 'Value' ) , '-a ' , '' ) + cOutputName + ' ' + cInputNameLong + Hb_OsNewLine()
                   //
-                  Out := Out + PUB_cCharTab + if(! bLogActivity, '@', '') + '-$(US_SHELL_EXE) ' + if(! bLogActivity, '-OFF ', '') + 'DELETE ' + cInputNameLong + '.def' + Hb_OsNewLine()
+                  Out := Out + PUB_cCharTab + if(! bLogActivity, '@', '') + '$(US_SHELL_EXE) ' + if(! bLogActivity, '-OFF ', '') + 'DELETE ' + cInputNameLong + '.def' + Hb_OsNewLine()
                otherwise
                   US_Log( 'Error in Convert DLL to LIB, Invalid C Compiler: ' + US_VarToStr( Prj_Radio_Cpp ) )
             endcase
@@ -6819,14 +6819,14 @@ Function QPM_Build2()
             MemoObj := MemoRead( US_ShortNAme(OBJFOLDER) + DEF_SLASH + US_FileNameOnlyNameAndExt( cInputName ) + '.Lst.ObjLst' )
             //
             Out := Out + PUB_cCharTab + '$(US_MSG_EXE) ' + PROGRESS_LOG + ' -MSG:Extracting Modules from Library (.' + US_Word( cConvert , 1 ) + ')' + ' ...' + Hb_OsNewLine()
-            Out := Out + PUB_cCharTab + '$(REDIR) $(TLIB_EXE) x ' + US_ShortNAme(OBJFOLDER) + DEF_SLASH + US_FileNameOnlyNameAndExt( cInputName )
+            Out := Out + PUB_cCharTab + '$(TLIB_EXE) x ' + US_ShortNAme(OBJFOLDER) + DEF_SLASH + US_FileNameOnlyNameAndExt( cInputName )
             For i:=1 to MLCount( MemoObj , 254 )
                Out := Out + ' ' + alltrim( memoline( MemoObj , 254 , i ) ) + '.o'
             next
             Out := Out + ' ' + Hb_OsNewLine()
             //
             Out := Out + PUB_cCharTab + '$(US_MSG_EXE) ' + PROGRESS_LOG + ' -MSG:Making DLL from Modules Object of Library (.' + US_Word( cConvert , 1 ) + ') in ' + cOutputNameDisplay + ' ...' + Hb_OsNewLine()
-            Out := Out + PUB_cCharTab + '$(REDIR) $(ILINK_EXE) -shared -o' + cOutputName + ' '
+            Out := Out + PUB_cCharTab + '$(ILINK_EXE) -shared -o' + cOutputName + ' '
             For i:=1 to MLCount( MemoObj , 254 )
                Out := Out + ' ' + US_ShortName(GetCppFolder()) + DEF_SLASH + 'BIN' + DEF_SLASH + alltrim( memoline( MemoObj , 254 , i ) ) + '.o '
             next
@@ -7307,7 +7307,7 @@ La existencia del ejecutable se hace en BUILD.BAT teniendo en cuenta el COPY/MOV
             ferase( US_ShortName( PUB_cProjectFolder ) + DEF_SLASH + OutName + '.exp' )
             ferase( US_ShortName( PUB_cProjectFolder ) + DEF_SLASH + OutName + '.TDS' )
             ferase( US_ShortName( PUB_cProjectFolder ) + DEF_SLASH + TopName + '.RES' )
-            ferase( US_ShortName( PUB_cQPM_Folder ) + DEF_SLASH + TopName + '.MAP' )
+            ferase( US_ShortName( PUB_cProjectFolder ) + DEF_SLASH + TopName + '.MAP' )
          endif
 
 //       TabChange( 'FILES' )   // esto es para que refresque los botones frizados durante el build
@@ -7844,6 +7844,8 @@ Function TranslateLog( Log )
    If Right( NewLog, 1 ) == PUB_cCharTab
       NewLog := Left( NewLog, Len( NewLog ) - 1 )
    EndIf
+   NewLog := StrTran( NewLog, HB_OsNewLine() + PUB_cCharTab, HB_OsNewLine() + '    ' )
+   NewLog := StrTran( NewLog, PUB_cCharTab, '   ' )
 Return NewLog
 
 Function SwitchDebug()

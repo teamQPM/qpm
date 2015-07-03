@@ -8,6 +8,27 @@
  * See "How to format your ChangeLog entries" in howtosvn.txt file.
  */
 
+2015-07-02 22:46:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * ./QPM_AutoProjectOnlyHelp.qpm
+   * ./QPM_AutoProject.qpm
+   * ./QPM.chm
+   * ./QPM.EXE
+     * Updated.
+   * ./QPM.PRG
+     * "Override Compile Parm" changed by "Extra Compile Params".
+     * "Override Link Parm" changed by "Extra Link Params".
+     * Use Project folder insted of QPM folder to place MAP file.
+     * Some messages.
+     % Build log.
+   * ./HelpQPM/QPM_Samples_Socket.zip
+     * Updated project file for Mingw+Harbour.
+     ! Compiler errors and warnings in SOCKET.C
+   * ./HelpQPM/QPM_SHG.dbf
+   * ./HelpQPM/QPM_SHG.fpt
+   * ./HelpQPM/QPM_SHG.cdx
+     * Updated help on socket library.
+     * Updated reference to QPM version.
+
 2015-03-24 23:10:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * ./Changelog
      * Previous entry.
