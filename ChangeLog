@@ -8,6 +8,15 @@
  * See "How to format your ChangeLog entries" in howtosvn.txt file.
  */
 
+2015-07-02 23:18:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * ./Changelog
+     * Missed in previous commit.
+
+2015-07-02 23:16:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * ./QPM_AutoProject.qpm
+   * ./QPM.EXE
+     * Updated.
+
 2015-07-02 23:10:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    + Some files to ignore list.
 
