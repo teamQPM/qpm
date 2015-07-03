@@ -1,14 +1,18 @@
+
 En la versión 05_04_04:
-1. Corregido: no se puede compilar con Harbour 3.2, MinGW y OOHG.
-2. Agregado: QPM recuerda el valor de la opción DEBUG.
+1. Agregado: librería iphlpapi.a para Harbour+MinGW+OOHG.
+2. Modificado: los fuentes de la librería socket para hacerlos compatibles con Harbour 3.2.
+3. Modificado: el log de ejecución ha sido mejorado.
 
 Version 05_04_04:
-1. Fixed: can't compile with Harbour 3.2, MinGW y OOHG.
-2. Added: DEBUG option is now remembered.
+1. Added: iphlpapi.a library for Harbour+MinGW+OOHG.
+2. Changed: socket library sources for compatibility with Harbour 3.2.
+3. Changed: improved build log.
 
 Versão 05_04_04:
-1. Fixo: Não é possível compilar com Harbour 3.2, MinGW y OOHG.
-2. Adicionado: opção DEBUG é lembrada.
+1. Adicionado: biblioteca iphlpapi.a para Harbour+MinGW+OOHG.
+2. Mudado: fontes da biblioteca socket para torná-los compatíveis com Harbour 3.2.
+3. Mudado: o log de execução foi melhorado
 
 ----
 
@@ -49,7 +53,7 @@ Version 05_04_01:
 
 Versão 05_04_01:
 1. Fixo: Não é possível compilar com Harbour 3.2, MinGW y OOHG.
-2. Mudado: o log de execução foi melhorado (tanto no modo normal e batch).
+2. Mudado: vários defeitos e artefatos visuais.
 3. Adicionado: opção "Move item" ao menu de contexto.
 
 ----
@@ -65,8 +69,8 @@ Version 05_04_00:
 NOTE: This is a full installation release, be aware that to preserve hot recovery info you must install in the folder currently used by previous version.
 
 Versão 05_04_00:
-1. Mudado: biblioteca LIBMSIMG32.A é incluída por padrão durante a compilação com ooHG+MinGW.
-2. Mudado: o log de execução foi melhorado (tanto no modo normal e batch).
+1. Mudado: o log de execução foi melhorado (tanto no modo normal e batch).
+2. Mudado: biblioteca LIBMSIMG32.A é incluída por padrão durante a compilação com ooHG+MinGW.
 NOTA: Esta é uma versão de instalação completa, estar ciente de que para preservar informações de "Hot recovery" você deve instalar na pasta actualmente usada pela versão anterior.
 
 ----
