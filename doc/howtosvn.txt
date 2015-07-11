@@ -125,8 +125,6 @@ Details....: <text>
 HOW TO BUILD QPM FROM SVN
 =========================
 
-TODO: describe procedure.
-
 Para configurar el ambiente de trabajo por primera vez:
 
 [1] Install the latest release from http://sourceforge.net/projects/qpm/files/

@@ -8,6 +8,10 @@
  * See "How to format your ChangeLog entries" in howtosvn.txt file.
  */
 
+2015-07-11 17:07:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * doc/howtosvn.txt
+     - T*O*D*O.
+
 2015-07-11 17:02:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * doc/howtosvn.txt
      * How to name upgrade and install files.
