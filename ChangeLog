@@ -8,6 +8,17 @@
  * See "How to format your ChangeLog entries" in howtosvn.txt file.
  */
 
+2015-07-11 17:02:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * doc/howtosvn.txt
+     * How to name upgrade and install files.
+   * ./readme.txt
+   * ./QPM_AutoProject.qpm
+     * Updated.
+   * ./QPM.EXE
+     * Version to 05_04_05.
+   * ./QPM.PRG
+     ! RTE when clicking on a previous opened file that no longer exists.
+
 2015-07-03 00:28:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * ./readme.txt
      * Updated.

@@ -1,135 +1,135 @@
-VERSION 05 04 04                                                                                                                                                                                                                                              
-PRJ_VERSION 05 04 0004
-PROJECTFOLDER <ThisFolder>                                                                                                                                                                                                                                    
-LASTLIBFOLDERM1BH                                                                                                                                                                                                                                             
-LASTLIBFOLDERM1BX                                                                                                                                                                                                                                             
-LASTLIBFOLDERE1BH C:\MiniGUI\Harbour\lib                                                                                                                                                                                                                      
-LASTLIBFOLDERE1BX C:\MiniGUI203\xHarbour\lib                                                                                                                                                                                                                  
-LASTLIBFOLDERE1GH                                                                                                                                                                                                                                             
-LASTLIBFOLDERE1GX                                                                                                                                                                                                                                             
-LASTLIBFOLDERO3BH                                                                                                                                                                                                                                             
-LASTLIBFOLDERO3BX                                                                                                                                                                                                                                             
-LASTLIBFOLDERO3GH                                                                                                                                                                                                                                             
-LASTLIBFOLDERO3GX                                                                                                                                                                                                                                             
-LASTLIBFOLDERO3PH                                                                                                                                                                                                                                             
-LASTLIBFOLDERO3PX                                                                                                                                                                                                                                             
-LASTLIBFOLDERM3GH                                                                                                                                                                                                                                             
-LASTLIBFOLDERM3GX                                                                                                                                                                                                                                             
-RUNFOLDER                                                                                                                                                                                                                                                     
-RUNPARAM                                                                                                                                                                                                                                                      
-OVERRIDECOMPILEPARM                                                                                                                                                                                                                                           
-OVERRIDELINKPARM                                                                                                                                                                                                                                              
-CHECKHARBOUR H                                                                                                                                                                                                                                                
-CHECKHARBOURIS31 YES                                                                                                                                                                                                                                          
-CHECKCPP B                                                                                                                                                                                                                                                    
-CHECKMINIGUI E1                                                                                                                                                                                                                                               
-CHECKCONSOLE NO                                                                                                                                                                                                                                               
-CHECKUPX NO                                                                                                                                                                                                                                                   
-CHECKFORMTOOL AUTO                                                                                                                                                                                                                                            
-CHECKDBFTOOL OTHER                                                                                                                                                                                                                                            
-OUTPUTCOPYMOVE NONE                                                                                                                                                                                                                                           
-OUTPUTCOPYMOVEFOLDER <ProjectFolder>_05_03_08                                                                                                                                                                                                                 
-OUTPUTRENAME NONE                                                                                                                                                                                                                                             
-OUTPUTRENAMENEWNAME                                                                                                                                                                                                                                           
-CHECKOUTPUTSUFFIX NO                                                                                                                                                                                                                                          
-OUTPUTTYPE SRCEXE                                                                                                                                                                                                                                             
-CHECKREIMPORT NO                                                                                                                                                                                                                                              
-LIBREIMPORT                                                                                                                                                                                                                                                   
-IMPORTGUIONA NO                                                                                                                                                                                                                                               
-DBFAUTOVIEW .T.                                                                                                                                                                                                                                               
-EXTRARUNCMDFINAL                                                                                                                                                                                                                                              
-EXTRARUNPROJQPM                                                                                                                                                                                                                                               
-EXTRARUNCMDEXE                                                                                                                                                                                                                                                
-EXTRARUNCMDFREE                                                                                                                                                                                                                                               
-EXTRARUNQPMPARM                                                                                                                                                                                                                                               
-EXTRARUNEXEPARM                                                                                                                                                                                                                                               
-EXTRARUNFREEPARM                                                                                                                                                                                                                                              
-EXTRARUNTYPE NONE                                                                                                                                                                                                                                             
-EXTRARUNQPMRADIO                                                                                                                                                                                                                                              
-EXTRARUNQPMLITE .T.                                                                                                                                                                                                                                           
-EXTRARUNQPMFORCEFULL .F.                                                                                                                                                                                                                                      
-EXTRARUNQPMRUN .F.                                                                                                                                                                                                                                            
-EXTRARUNQPMBUTTONRUN .F.                                                                                                                                                                                                                                      
-EXTRARUNQPMCLEAR .F.                                                                                                                                                                                                                                          
-EXTRARUNQPMLOG .F.                                                                                                                                                                                                                                            
-EXTRARUNQPMLOGONLYERROR .F.                                                                                                                                                                                                                                   
-EXTRARUNQPMAUTOEXIT .T.                                                                                                                                                                                                                                       
-EXTRARUNEXEWAIT .T.                                                                                                                                                                                                                                           
-EXTRARUNEXEPAUSE .T.                                                                                                                                                                                                                                          
-EXTRARUNFREEWAIT .T.                                                                                                                                                                                                                                          
-EXTRARUNFREEPAUSE .T.                                                                                                                                                                                                                                         
-DEBUGACTIVE NO                                                                                                                                                                                                                                                
-MI_BEXEASSOCIATION .F.                                                                                                                                                                                                                                        
-MI_CEXEASSOCIATION                                                                                                                                                                                                                                            
-MI_NEXEASSOCIATIONICON 0000000001                                                                                                                                                                                                                             
-MI_BEXEBACKUPOPTION .F.                                                                                                                                                                                                                                       
-MI_BNEWFILE .F.                                                                                                                                                                                                                                               
-MI_NNEWFILESUGGESTED 0000000001                                                                                                                                                                                                                               
-MI_CNEWFILELEYEND                                                                                                                                                                                                                                             
-MI_NNEWFILEEMPTY 0000000001                                                                                                                                                                                                                                   
-MI_CNEWFILEUSERFILE                                                                                                                                                                                                                                           
-MI_NDESTINATIONPATH 0000000001                                                                                                                                                                                                                                
-MI_CDESTINATIONPATH                                                                                                                                                                                                                                           
-MI_NLEYENDSUGGESTED 0000000001                                                                                                                                                                                                                                
-MI_CLEYENDUSERTEXT                                                                                                                                                                                                                                            
-MI_BDESKTOPSHORTCUT .T.                                                                                                                                                                                                                                       
-MI_NDESKTOPSHORTCUT 0000000001                                                                                                                                                                                                                                
-MI_BSTARTMENUSHORTCUT .T.                                                                                                                                                                                                                                     
-MI_NSTARTMENUSHORTCUT 0000000001                                                                                                                                                                                                                              
-MI_BLAUNCHAPPLICATION .T.                                                                                                                                                                                                                                     
-MI_NLAUNCHAPPLICATION 0000000001                                                                                                                                                                                                                              
-MI_BLAUNCHBACKUPOPTION .F.                                                                                                                                                                                                                                    
-MI_BREBOOT .F.                                                                                                                                                                                                                                                
-MI_CDEFAULTLANGUAGE EN                                                                                                                                                                                                                                        
-MI_NINSTALLERNAME 0000000001                                                                                                                                                                                                                                  
-MI_CINSTALLERNAME                                                                                                                                                                                                                                             
-MI_CIMAGE                                                                                                                                                                                                                                                     
-MI_BSELECTALLPRG .F.                                                                                                                                                                                                                                          
-MI_BSELECTALLHEA .F.                                                                                                                                                                                                                                          
-MI_BSELECTALLPAN .F.                                                                                                                                                                                                                                          
-MI_BSELECTALLDBF .F.                                                                                                                                                                                                                                          
-MI_BSELECTALLLIB .F.                                                                                                                                                                                                                                          
-SHGDATABASE *NONE*                                                                                                                                                                                                                                            
-SHGLASTFOLDERIMG <ProjectFolder>\QPM\HelpQPM                                                                                                                                                                                                                  
-SHGOUTPUTTYPE YES                                                                                                                                                                                                                                             
-SHGHTMLFOLDER D:\Temp\QPM\htmlhelp                                                                                                                                                                                                                            
-SHGWWW                                                                                                                                                                                                                                                        
-HOTLASTEXTERNALFILE D:\Temp\FreeWinActiveX\atl.cpp                                                                                                                                                                                                            
-SOURCE <ProjectFolder>\QPM.PRG                                                                                                                                                                                                                                
-SOURCE <ProjectFolder>\QPM_Environment.prg                                                                                                                                                                                                                    
-SOURCE <ProjectFolder>\QPM_ExtraRun.PRG                                                                                                                                                                                                                       
-SOURCE <ProjectFolder>\QPM_Functions.PRG                                                                                                                                                                                                                      
-SOURCE <ProjectFolder>\QPM_GlobalSettings.PRG                                                                                                                                                                                                                 
-SOURCE <ProjectFolder>\QPM_HotRecovery.prg                                                                                                                                                                                                                    
-SOURCE <ProjectFolder>\QPM_Killer.PRG                                                                                                                                                                                                                         
-SOURCE <ProjectFolder>\QPM_Libraries.prg                                                                                                                                                                                                                      
-SOURCE <ProjectFolder>\QPM_ProjectSettings.PRG                                                                                                                                                                                                                
-SOURCE <ProjectFolder>\QPM_SHG_AssistImage.PRG                                                                                                                                                                                                                
-SOURCE <ProjectFolder>\QPM_SHG_AssistLink.PRG                                                                                                                                                                                                                 
-SOURCE <ProjectFolder>\QPM_SHG_SimpleHelpGenerator.prg                                                                                                                                                                                                        
-SOURCE <ProjectFolder>\QPM_SyncRecovery.prg                                                                                                                                                                                                                   
-SOURCE <FR> <ProjectFolder>\QPM_Version.PRG                                                                                                                                                                                                                   
-SOURCE <ProjectFolder>\FuentesComunes\TAxPrg.prg                                                                                                                                                                                                              
-SOURCE <ProjectFolder>\FuentesComunes\US_Clases.prg                                                                                                                                                                                                           
-SOURCE <ProjectFolder>\FuentesComunes\US_Edit_CharFijo.prg                                                                                                                                                                                                    
-SOURCE <ProjectFolder>\FuentesComunes\US_HB.PRG                                                                                                                                                                                                               
-SOURCE <ProjectFolder>\FuentesComunes\US_Log.prg                                                                                                                                                                                                              
-SOURCE <ProjectFolder>\FuentesComunes\US_l_richeditbox.prg                                                                                                                                                                                                    
-SOURCE <ProjectFolder>\FuentesComunes\US_MG.PRG                                                                                                                                                                                                               
-SOURCE <ProjectFolder>\FuentesComunes\US_ProcessWin.prg                                                                                                                                                                                                       
-HEAD <ProjectFolder>\qpm.ch                                                                                                                                                                                                                                   
-HEAD <ProjectFolder>\QPM_CompatibilityHotRecovery.ch                                                                                                                                                                                                          
-HEAD <ProjectFolder>\QPM_CompatibilityOpenGlobal.CH                                                                                                                                                                                                           
-HEAD <ProjectFolder>\QPM_CompatibilityOpenProject.CH                                                                                                                                                                                                          
-HEAD <ProjectFolder>\QPM_CompatibilityStatistics.ch                                                                                                                                                                                                           
-HEAD <ProjectFolder>\QPM_Resources.ch                                                                                                                                                                                                                         
-HEAD <ProjectFolder>\resource.h                                                                                                                                                                                                                               
-HEAD <ProjectFolder>\FuentesComunes\US_Env.h                                                                                                                                                                                                                  
-HEAD <ProjectFolder>\FuentesComunes\US_i_richeditbox.ch                                                                                                                                                                                                       
-HEAD <ProjectFolder>\FuentesComunes\US_Log.h                                                                                                                                                                                                                  
-INCLUDEE1BH *Last* C:\MiniGUI\Harbour\lib\calldll.lib                                                                                                                                                                                                         
-INCLUDEE1BH *Last* C:\MiniGUI\Harbour\lib\hbct.lib                                                                                                                                                                                                            
-INCLUDEE1BH *Last* C:\MiniGUI\Harbour\lib\hbziparc.lib                                                                                                                                                                                                        
-INCLUDEE1BX *Last* C:\MiniGUI203\xHarbour\lib\calldll.lib                                                                                                                                                                                                     
-INCLUDEE1BX *Last* C:\MiniGUI203\xHarbour\lib\zlib.lib                                                                                                                                                                                                        
-EXCLUDEE1BH ziparchive.lib                                                                                                                                                                                                                                    
+VERSION 05 04 05
+PRJ_VERSION 05 04 0005
+PROJECTFOLDER <ThisFolder>
+LASTLIBFOLDERM1BH 
+LASTLIBFOLDERM1BX 
+LASTLIBFOLDERE1BH C:\MiniGUI\Harbour\lib
+LASTLIBFOLDERE1BX C:\MiniGUI203\xHarbour\lib
+LASTLIBFOLDERE1GH 
+LASTLIBFOLDERE1GX 
+LASTLIBFOLDERO3BH 
+LASTLIBFOLDERO3BX 
+LASTLIBFOLDERO3GH 
+LASTLIBFOLDERO3GX 
+LASTLIBFOLDERO3PH 
+LASTLIBFOLDERO3PX 
+LASTLIBFOLDERM3GH 
+LASTLIBFOLDERM3GX 
+RUNFOLDER 
+RUNPARAM 
+OVERRIDECOMPILEPARM 
+OVERRIDELINKPARM 
+CHECKHARBOUR H
+CHECKHARBOURIS31 YES
+CHECKCPP B
+CHECKMINIGUI E1
+CHECKCONSOLE NO
+CHECKUPX NO
+CHECKFORMTOOL AUTO
+CHECKDBFTOOL OTHER
+OUTPUTCOPYMOVE NONE
+OUTPUTCOPYMOVEFOLDER <ProjectFolder>_05_03_08
+OUTPUTRENAME NONE
+OUTPUTRENAMENEWNAME 
+CHECKOUTPUTSUFFIX NO
+OUTPUTTYPE SRCEXE
+CHECKREIMPORT NO
+LIBREIMPORT 
+IMPORTGUIONA NO
+DBFAUTOVIEW .T.
+EXTRARUNCMDFINAL 
+EXTRARUNPROJQPM 
+EXTRARUNCMDEXE 
+EXTRARUNCMDFREE 
+EXTRARUNQPMPARM 
+EXTRARUNEXEPARM 
+EXTRARUNFREEPARM 
+EXTRARUNTYPE NONE
+EXTRARUNQPMRADIO 
+EXTRARUNQPMLITE .T.
+EXTRARUNQPMFORCEFULL .F.
+EXTRARUNQPMRUN .F.
+EXTRARUNQPMBUTTONRUN .F.
+EXTRARUNQPMCLEAR .F.
+EXTRARUNQPMLOG .F.
+EXTRARUNQPMLOGONLYERROR .F.
+EXTRARUNQPMAUTOEXIT .T.
+EXTRARUNEXEWAIT .T.
+EXTRARUNEXEPAUSE .T.
+EXTRARUNFREEWAIT .T.
+EXTRARUNFREEPAUSE .T.
+DEBUGACTIVE NO
+MI_BEXEASSOCIATION .F.
+MI_CEXEASSOCIATION 
+MI_NEXEASSOCIATIONICON 0000000001
+MI_BEXEBACKUPOPTION .F.
+MI_BNEWFILE .F.
+MI_NNEWFILESUGGESTED 0000000001
+MI_CNEWFILELEYEND 
+MI_NNEWFILEEMPTY 0000000001
+MI_CNEWFILEUSERFILE 
+MI_NDESTINATIONPATH 0000000001
+MI_CDESTINATIONPATH 
+MI_NLEYENDSUGGESTED 0000000001
+MI_CLEYENDUSERTEXT 
+MI_BDESKTOPSHORTCUT .T.
+MI_NDESKTOPSHORTCUT 0000000001
+MI_BSTARTMENUSHORTCUT .T.
+MI_NSTARTMENUSHORTCUT 0000000001
+MI_BLAUNCHAPPLICATION .T.
+MI_NLAUNCHAPPLICATION 0000000001
+MI_BLAUNCHBACKUPOPTION .F.
+MI_BREBOOT .F.
+MI_CDEFAULTLANGUAGE EN
+MI_NINSTALLERNAME 0000000001
+MI_CINSTALLERNAME 
+MI_CIMAGE 
+MI_BSELECTALLPRG .F.
+MI_BSELECTALLHEA .F.
+MI_BSELECTALLPAN .F.
+MI_BSELECTALLDBF .F.
+MI_BSELECTALLLIB .F.
+SHGDATABASE *NONE*
+SHGLASTFOLDERIMG <ProjectFolder>\QPM\HelpQPM
+SHGOUTPUTTYPE YES
+SHGHTMLFOLDER D:\Temp\QPM\htmlhelp
+SHGWWW 
+HOTLASTEXTERNALFILE D:\Temp\FreeWinActiveX\atl.cpp
+SOURCE <ProjectFolder>\QPM.PRG
+SOURCE <ProjectFolder>\QPM_Environment.prg
+SOURCE <ProjectFolder>\QPM_ExtraRun.PRG
+SOURCE <ProjectFolder>\QPM_Functions.PRG
+SOURCE <ProjectFolder>\QPM_GlobalSettings.PRG
+SOURCE <ProjectFolder>\QPM_HotRecovery.prg
+SOURCE <ProjectFolder>\QPM_Killer.PRG
+SOURCE <ProjectFolder>\QPM_Libraries.prg
+SOURCE <ProjectFolder>\QPM_ProjectSettings.PRG
+SOURCE <ProjectFolder>\QPM_SHG_AssistImage.PRG
+SOURCE <ProjectFolder>\QPM_SHG_AssistLink.PRG
+SOURCE <ProjectFolder>\QPM_SHG_SimpleHelpGenerator.prg
+SOURCE <ProjectFolder>\QPM_SyncRecovery.prg
+SOURCE <FR> <ProjectFolder>\QPM_Version.PRG
+SOURCE <ProjectFolder>\FuentesComunes\TAxPrg.prg
+SOURCE <ProjectFolder>\FuentesComunes\US_Clases.prg
+SOURCE <ProjectFolder>\FuentesComunes\US_Edit_CharFijo.prg
+SOURCE <ProjectFolder>\FuentesComunes\US_HB.PRG
+SOURCE <ProjectFolder>\FuentesComunes\US_Log.prg
+SOURCE <ProjectFolder>\FuentesComunes\US_l_richeditbox.prg
+SOURCE <ProjectFolder>\FuentesComunes\US_MG.PRG
+SOURCE <ProjectFolder>\FuentesComunes\US_ProcessWin.prg
+HEAD <ProjectFolder>\qpm.ch
+HEAD <ProjectFolder>\QPM_CompatibilityHotRecovery.ch
+HEAD <ProjectFolder>\QPM_CompatibilityOpenGlobal.CH
+HEAD <ProjectFolder>\QPM_CompatibilityOpenProject.CH
+HEAD <ProjectFolder>\QPM_CompatibilityStatistics.ch
+HEAD <ProjectFolder>\QPM_Resources.ch
+HEAD <ProjectFolder>\resource.h
+HEAD <ProjectFolder>\FuentesComunes\US_Env.h
+HEAD <ProjectFolder>\FuentesComunes\US_i_richeditbox.ch
+HEAD <ProjectFolder>\FuentesComunes\US_Log.h
+INCLUDEE1BH *Last* C:\MiniGUI\Harbour\lib\calldll.lib 
+INCLUDEE1BH *Last* C:\MiniGUI\Harbour\lib\hbct.lib 
+INCLUDEE1BH *Last* C:\MiniGUI\Harbour\lib\hbziparc.lib 
+INCLUDEE1BX *Last* C:\MiniGUI203\xHarbour\lib\calldll.lib 
+INCLUDEE1BX *Last* C:\MiniGUI203\xHarbour\lib\zlib.lib 
+EXCLUDEE1BH ziparchive.lib
