@@ -29,7 +29,7 @@
 #include 'minigui.ch'
 #include <QPM.ch>
 
-#define QPM_VERSION_NUMBER '05 04 04'
+#define QPM_VERSION_NUMBER '05 04 05'
 #define QUOTE_MARK         '"'
 
 #define SCRIPT_FILE  ( US_ShortName( PUB_cProjectFolder ) + DEF_SLASH + '_' + PUB_cSecu + 'Script.ld' )
@@ -10755,10 +10755,12 @@ Function QPM_DefinoMainMenu()
                    if len( vLastOpen ) > 0
                       SEPARATOR
                    endif
-                   For i := len( vLastOpen ) to 1 step -1
-                       if ! empty( vLastOpen[i] )
-                          _DefineMenuItem( vLastOpen[i], {|| QPM_OpenProject( vLastOpen[i] ) }, NIL, if( file( vLastOpen[i] ), 'GridTilde', 'GridEquis' ) )
-                       endif
+                   for i := len( vLastOpen ) to 1 step -1
+                      cProj := vLastOpen[i]
+                      if ! empty( cProj )
+                         bAction := "{|| QPM_OpenProject( '" + cProj + "' ) }"
+                         _DefineMenuItem( cProj, &bAction, NIL, if( file( cProj ), 'GridTilde', 'GridEquis' ) )
+                      endif
                    next
                    if len( vLastOpen ) > 0
                       SEPARATOR
@@ -10861,13 +10863,19 @@ Function QPM_DefinoMainMenu()
                   DROPDOWN
 
                   DEFINE DROPDOWN MENU BUTTON OPEN OF VentanaMain
-                         ITEM 'Open/New'        ACTION QPM_OpenProject()
+                      ITEM 'Open/New' ACTION QPM_OpenProject()
+                      SEPARATOR
+                      for i := len( vLastOpen ) to 1 step -1
+                         cProj := vLastOpen[i]
+                         if ! empty( cProj )
+                            bAction := "{|| QPM_OpenProject( '" + cProj + "' ) }"
+                            _DefineMenuItem( cProj, &bAction, NIL, if( file( cProj ), 'GridTilde', 'GridEquis' ) )
+                         endif
+                      next
+                      if len( vLastOpen ) > 0
                          SEPARATOR
-                         For i := len( vLastOpen ) to 1 step -1
-                            if ! empty( vLastOpen[i] )
-                               _DefineMenuItem( vLastOpen[i], {|| QPM_OpenProject( vLastOpen[i] ) }, NIL, if( file( vLastOpen[i] ), 'GridTilde', 'GridEquis' ) )
-                            endif
-                         next
+                         ITEM '&Clear list' ACTION QPM_ClearLastOpenList()
+                      endif
                   END MENU
 
           BUTTON SAVE             ;

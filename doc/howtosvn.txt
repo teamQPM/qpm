@@ -167,8 +167,7 @@ HOW TO BUILD A NEW RELEASE
 [4] Build the project.
 
 [5] To publish a patch or upgrade release:
-    a) create a new folder in your local disk and name it
-       QPM_<old version number>_upgrade_to_<new version number>
+    a) create a new folder in your local disk and name it QPM_UPGRADE
     b) copy QPM.EXE
     c) copy ./doc/UpgradeReadme.txt and rename it as README.TXT
     d) update README.TXT replacing OLD by <new version number>.
@@ -214,10 +213,10 @@ HOW TO BUILD A NEW RELEASE
     c) update the following variables to the new version number:
          AppVerName=QPM v05.02 build 05
          DefaultDirName=C:\QPM_05_02_05
-         OutputBaseFilename=QPM_05_02_0005_Install
+         OutputBaseFilename=QPM_INSTALL
     d) update AppPublisher line with your name.
     e) hit "compile" button.
-    f) upload file C:\QPM Distribution\QPM_05_02_0005_Install.exe
+    f) upload file C:\QPM Distribution\QPM_INSTALL.exe
        to sourceforge.
 
 
