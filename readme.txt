@@ -1,4 +1,15 @@
 
+En la versión 05_04_05:
+1. Corregido: cancelación al clickear un proyecto previo que ya no existe.
+
+Version 05_04_05:
+1. Fixed: cancelation when clicking a previous project that no longer exists.
+
+Versão 05_04_05:
+1. Fixo: cancelamento al clicar em um projeto anterior que já não existe.
+
+----
+
 En la versión 05_04_04:
 1. Agregado: librería iphlpapi.a para Harbour+MinGW+OOHG.
 2. Modificado: los fuentes de la librería socket para hacerlos compatibles con Harbour 3.2.
