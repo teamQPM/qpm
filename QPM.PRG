@@ -29,7 +29,7 @@
 #include 'minigui.ch'
 #include <QPM.ch>
 
-#define QPM_VERSION_NUMBER '05 04 05'
+#define QPM_VERSION_NUMBER '05 04 07'
 #define QUOTE_MARK         '"'
 
 #define SCRIPT_FILE  ( US_ShortName( PUB_cProjectFolder ) + DEF_SLASH + '_' + PUB_cSecu + 'Script.ld' )
@@ -122,6 +122,7 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
    PUBLIC bConsole := .F.
    PUBLIC bUpx        := .F.
    PUBLIC bOutputSuffix := .F.
+   PUBLIC bOutputPrefix := .T.
 // Public cUpxOpt     := '--no-progress --compress-icons=0'     // con esta opcion NO comprime los ICONOS
    PUBLIC cUpxOpt     := '--no-progress'                        // por default comprime los iconos excepto el primero
    PUBLIC cFormTool := 'AUTO'
@@ -540,6 +541,7 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
    PUBLIC Prj_Radio_OutputRename        := 1
    PUBLIC Prj_Text_OutputRenameNewName  := ''
    PUBLIC Prj_Check_OutputSuffix        := .F.
+   PUBLIC Prj_Check_OutputPrefix        := .T.
    PUBLIC Prj_Check_Upx                 := .F.
    PUBLIC Prj_Radio_FormTool            := 1
    PUBLIC Prj_Radio_DbFTool             := 1
@@ -591,7 +593,7 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
    PUBLIC bWarningCpp                   := .T.
 
    PUBLIC vExeList := {}
-   aadd( vExeList , PUB_cQPM_Folder+DEF_SLASH+'QPM.exe'                   )
+   aadd( vExeList , PUB_cQPM_Folder+DEF_SLASH+'QPM.EXE'                   )
    aadd( vExeList , PUB_cQPM_Folder+DEF_SLASH+'QPM.chm'                   )
    aadd( vExeList , PUB_cQPM_Folder+DEF_SLASH+'US_Slash.exe'              )
    aadd( vExeList , PUB_cQPM_Folder+DEF_SLASH+'US_Shell.exe'              )
@@ -949,7 +951,7 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
            ON LOSTFOCUS LiberoWindowsHotKeys(.T.) ;
            ON MINIMIZE LiberoWindowsHotKeys(.T.) ;
            ON INIT MainInitAutoRun() ;
-           ON RELEASE if( !PUB_bLite , SaveEnvironment() , ) ;
+           ON RELEASE if( !PUB_bLite , SaveEnvironment( .T. ) , ) ;
            ON INTERACTIVECLOSE QPM_Exit()
 
 
@@ -4341,7 +4343,9 @@ Function QPM_OpenProject2()
       Prj_Check_Upx     := .F.
       bUpx              := .F.
       Prj_Check_OutputSuffix := .F.
+      Prj_Check_OutputPrefix := .T.
       bOutputSuffix     := .F.
+      bOutputPrefix     := .T.
       For i=1 to len( vSuffix )
          &( 'IncludeLibs'+vSuffix[i][1] ) := {}
          &( 'ExcludeLibs'+vSuffix[i][1] ) := {}
@@ -4627,6 +4631,9 @@ Function QPM_OpenProject2()
          ElseIf  US_Upper( US_Word( LOC_cLine , 1 ) ) == 'CHECKOUTPUTSUFFIX'
                  Prj_Check_OutputSuffix := if( US_Word ( LOC_cLine , 2 ) == 'YES' , .T. , .F. )
                  bOutputSuffix := if( US_Word ( LOC_cLine , 2 ) == 'YES' , .T. , .F. )
+         ElseIf  US_Upper( US_Word( LOC_cLine , 1 ) ) == 'CHECKOUTPUTPREFIX'
+                 Prj_Check_OutputPrefix := if( US_Word ( LOC_cLine , 2 ) == 'YES' , .T. , .F. )
+                 bOutputPrefix := if( US_Word ( LOC_cLine , 2 ) == 'YES' , .T. , .F. )
          ElseIf  US_Upper( US_Word( LOC_cLine , 1 ) ) == 'CHECKUPX'
                  Prj_Check_Upx := if( US_Word ( LOC_cLine , 2 ) == 'YES' , .T. , .F. )
                  bUpx := if( US_Word ( LOC_cLine , 2 ) == 'YES' , .T. , .F. )
@@ -5041,6 +5048,7 @@ Function QPM_SaveProject( bCheck )
    cINI := cINI + 'OUTPUTRENAME '               + cOutputRename + HB_OsNewLine()
    cINI := cINI + 'OUTPUTRENAMENEWNAME '        + Prj_Text_OutputRenameNewName + HB_OsNewLine()
    cINI := cINI + 'CHECKOUTPUTSUFFIX '          + if( Prj_Check_OutputSuffix , 'YES' , 'NO' ) + HB_OsNewLine()
+   cINI := cINI + 'CHECKOUTPUTPREFIX '          + if( Prj_Check_OutputPrefix , 'YES' , 'NO' ) + HB_OsNewLine()
    cINI := cINI + 'OUTPUTTYPE '                 + cOutputType + HB_OsNewLine()
    cINI := cINI + 'CHECKREIMPORT '              + if( GetProperty( 'VentanaMain' , 'Check_Reimp' , 'Value' ) , 'YES' , 'NO' ) + HB_OsNewLine()
    cINI := cINI + 'LIBREIMPORT '                + GetProperty( 'VentanaMain' , 'TReimportLib' , 'Value' ) + HB_OsNewLine()
@@ -7921,6 +7929,11 @@ Return .T.
 Function ActOutputSuffix()
    Prj_Check_OutputSuffix := GetProperty( 'WinPSettings' , 'Check_OutputSuffix' , 'value' )
    bOutputSuffix := Prj_Check_OutputSuffix
+Return .T.
+
+Function ActOutputPrefix()
+   Prj_Check_OutputPrefix := GetProperty( 'WinPSettings' , 'Check_OutputPrefix' , 'value' )
+   bOutputPrefix := Prj_Check_OutputPrefix
 Return .T.
 
 Function ActUpx()

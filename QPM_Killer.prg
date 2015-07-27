@@ -191,7 +191,7 @@ Function QPM_DefinoKillerWindow()
                 WIDTH           200
                 HEIGHT          20
                 VALUE           .F.
-                TOOLTIP "Show all QPM Process (QPM.exe, US_Run.exe, etc)"
+                TOOLTIP "Show all QPM Process (QPM.EXE, US_Run.exe, etc)"
                 ON CHANGE       ( RefreshGrid( WinKiller.GGrid.Cell( WinKiller.GGrid.Value , 1 ) , , .T. ) , WinKiller.GGrid.Setfocus )
         END CHECKBOX
 

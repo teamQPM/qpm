@@ -8,6 +8,38 @@
  * See "How to format your ChangeLog entries" in howtosvn.txt file.
  */
 
+2015-07-26 21:24:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * ./readme.txt
+   * ./QPM_AutoProject.qpm
+   * ./QPM.chm
+   * ./QPM_AutoProjectOnlyHelp.qpm
+   * ./QPM.EXE
+   * ./HelpQPM/QPM_ProjectSettings.png
+     * Updated.
+   * ./QPM.PRG
+     * Version to 05_04_07.
+     + Support for "Add Lib" option.
+     * Changed some filenames casing.
+   * ./QPM_Killer.prg
+   * ./QPM_SHG_SimpleHelpGenerator.prg
+     * Changed some filenames casing.
+   * ./QPM.ch
+   * ./QPM_Functions.PRG
+   * ./QPM_ProjectSettings.prg
+     + Support for "Add Lib" option. This options controls if QPM must add
+       "Lib" prefix to the name of a library.
+
+2015-07-15 20:31:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * ./readme.txt
+   * ./QPM_AutoProject.qpm
+     * Updated.
+   * ./QPM.EXE
+     * Version to 05_04_06.
+   * ./QPM.PRG
+   * ./QPM_Environment.prg
+     ! Global configuration is lost after upgrade.
+     ! New configuration file has wrong version number until app's exit.
+
 2015-07-11 17:24:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * ./readme.txt
      * Updated.
