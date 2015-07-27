@@ -8,6 +8,13 @@
  * See "How to format your ChangeLog entries" in howtosvn.txt file.
  */
 
+2015-07-26 21:28:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * ./HelpQPM/QPM_SHG.dbf
+   * ./HelpQPM/QPM_SHG.fpt
+   * ./HelpQPM/QPM_SHG.cdx
+     * Updated Changelog info.
+     * Updated Project Setup info.
+
 2015-07-26 21:24:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * ./readme.txt
    * ./QPM_AutoProject.qpm
