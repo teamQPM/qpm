@@ -1,4 +1,26 @@
 
+En la versión 05_04_07:
+1. Corregido: el ejecutable se genera siempre con la extensión EXE (en mayúscula), aún cuando se haya especificado con minúsculas.
+
+Version 05_04_07:
+1. Fixed: executable file is always named with EXE extention (uppercase), even when lowercase was specified.
+
+Versão 05_04_07:
+1. Fixo: o executável é sempre gerado com a extensão EXE (maiúsculas), mesmo quando especificado com letras minúsculas.
+
+----
+
+En la versión 05_04_06:
+1. Corregido: la configuración global se pierde luego de un upgrade.
+
+Version 05_04_06:
+1. Fixed: global configuration is lost after upgrade.
+
+Versão 05_04_06:
+1. Fixo: a configuração geral é perdida após um upgrade.
+
+----
+
 En la versión 05_04_05:
 1. Corregido: cancelación al clickear un proyecto previo que ya no existe.
 
