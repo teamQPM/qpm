@@ -8,6 +8,12 @@
  * See "How to format your ChangeLog entries" in howtosvn.txt file.
  */
 
+2015-07-26 21:40:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * ./readme.txt
+     * Updated.
+   ; Today commits try to fix "file not found" error when trying to run newly
+     created exe under Linux. Verification is pending.
+
 2015-07-26 21:28:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * ./HelpQPM/QPM_SHG.dbf
    * ./HelpQPM/QPM_SHG.fpt
