@@ -1091,24 +1091,24 @@ Function SHG_PutDllItcc()
       Return cDllItccPath
    endif
    if !file( PUB_cQPM_Folder + DEF_SLASH + "hha.dll" )
-      COPY FILE ( PUB_cQPM_Folder + DEF_SLASH + "us_hha.dll" ) TO ( PUB_cQPM_Folder + DEF_SLASH + "hha.dll" )
+      COPY FILE ( PUB_cQPM_Folder + DEF_SLASH + "US_hha.dll" ) TO ( PUB_cQPM_Folder + DEF_SLASH + "hha.dll" )
    endif
-   if ( upper( cDllItccPath ) == upper( PUB_cQPM_Folder + DEF_SLASH + "US_Itcc.dll" ) )
+   if ( upper( cDllItccPath ) == upper( PUB_cQPM_Folder + DEF_SLASH + "US_itcc.dll" ) )
       Return ""
    endif
-   if !empty( cDllItccPath ) .and. !( upper( cDllItccPath ) == upper( PUB_cQPM_Folder + DEF_SLASH + "US_Itcc.dll" ) )
+   if !empty( cDllItccPath ) .and. !( upper( cDllItccPath ) == upper( PUB_cQPM_Folder + DEF_SLASH + "US_itcc.dll" ) )
       QPM_Execute( "regsvr32" , "/s /u " + cDllItccPath , DEF_QPM_EXEC_WAIT , DEF_QPM_EXEC_MINIMIZE )
-      QPM_Execute( "regsvr32" , "/s " + PUB_cQPM_Folder + DEF_SLASH + "US_Itcc.dll" , DEF_QPM_EXEC_WAIT , DEF_QPM_EXEC_MINIMIZE )
+      QPM_Execute( "regsvr32" , "/s " + PUB_cQPM_Folder + DEF_SLASH + "US_itcc.dll" , DEF_QPM_EXEC_WAIT , DEF_QPM_EXEC_MINIMIZE )
       Return cDllItccPath
    endif
    if empty( cDllItccPath )
-      QPM_Execute( "regsvr32" , "/s " + PUB_cQPM_Folder + DEF_SLASH + "US_Itcc.dll" , DEF_QPM_EXEC_WAIT , DEF_QPM_EXEC_MINIMIZE )
+      QPM_Execute( "regsvr32" , "/s " + PUB_cQPM_Folder + DEF_SLASH + "US_itcc.dll" , DEF_QPM_EXEC_WAIT , DEF_QPM_EXEC_MINIMIZE )
    endif
 Return ""
 
 Function SHG_RestoreDllItcc( cDllName )
    //ferase( PUB_cQPM_Folder + DEF_SLASH + "hha.dll" )
-   QPM_Execute( "regsvr32" , "/s /u " + PUB_cQPM_Folder + DEF_SLASH + "US_Itcc.dll" , DEF_QPM_EXEC_WAIT , DEF_QPM_EXEC_MINIMIZE )
+   QPM_Execute( "regsvr32" , "/s /u " + PUB_cQPM_Folder + DEF_SLASH + "US_itcc.dll" , DEF_QPM_EXEC_WAIT , DEF_QPM_EXEC_MINIMIZE )
    QPM_Execute( "regsvr32" , "/s " + cDllName , DEF_QPM_EXEC_WAIT , DEF_QPM_EXEC_MINIMIZE )
 Return .T.
 

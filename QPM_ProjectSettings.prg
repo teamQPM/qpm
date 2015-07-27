@@ -51,11 +51,11 @@ Function ProjectSettings()
           ON INIT WinPSettingsInit() ;
           ON INTERACTIVECLOSE US_NOP()
 
-      @ 08 , 35 FRAME FCompiler ;
-         WIDTH 230 ;
+      @ 08 , 20 FRAME FCompiler ;
+         WIDTH 240 ;
          HEIGHT 120
 
-      @ 13 , 40 LABEL LCompiler ;
+      @ 13 , 30 LABEL LCompiler ;
          VALUE 'Compilers:' ;
          WIDTH 110 ;
          FONT 'arial' SIZE 10 BOLD ;
@@ -66,14 +66,14 @@ Function ProjectSettings()
     //        COL             10
     //        VALUE           'xHarbour MultiThread:'
     //END LABEL
-      @ 40 , 50 RADIOGROUP Radio_Harbour ;
+      @ 40 , 40 RADIOGROUP Radio_Harbour ;
          OPTIONS { 'Harbour' , 'xHarbour' } ;
          VALUE Prj_Radio_Harbour ;
          WIDTH  100 ;
          TOOLTIP "Select Compiler" ;
          ON CHANGE CheckCombinationRadio("H")
 
-      @ 96 , 50 CHECKBOX Chk_HBVersion ;
+      @ 96 , 40 CHECKBOX Chk_HBVersion ;
          CAPTION "Harbour 3.1 or later: " ;
          WIDTH 150 ;
          HEIGHT 24 ;
@@ -88,7 +88,7 @@ Function ProjectSettings()
     //        VALUE           Prj_Check_34
     //END CHECKBOX
 
-      @ 16 , 155 RADIOGROUP Radio_Cpp ;
+      @ 16 , 145 RADIOGROUP Radio_Cpp ;
          OPTIONS { 'BorlandC' , 'MinGW' , 'PellesC' } ;
          VALUE Prj_Radio_Cpp ;
          WIDTH  100 ;
@@ -96,7 +96,7 @@ Function ProjectSettings()
          ON CHANGE CheckCombinationRadio("C")
 
       @ 08 , 285 FRAME FMinigui ;
-         WIDTH 230 ;
+         WIDTH 240 ;
          HEIGHT 155
 
       @ 13 , 290 LABEL LMinigui ;
@@ -122,18 +122,18 @@ Function ProjectSettings()
       END CHECKBOX
           //  ON CHANGE       ActConsoleMode()
 
-      @ 138 , 35 FRAME FOutputType ;
-         WIDTH 230 ;
+      @ 138 , 20 FRAME FOutputType ;
+         WIDTH 240 ;
          HEIGHT 120
 
-      @ 143 , 40 LABEL LOutputType ;
+      @ 143 , 30 LABEL LOutputType ;
          VALUE 'Output Type:' ;
          WIDTH 150 ;
          FONT 'arial' SIZE 10 BOLD ;
          FONTCOLOR DEF_COLORBLUE
 
        //OPTIONS { 'Executable (.EXE)' , 'Library (.LIB or .A)' , 'Dynamic Library (.DLL) (only C)' } ;
-      @ 170 , 50 RADIOGROUP Radio_OutputType ;
+      @ 170 , 40 RADIOGROUP Radio_OutputType ;
          OPTIONS { 'Executable (.EXE)' , 'Library (.LIB or .A)' , 'Interface Library (for DLL)' } ;
          VALUE Prj_Radio_OutputType ;
          WIDTH 160 ;
@@ -143,23 +143,32 @@ Function ProjectSettings()
       DEFINE CHECKBOX Check_Upx
               CAPTION         "UPX"
               ROW             170
-              COL             210
+              COL             200
               WIDTH           50
               VALUE           Prj_Check_Upx
               TOOLTIP "Compress EXE with UPX utility.  Look at link menu for home page of UPX project"
       END CHECKBOX
 
-      @ 268 , 35 FRAME FOutputCopyMove ;
-         WIDTH 230 ;
+      DEFINE CHECKBOX Check_OutputPrefix
+              CAPTION         'Add Lib'
+              ROW             195
+              COL             200
+              WIDTH           60
+              VALUE           Prj_Check_OutputPrefix
+              TOOLTIP 'Add "Lib" Prefix to Output File'
+      END CHECKBOX
+
+      @ 268 , 20 FRAME FOutputCopyMove ;
+         WIDTH 240 ;
          HEIGHT 160
 
-      @ 273 , 40 LABEL LOutputCopyMove ;
+      @ 273 , 30 LABEL LOutputCopyMove ;
          VALUE 'Output Copy/Move:' ;
          WIDTH 150 ;
          FONT 'arial' SIZE 10 BOLD ;
          FONTCOLOR DEF_COLORBLUE
 
-      @ 300 , 50 RADIOGROUP Radio_OutputCopyMove ;
+      @ 300 , 40 RADIOGROUP Radio_OutputCopyMove ;
          OPTIONS { 'None' , 'Copy to...' , 'Move to...' } ;
          VALUE Prj_Radio_OutputCopyMove ;
          WIDTH 120 ;
@@ -175,12 +184,12 @@ Function ProjectSettings()
       DEFINE TEXTBOX Text_CopyMove
               VALUE           Prj_Text_OutputCopyMoveFolder
               ROW             390
-              COL              50
+              COL              40
               WIDTH           150
       END TEXTBOX
       DEFINE BUTTON Button_CopyMove
               ROW             390
-              COL             210
+              COL             200
               WIDTH           25
               HEIGHT          25
               PICTURE         'folderselect'
@@ -189,7 +198,7 @@ Function ProjectSettings()
       END BUTTON
 
       @ 168 , 285 FRAME FOutputRename ;
-         WIDTH 230 ;
+         WIDTH 240 ;
          HEIGHT 150
 
       @ 173 , 290 LABEL LOutputRename ;
@@ -222,7 +231,7 @@ Function ProjectSettings()
       END CHECKBOX
 
       @ 325 , 285 FRAME FExtraRun ;
-         WIDTH 230 ;
+         WIDTH 240 ;
          HEIGHT 070
 
       @ 330 , 290 LABEL LExtraRun ;
@@ -248,28 +257,23 @@ Function ProjectSettings()
               ONCLICK         QPM_GetExtraRun()
       END BUTTON
 
-   // @ 385 , 35 FRAME FUpx ;
-   //    WIDTH 450 ;
-   //    HEIGHT 40
-
-      @ 438 , 35 FRAME FDbf ;
-         WIDTH 230 ;
+      @ 438 , 20 FRAME FDbf ;
+         WIDTH 240 ;
          HEIGHT 90
 
-      @ 443 , 40 LABEL LDbf ;
+      @ 443 , 30 LABEL LDbf ;
          VALUE "Tool to Modify DBFs:" ;
          WIDTH 275 ;
          FONT 'arial' SIZE 10 BOLD ;
          FONTCOLOR DEF_COLORBLUE
 
-   //\\  OPTIONS { 'DbfView (by Grigory Filatov)' , 'DBU (by S. Rathinagiri)' , 'User Defined' } ;
-      @ 470 , 50 RADIOGROUP Radio_Dbf ;
+      @ 470 , 40 RADIOGROUP Radio_Dbf ;
          OPTIONS { 'DbfView (by Grigory Filatov)' , 'User Defined' } ;
          VALUE Prj_Radio_DbfTool ;
          WIDTH 200
 
       @ 408 , 285 FRAME FForm ;
-         WIDTH 230 ;
+         WIDTH 240 ;
          HEIGHT 120
 
       @ 413 , 290 LABEL LForm ;
@@ -296,7 +300,7 @@ Function ProjectSettings()
 
       DEFINE BUTTON B_CANCEL
              ROW             538
-             COL             290
+             COL             285
              WIDTH           80
              HEIGHT          25
              CAPTION         'Cancel'
@@ -342,6 +346,7 @@ Function ProjectChanged()
       Prj_Radio_OutputRename        != WinPSettings.Radio_OutputRename.value   .or. ;
       Prj_Text_OutputRenameNewName  != WinPSettings.Text_RenameOutput.value    .or. ;
       Prj_Check_OutputSuffix        != WinPSettings.Check_OutputSuffix.value   .or. ;
+      Prj_Check_OutputPrefix        != WinPSettings.Check_OutputPrefix.value   .or. ;
       Prj_Radio_FormTool            != WinPSettings.Radio_Form.value           .or. ;
       Prj_Radio_DbfTool             != WinPSettings.Radio_Dbf.value            .or. ;
       Prj_Check_Console             != WinPSettings.Check_Console.value        .or. ;
@@ -368,6 +373,7 @@ Function ProjectSettingsSave()
    ActOutputType()
    ActOutputRename()
    ActOutputSuffix()
+   ActOutputPrefix()
    ActFormTool()
    ActDbfTool()
    ActOutputCopyMove()

@@ -269,6 +269,7 @@ memvar bNumberOnHea
 memvar bNumberOnPan
 memvar bNumberOnPrg
 memvar bOutputSuffix
+memvar bOutputPrefix
 memvar bPanMoving
 memvar bPanSorting
 memvar bPpoDisplayado
@@ -393,6 +394,7 @@ memvar PageWWW
 memvar Prj_Check_Console
 memvar Prj_Check_HarbourIs31
 memvar Prj_Check_OutputSuffix
+memvar Prj_Check_OutputPrefix
 memvar Prj_Check_Upx
 memvar Prj_ExtraRunCmdEXE
 memvar Prj_ExtraRunCmdEXEParm

@@ -953,8 +953,23 @@ Function GetOutputModuleName( bForDisplay )
    endif
    do case
       case cOutputRename == "NEWNAME"
-         cOutputName        := US_ShortName(PUB_cProjectFolder) + DEF_SLASH + if( OutputExt() == "A" , 'Lib' , '' ) + US_FileNameOnlyName( Prj_Text_OutputRenameNewName ) + '.' + OutputExt()
-         cOutputNameDisplay := PUB_cProjectFolder + DEF_SLASH + if( OutputExt() == "A" , 'Lib' , '' ) + US_FileNameOnlyName( Prj_Text_OutputRenameNewName ) + '.' + OutputExt()
+         if empty( US_FileNameOnlyExt( Prj_Text_OutputRenameNewName ) )
+            if OutputExt() == "A" .and. bOutputPrefix
+               cOutputName        := US_ShortName(PUB_cProjectFolder) + DEF_SLASH + 'Lib' + US_FileNameOnlyName( Prj_Text_OutputRenameNewName ) + '.' + OutputExt()
+               cOutputNameDisplay := PUB_cProjectFolder + DEF_SLASH + 'Lib' + US_FileNameOnlyName( Prj_Text_OutputRenameNewName ) + '.' + OutputExt()
+            else
+               cOutputName        := US_ShortName(PUB_cProjectFolder) + DEF_SLASH + US_FileNameOnlyName( Prj_Text_OutputRenameNewName ) + '.' + OutputExt()
+               cOutputNameDisplay := PUB_cProjectFolder + DEF_SLASH + US_FileNameOnlyName( Prj_Text_OutputRenameNewName ) + '.' + OutputExt()
+            endif
+         else
+            if OutputExt() == "A" .and. bOutputPrefix
+               cOutputName        := US_ShortName(PUB_cProjectFolder) + DEF_SLASH + 'Lib' + US_FileNameOnlyNameAndExt( Prj_Text_OutputRenameNewName )
+               cOutputNameDisplay := PUB_cProjectFolder + DEF_SLASH + 'Lib' + US_FileNameOnlyNameAndExt( Prj_Text_OutputRenameNewName )
+            else
+               cOutputName        := US_ShortName(PUB_cProjectFolder) + DEF_SLASH + US_FileNameOnlyNameAndExt( Prj_Text_OutputRenameNewName )
+               cOutputNameDisplay := PUB_cProjectFolder + DEF_SLASH + US_FileNameOnlyNameAndExt( Prj_Text_OutputRenameNewName )
+            endif
+         endif
       otherwise
          cOutputName        := US_ShortName(PUB_cProjectFolder) + DEF_SLASH + if( OutputExt() == "A" , 'Lib' , '' ) + if( cConvert == "A DLL" , substr( US_FileNameOnlyName( GetProperty( "VentanaMain" , "GPrgFiles" , "Cell" , 1 , NCOLPRGFULLNAME ) ) , 4 ) , US_FileNameOnlyName( GetProperty( "VentanaMain" , "GPrgFiles" , "Cell" , 1 , NCOLPRGFULLNAME ) ) ) + '.' + OutputExt()
          cOutputNameDisplay := PUB_cProjectFolder + DEF_SLASH + if( OutputExt() == "A" , 'Lib' , '' ) + US_FileNameOnlyName( GetProperty( "VentanaMain" , "GPrgFiles" , "Cell" , 1 , NCOLPRGFULLNAME ) ) + '.' + OutputExt()
