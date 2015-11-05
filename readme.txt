@@ -1,4 +1,16 @@
 
+En la versión 05_04_08:
+1. Corregido: no se crea el ejecutable ya que MinGW de HMG 3.4.2 no encuentra los archivos de los #include.
+
+Version 05_04_08:
+1. Fixed: exe file is not builded because MinGW in HMG 3.4.2 couldn't find the #include files.
+
+Versão 05_04_08:
+1. Fixo: o executável não é gerado porque MinGW de HMG 3.4.2 não pode encontrar os arquivos.
+
+----
+
+
 En la versión 05_04_07:
 1. Corregido: el ejecutable se genera siempre con la extensión EXE (en mayúscula), aún cuando se haya especificado con minúsculas.
 

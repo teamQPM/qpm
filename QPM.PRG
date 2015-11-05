@@ -29,7 +29,7 @@
 #include 'minigui.ch'
 #include <QPM.ch>
 
-#define QPM_VERSION_NUMBER '05 04 07'
+#define QPM_VERSION_NUMBER '05 04 08'
 #define QUOTE_MARK         '"'
 
 #define SCRIPT_FILE  ( US_ShortName( PUB_cProjectFolder ) + DEF_SLASH + '_' + PUB_cSecu + 'Script.ld' )
@@ -5679,101 +5679,130 @@ Function QPM_Build2()
    aadd( vConcatIncludeC  , US_ShortName( PUB_cProjectFolder ) )
 
    For i := 1 to len( vConcatIncludeHB )
-      if US_IsRootFolder( vConcatIncludeHB[ i ] )
-         bExtraFolderSearchRoot := .T.
-      else
-         bExtraFolderSearchRoot := .F.
-      endif
-      do case
+      if ! empty( vConcatIncludeHB[ i ] )
+         if US_IsRootFolder( vConcatIncludeHB[ i ] )
+            bExtraFolderSearchRoot := .T.
+         else
+            bExtraFolderSearchRoot := .F.
+         endif
+         do case
          case IsMinGW
-            cExtraFoldersHB := cExtraFoldersHB + if( i==1 , '' , ';' ) + US_ShortName( vConcatIncludeHB[i] ) + if( bExtraFolderSearchRoot , DEF_SLASH , '' )
+            cExtraFoldersHB := cExtraFoldersHB + ';' + vConcatIncludeHB[i] + if( bExtraFolderSearchRoot, DEF_SLASH, '' )
+         case IsPelles
+            cExtraFoldersHB := cExtraFoldersHB + ';' + vConcatIncludeHB[i] + if( bExtraFolderSearchRoot, DEF_SLASH, '' )
+         case IsBorland
+            cExtraFoldersHB := cExtraFoldersHB + ';' + vConcatIncludeHB[i] + if( bExtraFolderSearchRoot, DEF_SLASH, '' )
          otherwise
-            cExtraFoldersHB := cExtraFoldersHB + if( i==1 , '' , ';' ) + US_ShortName( vConcatIncludeHB[i] ) + if( bExtraFolderSearchRoot , DEF_SLASH , '' )
-      endcase
+            US_Log( 'Error 5443')
+         endcase
+      endif
    Next i
 
    DO EVENTS
 
    For i := 1 to len( vConcatIncludeC )
-      if US_IsRootFolder( vConcatIncludeC[ i ] )
-         bExtraFolderSearchRoot := .T.
-      else
-         bExtraFolderSearchRoot := .F.
-      endif
-      do case
+      if ! empty( vConcatIncludeC[i] )
+         if US_IsRootFolder( vConcatIncludeC[i] )
+            bExtraFolderSearchRoot := .T.
+         else
+            bExtraFolderSearchRoot := .F.
+         endif
+         do case
          case IsMinGW
-            cExtraFoldersC  := cExtraFoldersC  + if( i==1 , '' , ' -I' ) + US_ShortName( vConcatIncludeC[i] ) + if( bExtraFolderSearchRoot , DEF_SLASH , '' )
+            cExtraFoldersC := cExtraFoldersC + ' -I' + vConcatIncludeC[i] + if( bExtraFolderSearchRoot, DEF_SLASH, '' )
          case IsPelles
-            cExtraFoldersC  := cExtraFoldersC  + if( i==1 , '' , ' /I' ) + US_ShortName( vConcatIncludeC[i] ) + if( bExtraFolderSearchRoot , DEF_SLASH , '' )
+            cExtraFoldersC := cExtraFoldersC + ' /I' + vConcatIncludeC[i] + if( bExtraFolderSearchRoot, DEF_SLASH, '' )
          case IsBorland
-            cExtraFoldersC  := cExtraFoldersC  + if( i==1 , '' , ';' ) + US_ShortName( vConcatIncludeC[i] ) + if( bExtraFolderSearchRoot , DEF_SLASH , '' )
+            cExtraFoldersC := cExtraFoldersC + ';' + vConcatIncludeC[i] + if( bExtraFolderSearchRoot, DEF_SLASH, '' )
          otherwise
-            US_Log( 'Error 5445')
-      endcase
+            US_Log( 'Error 5444')
+         endcase
+      endif
    Next i
 
    DO EVENTS
 
    For i := 1 to len( vExtraFoldersForSearch )
-      if !empty( vExtraFoldersForSearch[i] )
-         nLastExtraFolderSearchAdded := i
-         if US_IsRootFolder( vExtraFoldersForSearch[ i ] )
-            bExtraFolderSearchRoot := .T.
-         else
-            bExtraFolderSearchRoot := .F.
-         endif
-         aadd( vConcatIncludeHB , vExtraFoldersForSearch[i] )
-     //  aadd( vConcatIncludeHB , vExtraFoldersForSearch[i] + if( bExtraFolderSearchRoot , DEF_SLASH , '' ) )
-         aadd( vConcatIncludeC  , vExtraFoldersForSearch[i] )
-     //  aadd( vConcatIncludeC  , vExtraFoldersForSearch[i] + if( bExtraFolderSearchRoot , DEF_SLASH , '' ) )
+      if ! empty( vExtraFoldersForSearch[i] )
+         cAux := US_ShortName( vExtraFoldersForSearch[i] )
+         if ! empty( cAux )
+            nLastExtraFolderSearchAdded := i
+            if US_IsRootFolder( vExtraFoldersForSearch[ i ] )
+               bExtraFolderSearchRoot := .T.
+            else
+               bExtraFolderSearchRoot := .F.
+            endif
+            aadd( vConcatIncludeHB, cAux )
+            aadd( vConcatIncludeC, cAux )
 
-         cAux := US_ShortName( vExtraFoldersForSearch[i] ) + if( bExtraFolderSearchRoot , DEF_SLASH , '' )
-         if ! cAux $ cExtraFoldersHB
-            do case
-            case IsMinGW
-               cExtraFoldersHB := cExtraFoldersHB + ';' + cAux
-            case IsPelles
-               cExtraFoldersHB := cExtraFoldersHB + ';' + cAux
-            case IsBorland
-               cExtraFoldersHB := cExtraFoldersHB + ';' + cAux
-            otherwise
-               US_Log( 'Error 5464' )
-            endcase
-         endif
-         if ! cAux $ cExtraFoldersC
-            do case
-            case IsMinGW
-               cExtraFoldersC  := cExtraFoldersC  + ' -I' + cAux
-            case IsPelles
-               cExtraFoldersC  := cExtraFoldersC  + ' /I' + cAux
-            case IsBorland
-               cExtraFoldersC  := cExtraFoldersC  + ';' + cAux
-            otherwise
-               US_Log( 'Error 5464' )
-            endcase
+            if bExtraFolderSearchRoot
+               cAux += DEF_SLASH
+            endif
+
+            if ! cAux $ cExtraFoldersHB
+               do case
+               case IsMinGW
+                  cExtraFoldersHB := cExtraFoldersHB + ';' + cAux
+               case IsPelles
+                  cExtraFoldersHB := cExtraFoldersHB + ';' + cAux
+               case IsBorland
+                  cExtraFoldersHB := cExtraFoldersHB + ';' + cAux
+               otherwise
+                  US_Log( 'Error 5445' )
+               endcase
+            endif
+            if ! cAux $ cExtraFoldersC
+               do case
+               case IsMinGW
+                  cExtraFoldersC := cExtraFoldersC + ' -I' + cAux
+               case IsPelles
+                  cExtraFoldersC := cExtraFoldersC + ' /I' + cAux
+               case IsBorland
+                  cExtraFoldersC := cExtraFoldersC + ';' + cAux
+               otherwise
+                  US_Log( 'Error 5446' )
+               endcase
+            endif
          endif
       endif
    Next i
+
    // INI - El siguiente es un parche para cuando el ultimo folder a agregar en Search es del formato 'C:',
    //       ya que hay que agregarle algun folder del formato 'C:\xxxxx' para que no cancele
    if US_IsRootFolder( vExtraFoldersForSearch[ nLastExtraFolderSearchAdded ] )
-    //aadd( vConcatIncludeHB , DiskName() + ':' + DEF_SLASH + '_' + PUB_cSecu + 'SearchBug' )
-    //aadd( vConcatIncludeC  , DiskName() + ':' + DEF_SLASH + '_' + PUB_cSecu + 'SearchBug' )
+      /*
+      aadd( vConcatIncludeHB, US_ShortName( DiskName() + ':' + DEF_SLASH + '_' + PUB_cSecu + 'SearchBug' ) )
+      aadd( vConcatIncludeC, US_ShortName( DiskName() + ':' + DEF_SLASH + '_' + PUB_cSecu + 'SearchBug' ) )
+      */
       do case
-         case IsMinGW
-            cExtraFoldersHB := cExtraFoldersHB + ';' + DiskName() + ':' + DEF_SLASH + '_' + PUB_cSecu + 'SearchBug'
-            cExtraFoldersC  := cExtraFoldersC  + ' -I' + DiskName() + ':' + DEF_SLASH + '_' + PUB_cSecu + 'SearchBug'
-         case IsPelles
-            cExtraFoldersHB := cExtraFoldersHB + ';' + DiskName() + ':' + DEF_SLASH + '_' + PUB_cSecu + 'SearchBug'
-            cExtraFoldersC  := cExtraFoldersC  + ' /I' + DiskName() + ':' + DEF_SLASH + '_' + PUB_cSecu + 'SearchBug'
-         case IsBorland
-            cExtraFoldersHB := cExtraFoldersHB + ';' + DiskName() + ':' + DEF_SLASH + '_' + PUB_cSecu + 'SearchBug'
-            cExtraFoldersC  := cExtraFoldersC  + ';' + DiskName() + ':' + DEF_SLASH + '_' + PUB_cSecu + 'SearchBug'
-         otherwise
-            US_Log( 'Error 5465' )
+      case IsMinGW
+         cExtraFoldersHB := cExtraFoldersHB + ';' + US_ShortName( DiskName() + ':' + DEF_SLASH + '_' + PUB_cSecu + 'SearchBug' )
+         cExtraFoldersC  := cExtraFoldersC  + ' -I' + US_ShortName( DiskName() + ':' + DEF_SLASH + '_' + PUB_cSecu + 'SearchBug' )
+      case IsPelles
+         cExtraFoldersHB := cExtraFoldersHB + ';' + US_ShortName( DiskName() + ':' + DEF_SLASH + '_' + PUB_cSecu + 'SearchBug' )
+         cExtraFoldersC  := cExtraFoldersC  + ' /I' + US_ShortName( DiskName() + ':' + DEF_SLASH + '_' + PUB_cSecu + 'SearchBug' )
+      case IsBorland
+         cExtraFoldersHB := cExtraFoldersHB + ';' + US_ShortName( DiskName() + ':' + DEF_SLASH + '_' + PUB_cSecu + 'SearchBug' )
+         cExtraFoldersC  := cExtraFoldersC  + ';' + US_ShortName( DiskName() + ':' + DEF_SLASH + '_' + PUB_cSecu + 'SearchBug' )
+      otherwise
+         US_Log( 'Error 5447' )
       endcase
    endif
    // END Parche
+
+   do case
+   case IsMinGW
+      cExtraFoldersHB := SubStr( cExtraFoldersHB, 2 )  // get rid of first ';'
+      cExtraFoldersC  := SubStr( cExtraFoldersC, 4 )   // get rid of first ' -I'
+   case IsPelles
+      cExtraFoldersHB := SubStr( cExtraFoldersHB, 2 )  // get rid of first ';'
+      cExtraFoldersC  := SubStr( cExtraFoldersC, 4 )   // get rid of first ' /I'
+   case IsBorland
+      cExtraFoldersHB := SubStr( cExtraFoldersHB, 2 )  // get rid of first ';'
+      cExtraFoldersC  := SubStr( cExtraFoldersC, 2 )   // get rid of first ';'
+   otherwise
+      US_Log( 'Error 5445')
+   endcase
 
    DO EVENTS
 
@@ -5899,21 +5928,21 @@ Function QPM_Build2()
       endif
       if PUB_xHarbourMT = 'MT'
          if !IsMinGW
-            Out := Out + 'COBJFLAGS =  -c -O2 -tWM -M  -I$(DIR_C_INCLUDE) -L'+ US_ShortName(GetCppFolder()) + DEF_SLASH + 'LIB' + Hb_OsNewLine()
+            Out := Out + 'COBJFLAGS =  -c -O2 -tWM -M -I$(DIR_C_INCLUDE) -L'+ US_ShortName(GetCppFolder()) + DEF_SLASH + 'LIB' + Hb_OsNewLine()
          endif
       else
          do case
             case IsMinGW
                do case
                   case cOutputType == 'SRCDLL'
-                     Out := Out + 'COBJFLAGS =  -I$(DIR_C_INCLUDE) -c ' + Hb_OsNewLine()
+                     Out := Out + 'COBJFLAGS = -I$(DIR_C_INCLUDE) -c ' + Hb_OsNewLine()
                   otherwise
 /*
  Las versiones nuevas de gcc no soportan el flag -mno-cygwin
-                     Out := Out + 'COBJFLAGS =  -I$(DIR_C_INCLUDE) -mno-cygwin -Wall -c ' + Hb_OsNewLine()
+                     Out := Out + 'COBJFLAGS = -I$(DIR_C_INCLUDE) -mno-cygwin -Wall -c ' + Hb_OsNewLine()
 */
-                     Out := Out + 'COBJFLAGS =  -I$(DIR_C_INCLUDE) -Wall -c ' + Hb_OsNewLine()
-// For GTK           Out := Out + 'COBJFLAGS =  -I$(DIR_C_INCLUDE) -mms-bitfields -Wall -c ' + Hb_OsNewLine()
+                     Out := Out + 'COBJFLAGS = -I$(DIR_C_INCLUDE) -Wall -c ' + Hb_OsNewLine()
+// For GTK           Out := Out + 'COBJFLAGS = -I$(DIR_C_INCLUDE) -mms-bitfields -Wall -c ' + Hb_OsNewLine()
                endcase
             case IsPelles
                do case
@@ -8261,7 +8290,7 @@ Function xRefPrgHea()
       aadd( vHEAFiles , ChgPathToReal( GetProperty( 'VentanaMain' , 'GHeaFiles' , 'Cell' , f , NCOLHEAFULLNAME ) ) )
    Next f
    For f:=1 to len( vHeaFiles )
-      For i:=1 to len( vConcatIncludeC )
+      For i := 1 to len( vConcatIncludeC )
          if file( vConcatIncludeC[i]+DEF_SLASH+US_FileNameOnlyNameAndExt( vHeaFiles[f] ) )
             if !( US_Upper( US_ShortName( vConcatIncludeC[i]+DEF_SLASH+US_FileNameOnlyNameAndExt( vHeaFiles[f] ) ) ) == US_Upper( US_ShortName(vHeaFiles[f]) ) )
                MyMsgWarning( 'In Folder '+vConcatIncludeC[i]+' exists the Header '+US_FileNameOnlyNameAndExt( vHeaFiles[f] ) + HB_OsNewLine() + ;
