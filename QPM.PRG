@@ -5806,6 +5806,7 @@ Function QPM_Build2()
 
    DO EVENTS
 
+   ferase( SCRIPT_FILE )
    ferase( END_FILE )
    ferase( TEMP_LOG )
    ferase( PROGRESS_LOG )
