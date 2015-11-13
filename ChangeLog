@@ -8,6 +8,16 @@
  * See "How to format your ChangeLog entries" in howtosvn.txt file.
  */
 
+2015-11-12 21:48:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * ./QPM.EXE
+     * Updated.
+   * ./QPM.PRG
+     ! Exe is not linked because duplicated symbols are detected. This happens
+       when "Do not delete auxiliary files" option is checked and a second
+       build is launched.
+   * QPM_Libraries.prg
+     * Libraries for OOHG+MinGW synced with last release.
+
 2015-11-04 21:00:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * ./readme.txt
    * ./QPM_AutoProject.qpm
