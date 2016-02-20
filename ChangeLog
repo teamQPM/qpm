@@ -8,6 +8,17 @@
  * See "How to format your ChangeLog entries" in howtosvn.txt file.
  */
 
+2016-03-19 22:19:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * ./QPM.chm
+   * ./QPM_AutoProjectOnlyHelp.qpm
+     * Updated.
+   * ./HelpQPM/QPM_SHG.dbf
+   * ./HelpQPM/QPM_SHG.fpt
+   * ./HelpQPM/QPM_SHG.cdx
+     * Updated Changelog info.
+     + "Run folder" is needed when the exe builded with "Debug" option is
+       moved to another folder.
+
 2016-03-19 22:07:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * ./TODO
      * Updated.
