@@ -8,6 +8,15 @@
  * See "How to format your ChangeLog entries" in howtosvn.txt file.
  */
 
+2016-03-19 22:07:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * ./TODO
+     * Updated.
+   * ./QPM_Functions.PRG
+     + Function DebugOptions now writes the location and content of INIT.CLD
+   * ./QPM.PRG
+     * Version to 05_04_09.
+     * Do not write GCC call to log when Record Activity is on.
+
 2015-11-12 21:48:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * ./QPM.EXE
      * Updated.

@@ -29,7 +29,7 @@
 #include 'minigui.ch'
 #include <QPM.ch>
 
-#define QPM_VERSION_NUMBER '05 04 08'
+#define QPM_VERSION_NUMBER '05 04 09'
 #define QUOTE_MARK         '"'
 
 #define SCRIPT_FILE  ( US_ShortName( PUB_cProjectFolder ) + DEF_SLASH + '_' + PUB_cSecu + 'Script.ld' )
@@ -6736,11 +6736,11 @@ Function QPM_Build2()
          Out := Out + PUB_cCharTab + '$(US_MSG_EXE) ' + PROGRESS_LOG + ' -MSG:Processing ' + US_FileNameOnlyName( PRGFILES[i] ) + '.' + if( upper( US_FileNameOnlyExt( PRGFILES[i] ) ) == 'CPP' , 'cpp' , 'c' ) + ' ...' + Hb_OsNewLine()
          do case
             case IsMinGW
-               if bLogActivity
-                  Out := Out + PUB_cCharTab + '$(DEF_SLASH) -LIST' + US_ShortName(PUB_cQPM_Folder) + ' $(COBJFLAGS) $** -o$@' + Hb_OsNewLine()
-               else
+//               if bLogActivity
+//                  Out := Out + PUB_cCharTab + '$(DEF_SLASH) -LIST' + US_ShortName(PUB_cQPM_Folder) + ' $(COBJFLAGS) $** -o$@' + Hb_OsNewLine()
+//               else
                   Out := Out + PUB_cCharTab + '$(DEF_SLASH) $(COBJFLAGS) $** -o$@' + Hb_OsNewLine()
-               endif
+//               endif
             case IsPelles
                Out := Out + PUB_cCharTab + '$(COMPILATOR_C) $(COBJFLAGS) /Fo$@ $**' + Hb_OsNewLine()
             case IsBorland

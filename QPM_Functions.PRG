@@ -1031,7 +1031,7 @@ Function QPM_VerNunStr( nVer )
 Return ( "v" + substr( cAux , 1 , 2 ) + "." + substr( cAux , 3 , 2 ) + " build" + substr( cAux , 5 , 2 ) )
 
 Function DebugOptions( cDire , cPath )
-   LOCAL cAux := "" , cLeido := "" , i
+   LOCAL cAux := "", cLeido := "", i, memoTMP
    LOCAL cFile := US_FileNameOnlyPath( cDire ) + DEF_SLASH + "Init.Cld"
    cAux := cAux + 'Options Path ' + cPath + HB_OsNewLine()
 // cAux := cAux + 'Options Colors {"W + /BG","N/BG","R/BG","N + /BG","W + /B","GR + /B","W/B","N/W","R/W","N/BG","R/BG","GR + /BG"}' + HB_OsNewLine()
@@ -1068,6 +1068,15 @@ Function DebugOptions( cDire , cPath )
       next
    endif
    QPM_MemoWrit( cFile , cAux )
+   if bLogActivity
+      memoTMP := memoread( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log' )
+
+      memoTMP := memoTMP + HB_OSNewLine() + HB_OSNewLine()
+      memoTMP := memoTMP + '****** ' + cFile + HB_OSNewLine()+ HB_OSNewLine()
+      memoTMP := memoTMP + cAux + HB_OSNewLine()
+
+      QPM_MemoWrit( PUB_cQPM_Folder+DEF_SLASH + 'QPM.log' , memoTMP )
+   endif
 return
 
 Function ViewLog()
