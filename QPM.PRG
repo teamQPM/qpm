@@ -2463,7 +2463,7 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
                     WORKAREA Alias() ;
                     FIELDS ( vDbfHeaders ) ;
                     VALUE RECNO() ;
-                    FONT 'CourierNew' SIZE 9 ;
+                    FONT 'Courier New' SIZE 9 ;
                     BACKCOLOR DEF_COLORBACKDBF
 
                  DEFINE CHECKBOX Check_DbfAutoView
@@ -2818,7 +2818,7 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
            END BUTTONEX
 #endif
 
-           @ GetDesktopRealHeight() - 118 , 510 COMBOBOX CSearch ;
+           @ GetDesktopRealHeight() - 118 , 508 COMBOBOX CSearch ;
               ITEMS {} ;
               VALUE 1 ;
               DISPLAYEDIT ;
@@ -2829,7 +2829,7 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
 
            DEFINE BUTTONEX BGlobalSearch
                    ROW             GetDesktopRealHeight() - 118
-                   COL             GetDesktopRealWidth() - if( PUB_bW800 , 220 , 290 )
+                   COL             GetDesktopRealWidth() - if( PUB_bW800 , 223 , 293 )
                    WIDTH           90
                    HEIGHT          25
                    CAPTION 'Global Search'
@@ -2839,7 +2839,7 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
 
            DEFINE BUTTONEX BGlobalReset
                    ROW             GetDesktopRealHeight() - 118
-                   COL             GetDesktopRealWidth() - if( PUB_bW800 , 125 , 190 )
+                   COL             GetDesktopRealWidth() - if( PUB_bW800 , 129 , 194 )
                    WIDTH           if( PUB_bW800 , 15 , 50 )
                    HEIGHT          25
                    CAPTION if( PUB_bW800 , 'R' , 'Reset' )
@@ -2851,7 +2851,7 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
            DEFINE CHECKBOX Check_SearchFun
                    CAPTION         if( PUB_bW800 , 'Func/Proc' , 'Func/Proc/Method' )
                    ROW             GetDesktopRealHeight() - 125
-                   COL             GetDesktopRealWidth() - if( PUB_bW800 , 100 , 130 )
+                   COL             GetDesktopRealWidth() - if( PUB_bW800 , 105 , 135 )
                    WIDTH           if( PUB_bW800 , 80 , 120 )
                    HEIGHT          20
                    VALUE           .F.
@@ -2862,7 +2862,7 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
            DEFINE CHECKBOX Check_SearchDbf
                    CAPTION         if( PUB_bW800 , 'DBF Data' , 'DBF Data Search' )
                    ROW             GetDesktopRealHeight() - 104
-                   COL             GetDesktopRealWidth() - if( PUB_bW800 , 100 , 130 )
+                   COL             GetDesktopRealWidth() - if( PUB_bW800 , 105 , 135 )
                    WIDTH           if( PUB_bW800 , 80 , 120 )
                    HEIGHT          20
                    VALUE           .F.

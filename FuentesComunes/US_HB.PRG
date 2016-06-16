@@ -2357,7 +2357,7 @@ Return cMemoOut
 *// $ini funcion para nombre corto de archivo
 *//------------------------------------------------------------------------\\*
 Function US_ShortName( nombre )
-Local Reto := "" , error := .F.
+Local Reto := ""
    /* INI parche para parentesis por make GCC */
 // if at( "(" , Reto ) > 0 .or. ;
 //    at( ")" , Reto ) > 0 .or. ;
@@ -2384,21 +2384,25 @@ Local Reto := "" , error := .F.
          Reto := nombre
       endif
    else
-      if US_IsDirectory( nombre ) .and. !US_IsDirectory( Reto )
-         error := .T.
-      endif
-      if file( nombre ) .and. !file( Reto )
-         error := .T.
-      endif
-      if error
-         MsgStop( "This name: "+nombre+HB_OsNewLine()+"don't work correctly with Novell. Please, use a name without spaces and tokens with 8 characters or less.", NIL, NIL, .F. )  // this is not translated
+      if US_IsDirectory( nombre ) .and. ! US_IsDirectory( Reto )
+         MsgStop( "The name: " + nombre + HB_OsNewLine() + ;
+                  "was translated by the OS to a name that's not valid for a folder:" + HB_OsNewLine() + ;
+                  Reto + HB_OsNewLine() + ;
+                  "Please, use a name that follows the 8.3 convention.", NIL, NIL, .F. )  // this is not translated
+         Reto := ""
+      elseif file( nombre ) .and. ! file( Reto )
+         MsgStop( "The name: " + nombre + HB_OsNewLine() + ;
+                  "was translated by the OS to a name that's not valid for a file:" + HB_OsNewLine() + ;
+                  Reto + HB_OsNewLine() + ;
+                  "Please, use a name that follows the 8.3 convention.", NIL, NIL, .F. )  // this is not translated
          Reto := ""
       endif
    endif
    /* fin parche para Novell */
    /* INI parche para parentesis */
    if at( "(" , Reto ) > 0
-      MsgStop( "This name: "+nombre+HB_OsNewLine()+"don't work correctly. Please, use a name without parenthesis characters.", NIL, NIL, .F. )  // this is not translated
+      MsgStop( "This name doesn't work correctly: " +nombre + HB_OsNewLine() + ;
+               "Please, use a name without parenthesis characters.", NIL, NIL, .F. )  // this is not translated
       Reto := ""
    endif
    /* FIN parche para parentesis */
