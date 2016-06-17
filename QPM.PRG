@@ -278,6 +278,7 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
    PUBLIC cLastGlobalSearch     := ''
    PUBLIC bLastGlobalSearchFun := .F.
    PUBLIC bLastGlobalSearchDbf := .F.
+   PUBLIC bLastGlobalSearchCas := .F.
    PUBLIC bAvisoDbfGlobalSearchLow := .T.
    PUBLIC bAvisoDbfDataSearchLow := .T.
    //
@@ -2870,6 +2871,17 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
                    TRANSPARENT     if( IsXPThemeActive() , .T. , .F. )
            END CHECKBOX
 
+           DEFINE CHECKBOX Check_SearchCas
+                   CAPTION         if( PUB_bW800 , 'Case Sens' , 'Case Sensitive' )
+                   ROW             GetDesktopRealHeight() - 83
+                   COL             GetDesktopRealWidth() - if( PUB_bW800 , 105 , 135 )
+                   WIDTH           if( PUB_bW800 , 80 , 120 )
+                   HEIGHT          20
+                   VALUE           .F.
+                   TOOLTIP 'GLOBAL Search: Include data of DBF in Search Process'
+                   TRANSPARENT     if( IsXPThemeActive() , .T. , .F. )
+           END CHECKBOX
+
            DEFINE LABEL Label_2
                    ROW             GetDesktopRealHeight() - 85
                    COL             328
@@ -2882,7 +2894,7 @@ Function Main(PAR_cP1,PAR_cP2,PAR_cP3,PAR_cP4,PAR_cP5,PAR_cP6,PAR_cP7,PAR_cP8,PA
 
            DEFINE LABEL LGlobal
                    ROW             GetDesktopRealHeight() - 85
-                   COL             GetDesktopRealWidth() - if( PUB_bW800 , 100 , 190 )
+                   COL             GetDesktopRealWidth() - if( PUB_bW800 , 205 , 330 )
                    WIDTH           if( PUB_bW800 , 80 , 180 )
                    VALUE           if( PUB_bW800 , 'Global Is On' , 'Global Search Is Active' )
                    FONTNAME        'arial'
@@ -4264,6 +4276,7 @@ Function QPM_OpenProject2()
       bGlobalSearch         := .F.
       bLastGlobalSearchFun  := .F.
       bLastGlobalSearchDbf  := .F.
+      bLastGlobalSearchCas  := .F.
       VentanaMain.LGlobal.visible := .F.
       bPpoDisplayado := .F.
       SHG_Database          := ''
@@ -9875,6 +9888,7 @@ Function LocalSearch( Txt , bFunc )
    endif
    CaretAnt := GetProperty( 'VentanaMain' , 'RichEdit'+cTab , 'CaretPos' )
    if bFunc
+      VentanaMain.Check_SearchCas.Value := bLastGlobalSearchCas := .F.
       GlobalSearch2( 'PRG' , Txt , GetProperty( 'VentanaMain' , 'G'+cTab+'Files' , 'Value' ) , .T. , , , , , @PositionAux )
       PositionAux--
       aadd( Resultado , PositionAux )
@@ -9882,25 +9896,17 @@ Function LocalSearch( Txt , bFunc )
       aadd( Resultado , PositionAux )
       if Resultado[1] > 0
          SetProperty( 'VentanaMain' , 'RichEdit'+cTab , 'CaretPos' , PositionAux )
-         FindChr( GetControlHandle ( 'RichEdit'+cTab , 'VentanaMain' ) , Txt , .T. , .F. , .F. , .T. )
+         FindChr( GetControlHandle ( 'RichEdit'+cTab , 'VentanaMain' ) , Txt , .T. , .F. , bLastGlobalSearchCas , .T. )
       endif
    else
-      Resultado := FindChr( GetControlHandle( 'RichEdit'+cTab , 'VentanaMain' ) , Txt , .T. , .F. , .F. , .T. )
+      bLastGlobalSearchCas := VentanaMain.Check_SearchCas.Value
+      Resultado := FindChr( GetControlHandle( 'RichEdit'+cTab , 'VentanaMain' ) , Txt , .T. , .F. , bLastGlobalSearchCas , .T. )
    endif
    if Resultado[3] < 0
       if CaretAnt == 0
-  //    SetMGWaitHide()
          MsgOk( 'QPM (QAC Based Project Manager)' , 'Text not found' , 'E' , .T. , 2 )
       else
-       //FindChr( GetControlHandle( 'RichEdit'+cTab , 'VentanaMain' ) , 'main' , .F. , .F. , .F. , .T. )
-       //SetProperty( 'VentanaMain' , 'RichEdit'+cTab , 'CaretPos' , 0 )
-       //DoMethod( 'VentanaMain' , 'RichEdit'+cTab , 'SetFocus' )
-         //SendMessage( GetControlHandle( 'RichEdit'+cTab , 'VentanaMain' ) , EM_SETSEL , 1 , 1 )
-         //DoMethod( 'VentanaMain' , 'RichEdit'+cTab , 'refresh' )
-         //RichEditDisplay( cTab , .T. )
-   //    SetMGWaitHide()
          MsgOk( 'QPM (QAC Based Project Manager)' , 'Text not found'+HB_OsNewLine()+'Re-Search from Top' , 'W' , .T. , 2 )
-         //LocalSearch( Txt )
       endif
       SetProperty( 'VentanaMain' , 'RichEdit'+cTab , 'CaretPos' , CaretAnt )
       Return .F.
@@ -9973,7 +9979,7 @@ Function DbfDataSearch( Txt )
 #ENDIF
 
       VentanaMain.RichEditDbf.CaretPos := 1
-      FindChr( GetControlHandle ( 'RichEditDbf' , 'VentanaMain' ) , VentanaMain.CSearch.DisplayValue , FindChr( GetControlHandle ( 'RichEditDbf' , 'VentanaMain' ) , 'Content: ' , .T. , .F. , .F. , .T. ) , .F. , .F. , .T. )
+      FindChr( GetControlHandle ( 'RichEditDbf' , 'VentanaMain' ) , VentanaMain.CSearch.DisplayValue , FindChr( GetControlHandle ( 'RichEditDbf' , 'VentanaMain' ) , 'Content: ' , .T. , .F. , bLastGlobalSearchCas , .T. ) , .F. , bLastGlobalSearchCas , .T. )
       SetProperty( 'VentanaMain' , 'GDbfFiles' , 'Cell' , VentanaMain.GDbfFiles.Value , NCOLDBFSEARCH , alltrim( str( nRecord ) ) + ' ' + cFieldName + ' ' + alltrim( str( nFieldPos ) ) )
       DoMethod( 'VentanaMain' , 'GDbfFiles' , 'ColumnsAutoFitH' )
       VentanaMain.BLocalSearchDbf.caption := 'Continue Search'
@@ -10019,9 +10025,11 @@ Function GlobalSearch( Txt )
    cLastGlobalSearch    := Txt
    bLastGlobalSearchFun := VentanaMain.Check_SearchFun.value
    bLastGlobalSearchDbf := VentanaMain.Check_SearchDbf.value
+   bLastGlobalSearchCas := VentanaMain.Check_SearchCas.value
    bSearchDbfData       := bLastGlobalSearchDbf
    VentanaMain.Check_SearchFun.enabled := .F.
    VentanaMain.Check_SearchDbf.enabled := .F.
+   VentanaMain.Check_SearchCas.enabled := .F.
    VentanaMain.BGlobalReset.enabled    := .T.
    VentanaMain.LGlobal.visible         := .T.
 
@@ -10116,9 +10124,9 @@ Function GlobalSearch2( cType , Txt , nRow , bFunc , bDbfData , DBFcBaseType , n
    Local bSalir := .F. , nPosAux
    Local bFound := .F. , bChangeImg
    Local aStru , DbfName , DbfCode
-   Local cFieldBase := '' , nPosBase := 0 , columnValid := .F. , AuxPosition
-   DEFAULT bFunc       TO .F.
-   DEFAULT bDbfData    TO .F.
+   Local cFieldBase := '' , nPosBase := 0 , columnValid := .F.
+   DEFAULT bFunc        TO .F.
+   DEFAULT bDbfData     TO .F.
    DEFAULT DBFcBaseType TO 'R' /* R : Record , F : Filed , P : Position */
    DEFAULT nRecordBase  TO 1
    SetMGWaitTxt( 'Searching: ' + ChgPathToReal( GetProperty( 'VentanaMain' , 'G' + if( cType == 'LIB' , 'INC' , cType ) + 'Files' , 'Cell' , nRow , &( 'nCol'+cType+if(cType=='HLP','Topic','FullName') ) ) ) )
@@ -10129,6 +10137,7 @@ Function GlobalSearch2( cType , Txt , nRow , bFunc , bDbfData , DBFcBaseType , n
    endif
    nFieldPosFound := 0
    if bFunc .and. !( Prj_Radio_OutputType == DEF_RG_IMPORT )
+      VentanaMain.Check_SearchCas.Value := bLastGlobalSearchCas := .F.
       if bChangeImg
          GridImage( 'VentanaMain' , 'GPrgFiles' , nRow , NCOLPRGSTATUS , '-' , PUB_nGridImgSearchOk )
       endif
@@ -10178,10 +10187,18 @@ Function GlobalSearch2( cType , Txt , nRow , bFunc , bDbfData , DBFcBaseType , n
    else
       do case
          case cType == 'PRG'
-            if Prj_Radio_OutputType == DEF_RG_IMPORT
-               nPosAux := at( US_upper( Txt ) , us_upper( GetProperty( 'VentanaMain' , 'RichEditPRG' , 'value' ) ) )
+            if bLastGlobalSearchCas
+               if Prj_Radio_OutputType == DEF_RG_IMPORT
+                  nPosAux := at( Txt , GetProperty( 'VentanaMain' , 'RichEditPRG' , 'value' ) )
+               else
+                  nPosAux := at( Txt , MemoRead( ChgPathToReal( GetProperty( 'VentanaMain' , 'GPrgFiles' , 'Cell' , nRow , NCOLPRGFULLNAME ) ) ) )
+               endif
             else
-               nPosAux := at( us_upper( Txt ) , us_upper( MemoRead( ChgPathToReal( GetProperty( 'VentanaMain' , 'GPrgFiles' , 'Cell' , nRow , NCOLPRGFULLNAME ) ) ) ) )
+               if Prj_Radio_OutputType == DEF_RG_IMPORT
+                  nPosAux := at( US_upper( Txt ) , US_upper( GetProperty( 'VentanaMain' , 'RichEditPRG' , 'value' ) ) )
+               else
+                  nPosAux := at( US_upper( Txt ) , US_upper( MemoRead( ChgPathToReal( GetProperty( 'VentanaMain' , 'GPrgFiles' , 'Cell' , nRow , NCOLPRGFULLNAME ) ) ) ) )
+               endif
             endif
             if nPosAux > 0
                if bChangeImg
@@ -10194,7 +10211,12 @@ Function GlobalSearch2( cType , Txt , nRow , bFunc , bDbfData , DBFcBaseType , n
                endif
             endif
          case cType == 'HEA'
-            if at( us_upper( Txt ) , us_upper( MemoRead( ChgPathToReal( GetProperty( 'VentanaMain' , 'GHeaFiles' , 'Cell' , nRow , NCOLHEAFULLNAME ) ) ) ) ) > 0
+            if bLastGlobalSearchCas
+               nPosAux := at( Txt , MemoRead( ChgPathToReal( GetProperty( 'VentanaMain' , 'GHeaFiles' , 'Cell' , nRow , NCOLHEAFULLNAME ) ) ) )
+            else
+               nPosAux := at( US_upper( Txt ) , US_upper( MemoRead( ChgPathToReal( GetProperty( 'VentanaMain' , 'GHeaFiles' , 'Cell' , nRow , NCOLHEAFULLNAME ) ) ) ) )
+            endif
+            if nPosAux > 0
                if bChangeImg
                   GridImage( 'VentanaMain' , 'GHeaFiles' , nRow , NCOLHEASTATUS , '+' , PUB_nGridImgSearchOk )
                endif
@@ -10205,7 +10227,12 @@ Function GlobalSearch2( cType , Txt , nRow , bFunc , bDbfData , DBFcBaseType , n
                endif
             endif
          case cType == 'PAN'
-            if at( us_upper( Txt ) , us_upper( MemoRead( ChgPathToReal( GetProperty( 'VentanaMain' , 'GPanFiles' , 'Cell' , nRow , NCOLPANFULLNAME ) ) ) ) ) > 0
+            if bLastGlobalSearchCas
+               nPosAux := at( Txt , MemoRead( ChgPathToReal( GetProperty( 'VentanaMain' , 'GPanFiles' , 'Cell' , nRow , NCOLPANFULLNAME ) ) ) )
+            else
+               nPosAux := at( US_upper( Txt ) , US_upper( MemoRead( ChgPathToReal( GetProperty( 'VentanaMain' , 'GPanFiles' , 'Cell' , nRow , NCOLPANFULLNAME ) ) ) ) )
+            endif
+            if nPosAux > 0
                if bChangeImg
                   GridImage( 'VentanaMain' , 'GPanFiles' , nRow , NCOLPANSTATUS , '+' , PUB_nGridImgSearchOk )
                endif
@@ -10220,14 +10247,15 @@ Function GlobalSearch2( cType , Txt , nRow , bFunc , bDbfData , DBFcBaseType , n
             DbfCode := US_IsDBF( DbfName )
             If DbfCode = 0
                US_Use( .T. , , DbfName , 'DSearch' , DEF_DBF_SHARED , DEF_DBF_READ ) /* si pongo exclusive y write no funciona el search, revisarlo */
-               aStru:=DBSTRUCT()
-               if !bDbfData
-                  FOR x:=1 TO LEN(aStru)
-                     if at( us_upper( Txt ) , aStru[x][1] ) > 0
+               aStru := DBSTRUCT()
+               if ! bDbfData
+                  VentanaMain.Check_SearchCas.Value := bLastGlobalSearchCas := .F.
+                  FOR x := 1 TO LEN( aStru )
+                     if at( US_upper( Txt ) , aStru[x][1] ) > 0
                         bFound := .T.
                         exit
                      endif
-                  Next x
+                  NEXT x
                else
                 //nRecordBase := val( US_Word( GetProperty( 'VentanaMain' , 'GDbfFiles' , 'Cell' , nRow , NCOLDBFSEARCH ) , 1 ) )
                 //nRecordBase := VentanaMain.DbfBrowse.value
@@ -10263,15 +10291,24 @@ Function GlobalSearch2( cType , Txt , nRow , bFunc , bDbfData , DBFcBaseType , n
                            endif
                         endif
                         if columnValid
+                           if bLastGlobalSearchCas
 #IFDEF __XHARBOUR__
-                           if ( AuxPosition := at( US_Upper( Txt ) , US_Upper( US_VarToStr( &( aStru[x][1] ) ) ) , nPosBase ) ) > 0
+                              nPosAux := at( Txt , US_VarToStr( &( aStru[x][1] ) ) , nPosBase )
 #ELSE
-                           if ( AuxPosition := hb_at( US_Upper( Txt ) , US_Upper( US_VarToStr( &( aStru[x][1] ) ) ) , nPosBase ) ) > 0
+                              nPosAux := hb_at( Txt , US_VarToStr( &( aStru[x][1] ) ) , nPosBase )
 #ENDIF
+                           else
+#IFDEF __XHARBOUR__
+                              nPosAux := at( US_Upper( Txt ) , US_Upper( US_VarToStr( &( aStru[x][1] ) ) ) , nPosBase )
+#ELSE
+                              nPosAux := hb_at( US_Upper( Txt ) , US_Upper( US_VarToStr( &( aStru[x][1] ) ) ) , nPosBase )
+#ENDIF
+                           endif
+                           if nPosAux > 0
                               bFound := .T.
                               nRecordFound      := RecNo()
                               cFieldNameFound   := aStru[x][1]
-                              nFieldPosFound    := AuxPosition
+                              nFieldPosFound    := nPosAux
                               cFieldTxtFound    := US_VarToStr( &( aStru[x][1] ) )
                               exit
                            endif
@@ -10296,7 +10333,12 @@ Function GlobalSearch2( cType , Txt , nRow , bFunc , bDbfData , DBFcBaseType , n
                endif
             endif
          case cType == 'LIB'
-            if at( us_upper( Txt ) , us_upper( MemoRead( ChgPathToReal( GetProperty( 'VentanaMain' , 'GIncFiles' , 'Cell' , nRow , NCOLINCFULLNAME ) ) ) ) ) > 0
+            if bLastGlobalSearchCas
+               nPosAux := at( Txt , MemoRead( ChgPathToReal( GetProperty( 'VentanaMain' , 'GIncFiles' , 'Cell' , nRow , NCOLINCFULLNAME ) ) ) )
+            else
+               nPosAux := at( US_Upper( Txt ) , US_Upper( MemoRead( ChgPathToReal( GetProperty( 'VentanaMain' , 'GIncFiles' , 'Cell' , nRow , NCOLINCFULLNAME ) ) ) ) )
+            endif
+            if nPosAux > 0
                if bChangeImg
                   GridImage( 'VentanaMain' , 'GIncFiles' , nRow , NCOLINCSTATUS , '+' , PUB_nGridImgSearchOk )
                endif
@@ -10308,7 +10350,12 @@ Function GlobalSearch2( cType , Txt , nRow , bFunc , bDbfData , DBFcBaseType , n
             endif
 #ifdef QPM_SHG
          case cType == 'HLP'
-            if at( us_upper( Txt ) , us_upper( US_RTF2TXT( SHG_GetField( 'SHG_MEMOT' , nRow ) ) ) ) > 0
+            if bLastGlobalSearchCas
+               nPosAux := at( Txt , US_RTF2TXT( SHG_GetField( 'SHG_MEMOT' , nRow ) ) )
+            else
+               nPosAux := at( US_Upper( Txt ) , US_Upper( US_RTF2TXT( SHG_GetField( 'SHG_MEMOT' , nRow ) ) ) )
+            endif
+            if nPosAux > 0
                if bChangeImg
                   GridImage( 'VentanaMain' , 'GHlpFiles' , nRow , NCOLHLPSTATUS , '+' , PUB_nGridImgSearchOk )
                endif
@@ -10333,6 +10380,7 @@ Function ResetImgGrid( cGrid )
    VentanaMain.BGlobalReset.enabled    := .F.
    VentanaMain.Check_SearchFun.enabled := .T.
    VentanaMain.Check_SearchDbf.enabled := .T.
+   VentanaMain.Check_SearchCas.enabled := .T.
    VentanaMain.LGlobal.visible         := .F.
    bGlobalSearch         := .F.
    bLastGlobalSearchDbf  := .F.
@@ -10454,8 +10502,14 @@ Return .T.
 Function AddSearchTxtFound(email)
    Local i:=0
    For i=1 to VentanaMain.CSearch.ItemCount
-       if upper(email) == upper(VentanaMain.CSearch.Item(i))
-          Return .T.
+       if bLastGlobalSearchCas
+          if email == VentanaMain.CSearch.Item(i)
+             Return .T.
+          endif
+       else
+          if upper(email) == upper(VentanaMain.CSearch.Item(i))
+             Return .T.
+          endif
        endif
    next
 Return .F.

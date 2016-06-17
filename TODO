@@ -25,26 +25,10 @@ Details....: Sometimes a yellow warning window is show but all was OK.
 /******************************************************************************/
 
 Assigned to: <nobody>
-Added by...: 2013-10-29 09:04:00 UTC-0300 Fernando Yurisich <fyurisich>
-Status.....: Open.
-Details....: Agregar lib\win\mingw como path para libs de harbour.
-
-/******************************************************************************/
-
-Assigned to: <nobody>
 Added by...: 2013-06-05 09:24:00 UTC-0300 Fernando Yurisich <fyurisich>
 Status.....: Open.
 Details....: No se genera el ejecutable cuando algún nombre de archivo o
              carpeta contiene el caracter &.
-
-/******************************************************************************/
-
-Assigned to: <nobody>
-Added by...: 2012-02-29 19:53:00 UTC-0300 Fernando Yurisich <fyurisich>
-Status.....: Open.
-Details....: Agregar opción para que la búsqueda global se haga sobre los
-             textos originales y no sobre el UPPER() de los mismos.
-             Ver función GlobalSearch2().
 
 /******************************************************************************/
 

@@ -739,7 +739,7 @@ Function MsgOK( titulo , txt , tipo , autoexit , Ptiempo , bButtonRun )
    if US_IsWindowModalActive()
       DEFINE WINDOW &(WinMsg) ;
               AT 0,0 ;
-              WIDTH if( bButtonRun , 275 , 150 ) HEIGHT 125 ;
+              WIDTH if( bButtonRun , 295 , 170 ) HEIGHT 125 ;
               TITLE titulo ;
               MODAL ;
               NOSYSMENU ;
@@ -750,7 +750,7 @@ Function MsgOK( titulo , txt , tipo , autoexit , Ptiempo , bButtonRun )
    else
       DEFINE WINDOW &(WinMsg) ;
               AT 0,0 ;
-              WIDTH if( bButtonRun , 275 , 150 ) HEIGHT 125 ;
+              WIDTH if( bButtonRun , 295 , 170 ) HEIGHT 125 ;
               TITLE titulo ;
               CHILD ;
               TOPMOST ;
@@ -764,7 +764,7 @@ Function MsgOK( titulo , txt , tipo , autoexit , Ptiempo , bButtonRun )
    @ 0 , 0 LABEL LQPM ;
       OF &(WinMsg) ;
       VALUE "QPM" ;
-      WIDTH &(WinMsg).Width ;
+      WIDTH GetProperty( WinMsg, "Width" ) - GetBorderWidth() ;
       HEIGHT 23 ;
       FONT  'Arial' SIZE 12 BOLD ;
       FONTCOLOR ColorBack ;
@@ -775,7 +775,7 @@ Function MsgOK( titulo , txt , tipo , autoexit , Ptiempo , bButtonRun )
    @ 32 , 0 LABEL LText ;
       OF &(WinMsg) ;
       VALUE txt ;
-      WIDTH &(WinMsg).Width ;
+      WIDTH GetProperty( WinMsg, "Width" ) - GetBorderWidth() ;
       HEIGHT 45 ;
       FONT  'Arial' SIZE 10 BOLD ;
       FONTCOLOR ColorFont ;
@@ -786,7 +786,7 @@ Function MsgOK( titulo , txt , tipo , autoexit , Ptiempo , bButtonRun )
    DEFINE BUTTON bOK
       PARENT          &(WinMsg)
       ROW             75
-      COL             25
+      COL             35
       WIDTH           100
       HEIGHT          25
       CAPTION         if( PrivAutoexit , 'Ok (' + alltrim( str( tiempo ) ) + ')' , 'Ok' )
@@ -797,7 +797,7 @@ Function MsgOK( titulo , txt , tipo , autoexit , Ptiempo , bButtonRun )
       DEFINE BUTTON bRUN
          PARENT          &(WinMsg)
          ROW             75
-         COL             150
+         COL             160
          WIDTH           100
          HEIGHT          25
          CAPTION         'Run'
