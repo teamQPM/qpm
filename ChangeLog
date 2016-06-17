@@ -8,6 +8,18 @@
  * See "How to format your ChangeLog entries" in howtosvn.txt file.
  */
 
+2016-06-16 22:36:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * ./TODO
+     * Updated.
+   * ./QPM.ch
+     + Memvar declaration.
+   * ./QPM.PRG
+     + Parameter to enable case sensitive searchs.
+   * ./QPM_Functions.PRG
+     ! Displayed messages.
+   * ./QPM.EXE
+     * Updated.
+
 2016-06-16 19:57:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * ./QPM.PRG
      * Some controls position.

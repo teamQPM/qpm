@@ -264,6 +264,7 @@ memvar bIncMoving
 memvar bIncSorting
 memvar bLastGlobalSearchDbf
 memvar bLastGlobalSearchFun
+memvar bLastGlobalSearchCas
 memvar bLogActivity
 memvar bNumberOnHea
 memvar bNumberOnPan
