@@ -8,6 +8,12 @@
  * See "How to format your ChangeLog entries" in howtosvn.txt file.
  */
 
+2016-06-19 19:37:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * QPM_Libraries.prg
+     + Some libraries for HMG+MinGW+Harbour.
+   * ./QPM.EXE
+     * Updated.
+
 2016-06-19 18:49:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * ./TODO
      * Updated.
