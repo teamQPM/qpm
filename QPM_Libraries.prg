@@ -151,7 +151,7 @@ Function QPM_CargoLibraries()
    aadd( &( "vLibDefault"+DefineMiniGui1+DefineBorland+DefineXHarbour ) , cPre+'mysql'+cExt )
    aadd( &( "vLibDefault"+DefineMiniGui1+DefineBorland+DefineXHarbour ) , cPre+'libmysql'+cExt )
 
-   // Minigui 3.x con MinGW and Harbour ( Syncronized to 2.0 build 32 )
+   // Minigui 3.x con MinGW and Harbour
    cPre := "LIB"
    cExt := ".a"
    &( "vLibDefault"+DefineMiniGui3+DefineMinGW+DefineHarbour ) := {}
@@ -229,6 +229,10 @@ Function QPM_CargoLibraries()
    aadd( &( "vLibDefault"+DefineMiniGui3+DefineMinGW+DefineHarbour ) , cPre+'stdc++'+cExt ) /* for c++ */
    aadd( &( "vLibDefault"+DefineMiniGui3+DefineMinGW+DefineHarbour ) , cPre+'xHB'+cExt )
    aadd( &( "vLibDefault"+DefineMiniGui3+DefineMinGW+DefineHarbour ) , cPre+'ws2_32'+cExt )
+   aadd( &( "vLibDefault"+DefineMiniGui3+DefineMinGW+DefineHarbour ) , cPre+'msimg32'+cExt )
+   aadd( &( "vLibDefault"+DefineMiniGui3+DefineMinGW+DefineHarbour ) , cPre+'hbhpdf'+cExt )
+   aadd( &( "vLibDefault"+DefineMiniGui3+DefineMinGW+DefineHarbour ) , cPre+'libhpdf'+cExt )
+   aadd( &( "vLibDefault"+DefineMiniGui3+DefineMinGW+DefineHarbour ) , cPre+'png'+cExt )
 
    // Minigui 3.x con MinGW and xHarbour ( Syncronized to xHarbour 0.99.70 )
    cPre := "LIB"
