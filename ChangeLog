@@ -8,6 +8,9 @@
  * See "How to format your ChangeLog entries" in howtosvn.txt file.
  */
 
+2016-07-17 10:52:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   + Some files to ignore list.
+
 2016-07-17 10:44:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    + ./users-list
    + ./users-list/.mboxview
