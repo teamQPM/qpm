@@ -8,6 +8,14 @@
  * See "How to format your ChangeLog entries" in howtosvn.txt file.
  */
 
+2016-07-17 10:44:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   + ./users-list
+   + ./users-list/.mboxview
+   + ./users-list/mboxview.exe
+   + ./users-list/qpm-users.txt
+   + ./users-list/qpm-users.txt.mboxview
+   ; QPM's user list messages up to 2016-06-21.
+
 2016-06-19 19:37:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * QPM_Libraries.prg
      + Some libraries for HMG+MinGW+Harbour.
