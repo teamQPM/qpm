@@ -3,9 +3,9 @@
  */
 
 /*
- *    QPM - QAC Based Project Manager
+ *    QPM - QAC based Project Manager
  *
- *    Copyright 2011-2014 Fernando Yurisich <fernando.yurisich@gmail.com>
+ *    Copyright 2011-2016 Fernando Yurisich <fernando.yurisich@gmail.com>
  *    http://qpm.sourceforge.net
  *
  *    Based on QAC - Project Manager for (x)Harbour
@@ -70,7 +70,7 @@ Function ProjectSettings()
          OPTIONS { 'Harbour' , 'xHarbour' } ;
          VALUE Prj_Radio_Harbour ;
          WIDTH  100 ;
-         TOOLTIP "Select Compiler" ;
+         TOOLTIP "Select compiler" ;
          ON CHANGE CheckCombinationRadio("H")
 
       @ 96 , 40 CHECKBOX Chk_HBVersion ;
@@ -92,7 +92,7 @@ Function ProjectSettings()
          OPTIONS { 'BorlandC' , 'MinGW' , 'PellesC' } ;
          VALUE Prj_Radio_Cpp ;
          WIDTH  100 ;
-         TOOLTIP "Select Compiler" ;
+         TOOLTIP "Select compiler" ;
          ON CHANGE CheckCombinationRadio("C")
 
       @ 08 , 285 FRAME FMinigui ;
@@ -106,10 +106,10 @@ Function ProjectSettings()
          FONTCOLOR DEF_COLORBLUE
 
       @ 30 , 300 RADIOGROUP Radio_MiniGui ;
-         OPTIONS { 'MiniGUI Oficial 1.x' , 'MiniGUI Oficial 3.x' , 'MiniGUI Extended 1.x or later' , 'Object Oriented Harbour GUI' } ;
+         OPTIONS { 'HMG 1.x' , 'HMG 3.x' , 'HMG Extended' , 'ooHG' } ;
          VALUE Prj_Radio_MiniGui ;
          WIDTH 200 ;
-         TOOLTIP "Select GUI Library Version" ;
+         TOOLTIP "Select Minigui version" ;
          ON CHANGE CheckCombinationRadio("M")
 
       DEFINE CHECKBOX Check_Console
@@ -118,9 +118,8 @@ Function ProjectSettings()
               COL             300
               WIDTH           200
               VALUE           Prj_Check_Console
-              TOOLTIP "Compile Modo Console with (x)Harbour associated to Minigui Version"
+              TOOLTIP         "Build in console mode using associated (x)Harbour compiler"
       END CHECKBOX
-          //  ON CHANGE       ActConsoleMode()
 
       @ 138 , 20 FRAME FOutputType ;
          WIDTH 240 ;
@@ -138,7 +137,7 @@ Function ProjectSettings()
          VALUE Prj_Radio_OutputType ;
          WIDTH 160 ;
          ON CHANGE ( PrjSetColor() , HabilitoRadioSegunType() ) ;
-         TOOLTIP "Select Output Type"
+         TOOLTIP "Select Output type"
 
       DEFINE CHECKBOX Check_Upx
               CAPTION         "UPX"
@@ -146,7 +145,7 @@ Function ProjectSettings()
               COL             200
               WIDTH           50
               VALUE           Prj_Check_Upx
-              TOOLTIP "Compress EXE with UPX utility.  Look at link menu for home page of UPX project"
+              TOOLTIP         "Compress EXE using UPX utility. Look at Link menu for UPX project's home page"
       END CHECKBOX
 
       DEFINE CHECKBOX Check_OutputPrefix
@@ -155,7 +154,7 @@ Function ProjectSettings()
               COL             200
               WIDTH           60
               VALUE           Prj_Check_OutputPrefix
-              TOOLTIP 'Add "Lib" Prefix to Output File'
+              TOOLTIP         "Add " + DBLQT + "Lib" + DBLQT + " prefix to Output File's name"
       END CHECKBOX
 
       @ 268 , 20 FRAME FOutputCopyMove ;
@@ -173,7 +172,7 @@ Function ProjectSettings()
          VALUE Prj_Radio_OutputCopyMove ;
          WIDTH 120 ;
          ON CHANGE SwitchRadioOutputCopyMove() ;
-         TOOLTIP "Select Output Extra Options"
+         TOOLTIP "Select what to do after building"
 
  //   DEFINE LABEL Label_CopyMove
  //           VALUE           'Copy / Move Folder:'
@@ -193,7 +192,7 @@ Function ProjectSettings()
               WIDTH           25
               HEIGHT          25
               PICTURE         'folderselect'
-              TOOLTIP         'Select Folder for Copy or Move output file'
+              TOOLTIP         'Select destination folder for Copy or Move operation'
               ONCLICK         If ( !Empty( Folder := GetFolder( "Select Folder" , if( empty( WinPSettings.Text_CopyMove.Value ) , PUB_cProjectFolder , WinPSettings.Text_CopyMove.Value ) ) ) , WinPSettings.Text_CopyMove.Value := Folder , )
       END BUTTON
 
@@ -212,7 +211,7 @@ Function ProjectSettings()
          VALUE Prj_Radio_OutputRename ;
          WIDTH 160 ;
          ON CHANGE SwitchRadioOutputRename() ;
-         TOOLTIP "Select Output Extra Options"
+         TOOLTIP "Select what to do after building"
 
       DEFINE TEXTBOX Text_RenameOutput
               VALUE           Prj_Text_OutputRenameNewName
@@ -227,7 +226,7 @@ Function ProjectSettings()
               COL             300
               WIDTH           150
               VALUE           Prj_Check_OutputSuffix
-              TOOLTIP "Add automatic Suffix identifier of harbour and minigui version to Output File"
+              TOOLTIP "Automatically add to the Output File's name a suffix identifying (x)Harbour and Minigui versions"
       END CHECKBOX
 
       @ 325 , 285 FRAME FExtraRun ;
@@ -253,7 +252,7 @@ Function ProjectSettings()
               WIDTH           25
               HEIGHT          25
               PICTURE         'folderselect'
-              TOOLTIP         'Select Process for Extra Run'
+              TOOLTIP         'Select process'
               ONCLICK         QPM_GetExtraRun()
       END BUTTON
 
@@ -294,7 +293,7 @@ Function ProjectSettings()
              WIDTH           80
              HEIGHT          25
              CAPTION         'OK'
-             TOOLTIP         'Confirm Changes'
+             TOOLTIP         'Confirm changes'
              ONCLICK         if( ChequeoOutput() , ( ProjectSettingsSave() , WinPSettings.Release() ) , US_Nop() )
       END BUTTON
 
@@ -304,7 +303,7 @@ Function ProjectSettings()
              WIDTH           80
              HEIGHT          25
              CAPTION         'Cancel'
-             TOOLTIP         'Cancel Changes'
+             TOOLTIP         'Cancel changes'
              ONCLICK         WinPSettings.Release()
       END BUTTON
 

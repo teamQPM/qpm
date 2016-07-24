@@ -3,9 +3,9 @@
  */
 
 /*
- *    QPM - QAC Based Project Manager
+ *    QPM - QAC based Project Manager
  *
- *    Copyright 2011-2014 Fernando Yurisich <fernando.yurisich@gmail.com>
+ *    Copyright 2011-2016 Fernando Yurisich <fernando.yurisich@gmail.com>
  *    http://qpm.sourceforge.net
  *
  *    Based on QAC - Project Manager for (x)Harbour
@@ -323,7 +323,7 @@ Function QPM_HotRecoveryMenu()
          OPTIONS { 'Sources' , 'Headers' , 'Forms' } ;
          WIDTH 70 ;
          VALUE HR_nRadioFileType ;
-         TOOLTIP "Select Type Object for Recovery or Compare" ;
+         TOOLTIP "Select file type for Recovery or Compare" ;
          ON CHANGE QPM_HotChangeType() ;
          HORIZONTAL
 
@@ -337,7 +337,7 @@ Function QPM_HotRecoveryMenu()
          OPTIONS if( PUB_bW800 , { 'Compared' , '"From"/"Base"' , '"Target"/"New"' } , { 'View Compared Files' , 'View Only "From"/"Base"' , 'View Only "Target"/"New"' } ) ;
          WIDTH ( ( GetProperty( "WinHotRecovery" , "Width" ) - 400 ) / if( PUB_bW800 , 3.7 , 3.4 ) ) ;
          VALUE HR_nRadioFileSysout ;
-         TOOLTIP "Select View" ;
+         TOOLTIP "Select view" ;
          ON CHANGE QPM_HotChangeSysOut( B_COMPARE_YES ) ;
          HORIZONTAL
 
@@ -371,7 +371,7 @@ Function QPM_HotRecoveryMenu()
          VALUE 1 ;
          WIDTH 70 ;
          HEIGHT 200 ;
-         TOOLTIP "Go to Difference number..." ;
+         TOOLTIP "Go to difference number ..." ;
          ON CHANGE HotNavigate( HR_nActualDiff := ( GetProperty( "WinHotRecovery" , "CHR_GoToPos" , "value" ) - 1 ) )
 
       DEFINE BUTTON BHR_NavigatePrev
@@ -427,7 +427,7 @@ Function QPM_HotRecoveryMenu()
          OPTIONS { 'Hot Recovery Versions Database' , 'External File' } ;
          WIDTH 215 ;
          VALUE HR_nRadioFileFrom ;
-         TOOLTIP "Select File 'From' for Hot Recovery or 'Base' for Compare" ;
+         TOOLTIP 'Select "From" file for Hot Recovery or "Base" file for Compare' ;
          ON CHANGE QPM_HotChangeFrom()
 
       DEFINE BUTTON B_CommentFrom
@@ -436,7 +436,7 @@ Function QPM_HotRecoveryMenu()
              WIDTH           80
              HEIGHT          25
              CAPTION         "Comment"
-             TOOLTIP         "Add / Modify / Remove Version's Comments"
+             TOOLTIP         "Add / Modify / Remove version's comments"
              ONCLICK         HotGetComment( "FROM" )
       END BUTTON
 
@@ -444,7 +444,7 @@ Function QPM_HotRecoveryMenu()
               ROW             if( PUB_bW800 , 162 , 192 )
               COL             40
               WIDTH           290
-              VALUE           "File 'From' for Hot Recovery or 'Base' for Compare:"
+              VALUE           " 'From' for Hot Recovery or 'Base' for Compare:"
               TRANSPARENT     if( IsXPThemeActive() , .T. , .F. )
       END LABEL
 
@@ -477,7 +477,6 @@ Function QPM_HotRecoveryMenu()
          ITEMS {} ;
          VALUE 1 ;
          IMAGE vHotImagesGrid ;
-         TOOLTIP '' ;
          BACKCOLOR HR_aColorBackVersionsFrom ;
          ON HEADCLICK { {||SORT_VERSIONS( "WinHotRecovery" , "HR_GridVersionsFromPRG" ,1)} , {||SORT_VERSIONS( "WinHotRecovery" , "HR_GridVersionsFromPRG" ,2)} , {||SORT_VERSIONS( "WinHotRecovery" , "HR_GridVersionsFromPRG" ,3)} , {||SORT_VERSIONS( "WinHotRecovery" , "HR_GridVersionsFromPRG" ,4)} } ;
          ON DBLCLICK { HotGetComment( "FROM" ) } ;
@@ -492,7 +491,6 @@ Function QPM_HotRecoveryMenu()
          ITEMS {} ;
          VALUE 1 ;
          IMAGE vHotImagesGrid ;
-         TOOLTIP '' ;
          BACKCOLOR HR_aColorBackVersionsFrom ;
          ON HEADCLICK { {||SORT_VERSIONS( "WinHotRecovery" , "HR_GridVersionsFromHEA" ,1)} , {||SORT_VERSIONS( "WinHotRecovery" , "HR_GridVersionsFromHEA" ,2)} , {||SORT_VERSIONS( "WinHotRecovery" , "HR_GridVersionsFromHEA" ,3)} , {||SORT_VERSIONS( "WinHotRecovery" , "HR_GridVersionsFromHEA" ,4)} } ;
          ON DBLCLICK { HotGetComment( "FROM" ) } ;
@@ -509,7 +507,6 @@ Function QPM_HotRecoveryMenu()
          ITEMS {} ;
          VALUE 1 ;
          IMAGE vHotImagesGrid ;
-         TOOLTIP '' ;
          BACKCOLOR HR_aColorBackVersionsFrom ;
          ON HEADCLICK { {||SORT_VERSIONS( "WinHotRecovery" , "HR_GridVersionsFromPAN" ,1)} , {||SORT_VERSIONS( "WinHotRecovery" , "HR_GridVersionsFromPAN" ,2)} , {||SORT_VERSIONS( "WinHotRecovery" , "HR_GridVersionsFromPAN" ,3)} , {||SORT_VERSIONS( "WinHotRecovery" , "HR_GridVersionsFromPAN" ,4)} } ;
          ON DBLCLICK { HotGetComment( "FROM" ) } ;
@@ -533,7 +530,7 @@ Function QPM_HotRecoveryMenu()
          OPTIONS { 'Item of Project (Last Version)' , 'Hot Recovery Versions Database' } ;
          WIDTH 215 ;
          VALUE HR_nRadioFileTarget ;
-         TOOLTIP "Select File 'Target' for Hot Recovery or 'New' for Compare" ;
+         TOOLTIP 'Select "Target" file for Hot Recovery or "New" file for Compare' ;
          ON CHANGE QPM_HotChangeTarget()
 
       DEFINE BUTTON B_CommentTarget
@@ -542,7 +539,7 @@ Function QPM_HotRecoveryMenu()
              WIDTH           80
              HEIGHT          25
              CAPTION         "Comment"
-             TOOLTIP         "Add / Modify / Remove Version's Comments"
+             TOOLTIP         "Add / Modify / Remove version's comments"
              ONCLICK         HotGetComment( "TARGET" )
       END BUTTON
 
@@ -556,7 +553,6 @@ Function QPM_HotRecoveryMenu()
          ITEMS {} ;
          VALUE 1 ;
          IMAGE vHotImagesGrid ;
-         TOOLTIP '' ;
          BACKCOLOR HR_aColorBackVersionsTarget ;
          ON HEADCLICK { {||SORT_VERSIONS( "WinHotRecovery" , "HR_GridVersionsTargetPRG" ,1)} , {||SORT_VERSIONS( "WinHotRecovery" , "HR_GridVersionsTargetPRG" ,2)} , {||SORT_VERSIONS( "WinHotRecovery" , "HR_GridVersionsTargetPRG" ,3)} , {||SORT_VERSIONS( "WinHotRecovery" , "HR_GridVersionsTargetPRG" ,4)} } ;
          ON DBLCLICK { HotGetComment( "TARGET" ) } ;
@@ -573,7 +569,6 @@ Function QPM_HotRecoveryMenu()
          ITEMS {} ;
          VALUE 1 ;
          IMAGE vHotImagesGrid ;
-         TOOLTIP '' ;
          BACKCOLOR HR_aColorBackVersionsTarget ;
          ON HEADCLICK { {||SORT_VERSIONS( "WinHotRecovery" , "HR_GridVersionsTargetHEA" ,1)} , {||SORT_VERSIONS( "WinHotRecovery" , "HR_GridVersionsTargetHEA" ,2)} , {||SORT_VERSIONS( "WinHotRecovery" , "HR_GridVersionsTargetHEA" ,3)} , {||SORT_VERSIONS( "WinHotRecovery" , "HR_GridVersionsTargetHEA" ,4)} } ;
          ON DBLCLICK { HotGetComment( "TARGET" ) } ;
@@ -590,7 +585,6 @@ Function QPM_HotRecoveryMenu()
          ITEMS {} ;
          VALUE 1 ;
          IMAGE vHotImagesGrid ;
-         TOOLTIP '' ;
          BACKCOLOR HR_aColorBackVersionsTarget ;
          ON HEADCLICK { {||SORT_VERSIONS( "WinHotRecovery" , "HR_GridVersionsTargetPAN" ,1)} , {||SORT_VERSIONS( "WinHotRecovery" , "HR_GridVersionsTargetPAN" ,2)} , {||SORT_VERSIONS( "WinHotRecovery" , "HR_GridVersionsTargetPAN" ,3)} , {||SORT_VERSIONS( "WinHotRecovery" , "HR_GridVersionsTargetPAN" ,4)} } ;
          ON DBLCLICK { HotGetComment( "TARGET" ) } ;
@@ -607,7 +601,6 @@ Function QPM_HotRecoveryMenu()
          ITEMS {} ;
          VALUE 1 ;
          IMAGE vImagesGrid ;
-         TOOLTIP '' ;
          BACKCOLOR DEF_COLORBACKPRG ;
          ON HEADCLICK { {||SortPRG( "WinHotRecovery" , "HR_GridItemTargetPRG" ,1)} , {||SortPRG( "WinHotRecovery" , "HR_GridItemTargetPRG" ,2)} , {||SortPRG( "WinHotRecovery" , "HR_GridItemTargetPRG" ,3)} , {||SortPRG( "WinHotRecovery" , "HR_GridItemTargetPRG" ,4)} } ;
          ON CHANGE { || if( !bPrgSorting .and. !PUB_bLite , if( HR_bNumberOnPrg , QPM_Wait( "QPM_HotChangeGrid( 'TARGET' , 'ITEM' , 'PRG' )" , "Comparing ..." ) , QPM_HotChangeGrid( 'TARGET' , 'ITEM' , 'PRG' ) ) , US_NOP() ) } ;
@@ -651,9 +644,9 @@ Function QPM_HotRecoveryMenu()
               ROW             GetProperty( "WinHotRecovery" , "height" ) - 77
               COL             25
               WIDTH           320
-              CAPTION "Recovery File"
-              TOOLTIP "Recovery File 'From' in File 'Target'"
-              ONCLICK QPM_HotRecoveryProcess()
+              CAPTION         "Recover File"
+              TOOLTIP         'Recover "From" file in "Target" file'
+              ONCLICK         QPM_HotRecoveryProcess()
       END BUTTON
 
    END WINDOW
@@ -1402,7 +1395,7 @@ Function QPM_HotRecoveryOptions()
              WIDTH           80
              HEIGHT          25
              CAPTION         'OK'
-             TOOLTIP         'Confirm Changes'
+             TOOLTIP         'Confirm changes'
              ONCLICK         if( HotRecoverySaveOptions() , DoMethod( "HR_WinOptions" , "Release" ) , US_Nop() )
       END BUTTON
 
@@ -1412,7 +1405,7 @@ Function QPM_HotRecoveryOptions()
              WIDTH           80
              HEIGHT          25
              CAPTION         'Cancel'
-             TOOLTIP         'Cancel Changes'
+             TOOLTIP         'Cancel changes'
              ONCLICK         DoMethod( "HR_WinOptions" , "Release" )
       END BUTTON
 
@@ -1989,13 +1982,13 @@ Function QPM_HotRecovery_Migrate()
    
    if len( vHotR ) > 0
       aSort( vHotR ,,, { |x, y| US_Upper(x) > US_Upper(y) })
-      US_FileCopy( PUB_MigrateFolderFrom + DEF_SLASH + vHotR[1] , PUB_cQPM_Folder + DEF_SLASH + 'QPM_HotRecovery_' + PUB_cQPM_Version3 + '.dbf' )
-      US_FileCopy( PUB_MigrateFolderFrom + DEF_SLASH + US_FileNameOnlyName( vHotR[1] ) + ".fpt" , PUB_cQPM_Folder + DEF_SLASH + 'QPM_HotRecovery_' + PUB_cQPM_Version3 + '.fpt' )
-   // US_FileCopy( PUB_MigrateFolderFrom + DEF_SLASH + US_FileNameOnlyName( vHotR[1] ) + ".cdx" , PUB_cQPM_Folder + DEF_SLASH + 'QPM_HotRecovery_' + PUB_cQPM_Version3 + '.cdx' )
+      US_FileCopy( PUB_MigrateFolderFrom + DEF_SLASH + vHotR[1] , PUB_cQPM_Folder + DEF_SLASH + 'QPM_HotRecovery_' + QPM_VERSION_NUMBER_LONG + '.dbf' )
+      US_FileCopy( PUB_MigrateFolderFrom + DEF_SLASH + US_FileNameOnlyName( vHotR[1] ) + ".fpt" , PUB_cQPM_Folder + DEF_SLASH + 'QPM_HotRecovery_' + QPM_VERSION_NUMBER_LONG + '.fpt' )
+   // US_FileCopy( PUB_MigrateFolderFrom + DEF_SLASH + US_FileNameOnlyName( vHotR[1] ) + ".cdx" , PUB_cQPM_Folder + DEF_SLASH + 'QPM_HotRecovery_' + QPM_VERSION_NUMBER_LONG + '.cdx' )
       SetMGWaitTxt( "Reindexing Hot Recovery Database" )
       HotRecoveryReindex()
       SetMGWaitTxt( cOldTxt )
-      HotRecoveryDatabaseCompatibility( PUB_cQPM_Folder + DEF_SLASH + 'QPM_HotRecovery_' + PUB_cQPM_Version3 + '.dbf' )
+      HotRecoveryDatabaseCompatibility( PUB_cQPM_Folder + DEF_SLASH + 'QPM_HotRecovery_' + QPM_VERSION_NUMBER_LONG + '.dbf' )
    else
       Private cAuxHRName
       cAuxHRName := US_FileTmp( US_FileNameOnlyPath( QPM_HR_Database ) + DEF_SLASH + "_AddHRDbf" )

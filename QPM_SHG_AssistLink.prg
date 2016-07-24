@@ -3,9 +3,9 @@
  */
 
 /*
- *    QPM - QAC Based Project Manager
+ *    QPM - QAC based Project Manager
  *
- *    Copyright 2011-2014 Fernando Yurisich <fernando.yurisich@gmail.com>
+ *    Copyright 2011-2016 Fernando Yurisich <fernando.yurisich@gmail.com>
  *    http://qpm.sourceforge.net
  *
  *    Based on QAC - Project Manager for (x)Harbour
@@ -208,7 +208,7 @@ Function SHG_LinkAssistant( cMemo , nCaretPos )
          WIDTH           25
          HEIGHT          25
          PICTURE         'folderselect'
-         TOOLTIP         'Select Link file'
+         TOOLTIP         'Select link file'
          ONCLICK         SHG_LinkAssistantGetFile()
       END BUTTON
 
@@ -280,7 +280,7 @@ Function SHG_LinkAssistant( cMemo , nCaretPos )
           ITEMS { " " , "1" , "2" } ;
           VALUE 3 ;
           WIDTH 100 ;
-          TOOLTIP 'Border Link in pixels'
+          TOOLTIP "Link's border width in pixels"
 
       @ 133 , 40 LABEL LabelHSpace ;
          VALUE 'HSpace:' ;
@@ -327,7 +327,7 @@ Function SHG_LinkAssistant( cMemo , nCaretPos )
           ITEMS { " " , "top" , "middle" , "bottom" , "left" , "right" } ;
           VALUE 1 ;
           WIDTH 100 ;
-          TOOLTIP 'Link Align'
+          TOOLTIP 'Link align'
 
  //   @ 163 , 250 LABEL LabelNotFound ;
  //      VALUE '' ;
@@ -341,13 +341,13 @@ Function SHG_LinkAssistant( cMemo , nCaretPos )
              WIDTH           80
              HEIGHT          25
              CAPTION         'OK'
-             TOOLTIP         'Confirm Selection'
+             TOOLTIP         'Confirm selection'
              ONCLICK         SHG_LinkAssistantOK()
       END BUTTON
           // ONCLICK         ( cAuxName := PanInputLink.TextSrc.Value , cAuxNick := PanInputLink.TextNick.Value , if( !empty( cAuxNick ) .and. !FILEVALID( cAuxNick , 255 , 50 ) , MsgInfo( "NickName is not a valid file name of Windows" + HB_OsNewLine() + 'Remember: only numbers (0-9), letters (a-z or A-Z) and not use the followed simbols: \ / : * ? " < > |') , PanInputLink.Release() ) )
 
       @ 235 , 195 LABEL LabelReq ;
-         VALUE 'RED field are required' ;
+         VALUE 'RED fields are required' ;
          WIDTH 150 ;
          FONT 'arial' SIZE 10 BOLD ;
          FONTCOLOR {255,0,0}
@@ -358,7 +358,7 @@ Function SHG_LinkAssistant( cMemo , nCaretPos )
              WIDTH           80
              HEIGHT          15
              CAPTION         'Delete'
-             TOOLTIP         'Delete Current Link Tag'
+             TOOLTIP         'Delete current link tag'
              ONCLICK         SHG_LinkAssistantDELETE()
       END BUTTON
 
@@ -368,7 +368,7 @@ Function SHG_LinkAssistant( cMemo , nCaretPos )
              WIDTH           80
              HEIGHT          25
              CAPTION         'Cancel'
-             TOOLTIP         'Cancel Selection'
+             TOOLTIP         'Cancel selection'
              ONCLICK         PanInputLink.Release()
       END BUTTON
 

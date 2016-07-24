@@ -3,9 +3,9 @@
  */
 
 /*
- *    QPM - QAC Based Project Manager
+ *    QPM - QAC based Project Manager
  *
- *    Copyright 2011-2014 Fernando Yurisich <fernando.yurisich@gmail.com>
+ *    Copyright 2011-2016 Fernando Yurisich <fernando.yurisich@gmail.com>
  *    http://qpm.sourceforge.net
  *
  *    Based on QAC - Project Manager for (x)Harbour
@@ -54,39 +54,74 @@ Function LoadEnvironment
    &( "Gbl_T_X_" + DefineExtended1 + DefineBorland ) := 'C:' + DEF_SLASH + 'MiniGui' + DEF_SLASH + 'xHarbour'
    
    &( "Gbl_T_M_" + DefineExtended1 + DefineMinGW ) := 'C:' + DEF_SLASH + 'MiniGui'
-   &( "Gbl_T_C_" + DefineExtended1 + DefineMinGW ) := 'C:' + DEF_SLASH + 'HMG' + DEF_SLASH + 'MinGW'
+   &( "Gbl_T_C_" + DefineExtended1 + DefineMinGW ) := 'C:' + DEF_SLASH + 'HMG' + DEF_SLASH + 'MinGW32'
    &( "Gbl_T_H_" + DefineExtended1 + DefineMinGW ) := 'C:' + DEF_SLASH + 'HMG' + DEF_SLASH + 'Harbour'
    &( "Gbl_T_X_" + DefineExtended1 + DefineMinGW ) := 'C:' + DEF_SLASH + 'HMG' + DEF_SLASH + 'xHarbour'
    
-   &( "Gbl_T_M_" + DefineOohg3 + DefineBorland ) := 'C:' + DEF_SLASH + 'OOHGforBorland'
+   &( "Gbl_T_M_" + DefineOohg3 + DefineBorland ) := 'C:' + DEF_SLASH + 'OOHG'
    &( "Gbl_T_C_" + DefineOohg3 + DefineBorland ) := 'C:' + DEF_SLASH + 'Borland' + DEF_SLASH + 'bcc55'
-   &( "Gbl_T_H_" + DefineOohg3 + DefineBorland ) := 'C:' + DEF_SLASH + 'OOHGforBorland' + DEF_SLASH + 'Harbour'
-   &( "Gbl_T_X_" + DefineOohg3 + DefineBorland ) := 'C:' + DEF_SLASH + 'OOHGforBorland' + DEF_SLASH + 'xHarbour'
+   &( "Gbl_T_H_" + DefineOohg3 + DefineBorland ) := 'C:' + DEF_SLASH + 'OOHG' + DEF_SLASH + 'Harbour'
+   &( "Gbl_T_X_" + DefineOohg3 + DefineBorland ) := 'C:' + DEF_SLASH + 'OOHG' + DEF_SLASH + 'xHarbour'
    
-   &( "Gbl_T_M_" + DefineOohg3 + DefineMinGW ) := 'C:' + DEF_SLASH + 'OOHGforMinGW'
-   &( "Gbl_T_C_" + DefineOohg3 + DefineMinGW ) := 'C:' + DEF_SLASH + 'MinGW'
-   &( "Gbl_T_H_" + DefineOohg3 + DefineMinGW ) := 'C:' + DEF_SLASH + 'OOHGforMinGW' + DEF_SLASH + 'Harbour'
-   &( "Gbl_T_X_" + DefineOohg3 + DefineMinGW ) := 'C:' + DEF_SLASH + 'OOHGforMinGW' + DEF_SLASH + 'xHarbour'
+   &( "Gbl_T_M_" + DefineOohg3 + DefineMinGW ) := 'C:' + DEF_SLASH + 'OOHG'
+   &( "Gbl_T_C_" + DefineOohg3 + DefineMinGW ) := 'C:' + DEF_SLASH + 'OOHG' + DEF_SLASH + 'hb32' + DEF_SLASH + 'comp' + DEF_SLASH + 'MinGW'
+   &( "Gbl_T_H_" + DefineOohg3 + DefineMinGW ) := 'C:' + DEF_SLASH + 'OOHG' + DEF_SLASH + 'hb32'
+   &( "Gbl_T_X_" + DefineOohg3 + DefineMinGW ) := 'C:' + DEF_SLASH + 'OOHG' + DEF_SLASH + 'xHarbour'
    
-   &( "Gbl_T_M_" + DefineOohg3 + DefinePelles ) := 'C:' + DEF_SLASH + 'OOHGforPelles'
-   &( "Gbl_T_C_" + DefineOohg3 + DefinePelles ) := 'C:' + DEF_SLASH + 'Pelles'
-   &( "Gbl_T_H_" + DefineOohg3 + DefinePelles ) := 'C:' + DEF_SLASH + 'OOHGforPelles' + DEF_SLASH + 'Harbour'
-   &( "Gbl_T_X_" + DefineOohg3 + DefinePelles ) := 'C:' + DEF_SLASH + 'OOHGforPelles' + DEF_SLASH + 'xHarbour'
+   &( "Gbl_T_M_" + DefineOohg3 + DefinePelles ) := 'C:' + DEF_SLASH + 'OOHG'
+   &( "Gbl_T_C_" + DefineOohg3 + DefinePelles ) := 'C:' + DEF_SLASH + 'pellesc'
+   &( "Gbl_T_H_" + DefineOohg3 + DefinePelles ) := 'C:' + DEF_SLASH + 'OOHG' + DEF_SLASH + 'Harbour'
+   &( "Gbl_T_X_" + DefineOohg3 + DefinePelles ) := 'C:' + DEF_SLASH + 'OOHG' + DEF_SLASH + 'xHarbour'
    
+   &( "Gbl_T_M_LIBS_" + DefineMiniGui1 + DefineBorland ) := &( "Gbl_T_M_" + DefineMiniGui1 + DefineBorland ) + DEF_SLASH + 'lib'
+   &( "Gbl_T_C_LIBS_" + DefineMiniGui1 + DefineBorland ) := &( "Gbl_T_C_" + DefineMiniGui1 + DefineBorland ) + DEF_SLASH + 'lib'
+   &( "Gbl_T_H_LIBS_" + DefineMiniGui1 + DefineBorland ) := &( "Gbl_T_H_" + DefineMiniGui1 + DefineBorland ) + DEF_SLASH + 'lib'
+   &( "Gbl_T_X_LIBS_" + DefineMiniGui1 + DefineBorland ) := &( "Gbl_T_X_" + DefineMiniGui1 + DefineBorland ) + DEF_SLASH + 'lib'
+
+   &( "Gbl_T_M_LIBS_" + DefineMiniGui3 + DefineMinGW ) := &( "Gbl_T_M_" + DefineMiniGui3 + DefineMinGW ) + DEF_SLASH + 'lib'
+   &( "Gbl_T_C_LIBS_" + DefineMiniGui3 + DefineMinGW ) := &( "Gbl_T_C_" + DefineMiniGui3 + DefineMinGW ) + DEF_SLASH + 'i686-w64-mingw32' + DEF_SLASH + 'lib'
+   &( "Gbl_T_H_LIBS_" + DefineMiniGui3 + DefineMinGW ) := &( "Gbl_T_H_" + DefineMiniGui3 + DefineMinGW ) + DEF_SLASH + 'lib'
+   &( "Gbl_T_X_LIBS_" + DefineMiniGui3 + DefineMinGW ) := &( "Gbl_T_X_" + DefineMiniGui3 + DefineMinGW ) + DEF_SLASH + 'lib'
+
+   &( "Gbl_T_M_LIBS_" + DefineExtended1 + DefineBorland ) := &( "Gbl_T_M_" + DefineExtended1 + DefineBorland ) + DEF_SLASH + 'lib'
+   &( "Gbl_T_C_LIBS_" + DefineExtended1 + DefineBorland ) := &( "Gbl_T_C_" + DefineExtended1 + DefineBorland ) + DEF_SLASH + 'lib'
+   &( "Gbl_T_H_LIBS_" + DefineExtended1 + DefineBorland ) := &( "Gbl_T_H_" + DefineExtended1 + DefineBorland ) + DEF_SLASH + 'lib'
+   &( "Gbl_T_X_LIBS_" + DefineExtended1 + DefineBorland ) := &( "Gbl_T_X_" + DefineExtended1 + DefineBorland ) + DEF_SLASH + 'lib'
+
+   &( "Gbl_T_M_LIBS_" + DefineExtended1 + DefineMinGW ) := &( "Gbl_T_M_" + DefineExtended1 + DefineMinGW ) + DEF_SLASH + 'lib'
+   &( "Gbl_T_C_LIBS_" + DefineExtended1 + DefineMinGW ) := &( "Gbl_T_C_" + DefineExtended1 + DefineMinGW ) + DEF_SLASH + 'i686-w64-mingw32' + DEF_SLASH + 'lib'
+   &( "Gbl_T_H_LIBS_" + DefineExtended1 + DefineMinGW ) := &( "Gbl_T_H_" + DefineExtended1 + DefineMinGW ) + DEF_SLASH + 'lib'
+   &( "Gbl_T_X_LIBS_" + DefineExtended1 + DefineMinGW ) := &( "Gbl_T_X_" + DefineExtended1 + DefineMinGW ) + DEF_SLASH + 'lib'
+
+   &( "Gbl_T_M_LIBS_" + DefineOohg3 + DefineBorland ) := &( "Gbl_T_M_" + DefineOohg3 + DefineBorland ) + DEF_SLASH + 'lib' + DEF_SLASH + 'hb' + DEF_SLASH + 'bcc'
+   &( "Gbl_T_C_LIBS_" + DefineOohg3 + DefineBorland ) := &( "Gbl_T_C_" + DefineOohg3 + DefineBorland ) + DEF_SLASH + 'lib'
+   &( "Gbl_T_H_LIBS_" + DefineOohg3 + DefineBorland ) := &( "Gbl_T_H_" + DefineOohg3 + DefineBorland ) + DEF_SLASH + 'lib'
+   &( "Gbl_T_X_LIBS_" + DefineOohg3 + DefineBorland ) := &( "Gbl_T_X_" + DefineOohg3 + DefineBorland ) + DEF_SLASH + 'lib'
+
+   &( "Gbl_T_M_LIBS_" + DefineOohg3 + DefineMinGW ) := &( "Gbl_T_M_" + DefineOohg3 + DefineMinGW ) + DEF_SLASH + 'lib' + DEF_SLASH + 'hb' + DEF_SLASH + 'mingw'
+   &( "Gbl_T_C_LIBS_" + DefineOohg3 + DefineMinGW ) := &( "Gbl_T_C_" + DefineOohg3 + DefineMinGW ) + DEF_SLASH + 'lib'
+   &( "Gbl_T_H_LIBS_" + DefineOohg3 + DefineMinGW ) := &( "Gbl_T_H_" + DefineOohg3 + DefineMinGW ) + DEF_SLASH + 'lib' + DEF_SLASH + 'win' + DEF_SLASH + 'mingw'
+   &( "Gbl_T_X_LIBS_" + DefineOohg3 + DefineMinGW ) := &( "Gbl_T_X_" + DefineOohg3 + DefineMinGW ) + DEF_SLASH + 'lib'
+
+   &( "Gbl_T_M_LIBS_" + DefineOohg3 + DefinePelles ) := &( "Gbl_T_M_" + DefineOohg3 + DefinePelles ) + DEF_SLASH + 'lib'
+   &( "Gbl_T_C_LIBS_" + DefineOohg3 + DefinePelles ) := &( "Gbl_T_C_" + DefineOohg3 + DefinePelles ) + DEF_SLASH + 'lib'
+   &( "Gbl_T_H_LIBS_" + DefineOohg3 + DefinePelles ) := &( "Gbl_T_H_" + DefineOohg3 + DefinePelles ) + DEF_SLASH + 'lib'
+   &( "Gbl_T_X_LIBS_" + DefineOohg3 + DefinePelles ) := &( "Gbl_T_X_" + DefineOohg3 + DefinePelles ) + DEF_SLASH + 'lib'
+
    bEditorLongName := .F.
    bSuspendControlEdit := .F.
    
    if PUB_bLite .and. File( US_FileNameOnlyPathAndName( PUB_cProjectFile ) + ".cfg" )
       EnvironmentMemo := MemoRead ( US_FileNameOnlyPathAndName( PUB_cProjectFile ) + ".cfg" )
    else
-      if File( PUB_cQPM_Folder + DEF_SLASH + 'QPM_' + PUB_cQPM_Version3 + '.cfg' )
+      if File( PUB_cQPM_Folder + DEF_SLASH + 'QPM_' + QPM_VERSION_NUMBER_LONG + '.cfg' )
          if US_DirWrite( GetWindowsFolder() )
-            if File( GetWindowsFolder() + DEF_SLASH + 'QPM_' + PUB_cQPM_Version3 + '.path' )
-               if ! ( MemoRead( GetWindowsFolder() + DEF_SLASH + 'QPM_' + PUB_cQPM_Version3 + '.path' ) == PUB_cQPM_Folder )
-                  QPM_MemoWrit( GetWindowsFolder() + DEF_SLASH + 'QPM_' + PUB_cQPM_Version3 + '.path', PUB_cQPM_Folder )
+            if File( GetWindowsFolder() + DEF_SLASH + 'QPM_' + QPM_VERSION_NUMBER_LONG + '.path' )
+               if ! ( MemoRead( GetWindowsFolder() + DEF_SLASH + 'QPM_' + QPM_VERSION_NUMBER_LONG + '.path' ) == PUB_cQPM_Folder )
+                  QPM_MemoWrit( GetWindowsFolder() + DEF_SLASH + 'QPM_' + QPM_VERSION_NUMBER_LONG + '.path', PUB_cQPM_Folder )
                endif
             else
-               QPM_MemoWrit( GetWindowsFolder() + DEF_SLASH + 'QPM_' + PUB_cQPM_Version3 + '.path', PUB_cQPM_Folder )
+               QPM_MemoWrit( GetWindowsFolder() + DEF_SLASH + 'QPM_' + QPM_VERSION_NUMBER_LONG + '.path', PUB_cQPM_Folder )
             endif
          endif
       else
@@ -95,12 +130,12 @@ Function LoadEnvironment
             DECLARE vAuxDir[ ADIR( GetWindowsFolder() + DEF_SLASH + 'QAC_????????.path' ) ]
             ADIR( GetWindowsFolder() + DEF_SLASH + 'QAC_????????.path', vAuxDir )
             for nInx := 1 to len( vAuxDir )
-               if val( substr( vAuxDir[nInx], 5, 8 ) ) < val( PUB_cQPM_Version3 )
+               if val( substr( vAuxDir[nInx], 5, 8 ) ) < val( QPM_VERSION_NUMBER_LONG )
                   if US_IsDirectory( alltrim( memoline( memoread( GetWindowsFolder() + DEF_SLASH + vAuxDir[nInx] ), 254, 1 ) ) )
                      aadd( vConfig, vAuxDir[nInx] )
                   endif
                else
-                  if val( substr( vAuxDir[nInx], 5, 8 ) ) == val( PUB_cQPM_Version3 )
+                  if val( substr( vAuxDir[nInx], 5, 8 ) ) == val( QPM_VERSION_NUMBER_LONG )
                      if !( upper( alltrim( memoline( memoread( GetWindowsFolder() + DEF_SLASH + vAuxDir[nInx] ), 254, 1 ) ) ) == upper( PUB_cQPM_Folder ) )
                         if US_IsDirectory( alltrim( memoline( memoread( GetWindowsFolder() + DEF_SLASH + vAuxDir[nInx] ), 254, 1 ) ) )
                            aadd( vConfig, vAuxDir[nInx] )
@@ -114,12 +149,12 @@ Function LoadEnvironment
             DECLARE vAuxDir[ ADIR( GetWindowsFolder() + DEF_SLASH + 'QPM_????????.path' ) ]
             ADIR( GetWindowsFolder() + DEF_SLASH + 'QPM_????????.path', vAuxDir )
             for nInx := 1 to len( vAuxDir )
-               if val( substr( vAuxDir[nInx], 5, 8 ) ) < val( PUB_cQPM_Version3 )
+               if val( substr( vAuxDir[nInx], 5, 8 ) ) < val( QPM_VERSION_NUMBER_LONG )
                   if US_IsDirectory( alltrim( memoline( memoread( GetWindowsFolder() + DEF_SLASH + vAuxDir[nInx] ), 254, 1 ) ) )
                      aadd( vConfig, vAuxDir[nInx] )
                   endif
                else
-                  if val( substr( vAuxDir[nInx], 5, 8 ) ) == val( PUB_cQPM_Version3 )
+                  if val( substr( vAuxDir[nInx], 5, 8 ) ) == val( QPM_VERSION_NUMBER_LONG )
                      if !( upper( alltrim( memoline( memoread( GetWindowsFolder() + DEF_SLASH + vAuxDir[nInx] ), 254, 1 ) ) ) == upper( PUB_cQPM_Folder ) )
                         if US_IsDirectory( alltrim( memoline( memoread( GetWindowsFolder() + DEF_SLASH + vAuxDir[nInx] ), 254, 1 ) ) )
                            aadd( vConfig, vAuxDir[nInx] )
@@ -135,15 +170,15 @@ Function LoadEnvironment
                PUB_MigrateFolderFrom := alltrim( memoline( memoread( GetWindowsFolder() + DEF_SLASH + vConfig[1] ), , 1 ) )
                PUB_MigrateVersionFrom := US_FileNameOnlyName( vConfig[1] )
                if File( PUB_MigrateFolderFrom + DEF_SLASH + PUB_MigrateVersionFrom + ".cfg" )
-                  US_FileCopy( PUB_MigrateFolderFrom + DEF_SLASH + PUB_MigrateVersionFrom + ".cfg", PUB_cQPM_Folder + DEF_SLASH + 'QPM_' + PUB_cQPM_Version3 + '.cfg' )
+                  US_FileCopy( PUB_MigrateFolderFrom + DEF_SLASH + PUB_MigrateVersionFrom + ".cfg", PUB_cQPM_Folder + DEF_SLASH + 'QPM_' + QPM_VERSION_NUMBER_LONG + '.cfg' )
                else
                   US_Log( "Previous Configuration file not found: " + PUB_MigrateFolderFrom + DEF_SLASH + PUB_MigrateVersionFrom + ".cfg" )
                endif
             endif
-            QPM_MemoWrit( GetWindowsFolder() + DEF_SLASH + 'QPM_' + PUB_cQPM_Version3 + '.path', PUB_cQPM_Folder )
+            QPM_MemoWrit( GetWindowsFolder() + DEF_SLASH + 'QPM_' + QPM_VERSION_NUMBER_LONG + '.path', PUB_cQPM_Folder )
          endif
       endif
-      EnvironmentMemo := MemoRead( PUB_cQPM_Folder + DEF_SLASH + 'QPM_' + PUB_cQPM_Version3 + '.cfg' )
+      EnvironmentMemo := MemoRead( PUB_cQPM_Folder + DEF_SLASH + 'QPM_' + QPM_VERSION_NUMBER_LONG + '.cfg' )
       if empty( PUB_MigrateFolderFrom )
          PUB_MigrateFolderFrom := GetWindowsFolder()
       endif
@@ -156,7 +191,7 @@ Function LoadEnvironment
          EnvironmentVersion := val( "010001" )   && 01.00.01
       endif
    endif
-   if EnvironmentVersion > PUB_nQPM_Version
+   if EnvironmentVersion > val( QPM_VERSION_NUMBER_SHORT )
       MsgStop( "Version of Environment file is greater than the version of this program, the file will not be processed.  You can continue without problems." )
       Return .F.
    endif
@@ -188,6 +223,22 @@ Function LoadEnvironment
              Gbl_Text_Dbf := US_WordSubStr( LOC_cLine, 2 )
       ElseIf US_Upper( US_Word( LOC_cLine, 1 ) ) == 'DBFCOMILLAS'
              Gbl_Comillas_DBF := if( US_WordSubStr( LOC_cLine, 2 ) == ".T.", '"', '' )
+      ElseIf at( 'CCOMPILATORLIBS', US_Upper( LOC_cLine ) ) = 1
+             if US_IsVar( 'Gbl_T_C_LIBS_' + substr( US_Upper( US_Word( LOC_cLine, 1 ) ), 16 ) )
+                &('Gbl_T_C_LIBS_' + substr( US_Upper( US_Word( LOC_cLine, 1 ) ), 16 )) := US_WordSubStr( LOC_cLine, 2 )
+             endif
+      ElseIf at( 'MINIGUIFOLDERLIBS', US_Upper( LOC_cLine ) ) = 1
+             if US_IsVar( 'Gbl_T_M_LIBS_' + substr( US_Upper( US_Word( LOC_cLine, 1 ) ), 18 ) )
+                &('Gbl_T_M_LIBS_' + substr( US_Upper( US_Word( LOC_cLine, 1 ) ), 18 )) := US_WordSubStr( LOC_cLine, 2 )
+             endif
+      ElseIf at( 'HARBOURFOLDERLIBS', US_Upper( LOC_cLine ) ) = 1
+             if US_IsVar( 'Gbl_T_H_LIBS_' + substr( US_Upper( US_Word( LOC_cLine, 1 ) ), 18 ) )
+                &('Gbl_T_H_LIBS_' + substr( US_Upper( US_Word( LOC_cLine, 1 ) ), 18 )) := US_WordSubStr( LOC_cLine, 2 )
+             endif
+      ElseIf at( 'XHARBOURFOLDERLIBS', US_Upper( LOC_cLine ) ) = 1
+             if US_IsVar( 'Gbl_T_X_LIBS_' + substr( US_Upper( US_Word( LOC_cLine, 1 ) ), 19 ) )
+                &('Gbl_T_X_LIBS_' + substr( US_Upper( US_Word( LOC_cLine, 1 ) ), 19 )) := US_WordSubStr( LOC_cLine, 2 )
+             endif
       ElseIf at( 'CCOMPILATOR', US_Upper( LOC_cLine ) ) = 1
              if US_IsVar( 'Gbl_T_C_' + substr( US_Upper( US_Word( LOC_cLine, 1 ) ), 12 ) )
                 &('Gbl_T_C_' + substr( US_Upper( US_Word( LOC_cLine, 1 ) ), 12 )) := US_WordSubStr( LOC_cLine, 2 )
@@ -226,7 +277,7 @@ Return .T.
 
 Function SaveEnvironment
    Local c := ''
-   c := c + 'VERSION ' + PUB_cQPM_Version + Hb_OsNewLine()
+   c := c + 'VERSION ' + QPM_VERSION_NUMBER + Hb_OsNewLine()
    c := c + 'PROGRAMEDITOR ' + alltrim(Gbl_TEditor) + Hb_OsNewLine()
    c := c + 'EDITLONGNAME ' + US_VarToStr( bEditorLongName ) + Hb_OsNewLine()
    c := c + 'EDITSUSPENDCONTROL ' + US_VarToStr( bSuspendControlEdit ) + Hb_OsNewLine()
@@ -270,6 +321,42 @@ Function SaveEnvironment
    c := c + 'CCOMPILATOR' + DefineOohg3 + DefinePelles + ' ' + alltrim(&( "Gbl_T_C_" + DefineOohg3 + DefinePelles )) + Hb_OsNewLine()
    c := c + 'HARBOURFOLDER' + DefineOohg3 + DefinePelles + ' ' + alltrim(&( "Gbl_T_H_" + DefineOohg3 + DefinePelles )) + Hb_OsNewLine()
    c := c + 'XHARBOURFOLDER' + DefineOohg3 + DefinePelles + ' ' + alltrim(&( "Gbl_T_X_" + DefineOohg3 + DefinePelles )) + Hb_OsNewLine()
+
+   c := c + 'MINIGUIFOLDERLIBS' + DefineMiniGui1 + DefineBorland + ' ' + alltrim(&( "Gbl_T_M_LIBS_" + DefineMiniGui1 + DefineBorland )) + Hb_OsNewLine()
+   c := c + 'CCOMPILATORLIBS' + DefineMiniGui1 + DefineBorland + ' ' + alltrim(&( "Gbl_T_C_LIBS_" + DefineMiniGui1 + DefineBorland )) + Hb_OsNewLine()
+   c := c + 'HARBOURFOLDERLIBS' + DefineMiniGui1 + DefineBorland + ' ' + alltrim(&( "Gbl_T_H_LIBS_" + DefineMiniGui1 + DefineBorland )) + Hb_OsNewLine()
+   c := c + 'XHARBOURFOLDERLIBS' + DefineMiniGui1 + DefineBorland + ' ' + alltrim(&( "Gbl_T_X_LIBS_" + DefineMiniGui1 + DefineBorland )) + Hb_OsNewLine()
+
+   c := c + 'MINIGUIFOLDERLIBS' + DefineMiniGui3 + DefineMinGW + ' ' + alltrim(&( "Gbl_T_M_LIBS_" + DefineMiniGui3 + DefineMinGW )) + Hb_OsNewLine()
+   c := c + 'CCOMPILATORLIBS' + DefineMiniGui3 + DefineMinGW + ' ' + alltrim(&( "Gbl_T_C_LIBS_" + DefineMiniGui3 + DefineMinGW )) + Hb_OsNewLine()
+   c := c + 'HARBOURFOLDERLIBS' + DefineMiniGui3 + DefineMinGW + ' ' + alltrim(&( "Gbl_T_H_LIBS_" + DefineMiniGui3 + DefineMinGW )) + Hb_OsNewLine()
+   c := c + 'XHARBOURFOLDERLIBS' + DefineMiniGui3 + DefineMinGW + ' ' + alltrim(&( "Gbl_T_X_LIBS_" + DefineMiniGui3 + DefineMinGW )) + Hb_OsNewLine()
+
+   c := c + 'MINIGUIFOLDERLIBS' + DefineExtended1 + DefineBorland + ' ' + alltrim(&( "Gbl_T_M_LIBS_" + DefineExtended1 + DefineBorland )) + Hb_OsNewLine()
+   c := c + 'CCOMPILATORLIBS' + DefineExtended1 + DefineBorland + ' ' + alltrim(&( "Gbl_T_C_LIBS_" + DefineExtended1 + DefineBorland )) + Hb_OsNewLine()
+   c := c + 'HARBOURFOLDERLIBS' + DefineExtended1 + DefineBorland + ' ' + alltrim(&( "Gbl_T_H_LIBS_" + DefineExtended1 + DefineBorland )) + Hb_OsNewLine()
+   c := c + 'XHARBOURFOLDERLIBS' + DefineExtended1 + DefineBorland + ' ' + alltrim(&( "Gbl_T_X_LIBS_" + DefineExtended1 + DefineBorland )) + Hb_OsNewLine()
+
+   c := c + 'MINIGUIFOLDERLIBS' + DefineExtended1 + DefineMinGW + ' ' + alltrim(&( "Gbl_T_M_LIBS_" + DefineExtended1 + DefineMinGW )) + Hb_OsNewLine()
+   c := c + 'CCOMPILATORLIBS' + DefineExtended1 + DefineMinGW + ' ' + alltrim(&( "Gbl_T_C_LIBS_" + DefineExtended1 + DefineMinGW )) + Hb_OsNewLine()
+   c := c + 'HARBOURFOLDERLIBS' + DefineExtended1 + DefineMinGW + ' ' + alltrim(&( "Gbl_T_H_LIBS_" + DefineExtended1 + DefineMinGW )) + Hb_OsNewLine()
+   c := c + 'XHARBOURFOLDERLIBS' + DefineExtended1 + DefineMinGW + ' ' + alltrim(&( "Gbl_T_X_LIBS_" + DefineExtended1 + DefineMinGW )) + Hb_OsNewLine()
+
+   c := c + 'MINIGUIFOLDERLIBS' + DefineOohg3 + DefineBorland + ' ' + alltrim(&( "Gbl_T_M_LIBS_" + DefineOohg3 + DefineBorland )) + Hb_OsNewLine()
+   c := c + 'CCOMPILATORLIBS' + DefineOohg3 + DefineBorland + ' ' + alltrim(&( "Gbl_T_C_LIBS_" + DefineOohg3 + DefineBorland )) + Hb_OsNewLine()
+   c := c + 'HARBOURFOLDERLIBS' + DefineOohg3 + DefineBorland + ' ' + alltrim(&( "Gbl_T_H_LIBS_" + DefineOohg3 + DefineBorland )) + Hb_OsNewLine()
+   c := c + 'XHARBOURFOLDERLIBS' + DefineOohg3 + DefineBorland + ' ' + alltrim(&( "Gbl_T_X_LIBS_" + DefineOohg3 + DefineBorland )) + Hb_OsNewLine()
+
+   c := c + 'MINIGUIFOLDERLIBS' + DefineOohg3 + DefineMinGW + ' ' + alltrim(&( "Gbl_T_M_LIBS_" + DefineOohg3 + DefineMinGW )) + Hb_OsNewLine()
+   c := c + 'CCOMPILATORLIBS' + DefineOohg3 + DefineMinGW + ' ' + alltrim(&( "Gbl_T_C_LIBS_" + DefineOohg3 + DefineMinGW )) + Hb_OsNewLine()
+   c := c + 'HARBOURFOLDERLIBS' + DefineOohg3 + DefineMinGW + ' ' + alltrim(&( "Gbl_T_H_LIBS_" + DefineOohg3 + DefineMinGW )) + Hb_OsNewLine()
+   c := c + 'XHARBOURFOLDERLIBS' + DefineOohg3 + DefineMinGW + ' ' + alltrim(&( "Gbl_T_X_LIBS_" + DefineOohg3 + DefineMinGW )) + Hb_OsNewLine()
+
+   c := c + 'MINIGUIFOLDERLIBS' + DefineOohg3 + DefinePelles + ' ' + alltrim(&( "Gbl_T_M_LIBS_" + DefineOohg3 + DefinePelles )) + Hb_OsNewLine()
+   c := c + 'CCOMPILATORLIBS' + DefineOohg3 + DefinePelles + ' ' + alltrim(&( "Gbl_T_C_LIBS_" + DefineOohg3 + DefinePelles )) + Hb_OsNewLine()
+   c := c + 'HARBOURFOLDERLIBS' + DefineOohg3 + DefinePelles + ' ' + alltrim(&( "Gbl_T_H_LIBS_" + DefineOohg3 + DefinePelles )) + Hb_OsNewLine()
+   c := c + 'XHARBOURFOLDERLIBS' + DefineOohg3 + DefinePelles + ' ' + alltrim(&( "Gbl_T_X_LIBS_" + DefineOohg3 + DefinePelles )) + Hb_OsNewLine()
+
 #ifdef QPM_HOTRECOVERY
    c := c + 'HOTVERSIONS ' + alltrim( str( HR_nVersionsSet ) ) + HB_OsNewLine()
 #endif
@@ -287,7 +374,7 @@ Function SaveEnvironment
    Next i
    
    if !PUB_bLite
-      QPM_MemoWrit( PUB_cQPM_Folder + DEF_SLASH + 'QPM_' + PUB_cQPM_Version3 + '.cfg', c )
+      QPM_MemoWrit( PUB_cQPM_Folder + DEF_SLASH + 'QPM_' + QPM_VERSION_NUMBER_LONG + '.cfg', c )
    endif
 Return .T.
 

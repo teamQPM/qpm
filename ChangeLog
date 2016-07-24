@@ -2,12 +2,130 @@
  * $Id$
  */
 
-/* QPM - QAC Based Project Manager
- * Changes log file
+/* QPM - QAC based Project Manager
+ * Log of changes
  *
  * See "How to format your ChangeLog entries" in howtosvn.txt file.
  */
 
+2016-07-24 12:35:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * All files with copyright notice.
+     * Copyright updated.
+   * ./doc/codestyl.txt
+     * Text updated.
+   * ./HelpQPM/QPM_GlobalSettings_ExtendedMiniGUI_1x.png
+   * ./HelpQPM/QPM_ProjectSettings.png
+     * Updated.
+   * ./HelpQPM/QPM_SHG.cdx
+   * ./HelpQPM/QPM_SHG.dbf
+   * ./HelpQPM/QPM_SHG.fpt
+     * Updated some topics and links.
+   * ./index.htm
+     * Updated.
+   * ./QPM.ch
+     + Defines to handle version number.
+     + Defines to handle quotes and apostrophes.
+     + Declarations for some public and private variables.
+     - Some unneeded declarations.
+     * Format.
+     * MyMsgWarning pseudo-function to MsgWarn.
+   * ./QPM.prg
+     * Comments.
+     * Use new defines to handle version number.
+     * Format.
+     * Tooltips.
+     ! Typos.
+     * Some arrays are now initialized using constants.
+     + SET EXACT ON and SET TOOLTIPSTYLE BALLOON.
+     * Some error messages.
+     ! Painfully slow painting of SHG's keys grid.
+     - Unneeded code.
+     + AutoInc flag: when OFF version is not incremented on build.
+     ! Debug flag setting on project load.
+     + BCC32\LIB\PSDK folder to libs search path.
+     * Use new variables instead of hardwired 'lib' folder.
+     + gtgui is automaticaly added when minigui lib is added for console mode.
+     * Default libs search.
+     + xlib folder as SEARCH_DIR for Extended + MinGW + xHarbour.
+     * iphlpapi and msimg32 moved to default libs instead of being forced.
+     - Function QPM_ProjectOutputExistence.
+     - 50 files limit when adding sources.
+     * Entries into log when processing ppo and header files.
+     ! Main window's title when no project is open.
+     * Use GetResourceFileName() to handle the resource file.
+     + Support for windows's debugger.
+     * The way BUILD.BAT is constructed.
+     * Auxiliary rc files are not deleted when "Do not delete" flag is on.
+     + New translation to function TranslateLog.
+     + Function SwitchAutoInc.
+     * MyMsgWarning pseudo-function renamed to MsgWarn.
+     * Function GetPrjVersion renamed to GetPrj_Version.
+   * ./QPM_AutoProject.qpm
+   * ./QPM_AutoProjectOnlyHelp.qpm
+   * ./QPM_US_Msg.qpm
+   * ./QPM_US_Redir.qpm
+   * ./QPM_US_Res.qpm
+   * ./QPM_US_Run.qpm
+   * ./QPM_US_Shell.qpm
+   * ./QPM_US_Slash.qpm
+     * Updated.
+   * ./QPM_Environment.prg
+     + Initialization values for new variables used to handle libs folders.
+     * Some initialization values for Extended and OOHG.
+     * Use new defines to handle version number.
+     + Save libs folders to project file.
+   * ./QPM_ExtraRun.prg
+     * Some controls positions and tooltips.
+   * ./QPM_Functions.PRG
+     * Use new variables to handle lib's path.
+     * Use new defines to handle version number.
+     * Output module name is now lowercase.
+     - Function QPM_VerNunStr.
+     * Function QPM_ChangePrjVersion renamed to QPM_ChangePrj_Version.
+     * Function QPM_ChangePrjVersionOK renamed to QPM_ChangePrj_VersionOK.
+     * Function ReplacePrjVersion renamed to ReplacePrj_Version.
+     * Variable cPrjVersion renamed to cPrj_Version.
+     + Function GetResourceFileName.
+     * Some tooltips.
+     * Copyright notice at the top of fmg file.
+     * Function QPM_DirValid.
+     * Function CambiaTitulo.
+     * Function GetMiniguiName.
+   * ./QPM_GlobalSettings.prg
+     * Window size under Win Vista or later.
+     - Some commented code.
+     * Some comments and tooltips.
+     * Flavors names.
+     + Textboxes to select the libs folders. This enables the use of
+       MinGW 64 bits compilers that have its libs at x86_64-w64-mingw32\lib.
+       This also will handle future changes in libs folder.
+   * ./QPM_HotRecovery.prg
+     * Use new defines to handle version number.
+     * Some labels and tooltips.
+   * ./QPM_Killer.prg
+     * Some tooltips.
+   * ./QPM_Libraries.prg
+     - Some commented code.
+     * Some comments.
+     * gtgui, gtwin, debug and hbdebug libraries are included as default
+       libraries depending on console and debug options.
+     * debugger lib is used instead of (hb)debug for HMG and Extended.
+     * Default libs.
+   * ./QPM_ProjectSettings.prg
+     * Minigui's names.
+     * Some tooltips.
+   * ./QPM_SHG_AssistImage.prg
+   * ./QPM_SHG_AssistLink.prg.prg
+     * Some labels and tooltips.
+   * /QPM_SHG_SimpleHelpGenerator.prg
+     * Some tooltips.
+     * Function SHG_Togle renamed to SHG_Toggle.
+   * ./us_res.prg
+     * Version bumped to "01.07"
+     * Some error messages.
+     * Use defines to handle single and double quotes.
+     ! Wrong processing of some resource-definition statements.
+     
 2016-07-17 10:52:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    + Some files to ignore list.
 
