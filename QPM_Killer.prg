@@ -3,9 +3,9 @@
  */
 
 /*
- *    QPM - QAC Based Project Manager
+ *    QPM - QAC based Project Manager
  *
- *    Copyright 2011-2014 Fernando Yurisich <fernando.yurisich@gmail.com>
+ *    Copyright 2011-2016 Fernando Yurisich <fernando.yurisich@gmail.com>
  *    http://qpm.sourceforge.net
  *
  *    Based on QAC - Project Manager for (x)Harbour
@@ -113,7 +113,7 @@ Function QPM_DefinoKillerWindow()
            ACTION ( KillIt( if( WinKiller.GGrid.ItemCount > 0 , WinKiller.GGrid.Value , 0 ) ) , WinKiller.GGrid.Setfocus )
            FONTNAME "MS Sans Serif"
            FONTSIZE 8
-           TOOLTIP "To terminate selected process"
+           TOOLTIP "Terminate the selected process"
            FONTBOLD .F.
            FONTITALIC .F.
            FONTUNDERLINE .F.
@@ -143,7 +143,7 @@ Function QPM_DefinoKillerWindow()
            ACTION ( RefreshGrid( WinKiller.GGrid.Cell( WinKiller.GGrid.Value , 1 ) , , .T. ) , WinKiller.GGrid.Setfocus )
            FONTNAME "MS Sans Serif"
            FONTSIZE 8
-           TOOLTIP "Refresh Process List"
+           TOOLTIP "Refresh list of processes"
            FONTBOLD .F.
            FONTITALIC .F.
            FONTUNDERLINE .F.
@@ -169,7 +169,7 @@ Function QPM_DefinoKillerWindow()
            ACTION ( WinKiller.TimerRefresh.Enabled := .F. , SetProperty( "VentanaMain" , "bKill" , "Enabled" , .T. ) , DoMethod( "VentanaMain" , "restore" ) , ThisWindow.Hide() , QPM_bKiller := .F. , if( !bRunApp , QPM_SetProcessPriority( "NORMAL" ) , ) )
            FONTNAME "MS Sans Serif"
            FONTSIZE 8
-           TOOLTIP "Hide Killer Task and Restore QPM Desktop"
+           TOOLTIP "Hide " + DBLQT + "Killer Task" + DBLQT + " and restore QPM's desktop"
            FONTBOLD .F.
            FONTITALIC .F.
            FONTUNDERLINE .F.
@@ -191,7 +191,7 @@ Function QPM_DefinoKillerWindow()
                 WIDTH           200
                 HEIGHT          20
                 VALUE           .F.
-                TOOLTIP "Show all QPM Process (QPM.EXE, US_Run.exe, etc)"
+                TOOLTIP         "Show all QPM processes (QPM.EXE, US_Run.exe, etc.)"
                 ON CHANGE       ( RefreshGrid( WinKiller.GGrid.Cell( WinKiller.GGrid.Value , 1 ) , , .T. ) , WinKiller.GGrid.Setfocus )
         END CHECKBOX
 
@@ -202,7 +202,7 @@ Function QPM_DefinoKillerWindow()
                 WIDTH           100
                 HEIGHT          20
                 VALUE           .T.
-                TOOLTIP "Automatic Proces List Refresh"
+                TOOLTIP         "Toggle the list's automatic refresh"
                 ON CHANGE       ( WinKiller.TimerRefresh.Enabled := WinKiller.Check_AutoRefresh.Value , WinKiller.BRefresh.Enabled := !( WinKiller.Check_AutoRefresh.Value ) , WinKiller.GGrid.Setfocus )
         END CHECKBOX
 

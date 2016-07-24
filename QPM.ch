@@ -3,9 +3,9 @@
  */
 
 /*
- *    QPM - QAC Based Project Manager
+ *    QPM - QAC based Project Manager
  *
- *    Copyright 2011-2014 Fernando Yurisich <fernando.yurisich@gmail.com>
+ *    Copyright 2011-2016 Fernando Yurisich <fernando.yurisich@gmail.com>
  *    http://qpm.sourceforge.net
  *
  *    Based on QAC - Project Manager for (x)Harbour
@@ -28,210 +28,210 @@
 
 #include <US_Env.h>
 
-#DEFINE QPM_SHG
-#DEFINE QPM_KILLER
-#DEFINE QPM_HOTRECOVERY
-#DEFINE QPM_HOTRECOVERYWINDOW
+// String related defines
+#define DBLQT '"'
+#define SNGQT "'"
 
-//#DEFINE QPM_SYNCRECOVERY
+// Project version
+#define DEF_LEN_VER_VERSION        2
+#define DEF_LEN_VER_RELEASE        2
+#define DEF_LEN_VER_BUILD          4
 
-#translate MyMsgWarning( <txt> )       => MyMsg( "QPM - Warning"   , US_VarToStr( <txt> ) , "W" , bAutoExit )
-#translate MsgInfo( <txt> )            => MyMsg( "QPM - Notify"    , US_VarToStr( <txt> ) , "N" , bAutoExit )
-#translate MsgStop( <txt> )            => MyMsg( "QPM - Error"     , US_VarToStr( <txt> ) , "E" , bAutoExit )
+// QPM version
+#define QPM_VERSION_NUMBER_MAYOR   '05'
+#define QPM_VERSION_NUMBER_MINOR   '04'
+#define QPM_VERSION_NUMBER_BUILD   '09'
+#define QPM_VERSION_NUMBER_SHORT   ( QPM_VERSION_NUMBER_MAYOR + QPM_VERSION_NUMBER_MINOR + QPM_VERSION_NUMBER_BUILD )
+#define QPM_VERSION_NUMBER_LONG    ( QPM_VERSION_NUMBER_MAYOR + QPM_VERSION_NUMBER_MINOR + "00" + QPM_VERSION_NUMBER_BUILD )
+#define QPM_VERSION_DISPLAY_SHORT  ( QPM_VERSION_NUMBER_MAYOR + "." + QPM_VERSION_NUMBER_MINOR + '.' + QPM_VERSION_NUMBER_BUILD )
+#define QPM_VERSION_DISPLAY_LONG   ( 'v' + QPM_VERSION_NUMBER_MAYOR + "." + QPM_VERSION_NUMBER_MINOR + ' Build ' + QPM_VERSION_NUMBER_BUILD )
+#define QPM_VERSION_NUMBER         ( QPM_VERSION_NUMBER_MAYOR + " " + QPM_VERSION_NUMBER_MINOR + " " + QPM_VERSION_NUMBER_BUILD )
+#define QPM_VERSION_NUMBER_EXT     ( QPM_VERSION_NUMBER_MAYOR + " " + QPM_VERSION_NUMBER_MINOR + " 00" + QPM_VERSION_NUMBER_BUILD )
 
-//#translate ? <txt>                   => MyMsg( "QPM - Notify"    , US_VarToStr( <txt> ) , "N" , bAutoExit )
-//#translate ?? <txt>                  => MyMsg( "QPM - Notify"    , US_VarToStr( <txt> ) , "N" , bAutoExit )
-//#translate MsgYesNoCancel( <txt> )   => MyMsgYesNoCancel( <txt> , "QPM - Confirm" )
-//#translate MsgYesNo( <txt> )         => MyMsgYesNo( <txt> , "QPM - Confirm" )
-//#translate MsgOkCancel( <txt> )      => MyMsgOkCancel( <txt> , "QPM - Confirm" )
-//#translate MsgRetryCancel( <txt> )   => MyMsgRetryCancel( <txt> , "QPM - Confirm" )
+// QPM modules
+#define QPM_SHG
+#define QPM_KILLER
+#define QPM_HOTRECOVERY
+#define QPM_HOTRECOVERYWINDOW
+//#define QPM_SYNCRECOVERY
 
-#translate DEFAULT <var> TO <val>    =>  if( <var> == NIL , <var> := <val> , )
+// Pseudo-functions
+#translate MsgStop( <txt> )        => MyMsg( "QPM - Error",   US_VarToStr( <txt> ), "E", bAutoExit )
+#translate MsgWarn( <txt> )        => MyMsg( "QPM - Warning", US_VarToStr( <txt> ), "W", bAutoExit )
+#translate MsgInfo( <txt> )        => MyMsg( "QPM - Info",    US_VarToStr( <txt> ), "N", bAutoExit )
+#translate DEFAULT <var> TO <val>  => if( <var> == NIL, <var> := <val>, NIL )
 
-/*
-#command MOVE RADIOGROUP FROM <Control> OF <w> ITEM <item> TO <y>,<x> ;
-                                     => ;
-                                        MoveWindow ( _HMG_aControlHandles \[ GetControlIndex ( ;
-                                        <"Control">, <"w"> ) \] \[ <item> \] , <x> , <y> , _GetControlWidth ( ;
-                                        <"Control">, <"w"> ) , 28 , .t. )
-*/
-#define DEF_COLORWHITE          {255,255,255}
-#define DEF_COLORYELLOW         {242,242,000}
-#define DEF_COLORRED            {228,022,058}
-#define DEF_COLORGREENCLARO     {183,231,175}
-#define DEF_COLORGREEN          {041,135,049}
-#define DEF_COLORBLUE           {000,000,255}
-#define DEF_COLORBLACK          {000,000,000}
-#define DEF_COLORFONTEXTERNALEDIT {216,183,137}
-#define DEF_COLORBACKEXTERNALEDIT {215,130,155}
-#define DEF_COLORBACKPPO        {192,192,192}
-#define DEF_COLORFONTPPO        DEF_COLORWHITE
-#define DEF_COLORFONTVIEW       {000,000,000}
-#define DEF_COLORBACKPRG        {226,241,241}
-#define DEF_COLORBACKHEA        {255,236,236}
-#define DEF_COLORBACKPAN        {234,255,244}
-#define DEF_COLORBACKDBF        {255,238,230}
-#define DEF_COLORBACKDBFSEARCHOK {046,186,143}
-#define DEF_COLORBACKINC        {234,244,255}
-#define DEF_COLORBACKEXC        {229,229,229}
-#define DEF_COLORBACKHLP        {255,252,234}
-#define DEF_COLORBACKOUT        DEF_COLORWHITE
-#define DEF_COLORBACKSYSOUT     DEF_COLORWHITE
-#define DEF_COLORDLL            {228,207,177}
-#define DEF_COLORLIB            {221,233,220}
-#define DEF_COLOREXE            {188,219,240}
+// Colors
+#define DEF_COLORWHITE             { 255, 255, 255 }
+#define DEF_COLORYELLOW            { 242, 242, 000 }
+#define DEF_COLORRED               { 228, 022, 058 }
+#define DEF_COLORGREENCLARO        { 183, 231, 175 }
+#define DEF_COLORGREEN             { 041, 135, 049 }
+#define DEF_COLORBLUE              { 000, 000, 255 }
+#define DEF_COLORBLACK             { 000, 000, 000 }
+#define DEF_COLORFONTEXTERNALEDIT  { 216, 183, 137 }
+#define DEF_COLORBACKEXTERNALEDIT  { 215, 130, 155 }
+#define DEF_COLORBACKPPO           { 192, 192, 192 }
+#define DEF_COLORFONTVIEW          { 000, 000, 000 }
+#define DEF_COLORBACKPRG           { 226, 241, 241 }
+#define DEF_COLORBACKHEA           { 255, 236, 236 }
+#define DEF_COLORBACKPAN           { 234, 255, 244 }
+#define DEF_COLORBACKDBF           { 255, 238, 230 }
+#define DEF_COLORBACKDBFSEARCHOK   { 046, 186, 143 }
+#define DEF_COLORBACKINC           { 234, 244, 255 }
+#define DEF_COLORBACKEXC           { 229, 229, 229 }
+#define DEF_COLORBACKHLP           { 255, 252, 234 }
+#define DEF_COLORDLL               { 228, 207, 177 }
+#define DEF_COLORLIB               { 221, 233, 220 }
+#define DEF_COLOREXE               { 188, 219, 240 }
+#define DEF_COLORFONTPPO           DEF_COLORWHITE
+#define DEF_COLORBACKOUT           DEF_COLORWHITE
+#define DEF_COLORBACKSYSOUT        DEF_COLORWHITE
 
-#DEFINE DEF_FOLDER_EXE "Tools"
-#DEFINE DEF_FOLDER_ADD "Extra"
+// Open modes
+#DEFINE DEF_DBF_SHARED             .T.
+#DEFINE DEF_DBF_EXCLUSIVE          .F.
+#DEFINE DEF_DBF_READ               .T.
+#DEFINE DEF_DBF_WRITE              .F.
 
-#DEFINE DEF_DBF_SHARED .T.
-#DEFINE DEF_DBF_EXCLUSIVE .F.
-#DEFINE DEF_DBF_READ  .T.
-#DEFINE DEF_DBF_WRITE .F.
+// Execute modes
+#DEFINE DEF_QPM_EXEC_WAIT          .T.
+#DEFINE DEF_QPM_EXEC_NOWAIT        .F.
+#DEFINE DEF_QPM_EXEC_HIDE          -1
+#DEFINE DEF_QPM_EXEC_MINIMIZE      0
+#DEFINE DEF_QPM_EXEC_NORMAL        1
+#DEFINE DEF_QPM_EXEC_MAXIMIZE      2
 
-#DEFINE DEF_QPM_EXEC_WAIT      .T.
-#DEFINE DEF_QPM_EXEC_NOWAIT    .F.
-#DEFINE DEF_QPM_EXEC_HIDE      -1
-#DEFINE DEF_QPM_EXEC_MINIMIZE  0
-#DEFINE DEF_QPM_EXEC_NORMAL    1
-#DEFINE DEF_QPM_EXEC_MAXIMIZE  2
+// MiniGuis suffixes
+#DEFINE DEF_MG_MINIGUI1            M1
+#DEFINE DEF_MG_MINIGUI3            M3
+#DEFINE DEF_MG_EXTENDED1           E1
+#DEFINE DEF_MG_OOHG3               O3
 
-// MiniGuis Suffix
-#DEFINE DEF_MG_MINIGUI1        M1
-#DEFINE DEF_MG_MINIGUI3        M3
-#DEFINE DEF_MG_EXTENDED1       E1
-#DEFINE DEF_MG_OOHG3           O3
-// [x]Harbour Suffix
-#DEFINE DEF_MG_HARBOUR         H
-#DEFINE DEF_MG_XHARBOUR        X
-#DEFINE DEF_MG_CLIP            C
-// Cpp Suffix
-#DEFINE DEF_MG_BORLAND         B
-#DEFINE DEF_MG_MINGW           G
-#DEFINE DEF_MG_PELLES          P
-#DEFINE DEF_MG_VC              V
-// Radio Groups
-#define DEF_RG_HARBOUR    1
-#define DEF_RG_XHARBOUR   2
-#define DEF_RG_BORLAND    1
-#define DEF_RG_MINGW      2
-#define DEF_RG_PELLES     3
-#define DEF_RG_MINIGUI1   1
-#define DEF_RG_MINIGUI3   2
-#define DEF_RG_EXTENDED1  3
-#define DEF_RG_OOHG3      4
-#define DEF_RG_EXE        1
-#define DEF_RG_LIB        2
-#define DEF_RG_IMPORT     3
+// [x]Harbour suffixes
+#DEFINE DEF_MG_HARBOUR             H
+#DEFINE DEF_MG_XHARBOUR            X
+#DEFINE DEF_MG_CLIP                C
 
-#translate QPM_VAR0 <tipo> <var> := <valor> => <tipo> <var> := <"valor">
-#translate QPM_VAR1 <tipo> <var> <minigui> <harbour> <cpp> [ := <valor> ] => <tipo> <var><minigui><harbour><cpp> [ := <valor> ]
-#translate QPM_VAR2 <tipo> <var> <minigui> <cpp> [ := <valor> ] => <tipo> <var><minigui><cpp> [ := <valor> ]
+// Cpp suffixes
+#DEFINE DEF_MG_BORLAND             B
+#DEFINE DEF_MG_MINGW               G
+#DEFINE DEF_MG_PELLES              P
+#DEFINE DEF_MG_VC                  V
 
-// Symbol tables for ActiveX
-#define s_Events_Notify        0
-#define s_GridForeColor        1
-#define s_GridBackColor        2
-#define s_FontColor            3
-#define s_BackColor            4
-#define s_Container            5
-#define s_Parent               6
-#define s_hCursor              7
-#define s_Events               8
-#define s_Events_Color         9
-#define s_Name                 10
-#define s_Type                 11
-#define s_TControl             12
-#define s_TLabel               13
-#define s_TGrid                14
-#define s_ContextMenu          15
-#define s_RowMargin            16
-#define s_ColMargin            17
-#define s_hWnd                 18
-#define s_TText                19
-#define s_AdjustRightScroll    20
-#define s_OnMouseMove          21
-#define s_OnMouseDrag          22
-#define s_DoEvent              23
-#define s_LookForKey           24
-#define s_aControlInfo         25
-#define s__aControlInfo        26
-#define s_Events_DrawItem      27
-#define s__hWnd                28
-#define s_Events_Command       29
-#define s_OnChange             30
-#define s_OnGotFocus           31
-#define s_OnLostFocus          32
-#define s_OnClick              33
-#define s_Transparent          34
-#define s_Events_MeasureItem   35
-#define s_FontHandle           36
-#define s_TWindow              37
-#define s_WndProc              38
-#define s_OverWndProc          39
-#define s_hWndClient           40
-#define s_Refresh              41
-#define s_AuxHandle            42
-#define s_ContainerCol         43
-#define s_ContainerRow         44
-#define s_lRtl                 45
-#define s_Width                46
-#define s_Height               47
-#define s_VScroll              48
-#define s_ScrollButton         49
-#define s_Visible              50
-#define s_Events_HScroll       51
-#define s_Events_VScroll       52
-#define s_nTextHeight          53
-#define s_Events_Enter         54
-#define s_Id                   55
-#define s_NestedClick          56
-#define s__NestedClick         57
-#define s_TInternal            58
-#define s__ContextMenu         59
-#define s_Release              60
-#define s_Activate             61
-#define s_oOle                 62
-#define s_RangeHeight          63
-#define s_LastSymbol           64
+// RadioGroups items
+#define DEF_RG_HARBOUR             1
+#define DEF_RG_XHARBOUR            2
+#define DEF_RG_BORLAND             1
+#define DEF_RG_MINGW               2
+#define DEF_RG_PELLES              3
+#define DEF_RG_MINIGUI1            1
+#define DEF_RG_MINIGUI3            2
+#define DEF_RG_EXTENDED1           3
+#define DEF_RG_OOHG3               4
+#define DEF_RG_EXE                 1
+#define DEF_RG_LIB                 2
+#define DEF_RG_IMPORT              3
+
+// Symbols table for ActiveX
+#define s_Events_Notify            0
+#define s_GridForeColor            1
+#define s_GridBackColor            2
+#define s_FontColor                3
+#define s_BackColor                4
+#define s_Container                5
+#define s_Parent                   6
+#define s_hCursor                  7
+#define s_Events                   8
+#define s_Events_Color             9
+#define s_Name                     10
+#define s_Type                     11
+#define s_TControl                 12
+#define s_TLabel                   13
+#define s_TGrid                    14
+#define s_ContextMenu              15
+#define s_RowMargin                16
+#define s_ColMargin                17
+#define s_hWnd                     18
+#define s_TText                    19
+#define s_AdjustRightScroll        20
+#define s_OnMouseMove              21
+#define s_OnMouseDrag              22
+#define s_DoEvent                  23
+#define s_LookForKey               24
+#define s_aControlInfo             25
+#define s__aControlInfo            26
+#define s_Events_DrawItem          27
+#define s__hWnd                    28
+#define s_Events_Command           29
+#define s_OnChange                 30
+#define s_OnGotFocus               31
+#define s_OnLostFocus              32
+#define s_OnClick                  33
+#define s_Transparent              34
+#define s_Events_MeasureItem       35
+#define s_FontHandle               36
+#define s_TWindow                  37
+#define s_WndProc                  38
+#define s_OverWndProc              39
+#define s_hWndClient               40
+#define s_Refresh                  41
+#define s_AuxHandle                42
+#define s_ContainerCol             43
+#define s_ContainerRow             44
+#define s_lRtl                     45
+#define s_Width                    46
+#define s_Height                   47
+#define s_VScroll                  48
+#define s_ScrollButton             49
+#define s_Visible                  50
+#define s_Events_HScroll           51
+#define s_Events_VScroll           52
+#define s_nTextHeight              53
+#define s_Events_Enter             54
+#define s_Id                       55
+#define s_NestedClick              56
+#define s__NestedClick             57
+#define s_TInternal                58
+#define s__ContextMenu             59
+#define s_Release                  60
+#define s_Activate                 61
+#define s_oOle                     62
+#define s_RangeHeight              63
+#define s_LastSymbol               64
 
 // Hack for MinGW and static functions (object's methods)
 #ifdef __MINGW32__
-   #undef  HB_FUNC_STATIC
-   #define HB_FUNC_STATIC( x )     HB_FUNC( x )
+#undef  HB_FUNC_STATIC
+#define HB_FUNC_STATIC( x )        HB_FUNC( x )
 #endif
 
+// Hot recovery related defines
 #ifdef QPM_HOTRECOVERY
-   #define DEF_N_ITEM_COLIMAGE        1
-   #define DEF_N_ITEM_COLNAME         2
-   #define DEF_N_ITEM_COLRELATIVENAME 3
-   #define DEF_N_ITEM_COLFULLNAME     4
-   #define DEF_N_ITEM_COLDATETIME     5
-   #define DEF_N_ITEM_COLOFFSET       6
-   #define DEF_N_ITEM_COLVERSION      7
-
-   #define DEF_N_VER_COLIMAGE         1
-   #define DEF_N_VER_COLVERSION       2
-   #define DEF_N_VER_COLDATETIME      3
-   #define DEF_N_VER_COLCREATED       4
-   #define DEF_N_VER_COLCOMMENT       5
-   #define DEF_N_VER_COLRELATIVENAME  6
-   #define DEF_N_VER_COLFULLNAME      7
-   #define DEF_N_VER_COLCOMPUTER      8
-   #define DEF_N_VER_COLUSERID        9
-   #define DEF_N_VER_COLCODE          10
-   #define DEF_N_VER_COLOFFSET        11
+#define DEF_N_ITEM_COLIMAGE        1
+#define DEF_N_ITEM_COLNAME         2
+#define DEF_N_ITEM_COLRELATIVENAME 3
+#define DEF_N_ITEM_COLFULLNAME     4
+#define DEF_N_ITEM_COLDATETIME     5
+#define DEF_N_ITEM_COLOFFSET       6
+#define DEF_N_ITEM_COLVERSION      7
+#define DEF_N_VER_COLIMAGE         1
+#define DEF_N_VER_COLVERSION       2
+#define DEF_N_VER_COLDATETIME      3
+#define DEF_N_VER_COLCREATED       4
+#define DEF_N_VER_COLCOMMENT       5
+#define DEF_N_VER_COLRELATIVENAME  6
+#define DEF_N_VER_COLFULLNAME      7
+#define DEF_N_VER_COLCOMPUTER      8
+#define DEF_N_VER_COLUSERID        9
+#define DEF_N_VER_COLCODE          10
+#define DEF_N_VER_COLOFFSET        11
 #endif
-
-// Project version
-#define  DEF_LEN_VER_VERSION  2
-#define  DEF_LEN_VER_RELEASE  2
-#define  DEF_LEN_VER_BUILD    4
 
 // Resources ID definitions
 #include "resource.h"
 
-// memvar declarations
+// Public and private variables declarations
 memvar aGridDbf
 memvar aGridExc
 memvar aGridHea
@@ -262,15 +262,16 @@ memvar bHlpMoving
 memvar bHlpSorting
 memvar bIncMoving
 memvar bIncSorting
+memvar bLastGlobalSearchCas
 memvar bLastGlobalSearchDbf
 memvar bLastGlobalSearchFun
-memvar bLastGlobalSearchCas
 memvar bLogActivity
+memvar bNew
 memvar bNumberOnHea
 memvar bNumberOnPan
 memvar bNumberOnPrg
-memvar bOutputSuffix
 memvar bOutputPrefix
+memvar bOutputSuffix
 memvar bPanMoving
 memvar bPanSorting
 memvar bPpoDisplayado
@@ -286,25 +287,41 @@ memvar bSortIncAsc
 memvar bSortPanAsc
 memvar bSortPrgAsc
 memvar bSuspendControlEdit
+memvar BUILD_IN_PROGRESS
 memvar bUpx
 memvar bWaitForBuild
 memvar bWarningCpp
 memvar cConvert
 memvar cDbfDataSearchAskRpta
 memvar cDbfTool
+memvar cExeNotFoundMsg
 memvar cFormTool
 memvar cHeadTool
 memvar cLastGlobalSearch
-memvar cLastLibFolder
+memvar CLASTLIBFOLDERE1BH
+memvar CLASTLIBFOLDERE1BX
+memvar CLASTLIBFOLDERE1GH
+memvar CLASTLIBFOLDERE1GX
+memvar CLASTLIBFOLDERM1BH
+memvar CLASTLIBFOLDERM1BX
+memvar CLASTLIBFOLDERM3GH
+memvar CLASTLIBFOLDERM3GX
+memvar CLASTLIBFOLDERO3BH
+memvar CLASTLIBFOLDERO3BX
+memvar CLASTLIBFOLDERO3GH
+memvar CLASTLIBFOLDERO3GX
+memvar CLASTLIBFOLDERO3PH
+memvar CLASTLIBFOLDERO3PX
 memvar cLastProjectFolder
+memvar ConfigVersion
 memvar cOutputCopyMove
 memvar cOutputRename
 memvar cOutputType
 memvar cPpoCaretPrg
 memvar cPrj_Version
 memvar cPrj_VersionAnt
+memvar cProjectFileName
 memvar cProjectFolderIdent
-memvar cResTool
 memvar cUpxOpt
 memvar DefineBorland
 memvar DefineExtended1
@@ -315,20 +332,104 @@ memvar DefineMiniGui3
 memvar DefineOohg3
 memvar DefinePelles
 memvar DefineXHarbour
-memvar ExcludeLibs
+memvar EXCLUDELIBSE1BH
+memvar EXCLUDELIBSE1BX
+memvar EXCLUDELIBSE1GH
+memvar EXCLUDELIBSE1GX
+memvar EXCLUDELIBSM1BH
+memvar EXCLUDELIBSM1BX
+memvar EXCLUDELIBSM3GH
+memvar EXCLUDELIBSM3GX
+memvar EXCLUDELIBSO3BH
+memvar EXCLUDELIBSO3BX
+memvar EXCLUDELIBSO3GH
+memvar EXCLUDELIBSO3GX
+memvar EXCLUDELIBSO3PH
+memvar EXCLUDELIBSO3PX
 memvar Gbl_Comillas_DBF
 memvar GBL_cRunParm
 memvar GBL_HR_cLastExternalFileName
+memvar GBL_T_C_E1B
+memvar GBL_T_C_E1G
+memvar GBL_T_C_LIBS_E1B
+memvar GBL_T_C_LIBS_E1G
+memvar GBL_T_C_LIBS_M1B
+memvar GBL_T_C_LIBS_M3G
+memvar GBL_T_C_LIBS_O3B
+memvar GBL_T_C_LIBS_O3G
+memvar GBL_T_C_LIBS_O3P
+memvar GBL_T_C_M1B
+memvar GBL_T_C_M3G
+memvar GBL_T_C_O3B
+memvar GBL_T_C_O3G
+memvar GBL_T_C_O3P
+memvar GBL_T_H_E1B
+memvar GBL_T_H_E1G
+memvar GBL_T_H_LIBS_E1B
+memvar GBL_T_H_LIBS_E1G
+memvar GBL_T_H_LIBS_M1B
+memvar GBL_T_H_LIBS_M3G
+memvar GBL_T_H_LIBS_O3B
+memvar GBL_T_H_LIBS_O3G
+memvar GBL_T_H_LIBS_O3P
+memvar GBL_T_H_M1B
+memvar GBL_T_H_M3G
+memvar GBL_T_H_O3B
+memvar GBL_T_H_O3G
+memvar GBL_T_H_O3P
+memvar GBL_T_M_E1B
+memvar GBL_T_M_E1G
+memvar GBL_T_M_LIBS_E1B
+memvar GBL_T_M_LIBS_E1G
+memvar GBL_T_M_LIBS_M1B
+memvar GBL_T_M_LIBS_M3G
+memvar GBL_T_M_LIBS_O3B
+memvar GBL_T_M_LIBS_O3G
+memvar GBL_T_M_LIBS_O3P
+memvar GBL_T_M_M1B
+memvar GBL_T_M_M3G
+memvar GBL_T_M_O3B
+memvar GBL_T_M_O3G
+memvar GBL_T_M_O3P
+memvar GBL_T_X_E1B
+memvar GBL_T_X_E1G
+memvar GBL_T_X_LIBS_E1B
+memvar GBL_T_X_LIBS_E1G
+memvar GBL_T_X_LIBS_M1B
+memvar GBL_T_X_LIBS_M3G
+memvar GBL_T_X_LIBS_O3B
+memvar GBL_T_X_LIBS_O3G
+memvar GBL_T_X_LIBS_O3P
+memvar GBL_T_X_M1B
+memvar GBL_T_X_M3G
+memvar GBL_T_X_O3B
+memvar GBL_T_X_O3G
+memvar GBL_T_X_O3P
 memvar GBL_TabGridNameFocus
 memvar Gbl_TEditor
 memvar Gbl_Text_DBF
 memvar Gbl_Text_HMGSIDE
 memvar Gbl_Text_HMI
-memvar IncludeLibs
+memvar INCLUDELIBSE1BH
+memvar INCLUDELIBSE1BX
+memvar INCLUDELIBSE1GH
+memvar INCLUDELIBSE1GX
+memvar INCLUDELIBSM1BH
+memvar INCLUDELIBSM1BX
+memvar INCLUDELIBSM3GH
+memvar INCLUDELIBSM3GX
+memvar INCLUDELIBSO3BH
+memvar INCLUDELIBSO3BX
+memvar INCLUDELIBSO3GH
+memvar INCLUDELIBSO3GX
+memvar INCLUDELIBSO3PH
+memvar INCLUDELIBSO3PX
 memvar IsBorland
 memvar IsMinGW
 memvar IsPelles
 memvar LibsActiva
+memvar LOC_cLine
+memvar MAIN_HAS_FOCUS
 memvar NCOLDBFEDIT
 memvar NCOLDBFFULLNAME
 memvar NCOLDBFNAME
@@ -380,7 +481,6 @@ memvar nPageOut
 memvar nPagePan
 memvar nPagePrg
 memvar nPageSysout
-memvar nTotalPages
 memvar oHlpRichEdit
 memvar PageCdQ
 memvar PageDBF
@@ -392,10 +492,18 @@ memvar PagePAN
 memvar PagePRG
 memvar PageSysout
 memvar PageWWW
+memvar PRI_COMPATIBILITY_CONFIGVERSION
+memvar PRI_COMPATIBILITY_INX
+memvar PRI_COMPATIBILITY_LINE
+memvar PRI_COMPATIBILITY_MEMOPROJECTFILE
+memvar PRI_COMPATIBILITY_MEMOPROJECTFILEAUX
+memvar PRI_COMPATIBILITY_PROJECTFOLDER
+memvar PRI_COMPATIBILITY_PROJECTFOLDERIDENT
+memvar PRI_COMPATIBILITY_THISFOLDER
 memvar Prj_Check_Console
 memvar Prj_Check_HarbourIs31
-memvar Prj_Check_OutputSuffix
 memvar Prj_Check_OutputPrefix
+memvar Prj_Check_OutputSuffix
 memvar Prj_Check_Upx
 memvar Prj_ExtraRunCmdEXE
 memvar Prj_ExtraRunCmdEXEParm
@@ -429,8 +537,8 @@ memvar Prj_Radio_OutputType
 memvar Prj_Text_OutputCopyMoveFolder
 memvar Prj_Text_OutputRenameNewName
 memvar ProgLength
-memvar cExeNotFoundMsg
 memvar PUB_bDebugActive
+memvar PUB_bDebugActiveAnt
 memvar PUB_bForceRunFromMsgOk
 memvar PUB_bIgnoreVersionProject
 memvar PUB_bIsProcessing
@@ -449,15 +557,12 @@ memvar PUB_cQPM_Support_Admin
 memvar PUB_cQPM_Support_eMail
 memvar PUB_cQPM_Support_Link
 memvar PUB_cQPM_Title
-memvar PUB_cQPM_Version
-memvar PUB_cQPM_Version2
-memvar PUB_cQPM_Version3
-memvar PUB_cQPM_VersionDisplay
 memvar PUB_cSecu
 memvar PUB_cStatusLabel
 memvar PUB_cTempFolder
 memvar PUB_cThisFolder
 memvar PUB_cUS_RedirOpt
+memvar PUB_DeleteAux
 memvar PUB_ErrorLogTime
 memvar PUB_MenuGblOptions
 memvar PUB_MenuPrjOptions
@@ -507,7 +612,6 @@ memvar PUB_nGridImgSearchOk
 memvar PUB_nGridImgTilde
 memvar PUB_nGridImgTop
 memvar PUB_nProjectFileHandle
-memvar PUB_nQPM_Version
 memvar PUB_QPM_bHigh
 memvar PUB_RunTabAutoSync
 memvar PUB_RunTabChange
@@ -546,54 +650,69 @@ memvar Tmp_ExtraRunQPMLogOnlyError
 memvar Tmp_ExtraRunQPMRadio
 memvar Tmp_ExtraRunQPMRun
 memvar Tmp_ExtraRunType
+memvar var030399_Borland
+memvar var030399_Extended1
+memvar var030399_Harbour
+memvar var030399_MinGW
+memvar var030399_MiniGui1
+memvar var030399_MiniGui2
+memvar var030399_Oohg1
+memvar var030399_XHarbour
+memvar var041199_Borland
+memvar var041199_Extended1
+memvar var041199_Harbour
+memvar var041199_MinGW
+memvar var041199_MiniGui1
+memvar var041199_MiniGui3
+memvar var041199_Oohg3
+memvar var041199_Pelles
+memvar var041199_XHarbour
 memvar vDbfHeaders
 memvar vDbfJustify
 memvar vDbfWidths
 memvar vExeList
 memvar vExeNotFound
-memvar vExtraFoldersForLibs
+memvar VEXTRAFOLDERSFORLIBSE1BH
+memvar VEXTRAFOLDERSFORLIBSE1BX
+memvar VEXTRAFOLDERSFORLIBSE1GH
+memvar VEXTRAFOLDERSFORLIBSE1GX
+memvar VEXTRAFOLDERSFORLIBSM1BH
+memvar VEXTRAFOLDERSFORLIBSM1BX
+memvar VEXTRAFOLDERSFORLIBSM3GH
+memvar VEXTRAFOLDERSFORLIBSM3GX
+memvar VEXTRAFOLDERSFORLIBSO3BH
+memvar VEXTRAFOLDERSFORLIBSO3BX
+memvar VEXTRAFOLDERSFORLIBSO3GH
+memvar VEXTRAFOLDERSFORLIBSO3GX
+memvar VEXTRAFOLDERSFORLIBSO3PH
+memvar VEXTRAFOLDERSFORLIBSO3PX
 memvar vExtraFoldersForSearch
 memvar vImagesGrid
-memvar vImagesTranslateGrid
 memvar vLastOpen
 memvar vLastSearch
-memvar vLibDefault
+memvar VLIBDEFAULTE1BH
+memvar VLIBDEFAULTE1BX
+memvar VLIBDEFAULTE1GH
+memvar VLIBDEFAULTE1GX
+memvar VLIBDEFAULTM1BH
+memvar VLIBDEFAULTM1BX
+memvar VLIBDEFAULTM3GH
+memvar VLIBDEFAULTM3GX
+memvar VLIBDEFAULTO3BH
+memvar VLIBDEFAULTO3BX
+memvar VLIBDEFAULTO3GH
+memvar VLIBDEFAULTO3GX
+memvar VLIBDEFAULTO3PH
+memvar VLIBDEFAULTO3PX
 memvar vSinInclude
 memvar vSinLoadWindow
 memvar vSuffix
 memvar vXRefPrgFmg
 memvar vXRefPrgHea
-memvar CLASTLIBFOLDERM1BH
-memvar CLASTLIBFOLDERM1BX
-memvar CLASTLIBFOLDERM3GH
-memvar CLASTLIBFOLDERM3GX
-memvar EXCLUDELIBSM1BH
-memvar EXCLUDELIBSM1BX
-memvar EXCLUDELIBSM3GH
-memvar EXCLUDELIBSM3GX
-memvar GBL_T_C_E1B
-memvar GBL_T_C_M1B
-memvar GBL_T_C_M3G
-memvar GBL_T_H_E1B
-memvar GBL_T_H_M1B
-memvar GBL_T_H_M3G
-memvar GBL_T_M_E1B
-memvar GBL_T_M_M1B
-memvar GBL_T_M_M3G
-memvar GBL_T_X_E1B
-memvar GBL_T_X_M1B
-memvar GBL_T_X_M3G
-memvar INCLUDELIBSM1BH
-memvar INCLUDELIBSM1BX
-memvar INCLUDELIBSM3GH
-memvar INCLUDELIBSM3GX
-memvar VEXTRAFOLDERSFORLIBSM1BH
-memvar VEXTRAFOLDERSFORLIBSM1BX
-memvar VEXTRAFOLDERSFORLIBSM3GH
-memvar VEXTRAFOLDERSFORLIBSM3GX
-memvar VLIBDEFAULTM1BH
-memvar VLIBDEFAULTM1BX
-memvar VLIBDEFAULTM3GH
-memvar VLIBDEFAULTM3GX
+
+// Flavor dependent variables
+#translate QPM_VAR0 <tipo> <var> := <valor>                               => <tipo> <var> := <"valor">
+#translate QPM_VAR1 <tipo> <var> <minigui> <harbour> <cpp> [ := <valor> ] => <tipo> <var><minigui><harbour><cpp> [ := <valor> ]
+#translate QPM_VAR2 <tipo> <var> <minigui> <cpp> [ := <valor> ]           => <tipo> <var><minigui><cpp> [ := <valor> ]
 
 /* eof */

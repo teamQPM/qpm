@@ -3,9 +3,9 @@
  */
 
 /*
- *    QPM - QAC Based Project Manager
+ *    QPM - QAC based Project Manager
  *
- *    Copyright 2011-2014 Fernando Yurisich <fernando.yurisich@gmail.com>
+ *    Copyright 2011-2016 Fernando Yurisich <fernando.yurisich@gmail.com>
  *    http://qpm.sourceforge.net
  *
  *    Based on QAC - Project Manager for (x)Harbour
@@ -127,7 +127,7 @@ Function QPM_CreateNewFile( cType , cFile )
                OPTIONS { 'IDE+ by Ciro Vargas', 'HMGS-Ide by Walter Formigoni' } ;
                WIDTH 200 ;
                VALUE nOption ;
-               TOOLTIP "Select Tool"
+               TOOLTIP "Select tool"
 
             DEFINE BUTTON EditPanNewOK
                    ROW             115
@@ -135,7 +135,7 @@ Function QPM_CreateNewFile( cType , cFile )
                    WIDTH           80
                    HEIGHT          25
                    CAPTION         'OK'
-                   TOOLTIP         'Confirm Selection'
+                   TOOLTIP         'Confirm selection'
                    ONCLICK         ( nOption := EditPanNew.EditPanNewR.value , EditPanNew.Release() )
             END BUTTON
 
@@ -145,7 +145,7 @@ Function QPM_CreateNewFile( cType , cFile )
                    WIDTH           80
                    HEIGHT          25
                    CAPTION         'Cancel'
-                   TOOLTIP         'Cancel Selection'
+                   TOOLTIP         'Cancel selection'
                    ONCLICK         ( nOption := 0 , EditPanNew.Release() )
             END BUTTON
 
@@ -158,7 +158,7 @@ Function QPM_CreateNewFile( cType , cFile )
             case nOption == 1
                cMemo := HB_OsNewLine() + ;
                         "* ooHG IDE Plus form generated code" + HB_OsNewLine() + ;
-                        "* (c)2003-2014 Ciro Vargas Clemow <pcman2010@yahoo.com >" + HB_OsNewLine() + ;
+                        "* (c) 2003-" + LTrim( Str( Year( Date() ) ) ) + " Ciro Vargas Clemow <cvc@oohg.org>" + HB_OsNewLine() + ;
                         HB_OsNewLine() + ;
                         "DEFINE WINDOW TEMPLATE ;" + HB_OsNewLine() + ;
                         "   AT 238, 256 ;" + HB_OsNewLine() + ;
@@ -217,7 +217,7 @@ Function QPM_CreateNewFile( cType , cFile )
                    WIDTH           80
                    HEIGHT          25
                    CAPTION         'OK'
-                   TOOLTIP         'Confirm Selection'
+                   TOOLTIP         'Confirm selection'
                    ONCLICK         ( nOption := CreateDbfNew.CreateDbfNewR.value , CreateDbfNew.Release() )
             END BUTTON
 
@@ -227,7 +227,7 @@ Function QPM_CreateNewFile( cType , cFile )
                    WIDTH           80
                    HEIGHT          25
                    CAPTION         'Cancel'
-                   TOOLTIP         'Cancel Selection'
+                   TOOLTIP         'Cancel selection'
                    ONCLICK         ( nOption := 0 , CreateDbfNew.Release() )
             END BUTTON
 
@@ -261,154 +261,195 @@ Function QPM_CreateNewFile( cType , cFile )
    endcase
 Return bReto
 
-Function QPM_DirValid( cDir , cTipo )
-   Local bReto:=.F.
+Function QPM_DirValid( cDir, cDirLib, cTipo )
+   Local bReto := .F.
    if US_IsDirectory( cDir )
       do case
-         case cTipo == DefineMiniGui1 + DefineBorland
-            if ( File( cDir + DEF_SLASH + "INCLUDE" + DEF_SLASH + "minigui.ch" ) .and. ;
-                 !File( cDir + DEF_SLASH + "INCLUDE" + DEF_SLASH + "oohg.ch" ) .and. ;
-                 !US_IsDirectory( cDir + DEF_SLASH + "SOURCE" + DEF_SLASH + "TsBrowse" ) .and. ;
-                 ADIR( cDir + DEF_SLASH + 'LIB' + DEF_SLASH + 'Lib*.a' ) == 0 )
-               bReto:=.T.
-            endif
-         case cTipo == DefineMiniGui3 + DefineMinGW
-            if ( File( cDir + DEF_SLASH + "INCLUDE" + DEF_SLASH + "minigui.ch" ) .and. ;
-                 !File( cDir + DEF_SLASH + "INCLUDE" + DEF_SLASH + "tsbrowse.ch" ) .and. ;
-                 !File( cDir + DEF_SLASH + "INCLUDE" + DEF_SLASH + "oohg.h" ) )          // <-- ojo, no dice .ch, dice .h esto fue para hbqt
-               bReto:=.T.
-            endif
-         case cTipo == DefineExtended1 + DefineBorland
-            if ( File( cDir + DEF_SLASH + "INCLUDE" + DEF_SLASH + "minigui.ch" ) .and. ;
-                 File( cDir + DEF_SLASH + "INCLUDE" + DEF_SLASH + "tsbrowse.ch" ) .and. ;
-                 !File( cDir + DEF_SLASH + "INCLUDE" + DEF_SLASH + "oohg.ch" ) )
-               bReto:=.T.
-            endif
-// NOTE: added support for MINGW and Extended
-         case cTipo == DefineExtended1 + DefineMinGW
-            if ( File( cDir + DEF_SLASH + "INCLUDE" + DEF_SLASH + "minigui.ch" ) .and. ;
-                 File( cDir + DEF_SLASH + "INCLUDE" + DEF_SLASH + "tsbrowse.ch" ) .and. ;
-                 !File( cDir + DEF_SLASH + "INCLUDE" + DEF_SLASH + "oohg.ch" ) )
-               bReto:=.T.
-            endif
-         case cTipo == DefineOohg3 + DefineBorland
-            if ( File( cDir + DEF_SLASH + "INCLUDE" + DEF_SLASH + "oohg.ch" ) )
-               bReto:=.T.
-            endif
-         case cTipo == DefineOohg3 + DefineMinGW
-            if ( File( cDir + DEF_SLASH + "INCLUDE" + DEF_SLASH + "oohg.ch" ) )
-               bReto:=.T.
-            endif
-         case cTipo == DefineOohg3 + DefinePelles
-            if ( File( cDir + DEF_SLASH + "INCLUDE" + DEF_SLASH + "oohg.ch" ) )
-               bReto:=.T.
-            endif
-         case cTipo == "C_" + DefineMiniGui1 + DefineBorland
-            if File( cDir + DEF_SLASH + "bin" + DEF_SLASH + "BCC32.exe" )
-               bReto:=.T.
-            endif
-         case cTipo == "C_" + DefineMiniGui3 + DefineMinGW
-            if File( cDir + DEF_SLASH + "bin" + DEF_SLASH + "GCC.EXE" )
-               bReto:=.T.
-            endif
-         case cTipo == "C_" + DefineExtended1 + DefineBorland
-            if File( cDir + DEF_SLASH + "bin" + DEF_SLASH + "BCC32.exe" )
-               bReto:=.T.
-            endif
-         case cTipo == "C_" + DefineExtended1 + DefineMinGW
-            if File( cDir + DEF_SLASH + "bin" + DEF_SLASH + "GCC.exe" )
-               bReto:=.T.
-            endif
-         case cTipo == "C_" + DefineOohg3 + DefineBorland
-            if File( cDir + DEF_SLASH + "bin" + DEF_SLASH + "BCC32.exe" )
-               bReto:=.T.
-            endif
-         case cTipo == "C_" + DefineOohg3 + DefineMinGW
-            if File( cDir + DEF_SLASH + "bin" + DEF_SLASH + "GCC.exe" )
-               bReto:=.T.
-            endif
-         case cTipo == "C_" + DefineOohg3 + DefinePelles
-            if File( cDir + DEF_SLASH + "bin" + DEF_SLASH + "POCC.exe" )
-               bReto:=.T.
-            endif
-         case cTipo == DefineMiniGui1 + DefineBorland + DefineHarbour
-            if File( cDir + DEF_SLASH + "BIN" + DEF_SLASH + "HARBOUR.exe" ) .and. ( File( cDir + DEF_SLASH + "LIB" + DEF_SLASH + "rtl.lib" ) .or. File( cDir + DEF_SLASH + "LIB" + DEF_SLASH + "hbrtl.lib" ) )
-               bReto:=.T.
-            endif
-         case cTipo == DefineMiniGui3 + DefineMinGW + DefineHarbour
-            if File( cDir + DEF_SLASH + "BIN" + DEF_SLASH + "HARBOUR.exe" ) .and. ;
-               ( File( cDir + DEF_SLASH + "LIB" + DEF_SLASH + "librtl.a" ) .or. ;
-                 File( cDir + DEF_SLASH + "LIB" + DEF_SLASH + "libhbrtl.a" ) .or. ;
-                 File( cDir + DEF_SLASH + "LIB" + DEF_SLASH + "WIN" + DEF_SLASH + "MINGW" + DEF_SLASH + "librtl.a" ) .or. ;
-                 File( cDir + DEF_SLASH + "LIB" + DEF_SLASH + "WIN" + DEF_SLASH + "MINGW" + DEF_SLASH + "libhbrtl.a" ) )
-               bReto:=.T.
-            endif
-         case cTipo == DefineExtended1 + DefineBorland + DefineHarbour
-            if File( cDir + DEF_SLASH + "BIN" + DEF_SLASH + "HARBOUR.exe" ) .and. ( File( cDir + DEF_SLASH + "LIB" + DEF_SLASH + "rtl.lib" ) .or. File( cDir + DEF_SLASH + "LIB" + DEF_SLASH + "hbrtl.lib" ) )
-               bReto:=.T.
-            endif
-         case cTipo == DefineExtended1 + DefineMinGW + DefineHarbour
-            if File( cDir + DEF_SLASH + "BIN" + DEF_SLASH + "HARBOUR.exe" ) .and. ;
-               ( File( cDir + DEF_SLASH + "LIB" + DEF_SLASH + "librtl.a" ) .or. ;
-                 File( cDir + DEF_SLASH + "LIB" + DEF_SLASH + "libhbrtl.a" ) .or. ;
-                 File( cDir + DEF_SLASH + "LIB" + DEF_SLASH + "WIN" + DEF_SLASH + "MINGW" + DEF_SLASH + "librtl.a" ) .or. ;
-                 File( cDir + DEF_SLASH + "LIB" + DEF_SLASH + "WIN" + DEF_SLASH + "MINGW" + DEF_SLASH + "libhbrtl.a" ) )
-               bReto:=.T.
-            endif
-         case cTipo == DefineOohg3 + DefineBorland + DefineHarbour
-            if File( cDir + DEF_SLASH + "BIN" + DEF_SLASH + "HARBOUR.exe" ) .and. ( File( cDir + DEF_SLASH + "LIB" + DEF_SLASH + "rtl.lib" ) .or. File( cDir + DEF_SLASH + "LIB" + DEF_SLASH + "hbrtl.lib" ) )
-               bReto:=.T.
-            endif
-         case cTipo == DefineOohg3 + DefineMinGW + DefineHarbour
-            if File( cDir + DEF_SLASH + "BIN" + DEF_SLASH + "HARBOUR.exe" ) .and. ;
-               ( File( cDir + DEF_SLASH + "LIB" + DEF_SLASH + "librtl.a" ) .or. ;
-                 File( cDir + DEF_SLASH + "LIB" + DEF_SLASH + "libhbrtl.a" ) .or. ;
-                 File( cDir + DEF_SLASH + "LIB" + DEF_SLASH + "WIN" + DEF_SLASH + "MINGW" + DEF_SLASH + "librtl.a" ) .or. ;
-                 File( cDir + DEF_SLASH + "LIB" + DEF_SLASH + "WIN" + DEF_SLASH + "MINGW" + DEF_SLASH + "libhbrtl.a" ) )
-               bReto:=.T.
-            endif
-         case cTipo == DefineOohg3 + DefinePelles + DefineHarbour
-            if File( cDir + DEF_SLASH + "BIN" + DEF_SLASH + "HARBOUR.exe" ) .and. ( File( cDir + DEF_SLASH + "LIB" + DEF_SLASH + "rtl.lib" ) .or. File( cDir + DEF_SLASH + "LIB" + DEF_SLASH + "hbrtl.lib" ) )
-               bReto:=.T.
-            endif
-         case cTipo == DefineMiniGui1 + DefineBorland + DefineXHarbour
-            if File( cDir + DEF_SLASH + "BIN" + DEF_SLASH + "HARBOUR.exe" ) .and. File( cDir + DEF_SLASH + "LIB" + DEF_SLASH + "rtl.lib" )
-               bReto:=.T.
-            endif
-         case cTipo == DefineMiniGui3 + DefineMinGW + DefineXHarbour
-            if File( cDir + DEF_SLASH + "BIN" + DEF_SLASH + "HARBOUR.exe" ) .and. File( cDir + DEF_SLASH + "LIB" + DEF_SLASH + "librtl.a" ) .and. File( cDir + DEF_SLASH + "LIB" + DEF_SLASH + "libtip.a" )
-               bReto:=.T.
-            endif
-         case cTipo == DefineExtended1 + DefineBorland + DefineXHarbour
-            if File( cDir + DEF_SLASH + "BIN" + DEF_SLASH + "HARBOUR.exe" ) .and. File( cDir + DEF_SLASH + "LIB" + DEF_SLASH + "rtl.lib" ) .and. File( cDir + DEF_SLASH + "LIB" + DEF_SLASH + "tip.lib" )
-               bReto:=.T.
-            endif
-         case cTipo == DefineExtended1 + DefineMinGW + DefineXHarbour
-            if File( cDir + DEF_SLASH + "BIN" + DEF_SLASH + "HARBOUR.exe" ) .and. File( cDir + DEF_SLASH + "LIB" + DEF_SLASH + "librtl.a" ) .and. File( cDir + DEF_SLASH + "LIB" + DEF_SLASH + "libtip.a" )
-               bReto:=.T.
-            endif
-         case cTipo == DefineOohg3 + DefineBorland + DefineXHarbour
-            if File( cDir + DEF_SLASH + "BIN" + DEF_SLASH + "HARBOUR.exe" ) .and. File( cDir + DEF_SLASH + "LIB" + DEF_SLASH + "rtl.lib" ) .and. File( cDir + DEF_SLASH + "LIB" + DEF_SLASH + "tip.lib" )
-               bReto:=.T.
-            endif
-         case cTipo == DefineOohg3 + DefineMinGW + DefineXHarbour
-            if File( cDir + DEF_SLASH + "BIN" + DEF_SLASH + "HARBOUR.exe" ) .and. File( cDir + DEF_SLASH + "LIB" + DEF_SLASH + "librtl.a" ) .and. File( cDir + DEF_SLASH + "LIB" + DEF_SLASH + "libtip.a" )
-               bReto:=.T.
-            endif
-         case cTipo == DefineOohg3 + DefinePelles + DefineXHarbour
-            if File( cDir + DEF_SLASH + "BIN" + DEF_SLASH + "HARBOUR.exe" ) .and. File( cDir + DEF_SLASH + "LIB" + DEF_SLASH + "rtl.lib" ) .and. File( cDir + DEF_SLASH + "LIB" + DEF_SLASH + "tip.lib" )
-               bReto:=.T.
-            endif
-         otherwise
-            US_Log( "QPM1234E: Tipo de Directorio invalido: " + cTipo )
+      // HMG 1.x
+      case cTipo == DefineMiniGui1 + DefineBorland
+         if File( cDir + DEF_SLASH + "INCLUDE" + DEF_SLASH + "minigui.ch" ) .and. ;
+            ! File( cDir + DEF_SLASH + "INCLUDE" + DEF_SLASH + "oohg.ch" ) .and. ;
+            ! US_IsDirectory( cDir + DEF_SLASH + "SOURCE" + DEF_SLASH + "TsBrowse" ) .and. ;
+            File( cDirLib + DEF_SLASH + 'minigui.lib' )
+            bReto := .T.
+         endif
+      case cTipo == DefineMiniGui1 + DefineBorland + DefineHarbour
+         if File( cDir + DEF_SLASH + "BIN" + DEF_SLASH + "HARBOUR.EXE" ) .and. ;
+            ( File( cDirLib + DEF_SLASH + "rtl.lib" ) .or. ;
+              File( cDirLib + DEF_SLASH + "hbrtl.lib" ) )
+            bReto:=.T.
+         endif
+      case cTipo == DefineMiniGui1 + DefineBorland + DefineXHarbour
+         if File( cDir + DEF_SLASH + "BIN" + DEF_SLASH + "HARBOUR.EXE" ) .and. ;
+            File( cDirLib + DEF_SLASH + "rtl.lib" )
+            bReto:=.T.
+         endif
+      case cTipo == "C_" + DefineMiniGui1 + DefineBorland
+         if File( cDir + DEF_SLASH + "BIN" + DEF_SLASH + "BCC32.EXE" )
+            bReto:=.T.
+         endif
+      // HMG 3.x
+      case cTipo == DefineMiniGui3 + DefineMinGW
+         if File( cDir + DEF_SLASH + "INCLUDE" + DEF_SLASH + "minigui.ch" ) .and. ;
+            ! File( cDir + DEF_SLASH + "INCLUDE" + DEF_SLASH + "tsbrowse.ch" ) .and. ;
+            ! File( cDir + DEF_SLASH + "INCLUDE" + DEF_SLASH + "oohg.h" )  .and. ;
+            File( cDirLib + DEF_SLASH + 'libhmg.a' )
+            bReto := .T.
+         endif
+      case cTipo == DefineMiniGui3 + DefineMinGW + DefineHarbour
+         if File( cDir + DEF_SLASH + "BIN" + DEF_SLASH + "HARBOUR.EXE" ) .and. ;
+            ( File( cDirLib + DEF_SLASH + "librtl.a" ) .or. ;
+              File( cDirLib + DEF_SLASH + "libhbrtl.a" ) .or. ;
+              File( cDirLib + DEF_SLASH + "WIN" + DEF_SLASH + "MINGW" + DEF_SLASH + "librtl.a" ) .or. ;
+              File( cDirLib + DEF_SLASH + "WIN" + DEF_SLASH + "MINGW" + DEF_SLASH + "libhbrtl.a" ) )
+            bReto:=.T.
+         endif
+      case cTipo == DefineMiniGui3 + DefineMinGW + DefineXHarbour
+         if File( cDir + DEF_SLASH + "BIN" + DEF_SLASH + "HARBOUR.EXE" ) .and. ;
+            File( cDirLib + DEF_SLASH + "librtl.a" ) .and. ;
+            File( cDirLib + DEF_SLASH + "libtip.a" )
+            bReto:=.T.
+         endif
+      case cTipo == "C_" + DefineMiniGui3 + DefineMinGW
+         if File( cDir + DEF_SLASH + "BIN" + DEF_SLASH + "GCC.EXE" )
+            bReto:=.T.
+         endif
+      // Extended
+      case cTipo == DefineExtended1 + DefineBorland
+         if File( cDir + DEF_SLASH + "INCLUDE" + DEF_SLASH + "minigui.ch" ) .and. ;
+            File( cDir + DEF_SLASH + "INCLUDE" + DEF_SLASH + "tsbrowse.ch" ) .and. ;
+            ! File( cDir + DEF_SLASH + "INCLUDE" + DEF_SLASH + "oohg.ch" ) .and. ;
+            File( cDirLib + DEF_SLASH + 'minigui.lib' )
+            bReto:=.T.
+         endif
+      case cTipo == "C_" + DefineExtended1 + DefineBorland
+         if File( cDir + DEF_SLASH + "BIN" + DEF_SLASH + "BCC32.EXE" )
+            bReto:=.T.
+         endif
+      case cTipo == DefineExtended1 + DefineBorland + DefineHarbour
+         if File( cDir + DEF_SLASH + "BIN" + DEF_SLASH + "HARBOUR.EXE" ) .and. ;
+            ( File( cDirLib + DEF_SLASH + "rtl.lib" ) .or. ;
+              File( cDirLib + DEF_SLASH + "hbrtl.lib" ) )
+            bReto:=.T.
+         endif
+      case cTipo == DefineExtended1 + DefineBorland + DefineXHarbour
+         if File( cDir + DEF_SLASH + "BIN" + DEF_SLASH + "HARBOUR.EXE" ) .and. ;
+            File( cDirLib + DEF_SLASH + "rtl.lib" ) .and. ;
+            File( cDirLib + DEF_SLASH + "tip.lib" )
+            bReto:=.T.
+         endif
+      case cTipo == DefineExtended1 + DefineMinGW
+         if File( cDir + DEF_SLASH + "INCLUDE" + DEF_SLASH + "minigui.ch" ) .and. ;
+            File( cDir + DEF_SLASH + "INCLUDE" + DEF_SLASH + "tsbrowse.ch" ) .and. ;
+            ! File( cDir + DEF_SLASH + "INCLUDE" + DEF_SLASH + "oohg.ch" )  .and. ;
+            File( cDirLib + DEF_SLASH + 'libminigui.a' )
+            bReto:=.T.
+         endif
+      case cTipo == "C_" + DefineExtended1 + DefineMinGW
+         if File( cDir + DEF_SLASH + "BIN" + DEF_SLASH + "GCC.EXE" )
+            bReto:=.T.
+         endif
+      case cTipo == DefineExtended1 + DefineMinGW + DefineHarbour
+         if File( cDir + DEF_SLASH + "BIN" + DEF_SLASH + "HARBOUR.EXE" ) .and. ;
+            ( File( cDirLib + DEF_SLASH + "librtl.a" ) .or. ;
+              File( cDirLib + DEF_SLASH + "libhbrtl.a" ) .or. ;
+              File( cDirLib + DEF_SLASH + "WIN" + DEF_SLASH + "MINGW" + DEF_SLASH + "librtl.a" ) .or. ;
+              File( cDirLib + DEF_SLASH + "WIN" + DEF_SLASH + "MINGW" + DEF_SLASH + "libhbrtl.a" ) )
+            bReto:=.T.
+         endif
+      case cTipo == DefineExtended1 + DefineMinGW + DefineXHarbour
+         if File( cDir + DEF_SLASH + "BIN" + DEF_SLASH + "HARBOUR.EXE" ) .and. ;
+            File( cDirLib + DEF_SLASH + "librtl.a" ) .and. ;
+            File( cDirLib + DEF_SLASH + "libtip.a" )
+            bReto:=.T.
+         endif
+      // OOHG
+      case cTipo == DefineOohg3 + DefineBorland
+         if File( cDir + DEF_SLASH + "INCLUDE" + DEF_SLASH + "oohg.ch" ) .and. ;
+            File( cDirLib + DEF_SLASH + 'oohg.lib' )
+            bReto:=.T.
+         endif
+      case cTipo == DefineOohg3 + DefineBorland + DefineHarbour
+         if File( cDir + DEF_SLASH + "BIN" + DEF_SLASH + "HARBOUR.EXE" ) .and. ;
+            ( File( cDirLib + DEF_SLASH + "rtl.lib" ) .or. ;
+              File( cDirLib + DEF_SLASH + "hbrtl.lib" ) )
+            bReto:=.T.
+         endif
+      case cTipo == DefineOohg3 + DefineBorland + DefineXHarbour
+         if File( cDir + DEF_SLASH + "BIN" + DEF_SLASH + "HARBOUR.EXE" ) .and. ;
+            File( cDirLib + DEF_SLASH + "rtl.lib" ) .and. ;
+            File( cDirLib + DEF_SLASH + "tip.lib" )
+            bReto:=.T.
+         endif
+      case cTipo == "C_" + DefineOohg3 + DefineBorland
+         if File( cDir + DEF_SLASH + "BIN" + DEF_SLASH + "BCC32.EXE" )
+            bReto:=.T.
+         endif
+      case cTipo == DefineOohg3 + DefineMinGW
+         if File( cDir + DEF_SLASH + "INCLUDE" + DEF_SLASH + "oohg.ch" ) .and. ;
+            File( cDirLib + DEF_SLASH + "liboohg.a" )
+            bReto:=.T.
+         endif
+      case cTipo == DefineOohg3 + DefineMinGW + DefineHarbour
+         if File( cDir + DEF_SLASH + "BIN" + DEF_SLASH + "HARBOUR.EXE" ) .and. ;
+            ( File( cDirLib + DEF_SLASH + "librtl.a" ) .or. ;
+           File( cDirLib + DEF_SLASH + "libhbrtl.a" ) .or. ;
+              File( cDirLib + DEF_SLASH + "WIN" + DEF_SLASH + "MINGW" + DEF_SLASH + "librtl.a" ) .or. ;
+              File( cDirLib + DEF_SLASH + "WIN" + DEF_SLASH + "MINGW" + DEF_SLASH + "libhbrtl.a" ) )
+            bReto:=.T.
+         endif
+      case cTipo == DefineOohg3 + DefineMinGW + DefineXHarbour
+         if File( cDir + DEF_SLASH + "BIN" + DEF_SLASH + "HARBOUR.EXE" ) .and. ;
+            File( cDirLib + DEF_SLASH + "librtl.a" ) .and. ;
+            File( cDirLib + DEF_SLASH + "libtip.a" )
+            bReto:=.T.
+         endif
+      case cTipo == "C_" + DefineOohg3 + DefineMinGW
+         if File( cDir + DEF_SLASH + "BIN" + DEF_SLASH + "GCC.EXE" )
+            bReto:=.T.
+         endif
+      case cTipo == DefineOohg3 + DefinePelles
+         if File( cDir + DEF_SLASH + "INCLUDE" + DEF_SLASH + "oohg.ch" ) .and. ;
+            File( cDirLib + DEF_SLASH + 'oohg.lib' )
+            bReto:=.T.
+         endif
+      case cTipo == DefineOohg3 + DefinePelles + DefineHarbour
+         if File( cDir + DEF_SLASH + "BIN" + DEF_SLASH + "HARBOUR.EXE" ) .and. ;
+            ( File( cDirLib + DEF_SLASH + "rtl.lib" ) .or. ;
+              File( cDirLib + DEF_SLASH + "hbrtl.lib" ) )
+            bReto:=.T.
+         endif
+      case cTipo == DefineOohg3 + DefinePelles + DefineXHarbour
+         if File( cDir + DEF_SLASH + "BIN" + DEF_SLASH + "HARBOUR.EXE" ) .and. ;
+            File( cDirLib + DEF_SLASH + "rtl.lib" ) .and. ;
+            File( cDirLib + DEF_SLASH + "tip.lib" )
+            bReto:=.T.
+         endif
+      case cTipo == "C_" + DefineOohg3 + DefinePelles
+         if File( cDir + DEF_SLASH + "BIN" + DEF_SLASH + "POCC.EXE" )
+            bReto:=.T.
+         endif
+      otherwise
+         US_Log( "QPM1234E: Tipo de Directorio invalido: " + cTipo )
       endcase
    endif
 Return bReto
 
 Function CambioTitulo()
-   SetProperty( "VentanaMain" , "title" , US_FileNameOnlyNameAndExt( GetOutputModuleName( .T. ) ) + ' - QPM (' + PUB_cQPM_VersionDisplay + ') [ ' + AllTrim ( PUB_cProjectFile ) + ' ]' )
-   if _IsWindowDefined( "WinHotRecovery" )
-      SetProperty( "WinHotRecovery" , "title" , US_FileNameOnlyNameAndExt( GetOutputModuleName( .T. ) ) + ' - Hot Recovery for QPM Projects [ ' + AllTrim ( PUB_cProjectFile ) + ' ]' )
+   if PUB_bLite
+      if _IsWindowDefined( "VentanaLite" )
+         SetProperty( "VentanaLite", "Title", 'QPM (' + QPM_VERSION_DISPLAY_LONG + ') [ ' + alltrim( PUB_cProjectFile ) + ' ]' )
+      endif
+      if _IsWindowDefined( "WinHotRecovery" )
+         SetProperty( "WinHotRecovery" , "title" , 'Hot Recovery for QPM Projects [ ' + alltrim( PUB_cProjectFile ) + ' ]' )
+      endif
+   else
+      if _IsWindowDefined( "VentanaLite" )
+         SetProperty( "VentanaMain", "Title", 'QPM (QAC based Project Manager) - Project Manager for MiniGui (' + QPM_VERSION_DISPLAY_LONG + ') [ ' + alltrim( PUB_cProjectFile ) + ' ]' )
+      endif
+      if _IsWindowDefined( "WinHotRecovery" )
+         SetProperty( "WinHotRecovery" , "title" , 'QPM (QAC based Project Manager) - Hot Recovery for QPM Projects [ ' + alltrim( PUB_cProjectFile ) + ' ]' )
+      endif
    endif
 Return .T.
 
@@ -453,82 +494,70 @@ Return &( "Gbl_T_M_" + GetMiniGuiSuffix() + GetCppSuffix() )
 
 Function GetHarbourFolder()
    local reto
-   if !QPM_IsXHarbour()
-      reto:=&( "Gbl_T_H_" + GetMiniGuiSuffix() + GetCppSuffix() )
-   else
+   if QPM_IsXHarbour()
       reto:=&( "Gbl_T_X_" + GetMiniGuiSuffix() + GetCppSuffix() )
+   else
+      reto:=&( "Gbl_T_H_" + GetMiniGuiSuffix() + GetCppSuffix() )
    endif
 Return reto
 
+Function GetCppFolder()
+Return &( "Gbl_T_C_" + GetMiniGuiSuffix() + GetCppSuffix() )
+
 Function GetHarbourLibFolder( lLong )
-   Local cDir, cCompDir
-
-   DEFAULT lLong TO .F.
-   if lLong
-     cDir := GetHarbourFolder() + DEF_SLASH + 'LIB'
+   Local cDir, cCompDir, nAt
+   // Get from GlobalSettings
+   if ! QPM_IsXHarbour()
+      cDir := &( "Gbl_T_H_LIBS_" + GetMiniGuiSuffix() + GetCppSuffix() )
    else
-     cDir := US_ShortName( GetHarbourFolder() ) + DEF_SLASH + 'LIB'
+      cDir := &( "Gbl_T_X_LIBS_" + GetMiniGuiSuffix() + GetCppSuffix() )
    endif
-
-    if ! File( cDir + DEF_SLASH + "librtl.a" ) .and. ;
-       ! File( cDir + DEF_SLASH + "libhbrtl.a" )
-
-      do case
-      case GetCppSuffix() == DefineBorland
-         cCompDir := "BCC"
-      case GetCppSuffix() == DefineMinGW
-         cCompDir := "MINGW"
-      case GetCppSuffix() == DefinePelles
-         cCompDir := "PELLES"
-      otherwise
-         cCompDir := "XXX"
-      endcase
-
-      if File( cDir + DEF_SLASH + "WIN" + DEF_SLASH + cCompDir + DEF_SLASH + "librtl.a" ) .or. ;
-         File( cDir + DEF_SLASH + "WIN" + DEF_SLASH + cCompDir + DEF_SLASH + "libhbrtl.a" )
-         cDir += DEF_SLASH + "WIN" + DEF_SLASH + cCompDir
+   DEFAULT lLong TO .F.
+   if ! lLong
+     cDir := US_ShortName( cDir )
+   endif
+   if empty( cDir )
+      if lLong
+        cDir := GetHarbourFolder() + DEF_SLASH + 'LIB'
+      else
+        cDir := US_ShortName( GetHarbourFolder() ) + DEF_SLASH + 'LIB'
       endif
    endif
-
 Return cDir
 
 Function GetMiniguiLibFolder( lLong )
-   Local cDir, cCompDir
-
+   Local cDir, cCompDir, nAt, cHrbrSffx
+   // Get from GlobalSettings
+   cDir := &( "Gbl_T_M_LIBS_" + GetMiniGuiSuffix() + GetCppSuffix() )
    DEFAULT lLong TO .F.
-   if lLong
-     cDir := GetMiniGuiFolder() + DEF_SLASH + 'LIB'
-   else
-     cDir := US_ShortName( GetMiniGuiFolder() ) + DEF_SLASH + 'LIB'
+   if ! lLong
+     cDir := US_ShortName( cDir )
    endif
-
-   if Prj_Check_HarbourIs31
-      if QPM_IsXHarbour()
-         cCompDir := "XHB"
+   if empty( cDir )
+      if lLong
+        cDir := GetMiniGuiFolder() + DEF_SLASH + 'LIB'
       else
-         cCompDir := "HB"
-      endif
-      cCompDir += DEF_SLASH
-      do case
-      case GetCppSuffix() == DefineBorland
-         cCompDir += "BCC"
-      case GetCppSuffix() == DefineMinGW
-         cCompDir += "MINGW"
-      case GetCppSuffix() == DefinePelles
-         cCompDir += "PELLES"
-      otherwise
-         cCompDir += "XXX"
-      endcase
-
-      if File( cDir + DEF_SLASH + cCompDir + DEF_SLASH + GetMiniGuiName() )
-         cDir += DEF_SLASH + cCompDir
+        cDir := US_ShortName( GetMiniGuiFolder() ) + DEF_SLASH + 'LIB'
       endif
    endif
-
 Return cDir
 
-Function GetCppFolder()
-Return &( "Gbl_T_C_" + GetMiniGuiSuffix() + GetCppSuffix() )
+Function GetCppLibFolder( lLong )
+   Local cDir, nAt
+   // Get from GlobalSettings
+   cDir := &( "Gbl_T_C_LIBS_" + GetMiniGuiSuffix() + GetCppSuffix() )
+   DEFAULT lLong TO .F.
+   if ! lLong
+     cDir := US_ShortName( cDir )
+   endif
+   if empty( cDir )
+      if lLong
+        cDir := GetCppFolder() + DEF_SLASH + 'LIB'
+      else
+        cDir := US_ShortName( GetCppFolder() ) + DEF_SLASH + 'LIB'
+      endif
+   endif
+Return cDir
 
 Function GetSuffix()
 Return GetMiniGuiSuffix() + GetCppSuffix() + GetHarbourSuffix()
@@ -581,125 +610,160 @@ Return CompCVer
 Function GetMiniGuiType()
 Return substr( GetMiniGuiSuffix() , 1 , 1 )
 
-Function GetMiniGuiName( cForceCompiler )
-   Local nombre:="" , sufijo:=GetMiniGuiSuffix() + GetCppSuffix()
+Function GetResourceFileName()
+   Local nombre
    do case
-      case sufijo == DefineOohg3 + DefineBorland
-         if !empty( cForceCompiler )
-            do case
-               case cForceCompiler == DefineHarbour
-                  nombre := "OOHG.lib"
-               case cForceCompiler == DefineXHarbour
-                  nombre := "xOOHG.lib"
-               otherwise
-                  US_Log( "Error 1 in cForceCompiler of function GetMiniGuiName: " + US_VarToStr( cForceCompiler ) )
-            endcase
-         else
-            nombre:="OOHG.lib"
-            if QPM_IsXHarbour()
-               nombre := "x" + nombre
+   case GetMiniGuiSuffix() == DefineOohg3
+      if QPM_IsXHarbour() .and. File( GetMiniGuiFolder() + DEF_SLASH + 'RESOURCES' + DEF_SLASH + "xoohg.rc" )
+         nombre := "xoohg"
+      else
+         nombre := "oohg"
+      endif
+   case ( GetMiniGuiSuffix() + GetCppSuffix() ) == DefineMiniGui3 + DefineMinGW
+      if QPM_IsXHarbour() .and. File( GetMiniGuiFolder() + DEF_SLASH + 'RESOURCES' + DEF_SLASH + "xhmg.rc" )
+         nombre := "xhmg"
+      else
+         nombre := "hmg"
+      endif
+   case ( GetMiniGuiSuffix() + GetCppSuffix() ) == DefineExtended1 + DefineMinGW
+      if QPM_IsXHarbour() .and. File( GetMiniGuiFolder() + DEF_SLASH + 'RESOURCES' + DEF_SLASH + "xhmg.rc" )
+         nombre := "xhmg"
+      elseif QPM_IsXHarbour() .and. File( GetMiniGuiFolder() + DEF_SLASH + 'RESOURCES' + DEF_SLASH + "xminigui.rc" )
+         nombre := "xminigui"
+      elseif File( GetMiniGuiFolder() + DEF_SLASH + 'RESOURCES' + DEF_SLASH + "hmg.rc" )
+         nombre := "hmg"
+      else
+         nombre := "minigui"
+      endif
+   otherwise
+      if QPM_IsXHarbour() .and. File( GetMiniGuiFolder() + DEF_SLASH + 'RESOURCES' + DEF_SLASH + "xminigui.rc" )
+         nombre := "xminigui"
+      else
+         nombre := "minigui"
+      endif
+   endcase
+Return nombre
+
+Function GetMiniGuiName( cForceCompiler )
+   Local nombre := "", sufijo := GetMiniGuiSuffix() + GetCppSuffix()
+
+   do case
+   case sufijo == DefineOohg3 + DefineBorland
+      if empty( cForceCompiler )
+         if QPM_IsXHarbour()
+            if File( GetMiniguiLibFolder() + DEF_SLASH + "xoohg.lib" )
+               nombre := "xoohg.lib"
+            else
+               nombre := "oohg.lib"
             endif
-         endif
-      case sufijo == DefineOohg3 + DefineMinGW
-         if !empty( cForceCompiler )
-            do case
-               case cForceCompiler == DefineHarbour
-                  nombre := "LibOOHG.a"
-               case cForceCompiler == DefineXHarbour
-                  nombre := "LibXOOHG.a"
-               otherwise
-                  US_Log( "Error 1b in cForceCompiler of function GetMiniGuiName: " + US_VarToStr( cForceCompiler ) )
-            endcase
          else
-            nombre:="LibOOHG.a"
-            if QPM_IsXHarbour()
-               nombre := "LibXOOHG.a"
-            endif
+            nombre := "oohg.lib"
          endif
-      case sufijo == DefineOohg3 + DefinePelles
-         if !empty( cForceCompiler )
-            do case
-               case cForceCompiler == DefineHarbour
-                  nombre := "OOHG.lib"
-               case cForceCompiler == DefineXHarbour
-                  nombre := "xOOHG.lib"
-               otherwise
-                  US_Log( "Error 1c in cForceCompiler of function GetMiniGuiName: " + US_VarToStr( cForceCompiler ) )
-            endcase
+      elseif cForceCompiler == DefineHarbour
+         nombre := "oohg.lib"
+      else
+         nombre := "xoohg.lib"
+      endif
+   case sufijo == DefineOohg3 + DefineMinGW
+      if empty( cForceCompiler )
+         if QPM_IsXHarbour()
+            if File( GetMiniguiLibFolder() + DEF_SLASH + "libxoohg.a" )
+               nombre := "libxoohg.a"
+            else
+               nombre := "liboohg.a"
+            endif
          else
-            nombre:="OOHG.lib"
-            if QPM_IsXHarbour()
-               nombre := "x" + nombre
-            endif
+            nombre := "liboohg.a"
          endif
-      case sufijo == DefineMiniGui3 + DefineMinGW
-         if !empty( cForceCompiler )
-            do case
-               case cForceCompiler == DefineHarbour
-                  nombre := "Libhmg.a"
-               case cForceCompiler == DefineXHarbour
-                  nombre := "LibXhmg.a"
-               otherwise
-                  US_Log( "Error 2 in cForceCompiler of function GetMiniGuiName: " + US_VarToStr( cForceCompiler ) )
-            endcase
+      elseif cForceCompiler == DefineHarbour
+         nombre := "liboohg.a"
+      else
+         nombre := "libxoohg.a"
+      endif
+   case sufijo == DefineOohg3 + DefinePelles
+      if empty( cForceCompiler )
+         if QPM_IsXHarbour()
+            if file( GetMiniguiLibFolder() + def_slash + "xoohg.lib" )
+               nombre := "xoohg.lib"
+            else
+               nombre := "oohg.lib"
+            endif
          else
-            nombre:="Libhmg.a"
-            if QPM_IsXHarbour()
-               nombre := "LibXhmg.a"
-            endif
+            nombre := "oohg.lib"
          endif
-      case sufijo == DefineExtended1 + DefineMinGW
-         if !empty( cForceCompiler )
-            do case
-               case cForceCompiler == DefineHarbour
-                  nombre := "libminigui.a"
-               case cForceCompiler == DefineXHarbour
-                  nombre := "LibXminigui.a"
-               otherwise
-                  US_Log( "Error 2 in cForceCompiler of function GetMiniGuiName: " + US_VarToStr( cForceCompiler ) )
-            endcase
+      elseif cForceCompiler == DefineHarbour
+         nombre := "oohg.lib"
+      else
+         nombre := "xoohg.lib"
+      endif
+   case sufijo == DefineMiniGui3 + DefineMinGW
+      if empty( cForceCompiler )
+         if QPM_IsXHarbour()
+            if File( GetMiniguiLibFolder() + DEF_SLASH + "libxhmg.a" )
+               nombre := "libxhmg.a"
+            else
+               nombre := "libhmg.a"
+            endif
          else
-            nombre:="libminigui.a"
-            if QPM_IsXHarbour()
-               nombre := "LibXminigui.a"
-            endif
+            nombre := "libhmg.a"
          endif
-      otherwise
-         if !empty( cForceCompiler )
-            do case
-               case cForceCompiler == DefineHarbour
-                  nombre := "MiniGui.lib"
-               case cForceCompiler == DefineXHarbour
-                  nombre := "xMinigui.lib"
-               otherwise
-                  US_Log( "Error 3 in cForceCompiler of function GetMiniGuiName: " + US_VarToStr( cForceCompiler ) )
-            endcase
+      elseif cForceCompiler == DefineHarbour
+         nombre := "libhmg.a"
+      else
+         nombre := "libxhmg.a"
+      endif
+   case sufijo == DefineExtended1 + DefineMinGW
+      if empty( cForceCompiler )
+         if QPM_IsXHarbour()
+            if File( GetMiniguiLibFolder() + DEF_SLASH + "libxminigui.a" )
+               nombre := "libxminigui.a"
+            else
+               nombre := "libminigui.a"
+            endif
          else
-            nombre := "MiniGui.lib"
-            if QPM_IsXHarbour()
-               nombre := "x" + nombre
-            endif
+            nombre := "libminigui.a"
          endif
+      elseif cForceCompiler == DefineHarbour
+         nombre := "libminigui.a"
+      else
+         nombre := "libxminigui.a"
+      endif
+   otherwise            // DefineMiniGui1 + DefineBorland or DefineExtended1 + DefineBorland
+      if empty( cForceCompiler )
+         if QPM_IsXHarbour()
+            if file( GetMiniguiLibFolder() + def_slash + "xminigui.lib" )
+               nombre := "xminigui.lib"
+            else
+               nombre := "minigui.lib"
+            endif
+         else
+            nombre := "minigui.lib"
+         endif
+      elseif cForceCompiler == DefineHarbour
+         nombre := "minigui.lib"
+      else
+         nombre := "xminigui.lib"
+      endif
    endcase
 Return nombre
 
 Function ChgPathToReal( cLinea )
-   cLinea := US_StrTran( cLinea , "<NewLine>" , HB_OsNewLine() )
-   cLinea := US_StrTran( cLinea , "<QPM>" , PUB_cQPM_Folder + DEF_SLASH + "QPM.EXE" )
-   cLinea := US_StrTran( cLinea , "<QPMFolder>" , PUB_cQPM_Folder )
-   cLinea := US_StrTran( cLinea , "<ProjectFolder>" , PUB_cProjectFolder )
-   cLinea := US_StrTran( cLinea , "<ThisFolder>" , PUB_cThisFolder )
+   cLinea := US_StrTran( cLinea, "<NewLine>",       HB_OsNewLine() )
+   cLinea := US_StrTran( cLinea, "<QPM>",           PUB_cQPM_Folder + DEF_SLASH + "QPM.EXE" )
+   cLinea := US_StrTran( cLinea, "<QPMFolder>",     PUB_cQPM_Folder )
+   cLinea := US_StrTran( cLinea, "<ProjectFolder>", PUB_cProjectFolder )
+   cLinea := US_StrTran( cLinea, "<ThisFolder>",    PUB_cThisFolder )
 Return cLinea
 
 Function ChgPathToRelative( cLinea )
-   cLinea := US_StrTran( cLinea , HB_OsNewLine() , "<NewLine>" )
-   cLinea := US_StrTran( cLinea , PUB_cProjectFolder , "<ProjectFolder>" )
-   cLinea := US_StrTran( cLinea , PUB_cQPM_Folder + DEF_SLASH + "QPM.EXE" , "<QPM>" )
-   cLinea := US_StrTran( cLinea , PUB_cQPM_Folder , "<QPMFolder>" )
-   cLinea := US_StrTran( cLinea , PUB_cThisFolder , "<ThisFolder>" )
+   cLinea := US_StrTran( cLinea, HB_OsNewLine(),                          "<NewLine>" )
+   cLinea := US_StrTran( cLinea, PUB_cQPM_Folder + DEF_SLASH + "QPM.EXE", "<QPM>" )
+   cLinea := US_StrTran( cLinea, PUB_cQPM_Folder,                         "<QPMFolder>" )
+   cLinea := US_StrTran( cLinea, PUB_cProjectFolder,                      "<ProjectFolder>" )
+   cLinea := US_StrTran( cLinea, PUB_cThisFolder,                         "<ThisFolder>" )
 Return cLinea
 
-Function MsgOK( titulo , txt , tipo , autoexit , Ptiempo , bButtonRun )
+Function MsgOK( titulo, txt, tipo, autoexit, Ptiempo, bButtonRun )
    Local ColorBack , ColorFont
    Private contador := 0
    Private inicial := seconds()
@@ -709,7 +773,7 @@ Function MsgOK( titulo , txt , tipo , autoexit , Ptiempo , bButtonRun )
    DEFAULT bButtonRun TO .F.
    tiempo := Ptiempo
    if empty( titulo )
-      titulo := 'QPM (QAC Based Project Manager)'
+      titulo := 'QPM (QAC based Project Manager)'
    endif
    if empty( autoexit )
       autoexit := .F.
@@ -945,7 +1009,6 @@ Function QPM_ModuleType( cFile )
 Return "UNKNOWN"
 
 Function GetOutputModuleName( bForDisplay )
-   // GetOutputModuleName2
    Local cOutputName
    Local cOutputNameDisplay
    if empty( bForDisplay )
@@ -955,61 +1018,61 @@ Function GetOutputModuleName( bForDisplay )
       case cOutputRename == "NEWNAME"
          if empty( US_FileNameOnlyExt( Prj_Text_OutputRenameNewName ) )
             if OutputExt() == "A" .and. bOutputPrefix
-               cOutputName        := US_ShortName(PUB_cProjectFolder) + DEF_SLASH + 'Lib' + US_FileNameOnlyName( Prj_Text_OutputRenameNewName ) + '.' + OutputExt()
-               cOutputNameDisplay := PUB_cProjectFolder + DEF_SLASH + 'Lib' + US_FileNameOnlyName( Prj_Text_OutputRenameNewName ) + '.' + OutputExt()
+               cOutputName        := US_ShortName(PUB_cProjectFolder) + DEF_SLASH + 'lib' + US_FileNameOnlyName( Prj_Text_OutputRenameNewName ) + '.' + lower( OutputExt() )
+               cOutputNameDisplay := PUB_cProjectFolder + DEF_SLASH + 'lib' + US_FileNameOnlyName( Prj_Text_OutputRenameNewName ) + '.' + lower( OutputExt() )
             else
-               cOutputName        := US_ShortName(PUB_cProjectFolder) + DEF_SLASH + US_FileNameOnlyName( Prj_Text_OutputRenameNewName ) + '.' + OutputExt()
-               cOutputNameDisplay := PUB_cProjectFolder + DEF_SLASH + US_FileNameOnlyName( Prj_Text_OutputRenameNewName ) + '.' + OutputExt()
+               cOutputName        := US_ShortName(PUB_cProjectFolder) + DEF_SLASH + US_FileNameOnlyName( Prj_Text_OutputRenameNewName ) + '.' + lower( OutputExt() )
+               cOutputNameDisplay := PUB_cProjectFolder + DEF_SLASH + US_FileNameOnlyName( Prj_Text_OutputRenameNewName ) + '.' + lower( OutputExt() )
             endif
          else
             if OutputExt() == "A" .and. bOutputPrefix
-               cOutputName        := US_ShortName(PUB_cProjectFolder) + DEF_SLASH + 'Lib' + US_FileNameOnlyNameAndExt( Prj_Text_OutputRenameNewName )
-               cOutputNameDisplay := PUB_cProjectFolder + DEF_SLASH + 'Lib' + US_FileNameOnlyNameAndExt( Prj_Text_OutputRenameNewName )
+               cOutputName        := US_ShortName(PUB_cProjectFolder) + DEF_SLASH + 'lib' + US_FileNameOnlyNameAndExt( Prj_Text_OutputRenameNewName )
+               cOutputNameDisplay := PUB_cProjectFolder + DEF_SLASH + 'lib' + US_FileNameOnlyNameAndExt( Prj_Text_OutputRenameNewName )
             else
                cOutputName        := US_ShortName(PUB_cProjectFolder) + DEF_SLASH + US_FileNameOnlyNameAndExt( Prj_Text_OutputRenameNewName )
                cOutputNameDisplay := PUB_cProjectFolder + DEF_SLASH + US_FileNameOnlyNameAndExt( Prj_Text_OutputRenameNewName )
             endif
          endif
       otherwise
-         cOutputName        := US_ShortName(PUB_cProjectFolder) + DEF_SLASH + if( OutputExt() == "A" , 'Lib' , '' ) + if( cConvert == "A DLL" , substr( US_FileNameOnlyName( GetProperty( "VentanaMain" , "GPrgFiles" , "Cell" , 1 , NCOLPRGFULLNAME ) ) , 4 ) , US_FileNameOnlyName( GetProperty( "VentanaMain" , "GPrgFiles" , "Cell" , 1 , NCOLPRGFULLNAME ) ) ) + '.' + OutputExt()
-         cOutputNameDisplay := PUB_cProjectFolder + DEF_SLASH + if( OutputExt() == "A" , 'Lib' , '' ) + US_FileNameOnlyName( GetProperty( "VentanaMain" , "GPrgFiles" , "Cell" , 1 , NCOLPRGFULLNAME ) ) + '.' + OutputExt()
+         cOutputName        := US_ShortName(PUB_cProjectFolder) + DEF_SLASH + if( OutputExt() == "A" , 'lib' , '' ) + if( cConvert == "A DLL" , substr( US_FileNameOnlyName( GetProperty( "VentanaMain" , "GPrgFiles" , "Cell" , 1 , NCOLPRGFULLNAME ) ) , 4 ) , US_FileNameOnlyName( GetProperty( "VentanaMain" , "GPrgFiles" , "Cell" , 1 , NCOLPRGFULLNAME ) ) ) + '.' + lower( OutputExt() )
+         cOutputNameDisplay := PUB_cProjectFolder + DEF_SLASH + if( OutputExt() == "A" , 'lib' , '' ) + US_FileNameOnlyName( GetProperty( "VentanaMain" , "GPrgFiles" , "Cell" , 1 , NCOLPRGFULLNAME ) ) + '.' + lower( OutputExt() )
    endcase
    if bOutputSuffix
-      cOutputName        := US_FileNameOnlyPathAndName( cOutputName ) + "_" + GetSuffix() + '.' + OutputExt()
-      cOutputNameDisplay := US_FileNameOnlyPathAndName( cOutputNameDisplay ) + "_" + GetSuffix() + '.' + OutputExt()
+      cOutputName        := US_FileNameOnlyPathAndName( cOutputName ) + "_" + GetSuffix() + '.' + lower( OutputExt() )
+      cOutputNameDisplay := US_FileNameOnlyPathAndName( cOutputNameDisplay ) + "_" + GetSuffix() + '.' + lower( OutputExt() )
    endif
 Return if( bForDisplay , cOutputNameDisplay , cOutputName )
 
-Function MyMsgYesNo( a , b, c )
+Function MyMsgYesNo( a, b, c )
    Local Reto
    DEFAULT b TO "QPM - Confirm"
    DEFAULT c TO nil
    SetMGWaitHide()
-   Reto := MsgYesNo( a , b, c, .F. )
+   Reto := MsgYesNo( a, b, c, .F. )
    SetMGWaitShow()
 Return Reto
 
-Function MyMsgYesNoCancel( a , b )
+Function MyMsgYesNoCancel( a, b )
    Local Reto
    DEFAULT b TO "QPM - Confirm"
    SetMGWaitHide()
-   Reto := MsgYesNoCancel( a , b, nil, .F. )
+   Reto := MsgYesNoCancel( a, b, nil, .F. )
    SetMGWaitShow()
 Return Reto
 
-Function MyMsgOkCancel( a , b )
+Function MyMsgOkCancel( a, b )
    Local Reto
    DEFAULT b TO "QPM - Confirm"
    SetMGWaitHide()
-   Reto := MsgOkCancel( a , b, nil, .F. )
+   Reto := MsgOkCancel( a, b, nil, .F. )
    SetMGWaitShow()
 Return Reto
 
-Function MyMsgRetryCancel( a , b )
+Function MyMsgRetryCancel( a, b )
    Local Reto
    DEFAULT b TO "QPM - Confirm"
    SetMGWaitHide()
-   Reto := MsgRetryCancel( a , b, nil, .F. )
+   Reto := MsgRetryCancel( a, b, nil, .F. )
    SetMGWaitShow()
 Return Reto
 
@@ -1025,10 +1088,6 @@ Function KillTask()
    QPM_MemoWrit( cKillTaskControlFile , "Run Control File for " + KillPgm )
    QPM_Execute( US_ShortName( PUB_cQPM_Folder ) + DEF_SLASH + "US_Run.exe" , "QPM " + cRunParms )
 Return .T.
-
-Function QPM_VerNunStr( nVer )
-   Local cAux := Alltrim( US_StrCero( nVer , 6 ) )
-Return ( "v" + substr( cAux , 1 , 2 ) + "." + substr( cAux , 3 , 2 ) + " build" + substr( cAux , 5 , 2 ) )
 
 Function DebugOptions( cDire , cPath )
    LOCAL cAux := "", cLeido := "", i, memoTMP
@@ -1441,7 +1500,7 @@ Function SetMGWaitHide()
    endif
 Return .T.
 
-Function QPM_ChangePrjVersion()
+Function QPM_ChangePrj_Version()
    DEFINE WINDOW WinChangeVersion ;
           AT 0 , 0 ;
           WIDTH 300 ;
@@ -1491,8 +1550,8 @@ Function QPM_ChangePrjVersion()
              WIDTH           80
              HEIGHT          25
              CAPTION         'OK'
-             TOOLTIP         'Confirm Change'
-             ONCLICK         QPM_ChangePrjVersionOK()
+             TOOLTIP         'Confirm change'
+             ONCLICK         QPM_ChangePrj_VersionOK()
       END BUTTON
 
       DEFINE BUTTON WinChangeVersionCANCEL
@@ -1501,7 +1560,7 @@ Function QPM_ChangePrjVersion()
              WIDTH           80
              HEIGHT          25
              CAPTION         'Cancel'
-             TOOLTIP         'Cancel Change'
+             TOOLTIP         'Cancel change'
              ONCLICK         WinChangeVersion.Release()
       END BUTTON
 
@@ -1511,7 +1570,7 @@ Function QPM_ChangePrjVersion()
    Activate Window WinChangeVersion
 Return .T.
 
-Function QPM_ChangePrjVersionOK()
+Function QPM_ChangePrj_VersionOK()
    DELETE FILE ( PUB_cProjectFolder + DEF_SLASH + US_FileNameOnlyName( GetOutputModuleName() ) + '.' + OutputExt() )
    SetProperty( "VentanaMain" , "LVerVerNum" , "value" , PadL( alltrim( GetProperty( "WinChangeVersion" , "TVerVerNum" , "value" ) ) , DEF_LEN_VER_VERSION , "0" ) )
    SetProperty( "VentanaMain" , "LVerRelNum" , "value" , PadL( alltrim( GetProperty( "WinChangeVersion" , "TVerRelNum" , "value" ) ) , DEF_LEN_VER_RELEASE , "0" ) )
@@ -1520,14 +1579,14 @@ Function QPM_ChangePrjVersionOK()
    WinChangeVersion.Release()
 Return .T.
 
-Function ReplacePrjVersion( cFile , cPrjVersion )
+Function ReplacePrj_Version( cFile , cPrj_Version )
    Local cMemo := MemoRead( cFile ) , nInx := 0 , cLine := "" , cMemoOut := "" , bFound := .F.
    For nInx := 1 to MLCount( cMemo , 254 )
       cLine := Memoline( cMemo , 254 , nInx )
       if !bFound .and. ;
          US_Word( cLine , 1 ) == "PRJ_VERSION"
          bFound := .T.
-         cMemoOut := cMemoOut + "PRJ_VERSION " + cPrjVersion + HB_OsNewLine()
+         cMemoOut := cMemoOut + "PRJ_VERSION " + cPrj_Version + HB_OsNewLine()
       else
          cMemoOut := cMemoOut + cLine + HB_OsNewLine()
       endif

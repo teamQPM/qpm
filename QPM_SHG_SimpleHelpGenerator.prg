@@ -3,9 +3,9 @@
  */
 
 /*
- *    QPM - QAC Based Project Manager
+ *    QPM - QAC based Project Manager
  *
- *    Copyright 2011-2014 Fernando Yurisich <fernando.yurisich@gmail.com>
+ *    Copyright 2011-2016 Fernando Yurisich <fernando.yurisich@gmail.com>
  *    http://qpm.sourceforge.net
  *
  *    Based on QAC - Project Manager for (x)Harbour
@@ -848,7 +848,7 @@ Function SHG_CompileToCHM( Proyecto , cDirOutCHM )
    MemoResu := memoread( cOutPut )
    if at( "ERROR:" , upper( MemoResu ) ) == 0 .and. ;
       at( "WARNING:" , upper( MemoResu ) ) == 0
-      MsgOk( 'QPM (QAC Based Project Manager)' , 'Build Finished' + HB_OsNewLine()+'OK' , 'I' , .T. )
+      MsgOk( 'QPM (QAC based Project Manager)' , 'Build Finished' + HB_OsNewLine()+'OK' , 'I' , .T. )
       SHG_DisplayHelp( SHG_GetOutputName() )
    else
       msgStop( strtran( MemoResu , chr(13) + HB_OsNewLine() + chr(13) + HB_OsNewLine() , HB_OsNewLine() ) )
@@ -911,7 +911,7 @@ Function DisplayHelpTopic( xTopic , nMet )
     EndIf
 Return
 
-Function SHG_Togle()
+Function SHG_Toggle()
    if GetProperty( "VentanaMain" , "GHlpFiles" , "ItemCount" ) < 1
       Return .F.
    endif
@@ -1406,7 +1406,7 @@ Function SHG_InputTopic( cTopic , cNick )
              WIDTH           80
              HEIGHT          25
              CAPTION         'OK'
-             TOOLTIP         'Confirm Selection'
+             TOOLTIP         'Confirm selection'
              ONCLICK         if( bReto := SHG_InputTopicOK() , DoMethod( "PanInputTopic" , "Release" ) , US_Nop() )
              DEFAULT         .T.
       END BUTTON
@@ -1417,7 +1417,7 @@ Function SHG_InputTopic( cTopic , cNick )
              WIDTH           80
              HEIGHT          25
              CAPTION         'Cancel'
-             TOOLTIP         'Cancel Selection'
+             TOOLTIP         'Cancel selection'
              ONCLICK         ( bReto := .F. , DoMethod( "PanInputTopic" , "Release" ) )
       END BUTTON
       
