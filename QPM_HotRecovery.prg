@@ -46,10 +46,67 @@
 
 #define SORT_VERSIONS          SortHea     // Aqui podria ir SortHea o SortPan, es decir algun sort que no freeze la primera row como hace SortPRG
 
+// Public variables
+memvar HR_nLookTimeOut
+memvar HR_nVersionsDefault
+memvar HR_nVersionsDigitosMax
+memvar HR_nVersionsMinimun
+memvar HR_nVersionsSet
+memvar HR_nLimitForPack
+memvar HR_nRadioFileSysOut
+memvar HR_nRadioFileType
+memvar HR_nRadioFileFrom
+memvar HR_nRadioFileTarget
+memvar HR_cMemoFrom
+memvar HR_cMemoFromVersionsPRG
+memvar HR_cMemoFromVersionsHEA
+memvar HR_cMemoFromVersionsPAN
+memvar HR_cMemoFromExternal
+memvar HR_cMemoTarget
+memvar HR_cMemoTargetItemPRG
+memvar HR_cMemoTargetItemHEA
+memvar HR_cMemoTargetItemPAN
+memvar HR_cMemoTargetVersionsPRG
+memvar HR_cMemoTargetVersionsHEA
+memvar HR_cMemoTargetVersionsPAN
+memvar HR_cNameFrom
+memvar HR_cNameTarget
+memvar HR_cLastExternalFileName
+memvar HR_bWinHotRecoveryMinimized
+memvar HR_cHotItemType
+memvar HR_bSuspendChangeGrid
+memvar HR_cCompareFileOutput
+memvar HR_aColorBackVersionsFrom
+memvar HR_aColorBackVersionsTarget
+memvar HR_aColorBackCompare
+memvar HR_nActualDiff
+memvar HR_nTotalDiff
+memvar HR_cFocus
+memvar HotPUB_nGridImgNone
+memvar HotGridImgComment
+memvar HotGridImgFrom
+memvar HotGridImgTarget
+memvar HotGridImgFromComment
+memvar HotGridImgTargetComment
+memvar nHotPUB_nGridImgTop
+memvar vHotImagesGrid
+memvar vHotImagesTranslateGrid
+
+// Private variables
+memvar oW_HTML
+memvar o_HTML
+memvar cFromFile
+memvar cTargetFile
+memvar cFileAux
+memvar Incremento
+memvar cAux
+
+
+
 Function QPM_HotRecoveryBuscoCod()
    $US_Log()
-   DBGoBottom()                   // revisar esto  pepe
-Return ( HR_COD + 1 )             // revisar esto  pepe
+   DBGoBottom()                   
+Return ( field->HR_COD + 1 )
 
 Function QPM_HotInitPublicVariables()
    $US_Log()
@@ -128,8 +185,8 @@ Return .T.
 
 Function QPM_HotRecovery( cFun , cSubFun , cType , cFileName , cRecoveryFile )
    Local OPEN_nSecondsInit := Seconds()
-   Local OPEN_cOldTxt := ""
-   Local OPEN_cAreaOld := ""
+   Local OPEN_cOldTxt
+   Local OPEN_cAreaOld
    Local cMemoFileTxt := "" , cMemoFileZip := ""
    Local bZipFileError := .F. , bZipFileLong := .F.
    Local bZipDataError := .F. , bZipDataLong := .T.         // Cambiar a .F. cuando se implemente el zipeado y adaptar la funcion HotPutComment()
@@ -198,7 +255,7 @@ Function QPM_HotRecovery( cFun , cSubFun , cType , cFileName , cRecoveryFile )
             // INI ONLY FOR TEST
             if .F.
                if !bZipFileError .and. !bZipFileLong
-                  QPM_MemoWrit( cRecoveryFileZip + "TesT" , US_UnMaskBinData( HR_FILE ) )
+                  QPM_MemoWrit( cRecoveryFileZip + "TesT" , US_UnMaskBinData( field->HR_FILE ) )
                   HB_UNZIPFILE( cRecoveryFileZip + "TesT" , , .T. , , US_FileNameOnlyPath( cRecoveryFile ) + DEF_SLASH + "ZipTest" , "*.*" )
                   if !( memoread( cRecoveryFile ) == memoread( US_FileNameOnlyPath( cRecoveryFile ) + DEF_SLASH + "ZipTest" + DEF_SLASH + US_FileNameOnlyNameAndExt( CrecoveryFile ) ) )
                      US_Log( "Fallo en test de zip file for HotRecovery" )
@@ -254,7 +311,7 @@ Return .T.
 
 Function QPM_HotRecoveryMenu()
    $US_Log()
-   Local cOldRegPath := ""
+   Local cOldRegPath
    Local cOldRegPathDif := .F.
    If Empty( PUB_cProjectFile )
       MsgStop( 'You must open project first.' )
@@ -975,9 +1032,9 @@ Function QPM_HotCargoVersions( cType )
    Local OPEN_cAreaOld := dbf()
    Local OPEN_cOldTxt := GetMGWaitTxt()
    Local OPEN_nSecondsInit := Seconds()
-   Local cActual := "" , cActualHash := ""
-   Local cAuxLinea := "" , nInx := 0 , cRelativeName := "" , cFullName := "" , cFunction := "" , cComment := ""
-   Local cFileType := "" , cFileDateTime := "" , LOC_cVersionDateTime := "" , LOC_cVersionComputer := "" , LOC_cVersionUser := ""
+   Local cActual, cActualHash
+   Local cAuxLinea, nInx, cRelativeName := "" , cFullName := "" , cComment
+   Local cFileDateTime := "" , LOC_cVersionDateTime := "" , LOC_cVersionComputer := "" , LOC_cVersionUser := ""
    Local i := 0
    $US_Log()
    Do While !US_Use( .T. , "DBFCDX" , QPM_HR_Database , "HOTREC" , DEF_DBF_EXCLUSIVE , DEF_DBF_WRITE ) .and. ( seconds() - OPEN_nSecondsInit ) < HR_nLookTimeOut
@@ -995,19 +1052,19 @@ Function QPM_HotCargoVersions( cType )
       DoMethod( "WinHotRecovery" , "HR_GridVersionsFrom" + cType , "DeleteAllItems" )
       DoMethod( "WinHotRecovery" , "HR_GridVersionsTarget" + cType , "DeleteAllItems" )
       do while !eof()
-         cFunction := ""
+         //cFunction := ""
          cComment  := ""
-         for nInx := 1 to MLCount( HR_DATA , 254 )
-            cAuxLinea := MemoLine( HR_DATA , 254 , nInx )
+         for nInx := 1 to MLCount( field->HR_DATA , 254 )
+            cAuxLinea := MemoLine( field->HR_DATA , 254 , nInx )
             do case
                case US_Upper( US_Word( cAuxLinea , 1 ) ) == "FUNCTION"
-                  cFunction := US_WordSubStr( cAuxLinea , 2 )
+                  //cFunction := US_WordSubStr( cAuxLinea , 2 )
                case US_Upper( US_Word( cAuxLinea , 1 ) ) == "FULLNAME"
                   cFullName := US_WordSubStr( cAuxLinea , 2 )
                case US_Upper( US_Word( cAuxLinea , 1 ) ) == "RELATIVENAME"
                   cRelativeName := US_WordSubStr( cAuxLinea , 2 )
                case US_Upper( US_Word( cAuxLinea , 1 ) ) == "FILE_TYPE"
-                  cFileType := US_WordSubStr( cAuxLinea , 2 )
+                  //cFileType := US_WordSubStr( cAuxLinea , 2 )
                case US_Upper( US_Word( cAuxLinea , 1 ) ) == "FILE_DATETIME"
                   cFileDateTime := US_Dis_DateSeconds2( US_WordSubStr( cAuxLinea , 2 ) )
                case US_Upper( US_Word( cAuxLinea , 1 ) ) == "VERSION_DATETIME"
@@ -1026,7 +1083,7 @@ Function QPM_HotCargoVersions( cType )
          next
          i++
          DoMethod( "WinHotRecovery" , "HR_GridVersionsFrom" + cType , "AddItem" , { HotPUB_nGridImgNone , ;
-                                                                                    "-" + Alltrim( Str( HR_SECU ) ) , ;
+                                                                                    "-" + Alltrim( Str( field->HR_SECU ) ) , ;
                                                                                     cFileDateTime     , ;
                                                                                     LOC_cVersionDateTime , ;
                                                                                     cComment          , ;
@@ -1034,10 +1091,10 @@ Function QPM_HotCargoVersions( cType )
                                                                                     cFullName         , ;
                                                                                     LOC_cVersionComputer , ;
                                                                                     LOC_cVersionUser  , ;
-                                                                                    Str( HR_COD )     , ;
+                                                                                    Str( field->HR_COD )     , ;
                                                                                     "0" } )
          DoMethod( "WinHotRecovery" , "HR_GridVersionsTarget" + cType , "AddItem" , { HotPUB_nGridImgNone , ;
-                                                                                      "-" + Alltrim( Str( HR_SECU ) ) , ;
+                                                                                      "-" + Alltrim( Str( field->HR_SECU ) ) , ;
                                                                                       cFileDateTime     , ;
                                                                                       LOC_cVersionDateTime , ;
                                                                                       cComment          , ;
@@ -1045,7 +1102,7 @@ Function QPM_HotCargoVersions( cType )
                                                                                       cFullName         , ;
                                                                                       LOC_cVersionComputer , ;
                                                                                       LOC_cVersionUser  , ;
-                                                                                      Str( HR_COD )     , ;
+                                                                                      Str( field->HR_COD )     , ;
                                                                                       "0" } )
       // if alltrim( cFunction ) == "RECOVERY"
       //    HotGridImage( "WinHotRecovery" , "HR_GridVersionsFrom" + cType , i , DEF_N_VER_COLIMAGE , "+" , HotGridImgTarget )
@@ -1094,8 +1151,8 @@ Return .T.
 Function QPM_HotObtengo( cCode )
    Local cMemoAux := "Database for HotRecovery Versions is Not Open" , bMemoZiped := .F.
    Local cHotRecoveryZipFile := US_ShortName( PUB_cProjectFolder ) + DEF_SLASH + "_" + PUB_cSecu + "ZipHOTRecovery" + US_DateTimeCen() + ".Ziped"
-   Local cHotRecoveryTxtFile := US_ShortName( PUB_cProjectFolder ) + DEF_SLASH + "_" + PUB_cSecu + "ZipHOTRecovery" + US_DateTimeCen() + ".Planed"
-   Local aFilesInZip := {}
+   //Local cHotRecoveryTxtFile := US_ShortName( PUB_cProjectFolder ) + DEF_SLASH + "_" + PUB_cSecu + "ZipHOTRecovery" + US_DateTimeCen() + ".Planed"
+   Local aFilesInZip
    Local OPEN_cAreaOld := dbf()
    Local OPEN_cOldTxt := GetMGWaitTxt()
    Local OPEN_nSecondsInit := Seconds()
@@ -1108,8 +1165,8 @@ Function QPM_HotObtengo( cCode )
    if dbf() == "HOTREC"
       OrdSetFocus( "HR_COD01" )
       if DBSeek( val( cCode ) )
-         bMemoZiped := if( HR_FILE_TY == "Z" , .T. , .F. )
-         cMemoAux := HR_FILE
+         bMemoZiped := if( field->HR_FILE_TY == "Z" , .T. , .F. )
+         cMemoAux := field->HR_FILE
       else
          cMemoAux := "This Hot Recovery Version Doesn't Exists !!!" + HB_OsNewLine()
       endif
@@ -1129,6 +1186,7 @@ Function QPM_HotObtengo( cCode )
       ferase( cHotRecoveryZipFile )
       ferase( PUB_cProjectFolder + DEF_SLASH + aFilesInZip[ 1 ] )
    endif
+/*
    *    HB_UNZIPFILE( <cFile>, <bBlock>, <lWithPath>, <cPassWord>, <cPath>, <cFile> | <aFile>, <pFileProgress> ) ---> lCompress
    * $ARGUMENTS$
    *      <cFile>   Name of the zip file to extract
@@ -1138,6 +1196,7 @@ Function QPM_HotObtengo( cCode )
    *      <cPath>    Path to extract the files to - mandatory
    *      <cFile> | <aFiles> A File or Array of files to extract - mandatory
    *      <pFileProgress> Code block for File Progress
+*/
 Return cMemoAux
 
 Function QPM_HotChangeGrid( cZona , cSubZona , cType )
@@ -1176,7 +1235,7 @@ Function QPM_HotChangeExternal()
 Return .T.
 
 Function QPM_HotCompare( cBase , cNew , cNameBase , cNameNew )
-   Local cMemoCompared := "" , i
+   Local cMemoCompared, i
    Local ExeCompare     := US_ShortName( PUB_cQPM_Folder ) + DEF_SLASH + "US_dif.exe"
    Local cFileBase      := US_ShortName( PUB_cProjectFolder ) + DEF_SLASH + "_" + PUB_cSecu + "CompareBase" + US_DateTimeCen() + ".TxT"
    Local cFileNew       := US_ShortName( PUB_cProjectFolder ) + DEF_SLASH + "_" + PUB_cSecu + "CompareNew" + US_DateTimeCen() + ".TxT"
@@ -1232,12 +1291,12 @@ Function QPM_HotGetNameExternal( cFile )
 Return cFile
 
 Function QPM_HotRecoveryProcess()
-   Private cFromDescri := ""
-   Private cTargetDescri := ""
+   Local cFromDescri
+   Local cTargetDescri
+   Local PRI_cVersion := GetProperty( "WinHotRecovery" , "HR_GridVersionsFrom" + HR_cHotItemType , "cell" , GetProperty( "WinHotRecovery" , "HR_GridVersionsFrom" + HR_cHotItemType , "value" ) , DEF_N_VER_COLVERSION )
    Private cFromFile := ""
    Private cTargetFile := ""
    Private cFileAux  := US_ShortName( PUB_cProjectFolder ) + DEF_SLASH + "_" + PUB_cSecu + "AuxiliarHotRecovery" + US_DateTimeCen() + ".tmp"
-   Private PRI_cVersion := GetProperty( "WinHotRecovery" , "HR_GridVersionsFrom" + HR_cHotItemType , "cell" , GetProperty( "WinHotRecovery" , "HR_GridVersionsFrom" + HR_cHotItemType , "value" ) , DEF_N_VER_COLVERSION )
    $US_Log()
    if GridImage( "WinHotRecovery" , "HR_GridItemTarget" + HR_cHotItemType , GetProperty( "WinHotRecovery" , "HR_GridItemTarget" + HR_cHotItemType , "value" ) , DEF_N_ITEM_COLIMAGE , "?" , PUB_nGridImgEdited )
       MsgStop( "You can't recover into an edited file, finish edit and retry again." )
@@ -1307,7 +1366,7 @@ Return .T.
 
 Function QPM_HotRecoveryProcessYes()
    Local bError := .F.
-   Local nCode     := 0
+   //Local nCode     := 0
    Local cHotRecoveryFile
    $US_Log()
    if GetProperty( "WinHotRecovery" , "HR_FileFrom" , "value" ) == 1
@@ -1320,7 +1379,7 @@ Function QPM_HotRecoveryProcessYes()
       cHotRecoveryFile := US_ShortName( PUB_cProjectFolder ) + DEF_SLASH + "_" + PUB_cSecu + "SrcHOTRecovery" + US_DateTimeCen() + ".hot"
       US_FileCopy( ChgPathToReal( cTargetFile ) , cHotRecoveryFile )
       SetFDaTi( cHotRecoveryFile , US_FileDate( ChgPathToReal( cTargetFile ) ) , US_FileTime( ChgPathToReal( cTargetFile ) ) )
-      nCode := QPM_HotRecovery( "ADD" , "RECOVERY" , HR_cHotItemType , cTargetFile , cHotRecoveryFile )
+      //nCode := QPM_HotRecovery( "ADD" , "RECOVERY" , HR_cHotItemType , cTargetFile , cHotRecoveryFile )
       if US_FileCopy( cFromFile , ChgPathToReal( cTargetFile ) ) != US_FileSize( cFromFile )
          MsgInfo( "Error while copy Hot Recovery Versions to Item, process canceled." )
          US_Log( 'Funcion sin implementar: QPM_HotRecovery( "DELETE" , "RECOVERY" , HR_cHotItemType , nCode )' )
@@ -1560,6 +1619,7 @@ RETURN NIL
 
 FUNCTION HotRecoveryReindex2_Creacion(cBase,cClave,cNombre,bPack)
    $US_Log()
+   Empty( cBase )
    if reccount() < 101
       Incremento:=int(reccount() / 100)
    endif
@@ -1592,11 +1652,11 @@ RETURN(.T.)
 
 Function HotGetComment( cType , bOnlyDbf , nRecCode )
    Local cGrid := "HR_GridVersions"
-   Local cAux := ""
+   Local cAux
    Local nValue := 0
    Local OPEN_cAreaOld := DBF()
-   Local OPEN_nSecondsInit := 0
-   Local nAuxCode := 0
+   Local OPEN_nSecondsInit
+   Local nAuxCode
    Local bActualizar := .F.
    Local oInput := US_InputBox():New()
    $US_Log()
@@ -1669,11 +1729,11 @@ Function HotGetComment( cType , bOnlyDbf , nRecCode )
 Return .T.
 
 Function HotPutComment( cComment )
-   Local nInx := 0
-   Local cAuxLinea := "" , cOutMemo := ""
+   Local nInx
+   Local cAuxLinea, cOutMemo := ""
    $US_Log()
-   for nInx := 1 to MLCount( HR_DATA , 254 )
-      cAuxLinea := MemoLine( HR_DATA , 254 , nInx )
+   for nInx := 1 to MLCount( field->HR_DATA , 254 )
+      cAuxLinea := MemoLine( field->HR_DATA , 254 , nInx )
       do case
          case US_Upper( US_Word( cAuxLinea , 1 ) ) == "COMMENT"
             US_Nop()
@@ -1727,9 +1787,8 @@ Return .F.
 
 Function HotPutCommentWithOutImage( cComment )
    Local OPEN_cAreaOld := DBF()
-   Local OPEN_nSecondsInit := 0
+   Local OPEN_nSecondsInit := Seconds()
    $US_Log()
-   OPEN_nSecondsInit := Seconds()
    Do While !US_Use( .T. , "DBFCDX" , QPM_HR_Database , "HOTREC" , DEF_DBF_EXCLUSIVE , DEF_DBF_WRITE ) .and. ( seconds() - OPEN_nSecondsInit ) < HR_nLookTimeOut
       SetMGWaitTxt( "Waiting for Hot Recovery Database: " + alltrim( str( int( HR_nLookTimeOut - ( seconds() - OPEN_nSecondsInit ) ) ) ) + " seconds..." )
       DO EVENTS
@@ -1752,11 +1811,10 @@ Function HotPutCommentWithOutImage( cComment )
    endif
 Return .T.
 
-Function QPM_ForceHotRecovery( Par_cType )
-   Local nValue := GetProperty( "VentanaMain" , "G"+Par_cType+"Files" , "Value" )
-   Local HotRecoveryControlFile := US_ShortName( PUB_cProjectFolder ) + DEF_SLASH + "_" + PUB_cSecu + "Force"+Par_cType+"HOTRecovery" + US_DateTimeCen() + ".hot"
-   Local nRecCode := 0
-   Private cType := Par_cType
+Function QPM_ForceHotRecovery( cType )
+   Local nValue := GetProperty( "VentanaMain" , "G"+cType+"Files" , "Value" )
+   Local HotRecoveryControlFile := US_ShortName( PUB_cProjectFolder ) + DEF_SLASH + "_" + PUB_cSecu + "Force"+cType+"HOTRecovery" + US_DateTimeCen() + ".hot"
+   Local nRecCode
    $US_Log()
    if Prj_Radio_OutputType == DEF_RG_IMPORT
       MsgStop( "Hot Recovery Version don't support DLL files." )
@@ -1793,17 +1851,18 @@ Function HotRecoveryImport()
       QPM_Wait( "HotRecoveryImport2( cAux )" , "Importing records..." )
    endif
 Return .T.
+
 Function HotRecoveryImport2( cDatabase )
    Local OPEN_nSecondsInit := Seconds()
-   Local OPEN_cOldTxt := ""
-   Local OPEN_cAreaOld := ""
-   Local vStruct := {} , nInx := 0 , nNewCod := 0
+   Local OPEN_cOldTxt
+   Local OPEN_cAreaOld
+   Local vStruct, nInx := 0 , nNewCod
    Local cTemp_HR_Database := US_FileNameOnlyPathAndName( QPM_HR_Database ) + "_H_" + PUB_cSecu + "." + US_FileNameOnlyExt( QPM_HR_Database )
    Local cTemp_Database := PUB_cQPM_Folder + DEF_SLASH + US_FileNameOnlyName( cDatabase ) + "_I_" + PUB_cSecu + "." + US_FileNameOnlyExt( cDatabase )
-   Local nCont_Added   := 0
+   Local nCont_Added := 0
    Local nCont_Skipped := 0
-   Local nCont_Total   := 0
-   Local cHashOld      := space( 32 )
+   Local nCont_Total
+   Local cHashOld := space( 32 )
    $US_Log()
 us_log( cTemp_HR_Database, .F. )
 us_log( cTemp_Database,.F.)
@@ -1857,15 +1916,15 @@ us_log( cTemp_Database,.F.)
          Return .T.
       endif
       SetMGWaitTxt( "Importing Records (Fase 5 of 16)" )
-      REPLACE ___UNIQUE  with HB_MD5( HR_HASH + HB_MD5( upper( US_ExtractMemoKey( HR_DATA , "VERSION_COMPUTER" ) ) ) + HB_MD5( upper( US_ExtractMemoKey( HR_DATA , "VERSION_USER" ) ) ) + HB_MD5( US_ExtractMemoKey( HR_DATA , "VERSION_DATETIME" ) ) ) ALL
+      REPLACE ___UNIQUE  with HB_MD5( field->HR_HASH + HB_MD5( upper( US_ExtractMemoKey( field->HR_DATA , "VERSION_COMPUTER" ) ) ) + HB_MD5( upper( US_ExtractMemoKey( field->HR_DATA , "VERSION_USER" ) ) ) + HB_MD5( US_ExtractMemoKey( field->HR_DATA , "VERSION_DATETIME" ) ) ) ALL
       SetMGWaitTxt( "Importing Records (Fase 6 of 16)" )
-      REPLACE ___DATETIM with US_ExtractMemoKey( HR_DATA , "VERSION_DATETIME" ) ALL
+      REPLACE ___DATETIM with US_ExtractMemoKey( field->HR_DATA , "VERSION_DATETIME" ) ALL
       SetMGWaitTxt( "Importing Records (Fase 7 of 16)" )
-      INDEX ON HR_COD                                                            TAG "___COD"
+      INDEX ON field->HR_COD                                                            TAG "___COD"
       SetMGWaitTxt( "Importing Records (Fase 8 of 16)" )
-      INDEX ON ___UNIQUE                                                         TAG "___UNIQUE"
+      INDEX ON field->___UNIQUE                                                         TAG "___UNIQUE"
       SetMGWaitTxt( "Importing Records (Fase 9 of 16)" )
-      INDEX ON HR_HASH+___DATETIM                                                TAG "___DATETIM"
+      INDEX ON field->HR_HASH + field->___DATETIM                                       TAG "___DATETIM"
       DbCloseArea( "__HOTCOMPAT" )
       SetMGWaitTxt( "Importing Records (Fase 10 of 16)" )
       US_DB_CMP( US_FileNameOnlyPathAndName( cTemp_Database ) , "ADD" , "___UNIQUE" , "C" , 32 , 0 )
@@ -1879,7 +1938,7 @@ us_log( cTemp_Database,.F.)
          Return .T.
       endif
       SetMGWaitTxt( "Importing Records (Fase 11 of 16)" )
-      REPLACE ___UNIQUE with HB_MD5( HR_HASH + HB_MD5( upper( US_ExtractMemoKey( HR_DATA , "VERSION_COMPUTER" ) ) ) + HB_MD5( upper( US_ExtractMemoKey( HR_DATA , "VERSION_USER" ) ) ) + HB_MD5( US_ExtractMemoKey( HR_DATA , "VERSION_DATETIME" ) ) ) ALL
+      REPLACE ___UNIQUE with HB_MD5( field->HR_HASH + HB_MD5( upper( US_ExtractMemoKey( field->HR_DATA , "VERSION_COMPUTER" ) ) ) + HB_MD5( upper( US_ExtractMemoKey( field->HR_DATA , "VERSION_USER" ) ) ) + HB_MD5( US_ExtractMemoKey( field->HR_DATA , "VERSION_DATETIME" ) ) ) ALL
       DbCloseArea( "__IMPCOMPAT" )
       //
       US_Use( .T. , "DBFCDX" , cTemp_HR_Database , "__HOTDB" )
@@ -1887,7 +1946,7 @@ us_log( "abrio base local" , .f. )
       OrdSetFocus( "___COD" )
       DbGoBottom()
 us_log( __HOTDB->hr_cod , .f. )
-      nNewCod := HR_COD + 1
+      nNewCod := field->HR_COD + 1
       OrdSetFocus( "___UNIQUE" )
       DbGoTop()
       vStruct := DbStruct()
@@ -1929,14 +1988,14 @@ us_log( "hay agregados" , .f. )
          DbGoBottom()
          SetMGWaitTxt( "Importing Records (Fase 13 of 16)" )
          do while !bof()
-            if !( HR_HASH == cHashOld )
-               cHashOld := HR_HASH
+            if !( field->HR_HASH == cHashOld )
+               cHashOld := field->HR_HASH
                nInx := 1
             else
                nInx++
             endif
-            if !( nInx == HR_SECU )
-     us_log( "cambio secu a hr_cod " + US_VarToStr( hr_cod ) , .f. )
+            if !( nInx == field->HR_SECU )
+     us_log( "cambio secu a hr_cod " + US_VarToStr( field->HR_COD ) , .f. )
                REPLACE HR_SECU with nInx
             endif
             dbskip(-1)
@@ -1970,10 +2029,12 @@ Return .T.
 
 Function QPM_HotRecovery_Migrate()
    Local cOldTxt := GetMGWaitTxt(), i
-   
+   Local vHotR
+   Local vHotRold
+   Local cAuxHRName
    $US_Log()
-   Declare vHotR[ ADIR( PUB_MigrateFolderFrom + DEF_SLASH + 'QPM_HotRecovery_*.dbf' ) ]
-   Declare vHotRold[ ADIR( PUB_MigrateFolderFrom + DEF_SLASH + 'QAC_HotRecovery_*.dbf' ) ]
+   vHotR := Array( ADIR( PUB_MigrateFolderFrom + DEF_SLASH + 'QPM_HotRecovery_*.dbf' ) )
+   vHotRold := Array( ADIR( PUB_MigrateFolderFrom + DEF_SLASH + 'QAC_HotRecovery_*.dbf' ) )
    ADIR( PUB_MigrateFolderFrom + DEF_SLASH + 'QPM_HotRecovery_*.dbf' , vHotR )
    ADIR( PUB_MigrateFolderFrom + DEF_SLASH + 'QAC_HotRecovery_*.dbf' , vHotRold )
    For i := 1 to len(vHotRold)
@@ -1990,7 +2051,6 @@ Function QPM_HotRecovery_Migrate()
       SetMGWaitTxt( cOldTxt )
       HotRecoveryDatabaseCompatibility( PUB_cQPM_Folder + DEF_SLASH + 'QPM_HotRecovery_' + QPM_VERSION_NUMBER_LONG + '.dbf' )
    else
-      Private cAuxHRName
       cAuxHRName := US_FileTmp( US_FileNameOnlyPath( QPM_HR_Database ) + DEF_SLASH + "_AddHRDbf" )
       CREATE ( cAuxHRName )
       APPEND BLANK
@@ -2030,16 +2090,17 @@ Function QPM_HotRecovery_Migrate()
               Field_dec WITH 0
       USE
       CREATE ( QPM_HR_Database ) FROM ( cAuxHRName )
-      INDEX ON HR_COD                                                   TAG "HR_COD01"
-      INDEX ON HR_HASH + US_StrCero( HR_SECU , HR_nVersionsDigitosMax ) TAG "HR_HASH01"
+      INDEX ON field->HR_COD                                                   TAG "HR_COD01"
+      INDEX ON field->HR_HASH + US_StrCero( field->HR_SECU , HR_nVersionsDigitosMax ) TAG "HR_HASH01"
       USE
       ferase( cAuxHRName )
-      Release cAuxHRName
    endif
 Return .t.
 
 Function HotRecoveryDatabaseCompatibility( PRI_COMPATIBILITY_DATABASE )
    $US_Log()
+
+   Empty( PRI_COMPATIBILITY_DATABASE )
    
 #include "QPM_CompatibilityHotRecovery.ch"
 

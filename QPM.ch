@@ -26,7 +26,7 @@
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <US_Env.h>
+#include "US_Env.h"
 
 // String related defines
 #define DBLQT '"'
@@ -231,7 +231,7 @@
 // Resources ID definitions
 #include "resource.h"
 
-// Public and private variables declarations
+// Public variables
 memvar aGridDbf
 memvar aGridExc
 memvar aGridHea
@@ -246,8 +246,6 @@ memvar bAvisoDbfGlobalSearchLow
 memvar bBuildFinished
 memvar bBuildRun
 memvar bBuildRunBack
-memvar bConsole
-memvar bConvert
 memvar bDbfAutoView
 memvar bDbfDataSearchAsk
 memvar bDbfMoving
@@ -266,7 +264,6 @@ memvar bLastGlobalSearchCas
 memvar bLastGlobalSearchDbf
 memvar bLastGlobalSearchFun
 memvar bLogActivity
-memvar bNew
 memvar bNumberOnHea
 memvar bNumberOnPan
 memvar bNumberOnPrg
@@ -291,12 +288,10 @@ memvar BUILD_IN_PROGRESS
 memvar bUpx
 memvar bWaitForBuild
 memvar bWarningCpp
-memvar cConvert
 memvar cDbfDataSearchAskRpta
 memvar cDbfTool
 memvar cExeNotFoundMsg
 memvar cFormTool
-memvar cHeadTool
 memvar cLastGlobalSearch
 memvar CLASTLIBFOLDERE1BH
 memvar CLASTLIBFOLDERE1BX
@@ -313,7 +308,6 @@ memvar CLASTLIBFOLDERO3GX
 memvar CLASTLIBFOLDERO3PH
 memvar CLASTLIBFOLDERO3PX
 memvar cLastProjectFolder
-memvar ConfigVersion
 memvar cOutputCopyMove
 memvar cOutputRename
 memvar cOutputType
@@ -410,6 +404,9 @@ memvar Gbl_TEditor
 memvar Gbl_Text_DBF
 memvar Gbl_Text_HMGSIDE
 memvar Gbl_Text_HMI
+memvar HR_bNumberOnHEA
+memvar HR_bNumberOnPAN
+memvar HR_bNumberOnPRG
 memvar INCLUDELIBSE1BH
 memvar INCLUDELIBSE1BX
 memvar INCLUDELIBSE1GH
@@ -428,7 +425,6 @@ memvar IsBorland
 memvar IsMinGW
 memvar IsPelles
 memvar LibsActiva
-memvar LOC_cLine
 memvar MAIN_HAS_FOCUS
 memvar NCOLDBFEDIT
 memvar NCOLDBFFULLNAME
@@ -452,8 +448,8 @@ memvar NCOLHLPTOPIC
 memvar NCOLINCFULLNAME
 memvar NCOLINCNAME
 memvar NCOLINCSTATUS
-memvar nColLibFullName
-memvar nColLibStatus
+memvar NCOLLIBFULLNAME
+memvar NCOLLIBSTATUS
 memvar NCOLPANEDIT
 memvar NCOLPANFULLNAME
 memvar NCOLPANNAME
@@ -500,10 +496,12 @@ memvar PRI_COMPATIBILITY_MEMOPROJECTFILEAUX
 memvar PRI_COMPATIBILITY_PROJECTFOLDER
 memvar PRI_COMPATIBILITY_PROJECTFOLDERIDENT
 memvar PRI_COMPATIBILITY_THISFOLDER
+memvar Prj_Check_64bits
 memvar Prj_Check_Console
 memvar Prj_Check_HarbourIs31
 memvar Prj_Check_OutputPrefix
 memvar Prj_Check_OutputSuffix
+memvar Prj_Check_PlaceRCFirst
 memvar Prj_Check_Upx
 memvar Prj_ExtraRunCmdEXE
 memvar Prj_ExtraRunCmdEXEParm
@@ -526,6 +524,7 @@ memvar Prj_ExtraRunQPMLogOnlyError
 memvar Prj_ExtraRunQPMRadio
 memvar Prj_ExtraRunQPMRun
 memvar Prj_ExtraRunType
+memvar Prj_IsNew
 memvar Prj_Radio_Cpp
 memvar Prj_Radio_DbFTool
 memvar Prj_Radio_FormTool
@@ -537,6 +536,8 @@ memvar Prj_Radio_OutputType
 memvar Prj_Text_OutputCopyMoveFolder
 memvar Prj_Text_OutputRenameNewName
 memvar ProgLength
+memvar PUB_bConsole
+memvar PUB_bConvert
 memvar PUB_bDebugActive
 memvar PUB_bDebugActiveAnt
 memvar PUB_bForceRunFromMsgOk
@@ -550,6 +551,7 @@ memvar PUB_cAutoLog
 memvar PUB_cAutoLogTmp
 memvar PUB_cCharFileNameTemp
 memvar PUB_cCharTab
+memvar PUB_cConvert
 memvar PUB_cProjectFile
 memvar PUB_cProjectFolder
 memvar PUB_cQPM_Folder
@@ -599,7 +601,6 @@ memvar PUB_MI_nStartMenuShortCut
 memvar PUB_MI_vFiles
 memvar PUB_MigrateFolderFrom
 memvar PUB_MigrateVersionFrom
-memvar PUB_nBottom
 memvar PUB_nGridImgEdited
 memvar PUB_nGridImgEquis
 memvar PUB_nGridImgHlpBook
@@ -618,6 +619,7 @@ memvar PUB_RunTabChange
 memvar PUB_vAutoRun
 memvar PUB_xHarbourMT
 memvar QPM_bKiller
+memvar QPM_HR_Database
 memvar QPM_KillerbLate
 memvar QPM_KillerModule
 memvar QPM_KillerProcessLast
@@ -656,7 +658,13 @@ memvar var030399_Harbour
 memvar var030399_MinGW
 memvar var030399_MiniGui1
 memvar var030399_MiniGui2
+memvar var030399_ModName
+memvar var030399_Move
+memvar var030399_NewName
 memvar var030399_Oohg1
+memvar var030399_Renamed
+memvar var030399_Suffix
+memvar var030399_Type
 memvar var030399_XHarbour
 memvar var041199_Borland
 memvar var041199_Extended1
@@ -664,8 +672,14 @@ memvar var041199_Harbour
 memvar var041199_MinGW
 memvar var041199_MiniGui1
 memvar var041199_MiniGui3
+memvar var041199_ModName
+memvar var041199_Move
+memvar var041199_NewName
 memvar var041199_Oohg3
 memvar var041199_Pelles
+memvar var041199_Renamed
+memvar var041199_Suffix
+memvar var041199_Type
 memvar var041199_XHarbour
 memvar vDbfHeaders
 memvar vDbfJustify

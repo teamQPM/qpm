@@ -218,7 +218,7 @@ Function QPM_DefinoKillerWindow()
 Return .T.
 
 Function KillIt( nValue )
-   Local nPID := 0 , reto := 0
+   Local nPID, reto
    if nValue > 0
       nPID := val( WinKiller.GGrid.Item( nValue )[1] )
       IF MyMsgOkCancel( "Process #" + str( nPID ) + " will be terminated." + CRLF + ;
@@ -235,10 +235,10 @@ Function KillIt( nValue )
    else
       MsgInfo( "No process selected." )
    ENDIF
-Return
+Return nil
 
 Function RefreshGrid( cPId , nPIDExclude , bForce )
-   LOCAL aProc := {}, cFullName := "", cExeName := "" , nProcessID, i
+   LOCAL aProc := {}, cFullName, cExeName := "" , nProcessID, i
    LOCAL aProcessInfo := US_GetProcesses()
    LOCAL nPointer := "0" , vExclude := { "QPM.EXE" , "US_RUN.EXE" , "US_MSG.EXE" , "US_SHELL.EXE" , "US_SLASH.EXE" , "US_RES.EXE" , "US_MAKE.EXE" }
    WinKiller.GGrid.DisableUpdate
@@ -276,7 +276,7 @@ Function RefreshGrid( cPId , nPIDExclude , bForce )
    IF LEN(aProc) > 0
       WinKiller.GGrid.DisableUpdate
       WinKiller.GGrid.DeleteAllItems
-      Aeval( aProc, { |e,i| ( IF( upper( e[3] ) == upper( QPM_KillerModule ) , nPointer := alltrim( str( e[1] ) ) , ) ) } )
+      Aeval( aProc, { |e| ( IF( upper( e[3] ) == upper( QPM_KillerModule ) , nPointer := alltrim( str( e[1] ) ) , ) ) } )
       for i:=len( aproc) to 1 Step -1
          WinKiller.GGrid.AddItem( { alltrim( str( aProc[i][1] ) ) , aProc[i][2] , aProc[i][3] } )
       next
@@ -310,13 +310,13 @@ Function ResizeCtrls()
    WinKiller.Check_AutoRefresh.Row := WinKiller.Height - if( IsXPThemeActive() , 54 , 50 )
    WinKiller.Check_AutoRefresh.Col := WinKiller.Width - 114
    RefreshGrid( WinKiller.GGrid.Cell( WinKiller.GGrid.Value , 1 ) )
-Return
+Return nil
 
 Function Late()
    WinKiller.IRefresh.Picture := if( QPM_KillerbLate , "REVOLVER" , "REVOLVER2" )
    DO EVENTS
    QPM_KillerbLate := !QPM_KillerbLate
-Return
+Return nil
 
 Function PidToPos( cPId )
    Local i

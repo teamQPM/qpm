@@ -27,8 +27,13 @@
 */
 
 #include "minigui.ch"
-#include "i_pseudofunc.ch"
 #include <QPM.ch>
+
+memvar cPTopic
+memvar cPNick
+memvar cAuxTopic
+memvar cAuxNick
+memvar vFilesToCompile
 
 #ifdef QPM_SHG
 
@@ -181,14 +186,12 @@ Function SHG_PackDatabase()
 Return .T.
 
 Function SHG_GetDatabase()
-   Local vFiles
-   Local cFile := "" , cOldDatabase := GetProperty( "VentanaMain" , "THlpDataBase" , "Value" )
+   Local vFiles, cFile
    if !( QPM_WAIT( "SHG_CheckSave()" , "Checking for save ..." ) )
       Return .F.
    endif
    /* Get file con multiselect en .F. trae problemas cuando se pone algo nuevo y se presiona enter en lugar de usar el boton */
    If ( len( vFiles := US_GetFile( { {'QPM Help Generator Database (*_SHG.DBF)','*_SHG.DBF'} } , "Select QPM Help Generator Database" , if( !empty( US_FileNameOnlyPath( GetProperty( "VentanaMain" , "THlpDataBase" , "Value" ) ) ) , US_FileNameOnlyPath( GetProperty( "VentanaMain" , "THlpDataBase" , "Value" ) ) , PUB_cProjectFolder ) , .T. , .T. ) ) > 0 )
-   // cFile := vFiles[1]
       cFile := SHG_StrTran( vFiles[1] )
       if upper( right( US_FileNameOnlyName( cFile ) , 4 ) ) != "_SHG"
          cFile := US_FileNameOnlyPath( cFile ) + DEF_SLASH + US_FileNameOnlyName( cFile ) + "_SHG.dbf"
@@ -218,9 +221,7 @@ Function SHG_GetDatabase()
    else
       Return .F.
    Endif
-// if !( SHG_Database == cOldDatabase )
    QPM_WAIT( "SHG_LoadDatabase( SHG_Database )" , "Loading Database ..." )
-// endif
 Return .T.
 
 Function SHG_AddRecord( cType , nSecu , cTopic , cNick , cMemo , cKeys )
@@ -362,60 +363,53 @@ Function SHG_SaveAll()
          SetProperty( "VentanaMain" , "GHlpFiles" , "Cell" , nInx , NCOLHLPEDIT , "E" )
       endif
    Next
-Return
+Return .T.
 
 Function SHG_Generate( cBase , bGenHtml , PUB_cSecu , cWWW )
-// Local Prefijo    := "Hlp"
-   Local Prefijo    := ""
-   Local cOldDll    := ""
-   Local Folder     := ""
-   Local bCreateDir := .F.
-   Local cCreateDir := ""
-   Local cDllWithCancel := ""
+   Local Prefijo      // "Hlp"
+   Local cOldDll
+   Local Folder
+   Local cDllWithCancel
    Local cName , cPrev := NIL , cTop := NIL , cNext := NIL
    Local nCont := 0 , i
    Local cDirOutCHM := PUB_cProjectFolder + DEF_SLASH + "_" + PUB_cSecu + "HlpTemp"
-   Local nRegistros := 0 , cMemoHeader , cMemoFooter , cFooterHTML
+   Local nRegistros, cMemoHeader , cMemoFooter , cFooterHTML
    Local cBackColor := "#FFFCEA"
-   Local cDescri    := "Compilación Incremental con todas las versiones de MiniGui"
-   Local ceMail     := "mailto:qpm-users@lists.sourceforge.net"
    Local wwwCdQ     := "http://qpm.sourceforge.net"
    Local cWWWDescri := "Powered by QPM"
-   Local cAux       := ""
-   Local nCinx      := 0
-   Private cClaves  := " "
-   Private cDirOutHTML := PUB_cProjectFolder + DEF_SLASH + "HtmlHelp"
-   Private vFiles := {}
-   Private vFilesToCompile := {}
-   if empty( cWWW ) .or. len( cWWW ) < 4
-      cWWW := wwwCdQ
-   endif
-   if empty( PUB_cProjectFolder )
-      msgstop( "Project folder not completed, look at " + PagePrg )
-      Return .F.
-   endif
-   if !( US_IsDirectory( PUB_cProjectFolder ) )
-      msgstop( "Project folder not found: " + PUB_cProjectFolder )
+   Local cAux
+   Local nCinx
+   Local cClaves  := " "
+   Local cDirOutHTML := PUB_cProjectFolder + DEF_SLASH + "HtmlHelp"
+   Local vFiles := {}
+   PRIVATE vFilesToCompile := {}
+   if Empty( PUB_cProjectFolder ) .or. ! US_IsDirectory( PUB_cProjectFolder )
+      MsgStop( DBLQT + "Project Folder" + DBLQT + " is not a valid folder:" + Hb_OsNewLine() + PUB_cProjectFolder + Hb_OsNewLine() + 'Look at tab ' + DBLQT + PagePRG + DBLQT )
       Return .F.
    endif
    if US_FileInUse( SHG_GetOutputName() )
       MsgInfo( "Output name '" + SHG_GetOutputName() + "' is in use." + HB_OsNewLine() + "Close the help process an retry." )
       Return .F.
    endif
-   // check
    if !file( cBase )
-      msgStop( "Help database not found: " + cBase + HB_OsNewLine() + "Use open button for open or create help database." )
+      msgStop( "Help database not found: " + cBase + HB_OsNewLine() + "Use open button to open or create help database." )
       return .F.
    endif
-   Prefijo     := US_FileNameOnlyName( SHG_GetOutputName() )
+
+   // check
+   if empty( cWWW ) .or. len( cWWW ) < 4
+      cWWW := wwwCdQ
+   endif
+
+   Prefijo := US_FileNameOnlyName( SHG_GetOutputName() )
    US_Use( .T. , , cBase , "SHG" , DEF_DBF_EXCLUSIVE , DEF_DBF_WRITE )
    DbGoTo( 2 )
-   cAux := SHG_TYPE
+   cAux := field->SHG_TYPE
    DbGoTop()
-   if SHG_TYPE != "F" .or. ;
-      cAux     != "W" .or. ;
-      SHG_ORDER != 1 .or. ;
-      SHG_TOPIC != "Global Foot"
+   if field->SHG_TYPE != "F" .or. ;
+      cAux != "W" .or. ;
+      field->SHG_ORDER != 1 .or. ;
+      field->SHG_TOPIC != "Global Foot"
       msgStop( "Help Database is corrupted, records UNKNOWN" )
       DBCloseArea( "SHG" )
       Return .F.
@@ -429,7 +423,7 @@ Function SHG_Generate( cBase , bGenHtml , PUB_cSecu , cWWW )
       if at( "@" , upper( cWWW ) ) == 0
          cWWW := "http://" + cWWW
       else
-         if at( "msilto:" , upper( cWWW ) ) == 0
+         if at( "mailto:" , upper( cWWW ) ) == 0
             cWWW := "mailto:" + cWWW
          endif
       endif
@@ -461,8 +455,6 @@ Function SHG_Generate( cBase , bGenHtml , PUB_cSecu , cWWW )
          SHG_HtmlFolder := Folder
       Endif
       if ! US_IsDirectory( SHG_HtmlFolder )
-         bCreateDir := .T.
-         cCreateDir := SHG_HtmlFolder
          if ! US_CreateFolder( SHG_HtmlFolder )
             US_Log( "Unable to create HTML folder: " + SHG_HtmlFolder )
             return .F.
@@ -529,13 +521,13 @@ Function SHG_Generate( cBase , bGenHtml , PUB_cSecu , cWWW )
    nRegistros := Reccount()
    DbSeek( 1 )
    SetMGWaitTxt( "Generating foot for pages..." )
-   QPM_MemoWrit( cDirOutCHM + DEF_SLASH + "Footer.rtf" , SHG_MEMO )
+   QPM_MemoWrit( cDirOutCHM + DEF_SLASH + "Footer.rtf" , field->SHG_MEMO )
 //   US_FileChar26Zap( cDirOutCHM + DEF_SLASH + "Footer.rtf" )
    SHG_RtfToHtml( cDirOutCHM + DEF_SLASH + "Footer.rtf" , cDirOutCHM + DEF_SLASH + "Footer.htm" , "Global Foot" )
    cFooterHTML := SHG_HTML_GetFooter( cDirOutCHM + DEF_SLASH + "Footer.htm" )
    DBSeek( 3 )
-   if !empty( SHG_NICK )
-      cTop := alltrim( SHG_NICK )
+   if !empty( field->SHG_NICK )
+      cTop := alltrim( field->SHG_NICK )
    else
       cTop := Prefijo + "_2.htm"
    endif
@@ -543,51 +535,51 @@ Function SHG_Generate( cBase , bGenHtml , PUB_cSecu , cWWW )
    Do while !eof()
       DO EVENTS
       nCont++
-      if SHG_ORDER < 4
+      if field->SHG_ORDER < 4
          cPrev := NIL
       else
          DBSKIP( -1 )
-         if empty( SHG_NICK )
+         if empty( field->SHG_NICK )
             cPrev := Prefijo + "_" + alltrim( str( nCont - 1 ) ) + ".htm"
          else
-            cPrev := alltrim( SHG_NICK )
+            cPrev := alltrim( field->SHG_NICK )
          endif
          DBSKIP( +1 )
       endif
-      if SHG_ORDER == nRegistros
+      if field->SHG_ORDER == nRegistros
          cNext := NIL
       else
          DBSKIP( +1 )
-         if empty( SHG_NICK )
+         if empty( field->SHG_NICK )
             cNext := Prefijo + "_" + alltrim( str( nCont + 1 ) ) + ".htm"
          else
-            cNext := alltrim( SHG_NICK )
+            cNext := alltrim( field->SHG_NICK )
          endif
          DBSKIP( -1 )
       endif
-      if empty( SHG_NICK )
+      if empty( field->SHG_NICK )
          cName := Prefijo + "_" + alltrim( str( nCont ) )
       else
-         cName := US_FileNameOnlyName( SHG_NICK )
+         cName := US_FileNameOnlyName( field->SHG_NICK )
       endif
-      if !empty( SHG_KEYS )
-         QPM_MemoWrit( cDirOutCHM + DEF_SLASH + cName + ".Inx" , SHG_KEYS )
+      if !empty( field->SHG_KEYS )
+         QPM_MemoWrit( cDirOutCHM + DEF_SLASH + cName + ".Inx" , field->SHG_KEYS )
          if bGenHtml
-            for nCinx := 1 to mlcount( SHG_KEYS , 254 )
-               if at( upper( alltrim( memoline( SHG_KEYS , 254 , nCinx ) ) + ", " ) , upper( cClaves ) ) == 0
-                  cClaves := cClaves + alltrim( memoline( SHG_KEYS , 254 , nCinx ) ) + ", "
+            for nCinx := 1 to mlcount( field->SHG_KEYS , 254 )
+               if at( upper( alltrim( memoline( field->SHG_KEYS , 254 , nCinx ) ) + ", " ) , upper( cClaves ) ) == 0
+                  cClaves := cClaves + alltrim( memoline( field->SHG_KEYS , 254 , nCinx ) ) + ", "
                endif
             next
          endif
       endif
-      aadd( vFiles , { alltrim( SHG_TYPE ) , strtran( strtran( alltrim( SHG_TOPIC ) , "<" , "&lt;" ) , ">" , "&gt;" ) , cName + ".htm" , cDirOutCHM + DEF_SLASH + cName + ".Inx" , cPrev , cTop , cNext } )
-      QPM_MemoWrit( cDirOutCHM + DEF_SLASH + cName + ".rtf" , SHG_Memo )
+      aadd( vFiles , { alltrim( field->SHG_TYPE ) , strtran( strtran( alltrim( field->SHG_TOPIC ) , "<" , "&lt;" ) , ">" , "&gt;" ) , cName + ".htm" , cDirOutCHM + DEF_SLASH + cName + ".Inx" , cPrev , cTop , cNext } )
+      QPM_MemoWrit( cDirOutCHM + DEF_SLASH + cName + ".rtf" , field->SHG_Memo )
 //      US_FileChar26Zap( cDirOutCHM + DEF_SLASH + cName + ".rtf" )
    // SetMGWaitTxt( "Generating: " + cName + ".htm ..." )
-      SetMGWaitTxt( "Generating: " + alltrim( SHG_TOPIC ) + " ..." )
-      SHG_RtfToHtml( cDirOutCHM + DEF_SLASH + cName + ".rtf" , cDirOutCHM + DEF_SLASH + cName + ".htm" , alltrim( SHG_TOPIC ) )
+      SetMGWaitTxt( "Generating: " + alltrim( field->SHG_TOPIC ) + " ..." )
+      SHG_RtfToHtml( cDirOutCHM + DEF_SLASH + cName + ".rtf" , cDirOutCHM + DEF_SLASH + cName + ".htm" , alltrim( field->SHG_TOPIC ) )
       if file( cDirOutCHM + DEF_SLASH + cName + ".htm" )
-         SHG_HTML_ArmoHeader( @cMemoHeader , vFiles , len( vFiles ) , cBackColor , alltrim( SHG_TOPIC ) )
+         SHG_HTML_ArmoHeader( @cMemoHeader , vFiles , len( vFiles ) , cBackColor , alltrim( field->SHG_TOPIC ) )
          SHG_HTML_AddHeader( cDirOutCHM + DEF_SLASH + cName + ".htm" , cMemoHeader )
          SHG_HTML_ArmoFooter( @cMemoFooter , vFiles , len( vFiles ) , cFooterHTML , cWWW , cWWWDescri )
          SHG_HTML_AddFooter( cDirOutCHM + DEF_SLASH + cName + ".htm" , cMemoFooter )
@@ -600,7 +592,7 @@ Function SHG_Generate( cBase , bGenHtml , PUB_cSecu , cWWW )
    enddo
    DBCloseArea( "HlpAlias" )
    SetMGWaitTxt( "Compiling to make " + SHG_GetOutputName() + "..." )
-   SHG_HHP_Gener( Prefijo , cDirOutCHM , vFiles )
+   SHG_HHP_Gener( Prefijo , cDirOutCHM , vFiles, vFilesToCompile )
    SHG_HHC_Gener( Prefijo , cDirOutCHM , vFiles )
    SHG_HHK_Gener( Prefijo , cDirOutCHM , vFiles )
    DO EVENTS
@@ -643,7 +635,7 @@ Function SHG_CopyImageToHtmlFolder( vImage , cDirOut )
          endif
       endif
    next
-Return
+Return .T.
 
 Function SHG_GetOutputName()
    Local cOutputName := US_FileNameOnlyName( SHG_Database )
@@ -738,7 +730,7 @@ Function SHG_RtfToHtml( cIn , cOut , cTopic )
    DirChange( cOldFolder )
 Return .T.
 
-Function SHG_HHP_Gener( Prefijo , cDirOutCHM , vFiles )
+Function SHG_HHP_Gener( Prefijo , cDirOutCHM , vFiles, vFilesToCompile )
    Local cMemo , i
    cMemo := '[OPTIONS]                               ' + HB_OsNewLine() + ;
             'Auto Index=No                           ' + HB_OsNewLine() + ;
@@ -836,13 +828,11 @@ Return .T.
 // Se requieren dos DLL's : HHA.dll (puede estar en PUB_cQPM_Folder o en Window\System )
 //                          itcc.dll (debe estar en Window\System y debe registrarse: regsvr32 c:\windows\system\itcc.dll  )
 //           si no se registra esta dll da el siguiente error: "HHC6003: The file itircl.dll has not been registered correctly"
-// Pepe
 Function SHG_CompileToCHM( Proyecto , cDirOutCHM )
    Local cOutPut := cDirOutCHM + DEF_SLASH + '_' + PUB_cSecu + 'OutHHC' + US_DateTimeCen() + '.tmp'
    Local MemoResu
    ferase( SHG_GetOutputName() )
    QPM_MemoWrit( US_ShortName( PUB_cProjectFolder ) + DEF_SLASH + '_'+PUB_cSecu+'RunShell.bat' , US_ShortName(PUB_cQPM_Folder) + DEF_SLASH + 'US_hhc.exe ' + Proyecto + ' > ' + cOutput )
-// QPM_Execute( US_ShortName( PUB_cProjectFolder ) + DEF_SLASH + '_'+PUB_cSecu+'RunShell.bat' , , DEF_QPM_EXEC_WAIT , DEF_QPM_EXEC_MINIMIZE )
    QPM_Execute( US_ShortName( PUB_cProjectFolder ) + DEF_SLASH + '_'+PUB_cSecu+'RunShell.bat' , , DEF_QPM_EXEC_WAIT , DEF_QPM_EXEC_HIDE )
    ferase( US_ShortName( PUB_cProjectFolder ) + DEF_SLASH + '_'+PUB_cSecu+'RunShell.bat' )
    MemoResu := memoread( cOutPut )
@@ -887,7 +877,7 @@ Return .T.
 Function DisplayHelpTopic( xTopic , nMet )
     LOCAL LOC_cParam := ""
     If empty( GetActiveHelpFile() )
-        Return
+        Return .F.
     endif
     _HMG_nTopic := xTopic
     _HMG_nMet   := nMet
@@ -909,7 +899,7 @@ Function DisplayHelpTopic( xTopic , nMet )
         EndIf
         WinHelp( _HMG_MainHandle , GetActiveHelpFile() , 1 , nMet , xTopic )
     EndIf
-Return
+Return .T.
 
 Function SHG_Toggle()
    if GetProperty( "VentanaMain" , "GHlpFiles" , "ItemCount" ) < 1
@@ -967,10 +957,10 @@ Function SHG_NewSecuence()
 //   DBGoTop()
 //   SHG_IndexON( SHG_Database )
 //   DBCloseArea( "SHG" )
-Return
+Return .T.
 
 Function SHG_LoadDatabase( cDataBase )
-   Local cAux := "" , vStructure
+   Local cAux, vStructure
    
    SetMGWaitTxt( "Loading Help Database ..." )
    if US_IsDBF( cDataBase ) != 0
@@ -1022,11 +1012,11 @@ Function SHG_LoadDatabase( cDataBase )
       SetMGWaitTxt( "Loading Topics..." )
       DbGoTop()
       do while ! eof()
-         REPLACE SHG_TYPET  WITH SHG_TYPE
-         REPLACE SHG_TOPICT WITH SHG_TOPIC
-         REPLACE SHG_NICKT  WITH SHG_NICK
-         REPLACE SHG_MEMOT  WITH SHG_MEMO
-         REPLACE SHG_KEYST  WITH SHG_KEYS
+         REPLACE SHG_TYPET  WITH field->SHG_TYPE
+         REPLACE SHG_TOPICT WITH field->SHG_TOPIC
+         REPLACE SHG_NICKT  WITH field->SHG_NICK
+         REPLACE SHG_MEMOT  WITH field->SHG_MEMO
+         REPLACE SHG_KEYST  WITH field->SHG_KEYS
          DBSkip()
       enddo
       DbGoTop()
@@ -1045,12 +1035,12 @@ Function SHG_LoadDatabase( cDataBase )
       US_Use( .T. , , cDataBase , "SHG" , DEF_DBF_EXCLUSIVE , DEF_DBF_WRITE )
       DBSetIndex( US_FileNameOnlyPathAndName( cDataBase ) )
       DbGoTo( 2 )
-      cAux := SHG_TYPE
+      cAux := field->SHG_TYPE
       DbGoTop()
-      if SHG_TYPE != "F" .or. ;
+      if field->SHG_TYPE != "F" .or. ;
          cAux     != "W" .or. ;
-         SHG_ORDER != 1 .or. ;
-         SHG_TOPIC != "Global Foot"
+         field->SHG_ORDER != 1 .or. ;
+         field->SHG_TOPIC != "Global Foot"
          msgStop( "Help Database is corrupted, records UNKNOWN" )
          DBCloseArea( "SHG" )
          Return .F.
@@ -1059,9 +1049,9 @@ Function SHG_LoadDatabase( cDataBase )
       bHlpMoving := .T.
       DoMethod( "VentanaMain" , "GHlpFiles" , "DisableUpdate" )
       do while !eof()
-         SetMGWaitTxt( "Adding Topic " + alltrim( SHG_TOPIC ) + " to Help Grid ..." )
-         DoMethod( "VentanaMain" , "GHlpFiles" , "AddItem" , { 0 , alltrim( SHG_TOPIC ) , alltrim( SHG_NICK ) , "0" , "E" } )
-         GridImage( "VentanaMain" , "GHlpFiles" , GetProperty( "VentanaMain" , "GHlpFiles" , "ItemCount" ) , NCOLHLPSTATUS , "+" , if( SHG_TYPE == "B" , PUB_nGridImgHlpBook , if( SHG_TYPE == "F" , PUB_nGridImgHlpGlobalFoot , if( SHG_TYPE == "W" , PUB_nGridImgHlpWelcome , PUB_nGridImgHlpPage ) ) ) )
+         SetMGWaitTxt( "Adding Topic " + alltrim( field->SHG_TOPIC ) + " to Help Grid ..." )
+         DoMethod( "VentanaMain" , "GHlpFiles" , "AddItem" , { 0 , alltrim( field->SHG_TOPIC ) , alltrim( field->SHG_NICK ) , "0" , "E" } )
+         GridImage( "VentanaMain" , "GHlpFiles" , GetProperty( "VentanaMain" , "GHlpFiles" , "ItemCount" ) , NCOLHLPSTATUS , "+" , if( field->SHG_TYPE == "B" , PUB_nGridImgHlpBook , if( field->SHG_TYPE == "F" , PUB_nGridImgHlpGlobalFoot , if( field->SHG_TYPE == "W" , PUB_nGridImgHlpWelcome , PUB_nGridImgHlpPage ) ) ) )
          DbSkip()
       enddo
       DoMethod( "VentanaMain" , "GHlpFiles" , "EnableUpdate" )
@@ -1080,13 +1070,12 @@ Function SHG_LoadDatabase( cDataBase )
 Return .T.
 
 Function SHG_IndexON( cDatabase )
-// INDEX ON SHG_ORDER ON ( US_FileNameOnlyPathAndName( cDataBase ) )
-   INDEX ON SHG_ORDER TAG "SHG_ORDER1"
-Return
+   Empty( cDatabase )
+   INDEX ON field->SHG_ORDER TAG "SHG_ORDER1"
+Return .T.
 
 Function SHG_PutDllItcc()
    Local cDllItccPath := alltrim( US_GetReg(HKEY_CLASSES_ROOT , "CLSID\{4662DAA2-D393-11D0-9A56-00C04FB68BF7}\InprocServer32" , "" ) )
-//us_log( cDllItccPath )
    if cDllItccPath == "*ERROR*"
       Return cDllItccPath
    endif
@@ -1113,7 +1102,7 @@ Function SHG_RestoreDllItcc( cDllName )
 Return .T.
 
 Function SHG_AddHlpKey()
-   Local cAux := "" , cOldMemo
+   Local cAux, cOldMemo
    Local cSel := oHlpRichEdit:GetSelText()
    if SHG_BaseOK
       if empty( cSel )
@@ -1134,10 +1123,10 @@ Return .T.
 
 Function SHG_AddHlpHTML( accion )
    Local cClip , cTagAux , nCaretTxt := GetProperty( "VentanaMain" , "RichEditHlp" , "caretpos" )
-   Local nDesdeRtf , nHastaRtf , vDesdeLen
+   Local vDesdeLen
    Local cMemoTxt := US_GetRichEditValue( "VentanaMain" , "RichEditHlp" , "TXT" )
-   Local cMemoRtf := US_GetRichEditValue( "VentanaMain" , "RichEditHlp" , "RTF" )
-   Local cMemoRtfAux := ""
+//   Local cMemoRtf := US_GetRichEditValue( "VentanaMain" , "RichEditHlp" , "RTF" )
+//   Local cMemoRtfAux := ""
    DEFAULT accion TO "*NULA*"
 // cClip := RetriveTextFromClipboard()
    cClip := US_GetRtfClipboard()
@@ -1477,7 +1466,7 @@ Return .T.
 // mycVar        Es la variable pasada por referencia en donde se depositará el contenido de la clave
 // myvNextKeys   Es un vector pasada por referencia o valor en donde estan las posibles claves siguientes
 Function SHG_Parser( mycType , mycString , mycKey , mycVar , myvNextKeys )
-   Local cComilla := "" , cAuxString := "" , nEncontroSignoIgual := 0 , i , j , h
+   Local cComilla, cAuxString, nEncontroSignoIgual, j, h
    // mycType == 1    claves de tipo SRC="xxxx xxxxx "   donde puede estar separado el signo =
    //                 y en donde puede no estar las comillas o apostrofo , proxima clave es del mismo estilo y
    //                 el separador es un espacio
@@ -1666,7 +1655,7 @@ Function SHG_GenHtmlIndexHTML( cIndexName , cDirSalida , vTopic , cClaves , cWWW
 Return .T.
 
 Function SHG_GenHtmlIndexJava( cIndexName , cDirSalida , vTopic , cClaves , cWWW )
-   Local cLinea , i , cTopicos := "" , nLastBook := 0
+   Local cLinea, i, nLastBook := 0
    cLinea := '<html>' + HB_OsNewLine() + ;
              '<head>' + HB_OsNewLine() + ;
              '<title>' + US_FileNameOnlyName( cIndexName ) + ' Help</title>' + HB_OsNewLine() + ;
@@ -1746,7 +1735,7 @@ Function SHG_GenHtmlIndexJava( cIndexName , cDirSalida , vTopic , cClaves , cWWW
 Return .T.
 
 Function SHG_StrTran( cFullName )
-   Local cAux , nInx , cName := US_FileNameOnlyNameAndExt( cFullName )
+   Local cName := US_FileNameOnlyNameAndExt( cFullName )
 /*
    for nInx := 1 to len( cName )
       cAux := Substr( cName , nInx , 1 )
@@ -1761,10 +1750,9 @@ Function SHG_StrTran( cFullName )
 Return US_FileNameOnlyPath( cFullName ) + DEF_SLASH + cName
 
 Function SHG_Commands( cIn , cPos )
-   Local nInx := 0 , nFrom := 0 , nTo := 0 , nBase := 1 , cLineCommand := "" , cCommand := ""
-   Local bError := .F. , cParm := "" , cParm2 := ""
-   Local cLineAux := "" , cMemoInAux := "" , cMemoOutAux := ""
-   Local cMemoOut := "" , cMemoIn := memoread( cIn )
+   Local nFrom, nTo, nBase := 1, cLineCommand, cCommand
+   Local bError := .F., cParm
+   Local cMemoOut := "", cMemoIn := memoread( cIn )
    
 #IFDEF __XHARBOUR__
    Do while ( nFrom := at( "<!--SHG_" + cPos + "COMMAND " , cMemoIn , nBase ) ) > 0
@@ -1784,7 +1772,6 @@ Function SHG_Commands( cIn , cPos )
          nBase := nTo + 3
          do case
             case cCommand == "EXECUTE"
-               // US_Log( "Command: execute " + cParm )
                QPM_Execute( US_Word( cParm , 1 ) , US_WordSubStr( cParm , 2 ) , .T. , -1 )
             case cCommand == "INCLUDEHTM"
                if !file( cParm )
@@ -1798,14 +1785,6 @@ Function SHG_Commands( cIn , cPos )
                   US_Log( "Error SHG_" + cPos + "COMMAND INCLUDETXT: File Not Found!: " + cParm )
                   bError := .T.
                else
-               // cMemoInAux := memoread( cParm )
-               // cMemoOutAux := ""
-               // for nInx := 1 to MLCount( cMemoInAux , 254 )
-               //    cLineAux := rtrim( MemoLine( cMemoInAux , 254 , nInx ) )
-               //    cMemoOutAux := cMemoOutAux + if( nInx > 1 , HB_OsNewLine() , "" ) + strtran( cLineAux , " " , "&nbsp;" , 1 , US_FirstChar( cLineAux , 1 ) - 1 )
-               // next
-               // cMemoOutAux := strtran( strtran( cMemoOutAux , chr(13)+chr(10) , "<br>" ) , chr( 10 ) , "<br>" )
-               // cMemoOut := cMemoOut + cMemoOutAux
                   cMemoOut := cMemoOut + strtran( strtran( strtran( memoread( cParm ) , chr(13)+chr(10) , "<br>" ) , chr( 10 ) , "<br>" ) , " " , "&nbsp;" )
                endif
             case cCommand == "DELETE"

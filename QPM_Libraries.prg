@@ -65,13 +65,13 @@ Return bReto
 
 Function QPM_CargoLibraries()
    Local bOldNamesLib := QPM_IsLibrariesNamesOld( US_ShortName( GetHarbourFolder() ), GetSuffix() )
-   Local cPre := "", cExt := ""
+   Local cPre, cExt
 
    // HMG 1.x + BorlandC + Harbour
    cPre := ""
    cExt := ".lib"
    &( "vLibDefault"+DefineMiniGui1+DefineBorland+DefineHarbour ) := {}
-   if bConsole
+   if PUB_bConsole
    if PUB_bDebugActive
    aadd( &( "vLibDefault"+DefineMiniGui1+DefineBorland+DefineHarbour ),                                           cPre+'gtwin'+cExt )
    aadd( &( "vLibDefault"+DefineMiniGui1+DefineBorland+DefineHarbour ), if( bOldNamesLib, cPre+'debug'+cExt,      cPre+'hbdebug'+cExt ) )
@@ -123,7 +123,7 @@ Function QPM_CargoLibraries()
    cPre := ""
    cExt := ".lib"
    &( "vLibDefault"+DefineMiniGui1+DefineBorland+DefineXHarbour ) := {}
-   if bConsole
+   if PUB_bConsole
    if PUB_bDebugActive
    aadd( &( "vLibDefault"+DefineMiniGui1+DefineBorland+DefineXHarbour ), cPre+'gtwin'+cExt )
    aadd( &( "vLibDefault"+DefineMiniGui1+DefineBorland+DefineXHarbour ), cPre+'debug'+cExt )
@@ -173,7 +173,7 @@ Function QPM_CargoLibraries()
    cPre := "lib"
    cExt := ".a"
    &( "vLibDefault"+DefineMiniGui3+DefineMinGW+DefineHarbour ) := {}
-   if bConsole
+   if PUB_bConsole
    if PUB_bDebugActive
    aadd( &( "vLibDefault"+DefineMiniGui3+DefineMinGW+DefineHarbour ),                                           cPre+'gtwin'+cExt )
    aadd( &( "vLibDefault"+DefineMiniGui3+DefineMinGW+DefineHarbour ), if( bOldNamesLib, cPre+'debug'+cExt,      cPre+'hbdebug'+cExt ) )
@@ -224,6 +224,7 @@ Function QPM_CargoLibraries()
    aadd( &( "vLibDefault"+DefineMiniGui3+DefineMinGW+DefineHarbour ), if( bOldNamesLib, cPre+'rdd'+cExt,        cPre+'hbrdd'+cExt ) )
    aadd( &( "vLibDefault"+DefineMiniGui3+DefineMinGW+DefineHarbour ), if( bOldNamesLib, cPre+'rtl'+cExt,        cPre+'hbrtl'+cExt ) )
    aadd( &( "vLibDefault"+DefineMiniGui3+DefineMinGW+DefineHarbour ), if( bOldNamesLib, cPre+'hbsix'+cExt,      cPre+'hbsix'+cExt ) )
+   aadd( &( "vLibDefault"+DefineMiniGui3+DefineMinGW+DefineHarbour ),                                           cPre+'hbsqlit3'+cExt )
    aadd( &( "vLibDefault"+DefineMiniGui3+DefineMinGW+DefineHarbour ),                                           cPre+'hbusrrdd'+cExt )
    aadd( &( "vLibDefault"+DefineMiniGui3+DefineMinGW+DefineHarbour ), if( bOldNamesLib, cPre+'vm'+cExt,         cPre+'hbvm'+cExt ) )
    aadd( &( "vLibDefault"+DefineMiniGui3+DefineMinGW+DefineHarbour ),                                           cPre+'hbw32'+cExt )
@@ -251,6 +252,7 @@ Function QPM_CargoLibraries()
    aadd( &( "vLibDefault"+DefineMiniGui3+DefineMinGW+DefineHarbour ),                                           cPre+'registry'+cExt )
    aadd( &( "vLibDefault"+DefineMiniGui3+DefineMinGW+DefineHarbour ),                                           cPre+'report'+cExt )
    aadd( &( "vLibDefault"+DefineMiniGui3+DefineMinGW+DefineHarbour ),                                           cPre+'socket'+cExt )
+   aadd( &( "vLibDefault"+DefineMiniGui3+DefineMinGW+DefineHarbour ),                                           cPre+'sqlite3'+cExt )
    aadd( &( "vLibDefault"+DefineMiniGui3+DefineMinGW+DefineHarbour ),                                           cPre+'stdc++'+cExt )
    aadd( &( "vLibDefault"+DefineMiniGui3+DefineMinGW+DefineHarbour ),                                           cPre+'tip'+cExt )
    aadd( &( "vLibDefault"+DefineMiniGui3+DefineMinGW+DefineHarbour ),                                           cPre+'user32'+cExt )
@@ -266,7 +268,7 @@ Function QPM_CargoLibraries()
    cPre := "lib"
    cExt := ".a"
    &( "vLibDefault"+DefineMiniGui3+DefineMinGW+DefineXHarbour ) := {}
-   if bConsole
+   if PUB_bConsole
    if PUB_bDebugActive
    aadd( &( "vLibDefault"+DefineMiniGui3+DefineMinGW+DefineXHarbour ), cPre+'gtwin'+cExt )
    aadd( &( "vLibDefault"+DefineMiniGui3+DefineMinGW+DefineXHarbour ), cPre+'debug'+cExt )
@@ -337,7 +339,7 @@ Function QPM_CargoLibraries()
    cPre := ""
    cExt := ".lib"
    &( "vLibDefault"+DefineExtended1+DefineBorland+DefineHarbour ) := {}
-   if bConsole
+   if PUB_bConsole
    if PUB_bDebugActive
    aadd( &( "vLibDefault"+DefineExtended1+DefineBorland+DefineHarbour ),                                          cPre+'gtwin'+cExt )
    aadd( &( "vLibDefault"+DefineExtended1+DefineBorland+DefineHarbour ), if( bOldNamesLib, cPre+'debug'+cExt,     cPre+'hbdebug'+cExt ) )
@@ -421,7 +423,7 @@ Function QPM_CargoLibraries()
    cPre := "lib"
    cExt := ".a"
    &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineHarbour ) := {}
-   if bConsole
+   if PUB_bConsole
    if PUB_bDebugActive
    aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineHarbour ),                                           cPre+'gtwin'+cExt )
    else
@@ -437,6 +439,7 @@ Function QPM_CargoLibraries()
    endif
 
    aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineHarbour ),                                           cPre+'ace32'+cExt )
+   aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineHarbour ),                                           cPre+'adordd'+cExt )
    aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineHarbour ),                                           cPre+'bostaurus'+cExt )
    aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineHarbour ),                                           cPre+'calldll'+cExt )
    aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineHarbour ),                                           cPre+'comctl32'+cExt )
@@ -451,9 +454,12 @@ Function QPM_CargoLibraries()
    aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineHarbour ), if( bOldNamesLib, cPre+'codepage'+cExt,   cPre+'hbcpage'+cExt ) )
    aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineHarbour ), if( bOldNamesLib, cPre+'ct'+cExt,         cPre+'hbct'+cExt ) )
    aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineHarbour ), if( bOldNamesLib, cPre+'debug'+cExt,      cPre+'hbdebug'+cExt ) )
+   aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineHarbour ),                                           cPre+'hbhpdf'+cExt )
    aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineHarbour ), if( bOldNamesLib, cPre+'hsx'+cExt,        cPre+'hbhsx'+cExt ) )
    aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineHarbour ), if( bOldNamesLib, cPre+'lang'+cExt,       cPre+'hblang'+cExt ) )
    aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineHarbour ), if( bOldNamesLib, cPre+'macro'+cExt,      cPre+'hbmacro'+cExt ) )
+   aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineHarbour ),                                           cPre+'hbmisc'+cExt )
+   aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineHarbour ),                                           cPre+'hbmysql'+cExt )
    aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineHarbour ),                                           cPre+'hbmzip'+cExt )
    aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineHarbour ), if( bOldNamesLib, cPre+'nulsys'+cExt,     cPre+'hbnulsys'+cExt ) )
    aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineHarbour ),                                           cPre+'hbole'+cExt )
@@ -463,18 +469,22 @@ Function QPM_CargoLibraries()
    aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineHarbour ), if( bOldNamesLib, cPre+'rdd'+cExt,        cPre+'hbrdd'+cExt ) )
    aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineHarbour ), if( bOldNamesLib, cPre+'rtl'+cExt,        cPre+'hbrtl'+cExt ) )
    aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineHarbour ), if( bOldNamesLib, cPre+'hbsix'+cExt,      cPre+'hbsix'+cExt ) )
+   aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineHarbour ),                                           cPre+'hbsqlit3'+cExt )
    aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineHarbour ),                                           cPre+'hbunrar'+cExt )
    aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineHarbour ),                                           cPre+'hbusrrdd'+cExt )
    aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineHarbour ), if( bOldNamesLib, cPre+'vm'+cExt,         cPre+'hbvm'+cExt ) )
    aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineHarbour ),                                           cPre+'hbw32'+cExt )
    aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineHarbour ),                                           cPre+'hbwin'+cExt )
    aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineHarbour ),                                           cPre+'hbxml'+cExt )
+   aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineHarbour ),                                           cPre+'hbzebra'+cExt )
    aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineHarbour ),                                           cPre+'hbzip'+cExt )
    aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineHarbour ),                                           cPre+'hbziparc'+cExt )
    aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineHarbour ), if( bOldNamesLib, cPre+'ziparchive'+cExt, cPre+'hbziparch'+cExt ) )
    aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineHarbour ),                                           cPre+'hbzlib'+cExt )
+   aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineHarbour ),                                           cPre+'hmg_hpdf'+cExt )
    aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineHarbour ),                                           cPre+'ini'+cExt )
    aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineHarbour ),                                           cPre+'iphlpapi'+cExt )
+   aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineHarbour ),                                           cPre+'libhpdf'+cExt )
    aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineHarbour ),                                           cPre+'miniprint'+cExt )
    aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineHarbour ),                                           cPre+'minizip'+cExt )
    aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineHarbour ),                                           cPre+'misc'+cExt )
@@ -483,7 +493,11 @@ Function QPM_CargoLibraries()
    aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineHarbour ),                                           cPre+'mysqldll'+cExt )
    aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineHarbour ),                                           cPre+'ole32'+cExt )
    aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineHarbour ),                                           cPre+'oleaut32'+cExt )
+   aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineHarbour ),                                           cPre+'png'+cExt )
    aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineHarbour ),                                           cPre+'pcrepos'+cExt )
+   aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineHarbour ),                                           cPre+'propgrid'+cExt )
+   aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineHarbour ),                                           cPre+'propsheet'+cExt )
+   aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineHarbour ),                                           cPre+'qhtm'+cExt )
    aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineHarbour ),                                           cPre+'rddads'+cExt )
    aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineHarbour ), if( bOldNamesLib, cPre+'dbfcdx'+cExt,     cPre+'rddcdx'+cExt ) )
    aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineHarbour ), if( bOldNamesLib, cPre+'dbfdbt'+cExt,     cPre+'rdddbt'+cExt ) )
@@ -493,13 +507,16 @@ Function QPM_CargoLibraries()
    aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineHarbour ),                                           cPre+'report'+cExt )
    aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineHarbour ),                                           cPre+'socket'+cExt )
    aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineHarbour ),                                           cPre+'stdc++'+cExt )
+   aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineHarbour ),                                           cPre+'sqlite3'+cExt )
    aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineHarbour ),                                           cPre+'tip'+cExt )
+   aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineHarbour ),                                           cPre+'tmsagent'+cExt )
    aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineHarbour ),                                           cPre+'tsbrowse'+cExt )
    aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineHarbour ),                                           cPre+'unrar'+cExt )
    aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineHarbour ),                                           cPre+'user32'+cExt )
    aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineHarbour ),                                           cPre+'uuid'+cExt )
    aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineHarbour ),                                           cPre+'vfw32'+cExt )
    aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineHarbour ),                                           cPre+'winmm'+cExt )
+   aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineHarbour ),                                           cPre+'winreport'+cExt )
    aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineHarbour ),                                           cPre+'winspool'+cExt )
    aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineHarbour ),                                           cPre+'ws2_32'+cExt )
    aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineHarbour ),                                           cPre+'wsock32'+cExt )
@@ -510,7 +527,7 @@ Function QPM_CargoLibraries()
    cPre := ""
    cExt := ".lib"
    &( "vLibDefault"+DefineExtended1+DefineBorland+DefineXHarbour ) := {}
-   if bConsole
+   if PUB_bConsole
    if PUB_bDebugActive
    aadd( &( "vLibDefault"+DefineExtended1+DefineBorland+DefineXHarbour ), cPre+'gtwin'+cExt )
    aadd( &( "vLibDefault"+DefineExtended1+DefineBorland+DefineXHarbour ), cPre+'debug'+cExt )
@@ -581,7 +598,7 @@ Function QPM_CargoLibraries()
    cPre := "lib"
    cExt := ".a"
    &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineXHarbour ) := {}
-   if bConsole
+   if PUB_bConsole
    if PUB_bDebugActive
    aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineXHarbour ), cPre+'gtwin'+cExt )
    aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineXHarbour ), cPre+'debug'+cExt )
@@ -656,7 +673,7 @@ Function QPM_CargoLibraries()
    cPre := ""
    cExt := ".lib"
    &( "vLibDefault"+DefineOohg3+DefineBorland+DefineHarbour ) := {}
-   if bConsole
+   if PUB_bConsole
    if PUB_bDebugActive
    aadd( &( "vLibDefault"+DefineOohg3+DefineBorland+DefineHarbour ),                                           cPre+'gtwin'+cExt )
    aadd( &( "vLibDefault"+DefineOohg3+DefineBorland+DefineHarbour ), if( bOldNamesLib, cPre+'debug'+cExt,      cPre+'hbdebug'+cExt ) )
@@ -715,7 +732,7 @@ Function QPM_CargoLibraries()
    cPre := ""
    cExt := ".lib"
    &( "vLibDefault"+DefineOohg3+DefineBorland+DefineXHarbour ) := {}
-   if bConsole
+   if PUB_bConsole
    if PUB_bDebugActive
    aadd( &( "vLibDefault"+DefineOohg3+DefineBorland+DefineXHarbour ), cPre+'gtwin'+cExt )
    aadd( &( "vLibDefault"+DefineOohg3+DefineBorland+DefineXHarbour ), cPre+'debug'+cExt )
@@ -769,7 +786,7 @@ Function QPM_CargoLibraries()
    cPre := "lib"
    cExt := ".a"
    &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineHarbour ) := {}
-   if bConsole
+   if PUB_bConsole
    if PUB_bDebugActive
    aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineHarbour ), cPre+'gtwin'+cExt )
    aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineHarbour ), cPre+'hbdebug'+cExt )
@@ -841,7 +858,7 @@ Function QPM_CargoLibraries()
    cPre := "lib"
    cExt := ".a"
    &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineXHarbour ) := {}
-   if bConsole
+   if PUB_bConsole
    if PUB_bDebugActive
    aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineXHarbour ), cPre+'gtwin'+cExt )
    aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineXHarbour ), cPre+'debug'+cExt )
@@ -913,7 +930,7 @@ Function QPM_CargoLibraries()
    cPre := ""
    cExt := ".lib"
    &( "vLibDefault"+DefineOohg3+DefinePelles+DefineHarbour ) := {}
-   if bConsole
+   if PUB_bConsole
    if PUB_bDebugActive
    aadd( &( "vLibDefault"+DefineOohg3+DefinePelles+DefineHarbour ),                                           cPre+'gtwin'+cExt )
    aadd( &( "vLibDefault"+DefineOohg3+DefinePelles+DefineHarbour ), if( bOldNamesLib, cPre+'debug'+cExt,      cPre+'hbdebug'+cExt ) )
@@ -991,7 +1008,7 @@ Function QPM_CargoLibraries()
    cPre := ""
    cExt := ".lib"
    &( "vLibDefault"+DefineOohg3+DefinePelles+DefineXHarbour ) := {}
-   if bConsole
+   if PUB_bConsole
    if PUB_bDebugActive
    aadd( &( "vLibDefault"+DefineOohg3+DefinePelles+DefineXHarbour ), cPre+'gtwin'+cExt )
    aadd( &( "vLibDefault"+DefineOohg3+DefinePelles+DefineXHarbour ), cPre+'debug'+cExt )

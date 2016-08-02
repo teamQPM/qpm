@@ -29,6 +29,12 @@
 #include "minigui.ch"
 #include <QPM.ch>
 
+memvar vFilesToCompile
+memvar cReto
+memvar vKeys
+memvar PcMemo
+memvar PnCaretPos
+
 #ifdef QPM_SHG
 
 Function SHG_LinkGenerateList( cIn , cTopic )
@@ -100,7 +106,7 @@ Function SHG_LinkGenerateList( cIn , cTopic )
 Return .T.
 
 Function SHG_LinkGetString( cMemo , nPos )
-   Local nDesde , nLen , vAux
+   Local vAux
    vAux := SHG_LinkGetPos( cMemo , nPos )
    if vAux[1][2] > 0       // != NIL
       Return substr( cMemo , vAux[1][1] , vAux[1][2] )
@@ -108,7 +114,7 @@ Function SHG_LinkGetString( cMemo , nPos )
 Return ""
 
 Function SHG_LinkGetPos( cMemo , nPos )
-   Local nAuxDesde , nDesde , nHasta , nLen , vResult , nRtfPos := nPos
+   Local nAuxDesde , nDesde , nHasta , nLen , nRtfPos := nPos
    Local nLenGuia := len( "<A" )
    nAuxDesde := rat( ">" , substr( cMemo , 1 , nRtfPos ) ) + 1
    if ( nDesde := rat( "<A " , upper( substr( cMemo , nAuxDesde , ( nRtfPos - nAuxDesde + 1 ) + nLenGuia ) ) ) ) == 0
@@ -122,7 +128,7 @@ Function SHG_LinkGetPos( cMemo , nPos )
 Return { { nDesde , nLen } }
 
 Function SHG_LinkVector2String( vKeys , bSupressPath )
-   Local cString := "<A" , i , cComilla := ""                       // , vCaseName := {}
+   Local cString := "<A" , i , cComilla
    for i := 1 to len( vKeys )
       if vKeys[i][2] != NIL
          if upper( vKeys[i][1] ) == "HREF" .or. ;
@@ -472,8 +478,7 @@ Function SHG_LinkAssistantGetVector( cMemo , nCaretPos )
 return .T.
 
 Function SHG_LinkAssistantGetFile()
-Local cAux := ""
-// PanInputLink.TextSrc.Value := BugGetFile( { {'Link file','*.*'} } , "Select Link File" , PanInputLink.TextSrc.Value , .F. , .T. )
+Local cAux
    cAux := US_USlash( BugGetFile( { {'BMP Image file','*.bmp'} , {'JPEG Image file','*.jpg'} , {'PNG Image file','*.png'} , {'GIF Image file','*.gif'} } , "Select Link File" , if( empty(PanInputLink.TextSrc.Value) , SHG_LastFolderImg , US_FileNameOnlyPath( US_WSlash( PanInputLink.TextSrc.Value ) ) ) , .F. , .T. ) )
    if !empty( cAux )
       PanInputLink.TextSrc.Value := cAux
