@@ -478,7 +478,7 @@ HB_FUNC(US_KILLPROCESS)
 #define REALTIME_PRIORITY_CLASS        0x00000100
 
 Function US_SetPriorityToProcess( nPId , nPriority )
-   local nReto := 0
+   local nReto
    do case
       case nPriority == 1
          nReto := US_2SetPriorityToProcess( nPId , ABOVE_NORMAL_PRIORITY_CLASS )

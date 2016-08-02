@@ -26,11 +26,22 @@
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "US_ENV.H"
+#include "US_Env.h"
 #include "hbclass.ch"
 #include "minigui.ch"
 #include "US_i_richeditbox.ch"
-#include "i_pseudofunc.ch"
+
+memvar US_WANCHO
+memvar US_WALTO
+memvar US_WCOL
+memvar US_WFIL
+memvar US_SUBWIN
+memvar US_WLIENZO
+memvar US_HLIENZO
+memvar US_HWINPORCIENTO
+memvar US_WWINPORCIENTO
+memvar PRI_nPosTxT
+memvar PRI_cMemoRtf
 
 //==================================================================================
 //= CLASE US_RichEdit                                                              
@@ -40,13 +51,13 @@ CLASS US_RichEdit
 
    METHOD New()                                   && Crear el Objeto
    METHOD Destroy()                               && Destruir el Objeto
-   METHOD Init( memo )                            && Inicializa el objeto con un string
+   METHOD Init( cMemo )                           && Inicializa el objeto con un string
    METHOD Activate()                              && Activa el editor
    METHOD SetTitle( str )                         && Inicializa el titulo del editor
-   METHOD SetBackColor( vec )                     && Color de Fondo de la ventana
-   METHOD SetEditBackColor( vec )                 && Color de Fondo del Edit
-   METHOD SetTitleFontColor( vec )                && Color de Fonts del titulo de la ventana
-   METHOD SetTitleBackColor( vec )                && Color de Fondo del titulo de la ventana
+   METHOD SetBackColor( vColor )                  && Color de Fondo de la ventana
+   METHOD SetEditBackColor( vColor )              && Color de Fondo del Edit
+   METHOD SetTitleFontColor( vColor )             && Color de Fonts del titulo de la ventana
+   METHOD SetTitleBackColor( vColor )             && Color de Fondo del titulo de la ventana
    METHOD SetPos( nPos )                          && Establece la posicion del cursor dentro del texto
    METHOD FindText( txt )                         && Establece el texto a buscar cuando se inicie el editor
    METHOD GetSelText()                            && Retorna el area seleccionada
@@ -60,7 +71,7 @@ CLASS US_RichEdit
    METHOD US_EditRtfNormalize()           HIDDEN  && Convierte texto seleccionado en formato Arial 10
    METHOD US_EditSetButtonsCP()           HIDDEN  && Establece el valor de los botones de Copy-Paste
    // Fin for Copy-Paste
-   METHOD Lan( Guia )                     HIDDEN  && Lenguaje
+   METHOD Lan( cGuia )                    HIDDEN  && Lenguaje
    //
    METHOD US_EditInicial()                HIDDEN  && Accion inicial
    METHOD US_EditSeteoTeclas()            HIDDEN
@@ -69,13 +80,13 @@ CLASS US_RichEdit
    METHOD US_EditViewClipBoard()
    METHOD US_EditLoad()                   HIDDEN
    METHOD US_EditExport()                 HIDDEN
-   METHOD US_EditMaximize()               HIDDEN
+// METHOD US_EditMaximize()               HIDDEN
    METHOD US_EditReadFonts()              HIDDEN  && Lee los fuentes instalados en el sistema operativo
    METHOD US_EditRefreshButtons()                 && Metodo que se ejecuta al mover el cursor y sirve para actualizar el estado de los botones
-   METHOD US_EditSetButtonsFonts( vFont ) HIDDEN  && Establece el valor de los botones de fuente (Bold, Italic, etc.)
-   METHOD US_EditSetTextFonts()           HIDDEN  && Cambia el formato del texto seleccionado (Bold, Italic, etc.)
+   METHOD US_EditSetButtonsFonts( vGetFont ) HIDDEN  && Establece el valor de los botones de fuente (Bold, Italic, etc.)
+   METHOD US_EditSetTextFonts( boton )    HIDDEN  && Cambia el formato del texto seleccionado (Bold, Italic, etc.)
    METHOD US_EditSetButtonsAlign()        HIDDEN  && Establece el valor de los botones de alineacion (left, center, right)
-   METHOD US_EditSetTextAlign()           HIDDEN  && Cambia el formato del texto seleccionado (Center, Left, etc.)
+   METHOD US_EditSetTextAlign( boton )    HIDDEN  && Cambia el formato del texto seleccionado (Center, Left, etc.)
    METHOD US_EditSetFontName()            HIDDEN  && Cambia el tipo de letra
    METHOD US_EditSetFontSize()            HIDDEN  && Cambia el tamaño de letra
    METHOD US_EditSetFontColor()           HIDDEN  && Cambia el color de letra
@@ -87,7 +98,7 @@ CLASS US_RichEdit
    METHOD US_EditActiveTimer()            HIDDEN  && Activa el Timer de refresh
    // Ini Find
    METHOD US_EditFind()                   HIDDEN  && Funcion para buscar y reemplazar
-   METHOD US_EditFindNext()               HIDDEN  &&
+   METHOD US_EditFindNext(repl)           HIDDEN  &&
    METHOD US_EditFindButtonsChange()      HIDDEN  &&
    METHOD US_EditFindInit()               HIDDEN  &&
    METHOD US_EditFindRelease()            HIDDEN  &&
@@ -111,7 +122,7 @@ CLASS US_RichEdit
    DATA US_Edit_oSB        HIDDEN              init NIL                            && Para posible USER status bar
    DATA cMemoIni           HIDDEN              init NIL                            &&
    DATA cNewMemo           HIDDEN              init ""
-   DATA bUS_EditMaximized  HIDDEN              init .F.
+// DATA bUS_EditMaximized  HIDDEN              init .F.
    DATA nOldWinWidth       HIDDEN              init 0
    DATA nOldWinHeight      HIDDEN              init 0
    DATA hEd                HIDDEN              init 0                              && Handle del richeditbox
@@ -196,31 +207,33 @@ METHOD GetSelText() CLASS US_RichEdit
 return GetSelText( ::hEd )
 
 METHOD SetTitle( str ) CLASS US_RichEdit
-   do case
-      case ::cSkin = "VP"
-         ::US_Edit_oTB:SetTitle( str )
-      otherwise
+   //do case
+     // case ::cSkin = "VP"
+       //  ::US_Edit_oTB:SetTitle( str )
+ //     otherwise
          SetProperty( ::US_WinEdit , "caption" , str )
-   endcase
+   //endcase
 return NIL
 
 METHOD SetTitleBackColor( vColor ) CLASS US_RichEdit
+/*
    do case
       case ::cSkin = "VP"
          ::US_Edit_oTB:SetBackColor( vColor )
       otherwise
    endcase
+*/
    SetProperty( ::US_WinEdit , "LFilCol" , "fontcolor" , vColor )
    ::vTitleBackColor := vColor
 return NIL
 
 METHOD SetTitleFontColor( vColor ) CLASS US_RichEdit
-   do case
-      case ::cSkin = "VP"
-         ::US_Edit_oTB:SetFontColor( vColor )
-      otherwise
+//   do case
+//      case ::cSkin = "VP"
+//         ::US_Edit_oTB:SetFontColor( vColor )
+//      otherwise
          SetProperty( ::US_WinEdit , "fontcolor" , vColor )
-   endcase
+//   endcase
    ::vTitleFontColor := vColor
 return NIL
 
@@ -248,10 +261,12 @@ METHOD Init( cMemo ) CLASS US_RichEdit
       ::US_EditReadFonts()
    endif
 
+/*
    if ::cSkin = "VP"
       ::US_Edit_oTB := VP_TitleBar():New()
       ::US_Edit_oSB := VP_StatusBar():New()
    endif
+*/
 
    if ::bWin
 
@@ -315,15 +330,16 @@ METHOD Init( cMemo ) CLASS US_RichEdit
 
    endif
 
+/*
    if ::cSkin = "VP"
       ::US_Edit_oTB:ActionOnClose    := { || ::US_EditEscape() }
       ::US_Edit_oTB:ActionOnMaximize := { || ::US_EditMaximize() }
-    //::US_Edit_oTB:PorcentajeAlto   := 4.0
+      ::US_Edit_oTB:PorcentajeAlto   := 4.0
       ::US_Edit_oTB:Create( ::US_WinEdit )
       ::US_Edit_oTB:SetBackColor( ::vTitleBackColor )
       ::US_Edit_oTB:SetFontColor( ::vTitleFontColor )
    endif
-
+*/
  //DEFINE CONTEXT MENU
  //   ITEM 'Copiar'                ACTION Copy_click()     IMAGE 'copy'  NAME ItC_Copy
  //   ITEM 'Cortar'                ACTION Cut_Click()      IMAGE 'cut'   NAME ItC_Cut
@@ -692,7 +708,7 @@ METHOD Init( cMemo ) CLASS US_RichEdit
          TOOLTIP ::Lan( "NormaliceToolTip" ) ;
          FONT "VPArial" SIZE US_WFont(9)
 
-         ** ACTION ( DoMethod( ::US_WinEdit , ::cRichControlName, "SetFocus" ) , US_Send_SelectAll() ) ;
+         // ACTION ( DoMethod( ::US_WinEdit , ::cRichControlName, "SetFocus" ) , US_Send_SelectAll() ) ;
       @ US_TFil(22.0),US_LCol(49.8) BUTTONEX BSeleccionarTodo ;
          OF &(::US_WinEdit) ;
          CAPTION "SeleTodo" ;
@@ -727,6 +743,7 @@ METHOD Init( cMemo ) CLASS US_RichEdit
 
    endif
 
+/*
    if ::cSkin = "VP"
       ::US_Edit_oSB:PorcentajeRow         := 96.0
       ::US_Edit_oSB:PorcentajeAlto        := 3.2
@@ -735,74 +752,81 @@ METHOD Init( cMemo ) CLASS US_RichEdit
       ::US_Edit_oSB:Create( ::US_WinEdit )
       ::US_Edit_oSB:SetTitleFontSize( 9 )
    endif
-
+*/
    ::hEd := GetControlHandle ( ::cRichControlName , ::US_WinEdit )
 // us_log( SetTextMode( ::hEd , if(::bRTF,2,1) ) )
 // us_log( SetTextMode( ::hEd , 1 ) )
 RETURN NIL
 
 METHOD Activate() CLASS US_RichEdit
+/*
    if ::cSkin = "VP"
-      US_WinStackAdd( @RN_WinStack , ::US_WinEdit )
+       US_WinStackAdd( @RN_WinStack , ::US_WinEdit )
    endif
-
+*/
    if ::bWin
       ACTIVATE WINDOW &(::US_WinEdit)
    endif
 
+/*
    if ::cSkin = "VP"
-      US_WinStackDel( @RN_WinStack , ::US_WinEdit )
+       US_WinStackDel( @RN_WinStack , ::US_WinEdit )
    endif
+*/
 RETURN ::cNewMemo
 
 METHOD US_EditInicial() CLASS US_RichEdit
    SetProperty( ::US_WinEdit , ::cRichControlName , "ReadOnly" , !( ::bEdit ) )
-   **::nOldWinWidth:=GetProperty( ::US_WinEdit , "width" )
-   **::nOldWinHeight:=GetProperty( ::US_WinEdit , "height" )
+   //::nOldWinWidth:=GetProperty( ::US_WinEdit , "width" )
+   //::nOldWinHeight:=GetProperty( ::US_WinEdit , "height" )
    ::US_EditSeteoTeclas()
    DoMethod( ::US_WinEdit , ::cRichControlName , "SetFocus" )
    if ::bRTF
       ::US_EditRefreshButtons()
    endif
-   if RN_bWinMaximizedAll
-      ::bUS_EditMaximized := ::US_EditMaximize()
-   endif
+//   if RN_bWinMaximizedAll
+//      ::bUS_EditMaximized := ::US_EditMaximize()
+//   endif
    if !empty( ::cInitialFind )
       FindChr( ::hEd , ::cInitialFind , .T. , .T. , .F. , .T. )
    else
       SetProperty( ::US_WinEdit , ::cRichControlName , "caretpos" , 1 )
       SetProperty( ::US_WinEdit , ::cRichControlName , "caretpos" , 0 )
    endif
-Return
+Return nil
 
 METHOD US_EditSuspendTimer() CLASS US_RichEdit
    SetProperty( ::US_WinEdit , "TTexto" , "enabled" , .F. )
 //SetProperty( ::US_WinEdit , "CB_Norm" , "caption" , "suspendido" )
 // ::bFlagEnableTimer := .F.
-Return
+Return nil
 
 METHOD US_EditActiveTimer() CLASS US_RichEdit
    SetProperty( ::US_WinEdit , "TTexto" , "enabled" , .T. )
 //SetProperty( ::US_WinEdit , "CB_Norm" , "caption" , "enable" )
 // ::bFlagEnableTimer := .T.
-Return
+Return nil
 
 METHOD US_EditSeteoTeclas() CLASS US_RichEdit
-   // US_EditSeteoSpace()
+/*
+   US_EditSeteoSpace()
    if ::cSkin = "VP"
       ::US_Edit_oTB:KeysOn()
    endif
-Return
+*/
+Return nil
 
 METHOD US_EditLiberoTeclas() CLASS US_RichEdit
-   // US_EditLiberoSpace()
+/*
+   US_EditLiberoSpace()
    if ::cSkin = "VP"
       ::US_Edit_oTB:KeysOff()
    endif
-Return
+*/
+Return nil
 
 METHOD US_EditRtfNormalize() CLASS US_RichEdit
-   Local cTxt, nCPos , nVinBase := 0 , nVinTope
+   Local cTxt, nCPos
    Local aRange , nDesde , nHasta , nLen , cPrev , cSel , cPost
    aRange := GetSelRange( ::hEd )
 //pepe
@@ -833,7 +857,7 @@ METHOD US_EditRtfNormalize() CLASS US_RichEdit
    SetProperty( ::US_WinEdit , ::cRichControlName , "value" , cPrev + cSel + cPost )
    SetProperty( ::US_WinEdit , ::cRichControlName , "caretpos" , nCPos )
 //us_log(ctxt   )
-Return
+Return nil
 
 METHOD US_EditEscape() CLASS US_RichEdit
    Local Rpta
@@ -843,7 +867,7 @@ METHOD US_EditEscape() CLASS US_RichEdit
          Rpta:=US_Opcion("El texto ha sido modificado, desea guardar los cambios ?","Si No Cancelar",10,"SINDEFAULT","Cuidado !!!",,"W")
          do case
             case Rpta="Si"
-            ***::cNewMemo:=GetProperty( ::US_WinEdit , ::cRichControlName , "Value" )
+            //*::cNewMemo:=GetProperty( ::US_WinEdit , ::cRichControlName , "Value" )
                ::cNewMemo := US_GetRichEditValue( ::US_WinEdit , ::cRichControlName , if( ::bRTF , "RTF" , "TXT" ) )
                DoMethod( ::US_WinEdit , "Release" )
             case Rpta="No"
@@ -859,7 +883,7 @@ METHOD US_EditEscape() CLASS US_RichEdit
       ::cNewMemo:=::cMemoIni
       DoMethod( ::US_WinEdit , "Release" )
    endif
-Return
+Return nil
 
 METHOD US_EditViewClipBoard() CLASS US_RichEdit
    SetProperty( ::US_WinEdit , ::cRichControlName + "ClipBoard" , "value" , "" )
@@ -868,16 +892,17 @@ METHOD US_EditViewClipBoard() CLASS US_RichEdit
    DO EVENTS
    MsgInfo( US_VarToStr( GetProperty( ::US_WinEdit , ::cRichControlName + "ClipBoard" , "value" ) ) , "Portapapeles", NIL, .F. )
    DoMethod( ::US_WinEdit , ::cRichControlName, "SetFocus" )
-Return
+Return nil
 
 METHOD US_EditLoad() CLASS US_RichEdit
-   Local cFile, bLoad:=.F. , cCurrentDir:=US_CURDISK()+DEF_SLASH+CURDIR()
+   Local cFile, bLoad:=.F. , cCurrentDir:=US_CURDISK()+DEF_SLASH+CURDIR(), VP_EditLoadLastDir := "", Rpta
    cFile:=Getfile( { ;
                    {"All files (*.*)", "*.*"} ;
                    } , ;
                    "Seleccione el Archivo a cargar" , VP_EditLoadLastDir ,.F. )
    if !empty(cFile)
       VP_EditLoadLastDir:=substr(cFile,1,rat(DEF_SLASH,cFile)-1)
+      Empty( VP_EditLoadLastDir )
       if !empty( GetProperty( ::US_WinEdit , ::cRichControlName , "value" ) )
          Rpta:=US_Opcion("El anotador posee datos, +los Guarda en el Portapapeles (G), los Borra (D) o agrega el texto el nuevo texto al final (A)?","Guardar Borrar Agregar",10,"SINDEFAULT","Cuidado !!!",,"W")
          do case
@@ -907,10 +932,10 @@ METHOD US_EditLoad() CLASS US_RichEdit
    endif
    DoMethod( ::US_WinEdit , ::cRichControlName, "SetFocus" )
    SetCurrentFolder( cCurrentDir )
-Return
+Return nil
 
 METHOD US_EditExport() CLASS US_RichEdit
-   Local cFile, bGrabo:=.F. , cCurrentDir:=US_CURDISK()+DEF_SLASH+CURDIR()
+   Local cFile, bGrabo:=.F. , cCurrentDir:=US_CURDISK()+DEF_SLASH+CURDIR(), VP_EditExportLastDir := "", Rpta
    cFile:=Putfile( { ;
                    {"All files (*.*)", "*.*"} ;
                    } , ;
@@ -931,11 +956,13 @@ METHOD US_EditExport() CLASS US_RichEdit
          MsgInfo("Grabacion Exitosa.", NIL, NIL, .F.)
       endif
       VP_EditExportLastDir:=substr(cFile,1,rat(DEF_SLASH,cFile)-1)
+      Empty( VP_EditExportLastDir )
    endif
    DoMethod( ::US_WinEdit , ::cRichControlName, "SetFocus" )
    SetCurrentFolder( cCurrentDir )
-Return
+Return nil
 
+/*
 METHOD US_EditMaximize() CLASS US_RichEdit
    // me daba error codificar @(::variable)
    Local nOldWinWidth := ::nOldWinWidth , nOldWinHeight := ::nOldWinHeight , bUS_EditMaximized := ::bUS_EditMaximized , Reto:=NIL
@@ -944,7 +971,7 @@ METHOD US_EditMaximize() CLASS US_RichEdit
    ::nOldWinHeight     := nOldWinHeight
    ::bUS_EditMaximized := bUS_EditMaximized
 Return Reto
-
+*/
 METHOD US_EditReadFonts() CLASS US_RichEdit
    LOCAL cList, nPos
    ::vFonts:={}
@@ -963,7 +990,7 @@ Return Nil
 
 //METHOD US_EditLiberoSpace() CLASS US_RichEdit
 //   RELEASE KEY SPACE          OF &(::US_WinEdit)
-//Return
+//Return nil
 
 // pepe
 METHOD US_EditRefreshButtons() CLASS US_RichEdit
@@ -1025,7 +1052,7 @@ METHOD US_EditSetTextFonts( boton ) CLASS US_RichEdit
    ::US_EditRefreshButtons()
 Return NIL
 
-METHOD US_EditSetButtonsAlign( vGetFont ) CLASS US_RichEdit
+METHOD US_EditSetButtonsAlign() CLASS US_RichEdit
    LOCAL vAlign
    vAlign := GetParForm( ::hEd )
    // Los if previos a los set son para prevenir muchos refresh en version 3.x
@@ -1163,7 +1190,7 @@ Return NIL
 METHOD US_EditSetFontColor() CLASS US_RichEdit
    Local sel, aFont, tmp
    //
-   Local nPos, cColor , cRTF , aRange , nDesde , nHasta , nLen , cPrev , cSel , cPost
+   Local nPos, cRTF , aRange , nDesde , nHasta , nLen , cPrev , cSel , cPost
    Local cColorNext := "" , nCaretPos := GetProperty( ::US_WinEdit , ::cRichControlName , "caretpos" )
    aRange := GetSelRange( ::hEd )               // Obtengo el rango original
 
@@ -1213,7 +1240,6 @@ METHOD US_EditSetFontColor() CLASS US_RichEdit
       cSel := strtran( cSel , "\cf" , "\xx" )           // Pongo codigo inexistente para que lo ignore
    endif
    cSel := strtran( cSel , "\\xx" , "\\cf" )     // Restauro texto (\\ no es tag) con formato de tag
-// cSel := "\fs" + cColor + " " + cSel
    SetProperty( ::US_WinEdit , ::cRichControlName , "value" , cPrev + cSel + cColorNext + cPost )
    DoMethod( ::US_WinEdit , ::cRichControlName , "setfocus" )
    SetProperty( ::US_WinEdit , ::cRichControlName , "caretpos" , nCaretPos )
@@ -1382,10 +1408,12 @@ METHOD US_EditZoomGetCtrlSize() CLASS US_RichEdit
 Return NIL
 
 METHOD US_EditFind() CLASS US_RichEdit
-   Local wr:=30, ww:=100, cTitle:="Buscar y reemplazar" , ;
+//   Local cTitle:="Buscar y reemplazar"
+   Local nOldWinWidth, nOldWinHeight
+/*
          Find_oTB := VP_TitleBar():New()
          Find_oSB := VP_StatusBar():New()
-
+*/
    PRIVATE US_SUBWIN:=.F.,;
            US_WFIL:=0, ;
            US_WCOL:=0, ;
@@ -1398,13 +1426,9 @@ METHOD US_EditFind() CLASS US_RichEdit
    PRIVATE US_HLienzo:=US_PAlto(US_HWinPorciento), ;
            US_WLienzo:=US_PAncho(US_WWinPorciento)
 
-   PRIVATE nOldWinWidth:=US_PCol( US_WWinPorciento )
-   PRIVATE nOldWinHeight:=US_PFil( US_HWinPorciento )
+   nOldWinWidth  := US_PCol( US_WWinPorciento )
+   nOldWinHeight := US_PFil( US_HWinPorciento )
 
-   ***TOPMOST ;
-   ***NOMINIMIZE;
-   ***NOMAXIMIZE;
-   // NOSIZE;
    DEFINE WINDOW &(::US_WinFindEdit) ;
       AT US_PFil( 100 - ( US_HWinPorciento + 5 ) ) , US_PCol( (100-US_WWinPorciento)/2 ) ;
       WIDTH nOldWinWidth ;
@@ -1423,6 +1447,7 @@ METHOD US_EditFind() CLASS US_RichEdit
               US_WALTO:=&(::US_WinFindEdit).Height, ;
               US_WANCHO:=&(::US_WinFindEdit).Width
 
+/*
       if ::cSkin = "VP"
          Find_oTB:ActionOnClose    := { || ::US_EditFindRelease() }
          Find_oTB:PorcentajeAlto   := 10.0
@@ -1433,7 +1458,7 @@ METHOD US_EditFind() CLASS US_RichEdit
          Find_oTB:SetTitleFontSize( 10 )
          Find_oTB:SetTitle( cTitle )
       endif
-
+*/
       @  US_TFil( 3.5 ) , US_LCol( 2 ) LABEL lab_1 ;
          VALUE 'Buscar:';
          WIDTH US_Cols( 12 ) ;
@@ -1523,6 +1548,7 @@ METHOD US_EditFind() CLASS US_RichEdit
          HEIGHT US_Fils( 4.0 ) ;
          ACTION ::US_EditFindRelease()
 
+/*
       if ::cSkin = "VP"
          Find_oSB:PorcentajeRow         := 88.0
          Find_oSB:PorcentajeAlto        := 10.0
@@ -1531,24 +1557,26 @@ METHOD US_EditFind() CLASS US_RichEdit
          Find_oSB:Create( ::US_WinFindEdit )
          Find_oSB:SetTitleFontSize( 8 )
       endif
-
+*/
    END WINDOW
 
+/*
    if ::cSkin = "VP"
       US_WinStackAdd( @RN_WinStack , ::US_WinFindEdit )
       ::US_Edit_oTB:Off()
       ::US_Edit_oSB:Off()
    endif
-
+*/
    ACTIVATE WINDOW &(::US_WinFindEdit)
 
+/*
    if ::cSkin = "VP"
       US_WinStackDel( @RN_WinStack , ::US_WinFindEdit )
       ::US_Edit_oTB:On()
       ::US_Edit_oSB:On()
    endif
-
-Return
+*/
+Return nil
 
 METHOD US_EditFindRelease() CLASS US_RichEdit
    &(::US_WinFindEdit).Release
@@ -1596,11 +1624,11 @@ METHOD US_EditFindNext(repl) CLASS US_RichEdit
    endif
    while .t.
       if !(::lFind)
-         if ::cSkin == "VP"
-            US_Cartel("Texto no encontrado",10)
-         else
+//         if ::cSkin == "VP"
+//            US_Cartel("Texto no encontrado",10)
+//         else
             MsgInfo("Texto no encontrado.", NIL, NIL, .F.)
-         endif
+//         endif
          exit
       else
          if repl != 0
@@ -1630,10 +1658,10 @@ METHOD US_EditRedraw() CLASS US_RichEdit
    US_Redraw( ::US_WinEdit , @nOldWidth , @nOldHeight )
    ::nOldWinWidth := nOldWidth
    ::nOldWinHeight:= nOldHeight
-Return
+Return nil
 
 METHOD Lan( cGuia ) CLASS US_RichEdit
-   Local vLan := { "ES" , "EN" }
+   Local vLan := { "ES" , "EN" }, nLan, nPos
    if ( nLan := ascan( vLan , ::cLanguage ) ) == 0
       MsgInfo( "Invalid Language in Translate Language Function of US_Edit: " + ::cLanguage, NIL, NIL, .F. )
       Return cGuia
@@ -1687,6 +1715,155 @@ Return .T.
 Function PreviewRTF_Click()
 //   US_Log( "Funcion sin implementar" )
 Return .T.
+
+//========================================================================
+// Funcion para Activar el anotador personal
+//========================================================================
+/*
+Function RN_Notas(Ventana)
+   LOCAL oEdit:=US_RichEdit():New() , cFile := PRESYS+"_NOTAS.TXT"
+   RELEASE KEY ALT+A OF &(Ventana)
+
+   oEdit:nPorcentajeAncho := 80
+   oEdit:nPorcentajeAlto  := 80
+   oEdit:bEdit            := .T.
+   oEdit:cSkin            := "VP"
+   oEdit:Init( MEMOREAD( cFile ) )
+   oEdit:SetTitle( US_Lower("ANOTADOR GENERAL DE COSAS INTERESANTES, ARCHIVO "+PRESYS+"_NOTAS.TXT") )
+// oEdit:SetBackColor( ColorPan )
+// oEdit:SetTitleBackColor( ColorEdit )
+// oEdit:SetTitleFontColor( ColorPan )
+// oEdit:SetPos( OFFSET )
+   MemoWrit( cFile , oEdit:Activate() )
+
+   ON KEY ALT+A OF &(Ventana) ACTION RN_NOTAS(Ventana)
+Return nil
+*/
+
+/*
+ * Función para Convertir caretpos de RTF a posicion de RTF contando los  controles
+ */
+Function US_RTF2MemoPos( cMemoRtf , nPosTxt )
+   Local cVenti := US_GetCurrentWindow() , cControl := "control"+US_NameRandom()
+   Local cAux , cSeco , cClip , nPosTxtPriv := nPosTxt
+   Local hEd
+   Local LOC_nAuxiliar
+   if cVenti == ""
+      Private PRI_cMemoRtf := cMemoRtf , PRI_nPosTxT := nPosTxt
+      Return US_TempMainWindow( procname()+"( PRI_cMemoRtf , PRI_nPosTxt )" )
+   endif
+   @ 0,0 RICHEDITBOX &cControl ;
+      OF &( cVenti ) ;
+      WIDTH 0 ;
+      HEIGHT 0 ;
+      VALUE cMemoRtf ;
+      INVISIBLE
+   LOC_nAuxiliar := len( US_GetRichEditValue( cVenti , cControl , "TXT" ) )
+   cAux := US_GetRichEditValue( cVenti , cControl , "RTF" )
+   hEd := GetControlHandle( cControl , cVenti )
+   do while at( ( cSeco := "CdQ"+alltrim(str(int(seconds()))) ) , cAux ) > 0
+   enddo
+   cClip := US_GetRtfClipboard()
+   CopyToClipboard( cSeco )
+   DoMethod( cVenti , cControl , "setfocus" )
+   SetProperty( cVenti , cControl , "caretpos" , nPosTxtPriv + if( nPosTxtPriv < LOC_nAuxiliar , 1 , 0 ) )
+   PasteRTF( hEd )
+   CopyRtfToClipboard( cClip )
+   cAux := US_GetRichEditValue( cVenti , cControl , "RTF" )
+   DoMethod( cVenti , cControl , "release" )
+Return ( at( cSeco , cAux ) - if( nPosTxtPriv < LOC_nAuxiliar , 2 , 1 ) )    // -1
+
+/*
+ * Función para maximizar o restaurar una ventana
+Function US_Maximize( Vector , Ventana , nViejoWidth , nViejoHeight , bSystemMaximized , bModuleMaximized )
+   Local i
+   if bSystemMaximized
+      if !bModuleMaximized
+         DoMethod( Ventana , "maximize" )
+         US_WinStackStatus( @Vector , Ventana , "MAXIMIZADA" )
+         US_Redraw( Ventana , @nViejoWidth , @nViejoHeight )
+      else
+         DoMethod( Ventana , "restore" )
+         US_WinStackStatus( @Vector , Ventana , "NORMAL" )
+         bSystemMaximized := .F.
+      endif
+      bModuleMaximized := !bModuleMaximized
+   else
+      if bModuleMaximized
+         DoMethod( Ventana , "restore" )
+         US_WinStackStatus( @Vector , Ventana , "NORMAL" )
+         bModuleMaximized := .F.
+      else
+         DoMethod( Ventana , "maximize" )
+         US_WinStackStatus( @Vector , Ventana , "MAXIMIZADA" )
+         US_Redraw( Ventana , @nViejoWidth , @nViejoHeight )
+         bSystemMaximized := .T.
+         bModuleMaximized := .T.
+      endif
+   endif
+Return .t.
+*/
+
+/*
+ * Función para redibujar una ventana
+ */
+Function US_Redraw      && para que funcione esta llamada mediante US_MGWait se agrego un if en el US_Redraw2 para ignorar su ventana "US_WAIT"
+   Parameters cFormName , nOldWidth , nOldHeight
+Return Nil
+//Return VP_MGWait( "US_Redraw2( cFormName , @nOldWidth , @nOldHeight )" )
+
+/*
+Function US_Redraw2( cFormName , nOldWidth , nOldHeight )
+   Local nFormName , inx:=0 , i:=0 , foco := GetProperty( cFormName , "focusedcontrol" )
+   for i=len(RN_WinStack) to 1 step -1
+      if RN_WinStack[i][1] != NIL
+         if RN_WinStack[i][1] = cFormName
+            Private nWidth :=GetProperty( cFormName , "width" )
+            Private nHeight:=GetProperty( cFormName , "height" )
+            // US_LOG("Redraw: "+cFormName)
+            // Ini exclusivo FGS
+            US_WWinPorciento:=( (nWidth * US_WWinPorciento ) / nOldWidth )
+            US_HWinPorciento:=( (nHeight * US_HWinPorciento ) / nOldHeight )
+            US_WLienzo:=nWidth
+            US_HLienzo:=nHeight
+            // Fin exclusivo FGS
+            nFormName := GetFormHandle( cFormName )
+            For inx=1 to len( _HMG_aControlParenthandles )
+               if nFormName == _HMG_aControlParenthandles[inx]
+                  if !empty( _HMG_aControlnames[inx] )
+                     if !empty( GetProperty( cFormName , _HMG_aControlnames[inx] , "fontsize" ) )
+                  ////  if nWidth != nOldWidth
+                           SetProperty( cFormName , _HMG_aControlnames[inx] , "fontsize" , ( GetProperty( cFormName , _HMG_aControlnames[inx] , "fontsize" )  * nWidth  ) / nOldWidth  )
+                  ////  else
+                  ////     if nHeight < nOldHeight
+                  ////        SetProperty( cFormName , _HMG_aControlnames[inx] , "fontsize" , ( GetProperty( cFormName , _HMG_aControlnames[inx] , "fontsize" )  * nHeight ) / nOldHeight )
+                  ////     endif
+                  ////  endif
+                        //US_LOG("SetFont for: "+US_VarToStr(_HMG_aControlnames[inx]))
+                     endif
+                     SetProperty( cFormName , _HMG_aControlnames[inx] , "row"      , ( GetProperty( cFormName , _HMG_aControlnames[inx] , "row"      )  * nHeight ) / nOldHeight )
+                     SetProperty( cFormName , _HMG_aControlnames[inx] , "col"      , ( GetProperty( cFormName , _HMG_aControlnames[inx] , "col"      )  * nWidth  ) / nOldWidth  )
+                     SetProperty( cFormName , _HMG_aControlnames[inx] , "width"    , ( GetProperty( cFormName , _HMG_aControlnames[inx] , "width"    )  * nWidth  ) / nOldWidth  )
+                     SetProperty( cFormName , _HMG_aControlnames[inx] , "height"   , ( GetProperty( cFormName , _HMG_aControlnames[inx] , "height"   )  * nHeight ) / nOldHeight )
+                     // US_LOG("Post SetSize for: "+US_VarToStr(_HMG_aControlnames[inx]) , .t. )
+                  endif
+               endif
+            next
+            nOldWidth :=nWidth
+            nOldHeight:=nHeight
+         else
+            if substr(RN_WinStack[i][1],1,7) != "US_WAIT"    && ignorar la ventana de US_Wait, si no se llama con US_MGWait este if deberia eliminarse y dejar el exit siempre
+               exit
+            endif
+         endif
+      endif
+   next
+   if !empty( foco )   && posiblemente este bloque siempre es .F.
+//      us_log( "setfocus" , .F. )
+      DoMethod( cFormName , foco , "setfocus" )
+   endif
+Return nil
+*/
 
 #pragma BEGINDUMP
 
@@ -1773,153 +1950,5 @@ HB_FUNC ( GETDEVCAPS ) // GetDevCaps ( hwnd )
 }
 
 #pragma ENDDUMP
-
-//========================================================================
-// Funcion para Activar el anotador personal
-//========================================================================
-/*
-Function RN_Notas(Ventana)
-   LOCAL oEdit:=US_RichEdit():New() , cFile := PRESYS+"_NOTAS.TXT"
-   RELEASE KEY ALT+A OF &(Ventana)
-
-   oEdit:nPorcentajeAncho := 80
-   oEdit:nPorcentajeAlto  := 80
-   oEdit:bEdit            := .T.
-   oEdit:cSkin            := "VP"
-   oEdit:Init( MEMOREAD( cFile ) )
-   oEdit:SetTitle( US_Lower("ANOTADOR GENERAL DE COSAS INTERESANTES, ARCHIVO "+PRESYS+"_NOTAS.TXT") )
-// oEdit:SetBackColor( ColorPan )
-// oEdit:SetTitleBackColor( ColorEdit )
-// oEdit:SetTitleFontColor( ColorPan )
-// oEdit:SetPos( OFFSET )
-   MemoWrit( cFile , oEdit:Activate() )
-
-   ON KEY ALT+A OF &(Ventana) ACTION RN_NOTAS(Ventana)
-RETURN
-*/
-
-/*
- * Función para Convertir caretpos de RTF a posicion de RTF contando los  controles
- */
-Function US_RTF2MemoPos( cMemoRtf , nPosTxt )
-   Local cVenti := US_GetCurrentWindow() , cControl := "control"+US_NameRandom()
-   Local cAux , cSeco , cClip , nPosTxtPriv := nPosTxt
-   Local Reto , hEd
-   Local LOC_nPosAux
-   Local LOC_nAuxiliar
-   if cVenti == ""
-      Private PRI_cMemoRtf := cMemoRtf , PRI_nPosTxT := nPosTxt
-      Return US_TempMainWindow( procname()+"( PRI_cMemoRtf , PRI_nPosTxt )" )
-   endif
-   @ 0,0 RICHEDITBOX &cControl ;
-      OF &( cVenti ) ;
-      WIDTH 0 ;
-      HEIGHT 0 ;
-      VALUE cMemoRtf ;
-      INVISIBLE
-   LOC_nAuxiliar := len( US_GetRichEditValue( cVenti , cControl , "TXT" ) )
-   cAux := US_GetRichEditValue( cVenti , cControl , "RTF" )
-   hEd := GetControlHandle( cControl , cVenti )
-   do while at( ( cSeco := "CdQ"+alltrim(str(int(seconds()))) ) , cAux ) > 0
-   enddo
-   cClip := US_GetRtfClipboard()
-   CopyToClipboard( cSeco )
-   DoMethod( cVenti , cControl , "setfocus" )
-   SetProperty( cVenti , cControl , "caretpos" , nPosTxtPriv + if( nPosTxtPriv < LOC_nAuxiliar , 1 , 0 ) )
-   PasteRTF( hEd )
-   CopyRtfToClipboard( cClip )
-   cAux := US_GetRichEditValue( cVenti , cControl , "RTF" )
-   DoMethod( cVenti , cControl , "release" )
-Return ( at( cSeco , cAux ) - if( nPosTxtPriv < LOC_nAuxiliar , 2 , 1 ) )    // -1
-
-/*
- * Función para maximizar o restaurar una ventana
- */
-Function US_Maximize( Vector , Ventana , nViejoWidth , nViejoHeight , bSystemMaximized , bModuleMaximized )
-   Local i:=0
-   if bSystemMaximized
-      if !bModuleMaximized
-         DoMethod( Ventana , "maximize" )
-         US_WinStackStatus( @Vector , Ventana , "MAXIMIZADA" )
-         US_Redraw( Ventana , @nViejoWidth , @nViejoHeight )
-      else
-         DoMethod( Ventana , "restore" )
-         US_WinStackStatus( @Vector , Ventana , "NORMAL" )
-         bSystemMaximized := .F.
-      endif
-      bModuleMaximized := !bModuleMaximized
-   else
-      if bModuleMaximized
-         DoMethod( Ventana , "restore" )
-         US_WinStackStatus( @Vector , Ventana , "NORMAL" )
-         bModuleMaximized := .F.
-      else
-         DoMethod( Ventana , "maximize" )
-         US_WinStackStatus( @Vector , Ventana , "MAXIMIZADA" )
-         US_Redraw( Ventana , @nViejoWidth , @nViejoHeight )
-         bSystemMaximized := .T.
-         bModuleMaximized := .T.
-      endif
-   endif
-Return .t.
-
-/*
- * Función para redibujar una ventana
- */
-Function US_Redraw      && para que funcione esta llamada mediante US_MGWait se agrego un if en el US_Redraw2 para ignorar su ventana "US_WAIT"
-   Parameters cFormName , nOldWidth , nOldHeight
-Return Nil
-//Return VP_MGWait( "US_Redraw2( cFormName , @nOldWidth , @nOldHeight )" )
-
-Function US_Redraw2( cFormName , nOldWidth , nOldHeight )
-   Local nFormName , inx:=0 , i:=0 , foco := GetProperty( cFormName , "focusedcontrol" )
-   for i=len(RN_WinStack) to 1 step -1
-      if RN_WinStack[i][1] != NIL
-         if RN_WinStack[i][1] = cFormName
-            Private nWidth :=GetProperty( cFormName , "width" )
-            Private nHeight:=GetProperty( cFormName , "height" )
-            // US_LOG("Redraw: "+cFormName)
-            // Ini exclusivo FGS
-            US_WWinPorciento:=( (nWidth * US_WWinPorciento ) / nOldWidth )
-            US_HWinPorciento:=( (nHeight * US_HWinPorciento ) / nOldHeight )
-            US_WLienzo:=nWidth
-            US_HLienzo:=nHeight
-            // Fin exclusivo FGS
-            nFormName := GetFormHandle( cFormName )
-            For inx=1 to len( _HMG_aControlParenthandles )
-               if nFormName == _HMG_aControlParenthandles[inx]
-                  if !empty( _HMG_aControlnames[inx] )
-                     if !empty( GetProperty( cFormName , _HMG_aControlnames[inx] , "fontsize" ) )
-                  ****  if nWidth != nOldWidth
-                           SetProperty( cFormName , _HMG_aControlnames[inx] , "fontsize" , ( GetProperty( cFormName , _HMG_aControlnames[inx] , "fontsize" )  * nWidth  ) / nOldWidth  )
-                  ****  else
-                  ****     if nHeight < nOldHeight
-                  ****        SetProperty( cFormName , _HMG_aControlnames[inx] , "fontsize" , ( GetProperty( cFormName , _HMG_aControlnames[inx] , "fontsize" )  * nHeight ) / nOldHeight )
-                  ****     endif
-                  ****  endif
-                        //US_LOG("SetFont for: "+US_VarToStr(_HMG_aControlnames[inx]))
-                     endif
-                     SetProperty( cFormName , _HMG_aControlnames[inx] , "row"      , ( GetProperty( cFormName , _HMG_aControlnames[inx] , "row"      )  * nHeight ) / nOldHeight )
-                     SetProperty( cFormName , _HMG_aControlnames[inx] , "col"      , ( GetProperty( cFormName , _HMG_aControlnames[inx] , "col"      )  * nWidth  ) / nOldWidth  )
-                     SetProperty( cFormName , _HMG_aControlnames[inx] , "width"    , ( GetProperty( cFormName , _HMG_aControlnames[inx] , "width"    )  * nWidth  ) / nOldWidth  )
-                     SetProperty( cFormName , _HMG_aControlnames[inx] , "height"   , ( GetProperty( cFormName , _HMG_aControlnames[inx] , "height"   )  * nHeight ) / nOldHeight )
-                     // US_LOG("Post SetSize for: "+US_VarToStr(_HMG_aControlnames[inx]) , .t. )
-                  endif
-               endif
-            next
-            nOldWidth :=nWidth
-            nOldHeight:=nHeight
-         else
-            if substr(RN_WinStack[i][1],1,7) != "US_WAIT"    && ignorar la ventana de US_Wait, si no se llama con US_MGWait este if deberia eliminarse y dejar el exit siempre
-               exit
-            endif
-         endif
-      endif
-   next
-   if !empty( foco )   && posiblemente este bloque siempre es .F.
-//      us_log( "setfocus" , .F. )
-      DoMethod( cFormName , foco , "setfocus" )
-   endif
-return
 
 /* eof */
