@@ -30,6 +30,7 @@
 #include <QPM.ch>
 
 Function GlobalSettings()
+   LOCAL Filename, Folder
 
    DEFINE WINDOW WinGSettings ;
           AT 0 , 0 ;

@@ -29,11 +29,17 @@
 #include "minigui.ch"
 #include <QPM.ch>
 
+memvar tiempo
+memvar WinMsg
+memvar PRIVAUTOEXIT
+memvar SM_oMGWait
+memvar cMemoInP
+
 Function Get_QPM_Builder_VersionDisplay()
    Local cVer := Get_QPM_Builder_Version()
 Return "v" + substr( cVer , 1 , 2 ) + "." + substr( cVer , 3 , 2 ) + " Build " + substr( cVer , 5 , 2 )
 
-Function QPM_ForceRecompPRG()
+Procedure QPM_ForceRecompPRG()
    if GetProperty( "VentanaMain" , "GPRGFiles" , "value" ) > 0
       if GetProperty( "VentanaMain" , "GPRGFiles" , "Cell" , GetProperty( "VentanaMain" , "GPRGFiles" , "value" ) , NCOLPRGRECOMP ) == "R"
          SetProperty( "VentanaMain" , "GPRGFiles" , "Cell" , GetProperty( "VentanaMain" , "GPRGFiles" , "value" ) , NCOLPRGRECOMP , " " )
@@ -64,9 +70,9 @@ Function BugGetFile( a , b , c , d , e , f )
 Return auxReto
 
 Function QPM_CreateNewFile( cType , cFile )
-   Local cMemo := "" , bReto := .F.
+   Local cMemo , bReto := .F.
    Local nOption := 1
-   Local aStruct := {}
+   Local aStruct
    do case
       case US_Upper( cType ) == "PRG"
          cMemo := '#include "minigui.ch"'                              + HB_OsNewLine() + ;
@@ -505,7 +511,7 @@ Function GetCppFolder()
 Return &( "Gbl_T_C_" + GetMiniGuiSuffix() + GetCppSuffix() )
 
 Function GetHarbourLibFolder( lLong )
-   Local cDir, cCompDir, nAt
+   Local cDir
    // Get from GlobalSettings
    if ! QPM_IsXHarbour()
       cDir := &( "Gbl_T_H_LIBS_" + GetMiniGuiSuffix() + GetCppSuffix() )
@@ -526,7 +532,7 @@ Function GetHarbourLibFolder( lLong )
 Return cDir
 
 Function GetMiniguiLibFolder( lLong )
-   Local cDir, cCompDir, nAt, cHrbrSffx
+   Local cDir
    // Get from GlobalSettings
    cDir := &( "Gbl_T_M_LIBS_" + GetMiniGuiSuffix() + GetCppSuffix() )
    DEFAULT lLong TO .F.
@@ -543,7 +549,7 @@ Function GetMiniguiLibFolder( lLong )
 Return cDir
 
 Function GetCppLibFolder( lLong )
-   Local cDir, nAt
+   Local cDir
    // Get from GlobalSettings
    cDir := &( "Gbl_T_C_LIBS_" + GetMiniGuiSuffix() + GetCppSuffix() )
    DEFAULT lLong TO .F.
@@ -611,141 +617,172 @@ Function GetMiniGuiType()
 Return substr( GetMiniGuiSuffix() , 1 , 1 )
 
 Function GetResourceFileName()
-   Local nombre
+   Local cNombre
    do case
    case GetMiniGuiSuffix() == DefineOohg3
       if QPM_IsXHarbour() .and. File( GetMiniGuiFolder() + DEF_SLASH + 'RESOURCES' + DEF_SLASH + "xoohg.rc" )
-         nombre := "xoohg"
+         cNombre := "xoohg"
       else
-         nombre := "oohg"
+         cNombre := "oohg"
       endif
    case ( GetMiniGuiSuffix() + GetCppSuffix() ) == DefineMiniGui3 + DefineMinGW
       if QPM_IsXHarbour() .and. File( GetMiniGuiFolder() + DEF_SLASH + 'RESOURCES' + DEF_SLASH + "xhmg.rc" )
-         nombre := "xhmg"
+         cNombre := "xhmg"
       else
-         nombre := "hmg"
+         cNombre := "hmg"
       endif
+      cNombre += if( Prj_Check_64bits, "64", "32" )
    case ( GetMiniGuiSuffix() + GetCppSuffix() ) == DefineExtended1 + DefineMinGW
       if QPM_IsXHarbour() .and. File( GetMiniGuiFolder() + DEF_SLASH + 'RESOURCES' + DEF_SLASH + "xhmg.rc" )
-         nombre := "xhmg"
+         cNombre := "xhmg"
       elseif QPM_IsXHarbour() .and. File( GetMiniGuiFolder() + DEF_SLASH + 'RESOURCES' + DEF_SLASH + "xminigui.rc" )
-         nombre := "xminigui"
+         cNombre := "xminigui"
       elseif File( GetMiniGuiFolder() + DEF_SLASH + 'RESOURCES' + DEF_SLASH + "hmg.rc" )
-         nombre := "hmg"
+         cNombre := "hmg"
       else
-         nombre := "minigui"
+         cNombre := "minigui"
       endif
    otherwise
       if QPM_IsXHarbour() .and. File( GetMiniGuiFolder() + DEF_SLASH + 'RESOURCES' + DEF_SLASH + "xminigui.rc" )
-         nombre := "xminigui"
+         cNombre := "xminigui"
       else
-         nombre := "minigui"
+         cNombre := "minigui"
       endif
    endcase
-Return nombre
+Return cNombre
+
+Function GetResConfigFileName()
+   Local cType, cNombre
+   cType := GetMiniGuiSuffix() + GetCppSuffix()
+   do case
+   case cType == DefineOohg3 + DefineMinGW
+      cNombre := "_oohg_resconfig.h"
+   case cType == DefineExtended1 + DefineMinGW
+      cNombre := "_hmg_resconfig.h"
+   case cType == DefineMiniGui3 + DefineMinGW
+      cNombre := "_hmg_resconfig.h"
+   otherwise
+      cNombre := ""
+   endcase
+Return cNombre
+
+Function GetResConfigVarName()
+   Local cType, cNombre
+   cType := GetMiniGuiSuffix() + GetCppSuffix()
+   do case
+   case cType == DefineOohg3 + DefineMinGW
+      cNombre := "oohgpath"
+   case cType == DefineExtended1 + DefineMinGW
+      cNombre := "HMGRPATH"
+   case cType == DefineMiniGui3 + DefineMinGW
+      cNombre := "HMGRPATH"
+   otherwise
+      cNombre := ""
+   endcase
+Return cNombre
 
 Function GetMiniGuiName( cForceCompiler )
-   Local nombre := "", sufijo := GetMiniGuiSuffix() + GetCppSuffix()
+   Local cNombre, sufijo := GetMiniGuiSuffix() + GetCppSuffix()
 
    do case
    case sufijo == DefineOohg3 + DefineBorland
       if empty( cForceCompiler )
          if QPM_IsXHarbour()
             if File( GetMiniguiLibFolder() + DEF_SLASH + "xoohg.lib" )
-               nombre := "xoohg.lib"
+               cNombre := "xoohg.lib"
             else
-               nombre := "oohg.lib"
+               cNombre := "oohg.lib"
             endif
          else
-            nombre := "oohg.lib"
+            cNombre := "oohg.lib"
          endif
       elseif cForceCompiler == DefineHarbour
-         nombre := "oohg.lib"
+         cNombre := "oohg.lib"
       else
-         nombre := "xoohg.lib"
+         cNombre := "xoohg.lib"
       endif
    case sufijo == DefineOohg3 + DefineMinGW
       if empty( cForceCompiler )
          if QPM_IsXHarbour()
             if File( GetMiniguiLibFolder() + DEF_SLASH + "libxoohg.a" )
-               nombre := "libxoohg.a"
+               cNombre := "libxoohg.a"
             else
-               nombre := "liboohg.a"
+               cNombre := "liboohg.a"
             endif
          else
-            nombre := "liboohg.a"
+            cNombre := "liboohg.a"
          endif
       elseif cForceCompiler == DefineHarbour
-         nombre := "liboohg.a"
+         cNombre := "liboohg.a"
       else
-         nombre := "libxoohg.a"
+         cNombre := "libxoohg.a"
       endif
    case sufijo == DefineOohg3 + DefinePelles
       if empty( cForceCompiler )
          if QPM_IsXHarbour()
-            if file( GetMiniguiLibFolder() + def_slash + "xoohg.lib" )
-               nombre := "xoohg.lib"
+            if file( GetMiniguiLibFolder() + DEF_SLASH + "xoohg.lib" )
+               cNombre := "xoohg.lib"
             else
-               nombre := "oohg.lib"
+               cNombre := "oohg.lib"
             endif
          else
-            nombre := "oohg.lib"
+            cNombre := "oohg.lib"
          endif
       elseif cForceCompiler == DefineHarbour
-         nombre := "oohg.lib"
+         cNombre := "oohg.lib"
       else
-         nombre := "xoohg.lib"
+         cNombre := "xoohg.lib"
       endif
    case sufijo == DefineMiniGui3 + DefineMinGW
       if empty( cForceCompiler )
          if QPM_IsXHarbour()
             if File( GetMiniguiLibFolder() + DEF_SLASH + "libxhmg.a" )
-               nombre := "libxhmg.a"
+               cNombre := "libxhmg.a"
             else
-               nombre := "libhmg.a"
+               cNombre := "libhmg.a"
             endif
          else
-            nombre := "libhmg.a"
+            cNombre := "libhmg.a"
          endif
       elseif cForceCompiler == DefineHarbour
-         nombre := "libhmg.a"
+         cNombre := "libhmg.a"
       else
-         nombre := "libxhmg.a"
+         cNombre := "libxhmg.a"
       endif
    case sufijo == DefineExtended1 + DefineMinGW
       if empty( cForceCompiler )
          if QPM_IsXHarbour()
             if File( GetMiniguiLibFolder() + DEF_SLASH + "libxminigui.a" )
-               nombre := "libxminigui.a"
+               cNombre := "libxminigui.a"
             else
-               nombre := "libminigui.a"
+               cNombre := "libminigui.a"
             endif
          else
-            nombre := "libminigui.a"
+            cNombre := "libminigui.a"
          endif
       elseif cForceCompiler == DefineHarbour
-         nombre := "libminigui.a"
+         cNombre := "libminigui.a"
       else
-         nombre := "libxminigui.a"
+         cNombre := "libxminigui.a"
       endif
    otherwise            // DefineMiniGui1 + DefineBorland or DefineExtended1 + DefineBorland
       if empty( cForceCompiler )
          if QPM_IsXHarbour()
-            if file( GetMiniguiLibFolder() + def_slash + "xminigui.lib" )
-               nombre := "xminigui.lib"
+            if file( GetMiniguiLibFolder() + DEF_SLASH + "xminigui.lib" )
+               cNombre := "xminigui.lib"
             else
-               nombre := "minigui.lib"
+               cNombre := "minigui.lib"
             endif
          else
-            nombre := "minigui.lib"
+            cNombre := "minigui.lib"
          endif
       elseif cForceCompiler == DefineHarbour
-         nombre := "minigui.lib"
+         cNombre := "minigui.lib"
       else
-         nombre := "xminigui.lib"
+         cNombre := "xminigui.lib"
       endif
    endcase
-Return nombre
+Return cNombre
 
 Function ChgPathToReal( cLinea )
    cLinea := US_StrTran( cLinea, "<NewLine>",       HB_OsNewLine() )
@@ -765,8 +802,6 @@ Return cLinea
 
 Function MsgOK( titulo, txt, tipo, autoexit, Ptiempo, bButtonRun )
    Local ColorBack , ColorFont
-   Private contador := 0
-   Private inicial := seconds()
    Private tiempo , WinMsg := US_WindowNameRandom("MsgOk")
    Private PrivAutoexit
    DEFAULT Ptiempo TO 0
@@ -932,11 +967,10 @@ Function MyMsg( titulo , texto , tipo , autoexit )
       endcase
       SetMGWaitShow()
    endif
-Return
+Return .T.
 
 Function QPM_ModuleType( cFile )
-   Local MemoAux := ""
-   Local u0 := 0 , u1 := 0 , u2 := 0
+   Local MemoAux, u0, u1, u2
    Local cAux1 := "Bor"
    Local cBorland := cAux1 + "land C++ - Copyright 1999 Inprise Corporation"
    Local cAux2 := "Min"
@@ -1034,7 +1068,7 @@ Function GetOutputModuleName( bForDisplay )
             endif
          endif
       otherwise
-         cOutputName        := US_ShortName(PUB_cProjectFolder) + DEF_SLASH + if( OutputExt() == "A" , 'lib' , '' ) + if( cConvert == "A DLL" , substr( US_FileNameOnlyName( GetProperty( "VentanaMain" , "GPrgFiles" , "Cell" , 1 , NCOLPRGFULLNAME ) ) , 4 ) , US_FileNameOnlyName( GetProperty( "VentanaMain" , "GPrgFiles" , "Cell" , 1 , NCOLPRGFULLNAME ) ) ) + '.' + lower( OutputExt() )
+         cOutputName        := US_ShortName(PUB_cProjectFolder) + DEF_SLASH + if( OutputExt() == "A" , 'lib' , '' ) + if( PUB_cConvert == "A DLL" , substr( US_FileNameOnlyName( GetProperty( "VentanaMain" , "GPrgFiles" , "Cell" , 1 , NCOLPRGFULLNAME ) ) , 4 ) , US_FileNameOnlyName( GetProperty( "VentanaMain" , "GPrgFiles" , "Cell" , 1 , NCOLPRGFULLNAME ) ) ) + '.' + lower( OutputExt() )
          cOutputNameDisplay := PUB_cProjectFolder + DEF_SLASH + if( OutputExt() == "A" , 'lib' , '' ) + US_FileNameOnlyName( GetProperty( "VentanaMain" , "GPrgFiles" , "Cell" , 1 , NCOLPRGFULLNAME ) ) + '.' + lower( OutputExt() )
    endcase
    if bOutputSuffix
@@ -1080,6 +1114,7 @@ Function KillTask()
    Local cRunParms
    Local KillPgm := US_ShortName( PUB_cQPM_Folder ) + DEF_SLASH + "US_Killer.exe"
    Local KillParm := "QPM " + GetOutputModuleName()
+   Local cKillTaskControlFile
    cRunParms := US_ShortName( PUB_cProjectFolder ) + DEF_SLASH + "_" + PUB_cSecu + "KILL" + US_DateTimeCen() + ".cng"
    cKillTaskControlFile := US_ShortName( PUB_cProjectFolder ) + DEF_SLASH + "_" + PUB_cSecu + "KCF" + US_DateTimeCen() + ".cnt"
    QPM_MemoWrit( cRunParms , "Run Parms for Kill Task" + HB_OsNewLine() + ;
@@ -1090,7 +1125,7 @@ Function KillTask()
 Return .T.
 
 Function DebugOptions( cDire , cPath )
-   LOCAL cAux := "", cLeido := "", i, memoTMP
+   LOCAL cAux := "", cLeido, i, memoTMP, cLinea
    LOCAL cFile := US_FileNameOnlyPath( cDire ) + DEF_SLASH + "Init.Cld"
    cAux := cAux + 'Options Path ' + cPath + HB_OsNewLine()
 // cAux := cAux + 'Options Colors {"W + /BG","N/BG","R/BG","N + /BG","W + /B","GR + /B","W/B","N/W","R/W","N/BG","R/BG","GR + /BG"}' + HB_OsNewLine()
@@ -1136,20 +1171,18 @@ Function DebugOptions( cDire , cPath )
 
       QPM_MemoWrit( PUB_cQPM_Folder+DEF_SLASH + 'QPM.log' , memoTMP )
    endif
-return
+return .T.
 
 Function ViewLog()
-   if !File( AllTrim( Gbl_TEditor ) )
-      MsgStop( "Program Editor not Found: " + AllTrim( Gbl_TEditor ) + '. Look at ' + PUB_MenuGblOptions + ' of Settings menu' )
-      Return .T.
+   if ! File( AllTrim( Gbl_TEditor ) )
+      MsgStop( "Program Editor not Found: " + AllTrim( Gbl_TEditor ) + '. Look at ' + PUB_MenuGblOptions + ' of Settings menu.' )
+      Return .F.
    endif
    If Empty( Gbl_TEditor )
-      MyMsg( 'Operation Aborted', US_VarToStr( 'Program Editor Not Defined. Look at ' + PUB_MenuGblOptions + ' of Settings menu.' ) , "E" , bAutoExit )
-      Return .T.
-   Else
-      Editor := US_ShortName( AllTrim( Gbl_TEditor ) )
-   EndIf
-   QPM_Execute( Editor , PUB_cQPM_Folder + DEF_SLASH + "QPM.log" )
+      MyMsg( 'Operation Aborted', US_VarToStr( 'Program editor not defined. Look at ' + PUB_MenuGblOptions + ' of Settings menu.' ) , "E" , bAutoExit )
+      Return .F.
+   Endif
+   QPM_Execute( US_ShortName( AllTrim( Gbl_TEditor ) ) , PUB_cQPM_Folder + DEF_SLASH + "QPM.log" )
 Return .T.
 
 Function ActLibReimp()
@@ -1196,10 +1229,10 @@ Function ActLibReimp()
 Return .T.
 
 Function Enumeracion( cMemoIn , cType )
-   Local bNumberOn := .F.
+   Local bNumberOn
    Private cMemoInP := cMemoIn
    bNumberOn := &( "bNumberOn" + cType )
-   if !bNumberOn
+   if ! bNumberOn
       Return cMemoIn
    endif
 return QPM_Wait( "Enumeracion2( cMemoInP )" , "Enumerating" , , .T. )
@@ -1239,7 +1272,7 @@ Function Enumeracion2( cMemoIn )
    ferase( cFileOut )
 Return cMemoOut
 
-Function QPM_Execute( cCMD , cParms , bWait , nSize , RunWaitFileStop )
+Procedure QPM_Execute( cCMD , cParms , bWait , nSize , RunWaitFileStop )
    Local RunWaitControlFile , RunWaitParms , cSize
    DEFAULT cParms TO ""
    DEFAULT bWait TO .F.
@@ -1324,21 +1357,6 @@ Function ErrorLogName()
    endcase
 Return cErrorLog
 
-Function ErrorLogCaretPos()
-   Local cVer := GetMiniGuiSuffix()
-   do case
-      case cVer == "M1" .or. cVer == "M3"
-         Return PUB_nBottom
-      case cVer == "E1"
-         Return PUB_nBottom
-      case cVer == "O3"
-      // Return PUB_nBottom
-         Return 1
-      otherwise
-         US_Log( "Invalid minigui suffix" )
-   endcase
-Return cErrorLog
-
 Function QPM_DeleteErrorLog()
    Local cErrorLog := ErrorLogName()
    if MyMsgYesNo( "Confirm Delete Error Log ?" )
@@ -1349,16 +1367,16 @@ Function QPM_DeleteErrorLog()
 Return .T.
 
 Function MuestroErrorLog()
-   SetProperty( "VentanaMain" , "RichEditOut" , "Value" , QPM_Wait( "US_ViewErrorLog()") )
-   SetProperty( "VentanaMain" , "RichEditOut" , "caretpos" , ErrorLogCaretPos() )
+   SetProperty( "VentanaMain", "RichEditOut", "Value", QPM_Wait( "US_ViewErrorLog()") )
+   SetProperty( "VentanaMain", "RichEditOut", "CaretPos", Len( GetProperty( "VentanaMain" , "RichEditOut" , "Value" ) ) )
 Return .T.
 
 Function US_ViewErrorLog()
    Local cMemoHtml , cMemoRtf
    Local cMemoHtmlIni , cMemoHtmlFin
    Local cErrorLog := ErrorLogName()
-   Local nLenLog   := 0
-   Local nPosAux   := 0
+   Local nLenLog
+   Local nPosAux
    Local nTopLenLog := 100000
 // Local nTopLenLog := 2000
    if cErrorLog == "*RUNFOLDER*"
@@ -1405,7 +1423,7 @@ Function US_ViewErrorLog()
 Return cMemoRtf
 
 Function QPM_Send_SelectAll()
-   local cType := ""
+   local cType
    do case
       case GetProperty( "VentanaMain" , "TabFiles" , "Value" ) == nPagePrg
          cType := "PRG"
@@ -1580,11 +1598,11 @@ Function QPM_ChangePrj_VersionOK()
 Return .T.
 
 Function ReplacePrj_Version( cFile , cPrj_Version )
-   Local cMemo := MemoRead( cFile ) , nInx := 0 , cLine := "" , cMemoOut := "" , bFound := .F.
+   Local cMemo := MemoRead( cFile ) , nInx, cLine, cMemoOut := "" , bFound := .F.
    For nInx := 1 to MLCount( cMemo , 254 )
       cLine := Memoline( cMemo , 254 , nInx )
-      if !bFound .and. ;
-         US_Word( cLine , 1 ) == "PRJ_VERSION"
+      if ! bFound .and. ;
+         US_Word( cLine, 1 ) == "PRJ_VERSION"
          bFound := .T.
          cMemoOut := cMemoOut + "PRJ_VERSION " + cPrj_Version + HB_OsNewLine()
       else
@@ -1595,7 +1613,7 @@ Function ReplacePrj_Version( cFile , cPrj_Version )
 Return .T.
 
 Function ReplaceDebugActive( cFile , bDebugActive )
-   Local cMemo := MemoRead( cFile ) , nInx := 0 , cLine := "" , cMemoOut := "" , bFound := .F.
+   Local cMemo := MemoRead( cFile ), nInx, cLine, cMemoOut := "", bFound := .F.
    For nInx := 1 to MLCount( cMemo , 254 )
       cLine := Memoline( cMemo , 254 , nInx )
       if !bFound .and. ;

@@ -30,7 +30,7 @@
 #include <QPM.ch>
 
 Function QPM_GetExtraRun()
-   Local Folder := "", FileName := ""
+   Local FileName := ""
 
    DEFINE WINDOW ExtraRun ;
       AT -2,122 ;
@@ -303,7 +303,7 @@ Function QPM_GetExtraRunInit()
 Return .T.
 
 Function QPM_GetExtraRunSave( bTest )
-   Local Prefix := ""
+   Local Prefix
    Private Tst_ExtraRunProjQPM
    Private Tst_ExtraRunCmdEXE
    Private Tst_ExtraRunCmdFREE
@@ -599,7 +599,7 @@ Return .T.
 
 Function QPM_ExecuteExtraRun( bTest )
    Local CurrentFolder := GetCurrentFolder()
-   Local Prefix, Memorun := ""
+   Local Prefix, Memorun
    DEFAULT bTest TO .F.
    if bTest
       Prefix := "Tst"

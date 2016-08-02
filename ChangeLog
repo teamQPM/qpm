@@ -8,6 +8,77 @@
  * See "How to format your ChangeLog entries" in howtosvn.txt file.
  */
 
+2016-08-02 20:03:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * ./QPM.ch
+     * Updated list of memvars.
+   * ./QPM.EXE
+     * Updated.
+   * ./QPM.prg
+     ! Harbour warnings when compiling with -w3 switch.
+     * Some variables added, deleted or renamed.
+     * Some format.
+     * Some comments.
+     * Some messages.
+     * Some private variables changed by locals.
+     + Option to control the placement of the app resources file
+       before or after the minigui's resources file.
+     + Support for 64 bits compilers.
+     * US_DllTool.exe and US_WindRes.exe substituted by DllTool.exe
+       and WindRes.exe distributed with the MinGW compiler. This fixes
+       errors when compiling .rc files under 64 bits versions.
+     * BUILD.BAT now compiles .rc files under MinGW in the same way
+       as the minigui's build bat. This fixes errors when compiling
+       .rc files using new versions of WindRes.exe that do not support
+       short filenames.
+     + Content of Progress.log to QPM's log.
+     * Improved reading of build log.
+   * ./QPM.rc
+     ! File's id.
+   * QPM_AutoProject.qpm
+   * QPM_US_Msg.qpm
+   * QPM_US_Redir.qpm
+   * QPM_US_Res.qpm
+   * QPM_US_Run.qpm
+   * QPM_US_Shell.qpm
+   * QPM_US_Slash.qpm
+     * Updated.
+   * QPM_Environment.prg
+   * QPM_ExtraRun.prg
+   * QPM_GlobalSettings.prg
+   * QPM_HotRecovery.prg
+   * QPM_Killer.prg
+   * QPM_SHG_AssistImage.prg
+   * QPM_SHG_AssistLink.prg
+   * QPM_SHG_SimpleHelpGenerator.prg
+     ! Harbour warnings when compiling with -w3 switch.
+     * Some unused code was commented out.
+   * QPM_Functions.prg
+     ! Harbour warnings when compiling with -w3 switch.
+     ! RTE at GetMiniGuiName().
+     + Function GetResConfigFileName.
+     - Function ErrorLogCaretPos.
+   * QPM_Libraries.prg
+     ! Harbour warnings when compiling with -w3 switch.
+     + Some libraries.
+   * QPM_ProjectSettings.prg
+     ! Harbour warnings when compiling with -w3 switch.
+     + New option for 64 bits compilers.
+   * us_pexports.exe
+     * Replaced by version 0.47 to fix problems with 64 bits compilers.
+   * us_msg.exe
+   * us_redir.exe
+   * us_res.exe
+   * us_run.exe
+   * us_shell.exe
+   * us_slash.exe
+     * Updated.
+   * us_res.prg
+     * #define lines are now copied to output.
+     * Bumped to version 01.08
+   * us_slash.prg
+     * Bumped to version 01.05
+     * Output format.
+
 2016-08-02 19:00:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * ./FuentesComunes/TAxPrg.prg
    * ./FuentesComunes/US_Classes.prg

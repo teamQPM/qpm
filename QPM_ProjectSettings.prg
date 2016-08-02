@@ -29,15 +29,22 @@
 #include "minigui.ch"
 #include <QPM.ch>
 
+memvar OLD_Radio_Harbour
+memvar OLD_Check_HarbourIs31
+memvar OLD_Check_64bits
+memvar OLD_Radio_Cpp
+memvar OLD_Radio_MiniGui
+
 Function ProjectSettings()
    Local Folder:=""
    Private OLD_Radio_Harbour     := Prj_Radio_Harbour
    Private OLD_Check_HarbourIs31 := Prj_Check_HarbourIs31
+   Private OLD_Check_64bits      := Prj_Check_64bits
    Private OLD_Radio_Cpp         := Prj_Radio_Cpp
    Private OLD_Radio_MiniGui     := Prj_Radio_MiniGui
 
    if Empty ( PUB_cProjectFolder )
-      MsgStop('You must open project first')
+      MsgStop( 'No project is open.' )
       Return .F.
    EndIf
 
@@ -66,6 +73,12 @@ Function ProjectSettings()
     //        COL             10
     //        VALUE           'xHarbour MultiThread:'
     //END LABEL
+    //DEFINE CHECKBOX Check_34
+    //        ROW             70
+    //        COL             180
+    //        VALUE           Prj_Check_34
+    //END CHECKBOX
+
       @ 40 , 40 RADIOGROUP Radio_Harbour ;
          OPTIONS { 'Harbour' , 'xHarbour' } ;
          VALUE Prj_Radio_Harbour ;
@@ -74,19 +87,13 @@ Function ProjectSettings()
          ON CHANGE CheckCombinationRadio("H")
 
       @ 96 , 40 CHECKBOX Chk_HBVersion ;
-         CAPTION "Harbour 3.1 or later: " ;
-         WIDTH 150 ;
+         CAPTION "Harbour 3.1 or later " ;
+         WIDTH 130 ;
          HEIGHT 24 ;
          FONT 'arial' SIZE 10 ;
          VALUE Prj_Check_HarbourIs31 ;
          TRANSPARENT ;
          LEFTJUSTIFY
-
-    //DEFINE CHECKBOX Check_34
-    //        ROW             70
-    //        COL             180
-    //        VALUE           Prj_Check_34
-    //END CHECKBOX
 
       @ 16 , 145 RADIOGROUP Radio_Cpp ;
          OPTIONS { 'BorlandC' , 'MinGW' , 'PellesC' } ;
@@ -94,6 +101,15 @@ Function ProjectSettings()
          WIDTH  100 ;
          TOOLTIP "Select compiler" ;
          ON CHANGE CheckCombinationRadio("C")
+
+      @ 96 , 180 CHECKBOX Chk_64Bits ;
+         CAPTION "64 bits " ;
+         WIDTH 60 ;
+         HEIGHT 24 ;
+         FONT 'arial' SIZE 10 ;
+         VALUE Prj_Check_64bits ;
+         TRANSPARENT ;
+         LEFTJUSTIFY
 
       @ 08 , 285 FRAME FMinigui ;
          WIDTH 240 ;
@@ -304,7 +320,7 @@ Function ProjectSettings()
              HEIGHT          25
              CAPTION         'Cancel'
              TOOLTIP         'Cancel changes'
-             ONCLICK         WinPSettings.Release()
+             ONCLICK         ProjectEscape()
       END BUTTON
 
    END WINDOW
@@ -325,18 +341,18 @@ Return .T.
 
 Function ProjectEscape()
    if ProjectChanged()
-      if MyMsgYesNo('Do you want to cancel the changes ?')
+      if MyMsgYesNo( 'Changes will be discarded. Continue ?' )
          WinPSettings.release()
       endif
    else
       WinPSettings.release()
    endif
-// ON KEY ESCAPE OF WinPSettings ACTION ( if( MyMsgYesNo('Do you want to cancel the changes ?') , WinPSettings.release() , ) )
 Return .T.
 
 Function ProjectChanged()
    if Prj_Radio_Harbour             != WinPSettings.Radio_Harbour.value        .or. ;
       Prj_Check_HarbourIs31         != WinPSettings.Chk_HBVersion.value        .or. ;
+      Prj_Check_64bits              != WinPSettings.Chk_64bits.value            .or. ;
       Prj_Radio_Cpp                 != WinPSettings.Radio_Cpp.value            .or. ;
       Prj_Radio_MiniGui             != WinPSettings.Radio_MiniGui.value        .or. ;
       Prj_Radio_OutputType          != WinPSettings.Radio_OutputType.value     .or. ;
@@ -360,6 +376,7 @@ Return .F.
 Function ProjectSettingsSave()
    if Prj_Radio_Harbour     != WinPSettings.Radio_Harbour.value    .or. ;
       Prj_Check_HarbourIs31 != WinPSettings.Chk_HBVersion.value    .or. ;
+      Prj_Check_64bits      != WinPSettings.Chk_64bits.value       .or. ;
       Prj_Radio_Cpp         != WinPSettings.Radio_Cpp.value        .or. ;
       Prj_Radio_MiniGui     != WinPSettings.Radio_MiniGui.value    .or. ;
       Prj_Radio_OutputType  != WinPSettings.Radio_OutputType.value .or. ;
@@ -445,11 +462,12 @@ Function ChequeoOutput()
 Return .T.
 
 Function CheckCombinationRadio(cFrom)
-   Local nHarbourValue, lHarbourIs31 , nCppValue , nMiniGuiValue , bError := .F.
-   nHarbourValue := GetProperty( "WinPSettings" , "Radio_Harbour" , "value" )
-   lHarbourIs31  := GetProperty( "WinPSettings" , "Chk_HBVersion" , "value" )
-   nCppValue     := GetProperty( "WinPSettings" , "Radio_Cpp"     , "value" )
-   nMiniGuiValue := GetProperty( "WinPSettings" , "Radio_MiniGui" , "value" )
+   Local nHarbourValue, lHarbourIs31, l64bits, nCppValue , nMiniGuiValue , bError := .F.
+   nHarbourValue := GetProperty( "WinPSettings", "Radio_Harbour", "value" )
+   lHarbourIs31  := GetProperty( "WinPSettings", "Chk_HBVersion", "value" )
+   l64bits       := GetProperty( "WinPSettings", "Chk_64bits",    "value" )
+   nCppValue     := GetProperty( "WinPSettings", "Radio_Cpp",     "value" )
+   nMiniGuiValue := GetProperty( "WinPSettings", "Radio_MiniGui", "value" )
    
    if cFrom == "H"
       SetProperty( "WinPSettings", "Chk_HBVersion", "enabled", nHarbourValue == 1 )
@@ -486,6 +504,7 @@ Function CheckCombinationRadio(cFrom)
    else
       OLD_Radio_Harbour     := nHarbourValue
       OLD_Check_HarbourIs31 := lHarbourIs31
+      OLD_Check_64bits      := l64bits
       OLD_Radio_Cpp         := nCppValue
       OLD_Radio_MiniGui     := nMiniGuiValue
    endif
@@ -519,6 +538,7 @@ Return .T.
 Function FSwitchMode()
    Prj_Radio_Harbour     := GetProperty( "WinPSettings", "Radio_Harbour", "value" )
    Prj_Check_HarbourIs31 := GetProperty( "WinPSettings", "Chk_HBVersion", "value" )
+   Prj_Check_64bits      := GetProperty( "WinPSettings", "Chk_64bits", "value" )
    Prj_Radio_Cpp         := GetProperty( "WinPSettings", "Radio_Cpp", "value" )
    Prj_Radio_MiniGui     := GetProperty( "WinPSettings", "Radio_MiniGui", "value" )
    Prj_Radio_OutputType  := GetProperty( "WinPSettings", "Radio_OutputType", "value" )

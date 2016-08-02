@@ -29,6 +29,12 @@
 #include "minigui.ch"
 #include <QPM.ch>
 
+memvar vFilesToCompile
+memvar cReto
+memvar vKeys
+memvar PcMemo
+memvar PnCaretPos
+
 #ifdef QPM_SHG
 
 Function SHG_ImageGenerateList( cIn , cTopic )
@@ -76,7 +82,7 @@ Function SHG_ImageGenerateList( cIn , cTopic )
 Return .T.
 
 Function SHG_ImageGetString( cMemo , nPos )
-   Local nDesde , nLen , vAux
+   Local vAux
    vAux := SHG_ImageGetPos( cMemo , nPos )
    if vAux[1][2] > 0       // != NIL
       Return substr( cMemo , vAux[1][1] , vAux[1][2] )
@@ -84,7 +90,7 @@ Function SHG_ImageGetString( cMemo , nPos )
 Return ""
 
 Function SHG_ImageGetPos( cMemo , nPos )
-   Local nAuxDesde , nDesde , nHasta , nLen , vResult , nRtfPos := nPos
+   Local nAuxDesde , nDesde , nHasta , nLen , nRtfPos := nPos
    Local nLenGuia := len( "<IMG" )
    nAuxDesde := rat( ">" , substr( cMemo , 1 , nRtfPos ) ) + 1
    if ( nDesde := rat( "<IMG " , upper( substr( cMemo , nAuxDesde , ( nRtfPos - nAuxDesde + 1 ) + nLenGuia ) ) ) ) == 0
@@ -98,7 +104,7 @@ Function SHG_ImageGetPos( cMemo , nPos )
 Return { { nDesde , nLen } }
 
 Function SHG_ImageVector2String( vKeys , bSupressPath )
-   Local cString := "<IMG" , i , cComilla := ""                       // , vCaseName := {}
+   Local cString := "<IMG" , i , cComilla
    for i := 1 to len( vKeys )
       if vKeys[i][2] != NIL
          if upper( vKeys[i][1] ) == "SRC" .or. ;
@@ -467,9 +473,7 @@ Function SHG_ImageAssistantGetVector( cMemo , nCaretPos )
 return .T.
 
 Function SHG_ImageAssistantGetFile()
-Local cAux := ""
-// PanInputImage.TextSrc.Value := BugGetFile( { {'Image file','*.*'} } , "Select Image File" , PanInputImage.TextSrc.Value , .F. , .T. )
-// cAux := US_USlash( BugGetFile( { {'BMP Image file','*.bmp'} , {'JPEG Image file','*.jpg'} , {'PNG Image file','*.png'} , {'GIF Image file','*.gif'} } , "Select Image File" , if( empty(PanInputImage.TextSrc.Value) , SHG_LastFolderImg , US_FileNameOnlyPath( US_WSlash( PanInputImage.TextSrc.Value ) ) ) , .F. , .T. ) )
+Local cAux
    cAux := US_USlash( BugGetFile( { {'Images (bmp, jpg, png, gif)','*.bmp;*.jpg;*.png;*.gif'} } , "Select Image File" , if( empty(PanInputImage.TextSrc.Value) , SHG_LastFolderImg , US_FileNameOnlyPath( US_WSlash( PanInputImage.TextSrc.Value ) ) ) , .F. , .T. ) )
    if !empty( cAux )
       PanInputImage.TextSrc.Value := cAux

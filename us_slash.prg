@@ -28,7 +28,7 @@
 
 FUNCTION MAIN( ... )
    Local aParams := hb_aParams(), n
-   Local Version := "01.04", bLoop := .T., cLinea, cFines := { Chr(13) + Chr(10), Chr(10) }, hFiIn, cont := 0, hFiOut
+   Local Version := "01.05", bLoop := .T., cLinea, cFines := { Chr(13) + Chr(10), Chr(10) }, hFiIn, cont := 0, hFiOut
    Local cFileOut, nBytesSalida := 0, cFileIn, cParam, cFileTMP, cmd, cmdbat, bList := .F., gccbat := "_GCCbat.bat"
    Local estado := "_Status.tmp"
    Private cQPMDir := ""
@@ -65,11 +65,11 @@ FUNCTION MAIN( ... )
    If bList
       QPM_Log( "US_Slash " + Version )
       QPM_Log( "Slash 000I: by QPM_Support ( http://qpm.sourceforge.net )" )
-      QPM_Log( "Slash 999I: Log into " + cQPMDir + "QPM.log" )
-      QPM_Log( "Slash 003I: FileIn : " + cFileIn )
-      QPM_Log( "Slash 013I: FileOut: " + cFileOut )
-      QPM_Log( "Slash 023I: FileTMP: " + cFileTMP )
-      QPM_Log( "Slash 033I: Param : " + cParam )
+      QPM_Log( "Slash 999I: Log into: " + cQPMDir + "QPM.log" )
+      QPM_Log( "Slash 003I: FileIn:   " + cFileIn )
+      QPM_Log( "Slash 013I: FileOut:  " + cFileOut )
+      QPM_Log( "Slash 023I: FileTMP:  " + cFileTMP )
+      QPM_Log( "Slash 033I: Param:    " + cParam )
    EndIf
    hFiIn := FOpen( cFileIn )
    If FError() = 0
@@ -127,7 +127,6 @@ FUNCTION MAIN( ... )
    MemoWrit( GCCbat, cmd )
    If bList
       QPM_Log( "Slash 043I: Command: " + cmdbat )
-      QPM_Log( "" + HB_OsNewLine() )
    EndIf
    __Run( GCCbat )
    FRename( cFileIn, cFileTMP )
@@ -141,7 +140,7 @@ Return .T.
 
 Function QPM_Log( string )
    Local LogArchi := cQPMDir + "QPM.LOG"
-   Local msg := Dtos( Date() ) + " " + Time() + " Stack(" + AllTrim( Str( US_Stack() ) ) + ") " + ProcName( 1 ) + "(" + AllTrim( Str( ProcLine( 1 ) ) ) + ")" + " " + string
+   Local msg := Dtos( Date() ) + " " + Time() + " Stack(" + AllTrim( Str( US_Stack() ) ) + ") " + ProcName( 1 ) + "(" + StrZero( ProcLine( 1 ), 3, 0 ) + ")" + " " + string
 
    SET CONSOLE OFF
    SET ALTERNATE TO ( LogArchi ) ADDITIVE

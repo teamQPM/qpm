@@ -31,7 +31,7 @@
 
 PROCEDURE MAIN( ... )
    Local aParams := hb_aParams(), n
-   Local Version := "01.07", bLoop := .T., cLinea := "", cFines := { Chr(13) + Chr(10), Chr(10) }, hFiIn, cont := 0, hFiOut
+   Local Version := "01.08", bLoop := .T., cLinea := "", cFines := { Chr(13) + Chr(10), Chr(10) }, hFiIn, cont := 0, hFiOut
    Local cFileOut := "", nBytesSalida := 0, cFileIn := "", cParam := "", cPathTMP := "", cLineaAux := "", bList := .F., cWord3 := ""
    Local cApost := '', cRule := "", bForceChg := .F., i := 0, cChar := "", cSlash := "", bChg := .F.
    Local bInclude := .F., cMemoAux, nCantLines, nInx, cAuxLine, cFileInclude, cMemoSal := ""
@@ -165,9 +165,13 @@ PROCEDURE MAIN( ... )
       bChg := .F.
       cLinea := AllTrim( StrTran( cLinea, Chr( 09 ), " " ) )
 
+      // #define
+      If SubStr( cLinea, 1, 1 ) == "#" .and. SubStr( cLinea, 1, 7 ) == "#define"
+         // Do not change it, just copy to output
+
       // One line comment or some reserved words
-      If SubStr( cLinea, 1, 1 ) == "*" .or. ;
-         SubStr( cLinea, 1, 1 ) == "#" .or. ;
+      ElseIf SubStr( cLinea, 1, 1 ) == "*" .or. ;
+         ( SubStr( cLinea, 1, 1 ) == "#" .and. SubStr( cLinea, 1, 7 ) != "#define" ) .or. ;
          SubStr( cLinea, 1, 2 ) == "//" .or. ;
          SubStr( cLinea, 1, 2 ) == "&&" .or. ;
          US_Words( cLinea ) < 3 .or. ;
@@ -190,6 +194,7 @@ PROCEDURE MAIN( ... )
             QPM_Log( "US_Res 234I: Comment (" + AllTrim( Str( cont ) ) + "): " + cLinea )
             QPM_Log( "------------" )
          EndIf
+
       // Multiple lines comment
       ElseIf SubStr( cLinea, 1, 1 ) == "/*"
          Do While bLoop
@@ -223,6 +228,8 @@ PROCEDURE MAIN( ... )
                Exit
             EndIf
          EndDo
+
+      // resources
       Else
          Do Case
          // For: .\resources\main.ico
@@ -305,6 +312,7 @@ PROCEDURE MAIN( ... )
             cLineaAux := ""
          EndIf
       EndIf
+
       cLinea := cLinea + HB_OsNewLine()
       nBytesSalida := Len( cLinea )
       If FWrite( hFiOut, cLinea, nBytesSalida ) < nBytesSalida

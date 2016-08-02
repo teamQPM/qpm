@@ -29,12 +29,18 @@
 #include "minigui.ch"
 #include <QPM.ch>
 
+memvar PRI_COMPATIBILITY_ENVIRONMENTVERSION
+memvar PRI_COMPATIBILITY_ENVIRONMENTFILE
+memvar PRI_COMPATIBILITY_ENVIRONMENTFILEAUX    
+memvar HR_nVersionsMinimun
+memvar HR_nVersionsSet
+
+
 Function LoadEnvironment
    Local EnvironmentMemo, EnvironmentVersion, EnvironmentMemoAux
-   Local LOC_cLine, nInx, vConfig
-   
+   Local LOC_cLine, nInx, vConfig, vAuxDir, i
+
    EnvironmentVersion := 0
-   nInx := 0
    vConfig := {}
    Gbl_TEditor := ''
 
@@ -127,7 +133,7 @@ Function LoadEnvironment
       else
          if US_DirWrite( GetWindowsFolder() )
             
-            DECLARE vAuxDir[ ADIR( GetWindowsFolder() + DEF_SLASH + 'QAC_????????.path' ) ]
+            vAuxDir := Array( ADIR( GetWindowsFolder() + DEF_SLASH + 'QAC_????????.path' ) )
             ADIR( GetWindowsFolder() + DEF_SLASH + 'QAC_????????.path', vAuxDir )
             for nInx := 1 to len( vAuxDir )
                if val( substr( vAuxDir[nInx], 5, 8 ) ) < val( QPM_VERSION_NUMBER_LONG )
@@ -144,9 +150,8 @@ Function LoadEnvironment
                   endif
                endif
             next
-            RELEASE vAuxDir
             
-            DECLARE vAuxDir[ ADIR( GetWindowsFolder() + DEF_SLASH + 'QPM_????????.path' ) ]
+            vAuxDir := Array( ADIR( GetWindowsFolder() + DEF_SLASH + 'QPM_????????.path' ) )
             ADIR( GetWindowsFolder() + DEF_SLASH + 'QPM_????????.path', vAuxDir )
             for nInx := 1 to len( vAuxDir )
                if val( substr( vAuxDir[nInx], 5, 8 ) ) < val( QPM_VERSION_NUMBER_LONG )
@@ -163,7 +168,6 @@ Function LoadEnvironment
                   endif
                endif
             next
-            RELEASE vAuxDir
             
             if len( vConfig ) > 0
                aSort( vConfig, , , { |x, y| US_Upper(x) > US_Upper(y) })
@@ -200,8 +204,10 @@ Function LoadEnvironment
       PRIVATE PRI_COMPATIBILITY_ENVIRONMENTFILEAUX    := EnvironmentMemoAux
 #include "QPM_CompatibilityOpenGlobal.CH"
       EnvironmentVersion    := PRI_COMPATIBILITY_ENVIRONMENTVERSION
+      Empty( EnvironmentVersion )
       EnvironmentMemo       := PRI_COMPATIBILITY_ENVIRONMENTFILE
       EnvironmentMemoAux    := PRI_COMPATIBILITY_ENVIRONMENTFILEAUX
+      Empty( EnvironmentMemoAux )
       RELEASE PRI_COMPATIBILITY_ENVIRONMENTVERSION
       RELEASE PRI_COMPATIBILITY_ENVIRONMENTFILE
       RELEASE PRI_COMPATIBILITY_ENVIRONMENTFILEAUX
@@ -276,7 +282,7 @@ Function LoadEnvironment
 Return .T.
 
 Function SaveEnvironment
-   Local c := ''
+   Local c := '', i
    c := c + 'VERSION ' + QPM_VERSION_NUMBER + Hb_OsNewLine()
    c := c + 'PROGRAMEDITOR ' + alltrim(Gbl_TEditor) + Hb_OsNewLine()
    c := c + 'EDITLONGNAME ' + US_VarToStr( bEditorLongName ) + Hb_OsNewLine()
