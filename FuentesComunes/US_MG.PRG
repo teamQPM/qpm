@@ -26,11 +26,19 @@
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "US_ENV.H"
+#include "US_Env.h"
 #include "minigui.ch"
-#include "i_pseudofunc.ch"
 
 #translate MsgInfo(<texto>) => US_LOG( <texto> , .T. )
+
+memvar US_SUBWIN
+memvar US_FILDES
+memvar US_COLDES
+memvar US_WALTO
+memvar US_WANCHO
+memvar US_WLIENZO
+memvar US_WCOL
+memvar US_WFIL
 
 Function GetActiveHelpFile()
 Return _HMG_ActiveHelpFile
@@ -48,7 +56,7 @@ Return GetExeFilename()
  * Función para obtener el contenido de un RichEditBox
  */
 Function US_GetRichEditValue( ventana , control , modo )
-   Local cFile:="" , memo , hRichEdit := GetControlHandle ( control , ventana )
+   Local cFile, memo , hRichEdit := GetControlHandle ( control , ventana )
    if empty( modo )
       modo := "TXT"
    endif
@@ -59,7 +67,7 @@ Function US_GetRichEditValue( ventana , control , modo )
          memo:=MemoRead( cFile )
          ferase( cFile )
       otherwise
-      ** memo := GetWindowText( hRichEdit )
+      // memo := GetWindowText( hRichEdit )
          memo := GetProperty( ventana , control , "value" )
    endcase
 Return memo
@@ -133,24 +141,6 @@ Function US_GetRtfClipboard()
    cAux := US_GetRichEditValue( cVentana , cControl , "RTF" )
    DoMethod( cVentana , cControl , "release" )
 Return cAux
-
-#pragma BEGINDUMP
-
-#define _WIN32_IE      0x0500
-#define HB_OS_WIN_32_USED
-#define _WIN32_WINNT   0x0400
-#include <windows.h>
-#include "hbapi.h"
-
-/*
- * Función para Obtener el contenido de un clipboard con texto RTF
- */
-HB_FUNC(US_GETRTFCLIPBOARDPASTE)
-{
-   SendMessage( (HWND) hb_parnl (1),(UINT) WM_PASTE, 0, 0);
-}
-
-#pragma ENDDUMP
 
 /*
  * Función para posicionar el reproductor de medios
@@ -258,29 +248,29 @@ RETURN ((US_WANCHO * nValor) / 100)
 
 FUNCTION US_PAlto(nValor)
 RETURN ((US_WALTO * nValor) / 100)
-*RETURN int((US_WALTO * nValor) / 100)
+//RETURN int((US_WALTO * nValor) / 100)
 
 /*
  * Función para establecer el tamaño de una fuente                   
  */
 FUNCTION US_WFont(nValor)
-*   Local ancho, alto
-*   ancho:=( ( US_WLienzo * nValor ) / 640 )
-*   alto :=( ( US_HLienzo * nValor ) / 480 )
-*Return if( ancho<alto , ancho , alto )
+//   Local ancho, alto
+//   ancho:=( ( US_WLienzo * nValor ) / 640 )
+//   alto :=( ( US_HLienzo * nValor ) / 480 )
+//Return if( ancho<alto , ancho , alto )
 Return ( ( US_WLienzo * nValor ) / 640 )
-*****Return ( ( US_HLienzo * nValor ) / 480 )
+//Return ( ( US_HLienzo * nValor ) / 480 )
 
 /*
  * ESTA Función DEJA ELEJIR UNA OPCION DE UNA LISTA Y/O ENVIA UN CARTEL
  */
 FUNCTION US_Opcion(cTexto,LISTA,FILA,DEFAULT,cMsgTIT,FAYUDA,TIPO,TECLASALIR,ESPERA,COLORTIT,COLORFTIT,COLORMSG,COLORFMSG)
-   LOCAL PALS, LONGIHELP, AYUDA:=.F., KESCTXT, COLUMNA:=14, LINEAS:=0, INDLIS, ;
+   LOCAL PALS, LONGIHELP, AYUDA:=.F., KESCTXT, COLUMNA:=14, LINEAS, INDLIS, ;
          LONGIPAL, DESPLA, ;
-         WAux_Top:=0 , WAux_Left:=0 , WAux_Bottom:=0 , WAux_Right:=0, ;
+         WAux_Top , WAux_Left, WAux_Bottom, WAux_Right, ;
          WAux_Cols , WAux_Fils
 
-   PRIVATE cMsg, RPTA:=0, ACTIONAUX:="" , ;
+   Local cMsg, RPTA:=0, ACTIONAUX, cCRLF, ;
            Ventana:="US_OP"+ALLTRIM(STR(DAY(DATE())))+ALLTRIM(STR(INT(SECONDS())))
 
    IF TIPO = NIL
@@ -389,7 +379,7 @@ FUNCTION US_Opcion(cTexto,LISTA,FILA,DEFAULT,cMsgTIT,FAYUDA,TIPO,TECLASALIR,ESPE
          NOCAPTION ;
          FONT "ARIAL" SIZE US_WFont(9) ;
          BACKCOLOR COLORMSG ;
-         ON INIT USIOPCION(ESPERA) ;
+         ON INIT USIOPCION(Ventana, ESPERA) ;
          ON RELEASE US_NOP()
 
          PRIVATE US_SUBWIN:=.T.,;
@@ -529,12 +519,12 @@ FUNCTION US_Opcion(cTexto,LISTA,FILA,DEFAULT,cMsgTIT,FAYUDA,TIPO,TECLASALIR,ESPE
    endif
 RETURN ""
 
-FUNCTION USIOpcion(ESPERA)
+FUNCTION USIOpcion(Ventana, ESPERA)
    IF !ESPERA
       US_Wait(1)
       RETURN &(Ventana).Release()
    ENDIF
-RETURN
+RETURN nil
 
 /*
 FUNCTION USROpcion(OPCION)
@@ -3229,14 +3219,18 @@ RETURN
 */
 
 FUNCTION US_MGMenu(W_TOP,W_LEFT,W_BOTTOM,W_RIGHT,VECTOR,VECTORBOOL,USERFUNC)
-   PRIVATE Ventana:="US_PM"+ALLTRIM(STR(DAY(DATE())))+ALLTRIM(STR(INT(SECONDS()))) , ;
-           Opcion:=0, W_COLS, W_FILS
+   Local W_COLS, W_FILS
+   Local Ventana:="US_PM"+ALLTRIM(STR(DAY(DATE())))+ALLTRIM(STR(INT(SECONDS())))
+   Local Opcion:=0
+
+   Empty(VECTORBOOL)
+   Empty(USERFUNC)
 
    W_COLS:=W_RIGHT-W_LEFT
    W_FILS:=W_BOTTOM-W_TOP
 
-    * WIDTH US_Cols(W_COLS*0.8) ;
-    * HEIGHT US_Fils(W_FILS*2) ;
+   // WIDTH US_Cols(W_COLS*0.8) ;
+   // HEIGHT US_Fils(W_FILS*2) ;
    DEFINE WINDOW &(Ventana) ;
       AT US_WFIL+US_TFil(W_TOP),US_WCOL+US_LCol(W_LEFT) ;
       WIDTH US_Cols(W_COLS) ;
@@ -3250,8 +3244,7 @@ FUNCTION US_MGMenu(W_TOP,W_LEFT,W_BOTTOM,W_RIGHT,VECTOR,VECTORBOOL,USERFUNC)
               US_FILDES:=(&(Ventana).Row - US_WFIL), ;
               US_COLDES:=(&(Ventana).Col - US_WCOL)
 
-//      US_SETKEY("K_ESC",Ventana,"US_MenuEleccion(.T.)")
-      ON KEY ESCAPE OF &VENTANA ACTION US_MenuEleccion(.T.)
+      ON KEY ESCAPE OF &VENTANA ACTION US_MenuEleccion(Ventana, .T., @Opcion)
 
       DEFINE LISTBOX List_1
              ROW     0
@@ -3260,7 +3253,7 @@ FUNCTION US_MGMenu(W_TOP,W_LEFT,W_BOTTOM,W_RIGHT,VECTOR,VECTORBOOL,USERFUNC)
              HEIGHT  &(Ventana).Height
              ITEMS VECTOR
              VALUE 1
-             ONDBLCLICK US_MenuEleccion(.F.)
+             ONDBLCLICK US_MenuEleccion(Ventana, .F., @Opcion)
        END LISTBOX
 
    END WINDOW
@@ -3269,14 +3262,14 @@ FUNCTION US_MGMenu(W_TOP,W_LEFT,W_BOTTOM,W_RIGHT,VECTOR,VECTORBOOL,USERFUNC)
 
 RETURN Opcion
 
-FUNCTION US_MenuEleccion(Escape)
+FUNCTION US_MenuEleccion(Ventana, Escape, Opcion)
    IF ESCAPE
       Opcion := 0
    ELSE
       Opcion := &(Ventana).List_1.Value
    ENDIF
    &(Ventana).Release()
-RETURN
+RETURN nil
 
 /*
 FUNCTION US_IsEscDefined(Ventana)
@@ -3295,126 +3288,6 @@ Function _DefaultMenuItem( ItemNumber, ItemName, FormName )
 Return
 */
 
-#pragma BEGINDUMP
-
-#include <windows.h>
-#include <commctrl.h>
-#include "hbapi.h"
-#include "hbvm.h"
-#include "hbstack.h"
-#include "hbapiitm.h"
-#include "winreg.h"
-#include "tchar.h"
-
-HB_FUNC ( INTERACTIVEMOVEHANDLE )
-{
-
-        keybd_event(
-                VK_RIGHT,       // virtual-key code
-                0,              // hardware scan code
-                0,              // flags specifying various function options
-                0               // additional data associated with keystroke
-        );
-        keybd_event(
-                VK_LEFT,        // virtual-key code
-                0,              // hardware scan code
-                0,              // flags specifying various function options
-                0               // additional data associated with keystroke
-        );
-
-        SendMessage( (HWND) hb_parnl(1) , WM_SYSCOMMAND , SC_MOVE ,10 );
-
-}
-#pragma ENDDUMP
-
-#pragma BEGINDUMP
-
-#include <windows.h>
-#include <mmsystem.h>
-#include "hbapi.h"
-#include "hbapiitm.h"
-#include <commctrl.h>
-#include <vfw.h>
-
-/*
-HB_FUNC ( SETMENUDEFAULTITEM )
-{
-        SetMenuDefaultItem( (HMENU) hb_parnl( 1 ), hb_parni( 2 ) - 1, TRUE );
-}
-*/
-
-HB_FUNC ( US_MCIFUNC )
-{
-        HWND mcihand = (HWND) hb_parnl(1);
-        int  func    = hb_parni(2);
-        switch(func)
-      {
-         case  1:  hb_retnl( MCIWndPlay(mcihand) ); break;
-         case  2:  hb_retnl( MCIWndStop(mcihand) ); break;
-         case  3:  hb_retnl( MCIWndPause(mcihand) ); break;
-         case  4:  hb_retnl( MCIWndClose(mcihand) ); break;
-         case  5:            MCIWndDestroy(mcihand); hb_retnl(0);break;
-         case  6:  hb_retnl( MCIWndEject(mcihand) ); break;
-         case  7:  hb_retnl( MCIWndEnd(mcihand) ); break;
-         case  8:  hb_retnl( MCIWndHome(mcihand) ); break;
-         case  9:  hb_retnl( MCIWndOpen(mcihand,hb_parc(3),NULL) ); break;
-         case 10:  hb_retnl( MCIWndOpenDialog(mcihand) ); break;
-         case 11:  hb_retnl( MCIWndPlayReverse(mcihand) ); break;
-         case 12:  hb_retnl( MCIWndResume(mcihand) ); break;
-         case 13:            MCIWndSetRepeat(mcihand,hb_parl(3) );hb_retnl(0); break;
-         case 14:  hb_retnl( MCIWndSetSpeed(mcihand,hb_parni(3)) ); break;
-         case 15:  hb_retnl( MCIWndSetVolume(mcihand,hb_parni(3)) ); break;
-         case 16:            MCIWndSetZoom(mcihand,hb_parni(3) ); hb_retnl(0); break;
-         case 17:  hb_retnl( MCIWndGetLength(mcihand) ); break;
-         case 18:  hb_retnl( MCIWndGetPosition(mcihand) ); break;
-         case 19:  hb_retnl( MCIWndGetVolume(mcihand) ); break;
-         case 20:  hb_retnl( MCIWndSeek(mcihand,hb_parni(3)) ); hb_retnl(0); break;
-         default: hb_retnl( 0 );
-      }
-}
-
-/*
-HB_FUNC ( US_INITIMAGE )
-{
-        HWND  h;
-        HBITMAP hBitmap;
-        HWND hwnd;
-
-        hwnd = (HWND) hb_parnl (1);
-
-        h = CreateWindowEx(0,"static",NULL,
-        WS_CHILD | WS_VISIBLE | SS_BITMAP | SS_NOTIFY,
-        hb_parni(3), hb_parni(4), 0, 0,
-        hwnd,(HMENU)hb_parni(2) , GetModuleHandle(NULL) , NULL );
-
-        hBitmap = (HBITMAP)LoadImage(0,hb_parc(5),IMAGE_BITMAP,hb_parni(6),hb_parni(7),LR_LOADFROMFILE|LR_CREATEDIBSECTION);
-        if (hBitmap==NULL)
-        {
-                hBitmap = (HBITMAP)LoadImage(GetModuleHandle(NULL),hb_parc(5),IMAGE_BITMAP,hb_parni(6),hb_parni(7),LR_CREATEDIBSECTION);
-        }
-
-
-        SendMessage(h,(UINT)STM_SETIMAGE,(WPARAM)IMAGE_BITMAP,(LPARAM)hBitmap);
-
-        hb_retnl ( (LONG) h );
-}
-
-HB_FUNC ( US_C_SETPICTURE )
-{
-        HBITMAP hBitmap;
-
-        hBitmap = (HBITMAP)LoadImage(0,hb_parc(2),IMAGE_BITMAP,hb_parni(3),hb_parni(4),LR_LOADFROMFILE|LR_CREATEDIBSECTION);
-        if (hBitmap==NULL)
-        {
-                hBitmap = (HBITMAP)LoadImage(GetModuleHandle(NULL),hb_parc(2),IMAGE_BITMAP,hb_parni(3),hb_parni(4),LR_CREATEDIBSECTION);
-        }
-
-        SendMessage((HWND) hb_parnl (1),(UINT)STM_SETIMAGE,(WPARAM)IMAGE_BITMAP,(LPARAM)hBitmap);
-}
-*/
-#pragma ENDDUMP
-
-*/
 #define EM_SETSEL   177
 
 Function US_Send_SelectAll(ControlName,Ventana)
@@ -3714,8 +3587,8 @@ Function US_SetReg(nKey, cRegKey, cVar, Valor)
    oReg := TReg32():Create(nKey, cRegKey)
    nValue := oReg:Set(cVar, Valor)
    if oReg:lError
-      cValor := "*ERROR*"
-      US_Log( "The requested internal function is only execute with Administrator User Atributes, but you user is not Administrator" , .T. , .T. )
+//      cValor := "*ERROR*"
+      US_Log( "The requested internal function is only executed with Administrator User Atributes, but you user is not Administrator" , .T. , .T. )
    endif
    oReg:Close()
 RETURN nValue
@@ -3912,35 +3785,10 @@ RETURN(.T.)
  * Type: 0 Reset
  */
 Function US_SetWindowRgn(name,col,row,w,h,lx)
-   local lhand:=0
+   local lhand
    lhand := GetFormHandle( name )
    US_2SetWindowRgn(lhand,col,row,w,h,lx)
 Return Nil
-
-#pragma BEGINDUMP
-
-// #include <shlobj.h>
-
-HB_FUNC (US_2SETWINDOWRGN)
-{
-   HWND hWnd;
-   HRGN hrgn;
-
-   hWnd = (HWND) hb_parnl (1);
-   if ( hb_parni(6)==0)
-          SetWindowRgn(GetActiveWindow(),NULL,TRUE);
-   else
-     {
-     if ( hb_parni(6)==1 )
-        hrgn=CreateRectRgn(hb_parni(2),hb_parni(3),hb_parni(4),hb_parni(5));
-     else
-        hrgn=CreateEllipticRgn(hb_parni(2),hb_parni(3),hb_parni(4),hb_parni(5));
-     // SetWindowRgn(GetActiveWindow(),hrgn,TRUE);
-     SetWindowRgn( hWnd , hrgn , TRUE ) ;
-     // Should be hb_parnl(1) instead of GetActiveWindow()
-     }
-}
-#pragma ENDDUMP
 
 /*
 #define SW_HIDE             0
@@ -4025,33 +3873,33 @@ Function US_WinStackAdd( Vector , Ventana )
    // sexto elemento es el estado de la ventana: NORMAL MINIMIZADA MAXIMIZADA
    // es usado para cuando se restauran todas las ventanas minimizadas
    AADD(Vector, { Ventana , GetProperty( Ventana , "row" ) , GetProperty( Ventana , "col" ) , GetProperty( Ventana , "width") , GetProperty( Ventana , "height" ) , "NORMAL" } )
-Return
+Return nil
 
 Function US_WinStackDel( Vector , Ventana )
-   Local array:={} , i:=0 , j:=0
-   for i=1 to len(Vector)
+   Local array:={} , i, j
+   for i:=1 to len(Vector)
       if Vector[i][1] != Ventana
          AADD( array , { Vector[i][1] , Vector[i][2] , Vector[i][3] , Vector[i][4] , Vector[i][5] , Vector[i][6] } )
       endif
    next
-   for i=1 to len(array)
+   for i:=1 to len(array)
       for j=1 to 6
          Vector[i][j] := array[i][j]
       next
    next
-   for j=1 to 6
+   for j:=1 to 6
        Vector[len(Vector)][j] := NIL
    next
-Return
+Return nil
 */
 Function US_WinStackStatus( Vector , Ventana , Estado )
-   Local i:=0
+   Local i
    for i=1 to len(Vector)
       if Vector[i][1] = Ventana
          Vector[i][6] := Estado
       endif
    next
-Return
+Return nil
 /*
 Function US_WinMinimizeAll( Vector )
    Local i:=0
@@ -4110,58 +3958,7 @@ Function US_WinShowAll( Vector )
       endif
    next
 Return .T.
-*/
 
-#pragma BEGINDUMP
-
-#include <windows.h>
-#include <winuser.h>
-#include "hbapi.h"
-
-#define VK_C 67
-#define VK_V 86
-#define VK_X 88
-#define VK_Z 90
-
-// copy - ctrl-c
-HB_FUNC( US_SEND_COPY )
-{
-    keybd_event(VK_CONTROL, MapVirtualKey(VK_CONTROL, 0), 0, 0);
-    keybd_event(VK_C, MapVirtualKey(VK_C, 0), 0, 0);
-    keybd_event(VK_C, MapVirtualKey(VK_C, 0), KEYEVENTF_KEYUP, 0);
-    keybd_event(VK_CONTROL, MapVirtualKey(VK_CONTROL, 0), KEYEVENTF_KEYUP, 0);
-}
-
-// paste - ctrl-v 
-HB_FUNC( US_SEND_PASTE )
-{
-    keybd_event(VK_CONTROL, MapVirtualKey(VK_CONTROL, 0), 0, 0);
-    keybd_event(VK_V, MapVirtualKey(VK_V, 0), 0, 0);
-    keybd_event(VK_V, MapVirtualKey(VK_V, 0), KEYEVENTF_KEYUP, 0);
-    keybd_event(VK_CONTROL, MapVirtualKey(VK_CONTROL, 0), KEYEVENTF_KEYUP, 0);
-}
-
-// cut - ctrl-x 
-HB_FUNC( US_SEND_CUT )
-{
-    keybd_event(VK_CONTROL, MapVirtualKey(VK_CONTROL, 0), 0, 0);
-    keybd_event(VK_X, MapVirtualKey(VK_X, 0), 0, 0);
-    keybd_event(VK_X, MapVirtualKey(VK_X, 0), KEYEVENTF_KEYUP, 0);
-    keybd_event(VK_CONTROL, MapVirtualKey(VK_CONTROL, 0), KEYEVENTF_KEYUP, 0);
-}
-
-// undo - ctrl-z 
-HB_FUNC( US_SEND_UNDO )
-{
-    keybd_event(VK_CONTROL, MapVirtualKey(VK_CONTROL, 0), 0, 0);
-    keybd_event(VK_Z, MapVirtualKey(VK_Z, 0), 0, 0);
-    keybd_event(VK_Z, MapVirtualKey(VK_Z, 0), KEYEVENTF_KEYUP, 0);
-    keybd_event(VK_CONTROL, MapVirtualKey(VK_CONTROL, 0), KEYEVENTF_KEYUP, 0);
-}
-
-#pragma ENDDUMP
-
-/*
  * Function US_AutoScroll
  ***
 Function US_AutoScroll( sVentana, cTextBox, nOffset )
@@ -4746,6 +4543,7 @@ Function US_IsWindowModalActive()
 Return _HMG_IsModalActive
 
 Function US_WindowNameRandom( prefix )
+   local win
    if prefix == NIL
       prefix := ""
    endif
@@ -4791,7 +4589,7 @@ return nValue
 
 Function US_TempMainWindow( cFun )
    Local Reto
-   Private cPan := "RSM" + US_NameRandom()
+   Local cPan := "RSM" + US_NameRandom()
    DEFINE WINDOW &(cPan) at 0 , 0 ;
       WIDTH 0 ;
       HEIGHT 0 ;
@@ -4808,7 +4606,7 @@ Return Reto
 Function US_DisplayHelpTopic( cActiveHelpFile , xTopic , nMet )
    LOCAL cParam := ""
    If empty(cActiveHelpFile)
-       Return
+       Return nil
    endif
    _HMG_nTopic := xTopic
    _HMG_nMet   := nMet
@@ -4823,7 +4621,7 @@ Function US_DisplayHelpTopic( cActiveHelpFile , xTopic , nMet )
        cParam := '"' + cActiveHelpFile + '"'
    EndIf
    _Execute( 0 , "Open", "HH.exe", cParam , , 5 )
-Return
+Return nil
 
 /*
 Function US_MiniGuiType()
@@ -4846,6 +4644,217 @@ Return "?"
 Function US_InitialBarIsOculta()
 Return ( ( GetDesktopRealHeight() == GetDesktopHeight() ) .and. ( GetDesktopRealWidth() == GetDesktopWidth() ) )
 
+
+#pragma BEGINDUMP
+
+#define _WIN32_IE      0x0500
+#define HB_OS_WIN_32_USED
+#define _WIN32_WINNT   0x0400
+#include <windows.h>
+#include "hbapi.h"
+
+/*
+ * Función para Obtener el contenido de un clipboard con texto RTF
+ */
+HB_FUNC(US_GETRTFCLIPBOARDPASTE)
+{
+   SendMessage( (HWND) hb_parnl (1),(UINT) WM_PASTE, 0, 0);
+}
+
+#pragma ENDDUMP
+
+#pragma BEGINDUMP
+
+#include <windows.h>
+#include <commctrl.h>
+#include "hbapi.h"
+#include "hbvm.h"
+#include "hbstack.h"
+#include "hbapiitm.h"
+#include "winreg.h"
+#include "tchar.h"
+
+HB_FUNC ( INTERACTIVEMOVEHANDLE )
+{
+
+        keybd_event(
+                VK_RIGHT,       // virtual-key code
+                0,              // hardware scan code
+                0,              // flags specifying various function options
+                0               // additional data associated with keystroke
+        );
+        keybd_event(
+                VK_LEFT,        // virtual-key code
+                0,              // hardware scan code
+                0,              // flags specifying various function options
+                0               // additional data associated with keystroke
+        );
+
+        SendMessage( (HWND) hb_parnl(1) , WM_SYSCOMMAND , SC_MOVE ,10 );
+
+}
+#pragma ENDDUMP
+
+#pragma BEGINDUMP
+
+#include <windows.h>
+#include <mmsystem.h>
+#include "hbapi.h"
+#include "hbapiitm.h"
+#include <commctrl.h>
+#include <vfw.h>
+
+/*
+HB_FUNC ( SETMENUDEFAULTITEM )
+{
+        SetMenuDefaultItem( (HMENU) hb_parnl( 1 ), hb_parni( 2 ) - 1, TRUE );
+}
+*/
+
+HB_FUNC ( US_MCIFUNC )
+{
+        HWND mcihand = (HWND) hb_parnl(1);
+        int  func    = hb_parni(2);
+        switch(func)
+      {
+         case  1:  hb_retnl( MCIWndPlay(mcihand) ); break;
+         case  2:  hb_retnl( MCIWndStop(mcihand) ); break;
+         case  3:  hb_retnl( MCIWndPause(mcihand) ); break;
+         case  4:  hb_retnl( MCIWndClose(mcihand) ); break;
+         case  5:            MCIWndDestroy(mcihand); hb_retnl(0);break;
+         case  6:  hb_retnl( MCIWndEject(mcihand) ); break;
+         case  7:  hb_retnl( MCIWndEnd(mcihand) ); break;
+         case  8:  hb_retnl( MCIWndHome(mcihand) ); break;
+         case  9:  hb_retnl( MCIWndOpen(mcihand,hb_parc(3),NULL) ); break;
+         case 10:  hb_retnl( MCIWndOpenDialog(mcihand) ); break;
+         case 11:  hb_retnl( MCIWndPlayReverse(mcihand) ); break;
+         case 12:  hb_retnl( MCIWndResume(mcihand) ); break;
+         case 13:            MCIWndSetRepeat(mcihand,hb_parl(3) );hb_retnl(0); break;
+         case 14:  hb_retnl( MCIWndSetSpeed(mcihand,hb_parni(3)) ); break;
+         case 15:  hb_retnl( MCIWndSetVolume(mcihand,hb_parni(3)) ); break;
+         case 16:            MCIWndSetZoom(mcihand,hb_parni(3) ); hb_retnl(0); break;
+         case 17:  hb_retnl( MCIWndGetLength(mcihand) ); break;
+         case 18:  hb_retnl( MCIWndGetPosition(mcihand) ); break;
+         case 19:  hb_retnl( MCIWndGetVolume(mcihand) ); break;
+         case 20:  hb_retnl( MCIWndSeek(mcihand,hb_parni(3)) ); hb_retnl(0); break;
+         default: hb_retnl( 0 );
+      }
+}
+
+/*
+HB_FUNC ( US_INITIMAGE )
+{
+        HWND  h;
+        HBITMAP hBitmap;
+        HWND hwnd;
+
+        hwnd = (HWND) hb_parnl (1);
+
+        h = CreateWindowEx(0,"static",NULL,
+        WS_CHILD | WS_VISIBLE | SS_BITMAP | SS_NOTIFY,
+        hb_parni(3), hb_parni(4), 0, 0,
+        hwnd,(HMENU)hb_parni(2) , GetModuleHandle(NULL) , NULL );
+
+        hBitmap = (HBITMAP)LoadImage(0,hb_parc(5),IMAGE_BITMAP,hb_parni(6),hb_parni(7),LR_LOADFROMFILE|LR_CREATEDIBSECTION);
+        if (hBitmap==NULL)
+        {
+                hBitmap = (HBITMAP)LoadImage(GetModuleHandle(NULL),hb_parc(5),IMAGE_BITMAP,hb_parni(6),hb_parni(7),LR_CREATEDIBSECTION);
+        }
+
+
+        SendMessage(h,(UINT)STM_SETIMAGE,(WPARAM)IMAGE_BITMAP,(LPARAM)hBitmap);
+
+        hb_retnl ( (LONG) h );
+}
+
+HB_FUNC ( US_C_SETPICTURE )
+{
+        HBITMAP hBitmap;
+
+        hBitmap = (HBITMAP)LoadImage(0,hb_parc(2),IMAGE_BITMAP,hb_parni(3),hb_parni(4),LR_LOADFROMFILE|LR_CREATEDIBSECTION);
+        if (hBitmap==NULL)
+        {
+                hBitmap = (HBITMAP)LoadImage(GetModuleHandle(NULL),hb_parc(2),IMAGE_BITMAP,hb_parni(3),hb_parni(4),LR_CREATEDIBSECTION);
+        }
+
+        SendMessage((HWND) hb_parnl (1),(UINT)STM_SETIMAGE,(WPARAM)IMAGE_BITMAP,(LPARAM)hBitmap);
+}
+*/
+#pragma ENDDUMP
+
+#pragma BEGINDUMP
+
+// #include <shlobj.h>
+
+HB_FUNC (US_2SETWINDOWRGN)
+{
+   HWND hWnd;
+   HRGN hrgn;
+
+   hWnd = (HWND) hb_parnl (1);
+   if ( hb_parni(6)==0)
+          SetWindowRgn(GetActiveWindow(),NULL,TRUE);
+   else
+     {
+     if ( hb_parni(6)==1 )
+        hrgn=CreateRectRgn(hb_parni(2),hb_parni(3),hb_parni(4),hb_parni(5));
+     else
+        hrgn=CreateEllipticRgn(hb_parni(2),hb_parni(3),hb_parni(4),hb_parni(5));
+     // SetWindowRgn(GetActiveWindow(),hrgn,TRUE);
+     SetWindowRgn( hWnd , hrgn , TRUE ) ;
+     // Should be hb_parnl(1) instead of GetActiveWindow()
+     }
+}
+#pragma ENDDUMP
+
+#pragma BEGINDUMP
+
+#include <windows.h>
+#include <winuser.h>
+#include "hbapi.h"
+
+#define VK_C 67
+#define VK_V 86
+#define VK_X 88
+#define VK_Z 90
+
+// copy - ctrl-c
+HB_FUNC( US_SEND_COPY )
+{
+    keybd_event(VK_CONTROL, MapVirtualKey(VK_CONTROL, 0), 0, 0);
+    keybd_event(VK_C, MapVirtualKey(VK_C, 0), 0, 0);
+    keybd_event(VK_C, MapVirtualKey(VK_C, 0), KEYEVENTF_KEYUP, 0);
+    keybd_event(VK_CONTROL, MapVirtualKey(VK_CONTROL, 0), KEYEVENTF_KEYUP, 0);
+}
+
+// paste - ctrl-v
+HB_FUNC( US_SEND_PASTE )
+{
+    keybd_event(VK_CONTROL, MapVirtualKey(VK_CONTROL, 0), 0, 0);
+    keybd_event(VK_V, MapVirtualKey(VK_V, 0), 0, 0);
+    keybd_event(VK_V, MapVirtualKey(VK_V, 0), KEYEVENTF_KEYUP, 0);
+    keybd_event(VK_CONTROL, MapVirtualKey(VK_CONTROL, 0), KEYEVENTF_KEYUP, 0);
+}
+
+// cut - ctrl-x
+HB_FUNC( US_SEND_CUT )
+{
+    keybd_event(VK_CONTROL, MapVirtualKey(VK_CONTROL, 0), 0, 0);
+    keybd_event(VK_X, MapVirtualKey(VK_X, 0), 0, 0);
+    keybd_event(VK_X, MapVirtualKey(VK_X, 0), KEYEVENTF_KEYUP, 0);
+    keybd_event(VK_CONTROL, MapVirtualKey(VK_CONTROL, 0), KEYEVENTF_KEYUP, 0);
+}
+
+// undo - ctrl-z
+HB_FUNC( US_SEND_UNDO )
+{
+    keybd_event(VK_CONTROL, MapVirtualKey(VK_CONTROL, 0), 0, 0);
+    keybd_event(VK_Z, MapVirtualKey(VK_Z, 0), 0, 0);
+    keybd_event(VK_Z, MapVirtualKey(VK_Z, 0), KEYEVENTF_KEYUP, 0);
+    keybd_event(VK_CONTROL, MapVirtualKey(VK_CONTROL, 0), KEYEVENTF_KEYUP, 0);
+}
+
+#pragma ENDDUMP
 
 #pragma BEGINDUMP
 

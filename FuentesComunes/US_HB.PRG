@@ -26,7 +26,7 @@
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "US_ENV.H"
+#include "US_Env.h"
 #include "fileio.ch"
 #include "minigui.ch"
 
@@ -40,7 +40,7 @@ Function US_IsRootFolder( cFolder )
 Return if( substr( alltrim( cFolder ) , 2 , 1 ) == ":" .and. len( alltrim( cFolder ) ) == 2 , .T. , .F. )
 
 Function US_ListAlias()
-   LOCAL aLista := {} , nInx := 0
+   LOCAL aLista := {} , nInx
    for nInx := 1 to 254
       if !empty( alias( nInx ) )
          aadd( aLista , { nInx , alias( nInx ) } )
@@ -66,7 +66,7 @@ Function US_Use( bNew , cDriver , cName , cAlias , ExclusiveShared , WriteRead )
 Return .F.
 
 Function US_At( par_cSearch , par_cString , par_nStart , par_nEnd )
-   Local Loc_nAux := 0
+   Local Loc_nAux
    if par_nStart == NIL
       Return At( par_cSearch , par_cString )
    else
@@ -93,8 +93,8 @@ Return 0
 *// MOD: MODIFICA EL ANCHO DE LA COLUMNA
 *//========================================================================\\*
 FUNCTION US_DB_CMP(cTabla,cModo,CAMPO,TIPO,LONGI,DEC)
-   LOCAL vStruct:={}, vStructDelete:={}, SALIR:=.F., cTablaBAK:="", POS:=0, I:=0, ;
-         REGISTROS:=0 , cMemoExtType := ".DBT" , cDriver := "DBFNTX" , cDbfOld := dbf()
+   LOCAL vStruct, vStructDelete, SALIR:=.F., cTablaBAK:="", POS, I, ;
+         REGISTROS, cMemoExtType := ".DBT" , cDriver := "DBFNTX" , cDbfOld := dbf()
    cModo:=UPPER(cModo)
    IF (cModo == "ADD") .AND. (TIPO=="C" .OR. TIPO=="N") .AND. (LONGI==NIL .OR. LONGI < 1)
       ? "ERROR EN PARAMETRO LONGITUD DE FUNCION US_DB_CMP PARA CAMPO: "+CAMPO
@@ -223,7 +223,7 @@ FUNCTION US_DB_CMP(cTabla,cModo,CAMPO,TIPO,LONGI,DEC)
          US_DB_CMP(cTabla,"DEL",CAMPO)
          US_DB_CMP(cTabla,"ADD",CAMPO,TIPO,LONGI,DEC)
          US_Use( .T. , cDriver , cTabla )
-         REPLACE &(CAMPO) WITH A________A ALL
+         REPLACE &(CAMPO) WITH field->A________A ALL
          DbCloseArea( cTabla )
          US_DB_CMP(cTabla,"DEL","A________A")
          if !empty( cDbfOld )
@@ -240,7 +240,7 @@ FUNCTION US_DB_CMP(cTabla,cModo,CAMPO,TIPO,LONGI,DEC)
 RETURN 8
 
 Function US_ExtractMemoKey( cMemo , cKey )
-   Local nInx := 0
+   Local nInx
    for nInx := 1 to MLCount( cMemo , 254 )
       if Upper( US_Word( MemoLine( cMemo , 254 , nInx ) , 1 ) ) == upper( cKey )
          Return US_WordSubstr( MemoLine( cMemo , 254 , nInx ) , 2 )
@@ -276,7 +276,7 @@ Return CallDLL32( "WININET.DLL" , "InternetGetConnectedStateEx" , 0 , "" , 0 , 0
 //=  mal codificados                                                               =\\
 //----------------------------------------------------------------------------------\\
 Function US_DBConvert( cBaseIn , cBaseOut , cFrom , cTarget )
-   Local vStruct := {} , cAreaOld := dbf()
+   Local vStruct , cAreaOld := dbf()
    Request DBFCDX , DBFFPT
    if ( upper( cFrom ) == "DBFNTX" .and. upper( cTarget ) == "DBFCDX" ) .or. ;
       ( upper( cFrom ) == "DBFCDX" .and. upper( cTarget ) == "DBFNTX" )
@@ -313,6 +313,7 @@ Function US_UnMaskBinData( x )
    x := StrTran( x , '\\#00//' , chr(00) )
 return x
 
+/*
 Function US_Setup()
    SET ESCAPE OFF
    SET EXACT ON
@@ -499,19 +500,8 @@ Function US_Setup()
       LETRA_T:="T" ,;
       LETRA_V:="V" ,;
       LETRA_N:="N"
-   /***
-   *
-   * Inkey.ch
-   *
-   * Standard INKEY() key-code definitions
-   *
-   * Copyright (c) 1990-1993, Computer Associates International, Inc.
-   * All rights reserved.
-   *
-   * NOTE: Keystroke descriptions marked with an asterick (*) are only
-   *    available on enhanced keyboards (those with more than 84 keys)
-   *
-   */
+
+   // Inkey.ch
 
    // Cursor movement keys
 
@@ -725,7 +715,7 @@ Function US_Setup()
    Descend("P") && PARA CARGAR LA FUNCION DESCEND QUE ES UTILIZADA EN INDICES
 
 RETURN .T.
-
+*/
 
 Function US_DBSkip( num )
    if empty( num )
@@ -780,12 +770,14 @@ Return ALLTRIM(strtran(strtran(STR(seconds()),".",alltrim(str(US_Rand(seconds())
 *INKEY(0)
 *RETURN
 
+/*
 #ifndef __XHARBOUR__
 FUNCTION DISKFREE(Param)
 ? "Funcion DISKFREE no disponible en Harbour, Use US_DiskSpace"
 INKEY(0)
 RETURN
 #endif
+*/
 
 *FUNCTION NUMFILES(Param)
 *? "Funcion NUMFILES no disponible en Harbour"
@@ -835,7 +827,7 @@ Function US_FileTime(cFile)
 Return -1
 
 Function US_FileType(cFile)
-   Local vFile, CurrentDisk:="" , CurrentDir:=""
+   Local vFile, CurrentDisk, CurrentDir
    if rat(DEF_SLASH,cFile) = len(cFile)
       cFile:=substr(cFile,1,len(cFile)-1)
    endif
@@ -863,7 +855,7 @@ Function US_FileType(cFile)
 Return ""
 
 Function US_DiskSpace(Letra)
-   Local DiskTemp, nTam:=-1 , CurDir:=""
+   Local DiskTemp, nTam := -1, CurDir
    DiskTemp:=Diskname()
    CurDir  :=CurDir()
    IF DiskChange(Letra+":")
@@ -883,7 +875,7 @@ Return nTam
 //=   -2 = Error en parametros                                                     =\\
 //----------------------------------------------------------------------------------\\
 Function US_SeekFile(Vector, Disco, BaseFolder, Archivo, bBloqueNextFolder, bBloqueFileFound, bStopSeek)
-LOCAL inx, R, aFiles, aDirec, nCant:=0, NextFolder, RetornoRecursivo:=0
+LOCAL inx, aFiles, aDirec, nCant:=0, NextFolder, RetornoRecursivo
 if pcount() < 5
    us_log("Error en parámetros de US_SeekFile, Parámetros esperados: VectorDeResultados (por referencia), Disco, BaseFolder, Archivo, bBloqueNextFolder, bBloqueFileFound, VariableBooleanaParaStop (por referencia) (Opcional)",.t.)
    return -2
@@ -966,24 +958,23 @@ Return nCant
 //= -100 = Error en calculo de longitud de salida, Ver Log                         =\\
 //----------------------------------------------------------------------------------\\
 Function US_SplitFile( cEnt, nSize, vFilesResult, bStop, nIdioma, cMsgRetorno, EvaluoTotal, EvaluoParcial, bHomogeneo, cArchivoRebuild )
-Local archivo_de_entrada:="", ;
+Local archivo_de_entrada, ;
       cArmarFinal      :="@ECHO OFF",;
-      cArmarAuxFinal   :="",;
+      cArmarAuxFinal, ;
       cArmarNormal     :="COPY /B ",;
       cArmarExplorer   :="COPY /B ",;
       cArmarZipExplorer:="COPY /B ",;
-      nHomoAux:=0 , ;
+      nHomoAux, ;
       buffer:="" , ;
       buffsize:= 32767 , ;
-      msg := "" , ;
-      cant_arch_sal:=0 , ;
+      cant_arch_sal , ;
       bytes_leidos := 0 , ;
       cont_files := 0 , ;
       bytes_grabados := 0 , ;
       total_grabados := 0 , ;
-      bytes_evaluo_total := 0 , ;
+      bytes_evaluo_total, ;
       bytes_evaluo_parcial := 0 , ;
-      longitud_last := 0 , ;
+      longitud_last, ;
       aux_bytes := 0 , ;
       crear := .t. , ;
       loop := .t. , ;
@@ -991,7 +982,8 @@ Local archivo_de_entrada:="", ;
       archivo_batch := "" , ;
       cCRLF:=HB_OsNewLine(), ;
       longitud_de_salida  := 1457664 , ;
-      longitud_de_entrada := 0
+      longitud_de_entrada, ;
+      entrada, salida, batch
 
 if empty(bStop)
    bStop:=.F.
@@ -1323,7 +1315,7 @@ Function US_PosCenter(ESTRING)
 Return ( ( 80 - LEN( ESTRING ) ) / 2 )
 
 Function US_VarToStr(X)
-   Local T, StringAux:="" , i:=0
+   Local T, StringAux:="" , i
    if X == NIL
       X := "*NIL*"
    endif
@@ -1347,7 +1339,7 @@ Function US_VarToStr(X)
          StringAux=IF(X,'.T.','.F.')
          return StringAux
       case T='A'
-         for i=1 to ( len(x) - 1 )
+         for i:=1 to ( len(x) - 1 )
             StringAux:=StringAux + US_VarToStr( x[i] ) + HB_OSNewLine()
          next
          if len(x) > 0
@@ -1376,6 +1368,7 @@ FUNCTION US_StrCero(NUM,LONG,DEC)
    NEXT
 RETURN NUM
 
+/*
 FUNCTION US_CPT
    PARAMETERS CAMPO
    PRIVATE CLAVE,CLAVE2,H,I,SALIDA,REEMPLAZO,RANT
@@ -1449,10 +1442,10 @@ FUNCTION US_UCPT
           ? "TYPO NO CONTEMPLADO"
    ENDCASE
 RETURN SALIDA
+*/
 
-FUNCTION US_RAND
-   PARAMETERS RANDOM
-   PRIVATE NEGATIVE,TTX,TTJ,TTY,TTK,TTL,TTZ,TTS,TTT,RETT
+FUNCTION US_RAND( RANDOM )
+   LOCAL NEGATIVE,TTX,TTJ,TTY,TTK,TTL,TTZ,TTS,TTT,RETT
    NEGATIVE=(RANDOM < 0)
    IF RANDOM = 0
       RETURN(0)
@@ -1526,11 +1519,9 @@ Function US_ElapsedMil( cDesde , cHasta )
          nCenHasta := val( Substr( cHasta , 15 , 2 ) )
    Local cFechaDesde := CTOD(substr(cDesde,5,2)+"/"+substr(cDesde,7,2)+"/"+substr(cDesde,1,4)) , ;
          cFechaHasta := CTOD(substr(cHasta,5,2)+"/"+substr(cHasta,7,2)+"/"+substr(cHasta,1,4))
-   Local nSecDesde := 0 , ;
-         nSecHasta := 0
-   Local nDias := 0
+   Local nSecDesde, nSecHasta
+   Local nDias
    Local nSecAcum := 0
-   Local nReto := 0
    nDias := cFechaHasta - cFechaDesde
    nSecDesde := US_TimeSec( Substr( cDesde , 9 , 2 ) + ':' + Substr( cDesde , 11 , 2 ) + ':' + Substr( cDesde , 13 , 2 ) )
    nSecDesde += ( nCenDesde / 100 )
@@ -1770,16 +1761,15 @@ RETURN ESTRING
 *//========================================================================\\*
 *// PROCEDIMIENTO GENERAL PARA CERRAR BASES
 *//========================================================================\\*
-Function US_DBClose
-   PARAMETERS AREA && ALIAS
-   PRIVATE AREAACTUAL
+Function US_DBClose( AREA )
+   LOCAL AREAACTUAL
    AREAACTUAL = DBF()
    DBSELECTAREA(AREA)
    DBCLOSEAREA()
    IF AREAACTUAL != "" .AND. AREAACTUAL != AREA
       DBSELECTAREA(AREAACTUAL)
    ENDIF
-return
+return NIL
 
 *//========================================================================\\*
 *// ESTA FUNCION SAE USA PARA MOSTRAR EN DBEDIT MENOS DEL LARGO DEL CAMPO
@@ -1820,7 +1810,7 @@ return upper(STRTRAN(STRTRAN(STRTRAN(STRTRAN(STRTRAN(STRTRAN(STRTRAN(STRTRAN(STR
 FUNCTION US_PARSER(PREFIJO,PARAM)
 LOCAL PARAM2,POS,POS2,VAR,CONTE,VARNAME,SALIR,CONTADOR,A
 LOCAL bSaveHandler
-LOCAL oError
+LOCAL oError, USERROR
 CONTADOR:=0
 IF PCOUNT() < 2
    US_Log( "US_PARSER 001E: FALTA UNO O MAS PARAMETROS" )
@@ -1855,8 +1845,10 @@ DO WHILE SALIR == "N"
       bSaveHandler := errorblock( { |x| break(x) } )
       BEGIN SEQUENCE
             A=&VARNAME
+            EMPTY( A )
          RECOVER USING oError
             USERROR := oError:genCode   && CODIGO DEL ERROR, NO LO ESTOY USANDO
+            EMPTY( USERROR )
             US_Log( "US_PARCER 004E: PARAMETRO '"+VAR+"' ES INCORRECTO O NO ESTA DEFINIDA LA VARIABLE :"+VARNAME )
             RETURN -1
       END
@@ -1895,7 +1887,7 @@ IF US_WORDS(PAL) = 2
    VECTOR[BASEFIL][BASECOL+1]=US_WORD(PAL,2)
    VECTOR[BASEFIL+1][BASECOL]=US_WORD(PAL,2)
    VECTOR[BASEFIL+1][BASECOL+1]=US_WORD(PAL,1)
-   RETURN
+   RETURN NIL
 ENDIF
 FOR C=1 TO US_WORDS(PAL)
    FOR L=0 TO (US_FACTORIAL(US_WORDS(PAL))/US_WORDS(PAL))-1
@@ -1904,7 +1896,7 @@ FOR C=1 TO US_WORDS(PAL)
    US_COMBINATORIA(US_WORDDEL(PAL,C),@VECTOR,BASEFIL,BASECOL+1)
    BASEFIL=BASEFIL+US_FACTORIAL(US_WORDS(PAL))/US_WORDS(PAL)
 NEXT
-RETURN
+RETURN NIL
 
 *//========================================================================\\*
 *// FUNCION PARA CALCULAR EL FACTORIAL DE UN NUMERO
@@ -1916,7 +1908,7 @@ FUNCTION US_DateSeconds()
 RETURN DTOS(DATE())+US_STRCERO(SECONDS(),5)
 
 FUNCTION US_Dis_DateSeconds(DS, bInvertido)
-   Local cReto := ""
+   Local cReto
    if empty( bInvertido )
       bInvertido := .F.
    endif
@@ -1928,7 +1920,7 @@ FUNCTION US_Dis_DateSeconds(DS, bInvertido)
 RETURN cReto
 
 FUNCTION US_Dis_DateSeconds2(DS, bInvertido)
-   Local cReto := ""
+   Local cReto
    if empty( bInvertido )
       bInvertido := .F.
    endif
@@ -1940,7 +1932,7 @@ FUNCTION US_Dis_DateSeconds2(DS, bInvertido)
 RETURN cReto
 
 FUNCTION US_DIS_DATETIME(DT, bInvertido)
-   Local cReto := ""
+   Local cReto
    if empty( bInvertido )
       bInvertido := .F.
    endif
@@ -1952,7 +1944,7 @@ FUNCTION US_DIS_DATETIME(DT, bInvertido)
 RETURN cReto
 
 FUNCTION US_DIS_DateTimeCen(DTM , bInvertido)
-   Local cReto := ""
+   Local cReto
    if empty( bInvertido )
       bInvertido := .F.
    endif
@@ -2044,7 +2036,7 @@ FUNCTION US_MENU(PTOP,PLEFT,PBOTTOM,PRIGHT,VECTOR,VECTORBOOL,USERFUNC)
 RETURN US_MGMenu(PTOP,PLEFT,PBOTTOM,PRIGHT,VECTOR,VECTORBOOL,USERFUNC)
 */
 Function US_DB_CodePage( cbase , cNewCode )
-   Local cMode:="" , i:=0 , vEstructura:={}
+   Local cMode, i, vEstructura
    do case
       case upper(cNewCode) == "ANSI"
          cMode:="A"
@@ -2076,12 +2068,13 @@ Function US_DB_CodePage( cbase , cNewCode )
    DbCloseArea()
 Return .T.
 
+/*
 FUNCTION US_ISURL(URL,FILA,COLUMNA)
 RETURN 0
 
 FUNCTION US_ISISBN(ISBN,FILA,COLUMNA)
 RETURN 0
-
+*/
 *//========================================================================\\*
 *// $INI FUNCIONES para manejo de bits y numeros hexadecimales
 *//------------------------------------------------------------------------\\*
@@ -2232,7 +2225,7 @@ RETURN int(total)
 *// $fin funciones para manejo de bits y numeros hexadecimales
 *//========================================================================\\*
 
-/* funcion sin probar */
+/*
 Function US_IsDllAccess( DllName )
    Local hInstDLL := ::LoadLibrary( DllName )
    if !empty( hInstDll )
@@ -2241,7 +2234,7 @@ Function US_IsDllAccess( DllName )
       Return .F.
    endif
 Return .T.
-
+*/
 Function US_DirRemove( dire )
    Local arc , f , reto := .T.
    if US_IsDirectory( dire )
@@ -2289,9 +2282,9 @@ Return .F.
 *//          -1 si se produjo algun problema
 *//------------------------------------------------------------------------\\*
 Function US_FileChar26Zap( cFile )
-   Local nHndIn , reto := -1 , cAux := " " , cLinea := Space( 1024 ) , nLeidosTotal := 0 , nLenFileOut := 0 , nLeidosLoop := 0
+   Local nHndIn , reto := -1 , cAux := " " , cLinea := Space( 1024 ) , nLeidosTotal, nLenFileOut, nLeidosLoop
    Local cFileOut := US_FileNameOnlyPathAndName( cFile ) + "_T" + ALLTRIM( STR( INT( SECONDS() ) ) ) + "." + US_FileNameOnlyExt( cFile )
-   Local nHndOut := 0
+   Local nHndOut
 // nHndIn := fopen( cFile , 2 )
    nHndIn := fopen( cFile , FO_READWRITE )
    fseek( nHndIn , -1 , 2 )
@@ -2357,7 +2350,7 @@ Return cMemoOut
 *// $ini funcion para nombre corto de archivo
 *//------------------------------------------------------------------------\\*
 Function US_ShortName( nombre )
-Local Reto := ""
+Local Reto
    /* INI parche para parentesis por make GCC */
 // if at( "(" , Reto ) > 0 .or. ;
 //    at( ")" , Reto ) > 0 .or. ;
@@ -2417,9 +2410,9 @@ Function US_GetShortPathName( cPath )
 Return tmp
 
 Function US_GetShortFileName( cPath )
-   Local sShortPathName:="" ,lRetVal
+   Local sShortPathName:=""
    if file( cPath )
-      lRetVal := USAUX_GETSHORTPATHNAME(cPath,@sShortPathName)
+      USAUX_GETSHORTPATHNAME(cPath,@sShortPathName)
    endif
 Return sShortPathName
 *//------------------------------------------------------------------------\\*
@@ -2453,7 +2446,7 @@ Return substr( estring , us_wordind( estring , pos ) )
 *//========================================================================\\*
 FUNCTION US_IsVar(var)
    LOCAL bSaveHandler
-   LOCAL oError
+   LOCAL oError, USERROR
    Local a
    if at( "." , var ) > 0
       var := strtran( var , "." , " " )
@@ -2462,8 +2455,10 @@ FUNCTION US_IsVar(var)
    bSaveHandler := errorblock( { |x| break(x) } )
    BEGIN SEQUENCE
       a := &VAR
+      EMPTY( A )
    RECOVER USING oError
       USERROR = oError:genCode   && CODIGO DEL ERROR, NO LO ESTOY USANDO
+      EMPTY( USERROR )
       RETURN .F.
    END
    errorblock( bSaveHandler )
@@ -2511,16 +2506,13 @@ Function US_FileNameOnlyName( arc )
 Return reto
 
 Function US_FileNameOnlyPath( arc )
-// Local cReto := ""
    if arc == NIL
       Return ""
    endif
-   if US_IsDirectory( arc )  //  .and. substr( arc , len( arc ) - 2 ) != "*.*"
+   if US_IsDirectory( arc )
       return arc
    endif
 Return substr( arc , 1 , rat( DEF_SLASH , arc ) - 1 )
-// cReto := substr( arc , 1 , rat( DEF_SLASH , arc ) - 1 )
-//Return if( substr( cReto , 2 , 1 ) == ":" .and. len( cReto ) == 2 , cReto + DEF_SLASH , cReto )
 
 Function US_FileNameOnlyPathAndName( arc )
    Local cPath := US_FileNameOnlyPath( arc ) , cName := US_FileNameOnlyName( arc )
@@ -2557,12 +2549,14 @@ Return "99999999999999"
 
 Function US_IsVarDefined( nombre )
    LOCAL bSaveHandler , A
-   LOCAL oError
+   LOCAL oError, USERROR
    bSaveHandler := errorblock( { |x| break(x) } )
    BEGIN SEQUENCE
          A=&nombre
+         EMPTY( A )
       RECOVER USING oError
          USERROR = oError:genCode   && CODIGO DEL ERROR, NO LO ESTOY USANDO
+         EMPTY( USERROR )
          RETURN .F.
    END
    errorblock( bSaveHandler )
@@ -2574,7 +2568,7 @@ RETURN DTOS(DATE())+substr(tiempo,1,2)+substr(tiempo,4,2)+substr(tiempo,7,2)
 
 //#ifdef __XHARBOUR__
 FUNCTION US_DateTimeCen()
-   Local nCen := 0 , nTiempo , nSecCen := TIMETOSEC()
+   Local nCen, nTiempo , nSecCen := TIMETOSEC()
    nTiempo := SECTOTIME( INT( nSecCen ) )
    nCen := ( nSecCen - INT( nSecCen ) ) * 100
 RETURN DTOS(DATE())+substr(nTiempo,1,2)+substr(nTiempo,4,2)+substr(nTiempo,7,2)+alltrim(US_strcero(nCen,2))
@@ -2587,7 +2581,7 @@ Function US_WSlash( arc )
 Return strtran( arc , "/" , "\" )
 
 Function US_FileNameCase( cFile )
-   Local vCaseName
+   Local nCaseName
    if file( cFile )
       nCaseName := Directory( cFile , "HS" )
       Return nCaseName[1][1]
@@ -2639,7 +2633,7 @@ Return .T.
 // US_StrTran reemplaza caracteres ignorando si es mayusculas o minusculas
 Function US_StrTran( cLinea , cOld , cNew , nDesde , nCant )
    LOCAL nBase , nPos , cLineaSal := "" , nContador := 0 , bTope := .F.
-   LOCAL cLineaUpper , cOldUpper , cNewUpper
+   LOCAL cLineaUpper , cOldUpper
 //us_log( cLinea )
 //us_log( cold   )
 //us_log( cnew   )
@@ -2648,7 +2642,6 @@ Function US_StrTran( cLinea , cOld , cNew , nDesde , nCant )
    endif
    cLineaUpper := upper( cLinea )
    cOldUpper := upper( cOld )
-   cNewUpper := upper( cNew )
    if empty( nDesde )
       nDesde := 1
    endif
@@ -2680,9 +2673,9 @@ Function US_StrTran( cLinea , cOld , cNew , nDesde , nCant )
 Return cLineaSal
 
 #ifndef __XHARBOUR__
-   *----------------------------------------------------------------------------
+   //---------------------------------------------------------------------------
    FUNCTION FileValid( cFileName, nMaxName, nMaxExt, lWithoutExt, lSpaceInName )
-   *----------------------------------------------------------------------------
+   //---------------------------------------------------------------------------
    /*
    This function return by default, the MS-DOS valid file name (8x3) or an other
    format defined by user in accordance with <nMaxName> and <nMaxExt> values.
@@ -2692,10 +2685,10 @@ Return cLineaSal
    Local lRet  := .T.
    Local cName := ""
    Local cExt  := ""
-   Local i     := 0
+   Local i
    Local cInvalid := ""
-   Local nDecimalPoint := 0
-   Local nFileLen := 0
+   Local nDecimalPoint
+   Local nFileLen
 
    default cFileName to ""
    default nMaxName  to 8      // max file name len.
@@ -2827,9 +2820,9 @@ Return if( bFlag , ALTD() , ALTD(0) )
 *// $ini funcion para nombre corto de archivo
 *//------------------------------------------------------------------------\\*
 Function US_GetShortFullFileName( cPath )
-   Local sShortPathName:="" ,lRetVal
+   Local sShortPathName:=""
    if file( cPath )
-      lRetVal := USAUX_GETSHORTPATHNAME(cPath,@sShortPathName)
+      USAUX_GETSHORTPATHNAME(cPath,@sShortPathName)
    endif
 Return sShortPathName
 
@@ -2862,7 +2855,7 @@ HB_FUNC (HDGETSERIAL)
 //=========================================================================================================
 */
 
-// Dado un Path devuelve su nombre corto
+/* Dado un Path devuelve su nombre corto
 Function US_PathShortName( cPath )
    Local cDisc := DiskName() , cCurDir := CurDir() , cReto ,  cArc := "_temp"+US_NameRandom()
    memowrit( cArc , "." )
@@ -2870,11 +2863,11 @@ Function US_PathShortName( cPath )
    cReto := US_FileNameOnlyPath( cReto )
    ferase( cArc )
 Return cReto
-
+*/
 // Esta funcion nace por la necesidad de reemplazar la funcion filecopy que deja tomado el directorio de destino
 // La funcion filecopy es interesante porque devuelve la cantidad de bytes copiados
 Function US_FileCopy( cIn , cOut )
-   Local nLen := 0
+   Local nLen
    if file( cOut )
       if ferase( cOut ) != 0
          US_Log( "Error en delete de file destino: " + cOut , .F. )
@@ -2935,25 +2928,21 @@ Function US_CopyFileTree( cIn , cOut )
 Return bReto
 
 Function US_CreateFolder( par_cName )
-   Local Loc_nSlash := 0 , Loc_nInx := 0 , Loc_cDir := "" , Loc_cFirstCreated := "" , Loc_nPos := 0
+   Local Loc_nSlash, Loc_nInx, Loc_cDir, Loc_cFirstCreated := "" , Loc_nPos
    if !( right( par_cName , 1 ) == DEF_SLASH )
       par_cName := par_cName + DEF_SLASH
    endif
    Loc_nSlash := NumAt( DEF_SLASH , par_cName )
-//us_log( par_cName )
-//us_log( Loc_nSlash )
    Loc_nPos := 3
    for Loc_nInx := 1 to ( Loc_nSlash - 1 )
       Loc_nPos := US_At( DEF_SLASH , par_cName , Loc_nPos + 1 )
       Loc_cDir := Substr( par_cName , 1 , Loc_nPos - 1 )
-//  us_log( Loc_cDir )
       if !US_IsDirectory( Loc_cDir )
          CreateFolder( Loc_cDir )
          if empty( Loc_cFirstCreated )
             Loc_cFirstCreated := Loc_cDir
          endif
          if !US_IsDirectory( Loc_cDir )
-//us_log( "previo remove: " + Loc_cFirstCreated )
             US_DirRemove( Loc_cFirstCreated )
             return .F.
          endif
@@ -2963,17 +2952,16 @@ Return .T.
 
 //==================================================================================\\
 FUNCTION US_IsEmailAddress( cEmailAddress )
-   LOCAL lRetorno, cValidChars, nChar, cChar, cBeforeAt, cAfterAt, nDot, nRDot, nAt, nRat, nLen
-   LOCAL nLeftBracket, nRightBracket, cInBrackets, nLenTemp
+   LOCAL lRetorno, nChar, cChar, nDot, nRDot, nAt, nRat, nLen
+   LOCAL nLeftBracket, nRightBracket
    lRetorno       := .F.
    cEmailAddress  := IF(VALTYPE(cEmailAddress) <> "C", "", ALLTRIM(cEmailAddress))
    nLen           := LEN(cEmailAddress)
-   cValidChars    := '1234567890-_.^@~abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ[]'
    IF !EMPTY(cEmailAddress)
       FOR nChar := 1 TO nLen
          cChar := SUBSTR(cEmailAddress, nChar, 1)
          IF AT(cChar, cEmailAddress) == 0
-            RETU lRetorno
+            RETURN lRetorno
          ENDI
       NEXT
       nAt            := AT("@", cEmailAddress)
@@ -2985,23 +2973,23 @@ FUNCTION US_IsEmailAddress( cEmailAddress )
       IF (nLeftBracket > 0 .AND. nRightBracket < 1) .OR. ;
          (nRightBracket > 0 .AND. nLeftBracket < 1) .OR. ;
          (nLeftBracket > nRightBracket)
-         RETU lRetorno
+         RETURN lRetorno
       ENDI
       IF (nAt == 0 .OR. nAt == 1) .OR. ;
          (nRat <> nAt) .OR. ;
          (nDot == 0  .OR. nDot <= 2 .OR. nDot + 2 > nLen) .OR. ;
          (nRat > nRDot)
 
-         RETU lRetorno
+         RETURN lRetorno
       ENDI
       IF nLeftBracket > 0
          IF nRat > nLeftBracket
-            RETU lRetorno
+            RETURN lRetorno
          ENDI
       ENDI
       lRetorno := .T.
    ENDI
-RETU lRetorno
+RETURN lRetorno
 //==================================================================================\\
 
 //==================================================================================\\
@@ -3024,7 +3012,7 @@ Function US_DeleteFileMulti( cIn )
    for i:=1 to len(vAux)
       ferase( vAux[i][1] )
    next
-Return
+Return NIL
 #else
 Function US_DeleteFileMulti( cIn )
 Return FileDelete( cIn )
@@ -3033,19 +3021,19 @@ Return FileDelete( cIn )
 Function US_DoEvents()
   while US_ProcessMess()
   enddo
-return
+return NIL
 
 //=========================================================================================================
 // Ini Leer linea de archivo binario
 //---------------------------------------------------------------------------------------------------------
 Function US_fReadLine( hFile , cLinea , vFines )
 Return HB_fReadLine( hFile , @cLinea , vFines )
-// La siguiente funcion ejecuta correctamente, falta aggiornarla para archivos con final de linea tipo UNIX
-//Return US_fReadLineXXXXX( hFile , @cLinea , vFines )
+
+/* La siguiente funcion ejecuta correctamente, falta aggiornarla para archivos con final de linea tipo UNIX
 Function US_fReadLineXXXXX( nHnd , cLineOut , cDummy2 )
- //Local cLineOut, cChunk, cBigChunk, nOldOffset, nAtChr13
-   Local nLastPos := 0 , nLenFile := 0
+   Local nLenFile
    Local cChunk := "" , cBigChunk := "" , nOldOffset := 0 , nAtChr13 := 0
+   EMPTY( cDummy2 )
    cLineOut := ""
    nOldOffset := FSEEK( nHnd , 0 , 1 )
    nLenFile  := FSEEK( nHnd , 0 , 2 )
@@ -3054,12 +3042,11 @@ Function US_fReadLineXXXXX( nHnd , cLineOut , cDummy2 )
       return -1
    endif
    DO WHILE .T.
-      *- read in a Chunk of the file
+      // read in a Chunk of the file
       cChunk := ''
       cChunk := Freadstr( nHnd , 100 )
-      *- if we didn't read anything in, guess we're at the EOF
+      // if we didn't read anything in, guess we're at the EOF
       IF LEN( cChunk ) = 0
-         endof_file := .T.
          IF !EMPTY( cBigChunk )
            cLineOut := cBigChunk
          ENDIF
@@ -3067,33 +3054,33 @@ Function US_fReadLineXXXXX( nHnd , cLineOut , cDummy2 )
       elseif len( cBigChunk ) > 1024
          EXIT
       ENDIF
-      *- add this chunk to the big chunk
+      // add this chunk to the big chunk
       cBigChunk += cChunk
-      *- if we've got a CR , we've read in a line
-      *- otherwise we'll loop again and read in another chunk
+      // if we've got a CR , we've read in a line
+      // otherwise we'll loop again and read in another chunk
       IF AT( CHR( 13 ) , cBigChunk ) > 0
          nAtChr13 := AT( CHR( 13 ) , cBigChunk )
-         *- go back to beginning of line
+         // go back to beginning of line
          FSEEK( nHnd , nOldOffset )
-         *- read in from here to next CR (-1)
+         // read in from here to next CR (-1)
          cLineOut := Freadstr( nHnd , nAtChr13 - 1 )
-         *- move the pointer 1 byte
+         // move the pointer 1 byte
          FSEEK( nHnd , 1 , 1 )
          EXIT
       ENDIF
    ENDDO
-   *- move the pointer 1 byte
-   *- this should put us at the beginning of the next line
+   // move the pointer 1 byte
+   // this should put us at the beginning of the next line
    if FSEEK( nHnd , 1 , 1 ) > nLenFile
       cLineOut := US_MemoChar26Zap( cLineOut )
    endif
-*- return the contents of the line
+// return the contents of the line
 // RETURN cLineOut
 RETURN 0
 //--------------------------------------------------------------------------------------------------------
 // Fin Leer linea de archivo binario
 //=========================================================================================================
-
+*/
 #pragma BEGINDUMP
 #define _WIN32_IE      0x0500
 #define HB_OS_WIN_32_USED

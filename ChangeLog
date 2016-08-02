@@ -8,6 +8,17 @@
  * See "How to format your ChangeLog entries" in howtosvn.txt file.
  */
 
+2016-08-02 19:00:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * ./FuentesComunes/TAxPrg.prg
+   * ./FuentesComunes/US_Classes.prg
+   * ./FuentesComunes/US_Edit_CharFijo.prg
+   * ./FuentesComunes/US_HB.PRG
+   * ./FuentesComunes/US_Log.prg
+   * ./FuentesComunes/US_MG.PRG
+   * ./FuentesComunes/US_ProcessWin.prg
+     ! Harbour warnings when compiling with -w3 switch.
+     * Some unused code was commented out.
+
 2016-07-24 12:35:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * All files with copyright notice.
      * Copyright updated.

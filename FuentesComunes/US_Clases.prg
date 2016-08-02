@@ -26,7 +26,7 @@
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "US_ENV.H"
+#include "US_Env.h"
 #include "hbclass.ch"
 #include "minigui.ch"
 
@@ -1062,7 +1062,7 @@ CLASS US_InputBox
    METHOD New()                                 && Crear el Objeto
    METHOD Destroy()                             && Destruir el Objeto
    METHOD DefineWindow()                        && Definir la ventana y los controles
-   METHOD InputBoxEval( StringVal , LogicNum )  && Evaluar la condicion para abandonar el dialogo
+   METHOD InputBoxEval( cValidar , bNumeric )   && Evaluar la condicion para abandonar el dialogo
    METHOD Show()                                && Activar el dialogo
 
    DATA US_InputBoxPan HIDDEN             init "US_WIP"+US_NameRandom()
@@ -1154,7 +1154,7 @@ METHOD Show() CLASS US_InputBox
 return ::Reto
 
 METHOD InputBoxEval( cValidar , bNumeric ) CLASS US_InputBox
-   Private Aux:=GetProperty( ::US_InputBoxPan , "texto" , "value" )
+   Local Aux:=GetProperty( ::US_InputBoxPan , "texto" , "value" )
    if bNumeric
       Aux:=STR(Aux)
    endif
@@ -1167,7 +1167,7 @@ METHOD InputBoxEval( cValidar , bNumeric ) CLASS US_InputBox
       ::Reto:=GetProperty( ::US_InputBoxPan , "texto" , "value" )
       &(::US_InputBoxPan).Release()
    endif
-Return
+Return nil
 //----------------------------------------------------------------------------------\\
 //= END CLASE US_InputBox                                                          =\\
 //==================================================================================\\
@@ -1320,7 +1320,7 @@ CLASS US_MGWait
 
    METHOD New()                                  && Crear el Objeto
    METHOD Destroy()                              && Destruir el Objeto
-   METHOD Ejecutar( FuncionDeUsuario )           && Metodo que ejecuta la funcion
+   METHOD Ejecutar( cFun )                       && Metodo que ejecuta la funcion
    //
    METHOD Create()                     HIDDEN    && Crear la ventana del Objeto
    METHOD OnInit()                     HIDDEN    && Metodo interno para setear el nombre de la funcion a ejecutar
@@ -1417,8 +1417,10 @@ METHOD Create() CLASS US_MGWait
          BACKCOLOR { 45, 24,160} ;
          CENTERALIGN
 
+#define BSTOP_ROW ::nAlto - 30 - iif( IsVistaOrLater(), GetBorderWidth() / 2 + 2, 0)
+#define BSTOP_COL ::nAncho - 95 - iif( IsVistaOrLater(), GetBorderWidth() / 2 + 2, 0)
       if ::bStopButton
-         @ ::nAlto - 30 , ::nAncho - 95 BUTTON BStop ;
+         @ BSTOP_ROW, BSTOP_COL BUTTON BStop ;
             OF &(::MGWaitPan) ;
             CAPTION "Stop" ;
             ACTION ( SetProperty( ::MGWaitPan , "bStop" , "enabled" , .F. ) , ::bStop := .T. , SetProperty( ::MGWaitPan , "bStop" , "caption" , "Wait..." ) ) ;
@@ -1519,7 +1521,7 @@ METHOD Ejecutar( cFun ) CLASS US_MGWait
    endif
 
    if ::cSkin = "VP"
-      US_WinStackAdd( @RN_WinStack , ::MGWaitPan )
+//      US_WinStackAdd( @RN_WinStack , ::MGWaitPan )
    endif
 
    ACTIVATE WINDOW &( ::MGWaitPan )
@@ -1527,7 +1529,7 @@ METHOD Ejecutar( cFun ) CLASS US_MGWait
    DO EVENTS
 
    if ::cSkin = "VP"
-      US_WinStackDel( @RN_WinStack , ::MGWaitPan )
+//      US_WinStackDel( @RN_WinStack , ::MGWaitPan )
    endif
 
 // US_LOG("   despues de Window, retorno: " + US_VarToStr( ::Reto ) , .F. )

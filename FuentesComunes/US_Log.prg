@@ -28,7 +28,7 @@
 
 Function US_Log( cTexto , bDisplay , bStack )
    Local bReto , i
-   Local MSG := "" , vStack := {}
+   Local MSG := "" , vStack
    if bStack == NIL
       bStack := .F.
    endif
@@ -75,7 +75,7 @@ Function US_LogStackChar()
 Return vec
 
 Function US_LogTodoStr(X)
-   Local T, StringAux:="" , i:=0
+   Local T, StringAux:="" , i
    if X == NIL
       X := "*NIL*"
    endif
