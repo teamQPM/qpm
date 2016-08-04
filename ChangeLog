@@ -8,6 +8,23 @@
  * See "How to format your ChangeLog entries" in howtosvn.txt file.
  */
 
+2016-08-03 22:43:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * ./QPM.EXE
+   * ./QPM_AutoProject.qpm
+   * ./QPM_US_Slash.qpm
+   * ./us_slash.exe
+   * ./TODO
+     * Updated.
+   * ./QPM_GlobalSettings.prg
+     ! RTE when setting xHarbour's lib folder under Extended+BCC32.
+   * ./QPM.prg
+     ! Libs at xLib folder are ignored under Extended+BCC32+xHarbour.
+     ! .ppo files remain in BCC32\bin folder after build.
+   * us_slash.prg
+     + Blank line at the end to improve readability.
+   * QPM_Libraries.prg
+     * Some comments.
+
 2016-08-02 20:03:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * ./QPM.ch
      * Updated list of memvars.

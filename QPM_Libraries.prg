@@ -565,7 +565,7 @@ Function QPM_CargoLibraries()
    aadd( &( "vLibDefault"+DefineExtended1+DefineBorland+DefineXHarbour ), cPre+'hbxml'+cExt )
    aadd( &( "vLibDefault"+DefineExtended1+DefineBorland+DefineXHarbour ), cPre+'hbzip'+cExt )
    aadd( &( "vLibDefault"+DefineExtended1+DefineBorland+DefineXHarbour ), cPre+'hmg_hpdf'+cExt )
-   aadd( &( "vLibDefault"+DefineExtended1+DefineBorland+DefineXHarbour ), cPre+'hmg_qhtm'+cExt )
+   aadd( &( "vLibDefault"+DefineExtended1+DefineBorland+DefineXHarbour ), cPre+'hmg_qhtm'+cExt )       // xlib
    aadd( &( "vLibDefault"+DefineExtended1+DefineBorland+DefineXHarbour ), cPre+'hsx'+cExt )
    aadd( &( "vLibDefault"+DefineExtended1+DefineBorland+DefineXHarbour ), cPre+'iphlpapi'+cExt )
    aadd( &( "vLibDefault"+DefineExtended1+DefineBorland+DefineXHarbour ), cPre+'lang'+cExt )
@@ -586,15 +586,15 @@ Function QPM_CargoLibraries()
    aadd( &( "vLibDefault"+DefineExtended1+DefineBorland+DefineXHarbour ), cPre+'tbn'+cExt )
    aadd( &( "vLibDefault"+DefineExtended1+DefineBorland+DefineXHarbour ), cPre+'tip'+cExt )
    aadd( &( "vLibDefault"+DefineExtended1+DefineBorland+DefineXHarbour ), cPre+'tmsagent'+cExt )
-   aadd( &( "vLibDefault"+DefineExtended1+DefineBorland+DefineXHarbour ), cPre+'tsbrowse'+cExt )
+   aadd( &( "vLibDefault"+DefineExtended1+DefineBorland+DefineXHarbour ), cPre+'tsbrowse'+cExt )       // xlib
    aadd( &( "vLibDefault"+DefineExtended1+DefineBorland+DefineXHarbour ), cPre+'usrrdd'+cExt )
    aadd( &( "vLibDefault"+DefineExtended1+DefineBorland+DefineXHarbour ), cPre+'vfw32'+cExt )
    aadd( &( "vLibDefault"+DefineExtended1+DefineBorland+DefineXHarbour ), cPre+'vm'+cExt )
-   aadd( &( "vLibDefault"+DefineExtended1+DefineBorland+DefineXHarbour ), cPre+'winreport'+cExt )
+   aadd( &( "vLibDefault"+DefineExtended1+DefineBorland+DefineXHarbour ), cPre+'winreport'+cExt )      // xlib
    aadd( &( "vLibDefault"+DefineExtended1+DefineBorland+DefineXHarbour ), cPre+'xhbsqlite3'+cExt )     // xlib
    aadd( &( "vLibDefault"+DefineExtended1+DefineBorland+DefineXHarbour ), cPre+'zlib'+cExt )
 
-   // Extended 1.x MinGW + xHarbour
+   // Extended 1.x + MinGW + xHarbour
    cPre := "lib"
    cExt := ".a"
    &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineXHarbour ) := {}

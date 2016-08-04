@@ -136,14 +136,22 @@ FUNCTION MAIN( ... )
    EndIf
    FErase( GCCbat )
    FErase( estado )
+   If bList
+      QPM_Log( "" )
+   EndIf
 Return .T.
 
 Function QPM_Log( string )
-   Local LogArchi := cQPMDir + "QPM.LOG"
-   Local msg := Dtos( Date() ) + " " + Time() + " Stack(" + AllTrim( Str( US_Stack() ) ) + ") " + ProcName( 1 ) + "(" + StrZero( ProcLine( 1 ), 3, 0 ) + ")" + " " + string
+   Local LogArchi, msg
+
+   if empty( string )
+      msg := ""
+   else
+      msg := Dtos( Date() ) + " " + Time() + " Stack(" + AllTrim( Str( US_Stack() ) ) + ") " + ProcName( 1 ) + "(" + StrZero( ProcLine( 1 ), 3, 0 ) + ")" + " " + string
+   endif
 
    SET CONSOLE OFF
-   SET ALTERNATE TO ( LogArchi ) ADDITIVE
+   SET ALTERNATE TO ( cQPMDir + "QPM.LOG" ) ADDITIVE
    SET ALTERNATE ON
    ? msg
    SET ALTERNATE OFF
