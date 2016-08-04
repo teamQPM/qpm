@@ -5811,18 +5811,16 @@ Function QPM_Build2()
  */
    do case
       case IsMinGW
-         Out := Out + 'DEF_SLASH = '       + US_ShortName( PUB_cQPM_Folder )    + DEF_SLASH                             + 'US_SLASH.EXE QPM' + Hb_OsNewLine()
          Out := Out + 'IMPDEF_MGW_EXE = '  + US_ShortName( PUB_cQPM_Folder )    + DEF_SLASH                             + 'US_PEXPORTS.EXE'  + Hb_OsNewLine()
-         Out := Out + 'REIMPORT_EXE = '    + US_ShortName( PUB_cQPM_Folder )    + DEF_SLASH                             + 'US_REIMP.EXE'     + Hb_OsNewLine()
          Out := Out + 'IMPLIB_MGW_EXE = '  + US_ShortName( GetCppFolder() )     + DEF_SLASH + 'BIN'         + DEF_SLASH + 'DLLTOOL.EXE'      + Hb_OsNewLine()
          Out := Out + 'LSTA_EXE = '        + US_ShortName( PUB_cQPM_Folder )    + DEF_SLASH                             + 'US_OBJDUMP.EXE'   + Hb_OsNewLine()
          Out := Out + 'COMPILATOR_C = '    + US_ShortName( GetCppFolder() )     + DEF_SLASH + 'BIN'         + DEF_SLASH + 'GCC.EXE'          + Hb_OsNewLine()
          Out := Out + 'ILINK_EXE = '       + US_ShortName( GetCppFolder() )     + DEF_SLASH + 'BIN'         + DEF_SLASH + 'GCC.EXE'          + Hb_OsNewLine()
-         Out := Out + 'RESOURCE_COMP = '   + US_ShortName( GetCppFolder() )     + DEF_SLASH + 'BIN'         + DEF_SLASH + 'WINDRES.EXE'      + Hb_OsNewLine()
          Out := Out + 'TLIB_EXE = '        + US_ShortName( GetCppFolder() )     + DEF_SLASH + 'BIN'         + DEF_SLASH + 'AR.EXE'           + Hb_OsNewLine()
+         Out := Out + 'RESOURCE_COMP = '   + US_ShortName( GetCppFolder() )     + DEF_SLASH + 'BIN'         + DEF_SLASH + 'WINDRES.EXE'      + Hb_OsNewLine()
+         Out := Out + 'REIMPORT_EXE = '    + US_ShortName( PUB_cQPM_Folder )    + DEF_SLASH                             + 'US_REIMP.EXE'     + Hb_OsNewLine()
+         Out := Out + 'DEF_SLASH = '       + US_ShortName( PUB_cQPM_Folder )    + DEF_SLASH                             + 'US_SLASH.EXE QPM' + Hb_OsNewLine()
          Out := Out + 'DIR_COMPC = '       + US_ShortName( GetCppFolder() )                                                                  + Hb_OsNewLine()
-         Out := Out + 'DIR_MINIGUI = '     + US_ShortName( GetMiniGuiFolder() )                                                              + Hb_OsNewLine()
-         Out := Out + 'DIR_MINIGUI_RES = ' + US_ShortName( GetMiniGuiFolder()   + DEF_SLASH + 'RESOURCES' )                                  + Hb_OsNewLine()
          Out := Out + 'DIR_HARBOUR = '     + US_ShortName( GetHarbourFolder() )                                                              + Hb_OsNewLine()
       case IsPelles
          Out := Out + 'IMPDEF_PC_EXE = '   + US_ShortName( PUB_cQPM_Folder )    + DEF_SLASH                             + 'US_IMPDEF.EXE'    + Hb_OsNewLine()
@@ -5844,15 +5842,17 @@ Function QPM_Build2()
          US_Log( 'Error 5549' )
    endcase
 //   Out := Out + 'REDIR = ' + US_ShortName(PUB_cQPM_Folder) + DEF_SLASH + 'US_REDIR.EXE' + PUB_cUS_RedirOpt + TEMP_LOG + Hb_OsNewLine()
-   Out := Out + 'HARBOUR_EXE = ' + US_ShortName( GetHarbourFolder() ) + DEF_SLASH + 'BIN'+DEF_SLASH+'HARBOUR.EXE' + Hb_OsNewLine()
-   Out := Out + 'US_MSG_EXE = ' + US_ShortName(PUB_cQPM_Folder) + DEF_SLASH + 'US_MSG.EXE' + Hb_OsNewLine()
-   Out := Out + 'US_UPX_EXE = ' + US_ShortName(PUB_cQPM_Folder) + DEF_SLASH + 'US_UPX.EXE' + Hb_OsNewLine()
-   Out := Out + 'US_SHELL_EXE = ' + US_ShortName(PUB_cQPM_Folder) + DEF_SLASH + 'US_SHELL.EXE QPM' + Hb_OsNewLine()
-   Out := Out + 'DIR_HB_INCLUDE = ' + cExtraFoldersHB + Hb_OsNewLine()
-   Out := Out + 'DIR_C_INCLUDE = ' + cExtraFoldersC + Hb_OsNewLine()
-   Out := Out + 'DIR_MINIGUI_LIB = ' + GetMiniguiLibFolder() + Hb_OsNewLine()
-   Out := Out + 'DIR_COMPC_LIB = ' + GetCppLibFolder() + Hb_OsNewLine()
-   Out := Out + 'DIR_HARBOUR_LIB = ' + GetHarbourLibFolder() + Hb_OsNewLine()
+   Out := Out + 'HARBOUR_EXE = '     + US_ShortName( GetHarbourFolder() ) + DEF_SLASH + 'BIN' + DEF_SLASH + 'HARBOUR.EXE' + Hb_OsNewLine()
+   Out := Out + 'US_MSG_EXE = '      + US_ShortName(PUB_cQPM_Folder) + DEF_SLASH + 'US_MSG.EXE'                           + Hb_OsNewLine()
+   Out := Out + 'US_UPX_EXE = '      + US_ShortName(PUB_cQPM_Folder) + DEF_SLASH + 'US_UPX.EXE'                           + Hb_OsNewLine()
+   Out := Out + 'US_SHELL_EXE = '    + US_ShortName(PUB_cQPM_Folder) + DEF_SLASH + 'US_SHELL.EXE QPM'                     + Hb_OsNewLine()
+   Out := Out + 'DIR_HB_INCLUDE = '  + cExtraFoldersHB                                                                    + Hb_OsNewLine()
+   Out := Out + 'DIR_C_INCLUDE = '   + cExtraFoldersC                                                                     + Hb_OsNewLine()
+   Out := Out + 'DIR_MINIGUI = '     + US_ShortName( GetMiniGuiFolder() )                                                 + Hb_OsNewLine()
+   Out := Out + 'DIR_MINIGUI_LIB = ' + GetMiniguiLibFolder()                                                              + Hb_OsNewLine()
+   Out := Out + 'DIR_MINIGUI_RES = ' + US_ShortName( GetMiniGuiFolder() + DEF_SLASH + 'RESOURCES' )                       + Hb_OsNewLine()
+   Out := Out + 'DIR_COMPC_LIB = '   + GetCppLibFolder()                                                                  + Hb_OsNewLine()
+   Out := Out + 'DIR_HARBOUR_LIB = ' + GetHarbourLibFolder()                                                              + Hb_OsNewLine()
    if IsBorland
    Out := Out + 'DIR_COMPC_LIB2 = ' + GetCppLibFolder() + DEF_SLASH + 'PSDK' + Hb_OsNewLine()
    endif
@@ -6312,7 +6312,7 @@ Function QPM_Build2()
                      if aScan( vLibExcludeFiles , US_Upper( &( 'vLibDefault'+GetSuffix()+'['+str(i)+']' ) ) ) = 0
                         if File( GetMiniguiLibFolder() + DEF_SLASH + ( if(QPM_IsXHarbour(),'x','') + &('vLibDefault'+GetSuffix()+'['+str(i)+']') ) )
                            Out := Out + PUB_cCharTab + 'echo $(DIR_MINIGUI_LIB)' + DEF_SLASH + ( if(QPM_IsXHarbour(),'x','') + &('vLibDefault'+GetSuffix()+'['+str(i)+']') ) + ' + >> ' + SCRIPT_FILE + Hb_OsNewLine()
-                        elseif QPM_IsXHarbour() .and. ( Getminiguisuffix() == DefineExtended1 ) .and. File( GetMiniGuiFolder() + DEF_SLASH + 'xlib' + DEF_SLASH + substr( &('vLibDefault'+GetSuffix()+'['+str(i)+']') , 4 ) )
+                        elseif QPM_IsXHarbour() .and. ( Getminiguisuffix() == DefineExtended1 ) .and. File( GetMiniGuiFolder() + DEF_SLASH + 'xlib' + DEF_SLASH + &('vLibDefault'+GetSuffix()+'['+str(i)+']') )
                            Out := Out + PUB_cCharTab + 'echo $(DIR_MINIGUI)' + DEF_SLASH + 'xlib' + DEF_SLASH + &('vLibDefault'+GetSuffix()+'['+str(i)+']') + ' + >> ' + SCRIPT_FILE + Hb_OsNewLine()
                         elseif File( GetHarbourLibFolder() + DEF_SLASH + ( if(QPM_IsXHarbour(),'x','') + &('vLibDefault'+GetSuffix()+'['+str(i)+']') ) )
                            Out := Out + PUB_cCharTab + 'echo $(DIR_HARBOUR_LIB)' + DEF_SLASH + ( if(QPM_IsXHarbour(),'x','') + &('vLibDefault'+GetSuffix()+'['+str(i)+']') ) + ' + >> ' + SCRIPT_FILE + Hb_OsNewLine()
@@ -6530,14 +6530,9 @@ Function QPM_Build2()
             Out := Out + PUB_cCharTab + if(! bLogActivity, '@', '') + '$(US_SHELL_EXE) ' + if(! bLogActivity, '-OFF ','') + 'COPYZAP $** $@' + Hb_OsNewLine()
          else
             Out := Out + PUB_cCharTab + if(! bLogActivity, '@', '') + '$(US_SHELL_EXE) ' + if(! bLogActivity, '-OFF ', '') + 'DELETE $@' + Hb_OsNewLine()
-            Out := Out + PUB_cCharTab + '$(HARBOUR_EXE) $(HARBOUR_FLAGS) /q ' + if( QPM_IsXHarbour(), '/p', '/p$(DIR_OBJECTS)' + DEF_SLASH + US_FileNameOnlyName(PRGFILES[i]) ) + ' $** -o$@' + Hb_OsNewLine()
-            if QPM_IsXHarbour()
-               Out := Out + PUB_cCharTab + if(! bLogActivity, '@', '') + '$(US_SHELL_EXE) ' + if(! bLogActivity, '-OFF ', '') + 'MOVE ' + US_ShortName( US_FileNameOnlyPath( PRGFILES[i] ) ) + DEF_SLASH + US_FileNameOnlyName( PRGFILES[i] ) + '.ppo $(DIR_OBJECTS)' + DEF_SLASH + US_FileNameOnlyName( PRGFILES[i] ) + '.ppo' + Hb_OsNewLine()
-               Out := Out + PUB_cCharTab + if(! bLogActivity, '@', '') + '$(US_SHELL_EXE) ' + if(! bLogActivity, '-OFF ', '') + 'DELETE ' + US_ShortName( US_FileNameOnlyPath( PRGFILES[i] ) ) + DEF_SLASH + US_FileNameOnlyName( PRGFILES[i] ) + '.ppo.MOVED.TXT' + Hb_OsNewLine()
-            else
-               Out := Out + PUB_cCharTab + if(! bLogActivity, '@', '') + '$(US_SHELL_EXE) ' + if(! bLogActivity, '-OFF ', '') + 'MOVE $(DIR_OBJECTS)' + DEF_SLASH + US_FileNameOnlyName( PRGFILES[i] ) + ' $(DIR_OBJECTS)' + DEF_SLASH + US_FileNameOnlyName( PRGFILES[i] ) + '.ppo' + Hb_OsNewLine()
-               Out := Out + PUB_cCharTab + if(! bLogActivity, '@', '') + '$(US_SHELL_EXE) ' + if(! bLogActivity, '-OFF ', '') + 'DELETE $(DIR_OBJECTS)' + DEF_SLASH + US_FileNameOnlyName( PRGFILES[i] ) + '.MOVED.TXT' + Hb_OsNewLine()
-            endif
+            Out := Out + PUB_cCharTab + '$(HARBOUR_EXE) $(HARBOUR_FLAGS) /q /p $** -o$@' + Hb_OsNewLine()
+            Out := Out + PUB_cCharTab + if(! bLogActivity, '@', '') + '$(US_SHELL_EXE) ' + if(! bLogActivity, '-OFF ', '') + 'MOVE ' + US_ShortName( PUB_cProjectFolder ) + DEF_SLASH + US_FileNameOnlyName( PRGFILES[i] ) + '.ppo $(DIR_OBJECTS)' + DEF_SLASH + US_FileNameOnlyName( PRGFILES[i] ) + '.ppo' + Hb_OsNewLine()
+            Out := Out + PUB_cCharTab + if(! bLogActivity, '@', '') + '$(US_SHELL_EXE) ' + if(! bLogActivity, '-OFF ', '') + 'DELETE ' + US_ShortName( PUB_cProjectFolder ) + DEF_SLASH + US_FileNameOnlyName( PRGFILES[i] ) + '.ppo.MOVED.TXT' + Hb_OsNewLine()
             Out := Out + PUB_cCharTab + if(! bLogActivity, '@', '') + '$(US_SHELL_EXE) ' + if(! bLogActivity, '-OFF ', '') + 'CHECKRC NOTFILE $@' + Hb_OsNewLine()
          endif
          Out := Out + Hb_OsNewLine()
@@ -6554,10 +6549,10 @@ Function QPM_Build2()
             Out := Out + PUB_cCharTab + '$(COMPILATOR_C) $(COBJFLAGS) /Fo$@ $**' + Hb_OsNewLine()
          case IsBorland
             Out := Out + PUB_cCharTab + if(! bLogActivity, '@', '') + '$(US_SHELL_EXE) ' + if(! bLogActivity, '-OFF ', '' ) + 'DELETE $@' + Hb_OsNewLine()
-            Out := Out + PUB_cCharTab + '$(COMPILATOR_C) $(COBJFLAGS) -o$@ $**' + Hb_OsNewLine()
          otherwise
             US_Log( 'Error 6324' )
          endcase
+         Out := Out + PUB_cCharTab + if(! bLogActivity, '@', '') + '$(US_SHELL_EXE) ' + if(! bLogActivity, '-OFF ', '') + 'CHECKRC NOTFILE $@' + Hb_OsNewLine()
       Next i
 
    endif

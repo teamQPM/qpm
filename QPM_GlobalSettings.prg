@@ -800,7 +800,7 @@ Function GlobalSettings()
                     HEIGHT          25
                     PICTURE         'folderselect'
                     TOOLTIP         'Select folder'
-                    ONCLICK         If ( !Empty( Folder := GetFolder( "Select folder" , WinGSettings.&("TLIBS__"+DefineExtended1+DefineBorland+DefineXHarbour).Value ) ) , WinGSettings.&("T_LIBS_"+DefineExtended1+DefineBorland+DefineXHarbour).Value := Folder , )
+                    ONCLICK         If ( !Empty( Folder := GetFolder( "Select folder" , WinGSettings.&("T_LIBS_"+DefineExtended1+DefineBorland+DefineXHarbour).Value ) ) , WinGSettings.&("T_LIBS_"+DefineExtended1+DefineBorland+DefineXHarbour).Value := Folder , )
             END BUTTON
 
          END PAGE
