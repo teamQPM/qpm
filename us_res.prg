@@ -232,14 +232,23 @@ PROCEDURE MAIN( ... )
       // resources
       Else
          Do Case
+         // For: ..\resources\main.ico
+         Case SubStr( US_Word( cLinea, 3 ), 1, 2 ) == '..\' .or. ;
+              SubStr( US_Word( cLinea, 3 ), 1, 2 ) == '../'
+            cLineaAux := cLinea
+            cRule := "R02"
+            cWord3 := US_Word( cLinea, 3 )
+            cLinea := SubStr( cLinea, 1, US_WordInd( cLinea, 3 ) - 1 ) + cApost + cPathTMP + US_WSlash( cWord3 ) + cApost
+            bChg := .T.
          // For: .\resources\main.ico
-         Case SubStr( US_Word( cLinea, 3 ), 1, 2 ) == '.\' .or. ;  // .\resources\main.ico
-              SubStr( US_Word( cLinea, 3 ), 1, 2 ) == './'         // ./resources/main.ico
+         Case SubStr( US_Word( cLinea, 3 ), 1, 2 ) == '.\' .or. ;  
+              SubStr( US_Word( cLinea, 3 ), 1, 2 ) == './'         
             cLineaAux := cLinea
             cRule := "R01"
             cWord3 := US_Word( SubStr( cLinea, US_WordInd( cLinea, 3 ) + 2 ), 1 )
             cLinea := SubStr( cLinea, 1, US_WordInd( cLinea, 3 ) - 1 ) + cApost + cPathTMP + US_WSlash( cWord3 ) + cApost
             bChg := .T.
+/*
          // For: main.ico
          Case !( At( ':\', US_Word( cLinea, 3 ) ) > 0 ) .and. ;
               !( At( ':/', US_Word( cLinea, 3 ) ) > 0 ) .and. ;
@@ -268,18 +277,9 @@ PROCEDURE MAIN( ... )
             cWord3 := SubStr( cLinea, US_WordInd( cLinea, 3 ) + 1, at( DBLQT, SubStr( cLinea, US_WordInd( cLinea, 3 ) + 1 ) ) - 1 )
             cLinea := SubStr( cLinea, 1, US_WordInd( cLinea, 3 ) - 1 ) + cApost + cPathTMP + US_WSlash( cWord3 ) + cApost
             bChg := .T.
+*/
          EndCase
-         If bList .and. bChg
-            QPM_Log( "US_Res 004I: Old (" + PadL( AllTrim( Str( cont ) ), 8 ) + "): " + cLineaAux )
-            QPM_Log( "US_Res 234I: Resource rule " + cRule + " > " + cWord3 )
-            QPM_Log( "US_Res 005I: New (" + PadL( AllTrim( Str( cont ) ), 8 ) + "): " + cLinea )
-            QPM_Log( "------------" )
-            cLineaAux := ""
-         EndIf
-         If bList .and. ! bChg
-            QPM_Log( "US_Res 444I: Without change (" + AllTrim( Str( cont ) ) + "): " + cLinea )
-            QPM_Log( "------------" )
-         EndIf
+
          If bForceChg .and. ( At( ':\', US_Word( cLinea, 3 ) ) = 2 .or. ;
                               At( ":/", US_Word( cLinea, 3 ) ) = 2 )
             cLineaAux := cLinea
@@ -304,12 +304,18 @@ PROCEDURE MAIN( ... )
             cLinea := SubStr( cLinea, 1, US_WordInd( cLinea, 3 ) - 1 ) + cApost + cPathTMP + cWord3 + cApost
             bChg := .T.
          EndIf
-         If bList .and. bChg
-            QPM_Log( "US_Res 004I: Old (" + PadL( AllTrim( Str( cont ) ), 8 ) + "): " + cLineaAux )
-            QPM_Log( "US_Res 234I: Resource rule " + cRule + " > " + cWord3 )
-            QPM_Log( "US_Res 005I: New (" + PadL( AllTrim( Str( cont ) ), 8 ) + "): " + cLinea )
-            QPM_Log( "------------" )
-            cLineaAux := ""
+
+         If bList
+            If bChg
+               QPM_Log( "US_Res 004I: Old (" + PadL( AllTrim( Str( cont ) ), 8 ) + "): " + cLineaAux )
+               QPM_Log( "US_Res 234I: Resource rule " + cRule + " > " + cWord3 )
+               QPM_Log( "US_Res 005I: New (" + PadL( AllTrim( Str( cont ) ), 8 ) + "): " + cLinea )
+               QPM_Log( "------------" )
+               cLineaAux := ""
+            Else
+               QPM_Log( "US_Res 444I: Without change (" + AllTrim( Str( cont ) ) + "): " + cLinea )
+               QPM_Log( "------------" )
+            EndIf
          EndIf
       EndIf
 

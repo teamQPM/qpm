@@ -436,7 +436,7 @@ Function QPM_HotRecoveryMenu()
               COL             570
               WIDTH           25
               HEIGHT          25
-              PICTURE         "UP"
+              PICTURE         "UP15x15"
               TOOLTIP         "Go to previous difference"
               ONCLICK         HotNavigate( --HR_nActualDiff )
       END BUTTON
@@ -471,14 +471,19 @@ Function QPM_HotRecoveryMenu()
 
       // ---------
 
-      @ 70 , 18 FRAME FrameHotRecoveryFileFrom ;
-         CAPTION "" ;
-         WIDTH 334 ;
-         HEIGHT ( ( ( GetProperty( "WinHotRecovery" , "height" ) / 2 ) - 70 ) - 17 ) ;
-         SIZE 12 ;
-         BOLD ITALIC ;
-         FONTCOLOR {255,0,0} ;
-         OPAQUE
+      DEFINE FRAME FrameHotRecoveryFileFrom
+            ROW    70
+            COL    18
+            WIDTH  334
+            HEIGHT ( ( ( GetProperty( "WinHotRecovery" , "height" ) / 2 ) - 70 ) - 17 )
+            CAPTION "Select File 'From' for Hot Recovery"
+            OPAQUE .T.
+            FONTNAME "Arial"
+            FONTSIZE 12
+            FONTBOLD .T.
+            FONTITALIC .T.
+            FONTCOLOR {255,0,0}
+      END FRAME
 
       @ 100 , 50 RADIOGROUP HR_FileFrom ;
          OPTIONS { 'Hot Recovery Versions Database' , 'External File' } ;
@@ -575,10 +580,10 @@ Function QPM_HotRecoveryMenu()
       // ---------
 
       @ ( GetProperty( "WinHotRecovery" , "height" ) / 2 ) - 03 , 18 FRAME FrameHotRecoveryFileTarget ;
-         CAPTION "" ;
+         CAPTION "Select File 'Target' for Hot Recovery" ;
          WIDTH 334 ;
          HEIGHT ( GetProperty( "WinHotRecovery" , "height" ) - 147 ) - ( ( GetProperty( "WinHotRecovery" , "height" ) / 2 ) - 60 ) ;
-         SIZE 12 ;
+         FONT "Arial" SIZE 12 ;
          BOLD ITALIC ;
          FONTCOLOR {255,0,0} ;
          OPAQUE
