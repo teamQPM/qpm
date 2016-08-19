@@ -153,8 +153,11 @@ Para configurar el ambiente de trabajo por primera vez:
 HOW TO BUILD A NEW RELEASE
 ==========================
 
-[1] In QPM.PRG replace the value of var PUB_cQPM_Version with the new
-    release number.
+[1] In QPM.ch set the values of this defines:
+
+         #define QPM_VERSION_NUMBER_MAYOR   '05'
+         #define QPM_VERSION_NUMBER_MINOR   '04'
+         #define QPM_VERSION_NUMBER_BUILD   '09'
 
 [2] Open your working version of QPM and load ./QPM_AutoProject.qpm
 
@@ -178,36 +181,33 @@ HOW TO BUILD A NEW RELEASE
     b) Open QPM.ISS and verify the following files are included:
          QPM.chm
          QPM.exe
-         US_DbfView.exe
-         DbfView.chm
-         US_dif.exe
-         US_difwi.dll
-         US_DllTool.exe
-         US_dtree.css
-         US_dtree.im
-         US_dtree.js
-         US_hha.dll
-         US_hhc.exe
-         US_ImpDef.exe
-         US_ImpLib.exe
-         US_itcc.dll
-         US_Make.exe
-         US_Msg.exe
-         US_ObjDump.exe
-         US_PExports.exe
-         US_PODump.exe
-         US_POLib.exe
-         US_R2H.exe
-         US_Redir.exe
-         US_Reimp.exe
-         US_Res.exe
-         US_Run.exe
-         US_Shell.exe
-         US_Slash.exe
-         US_Tdump.exe
-         US_TLib.exe
-         US_Upx.exe
-         US_windres.exe
+         us_dbfview.exe
+         dbfview.chm
+         us_dif.exe
+         us_difwi.dll
+         us_dtree.css
+         us_dtree.im
+         us_dtree.js
+         us_hha.dll
+         us_hhc.exe
+         us_impdef.exe
+         us_implib.exe
+         us_itcc.dll
+         us_make.exe
+         us_msg.exe
+         us_objdump.exe
+         us_pexports.exe
+         us_podump.exe
+         us_polib.exe
+         us_r2h.exe
+         us_reimp.exe
+         us_res.exe
+         us_run.exe
+         us_shell.exe
+         us_slash.exe
+         us_tdump.exe
+         us_tlib.exe
+         us_upx.exe
          Samples\*.*
     c) update the following variables to the new version number:
          AppVerName=QPM v05.02 build 05
