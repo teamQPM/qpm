@@ -60,6 +60,7 @@
    FOLDERSELECT                 BITMAP     .\resource\FOLDERSELECT.BMP
    DOWN                         BITMAP     .\resource\DOWN.BMP
    UP                           BITMAP     .\resource\UP.BMP
+   UP15x15                      BITMAP     .\resource\UP15x15.BMP
    CLEARALL                     BITMAP     .\resource\CLEARALL.BMP
    TEST                         BITMAP     .\resource\TEST.BMP
    STOP                         BITMAP     .\resource\STOP.BMP

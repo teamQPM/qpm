@@ -30,7 +30,7 @@
 #include <QPM.ch>
 
 Function QPM_GetExtraRun()
-   Local FileName := ""
+   Local FileName := "", sep
 
    DEFINE WINDOW ExtraRun ;
       AT -2,122 ;
@@ -168,8 +168,7 @@ Function QPM_GetExtraRun()
       @ 346,161 TEXTBOX ExtraRunExeText ;
          HEIGHT 28 ;
          READONLY  ;
-         WIDTH 301 ;
-      // MAXLENGTH 30 ;
+         WIDTH 301
 
       @ 344,464 BUTTON ExtraRunExeButton ;
          PICTURE 'FolderSelect';
@@ -199,7 +198,6 @@ Function QPM_GetExtraRun()
          WIDTH 101 ;
          HEIGHT 27;
          VALUE .F.
-
 
       @ 449,16 FRAME ExtraRunFreeFrame ;
          CAPTION "" ;
@@ -231,20 +229,21 @@ Function QPM_GetExtraRun()
          HEIGHT 21 ;
          VALUE .F.
 
-      @ 531,64 BUTTON ExtraRunOk ;
+      sep := int( ( GetProperty( "ExtraRun", "Width" ) - GetBorderWidth() - 300 ) / 4 )
+
+      @ 530, sep BUTTON ExtraRunOk ;
          CAPTION 'Ok' ;
          ACTION QPM_GetExtraRunSave() ;
          WIDTH 100 ;
          HEIGHT 28 ;
 
-      @ 531,230 BUTTON ExtraRunTest ;
-         PICTURE 'TEST' ;
-         NOXPSTYLE ;
+      @ 530, 100 + sep * 2 BUTTON ExtraRunTest ;
+         CAPTION 'Test' ;
          ACTION QPM_GetExtraRunSave( .T. ) ;
-         WIDTH 80 ;
+         WIDTH 100 ;
          HEIGHT 28
 
-      @ 531,357 BUTTON ExtraRunCancel ;
+      @ 530, 100 * 2 + sep * 3 BUTTON ExtraRunCancel ;
          CAPTION 'Cancel' ;
          ACTION ExtraRun.release() ;
          WIDTH 100 ;
