@@ -8,12 +8,32 @@
  * See "How to format your ChangeLog entries" in howtosvn.txt file.
  */
 
+2016-08-19 20:50:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * ./ChangeLog
+     * Some previous entries fixed.
+   * ./README.TXT
+     * Renamed back as readme.txt
+     ; SourceForge requires that this filename must be in lowercase
+       in order to display its content.
+   * ./doc/howtosvn.txt
+     * Updated.
+   * ./FuentesComunes/US_HB.PRG
+     ! RTE at US_DB_CMP().
+   * ./QPM.ch
+     * Version to 05_05_00.
+   * ./QPM.exe
+   * ./QPM_AutoProject.qpm
+     * Updated.
+   * ./QPM.iss
+     * Tries to install over the previous installed version.
+     * Default install folder is now C:\QPM.
+
 2016-08-19 19:17:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * ./doc/howtosvn.txt
      * Updated.
 
 2016-08-18 22:09:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
-   * ./QPM.EXE
+   * ./QPM.exe
      * Updated.
 
 2016-08-18 22:05:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>

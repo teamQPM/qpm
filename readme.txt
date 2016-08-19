@@ -1,3 +1,13 @@
+En la versión 05_05_00:
+1. Agregado: soporte para 64 bits.
+
+Version 05_04_04:
+1. Added: 64 bits support.
+
+Versão 05_04_04:
+1. Adicionado: suporte para 64 bits.
+
+----
 
 En la versión 05_04_08:
 1. Corregido: no se crea el ejecutable ya que MinGW de HMG 3.4.2 no encuentra los archivos de los #include.
@@ -9,7 +19,6 @@ Versão 05_04_08:
 1. Fixo: o executável não é gerado porque MinGW de HMG 3.4.2 não pode encontrar os arquivos.
 
 ----
-
 
 En la versión 05_04_07:
 1. Corregido: el ejecutable se genera siempre con la extensión EXE (en mayúscula), aún cuando se haya especificado con minúsculas.
