@@ -52,36 +52,33 @@ Name: "quicklaunchicon"; Description: "{cm:CreateQuickLaunchIcon}"; GroupDescrip
 [Files]
 Source: "QPM.chm"; DestDir: "{app}"; Flags: ignoreversion
 Source: "QPM.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: "US_DbfView.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: "DbfView.chm"; DestDir: "{app}"; Flags: ignoreversion
-Source: "US_dif.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: "US_difwi.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "US_DllTool.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: "US_dtree.css"; DestDir: "{app}"; Flags: ignoreversion
-Source: "US_dtree.im"; DestDir: "{app}"; Flags: ignoreversion
-Source: "US_dtree.js"; DestDir: "{app}"; Flags: ignoreversion
-Source: "US_hha.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "US_hhc.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: "US_ImpDef.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: "US_ImpLib.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: "US_itcc.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "US_Make.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: "US_Msg.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: "US_ObjDump.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: "US_PExports.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: "US_PODump.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: "US_POLib.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: "US_R2H.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: "US_Redir.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: "US_Reimp.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: "US_Res.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: "US_Run.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: "US_Shell.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: "US_Slash.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: "US_Tdump.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: "US_TLib.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: "US_Upx.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: "US_windres.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "us_dbfview.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "dbfview.chm"; DestDir: "{app}"; Flags: ignoreversion
+Source: "us_dif.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "us_difwi.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "us_dtree.css"; DestDir: "{app}"; Flags: ignoreversion
+Source: "us_dtree.im"; DestDir: "{app}"; Flags: ignoreversion
+Source: "us_dtree.js"; DestDir: "{app}"; Flags: ignoreversion
+Source: "us_hha.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "us_hhc.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "us_impdef.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "us_implib.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "us_itcc.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "us_make.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "us_msg.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "us_objdump.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "us_pexports.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "us_podump.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "us_polib.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "us_r2h.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "us_reimp.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "us_res.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "us_run.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "us_shell.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "us_slash.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "us_tdump.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "us_tlib.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "us_upx.exe"; DestDir: "{app}"; Flags: ignoreversion
 ; Ejemplos
 ; Agenda
 Source: ".\Samples\Agenda\*.*"; DestDir: "{app}\Samples\Agenda"; Flags: ignoreversion
@@ -118,11 +115,11 @@ Root: HKCR; Subkey: ".qpm\ShellNew"; ValueType: string; ValueName: "NullFile"; V
 ; Esto agrega un item al menu NEW file del explorador
 Root: HKCR; Subkey: "QPM"; ValueType: string; ValueName: ""; ValueData: "QPM Project File"; Flags: uninsdeletekey
 ;"QPM" above is the name for the file type as shown in Explorer.
-Root: HKCR; Subkey: "QPM\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\US_Run.EXE,1"
-;Root: HKCR; Subkey: "QPM\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\QPM.EXE,1"
-;"DefaultIcon" is the registry key that specifies the filename containing the icon to associate with the file type. ",0" tells Explorer to use the first icon from MYPROG.EXE. (",1" would mean the second icon.)
-;Root: HKCR; Subkey: "QPM\shell\open\command"; ValueType: string; ValueName: ""; ValueData: """{app}\QPM.EXE"" ""%1"""
-Root: HKCR; Subkey: "QPM\shell\open\command"; ValueType: string; ValueName: ""; ValueData: """{app}\QPM.EXE"" ""%1"" %*"
+Root: HKCR; Subkey: "QPM\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\us_run.exe,1"
+;Root: HKCR; Subkey: "QPM\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\QPM.exe,1"
+;"DefaultIcon" is the registry key that specifies the filename containing the icon to associate with the file type. ",0" tells Explorer to use the first icon from QPM.exe. (",1" would mean the second icon.)
+;Root: HKCR; Subkey: "QPM\shell\open\command"; ValueType: string; ValueName: ""; ValueData: """{app}\QPM.exe"" ""%1"""
+Root: HKCR; Subkey: "QPM\shell\open\command"; ValueType: string; ValueName: ""; ValueData: """{app}\QPM.exe"" ""%1"" %*"
 ;"shell\open\command" is the registry key that specifies the program to execute when a file of the type is double-clicked in Explorer. The surrounding quotes are in the command line so it handles long filenames correctly.
 
 ; eof

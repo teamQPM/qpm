@@ -459,33 +459,33 @@ Function Main( PAR_cP01, PAR_cP02, PAR_cP03, PAR_cP04, PAR_cP05, PAR_cP06, PAR_c
    PUBLIC PUB_MI_bSelectAllLIB          := .F.
    PUBLIC vExeList                      := { PUB_cQPM_Folder + DEF_SLASH + 'QPM.EXE', ;          // TODO: Verificar uso de estos exes
                                              PUB_cQPM_Folder + DEF_SLASH + 'QPM.chm', ;
-                                             PUB_cQPM_Folder + DEF_SLASH + 'US_Slash.exe', ;
-                                             PUB_cQPM_Folder + DEF_SLASH + 'US_Shell.exe', ;
-                                             PUB_cQPM_Folder + DEF_SLASH + 'US_Make.exe', ;
-                                             PUB_cQPM_Folder + DEF_SLASH + 'US_Msg.exe', ;
-                                             PUB_cQPM_Folder + DEF_SLASH + 'US_Res.exe', ;
-                                             PUB_cQPM_Folder + DEF_SLASH + 'US_Run.exe', ;
-                                             PUB_cQPM_Folder + DEF_SLASH + 'US_Redir.exe', ;     // MinGW's command redirector
-                                             PUB_cQPM_Folder + DEF_SLASH + 'US_ImpDef.exe', ;    // Generates .DEF from DLL (Borland)
-                                             PUB_cQPM_Folder + DEF_SLASH + 'US_PExports.exe', ;  // Generates .DEF from DLL (MinGW)
-                                             PUB_cQPM_Folder + DEF_SLASH + 'US_Reimp.exe', ;     // Generates .DEF from LIB (MinGW)
-                                             PUB_cQPM_Folder + DEF_SLASH + 'US_ImpLib.exe', ;    // Converts DLL to LIB
-                                             PUB_cQPM_Folder + DEF_SLASH + 'US_TLib.exe', ;      // Lists LIB
-                                             PUB_cQPM_Folder + DEF_SLASH + 'US_POLib.exe', ;     // LIBs for Pelles
-                                             PUB_cQPM_Folder + DEF_SLASH + 'US_ObjDump.exe', ;   // Lists MinGW's modules
-                                             PUB_cQPM_Folder + DEF_SLASH + 'US_Tdump.exe', ;     // Dumps info from EXEOBJLIB modules
-                                             PUB_cQPM_Folder + DEF_SLASH + 'US_PODump.exe', ;    // Lists Pelles modules
-                                             PUB_cQPM_Folder + DEF_SLASH + 'US_Upx.exe', ;       // EXE compressor
-                                             PUB_cQPM_Folder + DEF_SLASH + 'US_DbfView.exe', ;   // by Grigory Filatov
-                                             PUB_cQPM_Folder + DEF_SLASH + 'US_R2H.exe', ;       // Rtf to HTML
-                                             PUB_cQPM_Folder + DEF_SLASH + 'US_dif.exe', ;       // CSDiff file-difference analysis tool
-                                             PUB_cQPM_Folder + DEF_SLASH + 'US_difwi.dll', ;     // CSDiff file-difference analysis tool
-                                             PUB_cQPM_Folder + DEF_SLASH + 'US_hhc.exe', ;       // HTML HELP WorkShop Compiler
-                                             PUB_cQPM_Folder + DEF_SLASH + 'US_hha.dll', ;       // HTML HELP WorkShop Compiler
-                                             PUB_cQPM_Folder + DEF_SLASH + 'US_itcc.dll', ;      // HTML HELP WorkShop Compiler
-                                             PUB_cQPM_Folder + DEF_SLASH + 'US_dtree.css', ;     // Tree for HTML Help
-                                             PUB_cQPM_Folder + DEF_SLASH + 'US_dtree.js', ;      // Java function for HTML Help
-                                             PUB_cQPM_Folder + DEF_SLASH + 'US_dtree.im' }       // Images for HTML Help
+                                             PUB_cQPM_Folder + DEF_SLASH + 'us_dbfview.exe', ;   // by Grigory Filatov
+                                             PUB_cQPM_Folder + DEF_SLASH + 'us_dif.exe', ;       // CSDiff file-difference analysis tool
+                                             PUB_cQPM_Folder + DEF_SLASH + 'us_difwi.dll', ;     // CSDiff file-difference analysis tool
+                                             PUB_cQPM_Folder + DEF_SLASH + 'us_dtree.css', ;     // Tree for HTML Help
+                                             PUB_cQPM_Folder + DEF_SLASH + 'us_dtree.im', ;      // Images for HTML Help
+                                             PUB_cQPM_Folder + DEF_SLASH + 'us_dtree.js', ;      // Java function for HTML Help
+                                             PUB_cQPM_Folder + DEF_SLASH + 'us_hha.dll', ;       // HTML HELP WorkShop Compiler
+                                             PUB_cQPM_Folder + DEF_SLASH + 'us_hhc.exe', ;       // HTML HELP WorkShop Compiler
+                                             PUB_cQPM_Folder + DEF_SLASH + 'us_impdef.exe', ;    // Generates .DEF from DLL (Borland)
+                                             PUB_cQPM_Folder + DEF_SLASH + 'us_implib.exe', ;    // Converts DLL to LIB
+                                             PUB_cQPM_Folder + DEF_SLASH + 'us_itcc.dll', ;      // HTML HELP WorkShop Compiler
+                                             PUB_cQPM_Folder + DEF_SLASH + 'us_make.exe', ;      // Make utility to compile and link
+                                             PUB_cQPM_Folder + DEF_SLASH + 'us_msg.exe', ;       // Generates log messages
+                                             PUB_cQPM_Folder + DEF_SLASH + 'us_objdump.exe', ;   // Lists MinGW's modules
+                                             PUB_cQPM_Folder + DEF_SLASH + 'us_pexports.exe', ;  // Generates .DEF from DLL (MinGW)
+                                             PUB_cQPM_Folder + DEF_SLASH + 'us_podump.exe', ;    // Lists Pelles modules
+                                             PUB_cQPM_Folder + DEF_SLASH + 'us_polib.exe', ;     // LIBs for Pelles
+                                             PUB_cQPM_Folder + DEF_SLASH + 'us_r2h.exe', ;       // Rtf to HTML
+                                             PUB_cQPM_Folder + DEF_SLASH + 'us_reimp.exe', ;     // Generates .DEF from LIB (MinGW)
+                                             PUB_cQPM_Folder + DEF_SLASH + 'us_res.exe', ;       // Preprocess rc files for MinGW
+                                             PUB_cQPM_Folder + DEF_SLASH + 'us_run.exe', ;       // Executes other programs
+                                             PUB_cQPM_Folder + DEF_SLASH + 'us_shell.exe', ;     // Executes batch scripts
+                                             PUB_cQPM_Folder + DEF_SLASH + 'us_slash.exe', ;     // Preprocess and executes C file using MinGW
+                                             PUB_cQPM_Folder + DEF_SLASH + 'us_tdump.exe', ;     // Dumps info from EXEOBJLIB modules
+                                             PUB_cQPM_Folder + DEF_SLASH + 'us_tlib.exe', ;      // Lists LIB
+                                             PUB_cQPM_Folder + DEF_SLASH + 'us_upx.exe' }        // EXE compressor
+//                                           PUB_cQPM_Folder + DEF_SLASH + 'us_redir.exe', ;     // MinGW's command redirector
 #ifdef QPM_HOTRECOVERY
    QPM_HotInitPublicVariables()
 #endif
