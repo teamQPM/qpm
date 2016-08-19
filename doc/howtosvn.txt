@@ -156,8 +156,8 @@ HOW TO BUILD A NEW RELEASE
 [1] In QPM.ch set the values of this defines:
 
          #define QPM_VERSION_NUMBER_MAYOR   '05'
-         #define QPM_VERSION_NUMBER_MINOR   '04'
-         #define QPM_VERSION_NUMBER_BUILD   '09'
+         #define QPM_VERSION_NUMBER_MINOR   '05'
+         #define QPM_VERSION_NUMBER_BUILD   '00'
 
 [2] Open your working version of QPM and load ./QPM_AutoProject.qpm
 
@@ -210,9 +210,9 @@ HOW TO BUILD A NEW RELEASE
          us_upx.exe
          Samples\*.*
     c) update the following variables to the new version number:
-         AppVerName=QPM v05.02 build 05
-         DefaultDirName=C:\QPM_05_02_05
-         OutputBaseFilename=QPM_INSTALL
+         AppVerName=QPM v05.05 build 0000
+         DefaultDirName=C:\QPM
+         OutputBaseFilename=QPM_05_05_0000_Install
     d) update AppPublisher line with your name.
     e) hit "compile" button.
     f) upload file C:\QPM Distribution\QPM_INSTALL.exe

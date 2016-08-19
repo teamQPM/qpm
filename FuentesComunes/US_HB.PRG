@@ -176,6 +176,7 @@ FUNCTION US_DB_CMP(cTabla,cModo,CAMPO,TIPO,LONGI,DEC)
                endif
                RETURN 8
             ELSE
+               vStruct := {}
                FOR I=1 TO LEN(vStructDelete)
                    IF I != POS
                       AADD(vStruct,{vStructDelete[I][1],vStructDelete[I][2],vStructDelete[I][3],vStructDelete[I][4]})
