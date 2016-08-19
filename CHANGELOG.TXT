@@ -8,6 +8,19 @@
  * See "How to format your ChangeLog entries" in howtosvn.txt file.
  */
 
+2016-08-18 22:05:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * ./CHANGELOG.TXT
+     + Missing entry.
+
+2016-08-18 22:03:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * ./ChangeLog
+     * Renamed as CHANGELOG.TXT
+   * ./QPM.iss
+     - us_reimp.exe, us_dlltool.exe and us_windres.exe
+     * Filenames to lowercase.
+   * ./QPM.PRG
+     * Order of file's list.
+
 2016-08-18 21:45:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * ./ChangeLog
      * Some previous entries fixed.
