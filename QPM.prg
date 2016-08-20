@@ -4939,7 +4939,7 @@ Function QPM_OpenProject2()
          ElseIf  US_Upper ( US_Word( LOC_cLine, 1 ) ) == 'DBF'
                  VentanaMain.GDbfFiles.AddItem( { PUB_nGridImgNone, US_FileNameOnlyNameAndExt( US_WordSubStr( LOC_cLine, 2 ) ), ChgPathToRelative( US_WordSubStr( LOC_cLine, 2 ) ), '0 0', '', '0 ** 0' } )
 
-         ElseIf  substr( us_word( US_Upper ( LOC_cLine ), 1 ), 1, 7 ) == 'INCLUDE' .and. AScan( vSuffix, { |x| x[1] == substr( US_Upper( us_word( LOC_cLine, 1 ) ), 8 ) } ) > 0
+         ElseIf  substr( us_word( US_Upper ( LOC_cLine ), 1 ), 1, 7 ) == 'INCLUDE'
                   if US_IsVar( 'IncludeLibs' + substr( US_Upper( US_Word( LOC_cLine, 1 ) ), 8 ) )
                      aadd( &( 'IncludeLibs' + substr( US_Upper( US_Word( LOC_cLine, 1 ) ), 8 ) ), US_Word( LOC_cLine, 2 ) + ' ' + substr( LOC_cLine, US_WordInd( LOC_cLine, 3 ) ) )
                   else
@@ -4947,7 +4947,7 @@ Function QPM_OpenProject2()
                         aadd( &( 'IncludeLibs' + substr( US_Upper( US_Word( LOC_cLine, 1 ) ), 8 ) + Define32bits ), US_Word( LOC_cLine, 2 ) + ' ' + substr( LOC_cLine, US_WordInd( LOC_cLine, 3 ) ) )
                      endif
                   endif
-         ElseIf  substr( us_word( US_Upper ( LOC_cLine ), 1 ), 1, 7 ) == 'EXCLUDE' .and. AScan( vSuffix, { |x| x[1] == substr( US_Upper( us_word( LOC_cLine, 1 ) ), 8 ) } ) > 0
+         ElseIf  substr( us_word( US_Upper ( LOC_cLine ), 1 ), 1, 7 ) == 'EXCLUDE'
                   if US_IsVar( 'ExcludeLibs' + substr( US_Upper( US_Word( LOC_cLine, 1 ) ), 8 ) )
                      aadd( &( 'ExcludeLibs' + substr( US_Upper( US_Word( LOC_cLine, 1 ) ), 8 ) ), US_Word( LOC_cLine, 2 ) + ' ' + substr( LOC_cLine, US_WordInd( LOC_cLine, 3 ) ) )
                   else
@@ -5379,17 +5379,39 @@ Return substr( GetPrj_Version() , 1 , 2 ) + ' ' + substr( GetPrj_Version() , 3 ,
 Function CargoIncludeLibs( tipo )
    Local i
    VentanaMain.GIncFiles.DeleteAllItems
-   For i=1 to len( &('IncludeLibs'+tipo) )
-      VentanaMain.GIncFiles.AddItem( { PUB_nGridImgNone , US_FileNameOnlyNameAndExt( &('IncludeLibs'+tipo+'['+str(i)+']') ) , '* ' + &('IncludeLibs'+tipo+'['+str(i)+']') } )
+   For i := 1 to len( &('IncludeLibs'+tipo) )
+      VentanaMain.GIncFiles.AddItem( { PUB_nGridImgNone, US_FileNameOnlyNameAndExt( &('IncludeLibs'+tipo+'['+str(i)+']') ), '* ' + &('IncludeLibs'+tipo+'['+str(i)+']') } )
       LibPos( VentanaMain.GIncFiles.itemcount )
-      if ascan( &('vExtraFoldersForLibs'+GetSuffix()) , upper( US_FileNameOnlyPath( ChgPathToReal( US_WordSubStr( &('IncludeLibs'+tipo+'['+str(i)+']') , 2 ) ) ) ) ) = 0
-         aadd( &('vExtraFoldersForLibs'+GetSuffix()) , upper( US_FileNameOnlyPath( ChgPathToReal( US_WordSubStr( &('IncludeLibs'+tipo+'['+str(i)+']') , 2 ) ) ) ) )
+      if ascan( &('vExtraFoldersForLibs'+GetSuffix()), upper( US_FileNameOnlyPath( ChgPathToReal( US_WordSubStr( &('IncludeLibs'+tipo+'['+str(i)+']'), 2 ) ) ) ) ) = 0
+         aadd( &('vExtraFoldersForLibs'+GetSuffix()), upper( US_FileNameOnlyPath( ChgPathToReal( US_WordSubStr( &('IncludeLibs'+tipo+'['+str(i)+']'), 2 ) ) ) ) )
       endif
    Next
    LibsActiva := tipo
    if VentanaMain.GDbfFiles.Value = 0
       VentanaMain.GDbfFiles.Value := 1
    endif
+Return .t.
+
+Function LibCheck( item )
+   local estado
+   if file( ChgPathToReal( us_wordsubstr( GetProperty( 'VentanaMain', 'GIncFiles', 'Cell', item, NCOLINCFULLNAME ), 3 ) ) )
+      estado := 'Ok'
+      SetProperty( 'VentanaMain', 'GIncFiles', 'Cell', item, NCOLINCSTATUS, PUB_nGridImgNone )
+   else
+      estado := 'Error'
+      GridImage( 'VentanaMain', 'GIncFiles', item, NCOLINCSTATUS, '+', PUB_nGridImgEquis )
+   endif
+   SetProperty( 'VentanaMain', 'GIncFiles', 'Cell', item, NCOLINCFULLNAME, estado + ' ' + US_WordSubStr( GetProperty( 'VentanaMain', 'GIncFiles', 'Cell', item, NCOLINCFULLNAME ), 2 ) )
+Return estado
+
+Function LibPos( item, pos )
+   If item > 0
+      if empty( pos )
+         pos := us_word( GetProperty( 'VentanaMain', 'GIncFiles', 'Cell', item, NCOLINCFULLNAME ), 2 )
+      endif
+      SetProperty( 'VentanaMain', 'GIncFiles', 'Cell', item, NCOLINCFULLNAME, LibCheck( item ) + ' ' + Pos + ' ' + US_WordSubStr( GetProperty( 'VentanaMain', 'GIncFiles', 'Cell', item, NCOLINCFULLNAME ), 3 ) )
+   endif
+   VentanaMain.GIncFiles.setfocus
 Return .t.
 
 Function DesCargoIncludeLibs( tipo )
@@ -7730,29 +7752,6 @@ Function LibExcludeInfo()
                c )
    endif
 Return .T.
-
-Function LibCheck( item )
-   local estado
-   if file( ChgPathToReal( us_wordsubstr( GetProperty( 'VentanaMain' , 'GIncFiles' , 'Cell' , item , NCOLINCFULLNAME ) , 3 ) ) )
-      estado:='Ok'
-      SetProperty( 'VentanaMain' , 'GIncFiles' , 'Cell' , item , NCOLINCSTATUS , PUB_nGridImgNone )
-   else
-      estado:='Not found !!!'
-   // GetProperty( 'VentanaMain' , 'GIncFiles' , 'Cell' , item , NCOLINCSTATUS ) := PUB_nGridImgEquis
-      GridImage( 'VentanaMain' , 'GIncFiles' , item , NCOLINCSTATUS , '+' , PUB_nGridImgEquis )
-   endif
-   SetProperty( 'VentanaMain' , 'GIncFiles' , 'Cell' , item , NCOLINCFULLNAME , estado + ' ' + us_wordSubStr( GetProperty( 'VentanaMain' , 'GIncFiles' , 'Cell' , item , NCOLINCFULLNAME ) , 2 ) )
-Return estado
-
-Function LibPos( item , pos )
-   If item > 0
-      if empty( pos )
-         pos := us_word( GetProperty( 'VentanaMain' , 'GIncFiles' , 'Cell' , item , NCOLINCFULLNAME ) , 2 )
-      endif
-      SetProperty( 'VentanaMain' , 'GIncFiles' , 'Cell' , item , NCOLINCFULLNAME , LibCheck( item ) + ' ' + Pos + ' ' + US_WordSubStr( GetProperty( 'VentanaMain' , 'GIncFiles' , 'Cell' , item , NCOLINCFULLNAME ) , 3 ) )
-   endif
-   VentanaMain.GIncFiles.setfocus
-Return .t.
 
 Function DefinoWindowsHotKeys( w_foco )
    LiberoWindowsHotKeys( w_foco )

@@ -8,6 +8,17 @@
  * See "How to format your ChangeLog entries" in howtosvn.txt file.
  */
 
+2016-08-20 20:07:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * us_res.exe
+   * us_res.prg
+     ! Resource name starting with ..\ is not processed correctly.
+   * ./QPM_US_Res.qpm
+   * ./QPM.exe
+     * Updated.
+   * ./QPM.prg
+     ! Added libs are not loaded from old version .qpm files.
+     ! Info displayed at 'LIB' tab.
+
 2016-08-20 14:11:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * ./CHANGELOG.TXT
      * Previous entry fixed.
@@ -56,7 +67,6 @@
      * Filenames to lowercase.
    * ./QPM.PRG
      * Order of file's list.
-
 2016-08-18 21:45:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * ./ChangeLog
      * Some previous entries fixed.

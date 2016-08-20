@@ -233,8 +233,8 @@ PROCEDURE MAIN( ... )
       Else
          Do Case
          // For: ..\resources\main.ico
-         Case SubStr( US_Word( cLinea, 3 ), 1, 2 ) == '..\' .or. ;
-              SubStr( US_Word( cLinea, 3 ), 1, 2 ) == '../'
+         Case SubStr( US_Word( cLinea, 3 ), 1, 3 ) == '..\' .or. ;
+              SubStr( US_Word( cLinea, 3 ), 1, 3 ) == '../'
             cLineaAux := cLinea
             cRule := "R02"
             cWord3 := US_Word( cLinea, 3 )
