@@ -11,6 +11,13 @@
 /******************************************************************************/
 
 Assigned to: <nobody>
+Added by...: 2016-08-19 21:48:00 UTC-0300 Fernando Yurisich <fyurisich>
+Status.....: Open.
+Details....: Update help file to last version.
+
+/******************************************************************************/
+
+Assigned to: <nobody>
 Added by...: 2016-01-08 22:18:00 UTC-0300 Fernando Yurisich <fyurisich>
 Status.....: Open.
 Details....: Add an option to disable Hot Recovery.
