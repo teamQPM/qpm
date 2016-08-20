@@ -8,8 +8,16 @@
  * See "How to format your ChangeLog entries" in howtosvn.txt file.
  */
 
+2016-08-20 14:11:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * ./CHANGELOG.TXT
+     * Previous entry fixed.
+   * ./TODO.TXT
+     * Updated.
+   * us_upx.exe
+     * Updated to version 3.91w
+
 2016-08-19 20:50:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
-   * ./ChangeLog
+   * ./CHANGELOG.TXT
      * Some previous entries fixed.
    * ./README.TXT
      * Renamed back as readme.txt
@@ -1041,7 +1049,7 @@
        svn+ssh://USERNAME@svn.code.sf.net/p/qpm/code (write access using SVN client)
 
 2013-03-16 17:55:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
-   * ./US_UPX.EXE
+   * ./us_upx.exe
      * Updated to version 3.09w.
 
 2013-03-10 20:51:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
