@@ -8,6 +8,15 @@
  * See "How to format your ChangeLog entries" in howtosvn.txt file.
  */
 
+2016-08-20 21:55:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * ./QPM.ch
+   * ./QPM.exe
+   * ./QPM_AutoProject.qpm
+   * ./QPM.iss
+     * Version to 05_05_01.
+   * ./readme.txt
+     * Updated.
+
 2016-08-20 21:07:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * ./CHANGELOG.TXT
      * Previous entry fixed.
@@ -17,7 +26,7 @@
 2016-08-20 20:07:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * us_res.exe
    * us_res.prg
-     ! Resource name starting with ..\ is not processed correctly.
+     ! The resources whose names start with '.. \' are not properly processed.
    * ./QPM_US_Res.qpm
    * ./QPM.exe
      * Updated.
