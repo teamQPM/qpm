@@ -1,3 +1,23 @@
+En la versión 05_05_01:
+1. Corregido: No se cargan las librerias adicionales al convertir desde versiones anteriores a la 05_05_00.
+2. Corregido: La información en la solapa 'LIB' no es correcta.
+3. Corregido: Los recursos cuyos nombres comienzan con '..\' no son correctamente procesados.
+4. Nota: Se provee un archivo .zip de instalación ya que algunos antivirus detectan malware en los archivos .exe
+
+En la versión 05_05_01:
+1. Fixed: Added libraries are not loaded from old version .qpm files.
+2. Fixed: Info displayed at 'LIB' tab.
+3. Fixed: The resources whose names start with '.. \' are not properly processed.
+4. Note: A .zip installation  file is provided because some antivirus detect malware in the .exe files.
+
+Versão 05_05_01:
+1. Fixo: as bibliotecas adicionais não são carregadas ao converter versões anteriores a 05_05_00 .
+2. Fixo: A informaçõe no separador "LIB" está incorreta.
+3. Fixo: Os recursos cujos nomes começam com ".. \" não são devidamente processados.
+4. Nota: Um arquivo de instalação .zip é fornecido porque alguns antivírus detectar malware nos arquivos .exe.
+
+----
+
 En la versión 05_05_00:
 1. Agregado: soporte para 64 bits.
 
