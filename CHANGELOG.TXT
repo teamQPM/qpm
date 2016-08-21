@@ -8,6 +8,12 @@
  * See "How to format your ChangeLog entries" in howtosvn.txt file.
  */
 
+2016-08-20 21:07:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * ./CHANGELOG.TXT
+     * Previous entry fixed.
+   * ./QPM.iss
+     * Compression type.
+
 2016-08-20 20:07:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * us_res.exe
    * us_res.prg
@@ -44,7 +50,6 @@
    * ./QPM_AutoProject.qpm
      * Updated.
    * ./QPM.iss
-     * Tries to install over the previous installed version.
      * Default install folder is now C:\QPM.
 
 2016-08-19 19:17:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
