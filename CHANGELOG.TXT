@@ -8,6 +8,39 @@
  * See "How to format your ChangeLog entries" in howtosvn.txt file.
  */
 
+2016-08-22 19:18:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * ./QPM.prg
+     + T*O*D*O.
+     ! Source tab's backcolor not restored after prg's edition is finished.
+   * ./QPM.ch
+   * ./QPM.exe
+   * ./QPM_AutoProject.qpm
+   * ./QPM.iss
+     * Version to 05_05_02.
+   * ./readme.txt
+   * ./QPM_US_Msg.qpm
+   * ./QPM_US_Redir.qpm
+   * ./QPM_US_Res.qpm
+   * ./QPM_US_Run.qpm
+   * ./QPM_US_Shell.qpm
+   * ./QPM_US_Slash.qpm
+   * ./us_msg.exe
+   * ./us_redir.exe
+   * ./us_res.exe
+   * ./us_run.exe
+   * ./us_shell.exe
+   * ./us_slash.exe
+   * ./us_podump.exe
+   * ./us_polib.exe
+     * Updated.
+   * ./us_msg.prg
+   * ./us_res.prg
+   * ./us_run.prg
+   * ./us_shell.prg
+   * ./us_slash.prg
+     + Needed functions to avoid linking auxiliary files. This change
+       fixes false positives results from some antivirus sofware.
+
 2016-08-20 21:55:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * ./QPM.ch
    * ./QPM.exe

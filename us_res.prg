@@ -26,6 +26,9 @@
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include "FuentesComunes\US_Env.h"
+#include "fileio.ch"
+
 #define DBLQT '"'
 #define SNGQT "'"
 
@@ -104,7 +107,7 @@ PROCEDURE MAIN( ... )
 
    hFiIn := FOpen( cFileIn )
    If FError() != 0
-      US_Log( "US_Res 786E: Error opening file: " + cFileIn )
+      QPM_Log( "US_Res 786E: Error opening file: " + cFileIn + HB_OsNewLine() )
       QPM_Log( "" + HB_OsNewLine() )
       ERRORLEVEL( 1 )
       RETURN
@@ -351,132 +354,269 @@ STATIC FUNCTION QPM_Log( string )
    SET CONSOLE ON
 RETURN .T.
 
-/*
-STATIC FUNCTION US_Word( estring, pos )
-   LOCAL cont := 1, nDonde
-   IF pos == NIL
-      pos := 1
-   ENDIF
-   estring := ALLTRIM( estring )
+//========================================================================
+// FUNCION PARA EXTRAER UNA PALABRA DE UN ESTRING
+//========================================================================
+FUNCTION US_WORD(ESTRING, POSICION)
+   LOCAL CONT
+   CONT := 1
+   if Posicion == NIL
+      Posicion := 1
+   endif
+   ESTRING := ALLTRIM(ESTRING)
    DO WHILE .T.
-      IF LEFT( estring, 1 ) == DBLQT
-         IF ( nDonde := AT( DBLQT, SUBSTR( estring, 2 ) ) ) == 0
-            IF cont == pos
-               RETURN estring
-            ELSE
-               EXIT
-            ENDIF
+      IF AT(" ",ESTRING) != 0
+         IF CONT == POSICION
+            RETURN SUBSTR(ESTRING,1,AT(" ",ESTRING)-1)
          ELSE
-            IF cont == pos
-               RETURN ALLTRIM( SUBSTR( estring, 2, nDonde - 1 ) )
-            ELSE
-               estring := ALLTRIM( SUBSTR( estring, nDonde + 1 ) )
-               cont ++
-            ENDIF
+            ESTRING := ALLTRIM(SUBSTR(ESTRING,AT(" ",ESTRING) + 1))
+            CONT := CONT + 1
          ENDIF
       ELSE
-         IF (nDonde := AT( " ", estring ) ) == 0
-            IF cont == pos
-               RETURN estring
-            ELSE
-               EXIT
-            ENDIF
+         IF POSICION == CONT
+            RETURN ESTRING
          ELSE
-            IF cont == pos
-               RETURN SUBSTR( estring, 1, nDonde - 1 )
-            ELSE
-               estring := ALLTRIM( SUBSTR( estring, nDonde + 1 ) )
-               cont ++
-            ENDIF
+            RETURN ""
          ENDIF
       ENDIF
    ENDDO
-RETURN ""
+Return ""
 
-STATIC FUNCTION US_WordInd( estring, pos )
-   LOCAL cont := 1, estrtrm
-   IF estring == NIL
-      estring := ""
+//========================================================================
+// FUNCION PARA ELIMINAR UNA PALABRA DE UN STRING
+//========================================================================
+FUNCTION US_WORDDEL(ESTRING,POSICION)
+RETURN IIF(POSICION>0,ALLTRIM(SUBSTR(ESTRING,1,US_WORDIND(ESTRING,POSICION)-1)+STRTRAN(SUBSTR(ESTRING,US_WORDIND(ESTRING,POSICION)),US_WORD(ESTRING,POSICION)," ",1,1)),ESTRING)
+
+//========================================================================
+// FUNCION PARA SABER LA POSICION DE LA PALABRA NUMERO ....
+// ESTA FUNCION RETORNA EL BYTE DONDE EMPIEZA LA PALABRA
+//========================================================================
+FUNCTION US_WORDIND(ESTRING, POSICION)
+   LOCAL CONT , ESTR , ESTR2
+   if ESTRING == NIL
+      ESTRING := ""
    ENDIF
-   IF US_Words( estring ) < pos
-      RETURN ( LEN( estring ) + 1 )
-   ENDIF
-   estrtrm := RTRIM( estring )
-   estring := ALLTRIM( estring )       
+   if us_words( Estring ) < Posicion
+      Return ( len( Estring ) + 1 )
+//    Return 0
+   endif
+   CONT := 1
+   ESTR := ESTRING
+   ESTR2 := RTRIM(ESTRING)
+   ESTRING := ALLTRIM(ESTRING)
    DO WHILE .T.
-      IF LEFT( estring, 1 ) == DBLQT
-         IF ( nDonde := AT( DBLQT, SUBSTR( estring, 2 ) ) ) == 0
-            IF cont == pos
-               RETURN ( LEN(estrtrm) - LEN(estring) + 2 )
-            ELSE
-               EXIT
-            ENDIF
+      IF AT(" ",ESTRING) != 0
+         IF CONT == POSICION
+            RETURN (LEN(ESTR)-(LEN(ESTRING)+(LEN(ESTR)-LEN(ESTR2)))+1)
          ELSE
-            IF cont == pos
-               RETURN ( LEN(estrtrm) - LEN(estring) + 2 )
-            ELSE
-               estring := ALLTRIM( SUBSTR( estring, nDonde + 1 ) )
-               cont ++
-            ENDIF
+            ESTRING := ALLTRIM(SUBSTR(ESTRING,AT(" ",ESTRING) + 1))
+            CONT := CONT + 1
          ENDIF
       ELSE
-         IF (nDonde := AT( " ", estring ) ) == 0
-            IF cont == pos
-               RETURN ( LEN(estrtrm) - LEN(estring) + 1 )
-            ELSE
-               EXIT
-            ENDIF
+         IF POSICION == CONT
+            RETURN (LEN(ESTR)-(LEN(ESTRING)+(LEN(ESTR)-LEN(ESTR2)))+1)
          ELSE
-            IF cont == pos
-               RETURN ( LEN(estrtrm) - LEN(estring) + 1 )
-            ELSE
-               estring := ALLTRIM( SUBSTR( estring, nDonde + 1 ) )
-               cont ++
-            ENDIF
+            RETURN 0
          ENDIF
       ENDIF
    ENDDO
 RETURN 0
 
-STATIC FUNCTION US_WordDel( estring, pos )
-LOCAL ret
-   IF pos > 0
-      ret := ALLTRIM( SUBSTR( estring, 1, US_WordInd( estring, pos ) - 1 ) + STRTRAN( SUBSTR( estring, US_WordInd( estring, pos ) ), US_Word( estring, pos ), " " , 1 , 1 ) )
-   ELSE
-      ret := estring
-   ENDIF
-RETURN ret
+//========================================================================
+// FUNCION PARA retornar un substr a partir de la posicion de una palabra
+//========================================================================
+FUNCTION US_WordSubstr( estring , pos )
+   if Estring == NIL
+      Estring := ""
+   endif
+RETURN substr( estring , us_wordind( estring , pos ) )
 
-STATIC FUNCTION US_Words( estring )
-   LOCAL cont := 0, nDonde
-   IF estring # NIL
-      estring := ALLTRIM( estring )
-      DO WHILE ! EMPTY( estring )
-         IF LEFT( estring, 1 ) == DBLQT
-            cont ++
-            IF ( nDonde := AT( DBLQT, SUBSTR( estring, 2 ) ) ) == 0
-               EXIT
-            ENDIF
-            estring := ALLTRIM( SUBSTR( estring, nDonde + 1 ) )
-            IF EMPTY( estring )
-               EXIT
-            ENDIF
+//========================================================================
+// FUNCION PARA CONTAR LAS PALABRAS EN UN ESTRING
+//========================================================================
+FUNCTION US_WORDS(ESTRING)
+   LOCAL CONT:=0
+   if Estring == NIL
+      Estring := ""
+   endif
+   ESTRING:=ALLTRIM(ESTRING)
+   DO WHILE .T.
+      IF AT(" ",ESTRING) != 0
+         ESTRING:=ALLTRIM(SUBSTR(ESTRING,AT(" ",ESTRING) + 1))
+         CONT++
+      ELSE
+         IF LEN(ESTRING) > 0
+            RETURN CONT + 1
          ELSE
-            cont ++
-            IF (nDonde := AT( " ", estring ) ) == 0
-               EXIT
-            ENDIF
-            estring := ALLTRIM( SUBSTR( estring, nDonde + 1 ) )
+            RETURN CONT
          ENDIF
-      ENDDO
-   ENDIF
-RETURN cont
+      ENDIF
+   ENDDO
+RETURN 0
 
-STATIC FUNCTION US_WordSubstr( estring, pos )
-   IF estring == NIL
-      estring := ""
+FUNCTION US_VarToStr(X)
+   LOCAL T, StringAux:="" , i
+   if X == NIL
+      X := "*NIL*"
+   endif
+   T=Valtype(X)
+   do case
+      case T='C'
+         return X
+      case T='O'
+         return "*OBJ*"
+      case T='U'
+         return "*UND*"
+      case T='M'
+         return X
+      case T='D'
+         StringAux=DTOS(X)
+         return StringAux
+      case T='N'
+         StringAux=US_STRCERO(X)
+         return StringAux
+      case T='L'
+         StringAux=IF(X,'.T.','.F.')
+         return StringAux
+      case T='A'
+         for i:=1 to ( len(x) - 1 )
+            StringAux:=StringAux + US_VarToStr( x[i] ) + HB_OSNewLine()
+         next
+         if len(x) > 0
+            StringAux:=StringAux + US_VarToStr( x[len(x)] )
+         endif
+         return StringAux
+   endcase
+RETURN ""
+
+FUNCTION US_StrCero(NUM,LONG,DEC)
+   LOCAL INDICIO
+   IF DEC=NIL
+      IF LONG=NIL
+         NUM=STR(NUM)
+      ELSE
+         NUM=STR(NUM,LONG)
+      ENDIF
+   ELSE
+      NUM=STR(NUM,LONG,DEC)
    ENDIF
-RETURN SUBSTR( estring, US_WordInd( estring, pos ) )
-*/
+   LONG=LEN(NUM)
+   FOR INDICIO=1 TO LONG
+      IF SUBSTR(NUM,INDICIO,1) = " "
+         NUM=STUFF(NUM,INDICIO,1,"0")
+      ENDIF
+   NEXT
+RETURN NUM
+
+Function US_WSlash( arc )
+Return strtran( arc , "/" , "\" )
+
+Function US_FileSize(cFile)
+   Local vFile
+   vFile:=DIRECTORY( cFile , "HS" )
+   if len(vFile) = 1
+      Return vFile[1][2]
+   endif
+Return -1
+
+Function US_Stack()
+Local n:=1
+   WHILE ! Empty( ProcName( n ) )
+      n++
+   ENDDO
+Return n - 1
+
+//========================================================================
+// Funcion para eliminar el caracter x'1A' que deja el memowrit al final del campo generado
+// Retorna: 0 si el caracter no existe (no hace nada)
+//          1 si pudo reemplazar el caracter
+//          -1 si se produjo algun problema
+//------------------------------------------------------------------------
+Function US_FileChar26Zap( cFile )
+   Local nHndIn , reto := -1 , cAux := " " , cLinea := Space( 1024 ) , nLeidosTotal, nLenFileOut, nLeidosLoop
+   Local cFileOut := US_FileNameOnlyPathAndName( cFile ) + "_T" + ALLTRIM( STR( INT( SECONDS() ) ) ) + "." + US_FileNameOnlyExt( cFile )
+   Local nHndOut
+   nHndIn := fopen( cFile , FO_READWRITE )
+   fseek( nHndIn , -1 , 2 )
+   if fread( nHndIn , @cAux , 1 ) == 1
+      if cAux == chr( 26 )
+         fseek( nHndIn , 0 , 0 )
+         nLeidosTotal := 0
+         if ( nHndOut := fcreate( cFileOut ) ) >= 0
+            nLenFileOut :=  US_FileSize( cFile ) - 1
+            do while ( nLeidosLoop := fread( nHndIn , @cLinea , if( ( nLenFileOut - nLeidosTotal ) > 1024 , 1024 , nLenFileOut - nLeidosTotal ) ) ) > 0
+               nLeidosTotal := nLeidosTotal + nLeidosLoop
+               if fwrite( nHndOut , cLinea , nLeidosLoop ) != nLeidosLoop
+                  fclose( nHndIn )
+                  fclose( nHndOut )
+                  QPM_Log( "Error writing output file '" + cFileOut + "'" + HB_OsNewLine() )
+                  return -1
+               endif
+            enddo
+            fclose( nHndOut )
+         else
+            fclose( nHndIn )
+            QPM_Log( "Error creating file '" + cFileOut + "', fError=" + US_VarToStr( fError() ) + HB_OsNewLine() )
+            return -1
+         endif
+         reto := 1
+      else
+         reto := 0
+      endif
+   endif
+   fclose( nHndIn )
+   if reto == 1
+      ferase( cFile )
+      frename( cFileOut , cFile )
+   endif
+Return Reto
+
+Function US_FileNameOnlyExt( arc )
+   arc := substr( arc , rat( DEF_SLASH , arc ) + 1 )
+   if US_IsDirectory( arc )
+      Return ""
+   endif
+   if rat( "." , arc ) == 0
+      return ""
+   endif
+return substr( arc , rat( "." , arc ) + 1 )
+
+Function US_FileNameOnlyName( arc )
+   Local barra , punto , reto
+   if arc == NIL
+      arc := ""
+   endif
+   barra:=rat( DEF_SLASH , arc )
+   punto:=rat( "." , arc )
+   do case
+      case punto > barra
+         reto := substr( arc , barra + 1 , punto - barra - 1 )
+      case punto = 0
+         reto := substr( arc , barra + 1 )
+      case punto < barra
+         reto := substr( arc , barra + 1 )
+   endcase
+Return reto
+
+Function US_FileNameOnlyPath( arc )
+   if arc == NIL
+      Return ""
+   endif
+   if US_IsDirectory( arc )
+      return arc
+   endif
+Return substr( arc , 1 , rat( DEF_SLASH , arc ) - 1 )
+
+Function US_FileNameOnlyPathAndName( arc )
+   Local cPath := US_FileNameOnlyPath( arc ) , cName := US_FileNameOnlyName( arc )
+Return cPath + if( !empty( cPath ) .and. !empty( cName ) , DEF_SLASH , "" ) + cName
+
+Function US_FileNameOnlyNameAndExt( arc )
+   Local cExt := US_FileNameOnlyExt( arc )
+Return US_FileNameOnlyName( arc ) + if( !empty( cExt ) , "." , "" ) + cExt
+
+Function US_IsDirectory( Dire )
+Return IsDirectory( Dire )
 
 /* eof */
