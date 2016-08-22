@@ -159,4 +159,103 @@ Function QPM_Log( string )
    SET CONSOLE ON
 Return .T.
 
+//========================================================================
+// FUNCION PARA EXTRAER UNA PALABRA DE UN ESTRING
+//========================================================================
+FUNCTION US_WORD(ESTRING, POSICION)
+   LOCAL CONT
+   CONT := 1
+   if Posicion == NIL
+      Posicion := 1
+   endif
+   ESTRING := ALLTRIM(ESTRING)
+   DO WHILE .T.
+      IF AT(" ",ESTRING) != 0
+         IF CONT == POSICION
+            RETURN SUBSTR(ESTRING,1,AT(" ",ESTRING)-1)
+         ELSE
+            ESTRING := ALLTRIM(SUBSTR(ESTRING,AT(" ",ESTRING) + 1))
+            CONT := CONT + 1
+         ENDIF
+      ELSE
+         IF POSICION == CONT
+            RETURN ESTRING
+         ELSE
+            RETURN ""
+         ENDIF
+      ENDIF
+   ENDDO
+Return ""
+
+//========================================================================
+// FUNCION PARA ELIMINAR UNA PALABRA DE UN STRING
+//========================================================================
+FUNCTION US_WORDDEL(ESTRING,POSICION)
+RETURN IIF(POSICION>0,ALLTRIM(SUBSTR(ESTRING,1,US_WORDIND(ESTRING,POSICION)-1)+STRTRAN(SUBSTR(ESTRING,US_WORDIND(ESTRING,POSICION)),US_WORD(ESTRING,POSICION)," ",1,1)),ESTRING)
+
+//========================================================================
+// FUNCION PARA SABER LA POSICION DE LA PALABRA NUMERO ....
+// ESTA FUNCION RETORNA EL BYTE DONDE EMPIEZA LA PALABRA
+//========================================================================
+FUNCTION US_WORDIND(ESTRING, POSICION)
+   LOCAL CONT , ESTR , ESTR2
+   if ESTRING == NIL
+      ESTRING := ""
+   ENDIF
+   if us_words( Estring ) < Posicion
+      Return ( len( Estring ) + 1 )
+//    Return 0
+   endif
+   CONT := 1
+   ESTR := ESTRING
+   ESTR2 := RTRIM(ESTRING)
+   ESTRING := ALLTRIM(ESTRING)
+   DO WHILE .T.
+      IF AT(" ",ESTRING) != 0
+         IF CONT == POSICION
+            RETURN (LEN(ESTR)-(LEN(ESTRING)+(LEN(ESTR)-LEN(ESTR2)))+1)
+         ELSE
+            ESTRING := ALLTRIM(SUBSTR(ESTRING,AT(" ",ESTRING) + 1))
+            CONT := CONT + 1
+         ENDIF
+      ELSE
+         IF POSICION == CONT
+            RETURN (LEN(ESTR)-(LEN(ESTRING)+(LEN(ESTR)-LEN(ESTR2)))+1)
+         ELSE
+            RETURN 0
+         ENDIF
+      ENDIF
+   ENDDO
+RETURN 0
+
+//========================================================================
+// FUNCION PARA CONTAR LAS PALABRAS EN UN ESTRING
+//========================================================================
+FUNCTION US_WORDS(ESTRING)
+   LOCAL CONT:=0
+   if Estring == NIL
+      Estring := ""
+   endif
+   ESTRING:=ALLTRIM(ESTRING)
+   DO WHILE .T.
+      IF AT(" ",ESTRING) != 0
+         ESTRING:=ALLTRIM(SUBSTR(ESTRING,AT(" ",ESTRING) + 1))
+         CONT++
+      ELSE
+         IF LEN(ESTRING) > 0
+            RETURN CONT + 1
+         ELSE
+            RETURN CONT
+         ENDIF
+      ENDIF
+   ENDDO
+RETURN 0
+
+FUNCTION US_Stack()
+   LOCAL n := 1
+   WHILE ! Empty( ProcName( n ) )
+      n++
+   ENDDO
+RETURN n - 1
+
 /* eof */

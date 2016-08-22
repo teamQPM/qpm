@@ -467,23 +467,23 @@ Function Main( PAR_cP01, PAR_cP02, PAR_cP03, PAR_cP04, PAR_cP05, PAR_cP06, PAR_c
                                              PUB_cQPM_Folder + DEF_SLASH + 'us_dtree.js', ;      // Java function for HTML Help
                                              PUB_cQPM_Folder + DEF_SLASH + 'us_hha.dll', ;       // HTML HELP WorkShop Compiler
                                              PUB_cQPM_Folder + DEF_SLASH + 'us_hhc.exe', ;       // HTML HELP WorkShop Compiler
-                                             PUB_cQPM_Folder + DEF_SLASH + 'us_impdef.exe', ;    // Generates .DEF from DLL (Borland)
-                                             PUB_cQPM_Folder + DEF_SLASH + 'us_implib.exe', ;    // Converts DLL to LIB
+                                             PUB_cQPM_Folder + DEF_SLASH + 'us_impdef.exe', ;    // Generates .DEF from DLL (BCC32)       TODO: Delete and use from compiler
+                                             PUB_cQPM_Folder + DEF_SLASH + 'us_implib.exe', ;    // Converts DLL to LIB (BCC32)           TODO: Delete and use from compiler
                                              PUB_cQPM_Folder + DEF_SLASH + 'us_itcc.dll', ;      // HTML HELP WorkShop Compiler
                                              PUB_cQPM_Folder + DEF_SLASH + 'us_make.exe', ;      // Make utility to compile and link
                                              PUB_cQPM_Folder + DEF_SLASH + 'us_msg.exe', ;       // Generates log messages
                                              PUB_cQPM_Folder + DEF_SLASH + 'us_objdump.exe', ;   // Lists MinGW's modules
                                              PUB_cQPM_Folder + DEF_SLASH + 'us_pexports.exe', ;  // Generates .DEF from DLL (MinGW)
-                                             PUB_cQPM_Folder + DEF_SLASH + 'us_podump.exe', ;    // Lists Pelles modules
-                                             PUB_cQPM_Folder + DEF_SLASH + 'us_polib.exe', ;     // LIBs for Pelles
+                                             PUB_cQPM_Folder + DEF_SLASH + 'us_podump.exe', ;    // Lists modules (Pelles)                TODO: Delete and use from compiler
+                                             PUB_cQPM_Folder + DEF_SLASH + 'us_polib.exe', ;     // Lists Libs (Pelles)                   TODO: Delete and use from compiler
                                              PUB_cQPM_Folder + DEF_SLASH + 'us_r2h.exe', ;       // Rtf to HTML
                                              PUB_cQPM_Folder + DEF_SLASH + 'us_reimp.exe', ;     // Generates .DEF from LIB (MinGW)
                                              PUB_cQPM_Folder + DEF_SLASH + 'us_res.exe', ;       // Preprocess rc files for MinGW
                                              PUB_cQPM_Folder + DEF_SLASH + 'us_run.exe', ;       // Executes other programs
                                              PUB_cQPM_Folder + DEF_SLASH + 'us_shell.exe', ;     // Executes batch scripts
-                                             PUB_cQPM_Folder + DEF_SLASH + 'us_slash.exe', ;     // Preprocess and executes C file using MinGW
-                                             PUB_cQPM_Folder + DEF_SLASH + 'us_tdump.exe', ;     // Dumps info from EXEOBJLIB modules
-                                             PUB_cQPM_Folder + DEF_SLASH + 'us_tlib.exe', ;      // Lists LIB
+                                             PUB_cQPM_Folder + DEF_SLASH + 'us_slash.exe', ;     // Preprocess and compiles C file using MinGW gcc
+                                             PUB_cQPM_Folder + DEF_SLASH + 'us_tdump.exe', ;     // Dumps info from EXEOBJLIB modules Check for 64 bits files
+                                             PUB_cQPM_Folder + DEF_SLASH + 'us_tlib.exe', ;      // Lists LIB (BCC32)
                                              PUB_cQPM_Folder + DEF_SLASH + 'us_upx.exe' }        // EXE compressor
 //                                           PUB_cQPM_Folder + DEF_SLASH + 'us_redir.exe', ;     // MinGW's command redirector
 #ifdef QPM_HOTRECOVERY
@@ -3577,11 +3577,17 @@ Function QPM_EditPRG
    Else
       Editor := US_ShortName( alltrim( Gbl_TEditor ) )
    EndIf
+   if bLogActivity
+      QPM_MemoWrit( PUB_cQPM_Folder+DEF_SLASH + 'QPM.log' , memoread( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log' ) + Hb_OsNewLine() + 'xRefPrgFmg Edit ' + GetProperty( 'VentanaMain' , 'GPrgFiles' , 'Cell' , VentanaMain.GPrgFiles.Value , NCOLPRGFULLNAME ) )
+   endif
    if bSuspendControlEdit
       if bEditorLongName
          cLineCmd := ChgPathToReal( GetProperty( 'VentanaMain' , 'GPrgFiles' , 'Cell' , VentanaMain.GPrgFiles.Value , NCOLPRGFULLNAME ) )
       else
          cLineCmd := US_ShortName( ChgPathToReal( GetProperty( 'VentanaMain' , 'GPrgFiles' , 'Cell' , VentanaMain.GPrgFiles.Value , NCOLPRGFULLNAME ) ) )
+      endif
+      if bLogActivity
+         QPM_MemoWrit( PUB_cQPM_Folder+DEF_SLASH + 'QPM.log' , memoread( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log' ) + Hb_OsNewLine() + 'Editor  ' + Editor + Hb_OsNewLine() + 'CmdLine ' + cLineCmd )
       endif
       QPM_Execute( Editor , cLineCmd )
    else
@@ -3613,10 +3619,10 @@ Function QPM_EditPRG
                               cLineCmd + Hb_OsNewLine() + ;
                               'CONTROL ' + EditControlFile )
       QPM_MemoWrit( EditControlFile , 'Edit Control File for ' + ChgPathToReal( GetProperty( 'VentanaMain' , 'GPrgFiles' , 'Cell' , VentanaMain.GPrgFiles.Value , NCOLPRGFULLNAME ) ) )
+      if bLogActivity
+         QPM_MemoWrit( PUB_cQPM_Folder+DEF_SLASH + 'QPM.log' , memoread( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log' ) + Hb_OsNewLine() + 'RunParms ' + RunParms )
+      endif
       QPM_Execute( US_ShortName( PUB_cQPM_Folder ) + DEF_SLASH + 'US_Run.exe' , 'QPM ' + RunParms )
-   endif
-   if bLogActivity
-      QPM_MemoWrit( PUB_cQPM_Folder+DEF_SLASH + 'QPM.log' , memoread( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log' ) + Hb_OsNewLine() + 'xRefPrgFmg Edit ' + GetProperty( 'VentanaMain' , 'GPrgFiles' , 'Cell' , VentanaMain.GPrgFiles.Value , NCOLPRGFULLNAME ) )
    endif
    if ( Rs := AScan( vSinLoadWindow , { |y| upper( US_VarToStr( y ) ) == US_Upper( ChgPathToReal( GetProperty( 'VentanaMain' , 'GPrgFiles' , 'Cell' , VentanaMain.GPrgFiles.Value , NCOLPRGFULLNAME ) ) ) } ) ) > 0 // Para Forzar Scan de PRG en busca de xREF con FMG
       adel( vSinLoadWindow , Rs ) // Para Forzar Scan de PRG en busca de xREF con FMG
@@ -10616,6 +10622,7 @@ Function QPM_Timer_Edit()
 #endif
             else
                VentanaMain.RichEditPrg.BackColor := DEF_COLORBACKPRG
+               VentanaMain.RichEditPrg.FontColor := DEF_COLORFONTVIEW
 #ifdef QPM_HOTRECOVERY
                ferase( GetProperty( 'VentanaMain' , 'GPrgFiles' , 'Cell' , i , NCOLPRGRECOVERY ) )
                SetProperty( 'VentanaMain' , 'GPrgFiles' , 'Cell' , i , NCOLPRGRECOVERY , '' )

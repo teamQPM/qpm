@@ -82,4 +82,48 @@ FUNCTION MAIN(cP1,cP2,cP3,cP4,cP5,cP6,cP7,cP8,cP9,cP10,cP11,cP12,cP13,cP14,cP15,
 // __run( "pause" )
 return .T.
 
+//========================================================================
+// FUNCION PARA EXTRAER UNA PALABRA DE UN ESTRING
+//========================================================================
+FUNCTION US_WORD(ESTRING, POSICION)
+   LOCAL CONT
+   CONT := 1
+   if Posicion == NIL
+      Posicion := 1
+   endif
+   ESTRING := ALLTRIM(ESTRING)
+   DO WHILE .T.
+      IF AT(" ",ESTRING) != 0
+         IF CONT == POSICION
+            RETURN SUBSTR(ESTRING,1,AT(" ",ESTRING)-1)
+         ELSE
+            ESTRING := ALLTRIM(SUBSTR(ESTRING,AT(" ",ESTRING) + 1))
+            CONT := CONT + 1
+         ENDIF
+      ELSE
+         IF POSICION == CONT
+            RETURN ESTRING
+         ELSE
+            RETURN ""
+         ENDIF
+      ENDIF
+   ENDDO
+Return ""
+
+//========================================================================
+// FUNCION PARA MOSTRAR UN CAMPO TIME SIN CEROS A LA IZQUIERDA
+//========================================================================
+FUNCTION US_TIMEDIS(TIEMPO)
+   LOCAL RES,I
+   RES := ""
+   FOR I:=1 TO 4
+      IF SUBSTR(TIEMPO,I,1) != "0" .AND. SUBSTR(TIEMPO,I,1) != ":"
+         RES:=RES+SUBSTR(TIEMPO,I)
+         RETURN RES
+      ELSE
+         RES:=RES+" "
+      ENDIF
+   NEXT
+RETURN RES+SUBSTR(TIEMPO,I)
+
 /* eof */
