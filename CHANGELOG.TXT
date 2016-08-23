@@ -8,6 +8,16 @@
  * See "How to format your ChangeLog entries" in howtosvn.txt file.
  */
 
+2016-08-23 19:48:31 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   + ./us_reimp.c
+   + ./reimp.h
+   + ./ar.c
+   + ./util.c
+   + ./QPM_US_Reimp.qpm
+     + Sources for reimp utility.
+   * us_reimp.exe
+     * Updated.
+
 2016-08-23 19:18:31 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * ./QPM.prg
      - Some messages of REIMPORT option.
