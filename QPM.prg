@@ -5619,9 +5619,9 @@ Function QPM_Build2()
             DefinoWindowsHotKeys( .F. )
             Return .F.
          endif
-         cInputReImpName := US_ShortName( ChgPathToReal( GetProperty( 'VentanaMain' , 'TReimportLib' , 'Value' ) ) )
          cInputReImpNameDisplay := ChgPathToReal( GetProperty( 'VentanaMain' , 'TReimportLib' , 'Value' ) )
-         cInputReImpDef := US_ShortName( GetCppFolder() ) + DEF_SLASH + 'BIN' + DEF_SLASH + US_FileNameOnlyName( GetProperty( 'VentanaMain' , 'TReimportLib' , 'Value' ) )
+         cInputReImpName := US_ShortName( cInputReImpNameDisplay )
+         cInputReImpDef := PUB_cQPM_Folder + DEF_SLASH + US_FileNameOnlyName( GetProperty( 'VentanaMain' , 'TReimportLib' , 'Value' ) ) + '.def'
       endif
    endif
 
@@ -6789,25 +6789,19 @@ Function QPM_Build2()
       do case
          case PUB_cConvert == 'DLL A'
             if GetProperty( 'VentanaMain' , 'Check_Reimp' , 'Value' )
-               Out := Out + PUB_cCharTab + '$(US_MSG_EXE) ' + PROGRESS_LOG + ' -MSG:Option ReImport Activate' + Hb_OsNewLine()
                Out := Out + PUB_cCharTab + '$(US_MSG_EXE) ' + PROGRESS_LOG + ' -MSG:ReImport From Library ' + cInputReImpNameDisplay + Hb_OsNewLine()
                Out := Out + PUB_cCharTab + '$(REIMPORT_EXE) -d ' + cInputReImpName + Hb_OsNewLine()
                Out := Out + PUB_cCharTab + '$(US_MSG_EXE) ' + PROGRESS_LOG + ' -MSG:DLL Function List for ' + cInputNameDisplay + ' ...' + Hb_OsNewLine()
-               Out := Out + PUB_cCharTab + '$(US_SHELL_EXE) ANALIZE_DLL ' + cInputReImpDef + '.def ' + Hb_OsNewLine()
-               //
+               Out := Out + PUB_cCharTab + if(! bLogActivity, '@', '') + '$(US_SHELL_EXE) ' + if(! bLogActivity, '-OFF ', '') + 'ANALIZE_DLL ' + cInputReImpDef + Hb_OsNewLine()
                Out := Out + PUB_cCharTab + '$(US_MSG_EXE) ' + PROGRESS_LOG + ' -MSG:Generating Interface Library (.' + US_Word( PUB_cConvert , 2 ) + ') for ' + cInputNameDisplay + ' ...' + Hb_OsNewLine()
-               Out := Out + PUB_cCharTab + '$(IMPLIB_MGW_EXE) -k -d ' + US_USlash( cInputReImpDef ) + '.def -D ' + US_FileNameOnlyNameAndExt( cInputNameDisplay ) + ' -l ' + US_USlash( cOutputName ) + Hb_OsNewLine()
-               //
-               Out := Out + PUB_cCharTab + if(! bLogActivity, '@', '') + '$(US_SHELL_EXE) ' + if(! bLogActivity, '-OFF ', '') + 'DELETE ' + cInputReImpDef + '.def' + Hb_OsNewLine()
+               Out := Out + PUB_cCharTab + '$(IMPLIB_MGW_EXE) -k -d ' + US_USlash( cInputReImpDef ) + ' -D ' + US_FileNameOnlyNameAndExt( cInputNameDisplay ) + ' -l ' + US_USlash( cOutputName ) + Hb_OsNewLine()
+               Out := Out + PUB_cCharTab + if(! bLogActivity, '@', '') + '$(US_SHELL_EXE) ' + if(! bLogActivity, '-OFF ', '') + 'DELETE ' + cInputReImpDef + Hb_OsNewLine()
             else
                Out := Out + PUB_cCharTab + '$(US_MSG_EXE) ' + PROGRESS_LOG + ' -MSG:DLL Function List for ' + cInputNameDisplay + ' ...' + Hb_OsNewLine()
-               *NO BORRAROut := Out + PUB_cCharTab + '$(IMPDEF_MGW_EXE) ' + cInputNameLong + '.def ' + cInputNameLong + Hb_OsNewLine()
                Out := Out + PUB_cCharTab + '$(IMPDEF_MGW_EXE) ' + cInputNameLong + ' > ' + cInputNameLong + '.def ' + Hb_OsNewLine()
-               Out := Out + PUB_cCharTab + '$(US_SHELL_EXE) ANALIZE_DLL ' + cInputNameLong + '.def ' + Hb_OsNewLine()
-               //
+               Out := Out + PUB_cCharTab + if(! bLogActivity, '@', '') + '$(US_SHELL_EXE) ' + if(! bLogActivity, '-OFF ', '') + 'ANALIZE_DLL ' + cInputNameLong + '.def ' + Hb_OsNewLine()
                Out := Out + PUB_cCharTab + '$(US_MSG_EXE) ' + PROGRESS_LOG + ' -MSG:Generating Interface Library (.' + US_Word( PUB_cConvert , 2 ) + ') for ' + cInputNameDisplay + ' ...' + Hb_OsNewLine()
                Out := Out + PUB_cCharTab + '$(IMPLIB_MGW_EXE) -d ' + US_USlash( cInputNameLong ) + '.def -D ' + US_FileNameOnlyNameAndExt( cInputNameDisplay ) + ' -l ' + US_USlash( cOutputName ) + Hb_OsNewLine()
-               //
                Out := Out + PUB_cCharTab + if(! bLogActivity, '@', '') + '$(US_SHELL_EXE) ' + if(! bLogActivity, '-OFF ', '') + 'DELETE ' + cInputNameLong + '.def' + Hb_OsNewLine()
             endif
          case PUB_cConvert == 'DLL LIB'
@@ -6815,7 +6809,7 @@ Function QPM_Build2()
                case Prj_Radio_Cpp == DEF_RG_PELLES
                   Out := Out + PUB_cCharTab + '$(US_MSG_EXE) ' + PROGRESS_LOG + ' -MSG:DLL Function List for ' + cInputNameDisplay + ' ...' + Hb_OsNewLine()
                   Out := Out + PUB_cCharTab + '$(IMPDEF_PC_EXE) ' + cInputNameLong + '.def ' + cInputNameLong + Hb_OsNewLine()
-                  Out := Out + PUB_cCharTab + '$(US_SHELL_EXE) ANALIZE_DLL ' + cInputNameLong + '.def ' + Hb_OsNewLine()
+                  Out := Out + PUB_cCharTab + if(! bLogActivity, '@', '') + '$(US_SHELL_EXE) ' + if(! bLogActivity, '-OFF ', '') + 'ANALIZE_DLL ' + cInputNameLong + '.def ' + Hb_OsNewLine()
                   //
                   Out := Out + PUB_cCharTab + '$(US_MSG_EXE) ' + PROGRESS_LOG + ' -MSG:Generating Interface Library (.' + US_Word( PUB_cConvert , 2 ) + ') for ' + cInputNameDisplay + ' ...' + Hb_OsNewLine()
                   Out := Out + PUB_cCharTab + '$(IMPLIB_PC_EXE) ' + if( GetProperty( 'VentanaMain' , 'Check_GuionA' , 'Value' ) , '' , '-NOUND ' ) + cInputNameLong + ' -OUT:' + cOutputName + Hb_OsNewLine()
@@ -6824,7 +6818,7 @@ Function QPM_Build2()
                case Prj_Radio_Cpp == DEF_RG_BORLAND
                   Out := Out + PUB_cCharTab + '$(US_MSG_EXE) ' + PROGRESS_LOG + ' -MSG:DLL Function List for ' + cInputNameDisplay + ' ...' + Hb_OsNewLine()
                   Out := Out + PUB_cCharTab + '$(IMPDEF_BCC_EXE) ' + cInputNameLong + '.def ' + cInputNameLong + Hb_OsNewLine()
-                  Out := Out + PUB_cCharTab + '$(US_SHELL_EXE) ANALIZE_DLL ' + cInputNameLong + '.def ' + Hb_OsNewLine()
+                  Out := Out + PUB_cCharTab + if(! bLogActivity, '@', '') + '$(US_SHELL_EXE) ' + if(! bLogActivity, '-OFF ', '') + 'ANALIZE_DLL ' + cInputNameLong + '.def ' + Hb_OsNewLine()
                   //
                   Out := Out + PUB_cCharTab + '$(US_MSG_EXE) ' + PROGRESS_LOG + ' -MSG:Generating Interface Library (.' + US_Word( PUB_cConvert , 2 ) + ') for ' + cInputNameDisplay + ' ...' + Hb_OsNewLine()
                   Out := Out + PUB_cCharTab + '$(IMPLIB_BCC_EXE) ' + if( GetProperty( 'VentanaMain' , 'Check_GuionA' , 'Value' ) , '-a ' , '' ) + cOutputName + ' ' + cInputNameLong + Hb_OsNewLine()
@@ -6862,7 +6856,7 @@ Function QPM_Build2()
             //
             Out := Out + PUB_cCharTab + '$(US_MSG_EXE) ' + PROGRESS_LOG + ' -MSG:DLL Function List for ' + cOutputNameDisplay + ' ...' + Hb_OsNewLine()
             Out := Out + PUB_cCharTab + '$(IMPDEF_BCC_EXE) ' + cOutputName + '.def ' + cOutputName + Hb_OsNewLine()
-            Out := Out + PUB_cCharTab + '$(US_SHELL_EXE) ANALIZE_DLL ' + cOutputName + '.def -DELETE' + Hb_OsNewLine()
+            Out := Out + PUB_cCharTab + if(! bLogActivity, '@', '') + '$(US_SHELL_EXE) ' + if(! bLogActivity, '-OFF ', '') + 'ANALIZE_DLL ' + cOutputName + '.def -DELETE' + Hb_OsNewLine()
             //
             Out := Out + PUB_cCharTab + '$(US_MSG_EXE) ' + PROGRESS_LOG + ' -MSG:Cleaning Temporary Files' + ' ...' + Hb_OsNewLine()
             Out := Out + PUB_cCharTab + '$(US_SHELL_EXE) DELETE ' + OBJFOLDER + DEF_SLASH + US_FileNameOnlyNameAndExt( cInputName ) + ' -OFF' + Hb_OsNewLine()
@@ -6906,7 +6900,7 @@ Function QPM_Build2()
             //
             Out := Out + PUB_cCharTab + '$(US_MSG_EXE) ' + PROGRESS_LOG + ' -MSG:DLL Function List for ' + cOutputNameDisplay + ' ...' + Hb_OsNewLine()
             Out := Out + PUB_cCharTab + '$(IMPDEF_MGW_EXE) ' + cOutputName + ' > ' + cOutputName + '.def ' + Hb_OsNewLine()
-            Out := Out + PUB_cCharTab + '$(US_SHELL_EXE) ANALIZE_DLL ' + cOutputName + '.def -DELETE' + Hb_OsNewLine()
+            Out := Out + PUB_cCharTab + if(! bLogActivity, '@', '') + '$(US_SHELL_EXE) ' + if(! bLogActivity, '-OFF ', '') + 'ANALIZE_DLL ' + cOutputName + '.def -DELETE' + Hb_OsNewLine()
             //
             Out := Out + PUB_cCharTab + '$(US_MSG_EXE) ' + PROGRESS_LOG + ' -MSG:Cleaning Temporary Files' + ' ...' + Hb_OsNewLine()
             Out := Out + PUB_cCharTab + '$(US_SHELL_EXE) DELETE ' + OBJFOLDER + DEF_SLASH + US_FileNameOnlyNameAndExt( cInputName ) + ' -OFF' + Hb_OsNewLine()
@@ -6985,15 +6979,16 @@ Function QPM_Build2()
          if bLogActivity
          bld_cmd += 'ECHO Writing Log Activity ...'                                                                              + Hb_OsNewLine()
          endif
-         bld_cmd += 'IF EXIST ' + BM_TEMP_RC  + ' DEL ' + BM_TEMP_RC + ' > NUL'                                                  + Hb_OsNewLine()
-         bld_cmd += 'IF EXIST ' + BM_TMP_ERR  + ' DEL ' + BM_TMP_ERR + ' > NUL'                                                  + Hb_OsNewLine()
-         bld_cmd += 'IF EXIST ' + TEMP_LOG    + ' DEL ' + TEMP_LOG   + ' > NUL'                                                  + Hb_OsNewLine()
-         bld_cmd += 'IF EXIST ' + SCRIPT_FILE + ' DEL ' + TEMP_LOG   + ' > NUL'                                                  + Hb_OsNewLine()
-         bld_cmd += 'IF EXIST ' + BM_RC_CONF  + ' DEL ' + BM_RC_CONF + ' > NUL'                                                  + Hb_OsNewLine()
-         bld_cmd += 'IF EXIST ' + BM_RC1_SHR  + ' DEL ' + BM_RC1_SHR + ' > NUL'                                                  + Hb_OsNewLine()
-         bld_cmd += 'IF EXIST ' + BM_RC2_SHR  + ' DEL ' + BM_RC2_SHR + ' > NUL'                                                  + Hb_OsNewLine()
+         bld_cmd += 'IF EXIST ' + BM_TMP_ERR  + ' DEL ' + BM_TMP_ERR  + ' > NUL'                                                 + Hb_OsNewLine()
+         bld_cmd += 'IF EXIST ' + TEMP_LOG    + ' DEL ' + TEMP_LOG    + ' > NUL'                                                 + Hb_OsNewLine()
+         bld_cmd += 'IF EXIST ' + SCRIPT_FILE + ' DEL ' + SCRIPT_FILE + ' > NUL'                                                 + Hb_OsNewLine()
 
          if ! PUB_bConvert .and. ! PUB_bConsole
+         bld_cmd += 'IF EXIST ' + BM_TEMP_RC  + ' DEL ' + BM_TEMP_RC  + ' > NUL'                                                 + Hb_OsNewLine()
+         bld_cmd += 'IF EXIST ' + BM_RC_CONF  + ' DEL ' + BM_RC_CONF  + ' > NUL'                                                 + Hb_OsNewLine()
+         bld_cmd += 'IF EXIST ' + BM_RC1_SHR  + ' DEL ' + BM_RC1_SHR  + ' > NUL'                                                 + Hb_OsNewLine()
+         bld_cmd += 'IF EXIST ' + BM_RC2_SHR  + ' DEL ' + BM_RC2_SHR  + ' > NUL'                                                 + Hb_OsNewLine()
+
          bld_cmd += 'IF NOT EXIST ' + BM_RC_MINI + ' ECHO ' + BM_RCM_ERR + ' > ' + BM_TMP_ERR                                    + Hb_OsNewLine()
          bld_cmd += 'ECHO #define ' + GetResConfigVarName() + ' ' + GetMiniGuiFolder() + DEF_SLASH + 'RESOURCES > ' + BM_RC_CONF + HB_OsNewLIne()
          bld_cmd += 'IF NOT EXIST ' + BM_RC_CONF + ' ECHO ' + BM_RCF_ERR + ' > ' + BM_TMP_ERR                                    + Hb_OsNewLine()
@@ -7044,7 +7039,7 @@ Function QPM_Build2()
          bld_cmd += 'ECHO OK > ' + END_FILE                                                                                      + Hb_OsNewLine()
          bld_cmd += ':END'                                                                                                       + Hb_OsNewLine()
 
-         if PUB_DeleteAux
+         if PUB_DeleteAux .and. ! PUB_bConvert .and. ! PUB_bConsole
          bld_cmd += 'IF EXIST ' + BM_TEMP_RC  + ' DEL ' + BM_TEMP_RC + ' > NUL'                                                  + Hb_OsNewLine()
          bld_cmd += 'IF EXIST ' + BM_RC_CONF  + ' DEL ' + BM_RC_CONF + ' > NUL'                                                  + Hb_OsNewLine()
          bld_cmd += 'IF EXIST ' + BM_RC1_SHR  + ' DEL ' + BM_RC1_SHR + ' > NUL'                                                  + Hb_OsNewLine()
@@ -9809,7 +9804,7 @@ Function ListModule( ModName )
    if upper( US_FileNameOnlyExt( ModName ) ) == 'DLL'
       QPM_Execute( US_ShortName(PUB_cQPM_Folder) + DEF_SLASH + 'US_IMPDEF.EXE' , US_ShortName( ModName ) + '.Tmp ' + US_ShortName( ModName ) , DEF_QPM_EXEC_WAIT , DEF_QPM_EXEC_MINIMIZE )
 
-      QPM_MemoWrit( RUN_FILE , US_ShortName(PUB_cQPM_Folder) + DEF_SLASH + 'US_SHELL.EXE QPM ANALIZE_DLL ' + US_ShortName( ModName ) + '.Tmp' + ' -FILESTOP ' + LOC_RunWaitFileStop + ' > "' + US_ShortName( ModName ) + '.TmpOut"' )
+      QPM_MemoWrit( RUN_FILE , US_ShortName(PUB_cQPM_Folder) + DEF_SLASH + 'US_SHELL.EXE QPM -OFF ANALIZE_DLL ' + US_ShortName( ModName ) + '.Tmp' + ' -FILESTOP ' + LOC_RunWaitFileStop + ' > "' + US_ShortName( ModName ) + '.TmpOut"' )
       QPM_Execute( RUN_FILE , , DEF_QPM_EXEC_WAIT , DEF_QPM_EXEC_MINIMIZE , LOC_RunWaitFileStop )
       ferase( RUN_FILE )
    endif
