@@ -8,6 +8,18 @@
  * See "How to format your ChangeLog entries" in howtosvn.txt file.
  */
 
+2016-08-23 19:18:31 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * ./QPM.prg
+     - Some messages of REIMPORT option.
+     ! In some cases the script file is not being deleted.
+     - Unneeded commands in BUILD.BAT for REIMPORT option.
+   * ./QPM_US_Shell.qpm
+   * ./QPM.exe
+   * ./us_shell.exe
+     Updated.
+   * ./us_shell.prg
+     ! Some messages displayed under OFF option.
+
 2016-08-22 19:18:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * ./QPM.prg
      + T*O*D*O.
@@ -57,8 +69,8 @@
      * Compression type.
 
 2016-08-20 20:07:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
-   * us_res.exe
-   * us_res.prg
+   * ./us_res.exe
+   * ./us_res.prg
      ! The resources whose names start with '.. \' are not properly processed.
    * ./QPM_US_Res.qpm
    * ./QPM.exe
@@ -72,7 +84,7 @@
      * Previous entry fixed.
    * ./TODO.TXT
      * Updated.
-   * us_upx.exe
+   * ./us_upx.exe
      * Updated to version 3.91w
 
 2016-08-19 20:50:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
