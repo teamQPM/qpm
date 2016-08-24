@@ -8,6 +8,12 @@
  * See "How to format your ChangeLog entries" in howtosvn.txt file.
  */
 
+2016-08-23 21:30:31 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * ./QPM.exe
+     Updated.
+   * ./QPM_Environment.prg
+     ! Environment file is not copied on version change.
+
 2016-08-23 19:48:31 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    + ./us_reimp.c
    + ./reimp.h
