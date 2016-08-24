@@ -37,8 +37,8 @@ memvar HR_nVersionsSet
 
 
 Function LoadEnvironment
-   Local EnvironmentMemo, EnvironmentVersion, EnvironmentMemoAux
-   Local LOC_cLine, nInx, vConfig, vAuxDir, i
+   Local EnvironmentMemo, EnvironmentVersion
+   Local LOC_cLine, nInx, vConfig, vAuxDir, i, cWinFolder
 
    EnvironmentVersion := 0
    vConfig := {}
@@ -264,60 +264,75 @@ Function LoadEnvironment
             endif
          endif
       else
-         if US_DirWrite( GetWindowsFolder() )
-            
-            vAuxDir := Array( ADIR( GetWindowsFolder() + DEF_SLASH + 'QAC_????????.path' ) )
-            ADIR( GetWindowsFolder() + DEF_SLASH + 'QAC_????????.path', vAuxDir )
+         if US_DirWrite( cWinFolder := GetWindowsFolder() )
+            // process old path files
+            vAuxDir := Array( ADIR( cWinFolder + DEF_SLASH + 'QAC_????????.path' ) )
+            ADIR( cWinFolder + DEF_SLASH + 'QAC_????????.path', vAuxDir )
             for nInx := 1 to len( vAuxDir )
                if val( substr( vAuxDir[nInx], 5, 8 ) ) < val( QPM_VERSION_NUMBER_LONG )
-                  if US_IsDirectory( alltrim( memoline( memoread( GetWindowsFolder() + DEF_SLASH + vAuxDir[nInx] ), 254, 1 ) ) )
+                  if US_IsDirectory( alltrim( memoline( memoread( cWinFolder + DEF_SLASH + vAuxDir[nInx] ), 254, 1 ) ) )
                      aadd( vConfig, vAuxDir[nInx] )
                   endif
                else
                   if val( substr( vAuxDir[nInx], 5, 8 ) ) == val( QPM_VERSION_NUMBER_LONG )
-                     if !( upper( alltrim( memoline( memoread( GetWindowsFolder() + DEF_SLASH + vAuxDir[nInx] ), 254, 1 ) ) ) == upper( PUB_cQPM_Folder ) )
-                        if US_IsDirectory( alltrim( memoline( memoread( GetWindowsFolder() + DEF_SLASH + vAuxDir[nInx] ), 254, 1 ) ) )
+                     if !( upper( alltrim( memoline( memoread( cWinFolder + DEF_SLASH + vAuxDir[nInx] ), 254, 1 ) ) ) == upper( PUB_cQPM_Folder ) )
+                        if US_IsDirectory( alltrim( memoline( memoread( cWinFolder + DEF_SLASH + vAuxDir[nInx] ), 254, 1 ) ) )
                            aadd( vConfig, vAuxDir[nInx] )
                         endif
                      endif
                   endif
                endif
             next
-            
-            vAuxDir := Array( ADIR( GetWindowsFolder() + DEF_SLASH + 'QPM_????????.path' ) )
-            ADIR( GetWindowsFolder() + DEF_SLASH + 'QPM_????????.path', vAuxDir )
+            // process new path files
+            vAuxDir := Array( ADIR( cWinFolder + DEF_SLASH + 'QPM_????????.path' ) )
+            ADIR( cWinFolder + DEF_SLASH + 'QPM_????????.path', vAuxDir )
             for nInx := 1 to len( vAuxDir )
                if val( substr( vAuxDir[nInx], 5, 8 ) ) < val( QPM_VERSION_NUMBER_LONG )
-                  if US_IsDirectory( alltrim( memoline( memoread( GetWindowsFolder() + DEF_SLASH + vAuxDir[nInx] ), 254, 1 ) ) )
+                  if US_IsDirectory( alltrim( memoline( memoread( cWinFolder + DEF_SLASH + vAuxDir[nInx] ), 254, 1 ) ) )
                      aadd( vConfig, vAuxDir[nInx] )
                   endif
                else
                   if val( substr( vAuxDir[nInx], 5, 8 ) ) == val( QPM_VERSION_NUMBER_LONG )
-                     if !( upper( alltrim( memoline( memoread( GetWindowsFolder() + DEF_SLASH + vAuxDir[nInx] ), 254, 1 ) ) ) == upper( PUB_cQPM_Folder ) )
-                        if US_IsDirectory( alltrim( memoline( memoread( GetWindowsFolder() + DEF_SLASH + vAuxDir[nInx] ), 254, 1 ) ) )
+                     if !( upper( alltrim( memoline( memoread( cWinFolder + DEF_SLASH + vAuxDir[nInx] ), 254, 1 ) ) ) == upper( PUB_cQPM_Folder ) )
+                        if US_IsDirectory( alltrim( memoline( memoread( cWinFolder + DEF_SLASH + vAuxDir[nInx] ), 254, 1 ) ) )
                            aadd( vConfig, vAuxDir[nInx] )
                         endif
                      endif
                   endif
                endif
             next
-            
-            if len( vConfig ) > 0
-               aSort( vConfig, , , { |x, y| US_Upper(x) > US_Upper(y) })
-               PUB_MigrateFolderFrom := alltrim( memoline( memoread( GetWindowsFolder() + DEF_SLASH + vConfig[1] ), , 1 ) )
-               PUB_MigrateVersionFrom := US_FileNameOnlyName( vConfig[1] )
-               if File( PUB_MigrateFolderFrom + DEF_SLASH + PUB_MigrateVersionFrom + ".cfg" )
-                  US_FileCopy( PUB_MigrateFolderFrom + DEF_SLASH + PUB_MigrateVersionFrom + ".cfg", PUB_cQPM_Folder + DEF_SLASH + 'QPM_' + QPM_VERSION_NUMBER_LONG + '.cfg' )
-               else
-                  US_Log( "Previous Configuration file not found: " + PUB_MigrateFolderFrom + DEF_SLASH + PUB_MigrateVersionFrom + ".cfg" )
-               endif
+         endif
+         // process old cfg files
+         vAuxDir := Array( ADIR( PUB_cQPM_Folder + DEF_SLASH + 'QPM_????????.cfg' ) )
+         ADIR( PUB_cQPM_Folder + DEF_SLASH + 'QPM_????????.cfg', vAuxDir )
+         for nInx := 1 to len( vAuxDir )
+            if val( substr( vAuxDir[nInx], 5, 8 ) ) < val( QPM_VERSION_NUMBER_LONG )
+               aadd( vConfig, vAuxDir[nInx] )
             endif
-            QPM_MemoWrit( GetWindowsFolder() + DEF_SLASH + 'QPM_' + QPM_VERSION_NUMBER_LONG + '.path', PUB_cQPM_Folder )
+         next
+         // use the most recent cfg file (the one with the higher number)
+         if len( vConfig ) > 0
+            aSort( vConfig, , , { |x, y| US_Upper( substr( x, 5, 8 ) ) > US_Upper( substr( y, 5, 8 ) ) })
+            if US_Upper( US_FileNameOnlyExt( vConfig[1] ) ) == "PATH"
+               PUB_MigrateFolderFrom := alltrim( memoline( memoread( cWinFolder + DEF_SLASH + vConfig[1] ), , 1 ) )
+            else
+               PUB_MigrateFolderFrom := PUB_cQPM_Folder
+            endif
+            PUB_MigrateVersionFrom := US_FileNameOnlyName( vConfig[1] )
+            if File( PUB_MigrateFolderFrom + DEF_SLASH + PUB_MigrateVersionFrom + ".cfg" )
+               US_FileCopy( PUB_MigrateFolderFrom + DEF_SLASH + PUB_MigrateVersionFrom + ".cfg", PUB_cQPM_Folder + DEF_SLASH + 'QPM_' + QPM_VERSION_NUMBER_LONG + '.cfg' )
+            else
+               US_Log( "Previous configuration file not found: " + PUB_MigrateFolderFrom + DEF_SLASH + PUB_MigrateVersionFrom + ".cfg" )
+            endif
+         endif
+         // remember path if we can write in Windows folder
+         if US_DirWrite( cWinFolder := GetWindowsFolder() )
+            QPM_MemoWrit( cWinFolder + DEF_SLASH + 'QPM_' + QPM_VERSION_NUMBER_LONG + '.path', PUB_cQPM_Folder )
          endif
       endif
       EnvironmentMemo := MemoRead( PUB_cQPM_Folder + DEF_SLASH + 'QPM_' + QPM_VERSION_NUMBER_LONG + '.cfg' )
       if empty( PUB_MigrateFolderFrom )
-         PUB_MigrateFolderFrom := GetWindowsFolder()
+         PUB_MigrateFolderFrom := cWinFolder
       endif
    endif
    if MLCount ( EnvironmentMemo, 254 ) > 0
@@ -325,25 +340,23 @@ Function LoadEnvironment
       if us_word( LOC_cLine, 1 ) == "VERSION"
          EnvironmentVersion := val( us_word( LOC_cLine, 2 ) + us_word( LOC_cLine, 3 ) + us_word( LOC_cLine, 4 ) )
       else
-         EnvironmentVersion := val( "010001" )   && 01.00.01
+         EnvironmentVersion := val( "010001" )
       endif
    endif
    if EnvironmentVersion > val( QPM_VERSION_NUMBER_SHORT )
-      MsgStop( "Version of Environment file is greater than the version of this program, the file will not be processed.  You can continue without problems." )
+      MsgStop( "Version of Environment file is greater than the version of this program, the file will not be processed. You can continue without problems." )
       Return .F.
    endif
-      PRIVATE PRI_COMPATIBILITY_ENVIRONMENTVERSION    := EnvironmentVersion
-      PRIVATE PRI_COMPATIBILITY_ENVIRONMENTFILE       := EnvironmentMemo
-      PRIVATE PRI_COMPATIBILITY_ENVIRONMENTFILEAUX    := EnvironmentMemoAux
+
+   PRIVATE PRI_COMPATIBILITY_ENVIRONMENTVERSION    := EnvironmentVersion
+   PRIVATE PRI_COMPATIBILITY_ENVIRONMENTFILE       := EnvironmentMemo
+   PRIVATE PRI_COMPATIBILITY_ENVIRONMENTFILEAUX    := Nil
 #include "QPM_CompatibilityOpenGlobal.CH"
-      EnvironmentVersion    := PRI_COMPATIBILITY_ENVIRONMENTVERSION
-      Empty( EnvironmentVersion )
-      EnvironmentMemo       := PRI_COMPATIBILITY_ENVIRONMENTFILE
-      EnvironmentMemoAux    := PRI_COMPATIBILITY_ENVIRONMENTFILEAUX
-      Empty( EnvironmentMemoAux )
-      RELEASE PRI_COMPATIBILITY_ENVIRONMENTVERSION
-      RELEASE PRI_COMPATIBILITY_ENVIRONMENTFILE
-      RELEASE PRI_COMPATIBILITY_ENVIRONMENTFILEAUX
+   EnvironmentMemo       := PRI_COMPATIBILITY_ENVIRONMENTFILE
+   RELEASE PRI_COMPATIBILITY_ENVIRONMENTVERSION
+   RELEASE PRI_COMPATIBILITY_ENVIRONMENTFILE
+   RELEASE PRI_COMPATIBILITY_ENVIRONMENTFILEAUX
+
    /* Version ACTUAL */
    For i := 1 To MLCount ( EnvironmentMemo, 254 )
       DO EVENTS
@@ -461,7 +474,7 @@ Function SaveEnvironment
    c := c + 'DBFTOOL '            + alltrim( Gbl_Text_Dbf ) + Hb_OsNewLine()
    c := c + 'DBFCOMILLAS '        + if( Gbl_Comillas_DBF == DBLQT, ".T.", ".F." ) + Hb_OsNewLine()
    c := c + 'LASTPROJECTFOLDER '  + cLastProjectFolder + Hb_OsNewLine()
-   
+
    /* MiniGui Oficial 1 with BCC */
    c := c + 'CCOMPILATOR'         + DefineMiniGui1  + DefineBorland + DefineHarbour  + Define32bits + ' ' + alltrim( &("Gbl_T_C_"       + DefineMiniGui1 + DefineBorland + DefineHarbour  + Define32bits) ) + Hb_OsNewLine()
    c := c + 'MINIGUIFOLDER'       + DefineMiniGui1  + DefineBorland + DefineHarbour  + Define32bits + ' ' + alltrim( &("Gbl_T_M_"       + DefineMiniGui1 + DefineBorland + DefineHarbour  + Define32bits) ) + Hb_OsNewLine()
