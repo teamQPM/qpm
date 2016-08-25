@@ -1,3 +1,10 @@
+
+Desde 2016-08-25 12:41:05 UTC, Virustotal reporta que el instalador .exe está libre de virus.
+Since 2016-08-25 12:41:05 UTC, Virustotal reports that the .exe installer is virus-free.
+A partir de 2016-08-25 12:41:05 UTC, Virustotal relata que o instalador .exe está livre de vírus.
+
+----
+
 En la versión 05_05_02:
 1. Corregido: No se carga la configuración global desde la versión anterior al instalar una nueva.
 2. Corregido: Varios falsos positivos reportados por diferentes antivirus.

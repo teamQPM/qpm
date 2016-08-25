@@ -8,6 +8,11 @@
  * See "How to format your ChangeLog entries" in howtosvn.txt file.
  */
 
+2016-08-25 10:08:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * ./readme.txt
+     * Updated to reflect that, since 2016-08-25 12:41:05 UTC, VirusTotal
+       reports that the .exe installer published at SourceForge is virus-free.
+
 2016-08-24 21:37:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * ./readme.txt
      * Updated.
