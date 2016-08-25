@@ -1,3 +1,23 @@
+En la versión 05_05_02:
+1. Corregido: No se carga la configuración global desde la versión anterior al instalar una nueva.
+2. Corregido: Varios falsos positivos reportados por diferentes antivirus.
+3. Corregido: El color de fondo de la pantalla no es restaurado al final la edición de un fuente.
+4. Nota: Se provee un archivo .zip de instalación ya que algunos antivirus detectan malware en el instalador .exe
+
+En la versión 05_05_02:
+1. Fixed: The global configuration is not copied from the previous version when installing a new one.
+2. Fixed: Some false positives reported by some antivirus.
+3. Fixed: Screen's background color is not restored after editing a source.
+4. Note: A .zip installation file is provided because some antivirus detect malware in the .exe installer.
+
+Versão 05_05_02:
+1. Fixo: A configuração global não é carregada a partir da versão anterior ao instalar uma nova versão.
+2. Fixo: Alguns falsos positivos relatados por alguns antivírus.
+3. Fixo: O cor de fundo da tela não é restaurado depois de editar um programa fonte.
+4. Nota: Um arquivo de instalação .zip é fornecido porque alguns antivírus detectan malware no arquivo instalador .exe
+
+----
+
 En la versión 05_05_01:
 1. Corregido: No se cargan las librerias adicionales al convertir desde versiones anteriores a la 05_05_00.
 2. Corregido: La información en la solapa 'LIB' no es correcta.
