@@ -30,6 +30,7 @@
 #include "fileio.ch"
 #include "minigui.ch"
 
+#xcommand ?? <texto> => US_LOG( <texto> , .T. )
 #xcommand ? <texto> => US_LOG( <texto> , .T. )
 #translate inkey(0) => US_LOG("Inkey(0) , Presione Enter" , .T. )
 

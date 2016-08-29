@@ -90,12 +90,12 @@
                     endcase
             ElseIf  US_Upper( US_Word( PRI_COMPATIBILITY_LINE , 1 ) ) = 'CHECKFORMTOOL'
                     do case
-                       case US_WordSubStr( PRI_COMPATIBILITY_LINE , 2 ) == "1"
-                          PRI_COMPATIBILITY_LINE := "CHECKFORMTOOL " + "EDITOR"
-                       case US_WordSubStr( PRI_COMPATIBILITY_LINE , 2 ) == "2"
-                          PRI_COMPATIBILITY_LINE := "CHECKFORMTOOL " + "HMI"
-                       case US_WordSubStr( PRI_COMPATIBILITY_LINE , 2 ) == "3"
-                          PRI_COMPATIBILITY_LINE := "CHECKFORMTOOL " + "HMGSIDE"
+                       case US_WordSubStr( PRI_COMPATIBILITY_LINE , 2 ) == '1'
+                          PRI_COMPATIBILITY_LINE := 'CHECKFORMTOOL ' + 'EDITOR'
+                       case US_WordSubStr( PRI_COMPATIBILITY_LINE , 2 ) == '2'
+                          PRI_COMPATIBILITY_LINE := 'CHECKFORMTOOL ' + 'HMI'
+                       case US_WordSubStr( PRI_COMPATIBILITY_LINE , 2 ) == '3'
+                          PRI_COMPATIBILITY_LINE := 'CHECKFORMTOOL ' + 'HMGSIDE'
                     endcase
             ElseIf  US_Upper( US_Word( PRI_COMPATIBILITY_LINE , 1 ) ) = 'XHARBOURSUPPORT'
                     If US_Upper ( US_Word( PRI_COMPATIBILITY_LINE , 2 ) ) = 'YES'
@@ -121,8 +121,8 @@
             ElseIf Right( US_Upper ( PRI_COMPATIBILITY_LINE) , 2 ) == '.C'
                    PRI_COMPATIBILITY_LINE := "SOURCE "+alltrim(PRI_COMPATIBILITY_LINE)
             ElseIf US_Upper( US_Word( PRI_COMPATIBILITY_LINE , 1 ) ) == 'CHECKFORMTOOL'
-                   if US_Word ( PRI_COMPATIBILITY_LINE , 2 ) == "EDITOR"
-                      PRI_COMPATIBILITY_LINE := "CHECKFORMTOOL AUTO"
+                   if US_Word ( PRI_COMPATIBILITY_LINE , 2 ) == "AUTO"
+                      PRI_COMPATIBILITY_LINE := 'CHECKFORMTOOL EDITOR'
                    endif
             endif
             PRI_COMPATIBILITY_MEMOPROJECTFILE := PRI_COMPATIBILITY_MEMOPROJECTFILE + PRI_COMPATIBILITY_LINE + HB_OsNewLine()
@@ -139,12 +139,12 @@
             PRI_COMPATIBILITY_LINE := AllTrim ( MEMOLINE( PRI_COMPATIBILITY_MEMOPROJECTFILEAUX , 254 , PRI_COMPATIBILITY_INX ) )
             If  US_Upper( US_Word( PRI_COMPATIBILITY_LINE , 1 ) ) == 'OUTPUTTYPE'
                 do case
-                   case US_Word ( PRI_COMPATIBILITY_LINE , 2 ) == "EXE"
-                      PRI_COMPATIBILITY_LINE := "OUTPUTTYPE SRCEXE"
-                   case US_Word ( PRI_COMPATIBILITY_LINE , 2 ) == "LIB"
-                      PRI_COMPATIBILITY_LINE := "OUTPUTTYPE SRCLIB"
-                   case US_Word ( PRI_COMPATIBILITY_LINE , 2 ) == "DLL"
-                      PRI_COMPATIBILITY_LINE := "OUTPUTTYPE SRCDLL"
+                   case US_Word ( PRI_COMPATIBILITY_LINE , 2 ) == 'EXE'
+                      PRI_COMPATIBILITY_LINE := 'OUTPUTTYPE SRCEXE'
+                   case US_Word ( PRI_COMPATIBILITY_LINE , 2 ) == 'LIB'
+                      PRI_COMPATIBILITY_LINE := 'OUTPUTTYPE SRCLIB'
+                   case US_Word ( PRI_COMPATIBILITY_LINE , 2 ) == 'DLL'
+                      PRI_COMPATIBILITY_LINE := 'OUTPUTTYPE SRCDLL'
                 endcase
             endif
             PRI_COMPATIBILITY_MEMOPROJECTFILE := PRI_COMPATIBILITY_MEMOPROJECTFILE + PRI_COMPATIBILITY_LINE + HB_OsNewLine()
