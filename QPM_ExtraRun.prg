@@ -256,10 +256,8 @@ Function QPM_GetExtraRun()
 Return .T.
 
 Function QPM_GetExtraRunInit()
-   //pepe
-   //us_log(Prj_ExtraRunType)
    do case
-      case Prj_ExtraRunType == "NONE" .or. Prj_ExtraRunType == ""
+      case Prj_ExtraRunType == "NONE" .or. Empty( Prj_ExtraRunType )
          ExtraRun.ExtraRunSelectRadio.Value := 1
       case Prj_ExtraRunType == "QPM"
          ExtraRun.ExtraRunSelectRadio.Value := 2
@@ -627,30 +625,6 @@ Function QPM_ExecuteExtraRun( bTest )
          QPM_Execute( MemoRun )
    endcase
    DirChange( CurrentFolder )
-Return .T.
-
-Function QPM_ActExtraRun()
-   Prj_ExtraRunCmdFINAL        := GetProperty( "WinPSettings", "Text_ExtraRunCmd", "value" )
-   Prj_ExtraRunProjQPM         := Tmp_ExtraRunProjQPM
-   Prj_ExtraRunCmdEXE          := Tmp_ExtraRunCmdEXE
-   Prj_ExtraRunCmdFREE         := Tmp_ExtraRunCmdFREE
-   Prj_ExtraRunCmdQPMParm      := Tmp_ExtraRunCmdQPMParm
-   Prj_ExtraRunCmdEXEParm      := Tmp_ExtraRunCmdEXEParm
-   Prj_ExtraRunCmdFREEParm     := Tmp_ExtraRunCmdFREEParm
-   Prj_ExtraRunType            := Tmp_ExtraRunType
-   Prj_ExtraRunQPMRadio        := Tmp_ExtraRunQPMRadio
-   Prj_ExtraRunQPMLite         := Tmp_ExtraRunQPMLite
-   Prj_ExtraRunQPMForceFull    := Tmp_ExtraRunQPMForceFull
-   Prj_ExtraRunQPMRun          := Tmp_ExtraRunQPMRun
-   Prj_ExtraRunQPMButtonRun    := Tmp_ExtraRunQPMButtonRun
-   Prj_ExtraRunQPMClear        := Tmp_ExtraRunQPMClear
-   Prj_ExtraRunQPMLog          := Tmp_ExtraRunQPMLog
-   Prj_ExtraRunQPMLogOnlyError := Tmp_ExtraRunQPMLogOnlyError
-   Prj_ExtraRunQPMAutoExit     := Tmp_ExtraRunQPMAutoExit
-   Prj_ExtraRunExeWait         := Tmp_ExtraRunExeWait
-   Prj_ExtraRunExePause        := Tmp_ExtraRunExePause
-   Prj_ExtraRunFreeWait        := Tmp_ExtraRunFreeWait
-   Prj_ExtraRunFreePause       := Tmp_ExtraRunFreePause
 Return .T.
 
 /* eof */

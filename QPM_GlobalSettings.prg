@@ -60,19 +60,19 @@ Function GlobalSettings()
 
             DEFINE LABEL LEditor
                     VALUE           'Program Editor for Text Files:'
-                    ROW             67
+                    ROW             70
                     COL             10
                     AUTOSIZE        .T.
                     TRANSPARENT     .T.
             END LABEL
             DEFINE TEXTBOX TEditor
-                    VALUE           Gbl_TEditor
-                    ROW             67
+                    VALUE           Gbl_Text_Editor
+                    ROW             70
                     COL             220
                     WIDTH           461
             END TEXTBOX
             DEFINE BUTTON BEditor
-                    ROW             67
+                    ROW             70
                     COL             691
                     WIDTH           25
                     HEIGHT          25
@@ -83,7 +83,7 @@ Function GlobalSettings()
 
             DEFINE CHECKBOX Check_EditorLongName
                     CAPTION         "Use Long Name"
-                    ROW             87
+                    ROW             100
                     COL             15
                     WIDTH           150
                     HEIGHT          20
@@ -94,7 +94,7 @@ Function GlobalSettings()
 
             DEFINE CHECKBOX Check_EditorSuspendControl
                     CAPTION         "Suspend Control Edit"
-                    ROW             108
+                    ROW             130
                     COL             15
                     WIDTH           150
                     HEIGHT          20
@@ -103,7 +103,7 @@ Function GlobalSettings()
                     ON CHANGE       bSuspendControlEdit := WinGSettings.Check_EditorSuspendControl.Value
             END CHECKBOX
 
-            @ 132, 10 LABEL LDummy_Form ;
+            @ 160, 10 LABEL LDummy_Form ;
                VALUE 'Forms Tools Location:' ;
                WIDTH 275 ;
                FONT 'arial' SIZE 10 BOLD ;
@@ -112,19 +112,19 @@ Function GlobalSettings()
 
             DEFINE LABEL Label_HMI
                     VALUE           ' OOHG IDE+ (By Ciro Vargas):'
-                    ROW             160
+                    ROW             190
                     COL             10
                     AUTOSIZE        .T.
                     TRANSPARENT     .T.
             END LABEL
             DEFINE TEXTBOX Text_HMI
                     VALUE           Gbl_Text_HMI
-                    ROW             160
+                    ROW             190
                     COL             220
                     WIDTH           461
             END TEXTBOX
             DEFINE BUTTON Button_HMI
-                    ROW             160
+                    ROW             190
                     COL             691
                     WIDTH           25
                     HEIGHT          25
@@ -135,19 +135,19 @@ Function GlobalSettings()
 
             DEFINE LABEL Label_HMGSIDE
                     VALUE           'HMGS-IDE (By Walter Formigoni):'
-                    ROW             190
+                    ROW             220
                     COL             10
                     AUTOSIZE        .T.
                     TRANSPARENT     .T.
             END LABEL
             DEFINE TEXTBOX Text_HMGSIDE
                     VALUE           Gbl_Text_HMGSIDE
-                    ROW             190
+                    ROW             220
                     COL             220
                     WIDTH           461
             END TEXTBOX
             DEFINE BUTTON Button_HMGSIDE
-                    ROW             190
+                    ROW             220
                     COL             691
                     WIDTH           25
                     HEIGHT          25
@@ -161,7 +161,7 @@ Function GlobalSettings()
          // PAGE 2
          DEFINE PAGE "DBF Tool"
 
-            @ 102, 10 LABEL LDummy_Dbf ;
+            @ 40, 10 LABEL LDummy_Dbf ;
                VALUE 'Dbf Tools Location:' ;
                WIDTH 275 ;
                FONT 'arial' SIZE 10 BOLD ;
@@ -170,19 +170,19 @@ Function GlobalSettings()
 
             DEFINE LABEL Label_Dbf
                     VALUE           'Select DBF Tool:'
-                    ROW             130
+                    ROW             70
                     COL             10
                     AUTOSIZE        .T.
                     TRANSPARENT     .T.
             END LABEL
             DEFINE TEXTBOX Text_Dbf
                     VALUE           Gbl_Text_Dbf
-                    ROW             130
+                    ROW             70
                     COL             220
                     WIDTH           461
             END TEXTBOX
             DEFINE BUTTON Button_Dbf
-                    ROW             130
+                    ROW             70
                     COL             691
                     WIDTH           25
                     HEIGHT          25
@@ -193,7 +193,7 @@ Function GlobalSettings()
 
             DEFINE CHECKBOX Check_DBF_NoComillas
                     CAPTION         "Do Not Use Quotes in DBF's Name"
-                    ROW             160
+                    ROW             100
                     COL             10
                     WIDTH           250
                     HEIGHT          20
@@ -207,7 +207,7 @@ Function GlobalSettings()
          // PAGE 3
          DEFINE PAGE "HMG 1.x + BCC32 + Harbour"
 
-            @ 43, 10 LABEL &("LDummy_"+DefineMiniGui1+DefineBorland+DefineHarbour+Define32bits) ;
+            @ 40, 10 LABEL &("LDummy_"+DefineMiniGui1+DefineBorland+DefineHarbour+Define32bits) ;
                VALUE 'Folders for HMG 1.x + BCC32 + Harbour:' ;
                WIDTH 601 ;
                FONT 'arial' SIZE 10 BOLD ;
@@ -361,7 +361,7 @@ Function GlobalSettings()
          // PAGE 4
          DEFINE PAGE "HMG 1.x + BCC32 + xHarbour"
 
-            @ 43, 10 LABEL &("LDummy_"+DefineMiniGui1+DefineBorland+DefineXHarbour+Define32bits) ;
+            @ 40, 10 LABEL &("LDummy_"+DefineMiniGui1+DefineBorland+DefineXHarbour+Define32bits) ;
                VALUE 'Folders for HMG 1.x + BCC32 + xHarbour:' ;
                WIDTH 601 ;
                FONT 'arial' SIZE 10 BOLD ;
@@ -515,7 +515,7 @@ Function GlobalSettings()
          // PAGE 5
          DEFINE PAGE "HMG 3.x + MinGW + Harbour, 32 bits"
 
-            @ 43, 10 LABEL &("LDummy_"+DefineMiniGui3+DefineMinGW+DefineHarbour+Define32bits) ;
+            @ 40, 10 LABEL &("LDummy_"+DefineMiniGui3+DefineMinGW+DefineHarbour+Define32bits) ;
                VALUE 'Folders for HMG 3.x + MinGW + Harbour, 32 bits:' ;
                WIDTH 601 ;
                FONT 'arial' SIZE 10 BOLD ;
@@ -667,163 +667,9 @@ Function GlobalSettings()
          END PAGE
 
          // PAGE 6
-         DEFINE PAGE "HMG 3.x + MinGW + xHarbour, 32 bits"
-
-            @ 43, 10 LABEL &("LDummy_"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define32bits) ;
-               VALUE 'Folders for HMG 3.x + MinGW + xHarbour, 32 bits:' ;
-               WIDTH 601 ;
-               FONT 'arial' SIZE 10 BOLD ;
-               TRANSPARENT ;
-               FONTCOLOR DEF_COLORBLUE
-
-// Minigui Folder
-            DEFINE LABEL &("LM_"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define32bits)
-                    ROW             70
-                    COL             10
-                    WIDTH           109
-                    VALUE           'HMG Folder:'
-                    TRANSPARENT     .T.
-            END LABEL
-            DEFINE TEXTBOX &("TM_"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define32bits)
-                    VALUE           &("Gbl_T_M_"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define32bits)
-                    ROW             70
-                    COL             120
-                    WIDTH           561
-            END TEXTBOX
-            DEFINE BUTTON &("BM_"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define32bits)
-                    ROW             70
-                    COL             691
-                    WIDTH           25
-                    HEIGHT          25
-                    PICTURE         'folderselect'
-                    TOOLTIP         'Select folder'
-                    ONCLICK         If ( !Empty( Folder := GetFolder( "Select folder", WinGSettings.&("TM_"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define32bits).Value ) ), WinGSettings.&("TM_"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define32bits).Value := Folder, )
-            END BUTTON
-// Minigui Libs Folder
-            DEFINE LABEL &("LM_LIBS_"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define32bits)
-                    ROW             100
-                    COL             10
-                    WIDTH           109
-                    VALUE           '    Libs Folder:'
-                    TRANSPARENT     .T.
-            END LABEL
-            DEFINE TEXTBOX &("TM_LIBS_"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define32bits)
-                    VALUE           &("Gbl_T_M_LIBS_"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define32bits)
-                    ROW             100
-                    COL             120
-                    WIDTH           561
-                    TOOLTIP         "Full path to HMG's libraries (usually subfolder 'lib' of HMG Folder)"
-            END TEXTBOX
-            DEFINE BUTTON &("BM_LIBS_"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define32bits)
-                    ROW             100
-                    COL             691
-                    WIDTH           25
-                    HEIGHT          25
-                    PICTURE         'folderselect'
-                    TOOLTIP         'Select folder'
-                    ONCLICK         If ( !Empty( Folder := GetFolder( "Select folder", WinGSettings.&("TM_LIBS_"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define32bits).Value ) ), WinGSettings.&("TM_LIBS_"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define32bits).Value := Folder, )
-            END BUTTON
-// MinGW Folder
-            DEFINE LABEL &("LC_"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define32bits)
-                    ROW             130
-                    COL             10
-                    WIDTH           109
-                    VALUE           'MinGW Folder:'
-                    TRANSPARENT     .T.
-            END LABEL
-            DEFINE TEXTBOX &("TC_"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define32bits)
-                    VALUE           &("Gbl_T_C_"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define32bits)
-                    ROW             130
-                    COL             120
-                    WIDTH           561
-            END TEXTBOX
-            DEFINE BUTTON &("BC_"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define32bits)
-                    ROW             130
-                    COL             691
-                    WIDTH           25
-                    HEIGHT          25
-                    PICTURE         'folderselect'
-                    TOOLTIP         'Select folder'
-                    ONCLICK         If ( !Empty( Folder := GetFolder( "Select folder", WinGSettings.&("TC_"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define32bits).Value ) ), WinGSettings.&("TC_"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define32bits).Value := Folder, )
-            END BUTTON
-// MinGW Libs Folder
-            DEFINE LABEL &("LC_LIBS_"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define32bits)
-                    ROW             160
-                    COL             10
-                    WIDTH           109
-                    VALUE           '    Libs Folder:'
-                    TRANSPARENT     .T.
-            END LABEL
-            DEFINE TEXTBOX &("TC_LIBS_"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define32bits)
-                    VALUE           &("Gbl_T_C_LIBS_"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define32bits)
-                    ROW             160
-                    COL             120
-                    WIDTH           561
-                    TOOLTIP         "Full path to MinGW's libraries (usually subfolder 'lib' or 'i686-w64-mingw32\lib' of MinGW Folder)"
-            END TEXTBOX
-            DEFINE BUTTON &("BC_LIBS_"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define32bits)
-                    ROW             160
-                    COL             691
-                    WIDTH           25
-                    HEIGHT          25
-                    PICTURE         'folderselect'
-                    TOOLTIP         'Select folder'
-                    ONCLICK         If ( !Empty( Folder := GetFolder( "Select folder", WinGSettings.&("TC_LIBS_"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define32bits).Value ) ), WinGSettings.&("TC_LIBS_"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define32bits).Value := Folder, )
-            END BUTTON
-// xHarbour Folder
-            DEFINE LABEL &("LP_"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define32bits)
-                    ROW             190
-                    COL             10
-                    WIDTH           109
-                    VALUE           'xHarbour Folder:'
-                    TRANSPARENT     .T.
-            END LABEL
-            DEFINE TEXTBOX &("TP_"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define32bits)
-                    VALUE           &("Gbl_T_P_"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define32bits)
-                    ROW             190
-                    COL             120
-                    WIDTH           561
-            END TEXTBOX
-            DEFINE BUTTON &("BP_"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define32bits)
-                    ROW             190
-                    COL             691
-                    WIDTH           25
-                    HEIGHT          25
-                    PICTURE         'folderselect'
-                    TOOLTIP         'Select folder'
-                    ONCLICK         If ( !Empty( Folder := GetFolder( "Select folder", WinGSettings.&("TP_"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define32bits).Value ) ), WinGSettings.&("TP_"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define32bits).Value := Folder, )
-            END BUTTON
-// xHarbour Libs Folder
-            DEFINE LABEL &("LP_LIBS_"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define32bits)
-                    ROW             220
-                    COL             10
-                    WIDTH           109
-                    VALUE           '    Libs Folder:'
-                    TRANSPARENT     .T.
-            END LABEL
-            DEFINE TEXTBOX &("TP_LIBS_"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define32bits)
-                    VALUE           &("Gbl_T_P_LIBS_"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define32bits)
-                    ROW             220
-                    COL             120
-                    WIDTH           561
-                    TOOLTIP         "Full path to xHarbour's libraries (usually subfolder 'lib' or 'lib\win\mingw' of xHarbour Folder)"
-            END TEXTBOX
-            DEFINE BUTTON &("BP_LIBS_"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define32bits)
-                    ROW             220
-                    COL             691
-                    WIDTH           25
-                    HEIGHT          25
-                    PICTURE         'folderselect'
-                    TOOLTIP         'Select folder'
-                    ONCLICK         If ( !Empty( Folder := GetFolder( "Select folder", WinGSettings.&("TP_LIBS_"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define32bits).Value ) ), WinGSettings.&("TP_LIBS_"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define32bits).Value := Folder, )
-            END BUTTON
-
-         END PAGE
-
-         // PAGE 7
          DEFINE PAGE "HMG 3.x + MinGW + Harbour, 64 bits"
 
-            @ 43, 10 LABEL &("LDummy_"+DefineMiniGui3+DefineMinGW+DefineHarbour+Define64bits) ;
+            @ 40, 10 LABEL &("LDummy_"+DefineMiniGui3+DefineMinGW+DefineHarbour+Define64bits) ;
                VALUE 'Folders for HMG 3.x + MinGW + Harbour, 64 bits:' ;
                WIDTH 601 ;
                FONT 'arial' SIZE 10 BOLD ;
@@ -974,164 +820,10 @@ Function GlobalSettings()
 
          END PAGE
 
-         // PAGE 8
-         DEFINE PAGE "HMG 3.x + MinGW + xHarbour, 64 bits"
-
-            @ 43, 10 LABEL &("LDummy_"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define64bits) ;
-               VALUE 'Folders for HMG 3.x + MinGW + xHarbour, 64 bits:' ;
-               WIDTH 601 ;
-               FONT 'arial' SIZE 10 BOLD ;
-               TRANSPARENT ;
-               FONTCOLOR DEF_COLORBLUE
-
-// Minigui Folder
-            DEFINE LABEL &("LM_"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define64bits)
-                    ROW             70
-                    COL             10
-                    WIDTH           109
-                    VALUE           'HMG Folder:'
-                    TRANSPARENT     .T.
-            END LABEL
-            DEFINE TEXTBOX &("TM_"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define64bits)
-                    VALUE           &("Gbl_T_M_"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define64bits)
-                    ROW             70
-                    COL             120
-                    WIDTH           561
-            END TEXTBOX
-            DEFINE BUTTON &("BM_"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define64bits)
-                    ROW             70
-                    COL             691
-                    WIDTH           25
-                    HEIGHT          25
-                    PICTURE         'folderselect'
-                    TOOLTIP         'Select folder'
-                    ONCLICK         If ( !Empty( Folder := GetFolder( "Select folder", WinGSettings.&("TM_"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define64bits).Value ) ), WinGSettings.&("TM_"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define64bits).Value := Folder, )
-            END BUTTON
-// Minigui Libs Folder
-            DEFINE LABEL &("LM_LIBS_"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define64bits)
-                    ROW             100
-                    COL             10
-                    WIDTH           109
-                    VALUE           '    Libs Folder:'
-                    TRANSPARENT     .T.
-            END LABEL
-            DEFINE TEXTBOX &("TM_LIBS_"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define64bits)
-                    VALUE           &("Gbl_T_M_LIBS_"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define64bits)
-                    ROW             100
-                    COL             120
-                    WIDTH           561
-                    TOOLTIP         "Full path to HMG's libraries (usually subfolder 'lib' of HMG Folder)"
-            END TEXTBOX
-            DEFINE BUTTON &("BM_LIBS_"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define64bits)
-                    ROW             100
-                    COL             691
-                    WIDTH           25
-                    HEIGHT          25
-                    PICTURE         'folderselect'
-                    TOOLTIP         'Select folder'
-                    ONCLICK         If ( !Empty( Folder := GetFolder( "Select folder", WinGSettings.&("TM_LIBS_"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define64bits).Value ) ), WinGSettings.&("TM_LIBS_"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define64bits).Value := Folder, )
-            END BUTTON
-// MinGW Folder
-            DEFINE LABEL &("LC_"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define64bits)
-                    ROW             130
-                    COL             10
-                    WIDTH           109
-                    VALUE           'MinGW Folder:'
-                    TRANSPARENT     .T.
-            END LABEL
-            DEFINE TEXTBOX &("TC_"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define64bits)
-                    VALUE           &("Gbl_T_C_"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define64bits)
-                    ROW             130
-                    COL             120
-                    WIDTH           561
-            END TEXTBOX
-            DEFINE BUTTON &("BC_"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define64bits)
-                    ROW             130
-                    COL             691
-                    WIDTH           25
-                    HEIGHT          25
-                    PICTURE         'folderselect'
-                    TOOLTIP         'Select folder'
-                    ONCLICK         If ( !Empty( Folder := GetFolder( "Select folder", WinGSettings.&("TC_"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define64bits).Value ) ), WinGSettings.&("TC_"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define64bits).Value := Folder, )
-            END BUTTON
-// MinGW Libs Folder
-            DEFINE LABEL &("LC_LIBS_"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define64bits)
-                    ROW             160
-                    COL             10
-                    WIDTH           109
-                    VALUE           '    Libs Folder:'
-                    TRANSPARENT     .T.
-            END LABEL
-            DEFINE TEXTBOX &("TC_LIBS_"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define64bits)
-                    VALUE           &("Gbl_T_C_LIBS_"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define64bits)
-                    ROW             160
-                    COL             120
-                    WIDTH           561
-                    TOOLTIP         "Full path to MinGW's libraries (usually subfolder 'lib' or 'x86_64-w64-mingw32\lib' of MinGW Folder)"
-            END TEXTBOX
-            DEFINE BUTTON &("BC_LIBS_"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define64bits)
-                    ROW             160
-                    COL             691
-                    WIDTH           25
-                    HEIGHT          25
-                    PICTURE         'folderselect'
-                    TOOLTIP         'Select folder'
-                    ONCLICK         If ( !Empty( Folder := GetFolder( "Select folder", WinGSettings.&("TC_LIBS_"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define64bits).Value ) ), WinGSettings.&("TC_LIBS_"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define64bits).Value := Folder, )
-            END BUTTON
-// xHarbour Folder
-            DEFINE LABEL &("LP_"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define64bits)
-                    ROW             190
-                    COL             10
-                    WIDTH           109
-                    VALUE           'xHarbour Folder:'
-                    TRANSPARENT     .T.
-            END LABEL
-            DEFINE TEXTBOX &("TP_"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define64bits)
-                    VALUE           &("Gbl_T_P_"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define64bits)
-                    ROW             190
-                    COL             120
-                    WIDTH           561
-            END TEXTBOX
-            DEFINE BUTTON &("BP_"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define64bits)
-                    ROW             190
-                    COL             691
-                    WIDTH           25
-                    HEIGHT          25
-                    PICTURE         'folderselect'
-                    TOOLTIP         'Select folder'
-                    ONCLICK         If ( !Empty( Folder := GetFolder( "Select folder", WinGSettings.&("TP_"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define64bits).Value ) ), WinGSettings.&("TP_"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define64bits).Value := Folder, )
-            END BUTTON
-// xHarbour Libs Folder
-            DEFINE LABEL &("LP_LIBS_"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define64bits)
-                    ROW             220
-                    COL             10
-                    WIDTH           109
-                    VALUE           '    Libs Folder:'
-                    TRANSPARENT     .T.
-            END LABEL
-            DEFINE TEXTBOX &("TP_LIBS_"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define64bits)
-                    VALUE           &("Gbl_T_P_LIBS_"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define64bits)
-                    ROW             220
-                    COL             120
-                    WIDTH           561
-                    TOOLTIP         "Full path to xHarbour's libraries (usually subfolder 'lib' or 'lib\win\mingw64' of xHarbour Folder)"
-            END TEXTBOX
-            DEFINE BUTTON &("BP_LIBS_"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define64bits)
-                    ROW             220
-                    COL             691
-                    WIDTH           25
-                    HEIGHT          25
-                    PICTURE         'folderselect'
-                    TOOLTIP         'Select folder'
-                    ONCLICK         If ( !Empty( Folder := GetFolder( "Select folder", WinGSettings.&("TP_LIBS_"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define64bits).Value ) ), WinGSettings.&("TP_LIBS_"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define64bits).Value := Folder, )
-            END BUTTON
-
-         END PAGE
-
-         // PAGE 9
+         // PAGE 7
          DEFINE PAGE "HMG Extended + BCC32 + Harbour"
 
-            @ 43, 10 LABEL &("LDummy_"+DefineExtended1+DefineBorland+DefineHarbour+Define32bits) ;
+            @ 40, 10 LABEL &("LDummy_"+DefineExtended1+DefineBorland+DefineHarbour+Define32bits) ;
                VALUE 'Folders for HMG Extended + BCC32 + Harbour:' ;
                WIDTH 601 ;
                FONT 'arial' SIZE 10 BOLD ;
@@ -1282,10 +974,10 @@ Function GlobalSettings()
 
          END PAGE
 
-         // PAGE 10
+         // PAGE 8
          DEFINE PAGE "HMG Extended + BCC32 + xHarbour"
 
-            @ 43, 10 LABEL &("LDummy_"+DefineExtended1+DefineBorland+DefineXHarbour+Define32bits) ;
+            @ 40, 10 LABEL &("LDummy_"+DefineExtended1+DefineBorland+DefineXHarbour+Define32bits) ;
                VALUE 'Folders for HMG Extended + BCC32 + xHarbour:' ;
                WIDTH 601 ;
                FONT 'arial' SIZE 10 BOLD ;
@@ -1436,10 +1128,10 @@ Function GlobalSettings()
 
          END PAGE
 
-         // PAGE 11
+         // PAGE 9
          DEFINE PAGE "HMG Extended + MinGW + Harbour, 32 bits"
 
-            @ 43, 10 LABEL &("LDummy_"+DefineExtended1+DefineMinGW+DefineHarbour+Define32bits) ;
+            @ 40, 10 LABEL &("LDummy_"+DefineExtended1+DefineMinGW+DefineHarbour+Define32bits) ;
                VALUE 'Folders for HMG Extended + MinGW + Harbour, 32 bits:' ;
                WIDTH 601 ;
                FONT 'arial' SIZE 10 BOLD ;
@@ -1590,10 +1282,10 @@ Function GlobalSettings()
 
          END PAGE
 
-         // PAGE 12
+         // PAGE 10
          DEFINE PAGE "HMG Extended + MinGW + xHarbour, 32 bits"
 
-            @ 43, 10 LABEL &("LDummy_"+DefineExtended1+DefineMinGW+DefineXHarbour+Define32bits) ;
+            @ 40, 10 LABEL &("LDummy_"+DefineExtended1+DefineMinGW+DefineXHarbour+Define32bits) ;
                VALUE 'Folders for HMG Extended + MinGW + xHarbour, 32 bits:' ;
                WIDTH 601 ;
                FONT 'arial' SIZE 10 BOLD ;
@@ -1744,10 +1436,10 @@ Function GlobalSettings()
 
          END PAGE
 
-         // PAGE 13
+         // PAGE 11
          DEFINE PAGE "HMG Extended + MinGW + Harbour, 64 bits"
 
-            @ 43, 10 LABEL &("LDummy_"+DefineExtended1+DefineMinGW+DefineHarbour+Define64bits) ;
+            @ 40, 10 LABEL &("LDummy_"+DefineExtended1+DefineMinGW+DefineHarbour+Define64bits) ;
                VALUE 'Folders for HMG Extended + MinGW + Harbour, 64 bits:' ;
                WIDTH 601 ;
                FONT 'arial' SIZE 10 BOLD ;
@@ -1898,10 +1590,10 @@ Function GlobalSettings()
 
          END PAGE
 
-         // PAGE 14
+         // PAGE 12
          DEFINE PAGE "HMG Extended + MinGW + xHarbour, 64 bits"
 
-            @ 43, 10 LABEL &("LDummy_"+DefineExtended1+DefineMinGW+DefineXHarbour+Define64bits) ;
+            @ 40, 10 LABEL &("LDummy_"+DefineExtended1+DefineMinGW+DefineXHarbour+Define64bits) ;
                VALUE 'Folders for HMG Extended + MinGW + xHarbour, 64 bits:' ;
                WIDTH 601 ;
                FONT 'arial' SIZE 10 BOLD ;
@@ -2052,10 +1744,10 @@ Function GlobalSettings()
 
          END PAGE
 
-         // PAGE 15
+         // PAGE 13
          DEFINE PAGE "OOHG + BCC32 + Harbour"
 
-            @ 43, 10 LABEL &("LDummy_"+DefineOohg3+DefineBorland+DefineHarbour+Define32bits) ;
+            @ 40, 10 LABEL &("LDummy_"+DefineOohg3+DefineBorland+DefineHarbour+Define32bits) ;
                VALUE 'Folders for OOHG + BCC32 + Harbour:' ;
                WIDTH 601 ;
                FONT 'arial' SIZE 10 BOLD ;
@@ -2206,10 +1898,10 @@ Function GlobalSettings()
 
          END PAGE
 
-         // PAGE 16
+         // PAGE 14
          DEFINE PAGE "OOHG + BCC32 + xHarbour"
 
-            @ 43, 10 LABEL &("LDummy_"+DefineOohg3+DefineBorland+DefineXHarbour+Define32bits) ;
+            @ 40, 10 LABEL &("LDummy_"+DefineOohg3+DefineBorland+DefineXHarbour+Define32bits) ;
                VALUE 'Folders for OOHG + BCC32 + xHarbour:' ;
                WIDTH 601 ;
                FONT 'arial' SIZE 10 BOLD ;
@@ -2360,10 +2052,10 @@ Function GlobalSettings()
 
          END PAGE
 
-         // PAGE 17
+         // PAGE 15
          DEFINE PAGE "OOHG + MinGW + Harbour, 32 bits"
 
-            @ 43, 10 LABEL &("LDummy_"+DefineOohg3+DefineMinGW+DefineHarbour+Define32bits) ;
+            @ 40, 10 LABEL &("LDummy_"+DefineOohg3+DefineMinGW+DefineHarbour+Define32bits) ;
                VALUE 'Folders for OOHG + MinGW + Harbour, 32 bits:' ;
                WIDTH 601 ;
                FONT 'arial' SIZE 10 BOLD ;
@@ -2514,10 +2206,10 @@ Function GlobalSettings()
 
          END PAGE
 
-         // PAGE 18
+         // PAGE 16
          DEFINE PAGE "OOHG + MinGW + xHarbour, 32 bits"
 
-            @ 43, 10 LABEL &("LDummy_"+DefineOohg3+DefineMinGW+DefineXHarbour+Define32bits) ;
+            @ 40, 10 LABEL &("LDummy_"+DefineOohg3+DefineMinGW+DefineXHarbour+Define32bits) ;
                VALUE 'Folders for OOHG + MinGW + xHarbour, 32 bits:' ;
                WIDTH 601 ;
                FONT 'arial' SIZE 10 BOLD ;
@@ -2668,10 +2360,10 @@ Function GlobalSettings()
 
          END PAGE
 
-         // PAGE 19
+         // PAGE 17
          DEFINE PAGE "OOHG + MinGW + Harbour, 64 bits"
 
-            @ 43, 10 LABEL &("LDummy_"+DefineOohg3+DefineMinGW+DefineHarbour+Define64bits) ;
+            @ 40, 10 LABEL &("LDummy_"+DefineOohg3+DefineMinGW+DefineHarbour+Define64bits) ;
                VALUE 'Folders for OOHG + MinGW + Harbour, 64 bits:' ;
                WIDTH 601 ;
                FONT 'arial' SIZE 10 BOLD ;
@@ -2822,10 +2514,10 @@ Function GlobalSettings()
 
          END PAGE
 
-         // PAGE 20
+         // PAGE 18
          DEFINE PAGE "OOHG + MinGW + xHarbour, 64 bits"
 
-            @ 43, 10 LABEL &("LDummy_"+DefineOohg3+DefineMinGW+DefineXHarbour+Define64bits) ;
+            @ 40, 10 LABEL &("LDummy_"+DefineOohg3+DefineMinGW+DefineXHarbour+Define64bits) ;
                VALUE 'Folders for OOHG + MinGW + xHarbour, 64 bits:' ;
                WIDTH 601 ;
                FONT 'arial' SIZE 10 BOLD ;
@@ -2976,10 +2668,10 @@ Function GlobalSettings()
 
          END PAGE
 
-         // PAGE 21
+         // PAGE 19
          DEFINE PAGE "OOHG + Pelles C + Harbour, 32 bits"
 
-            @ 43, 10 LABEL &("LDummy_"+DefineOohg3+DefinePelles+DefineHarbour+Define32bits) ;
+            @ 40, 10 LABEL &("LDummy_"+DefineOohg3+DefinePelles+DefineHarbour+Define32bits) ;
                VALUE 'Folders for OOHG + Pelles C + Harbour, 32 bits:' ;
                WIDTH 601 ;
                FONT 'arial' SIZE 10 BOLD ;
@@ -3130,10 +2822,10 @@ Function GlobalSettings()
 
          END PAGE
 
-         // PAGE 22
+         // PAGE 20
          DEFINE PAGE "OOHG + Pelles C + xHarbour, 32 bits"
 
-            @ 43, 10 LABEL &("LDummy_"+DefineOohg3+DefinePelles+DefineXHarbour+Define32bits) ;
+            @ 40, 10 LABEL &("LDummy_"+DefineOohg3+DefinePelles+DefineXHarbour+Define32bits) ;
                VALUE 'Folders for OOHG + Pelles C + xHarbour, 32 bits:' ;
                WIDTH 601 ;
                FONT 'arial' SIZE 10 BOLD ;
@@ -3284,10 +2976,10 @@ Function GlobalSettings()
 
          END PAGE
 
-         // PAGE 23
+         // PAGE 21
          DEFINE PAGE "OOHG + Pelles C + Harbour, 64 bits"
 
-            @ 43, 10 LABEL &("LDummy_"+DefineOohg3+DefinePelles+DefineHarbour+Define64bits) ;
+            @ 40, 10 LABEL &("LDummy_"+DefineOohg3+DefinePelles+DefineHarbour+Define64bits) ;
                VALUE 'Folders for OOHG + Pelles C + Harbour, 64 bits:' ;
                WIDTH 601 ;
                FONT 'arial' SIZE 10 BOLD ;
@@ -3438,10 +3130,10 @@ Function GlobalSettings()
 
          END PAGE
 
-         // PAGE 24
+         // PAGE 22
          DEFINE PAGE "OOHG + Pelles C + xHarbour, 64 bits"
 
-            @ 43, 10 LABEL &("LDummy_"+DefineOohg3+DefinePelles+DefineXHarbour+Define64bits) ;
+            @ 40, 10 LABEL &("LDummy_"+DefineOohg3+DefinePelles+DefineXHarbour+Define64bits) ;
                VALUE 'Folders for OOHG + Pelles C + xHarbour, 64 bits:' ;
                WIDTH 601 ;
                FONT 'arial' SIZE 10 BOLD ;
@@ -3630,84 +3322,90 @@ Function SelectTab
       WinGSettings.TabGSettings.value := 1
    else
       do case
-         case Prj_Radio_MiniGui == DEF_RG_MINIGUI1 .and. Prj_Radio_Cpp == DEF_RG_BORLAND
+      case Prj_Radio_MiniGui == DEF_RG_MINIGUI1 .and. Prj_Radio_Cpp == DEF_RG_BORLAND
+         if Prj_Radio_Harbour == DEF_RG_HARBOUR
+            WinGSettings.TabGSettings.value := 3
+         else
+            WinGSettings.TabGSettings.value := 4
+         endif
+      case Prj_Radio_MiniGui == DEF_RG_MINIGUI3 .and. Prj_Radio_Cpp == DEF_RG_MINGW
+         if Prj_Check_64bits
             if Prj_Radio_Harbour == DEF_RG_HARBOUR
-               WinGSettings.TabGSettings.value := 3
+               WinGSettings.TabGSettings.value := 6
             else
-               WinGSettings.TabGSettings.value := 4
+               WinGSettings.TabGSettings.value := 1
+               US_Log( "Invalid combination: Prj_Radio_MiniGui: " + DEF_RG_MINIGUI3 + HB_OsNewLine() + ;
+                       "                     Prj_Radio_Cpp:     " + DEF_RG_MINGW  + HB_OsNewLine() + ;
+                       "                     Prj_Radio_Harbour: " + US_VarToStr( Prj_Radio_Harbour )  + HB_OsNewLine() )
             endif
-         case Prj_Radio_MiniGui == DEF_RG_MINIGUI3 .and. Prj_Radio_Cpp == DEF_RG_MINGW
-            if Prj_Check_64bits
-               if Prj_Radio_Harbour == DEF_RG_HARBOUR
-                  WinGSettings.TabGSettings.value := 7
-               else
-                  WinGSettings.TabGSettings.value := 8
-               endif
+         else
+            if Prj_Radio_Harbour == DEF_RG_HARBOUR
+               WinGSettings.TabGSettings.value := 5
             else
-               if Prj_Radio_Harbour == DEF_RG_HARBOUR
-                  WinGSettings.TabGSettings.value := 5
-               else
-                  WinGSettings.TabGSettings.value := 6
-               endif
+               WinGSettings.TabGSettings.value := 1
+               US_Log( "Invalid combination: Prj_Radio_MiniGui: " + DEF_RG_MINIGUI3 + HB_OsNewLine() + ;
+                       "                     Prj_Radio_Cpp:     " + DEF_RG_MINGW  + HB_OsNewLine() + ;
+                       "                     Prj_Radio_Harbour: " + US_VarToStr( Prj_Radio_Harbour )  + HB_OsNewLine() )
             endif
-         case Prj_Radio_MiniGui == DEF_RG_EXTENDED1 .and. Prj_Radio_Cpp == DEF_RG_BORLAND
-
+         endif
+      case Prj_Radio_MiniGui == DEF_RG_EXTENDED1 .and. Prj_Radio_Cpp == DEF_RG_BORLAND
+         if Prj_Radio_Harbour == DEF_RG_HARBOUR
+            WinGSettings.TabGSettings.value := 7
+         else
+            WinGSettings.TabGSettings.value := 8
+         endif
+      case Prj_Radio_MiniGui == DEF_RG_EXTENDED1 .and. Prj_Radio_Cpp == DEF_RG_MINGW
+         if Prj_Check_64bits
+            if Prj_Radio_Harbour == DEF_RG_HARBOUR
+               WinGSettings.TabGSettings.value := 11
+            else
+               WinGSettings.TabGSettings.value := 12
+            endif
+         else
             if Prj_Radio_Harbour == DEF_RG_HARBOUR
                WinGSettings.TabGSettings.value := 9
             else
                WinGSettings.TabGSettings.value := 10
             endif
-         case Prj_Radio_MiniGui == DEF_RG_EXTENDED1 .and. Prj_Radio_Cpp == DEF_RG_MINGW
-            if Prj_Check_64bits
-               if Prj_Radio_Harbour == DEF_RG_HARBOUR
-                  WinGSettings.TabGSettings.value := 13
-               else
-                  WinGSettings.TabGSettings.value := 14
-               endif
+         endif
+      case Prj_Radio_MiniGui == DEF_RG_OOHG3 .and. Prj_Radio_Cpp == DEF_RG_BORLAND
+         if Prj_Radio_Harbour == DEF_RG_HARBOUR
+            WinGSettings.TabGSettings.value := 13
+         else
+            WinGSettings.TabGSettings.value := 14
+         endif
+      case Prj_Radio_MiniGui == DEF_RG_OOHG3 .and. Prj_Radio_Cpp == DEF_RG_MINGW
+         if Prj_Check_64bits
+            if Prj_Radio_Harbour == DEF_RG_HARBOUR
+               WinGSettings.TabGSettings.value := 17
             else
-               if Prj_Radio_Harbour == DEF_RG_HARBOUR
-                  WinGSettings.TabGSettings.value := 11
-               else
-                  WinGSettings.TabGSettings.value := 12
-               endif
+               WinGSettings.TabGSettings.value := 18
             endif
-         case Prj_Radio_MiniGui == DEF_RG_OOHG3 .and. Prj_Radio_Cpp == DEF_RG_BORLAND
+         else
             if Prj_Radio_Harbour == DEF_RG_HARBOUR
                WinGSettings.TabGSettings.value := 15
             else
                WinGSettings.TabGSettings.value := 16
             endif
-         case Prj_Radio_MiniGui == DEF_RG_OOHG3 .and. Prj_Radio_Cpp == DEF_RG_MINGW
-            if Prj_Check_64bits
-               if Prj_Radio_Harbour == DEF_RG_HARBOUR
-                  WinGSettings.TabGSettings.value := 19
-               else
-                  WinGSettings.TabGSettings.value := 20
-               endif
+         endif
+      case Prj_Radio_MiniGui == DEF_RG_OOHG3 .and. Prj_Radio_Cpp == DEF_RG_PELLES
+         if Prj_Check_64bits
+            if Prj_Radio_Harbour == DEF_RG_HARBOUR
+               WinGSettings.TabGSettings.value := 21
             else
-               if Prj_Radio_Harbour == DEF_RG_HARBOUR
-                  WinGSettings.TabGSettings.value := 17
-               else
-                  WinGSettings.TabGSettings.value := 18
-               endif
+               WinGSettings.TabGSettings.value := 22
             endif
-         case Prj_Radio_MiniGui == DEF_RG_OOHG3 .and. Prj_Radio_Cpp == DEF_RG_PELLES
-            if Prj_Check_64bits
-               if Prj_Radio_Harbour == DEF_RG_HARBOUR
-                  WinGSettings.TabGSettings.value := 23
-               else
-                  WinGSettings.TabGSettings.value := 24
-               endif
+         else
+            if Prj_Radio_Harbour == DEF_RG_HARBOUR
+               WinGSettings.TabGSettings.value := 19
             else
-               if Prj_Radio_Harbour == DEF_RG_HARBOUR
-                  WinGSettings.TabGSettings.value := 21
-               else
-                  WinGSettings.TabGSettings.value := 22
-               endif
+               WinGSettings.TabGSettings.value := 20
             endif
-         otherwise
-            US_Log( "Invalid combination: Prj_Radio_MiniGui: " + US_VarToStr( Prj_Radio_MiniGui ) + HB_OsNewLine() + ;
-                    "                     Prj_Radio_Cpp: " + US_VarToStr( Prj_Radio_Cpp ) )
+         endif
+      otherwise
+         WinGSettings.TabGSettings.value := 1
+         US_Log( "Invalid combination: Prj_Radio_MiniGui: " + US_VarToStr( Prj_Radio_MiniGui ) + HB_OsNewLine() + ;
+                 "                     Prj_Radio_Cpp:     " + US_VarToStr( Prj_Radio_Cpp )  + HB_OsNewLine() )
       endcase
    endif
 Return Nil
@@ -3723,7 +3421,7 @@ Function GlobalEscape()
 Return .T.
 
 Function GlobalChanged()
-   if Gbl_TEditor      != WinGSettings.TEditor.value      .or. ;
+   if Gbl_Text_Editor  != WinGSettings.TEditor.value      .or. ;
       Gbl_Text_HMI     != WinGSettings.Text_HMI.value     .or. ;
       Gbl_Text_HMGSIDE != WinGSettings.Text_HMGSIDE.value .or. ;
       Gbl_Text_Dbf     != WinGSettings.Text_Dbf.value     .or. ;
@@ -3749,26 +3447,12 @@ Function GlobalChanged()
       &("Gbl_T_C_LIBS_" + DefineMiniGui3  + DefineMinGW   + DefineHarbour  + Define32bits) != WinGSettings.&("TC_LIBS_" + DefineMiniGui3  + DefineMinGW   + DefineHarbour  + Define32bits).value .or. ;
       &("Gbl_T_P_LIBS_" + DefineMiniGui3  + DefineMinGW   + DefineHarbour  + Define32bits) != WinGSettings.&("TP_LIBS_" + DefineMiniGui3  + DefineMinGW   + DefineHarbour  + Define32bits).value .or. ;
       ;
-      &("Gbl_T_M_"      + DefineMiniGui3  + DefineMinGW   + DefineXHarbour + Define32bits) != WinGSettings.&("TM_"      + DefineMiniGui3  + DefineMinGW   + DefineXHarbour + Define32bits).value .or. ;
-      &("Gbl_T_C_"      + DefineMiniGui3  + DefineMinGW   + DefineXHarbour + Define32bits) != WinGSettings.&("TC_"      + DefineMiniGui3  + DefineMinGW   + DefineXHarbour + Define32bits).value .or. ;
-      &("Gbl_T_P_"      + DefineMiniGui3  + DefineMinGW   + DefineXHarbour + Define32bits) != WinGSettings.&("TP_"      + DefineMiniGui3  + DefineMinGW   + DefineXHarbour + Define32bits).value .or. ;
-      &("Gbl_T_M_LIBS_" + DefineMiniGui3  + DefineMinGW   + DefineXHarbour + Define32bits) != WinGSettings.&("TM_LIBS_" + DefineMiniGui3  + DefineMinGW   + DefineXHarbour + Define32bits).value .or. ;
-      &("Gbl_T_C_LIBS_" + DefineMiniGui3  + DefineMinGW   + DefineXHarbour + Define32bits) != WinGSettings.&("TC_LIBS_" + DefineMiniGui3  + DefineMinGW   + DefineXHarbour + Define32bits).value .or. ;
-      &("Gbl_T_P_LIBS_" + DefineMiniGui3  + DefineMinGW   + DefineXHarbour + Define32bits) != WinGSettings.&("TP_LIBS_" + DefineMiniGui3  + DefineMinGW   + DefineXHarbour + Define32bits).value .or. ;
-      ;
       &("Gbl_T_M_"      + DefineMiniGui3  + DefineMinGW   + DefineHarbour  + Define64bits) != WinGSettings.&("TM_"      + DefineMiniGui3  + DefineMinGW   + DefineHarbour  + Define64bits).value .or. ;
       &("Gbl_T_C_"      + DefineMiniGui3  + DefineMinGW   + DefineHarbour  + Define64bits) != WinGSettings.&("TC_"      + DefineMiniGui3  + DefineMinGW   + DefineHarbour  + Define64bits).value .or. ;
       &("Gbl_T_P_"      + DefineMiniGui3  + DefineMinGW   + DefineHarbour  + Define64bits) != WinGSettings.&("TP_"      + DefineMiniGui3  + DefineMinGW   + DefineHarbour  + Define64bits).value .or. ;
       &("Gbl_T_M_LIBS_" + DefineMiniGui3  + DefineMinGW   + DefineHarbour  + Define64bits) != WinGSettings.&("TM_LIBS_" + DefineMiniGui3  + DefineMinGW   + DefineHarbour  + Define64bits).value .or. ;
       &("Gbl_T_C_LIBS_" + DefineMiniGui3  + DefineMinGW   + DefineHarbour  + Define64bits) != WinGSettings.&("TC_LIBS_" + DefineMiniGui3  + DefineMinGW   + DefineHarbour  + Define64bits).value .or. ;
       &("Gbl_T_P_LIBS_" + DefineMiniGui3  + DefineMinGW   + DefineHarbour  + Define64bits) != WinGSettings.&("TP_LIBS_" + DefineMiniGui3  + DefineMinGW   + DefineHarbour  + Define64bits).value .or. ;
-      ;
-      &("Gbl_T_M_"      + DefineMiniGui3  + DefineMinGW   + DefineXHarbour + Define64bits) != WinGSettings.&("TM_"      + DefineMiniGui3  + DefineMinGW   + DefineXHarbour + Define64bits).value .or. ;
-      &("Gbl_T_C_"      + DefineMiniGui3  + DefineMinGW   + DefineXHarbour + Define64bits) != WinGSettings.&("TC_"      + DefineMiniGui3  + DefineMinGW   + DefineXHarbour + Define64bits).value .or. ;
-      &("Gbl_T_P_"      + DefineMiniGui3  + DefineMinGW   + DefineXHarbour + Define64bits) != WinGSettings.&("TP_"      + DefineMiniGui3  + DefineMinGW   + DefineXHarbour + Define64bits).value .or. ;
-      &("Gbl_T_M_LIBS_" + DefineMiniGui3  + DefineMinGW   + DefineXHarbour + Define64bits) != WinGSettings.&("TM_LIBS_" + DefineMiniGui3  + DefineMinGW   + DefineXHarbour + Define64bits).value .or. ;
-      &("Gbl_T_C_LIBS_" + DefineMiniGui3  + DefineMinGW   + DefineXHarbour + Define64bits) != WinGSettings.&("TC_LIBS_" + DefineMiniGui3  + DefineMinGW   + DefineXHarbour + Define64bits).value .or. ;
-      &("Gbl_T_P_LIBS_" + DefineMiniGui3  + DefineMinGW   + DefineXHarbour + Define64bits) != WinGSettings.&("TP_LIBS_" + DefineMiniGui3  + DefineMinGW   + DefineXHarbour + Define64bits).value .or. ;
       ;
       &("Gbl_T_M_"      + DefineExtended1 + DefineBorland + DefineHarbour  + Define32bits) != WinGSettings.&("TM_"      + DefineExtended1 + DefineBorland + DefineHarbour  + Define32bits).value .or. ;
       &("Gbl_T_C_"      + DefineExtended1 + DefineBorland + DefineHarbour  + Define32bits) != WinGSettings.&("TC_"      + DefineExtended1 + DefineBorland + DefineHarbour  + Define32bits).value .or. ;
@@ -3887,7 +3571,7 @@ Function GlobalChanged()
 Return .F.
 
 Function GlobalSettingsSave()
-   Gbl_TEditor      := WinGSettings.TEditor.value
+   Gbl_Text_Editor  := WinGSettings.TEditor.value
    Gbl_Text_HMI     := WinGSettings.Text_HMI.value
    Gbl_Text_HMGSIDE := WinGSettings.Text_HMGSIDE.value
    Gbl_Text_Dbf     := WinGSettings.Text_Dbf.value
@@ -3919,20 +3603,6 @@ Function GlobalSettingsSave()
    &("Gbl_T_M_LIBS_" + DefineMiniGui3  + DefineMinGW   + DefineHarbour  + Define64bits) := WinGSettings.&("TM_LIBS_" + DefineMiniGui3  + DefineMinGW   + DefineHarbour  + Define64bits).value
    &("Gbl_T_P_"      + DefineMiniGui3  + DefineMinGW   + DefineHarbour  + Define64bits) := WinGSettings.&("TP_"      + DefineMiniGui3  + DefineMinGW   + DefineHarbour  + Define64bits).value
    &("Gbl_T_P_LIBS_" + DefineMiniGui3  + DefineMinGW   + DefineHarbour  + Define64bits) := WinGSettings.&("TP_LIBS_" + DefineMiniGui3  + DefineMinGW   + DefineHarbour  + Define64bits).value
-
-   &("Gbl_T_C_"      + DefineMiniGui3  + DefineMinGW   + DefineXHarbour + Define32bits) := WinGSettings.&("TC_"      + DefineMiniGui3  + DefineMinGW   + DefineXHarbour + Define32bits).value
-   &("Gbl_T_C_LIBS_" + DefineMiniGui3  + DefineMinGW   + DefineXHarbour + Define32bits) := WinGSettings.&("TC_LIBS_" + DefineMiniGui3  + DefineMinGW   + DefineXHarbour + Define32bits).value
-   &("Gbl_T_M_"      + DefineMiniGui3  + DefineMinGW   + DefineXHarbour + Define32bits) := WinGSettings.&("TM_"      + DefineMiniGui3  + DefineMinGW   + DefineXHarbour + Define32bits).value
-   &("Gbl_T_M_LIBS_" + DefineMiniGui3  + DefineMinGW   + DefineXHarbour + Define32bits) := WinGSettings.&("TM_LIBS_" + DefineMiniGui3  + DefineMinGW   + DefineXHarbour + Define32bits).value
-   &("Gbl_T_P_"      + DefineMiniGui3  + DefineMinGW   + DefineXHarbour + Define32bits) := WinGSettings.&("TP_"      + DefineMiniGui3  + DefineMinGW   + DefineXHarbour + Define32bits).value
-   &("Gbl_T_P_LIBS_" + DefineMiniGui3  + DefineMinGW   + DefineXHarbour + Define32bits) := WinGSettings.&("TP_LIBS_" + DefineMiniGui3  + DefineMinGW   + DefineXHarbour + Define32bits).value
-
-   &("Gbl_T_C_"      + DefineMiniGui3  + DefineMinGW   + DefineXHarbour + Define64bits) := WinGSettings.&("TC_"      + DefineMiniGui3  + DefineMinGW   + DefineXHarbour + Define64bits).value
-   &("Gbl_T_C_LIBS_" + DefineMiniGui3  + DefineMinGW   + DefineXHarbour + Define64bits) := WinGSettings.&("TC_LIBS_" + DefineMiniGui3  + DefineMinGW   + DefineXHarbour + Define64bits).value
-   &("Gbl_T_M_"      + DefineMiniGui3  + DefineMinGW   + DefineXHarbour + Define64bits) := WinGSettings.&("TM_"      + DefineMiniGui3  + DefineMinGW   + DefineXHarbour + Define64bits).value
-   &("Gbl_T_M_LIBS_" + DefineMiniGui3  + DefineMinGW   + DefineXHarbour + Define64bits) := WinGSettings.&("TM_LIBS_" + DefineMiniGui3  + DefineMinGW   + DefineXHarbour + Define64bits).value
-   &("Gbl_T_P_"      + DefineMiniGui3  + DefineMinGW   + DefineXHarbour + Define64bits) := WinGSettings.&("TP_"      + DefineMiniGui3  + DefineMinGW   + DefineXHarbour + Define64bits).value
-   &("Gbl_T_P_LIBS_" + DefineMiniGui3  + DefineMinGW   + DefineXHarbour + Define64bits) := WinGSettings.&("TP_LIBS_" + DefineMiniGui3  + DefineMinGW   + DefineXHarbour + Define64bits).value
 
    &("Gbl_T_C_"      + DefineExtended1 + DefineBorland + DefineHarbour  + Define32bits) := WinGSettings.&("TC_"      + DefineExtended1 + DefineBorland + DefineHarbour  + Define32bits).value
    &("Gbl_T_C_LIBS_" + DefineExtended1 + DefineBorland + DefineHarbour  + Define32bits) := WinGSettings.&("TC_LIBS_" + DefineExtended1 + DefineBorland + DefineHarbour  + Define32bits).value

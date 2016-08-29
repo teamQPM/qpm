@@ -42,7 +42,7 @@ Function LoadEnvironment
 
    EnvironmentVersion := 0
    vConfig := {}
-   Gbl_TEditor := ''
+   Gbl_Text_Editor := ''
 
    /* MiniGui Oficial 1 with BCC */
    &("Gbl_T_C_"      + DefineMiniGui1  + DefineBorland + DefineHarbour  + Define32bits) := ''
@@ -59,20 +59,6 @@ Function LoadEnvironment
    &("Gbl_T_M_LIBS_" + DefineMiniGui1  + DefineBorland + DefineXHarbour + Define32bits) := ''
    &("Gbl_T_P_LIBS_" + DefineMiniGui1  + DefineBorland + DefineXHarbour + Define32bits) := ''
 
-   &("Gbl_T_C_"      + DefineMiniGui1  + DefineBorland + DefineHarbour  + Define64bits) := ''
-   &("Gbl_T_M_"      + DefineMiniGui1  + DefineBorland + DefineHarbour  + Define64bits) := ''
-   &("Gbl_T_P_"      + DefineMiniGui1  + DefineBorland + DefineHarbour  + Define64bits) := ''
-   &("Gbl_T_C_LIBS_" + DefineMiniGui1  + DefineBorland + DefineHarbour  + Define64bits) := ''
-   &("Gbl_T_M_LIBS_" + DefineMiniGui1  + DefineBorland + DefineHarbour  + Define64bits) := ''
-   &("Gbl_T_P_LIBS_" + DefineMiniGui1  + DefineBorland + DefineHarbour  + Define64bits) := ''
-
-   &("Gbl_T_C_"      + DefineMiniGui1  + DefineBorland + DefineXHarbour + Define64bits) := ''
-   &("Gbl_T_M_"      + DefineMiniGui1  + DefineBorland + DefineXHarbour + Define64bits) := ''
-   &("Gbl_T_P_"      + DefineMiniGui1  + DefineBorland + DefineXHarbour + Define64bits) := ''
-   &("Gbl_T_C_LIBS_" + DefineMiniGui1  + DefineBorland + DefineXHarbour + Define64bits) := ''
-   &("Gbl_T_M_LIBS_" + DefineMiniGui1  + DefineBorland + DefineXHarbour + Define64bits) := ''
-   &("Gbl_T_P_LIBS_" + DefineMiniGui1  + DefineBorland + DefineXHarbour + Define64bits) := ''
-
    /* MiniGui Oficial 3 with MinGW */
    &("Gbl_T_C_"      + DefineMiniGui3  + DefineMinGW   + DefineHarbour  + Define32bits) := ''
    &("Gbl_T_M_"      + DefineMiniGui3  + DefineMinGW   + DefineHarbour  + Define32bits) := ''
@@ -81,26 +67,12 @@ Function LoadEnvironment
    &("Gbl_T_M_LIBS_" + DefineMiniGui3  + DefineMinGW   + DefineHarbour  + Define32bits) := ''
    &("Gbl_T_P_LIBS_" + DefineMiniGui3  + DefineMinGW   + DefineHarbour  + Define32bits) := ''
 
-   &("Gbl_T_C_"      + DefineMiniGui3  + DefineMinGW   + DefineXHarbour + Define32bits) := ''
-   &("Gbl_T_M_"      + DefineMiniGui3  + DefineMinGW   + DefineXHarbour + Define32bits) := ''
-   &("Gbl_T_P_"      + DefineMiniGui3  + DefineMinGW   + DefineXHarbour + Define32bits) := ''
-   &("Gbl_T_C_LIBS_" + DefineMiniGui3  + DefineMinGW   + DefineXHarbour + Define32bits) := ''
-   &("Gbl_T_M_LIBS_" + DefineMiniGui3  + DefineMinGW   + DefineXHarbour + Define32bits) := ''
-   &("Gbl_T_P_LIBS_" + DefineMiniGui3  + DefineMinGW   + DefineXHarbour + Define32bits) := ''
-
    &("Gbl_T_C_"      + DefineMiniGui3  + DefineMinGW   + DefineHarbour  + Define64bits) := ''
    &("Gbl_T_M_"      + DefineMiniGui3  + DefineMinGW   + DefineHarbour  + Define64bits) := ''
    &("Gbl_T_P_"      + DefineMiniGui3  + DefineMinGW   + DefineHarbour  + Define64bits) := ''
    &("Gbl_T_C_LIBS_" + DefineMiniGui3  + DefineMinGW   + DefineHarbour  + Define64bits) := ''
    &("Gbl_T_M_LIBS_" + DefineMiniGui3  + DefineMinGW   + DefineHarbour  + Define64bits) := ''
    &("Gbl_T_P_LIBS_" + DefineMiniGui3  + DefineMinGW   + DefineHarbour  + Define64bits) := ''
-
-   &("Gbl_T_C_"      + DefineMiniGui3  + DefineMinGW   + DefineXHarbour + Define64bits) := ''
-   &("Gbl_T_M_"      + DefineMiniGui3  + DefineMinGW   + DefineXHarbour + Define64bits) := ''
-   &("Gbl_T_P_"      + DefineMiniGui3  + DefineMinGW   + DefineXHarbour + Define64bits) := ''
-   &("Gbl_T_C_LIBS_" + DefineMiniGui3  + DefineMinGW   + DefineXHarbour + Define64bits) := ''
-   &("Gbl_T_M_LIBS_" + DefineMiniGui3  + DefineMinGW   + DefineXHarbour + Define64bits) := ''
-   &("Gbl_T_P_LIBS_" + DefineMiniGui3  + DefineMinGW   + DefineXHarbour + Define64bits) := ''
 
    /* MiniGui Extended 1 with BCC */
    &("Gbl_T_C_"      + DefineExtended1 + DefineBorland + DefineHarbour  + Define32bits) := ''
@@ -116,20 +88,6 @@ Function LoadEnvironment
    &("Gbl_T_C_LIBS_" + DefineExtended1 + DefineBorland + DefineXHarbour + Define32bits) := ''
    &("Gbl_T_M_LIBS_" + DefineExtended1 + DefineBorland + DefineXHarbour + Define32bits) := ''
    &("Gbl_T_P_LIBS_" + DefineExtended1 + DefineBorland + DefineXHarbour + Define32bits) := ''
-
-   &("Gbl_T_C_"      + DefineExtended1 + DefineBorland + DefineHarbour  + Define64bits) := ''
-   &("Gbl_T_M_"      + DefineExtended1 + DefineBorland + DefineHarbour  + Define64bits) := ''
-   &("Gbl_T_P_"      + DefineExtended1 + DefineBorland + DefineHarbour  + Define64bits) := ''
-   &("Gbl_T_C_LIBS_" + DefineExtended1 + DefineBorland + DefineHarbour  + Define64bits) := ''
-   &("Gbl_T_M_LIBS_" + DefineExtended1 + DefineBorland + DefineHarbour  + Define64bits) := ''
-   &("Gbl_T_P_LIBS_" + DefineExtended1 + DefineBorland + DefineHarbour  + Define64bits) := ''
-
-   &("Gbl_T_C_"      + DefineExtended1 + DefineBorland + DefineXHarbour + Define64bits) := ''
-   &("Gbl_T_M_"      + DefineExtended1 + DefineBorland + DefineXHarbour + Define64bits) := ''
-   &("Gbl_T_P_"      + DefineExtended1 + DefineBorland + DefineXHarbour + Define64bits) := ''
-   &("Gbl_T_C_LIBS_" + DefineExtended1 + DefineBorland + DefineXHarbour + Define64bits) := ''
-   &("Gbl_T_M_LIBS_" + DefineExtended1 + DefineBorland + DefineXHarbour + Define64bits) := ''
-   &("Gbl_T_P_LIBS_" + DefineExtended1 + DefineBorland + DefineXHarbour + Define64bits) := ''
 
    /* MiniGui Extended 1 with MinGW */
    &("Gbl_T_C_"      + DefineExtended1 + DefineMinGW   + DefineHarbour  + Define32bits) := ''
@@ -174,20 +132,6 @@ Function LoadEnvironment
    &("Gbl_T_C_LIBS_" + DefineOohg3     + DefineBorland + DefineXHarbour + Define32bits) := ''
    &("Gbl_T_M_LIBS_" + DefineOohg3     + DefineBorland + DefineXHarbour + Define32bits) := ''
    &("Gbl_T_P_LIBS_" + DefineOohg3     + DefineBorland + DefineXHarbour + Define32bits) := ''
-
-   &("Gbl_T_C_"      + DefineOohg3     + DefineBorland + DefineHarbour  + Define64bits) := ''
-   &("Gbl_T_M_"      + DefineOohg3     + DefineBorland + DefineHarbour  + Define64bits) := ''
-   &("Gbl_T_P_"      + DefineOohg3     + DefineBorland + DefineHarbour  + Define64bits) := ''
-   &("Gbl_T_C_LIBS_" + DefineOohg3     + DefineBorland + DefineHarbour  + Define64bits) := ''
-   &("Gbl_T_M_LIBS_" + DefineOohg3     + DefineBorland + DefineHarbour  + Define64bits) := ''
-   &("Gbl_T_P_LIBS_" + DefineOohg3     + DefineBorland + DefineHarbour  + Define64bits) := ''
-
-   &("Gbl_T_C_"      + DefineOohg3     + DefineBorland + DefineXHarbour + Define64bits) := ''
-   &("Gbl_T_M_"      + DefineOohg3     + DefineBorland + DefineXHarbour + Define64bits) := ''
-   &("Gbl_T_P_"      + DefineOohg3     + DefineBorland + DefineXHarbour + Define64bits) := ''
-   &("Gbl_T_C_LIBS_" + DefineOohg3     + DefineBorland + DefineXHarbour + Define64bits) := ''
-   &("Gbl_T_M_LIBS_" + DefineOohg3     + DefineBorland + DefineXHarbour + Define64bits) := ''
-   &("Gbl_T_P_LIBS_" + DefineOohg3     + DefineBorland + DefineXHarbour + Define64bits) := ''
 
    /* OOHG with MinGW */
    &("Gbl_T_C_"      + DefineOohg3     + DefineMinGW   + DefineHarbour  + Define32bits) := ''
@@ -362,7 +306,7 @@ Function LoadEnvironment
       DO EVENTS
       LOC_cLine := AllTrim ( MEMOLINE( EnvironmentMemo, 254, i ) )
       If     US_Upper( US_Word( LOC_cLine, 1 ) ) == 'PROGRAMEDITOR'
-             Gbl_TEditor := US_WordSubStr( LOC_cLine, 2 )
+             Gbl_Text_Editor := US_WordSubStr( LOC_cLine, 2 )
       ElseIf US_Upper( US_Word( LOC_cLine, 1 ) ) == 'EDITLONGNAME'
              bEditorLongName := if( US_WordSubStr( LOC_cLine, 2 ) == ".T.", .T., .F. )
       ElseIf US_Upper( US_Word( LOC_cLine, 1 ) ) == 'EDITSUSPENDCONTROL'
@@ -458,15 +402,15 @@ Function LoadEnvironment
 #endif
       EndIf
    Next i
-   If Empty(Gbl_TEditor)
-      Gbl_TEditor := GetWindowsFolder() + DEF_SLASH + 'system32' + DEF_SLASH + 'NOTEPAD.EXE'
+   If Empty( Gbl_Text_Editor )
+      Gbl_Text_Editor := GetWindowsFolder() + DEF_SLASH + 'system32' + DEF_SLASH + 'NOTEPAD.EXE'
    EndIf
 Return .T.
 
 Function SaveEnvironment
    Local c := '', i
    c := c + 'VERSION '            + QPM_VERSION_NUMBER + Hb_OsNewLine()
-   c := c + 'PROGRAMEDITOR '      + alltrim( Gbl_TEditor) + Hb_OsNewLine()
+   c := c + 'PROGRAMEDITOR '      + alltrim( Gbl_Text_Editor) + Hb_OsNewLine()
    c := c + 'EDITLONGNAME '       + US_VarToStr( bEditorLongName ) + Hb_OsNewLine()
    c := c + 'EDITSUSPENDCONTROL ' + US_VarToStr( bSuspendControlEdit ) + Hb_OsNewLine()
    c := c + 'FORMTOOLHMI '        + alltrim( Gbl_Text_HMI ) + Hb_OsNewLine()
@@ -483,26 +427,12 @@ Function SaveEnvironment
    c := c + 'MINIGUIFOLDERLIBS'   + DefineMiniGui1  + DefineBorland + DefineHarbour  + Define32bits + ' ' + alltrim( &("Gbl_T_M_LIBS_"  + DefineMiniGui1 + DefineBorland + DefineHarbour  + Define32bits) ) + Hb_OsNewLine()
    c := c + 'HARBOURFOLDERLIBS'   + DefineMiniGui1  + DefineBorland + DefineHarbour  + Define32bits + ' ' + alltrim( &("Gbl_T_P_LIBS_"  + DefineMiniGui1 + DefineBorland + DefineHarbour  + Define32bits) ) + Hb_OsNewLine()
 
-   c := c + 'CCOMPILATOR'         + DefineMiniGui1  + DefineBorland + DefineHarbour  + Define64bits + ' ' + alltrim( &("Gbl_T_C_"       + DefineMiniGui1 + DefineBorland + DefineHarbour  + Define64bits) ) + Hb_OsNewLine()
-   c := c + 'MINIGUIFOLDER'       + DefineMiniGui1  + DefineBorland + DefineHarbour  + Define64bits + ' ' + alltrim( &("Gbl_T_M_"       + DefineMiniGui1 + DefineBorland + DefineHarbour  + Define64bits) ) + Hb_OsNewLine()
-   c := c + 'HARBOURFOLDER'       + DefineMiniGui1  + DefineBorland + DefineHarbour  + Define64bits + ' ' + alltrim( &("Gbl_T_P_"       + DefineMiniGui1 + DefineBorland + DefineHarbour  + Define64bits) ) + Hb_OsNewLine()
-   c := c + 'CCOMPILATORLIBS'     + DefineMiniGui1  + DefineBorland + DefineHarbour  + Define64bits + ' ' + alltrim( &("Gbl_T_C_LIBS_"  + DefineMiniGui1 + DefineBorland + DefineHarbour  + Define64bits) ) + Hb_OsNewLine()
-   c := c + 'MINIGUIFOLDERLIBS'   + DefineMiniGui1  + DefineBorland + DefineHarbour  + Define64bits + ' ' + alltrim( &("Gbl_T_M_LIBS_"  + DefineMiniGui1 + DefineBorland + DefineHarbour  + Define64bits) ) + Hb_OsNewLine()
-   c := c + 'HARBOURFOLDERLIBS'   + DefineMiniGui1  + DefineBorland + DefineHarbour  + Define64bits + ' ' + alltrim( &("Gbl_T_P_LIBS_"  + DefineMiniGui1 + DefineBorland + DefineHarbour  + Define64bits) ) + Hb_OsNewLine()
-
    c := c + 'CCOMPILATOR'         + DefineMiniGui1  + DefineBorland + DefineXHarbour + Define32bits + ' ' + alltrim( &("Gbl_T_C_"       + DefineMiniGui1 + DefineBorland + DefineXHarbour + Define32bits) ) + Hb_OsNewLine()
    c := c + 'MINIGUIFOLDER'       + DefineMiniGui1  + DefineBorland + DefineXHarbour + Define32bits + ' ' + alltrim( &("Gbl_T_M_"       + DefineMiniGui1 + DefineBorland + DefineXHarbour + Define32bits) ) + Hb_OsNewLine()
    c := c + 'XHARBOURFOLDER'      + DefineMiniGui1  + DefineBorland + DefineXHarbour + Define32bits + ' ' + alltrim( &("Gbl_T_P_"       + DefineMiniGui1 + DefineBorland + DefineXHarbour + Define32bits) ) + Hb_OsNewLine()
    c := c + 'CCOMPILATORLIBS'     + DefineMiniGui1  + DefineBorland + DefineXHarbour + Define32bits + ' ' + alltrim( &("Gbl_T_C_LIBS_"  + DefineMiniGui1 + DefineBorland + DefineXHarbour + Define32bits) ) + Hb_OsNewLine()
    c := c + 'MINIGUIFOLDERLIBS'   + DefineMiniGui1  + DefineBorland + DefineXHarbour + Define32bits + ' ' + alltrim( &("Gbl_T_M_LIBS_"  + DefineMiniGui1 + DefineBorland + DefineXHarbour + Define32bits) ) + Hb_OsNewLine()
    c := c + 'XHARBOURFOLDERLIBS'  + DefineMiniGui1  + DefineBorland + DefineXHarbour + Define32bits + ' ' + alltrim( &("Gbl_T_P_LIBS_"  + DefineMiniGui1 + DefineBorland + DefineXHarbour + Define32bits) ) + Hb_OsNewLine()
-
-   c := c + 'CCOMPILATOR'         + DefineMiniGui1  + DefineBorland + DefineXHarbour + Define64bits + ' ' + alltrim( &("Gbl_T_C_"       + DefineMiniGui1 + DefineBorland + DefineXHarbour + Define64bits) ) + Hb_OsNewLine()
-   c := c + 'MINIGUIFOLDER'       + DefineMiniGui1  + DefineBorland + DefineXHarbour + Define64bits + ' ' + alltrim( &("Gbl_T_M_"       + DefineMiniGui1 + DefineBorland + DefineXHarbour + Define64bits) ) + Hb_OsNewLine()
-   c := c + 'XHARBOURFOLDER'      + DefineMiniGui1  + DefineBorland + DefineXHarbour + Define64bits + ' ' + alltrim( &("Gbl_T_P_"       + DefineMiniGui1 + DefineBorland + DefineXHarbour + Define64bits) ) + Hb_OsNewLine()
-   c := c + 'CCOMPILATORLIBS'     + DefineMiniGui1  + DefineBorland + DefineXHarbour + Define64bits + ' ' + alltrim( &("Gbl_T_C_LIBS_"  + DefineMiniGui1 + DefineBorland + DefineXHarbour + Define64bits) ) + Hb_OsNewLine()
-   c := c + 'MINIGUIFOLDERLIBS'   + DefineMiniGui1  + DefineBorland + DefineXHarbour + Define64bits + ' ' + alltrim( &("Gbl_T_M_LIBS_"  + DefineMiniGui1 + DefineBorland + DefineXHarbour + Define64bits) ) + Hb_OsNewLine()
-   c := c + 'XHARBOURFOLDERLIBS'  + DefineMiniGui1  + DefineBorland + DefineXHarbour + Define64bits + ' ' + alltrim( &("Gbl_T_P_LIBS_"  + DefineMiniGui1 + DefineBorland + DefineXHarbour + Define64bits) ) + Hb_OsNewLine()
 
    /* MiniGui Oficial 3 with MinGW */
    c := c + 'CCOMPILATOR'         + DefineMiniGui3  + DefineMinGW   + DefineHarbour  + Define32bits + ' ' + alltrim( &("Gbl_T_C_"       + DefineMiniGui3 + DefineMinGW   + DefineHarbour  + Define32bits) ) + Hb_OsNewLine()
@@ -512,26 +442,12 @@ Function SaveEnvironment
    c := c + 'MINIGUIFOLDERLIBS'   + DefineMiniGui3  + DefineMinGW   + DefineHarbour  + Define32bits + ' ' + alltrim( &("Gbl_T_M_LIBS_"  + DefineMiniGui3 + DefineMinGW   + DefineHarbour  + Define32bits) ) + Hb_OsNewLine()
    c := c + 'HARBOURFOLDERLIBS'   + DefineMiniGui3  + DefineMinGW   + DefineHarbour  + Define32bits + ' ' + alltrim( &("Gbl_T_P_LIBS_" + DefineMiniGui3 + DefineMinGW   + DefineHarbour  + Define32bits) ) + Hb_OsNewLine()
 
-   c := c + 'CCOMPILATOR'         + DefineMiniGui3  + DefineMinGW   + DefineXHarbour + Define32bits + ' ' + alltrim( &("Gbl_T_C_"       + DefineMiniGui3 + DefineMinGW   + DefineXHarbour + Define32bits) ) + Hb_OsNewLine()
-   c := c + 'MINIGUIFOLDER'       + DefineMiniGui3  + DefineMinGW   + DefineXHarbour + Define32bits + ' ' + alltrim( &("Gbl_T_M_"       + DefineMiniGui3 + DefineMinGW   + DefineXHarbour + Define32bits) ) + Hb_OsNewLine()
-   c := c + 'XHARBOURFOLDER'      + DefineMiniGui3  + DefineMinGW   + DefineXHarbour + Define32bits + ' ' + alltrim( &("Gbl_T_P_"       + DefineMiniGui3 + DefineMinGW   + DefineXHarbour + Define32bits) ) + Hb_OsNewLine()
-   c := c + 'CCOMPILATORLIBS'     + DefineMiniGui3  + DefineMinGW   + DefineXHarbour + Define32bits + ' ' + alltrim( &("Gbl_T_C_LIBS_"  + DefineMiniGui3 + DefineMinGW   + DefineXHarbour + Define32bits) ) + Hb_OsNewLine()
-   c := c + 'MINIGUIFOLDERLIBS'   + DefineMiniGui3  + DefineMinGW   + DefineXHarbour + Define32bits + ' ' + alltrim( &("Gbl_T_M_LIBS_"  + DefineMiniGui3 + DefineMinGW   + DefineXHarbour + Define32bits) ) + Hb_OsNewLine()
-   c := c + 'XHARBOURFOLDERLIBS'  + DefineMiniGui3  + DefineMinGW   + DefineXHarbour + Define32bits + ' ' + alltrim( &("Gbl_T_P_LIBS_" + DefineMiniGui3 + DefineMinGW   + DefineXHarbour + Define32bits) ) + Hb_OsNewLine()
-
    c := c + 'CCOMPILATOR'         + DefineMiniGui3  + DefineMinGW   + DefineHarbour  + Define64bits + ' ' + alltrim( &("Gbl_T_C_"       + DefineMiniGui3 + DefineMinGW   + DefineHarbour  + Define64bits) ) + Hb_OsNewLine()
    c := c + 'MINIGUIFOLDER'       + DefineMiniGui3  + DefineMinGW   + DefineHarbour  + Define64bits + ' ' + alltrim( &("Gbl_T_M_"       + DefineMiniGui3 + DefineMinGW   + DefineHarbour  + Define64bits) ) + Hb_OsNewLine()
    c := c + 'HARBOURFOLDER'       + DefineMiniGui3  + DefineMinGW   + DefineHarbour  + Define64bits + ' ' + alltrim( &("Gbl_T_P_"       + DefineMiniGui3 + DefineMinGW   + DefineHarbour  + Define64bits) ) + Hb_OsNewLine()
    c := c + 'CCOMPILATORLIBS'     + DefineMiniGui3  + DefineMinGW   + DefineHarbour  + Define64bits + ' ' + alltrim( &("Gbl_T_C_LIBS_"  + DefineMiniGui3 + DefineMinGW   + DefineHarbour  + Define64bits) ) + Hb_OsNewLine()
    c := c + 'MINIGUIFOLDERLIBS'   + DefineMiniGui3  + DefineMinGW   + DefineHarbour  + Define64bits + ' ' + alltrim( &("Gbl_T_M_LIBS_"  + DefineMiniGui3 + DefineMinGW   + DefineHarbour  + Define64bits) ) + Hb_OsNewLine()
    c := c + 'HARBOURFOLDERLIBS'   + DefineMiniGui3  + DefineMinGW   + DefineHarbour  + Define64bits + ' ' + alltrim( &("Gbl_T_P_LIBS_" + DefineMiniGui3 + DefineMinGW   + DefineHarbour  + Define64bits) ) + Hb_OsNewLine()
-
-   c := c + 'CCOMPILATOR'         + DefineMiniGui3  + DefineMinGW   + DefineXHarbour + Define64bits + ' ' + alltrim( &("Gbl_T_C_"       + DefineMiniGui3 + DefineMinGW   + DefineXHarbour + Define64bits) ) + Hb_OsNewLine()
-   c := c + 'MINIGUIFOLDER'       + DefineMiniGui3  + DefineMinGW   + DefineXHarbour + Define64bits + ' ' + alltrim( &("Gbl_T_M_"       + DefineMiniGui3 + DefineMinGW   + DefineXHarbour + Define64bits) ) + Hb_OsNewLine()
-   c := c + 'XHARBOURFOLDER'      + DefineMiniGui3  + DefineMinGW   + DefineXHarbour + Define64bits + ' ' + alltrim( &("Gbl_T_P_"       + DefineMiniGui3 + DefineMinGW   + DefineXHarbour + Define64bits) ) + Hb_OsNewLine()
-   c := c + 'CCOMPILATORLIBS'     + DefineMiniGui3  + DefineMinGW   + DefineXHarbour + Define64bits + ' ' + alltrim( &("Gbl_T_C_LIBS_"  + DefineMiniGui3 + DefineMinGW   + DefineXHarbour + Define64bits) ) + Hb_OsNewLine()
-   c := c + 'MINIGUIFOLDERLIBS'   + DefineMiniGui3  + DefineMinGW   + DefineXHarbour + Define64bits + ' ' + alltrim( &("Gbl_T_M_LIBS_"  + DefineMiniGui3 + DefineMinGW   + DefineXHarbour + Define64bits) ) + Hb_OsNewLine()
-   c := c + 'XHARBOURFOLDERLIBS'  + DefineMiniGui3  + DefineMinGW   + DefineXHarbour + Define64bits + ' ' + alltrim( &("Gbl_T_P_LIBS_" + DefineMiniGui3 + DefineMinGW   + DefineXHarbour + Define64bits) ) + Hb_OsNewLine()
 
    /* MiniGui Extended 1 with BCC */
    c := c + 'CCOMPILATOR'         + DefineExtended1 + DefineBorland + DefineHarbour  + Define32bits + ' ' + alltrim( &("Gbl_T_C_"       + DefineExtended1 + DefineBorland + DefineHarbour  + Define32bits) ) + Hb_OsNewLine()
@@ -547,20 +463,6 @@ Function SaveEnvironment
    c := c + 'CCOMPILATORLIBS'     + DefineExtended1 + DefineBorland + DefineXHarbour + Define32bits + ' ' + alltrim( &("Gbl_T_C_LIBS_"  + DefineExtended1 + DefineBorland + DefineXHarbour + Define32bits) ) + Hb_OsNewLine()
    c := c + 'MINIGUIFOLDERLIBS'   + DefineExtended1 + DefineBorland + DefineXHarbour + Define32bits + ' ' + alltrim( &("Gbl_T_M_LIBS_"  + DefineExtended1 + DefineBorland + DefineXHarbour + Define32bits) ) + Hb_OsNewLine()
    c := c + 'XHARBOURFOLDERLIBS'  + DefineExtended1 + DefineBorland + DefineXHarbour + Define32bits + ' ' + alltrim( &("Gbl_T_P_LIBS_"  + DefineExtended1 + DefineBorland + DefineXHarbour + Define32bits) ) + Hb_OsNewLine()
-
-   c := c + 'CCOMPILATOR'         + DefineExtended1 + DefineBorland + DefineHarbour  + Define64bits + ' ' + alltrim( &("Gbl_T_C_"       + DefineExtended1 + DefineBorland + DefineHarbour  + Define64bits) ) + Hb_OsNewLine()
-   c := c + 'MINIGUIFOLDER'       + DefineExtended1 + DefineBorland + DefineHarbour  + Define64bits + ' ' + alltrim( &("Gbl_T_M_"       + DefineExtended1 + DefineBorland + DefineHarbour  + Define64bits) ) + Hb_OsNewLine()
-   c := c + 'HARBOURFOLDER'       + DefineExtended1 + DefineBorland + DefineHarbour  + Define64bits + ' ' + alltrim( &("Gbl_T_P_"       + DefineExtended1 + DefineBorland + DefineHarbour  + Define64bits) ) + Hb_OsNewLine()
-   c := c + 'CCOMPILATORLIBS'     + DefineExtended1 + DefineBorland + DefineHarbour  + Define64bits + ' ' + alltrim( &("Gbl_T_C_LIBS_"  + DefineExtended1 + DefineBorland + DefineHarbour  + Define64bits) ) + Hb_OsNewLine()
-   c := c + 'MINIGUIFOLDERLIBS'   + DefineExtended1 + DefineBorland + DefineHarbour  + Define64bits + ' ' + alltrim( &("Gbl_T_M_LIBS_"  + DefineExtended1 + DefineBorland + DefineHarbour  + Define64bits) ) + Hb_OsNewLine()
-   c := c + 'HARBOURFOLDERLIBS'   + DefineExtended1 + DefineBorland + DefineHarbour  + Define64bits + ' ' + alltrim( &("Gbl_T_P_LIBS_"  + DefineExtended1 + DefineBorland + DefineHarbour  + Define64bits) ) + Hb_OsNewLine()
-
-   c := c + 'CCOMPILATOR'         + DefineExtended1 + DefineBorland + DefineXHarbour + Define64bits + ' ' + alltrim( &("Gbl_T_C_"       + DefineExtended1 + DefineBorland + DefineXHarbour + Define64bits) ) + Hb_OsNewLine()
-   c := c + 'MINIGUIFOLDER'       + DefineExtended1 + DefineBorland + DefineXHarbour + Define64bits + ' ' + alltrim( &("Gbl_T_M_"       + DefineExtended1 + DefineBorland + DefineXHarbour + Define64bits) ) + Hb_OsNewLine()
-   c := c + 'XHARBOURFOLDER'      + DefineExtended1 + DefineBorland + DefineXHarbour + Define64bits + ' ' + alltrim( &("Gbl_T_P_"       + DefineExtended1 + DefineBorland + DefineXHarbour + Define64bits) ) + Hb_OsNewLine()
-   c := c + 'CCOMPILATORLIBS'     + DefineExtended1 + DefineBorland + DefineXHarbour + Define64bits + ' ' + alltrim( &("Gbl_T_C_LIBS_"  + DefineExtended1 + DefineBorland + DefineXHarbour + Define64bits) ) + Hb_OsNewLine()
-   c := c + 'MINIGUIFOLDERLIBS'   + DefineExtended1 + DefineBorland + DefineXHarbour + Define64bits + ' ' + alltrim( &("Gbl_T_M_LIBS_"  + DefineExtended1 + DefineBorland + DefineXHarbour + Define64bits) ) + Hb_OsNewLine()
-   c := c + 'XHARBOURFOLDERLIBS'  + DefineExtended1 + DefineBorland + DefineXHarbour + Define64bits + ' ' + alltrim( &("Gbl_T_P_LIBS_"  + DefineExtended1 + DefineBorland + DefineXHarbour + Define64bits) ) + Hb_OsNewLine()
 
    /* MiniGui Extended 1 with MinGW */
    c := c + 'CCOMPILATOR'         + DefineExtended1 + DefineMinGW   + DefineHarbour  + Define32bits + ' ' + alltrim( &("Gbl_T_C_"       + DefineExtended1 + DefineMinGW   + DefineHarbour  + Define32bits) ) + Hb_OsNewLine()
@@ -605,20 +507,6 @@ Function SaveEnvironment
    c := c + 'CCOMPILATORLIBS'     + DefineOohg3     + DefineBorland + DefineXHarbour + Define32bits + ' ' + alltrim( &("Gbl_T_C_LIBS_"  + DefineOohg3     + DefineBorland + DefineXHarbour + Define32bits) ) + Hb_OsNewLine()
    c := c + 'MINIGUIFOLDERLIBS'   + DefineOohg3     + DefineBorland + DefineXHarbour + Define32bits + ' ' + alltrim( &("Gbl_T_M_LIBS_"  + DefineOohg3     + DefineBorland + DefineXHarbour + Define32bits) ) + Hb_OsNewLine()
    c := c + 'XHARBOURFOLDERLIBS'  + DefineOohg3     + DefineBorland + DefineXHarbour + Define32bits + ' ' + alltrim( &("Gbl_T_P_LIBS_"  + DefineOohg3     + DefineBorland + DefineXHarbour + Define32bits) ) + Hb_OsNewLine()
-
-   c := c + 'CCOMPILATOR'         + DefineOohg3     + DefineBorland + DefineHarbour  + Define64bits + ' ' + alltrim( &("Gbl_T_C_"       + DefineOohg3     + DefineBorland + DefineHarbour  + Define64bits) ) + Hb_OsNewLine()
-   c := c + 'MINIGUIFOLDER'       + DefineOohg3     + DefineBorland + DefineHarbour  + Define64bits + ' ' + alltrim( &("Gbl_T_M_"       + DefineOohg3     + DefineBorland + DefineHarbour  + Define64bits) ) + Hb_OsNewLine()
-   c := c + 'HARBOURFOLDER'       + DefineOohg3     + DefineBorland + DefineHarbour  + Define64bits + ' ' + alltrim( &("Gbl_T_P_"       + DefineOohg3     + DefineBorland + DefineHarbour  + Define64bits) ) + Hb_OsNewLine()
-   c := c + 'CCOMPILATORLIBS'     + DefineOohg3     + DefineBorland + DefineHarbour  + Define64bits + ' ' + alltrim( &("Gbl_T_C_LIBS_"  + DefineOohg3     + DefineBorland + DefineHarbour  + Define64bits) ) + Hb_OsNewLine()
-   c := c + 'MINIGUIFOLDERLIBS'   + DefineOohg3     + DefineBorland + DefineHarbour  + Define64bits + ' ' + alltrim( &("Gbl_T_M_LIBS_"  + DefineOohg3     + DefineBorland + DefineHarbour  + Define64bits) ) + Hb_OsNewLine()
-   c := c + 'HARBOURFOLDERLIBS'   + DefineOohg3     + DefineBorland + DefineHarbour  + Define64bits + ' ' + alltrim( &("Gbl_T_P_LIBS_"  + DefineOohg3     + DefineBorland + DefineHarbour  + Define64bits) ) + Hb_OsNewLine()
-
-   c := c + 'CCOMPILATOR'         + DefineOohg3     + DefineBorland + DefineXHarbour + Define64bits + ' ' + alltrim( &("Gbl_T_C_"       + DefineOohg3     + DefineBorland + DefineXHarbour + Define64bits) ) + Hb_OsNewLine()
-   c := c + 'MINIGUIFOLDER'       + DefineOohg3     + DefineBorland + DefineXHarbour + Define64bits + ' ' + alltrim( &("Gbl_T_M_"       + DefineOohg3     + DefineBorland + DefineXHarbour + Define64bits) ) + Hb_OsNewLine()
-   c := c + 'XHARBOURFOLDER'      + DefineOohg3     + DefineBorland + DefineXHarbour + Define64bits + ' ' + alltrim( &("Gbl_T_P_"       + DefineOohg3     + DefineBorland + DefineXHarbour + Define64bits) ) + Hb_OsNewLine()
-   c := c + 'CCOMPILATORLIBS'     + DefineOohg3     + DefineBorland + DefineXHarbour + Define64bits + ' ' + alltrim( &("Gbl_T_C_LIBS_"  + DefineOohg3     + DefineBorland + DefineXHarbour + Define64bits) ) + Hb_OsNewLine()
-   c := c + 'MINIGUIFOLDERLIBS'   + DefineOohg3     + DefineBorland + DefineXHarbour + Define64bits + ' ' + alltrim( &("Gbl_T_M_LIBS_"  + DefineOohg3     + DefineBorland + DefineXHarbour + Define64bits) ) + Hb_OsNewLine()
-   c := c + 'XHARBOURFOLDERLIBS'  + DefineOohg3     + DefineBorland + DefineXHarbour + Define64bits + ' ' + alltrim( &("Gbl_T_P_LIBS_"  + DefineOohg3     + DefineBorland + DefineXHarbour + Define64bits) ) + Hb_OsNewLine()
 
    /* OOHG with MinGW */
    c := c + 'CCOMPILATOR'         + DefineOohg3     + DefineMinGW   + DefineHarbour  + Define32bits + ' ' + alltrim( &("Gbl_T_C_"       + DefineOohg3     + DefineMinGW   + DefineHarbour  + Define32bits) ) + Hb_OsNewLine()

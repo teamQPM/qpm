@@ -8,6 +8,58 @@
  * See "How to format your ChangeLog entries" in howtosvn.txt file.
  */
 
+2016-08-28 23:02:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * ./FuentesComunes/US_Classes.prg
+     + Defines for colors.
+   * ./FuentesComunes/US_HB.PRG
+     + xcommand.
+   - ./FuentesComunes/US.CH
+   * ./QPM.ch
+     - Unneeded declarations.
+   * ./QPM.exe
+     * Updated.
+   * ./QPM.prg
+     * AutoInc is now a project option.
+     - Some comments and some no longer needed public vars.
+     - Some unnecessary code.
+     * Format.
+     * Option AUTO of FMG tool renamed to EDITOR.
+     * Use an auxiliary file to request default GT for HMG 3.x instead of
+       adding and include into minigui.ch
+     - Some T*O*D*O*s
+     * Functions ActConsoleMode, ActOutputSuffix, ActOutputPrefix, ActUpx,
+       ActFormTool, ActDbfTool, ActOutputCopyMove, SwitchRadioOutputCopyMove,
+       ActOutputRename, SwitchRadioOutputRename, ActOutputType and PrjSetColor
+       moved to ./QPM_ProjectSettings.prg
+   * ./QPM_AutoProject.qpm
+     * Updated.
+   * ./QPM_CompatibilityOpenProject.ch
+     * Format.
+     * Option AUTO of FMG tool renamed to EDITOR.
+   * ./QPM_Environment.prg
+     - Unneeded initialization of some no longer used public vars.
+   * ./QPM_ExtraRun.prg
+     - Some comments.
+     - Some unnecessary code.
+     * Function QPM_ActExtraRun moved to ./QPM_ProjectSettings.prg
+   * ./QPM_Functions.PRG
+     * Use project properties instead of indirect references.
+   * ./QPM_GlobalSettings.prg
+     * Some control's positions.
+     - Data pages for HMG 3.x + xHarbour.
+     - Unneeded initialization of some no longer used public vars.
+   * ./QPM_Libraries.prg
+     * Always add gtgui and gtwin to HMG 3.x builds.
+     + Missing libraries.
+   * ./QPM_ProjectSettings.prg
+     + Code removed from ./QPM.prg and ./QPM_ExtraRun.prg
+     - Function WinPSettingsInit. It's useful context was moved to ON INIT.
+     - Function ActRadioCpp. It´s context was moved to CheckCombination().
+     - Funciton FSwitchMode. It´s context was moved to ProjectSettingsSave().
+     ! Some radio options are not enabled or can't be changed.
+   * ./QPM_GlobalSettings.prg
+     - Tab pages for invalid combinations HMG 3.x + xHarbour.
+
 2016-08-25 10:08:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * ./readme.txt
      * Updated to reflect that, since 2016-08-25 12:41:05 UTC, VirusTotal

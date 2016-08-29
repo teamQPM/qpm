@@ -68,11 +68,11 @@ Function QPM_CargoLibraries()
    Local bOldNamesLib := QPM_IsLibrariesNamesOld( US_ShortName( GetHarbourFolder() ), GetSuffix() )
    Local cPre, cExt
 
-   // HMG 1.x + BorlandC + Harbour
+   // 1 - HMG 1.x + BorlandC + Harbour
    cPre := ""
    cExt := ".lib"
    &( "vLibDefault"+DefineMiniGui1+DefineBorland+DefineHarbour+Define32bits ) := {}
-   if PUB_bConsole
+   if Prj_Check_Console
    if PUB_bDebugActive
    aadd( &( "vLibDefault"+DefineMiniGui1+DefineBorland+DefineHarbour+Define32bits ),                                           cPre+'gtwin'+cExt )
    aadd( &( "vLibDefault"+DefineMiniGui1+DefineBorland+DefineHarbour+Define32bits ), if( bOldNamesLib, cPre+'debug'+cExt,      cPre+'hbdebug'+cExt ) )
@@ -120,11 +120,11 @@ Function QPM_CargoLibraries()
    aadd( &( "vLibDefault"+DefineMiniGui1+DefineBorland+DefineHarbour+Define32bits ),                                           cPre+'tip'+cExt )
    aadd( &( "vLibDefault"+DefineMiniGui1+DefineBorland+DefineHarbour+Define32bits ),                                           cPre+'zlib1'+cExt )
 
-   // HMG 1.x + BorlandC + xHarbour
+   // 2 - HMG 1.x + BorlandC + xHarbour
    cPre := ""
    cExt := ".lib"
    &( "vLibDefault"+DefineMiniGui1+DefineBorland+DefineXHarbour+Define32bits ) := {}
-   if PUB_bConsole
+   if Prj_Check_Console
    if PUB_bDebugActive
    aadd( &( "vLibDefault"+DefineMiniGui1+DefineBorland+DefineXHarbour+Define32bits ), cPre+'gtwin'+cExt )
    aadd( &( "vLibDefault"+DefineMiniGui1+DefineBorland+DefineXHarbour+Define32bits ), cPre+'debug'+cExt )
@@ -170,23 +170,27 @@ Function QPM_CargoLibraries()
    aadd( &( "vLibDefault"+DefineMiniGui1+DefineBorland+DefineXHarbour+Define32bits ), cPre+'vm'+cExt )
    aadd( &( "vLibDefault"+DefineMiniGui1+DefineBorland+DefineXHarbour+Define32bits ), cPre+'zlib1'+cExt )
 
-   // HMG 3.x + MinGW + Harbour, 32 bits
+   // 3 - HMG 3.x + MinGW + Harbour, 32 bits
    cPre := "lib"
    cExt := ".a"
    &( "vLibDefault"+DefineMiniGui3+DefineMinGW+DefineHarbour+Define32bits ) := {}
-   if PUB_bConsole
+   if Prj_Check_Console
    if PUB_bDebugActive
    aadd( &( "vLibDefault"+DefineMiniGui3+DefineMinGW+DefineHarbour+Define32bits ), cPre+'gtwin'+cExt )
+   aadd( &( "vLibDefault"+DefineMiniGui3+DefineMinGW+DefineHarbour+Define32bits ), cPre+'gtgui'+cExt )
    aadd( &( "vLibDefault"+DefineMiniGui3+DefineMinGW+DefineHarbour+Define32bits ), cPre+'hbdebug'+cExt )
    else
    aadd( &( "vLibDefault"+DefineMiniGui3+DefineMinGW+DefineHarbour+Define32bits ), cPre+'gtwin'+cExt )
+   aadd( &( "vLibDefault"+DefineMiniGui3+DefineMinGW+DefineHarbour+Define32bits ), cPre+'gtgui'+cExt )
    endif
    else
    if PUB_bDebugActive
    aadd( &( "vLibDefault"+DefineMiniGui3+DefineMinGW+DefineHarbour+Define32bits ), cPre+'gtgui'+cExt )
+   aadd( &( "vLibDefault"+DefineMiniGui3+DefineMinGW+DefineHarbour+Define32bits ), cPre+'gtwin'+cExt )
    aadd( &( "vLibDefault"+DefineMiniGui3+DefineMinGW+DefineHarbour+Define32bits ), cPre+'debugger'+cExt )
    else
    aadd( &( "vLibDefault"+DefineMiniGui3+DefineMinGW+DefineHarbour+Define32bits ), cPre+'gtgui'+cExt )
+   aadd( &( "vLibDefault"+DefineMiniGui3+DefineMinGW+DefineHarbour+Define32bits ), cPre+'gtwin'+cExt )
    endif
    endif
 
@@ -265,87 +269,18 @@ Function QPM_CargoLibraries()
    aadd( &( "vLibDefault"+DefineMiniGui3+DefineMinGW+DefineHarbour+Define32bits ), cPre+'wsock32'+cExt )
    aadd( &( "vLibDefault"+DefineMiniGui3+DefineMinGW+DefineHarbour+Define32bits ), cPre+'xHB'+cExt )
 
-   // HMG 3.x + MinGW + xHarbour, 32 bits
-   cPre := "lib"
-   cExt := ".a"
-   &( "vLibDefault"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define32bits ) := {}
-   if PUB_bConsole
-   if PUB_bDebugActive
-   aadd( &( "vLibDefault"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define32bits ), cPre+'gtwin'+cExt )
-   aadd( &( "vLibDefault"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define32bits ), cPre+'debug'+cExt )
-   else
-   aadd( &( "vLibDefault"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define32bits ), cPre+'gtwin'+cExt )
-   endif
-   else
-   if PUB_bDebugActive
-   aadd( &( "vLibDefault"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define32bits ), cPre+'gtgui'+cExt )
-   aadd( &( "vLibDefault"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define32bits ), cPre+'debugger'+cExt )
-   else
-   aadd( &( "vLibDefault"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define32bits ), cPre+'gtgui'+cExt )
-   endif
-   endif
-
-   aadd( &( "vLibDefault"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define32bits ), cPre+'codepage'+cExt )
-   aadd( &( "vLibDefault"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define32bits ), cPre+'comctl32'+cExt )
-   aadd( &( "vLibDefault"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define32bits ), cPre+'comdlg32'+cExt )
-   aadd( &( "vLibDefault"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define32bits ), cPre+'common'+cExt )
-   aadd( &( "vLibDefault"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define32bits ), cPre+'ct'+cExt )
-   aadd( &( "vLibDefault"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define32bits ), cPre+'dbfcdx'+cExt )
-   aadd( &( "vLibDefault"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define32bits ), cPre+'dbfdbt'+cExt )
-   aadd( &( "vLibDefault"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define32bits ), cPre+'dbffpt'+cExt )
-   aadd( &( "vLibDefault"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define32bits ), cPre+'dbfntx'+cExt )
-   aadd( &( "vLibDefault"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define32bits ), cPre+'dll'+cExt )
-   aadd( &( "vLibDefault"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define32bits ), cPre+'gdi32'+cExt )
-   aadd( &( "vLibDefault"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define32bits ), cPre+'hbmzip'+cExt )
-   aadd( &( "vLibDefault"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define32bits ), cPre+'hbprinter'+cExt )
-   aadd( &( "vLibDefault"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define32bits ), cPre+'hbsix'+cExt )
-   aadd( &( "vLibDefault"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define32bits ), cPre+'hbzip'+cExt )
-   aadd( &( "vLibDefault"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define32bits ), cPre+'hsx'+cExt )
-   aadd( &( "vLibDefault"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define32bits ), cPre+'lang'+cExt )
-   aadd( &( "vLibDefault"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define32bits ), cPre+'macro'+cExt )
-   aadd( &( "vLibDefault"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define32bits ), cPre+'mapi32'+cExt )
-   aadd( &( "vLibDefault"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define32bits ), cPre+'miniprint'+cExt )
-   aadd( &( "vLibDefault"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define32bits ), cPre+'mysql'+cExt )
-   aadd( &( "vLibDefault"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define32bits ), cPre+'mysqldll'+cExt )
-   aadd( &( "vLibDefault"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define32bits ), cPre+'nulsys'+cExt )
-   aadd( &( "vLibDefault"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define32bits ), cPre+'ole32'+cExt )
-   aadd( &( "vLibDefault"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define32bits ), cPre+'oleaut32'+cExt )
-   aadd( &( "vLibDefault"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define32bits ), cPre+'pcrepos'+cExt )
-   aadd( &( "vLibDefault"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define32bits ), cPre+'pp'+cExt )
-   aadd( &( "vLibDefault"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define32bits ), cPre+'rdd'+cExt )
-   aadd( &( "vLibDefault"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define32bits ), cPre+'rtl'+cExt )
-   aadd( &( "vLibDefault"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define32bits ), cPre+'socket'+cExt )
-   aadd( &( "vLibDefault"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define32bits ), cPre+'stdc++'+cExt )
-   aadd( &( "vLibDefault"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define32bits ), cPre+'tip'+cExt )
-   aadd( &( "vLibDefault"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define32bits ), cPre+'user32'+cExt )
-   aadd( &( "vLibDefault"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define32bits ), cPre+'usrrdd'+cExt )
-   aadd( &( "vLibDefault"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define32bits ), cPre+'uuid'+cExt )
-   aadd( &( "vLibDefault"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define32bits ), cPre+'vfw32'+cExt )
-   aadd( &( "vLibDefault"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define32bits ), cPre+'vm'+cExt )
-   aadd( &( "vLibDefault"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define32bits ), cPre+'winmm'+cExt )
-   aadd( &( "vLibDefault"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define32bits ), cPre+'winspool'+cExt )
-   aadd( &( "vLibDefault"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define32bits ), cPre+'ws2_32'+cExt )
-   aadd( &( "vLibDefault"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define32bits ), cPre+'wsock32'+cExt )
-   aadd( &( "vLibDefault"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define32bits ), cPre+'xCrypt'+cExt )
-   aadd( &( "vLibDefault"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define32bits ), cPre+'xEdit'+cExt )
-   aadd( &( "vLibDefault"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define32bits ), cPre+'xEditex'+cExt )
-   aadd( &( "vLibDefault"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define32bits ), cPre+'xGraph'+cExt )
-   aadd( &( "vLibDefault"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define32bits ), cPre+'xIni'+cExt )
-   aadd( &( "vLibDefault"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define32bits ), cPre+'xRegistry'+cExt )
-   aadd( &( "vLibDefault"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define32bits ), cPre+'xReport'+cExt )
-   aadd( &( "vLibDefault"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define32bits ), cPre+'zlib'+cExt )
-   aadd( &( "vLibDefault"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define32bits ), cPre+'zlib1'+cExt )
-
-   // HMG 3.x + MinGW + Harbour, 64 bits
+   // 4 - HMG 3.x + MinGW + Harbour, 64 bits
    cPre := "lib"
    cExt := ".a"
    &( "vLibDefault"+DefineMiniGui3+DefineMinGW+DefineHarbour+Define64bits ) := {}
-   if PUB_bConsole
+   if Prj_Check_Console
    if PUB_bDebugActive
    aadd( &( "vLibDefault"+DefineMiniGui3+DefineMinGW+DefineHarbour+Define64bits ), cPre+'gtwin'+cExt )
+   aadd( &( "vLibDefault"+DefineMiniGui3+DefineMinGW+DefineHarbour+Define64bits ), cPre+'gtgui'+cExt )
    aadd( &( "vLibDefault"+DefineMiniGui3+DefineMinGW+DefineHarbour+Define64bits ), cPre+'hbdebug'+cExt )
    else
    aadd( &( "vLibDefault"+DefineMiniGui3+DefineMinGW+DefineHarbour+Define64bits ), cPre+'gtwin'+cExt )
+   aadd( &( "vLibDefault"+DefineMiniGui3+DefineMinGW+DefineHarbour+Define64bits ), cPre+'gtgui'+cExt )
    endif
    else
    if PUB_bDebugActive
@@ -439,82 +374,11 @@ Function QPM_CargoLibraries()
    aadd( &( "vLibDefault"+DefineMiniGui3+DefineMinGW+DefineHarbour+Define64bits ), cPre+'wsock32'+cExt )
    aadd( &( "vLibDefault"+DefineMiniGui3+DefineMinGW+DefineHarbour+Define64bits ), cPre+'xHB'+cExt )
 
-   // HMG 3.x + MinGW + xHarbour, 64 bits
-   cPre := "lib"
-   cExt := ".a"
-   &( "vLibDefault"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define64bits ) := {}
-   if PUB_bConsole
-   if PUB_bDebugActive
-   aadd( &( "vLibDefault"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define64bits ), cPre+'gtwin'+cExt )
-   aadd( &( "vLibDefault"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define64bits ), cPre+'debug'+cExt )
-   else
-   aadd( &( "vLibDefault"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define64bits ), cPre+'gtwin'+cExt )
-   endif
-   else
-   if PUB_bDebugActive
-   aadd( &( "vLibDefault"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define64bits ), cPre+'gtgui'+cExt )
-   aadd( &( "vLibDefault"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define64bits ), cPre+'debugger'+cExt )
-   else
-   aadd( &( "vLibDefault"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define64bits ), cPre+'gtgui'+cExt )
-   endif
-   endif
-
-   aadd( &( "vLibDefault"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define64bits ), cPre+'codepage'+cExt )
-   aadd( &( "vLibDefault"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define64bits ), cPre+'comctl32'+cExt )
-   aadd( &( "vLibDefault"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define64bits ), cPre+'comdlg32'+cExt )
-   aadd( &( "vLibDefault"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define64bits ), cPre+'common'+cExt )
-   aadd( &( "vLibDefault"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define64bits ), cPre+'ct'+cExt )
-   aadd( &( "vLibDefault"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define64bits ), cPre+'dbfcdx'+cExt )
-   aadd( &( "vLibDefault"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define64bits ), cPre+'dbfdbt'+cExt )
-   aadd( &( "vLibDefault"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define64bits ), cPre+'dbffpt'+cExt )
-   aadd( &( "vLibDefault"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define64bits ), cPre+'dbfntx'+cExt )
-   aadd( &( "vLibDefault"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define64bits ), cPre+'dll'+cExt )
-   aadd( &( "vLibDefault"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define64bits ), cPre+'gdi32'+cExt )
-   aadd( &( "vLibDefault"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define64bits ), cPre+'hbmzip'+cExt )
-   aadd( &( "vLibDefault"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define64bits ), cPre+'hbprinter'+cExt )
-   aadd( &( "vLibDefault"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define64bits ), cPre+'hbsix'+cExt )
-   aadd( &( "vLibDefault"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define64bits ), cPre+'hbzip'+cExt )
-   aadd( &( "vLibDefault"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define64bits ), cPre+'hsx'+cExt )
-   aadd( &( "vLibDefault"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define64bits ), cPre+'lang'+cExt )
-   aadd( &( "vLibDefault"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define64bits ), cPre+'macro'+cExt )
-   aadd( &( "vLibDefault"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define64bits ), cPre+'mapi32'+cExt )
-   aadd( &( "vLibDefault"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define64bits ), cPre+'miniprint'+cExt )
-   aadd( &( "vLibDefault"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define64bits ), cPre+'mysql'+cExt )
-   aadd( &( "vLibDefault"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define64bits ), cPre+'mysqldll'+cExt )
-   aadd( &( "vLibDefault"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define64bits ), cPre+'nulsys'+cExt )
-   aadd( &( "vLibDefault"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define64bits ), cPre+'ole32'+cExt )
-   aadd( &( "vLibDefault"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define64bits ), cPre+'oleaut32'+cExt )
-   aadd( &( "vLibDefault"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define64bits ), cPre+'pcrepos'+cExt )
-   aadd( &( "vLibDefault"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define64bits ), cPre+'pp'+cExt )
-   aadd( &( "vLibDefault"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define64bits ), cPre+'rdd'+cExt )
-   aadd( &( "vLibDefault"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define64bits ), cPre+'rtl'+cExt )
-   aadd( &( "vLibDefault"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define64bits ), cPre+'socket'+cExt )
-   aadd( &( "vLibDefault"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define64bits ), cPre+'stdc++'+cExt )
-   aadd( &( "vLibDefault"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define64bits ), cPre+'tip'+cExt )
-   aadd( &( "vLibDefault"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define64bits ), cPre+'user32'+cExt )
-   aadd( &( "vLibDefault"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define64bits ), cPre+'usrrdd'+cExt )
-   aadd( &( "vLibDefault"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define64bits ), cPre+'uuid'+cExt )
-   aadd( &( "vLibDefault"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define64bits ), cPre+'vfw32'+cExt )
-   aadd( &( "vLibDefault"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define64bits ), cPre+'vm'+cExt )
-   aadd( &( "vLibDefault"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define64bits ), cPre+'winmm'+cExt )
-   aadd( &( "vLibDefault"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define64bits ), cPre+'winspool'+cExt )
-   aadd( &( "vLibDefault"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define64bits ), cPre+'ws2_32'+cExt )
-   aadd( &( "vLibDefault"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define64bits ), cPre+'wsock32'+cExt )
-   aadd( &( "vLibDefault"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define64bits ), cPre+'xCrypt'+cExt )
-   aadd( &( "vLibDefault"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define64bits ), cPre+'xEdit'+cExt )
-   aadd( &( "vLibDefault"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define64bits ), cPre+'xEditex'+cExt )
-   aadd( &( "vLibDefault"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define64bits ), cPre+'xGraph'+cExt )
-   aadd( &( "vLibDefault"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define64bits ), cPre+'xIni'+cExt )
-   aadd( &( "vLibDefault"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define64bits ), cPre+'xRegistry'+cExt )
-   aadd( &( "vLibDefault"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define64bits ), cPre+'xReport'+cExt )
-   aadd( &( "vLibDefault"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define64bits ), cPre+'zlib'+cExt )
-   aadd( &( "vLibDefault"+DefineMiniGui3+DefineMinGW+DefineXHarbour+Define64bits ), cPre+'zlib1'+cExt )
-
-// Extended + BCC32 + Harbour
+// 5 - Extended + BCC32 + Harbour
    cPre := ""
    cExt := ".lib"
    &( "vLibDefault"+DefineExtended1+DefineBorland+DefineHarbour+Define32bits ) := {}
-   if PUB_bConsole
+   if Prj_Check_Console
    if PUB_bDebugActive
    aadd( &( "vLibDefault"+DefineExtended1+DefineBorland+DefineHarbour+Define32bits ), cPre+'gtwin'+cExt )
    aadd( &( "vLibDefault"+DefineExtended1+DefineBorland+DefineHarbour+Define32bits ), cPre+'hbdebug'+cExt )
@@ -594,11 +458,11 @@ Function QPM_CargoLibraries()
    aadd( &( "vLibDefault"+DefineExtended1+DefineBorland+DefineHarbour+Define32bits ), cPre+'xHB'+cExt )
    aadd( &( "vLibDefault"+DefineExtended1+DefineBorland+DefineHarbour+Define32bits ), cPre+'ziparchive'+cExt )
 
-// Extended + BCC32 + xHarbour
+// 6 - Extended + BCC32 + xHarbour
    cPre := ""
    cExt := ".lib"
    &( "vLibDefault"+DefineExtended1+DefineBorland+DefineXHarbour+Define32bits ) := {}
-   if PUB_bConsole
+   if Prj_Check_Console
    if PUB_bDebugActive
    aadd( &( "vLibDefault"+DefineExtended1+DefineBorland+DefineXHarbour+Define32bits ), cPre+'gtwin'+cExt )
    aadd( &( "vLibDefault"+DefineExtended1+DefineBorland+DefineXHarbour+Define32bits ), cPre+'hbdebug'+cExt )
@@ -678,11 +542,11 @@ Function QPM_CargoLibraries()
    aadd( &( "vLibDefault"+DefineExtended1+DefineBorland+DefineXHarbour+Define32bits ), cPre+'xHB'+cExt )
    aadd( &( "vLibDefault"+DefineExtended1+DefineBorland+DefineXHarbour+Define32bits ), cPre+'ziparchive'+cExt )
 
-   // Extended + MinGW + Harbour, 32 bits
+   // 7 - Extended + MinGW + Harbour, 32 bits
    cPre := "lib"
    cExt := ".a"
    &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineHarbour+Define32bits ) := {}
-   if PUB_bConsole
+   if Prj_Check_Console
    if PUB_bDebugActive
    aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineHarbour+Define32bits ), cPre+'gtwin'+cExt )
    else
@@ -782,11 +646,11 @@ Function QPM_CargoLibraries()
    aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineHarbour+Define32bits ), cPre+'xHB'+cExt )
    aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineHarbour+Define32bits ), cPre+'zlib1'+cExt )
 
-   // Extended + MinGW + xHarbour, 32 bits
+   // 8 - Extended + MinGW + xHarbour, 32 bits
    cPre := "lib"
    cExt := ".a"
    &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineXHarbour+Define32bits ) := {}
-   if PUB_bConsole
+   if Prj_Check_Console
    if PUB_bDebugActive
    aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineXHarbour+Define32bits ), cPre+'gtwin'+cExt )
    else
@@ -886,11 +750,11 @@ Function QPM_CargoLibraries()
    aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineXHarbour+Define32bits ), cPre+'xHB'+cExt )
    aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineXHarbour+Define32bits ), cPre+'zlib1'+cExt )
 
-   // Extended + MinGW + Harbour, 64 bits
+   // 9 - Extended + MinGW + Harbour, 64 bits
    cPre := "lib"
    cExt := ".a"
    &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineHarbour+Define64bits ) := {}
-   if PUB_bConsole
+   if Prj_Check_Console
    if PUB_bDebugActive
    aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineHarbour+Define64bits ), cPre+'gtwin'+cExt )
    else
@@ -990,11 +854,11 @@ Function QPM_CargoLibraries()
    aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineHarbour+Define64bits ), cPre+'xHB'+cExt )
    aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineHarbour+Define64bits ), cPre+'zlib1'+cExt )
 
-   // Extended + MinGW + xHarbour, 64 bits
+   // 10 - Extended + MinGW + xHarbour, 64 bits
    cPre := "lib"
    cExt := ".a"
    &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineXHarbour+Define64bits ) := {}
-   if PUB_bConsole
+   if Prj_Check_Console
    if PUB_bDebugActive
    aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineXHarbour+Define64bits ), cPre+'gtwin'+cExt )
    else
@@ -1094,11 +958,11 @@ Function QPM_CargoLibraries()
    aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineXHarbour+Define64bits ), cPre+'xHB'+cExt )
    aadd( &( "vLibDefault"+DefineExtended1+DefineMinGW+DefineXHarbour+Define64bits ), cPre+'zlib1'+cExt )
 
-   // OOHG + BCC32 + Harbour
+   // 11 - OOHG + BCC32 + Harbour
    cPre := ""
    cExt := ".lib"
    &( "vLibDefault"+DefineOohg3+DefineBorland+DefineHarbour+Define32bits ) := {}
-   if PUB_bConsole
+   if Prj_Check_Console
    if PUB_bDebugActive
    aadd( &( "vLibDefault"+DefineOohg3+DefineBorland+DefineHarbour+Define32bits ), cPre+'gtwin'+cExt )
    aadd( &( "vLibDefault"+DefineOohg3+DefineBorland+DefineHarbour+Define32bits ), cPre+'hbdebug'+cExt )
@@ -1153,11 +1017,11 @@ Function QPM_CargoLibraries()
    aadd( &( "vLibDefault"+DefineOohg3+DefineBorland+DefineHarbour+Define32bits ), cPre+'socket'+cExt )
    aadd( &( "vLibDefault"+DefineOohg3+DefineBorland+DefineHarbour+Define32bits ), cPre+'xHB'+cExt )
 
-   // OOHG + BCC32 + xHarbour
+   // 12 - OOHG + BCC32 + xHarbour
    cPre := ""
    cExt := ".lib"
    &( "vLibDefault"+DefineOohg3+DefineBorland+DefineXHarbour+Define32bits ) := {}
-   if PUB_bConsole
+   if Prj_Check_Console
    if PUB_bDebugActive
    aadd( &( "vLibDefault"+DefineOohg3+DefineBorland+DefineXHarbour+Define32bits ), cPre+'gtwin'+cExt )
    aadd( &( "vLibDefault"+DefineOohg3+DefineBorland+DefineXHarbour+Define32bits ), cPre+'debug'+cExt )
@@ -1207,11 +1071,11 @@ Function QPM_CargoLibraries()
    aadd( &( "vLibDefault"+DefineOohg3+DefineBorland+DefineXHarbour+Define32bits ), cPre+'vm'+cExt )
    aadd( &( "vLibDefault"+DefineOohg3+DefineBorland+DefineXHarbour+Define32bits ), cPre+'zlib1'+cExt )
 
-   // OOHG + MinGW + Harbour, 32 bits
+   // 13 - OOHG + MinGW + Harbour, 32 bits
    cPre := "lib"
    cExt := ".a"
    &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineHarbour+Define32bits ) := {}
-   if PUB_bConsole
+   if Prj_Check_Console
    if PUB_bDebugActive
    aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineHarbour+Define32bits ), cPre+'gtwin'+cExt )
    aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineHarbour+Define32bits ), cPre+'hbdebug'+cExt )
@@ -1279,11 +1143,11 @@ Function QPM_CargoLibraries()
    aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineHarbour+Define32bits ), cPre+'wsock32'+cExt )
    aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineHarbour+Define32bits ), cPre+'xhb'+cExt )
 
-   // OOHG + MinGW + xHarbour, 32 bits
+   // 14 - OOHG + MinGW + xHarbour, 32 bits
    cPre := "lib"
    cExt := ".a"
    &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineXHarbour+Define32bits ) := {}
-   if PUB_bConsole
+   if Prj_Check_Console
    if PUB_bDebugActive
    aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineXHarbour+Define32bits ), cPre+'gtwin'+cExt )
    aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineXHarbour+Define32bits ), cPre+'debug'+cExt )
@@ -1351,11 +1215,155 @@ Function QPM_CargoLibraries()
    aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineXHarbour+Define32bits ), cPre+'xReport'+cExt )
    aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineXHarbour+Define32bits ), cPre+'zlib1'+cExt )
 
-   // OOHG + Pelles C + Harbour, 32 bits
+   // 15 - OOHG + MinGW + Harbour, 64 bits
+   cPre := "lib"
+   cExt := ".a"
+   &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineHarbour+Define64bits ) := {}
+   if Prj_Check_Console
+   if PUB_bDebugActive
+   aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineHarbour+Define64bits ), cPre+'gtwin'+cExt )
+   aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineHarbour+Define64bits ), cPre+'hbdebug'+cExt )
+   else
+   aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineHarbour+Define64bits ), cPre+'gtwin'+cExt )
+   endif
+   else
+   if PUB_bDebugActive
+   aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineHarbour+Define64bits ), cPre+'gtgui'+cExt )
+   else
+   aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineHarbour+Define64bits ), cPre+'gtgui'+cExt )
+   endif
+   endif
+
+   aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineHarbour+Define64bits ), cPre+'bostaurus'+cExt )
+   aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineHarbour+Define64bits ), cPre+'comctl32'+cExt )
+   aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineHarbour+Define64bits ), cPre+'comdlg32'+cExt )
+   aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineHarbour+Define64bits ), cPre+'gdi32'+cExt )
+   aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineHarbour+Define64bits ), cPre+'hbcommon'+cExt )
+   aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineHarbour+Define64bits ), cPre+'hbcpage'+cExt )
+   aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineHarbour+Define64bits ), cPre+'hbcplr'+cExt )
+   aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineHarbour+Define64bits ), cPre+'hbct'+cExt )
+   aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineHarbour+Define64bits ), cPre+'hbextern'+cExt )
+   aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineHarbour+Define64bits ), cPre+'hbhsx'+cExt )
+   aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineHarbour+Define64bits ), cPre+'hblang'+cExt )
+   aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineHarbour+Define64bits ), cPre+'hbmacro'+cExt )
+   aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineHarbour+Define64bits ), cPre+'hbmemio'+cExt )
+   aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineHarbour+Define64bits ), cPre+'hbmisc'+cExt )
+   aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineHarbour+Define64bits ), cPre+'hbmysql'+cExt )
+   aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineHarbour+Define64bits ), cPre+'hbmzip'+cExt )
+   aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineHarbour+Define64bits ), cPre+'hbodbc'+cExt )
+   aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineHarbour+Define64bits ), cPre+'hbpcre'+cExt )
+   aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineHarbour+Define64bits ), cPre+'hbpp'+cExt )
+   aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineHarbour+Define64bits ), cPre+'hbprinter'+cExt )
+   aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineHarbour+Define64bits ), cPre+'hbrdd'+cExt )
+   aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineHarbour+Define64bits ), cPre+'hbrtl'+cExt )
+   aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineHarbour+Define64bits ), cPre+'hbsix'+cExt )
+   aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineHarbour+Define64bits ), cPre+'hbtip'+cExt )
+   aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineHarbour+Define64bits ), cPre+'hbuddall'+cExt )
+   aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineHarbour+Define64bits ), cPre+'hbusrrdd'+cExt )
+   aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineHarbour+Define64bits ), cPre+'hbvm'+cExt )
+   aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineHarbour+Define64bits ), cPre+'hbwin'+cExt )
+   aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineHarbour+Define64bits ), cPre+'hbziparc'+cExt )
+   aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineHarbour+Define64bits ), cPre+'hbzlib'+cExt )
+   aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineHarbour+Define64bits ), cPre+'iphlpapi'+cExt )
+   aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineHarbour+Define64bits ), cPre+'miniprint'+cExt )
+   aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineHarbour+Define64bits ), cPre+'minizip'+cExt )
+   aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineHarbour+Define64bits ), cPre+'msimg32'+cExt )
+   aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineHarbour+Define64bits ), cPre+'odbc32'+cExt )
+   aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineHarbour+Define64bits ), cPre+'ole32'+cExt )
+   aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineHarbour+Define64bits ), cPre+'oleaut32'+cExt )
+   aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineHarbour+Define64bits ), cPre+'rddads'+cExt )
+   aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineHarbour+Define64bits ), cPre+'rddcdx'+cExt )
+   aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineHarbour+Define64bits ), cPre+'rddfpt'+cExt )
+   aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineHarbour+Define64bits ), cPre+'rddnsx'+cExt )
+   aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineHarbour+Define64bits ), cPre+'rddntx'+cExt )
+   aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineHarbour+Define64bits ), cPre+'rddsql'+cExt )
+   aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineHarbour+Define64bits ), cPre+'sddodbc'+cExt )
+   aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineHarbour+Define64bits ), cPre+'user32'+cExt )
+   aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineHarbour+Define64bits ), cPre+'uuid'+cExt )
+   aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineHarbour+Define64bits ), cPre+'vfw32'+cExt )
+   aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineHarbour+Define64bits ), cPre+'winmm'+cExt )
+   aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineHarbour+Define64bits ), cPre+'winspool'+cExt )
+   aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineHarbour+Define64bits ), cPre+'ws2_32'+cExt )
+   aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineHarbour+Define64bits ), cPre+'wsock32'+cExt )
+   aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineHarbour+Define64bits ), cPre+'xhb'+cExt )
+
+   // 16 - OOHG + MinGW + xHarbour, 64 bits
+   cPre := "lib"
+   cExt := ".a"
+   &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineXHarbour+Define64bits ) := {}
+   if Prj_Check_Console
+   if PUB_bDebugActive
+   aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineXHarbour+Define64bits ), cPre+'gtwin'+cExt )
+   aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineXHarbour+Define64bits ), cPre+'debug'+cExt )
+   else
+   aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineXHarbour+Define64bits ), cPre+'gtwin'+cExt )
+   endif
+   else
+   if PUB_bDebugActive
+   aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineXHarbour+Define64bits ), cPre+'gtgui'+cExt )
+   else
+   aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineXHarbour+Define64bits ), cPre+'gtgui'+cExt )
+   endif
+   endif
+
+   aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineXHarbour+Define64bits ), cPre+'bostaurus'+cExt )
+   aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineXHarbour+Define64bits ), cPre+'codepage'+cExt )
+   aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineXHarbour+Define64bits ), cPre+'comctl32'+cExt )
+   aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineXHarbour+Define64bits ), cPre+'comdlg32'+cExt )
+   aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineXHarbour+Define64bits ), cPre+'common'+cExt )
+   aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineXHarbour+Define64bits ), cPre+'ct'+cExt )
+   aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineXHarbour+Define64bits ), cPre+'dbfcdx'+cExt )
+   aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineXHarbour+Define64bits ), cPre+'dbfdbt'+cExt )
+   aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineXHarbour+Define64bits ), cPre+'dbffpt'+cExt )
+   aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineXHarbour+Define64bits ), cPre+'dbfntx'+cExt )
+   aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineXHarbour+Define64bits ), cPre+'dll'+cExt )
+   aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineXHarbour+Define64bits ), cPre+'gdi32'+cExt )
+   aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineXHarbour+Define64bits ), cPre+'hbmzip'+cExt )
+   aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineXHarbour+Define64bits ), cPre+'hbprinter'+cExt )
+   aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineXHarbour+Define64bits ), cPre+'hbsix'+cExt )
+   aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineXHarbour+Define64bits ), cPre+'hbzip'+cExt )
+   aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineXHarbour+Define64bits ), cPre+'hbzlib'+cExt )
+   aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineXHarbour+Define64bits ), cPre+'hsx'+cExt )
+   aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineXHarbour+Define64bits ), cPre+'lang'+cExt )
+   aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineXHarbour+Define64bits ), cPre+'macro'+cExt )
+   aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineXHarbour+Define64bits ), cPre+'mapi32'+cExt )
+   aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineXHarbour+Define64bits ), cPre+'miniprint'+cExt )
+   aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineXHarbour+Define64bits ), cPre+'msimg32'+cExt )
+   aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineXHarbour+Define64bits ), cPre+'mysql'+cExt )
+   aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineXHarbour+Define64bits ), cPre+'mysqldll'+cExt )
+   aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineXHarbour+Define64bits ), cPre+'nulsys'+cExt )
+   aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineXHarbour+Define64bits ), cPre+'ole32'+cExt )
+   aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineXHarbour+Define64bits ), cPre+'oleaut32'+cExt )
+   aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineXHarbour+Define64bits ), cPre+'pcrepos'+cExt )
+   aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineXHarbour+Define64bits ), cPre+'pp'+cExt )
+   aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineXHarbour+Define64bits ), cPre+'rdd'+cExt )
+   aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineXHarbour+Define64bits ), cPre+'rtl'+cExt )
+   aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineXHarbour+Define64bits ), cPre+'socket'+cExt )
+   aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineXHarbour+Define64bits ), cPre+'stdc++'+cExt )
+   aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineXHarbour+Define64bits ), cPre+'tip'+cExt )
+   aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineXHarbour+Define64bits ), cPre+'user32'+cExt )
+   aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineXHarbour+Define64bits ), cPre+'usrrdd'+cExt )
+   aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineXHarbour+Define64bits ), cPre+'uuid'+cExt )
+   aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineXHarbour+Define64bits ), cPre+'vfw32'+cExt )
+   aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineXHarbour+Define64bits ), cPre+'vm'+cExt )
+   aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineXHarbour+Define64bits ), cPre+'winmm'+cExt )
+   aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineXHarbour+Define64bits ), cPre+'winspool'+cExt )
+   aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineXHarbour+Define64bits ), cPre+'ws2_32'+cExt )
+   aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineXHarbour+Define64bits ), cPre+'wsock32'+cExt )
+   aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineXHarbour+Define64bits ), cPre+'xCrypt'+cExt )
+   aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineXHarbour+Define64bits ), cPre+'xEdit'+cExt )
+   aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineXHarbour+Define64bits ), cPre+'xEditex'+cExt )
+   aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineXHarbour+Define64bits ), cPre+'xGraph'+cExt )
+   aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineXHarbour+Define64bits ), cPre+'xIni'+cExt )
+   aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineXHarbour+Define64bits ), cPre+'xRegistry'+cExt )
+   aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineXHarbour+Define64bits ), cPre+'xReport'+cExt )
+   aadd( &( "vLibDefault"+DefineOohg3+DefineMinGW+DefineXHarbour+Define64bits ), cPre+'zlib1'+cExt )
+
+   // 17 - OOHG + Pelles C + Harbour, 32 bits
    cPre := ""
    cExt := ".lib"
    &( "vLibDefault"+DefineOohg3+DefinePelles+DefineHarbour+Define32bits ) := {}
-   if PUB_bConsole
+   if Prj_Check_Console
    if PUB_bDebugActive
    aadd( &( "vLibDefault"+DefineOohg3+DefinePelles+DefineHarbour+Define32bits ), cPre+'gtwin'+cExt )
    aadd( &( "vLibDefault"+DefineOohg3+DefinePelles+DefineHarbour+Define32bits ), cPre+'hbdebug'+cExt )
@@ -1429,11 +1437,11 @@ Function QPM_CargoLibraries()
    aadd( &( "vLibDefault"+DefineOohg3+DefinePelles+DefineHarbour+Define32bits ), cPre+'xHB'+cExt )
    aadd( &( "vLibDefault"+DefineOohg3+DefinePelles+DefineHarbour+Define32bits ), cPre+'zlib1'+cExt )
 
-   // OOHG + Pelles C + xHarbour, 32 bits
+   // 18 - OOHG + Pelles C + xHarbour, 32 bits
    cPre := ""
    cExt := ".lib"
    &( "vLibDefault"+DefineOohg3+DefinePelles+DefineXHarbour+Define32bits ) := {}
-   if PUB_bConsole
+   if Prj_Check_Console
    if PUB_bDebugActive
    aadd( &( "vLibDefault"+DefineOohg3+DefinePelles+DefineXHarbour+Define32bits ), cPre+'gtwin'+cExt )
    aadd( &( "vLibDefault"+DefineOohg3+DefinePelles+DefineXHarbour+Define32bits ), cPre+'debug'+cExt )
@@ -1500,11 +1508,11 @@ Function QPM_CargoLibraries()
    aadd( &( "vLibDefault"+DefineOohg3+DefinePelles+DefineXHarbour+Define32bits ), cPre+'wsock32'+cExt )
    aadd( &( "vLibDefault"+DefineOohg3+DefinePelles+DefineXHarbour+Define32bits ), cPre+'zlib1'+cExt )
 
-   // OOHG + Pelles C + Harbour, 64 bits
+   // 19 - OOHG + Pelles C + Harbour, 64 bits
    cPre := ""
    cExt := ".lib"
    &( "vLibDefault"+DefineOohg3+DefinePelles+DefineHarbour+Define64bits ) := {}
-   if PUB_bConsole
+   if Prj_Check_Console
    if PUB_bDebugActive
    aadd( &( "vLibDefault"+DefineOohg3+DefinePelles+DefineHarbour+Define64bits ), cPre+'gtwin'+cExt )
    aadd( &( "vLibDefault"+DefineOohg3+DefinePelles+DefineHarbour+Define64bits ), cPre+'hbdebug'+cExt )
@@ -1578,11 +1586,11 @@ Function QPM_CargoLibraries()
    aadd( &( "vLibDefault"+DefineOohg3+DefinePelles+DefineHarbour+Define64bits ), cPre+'xHB'+cExt )
    aadd( &( "vLibDefault"+DefineOohg3+DefinePelles+DefineHarbour+Define64bits ), cPre+'zlib1'+cExt )
 
-   // OOHG + Pelles C + xHarbour, 64 bits
+   // 20 - OOHG + Pelles C + xHarbour, 64 bits
    cPre := ""
    cExt := ".lib"
    &( "vLibDefault"+DefineOohg3+DefinePelles+DefineXHarbour+Define64bits ) := {}
-   if PUB_bConsole
+   if Prj_Check_Console
    if PUB_bDebugActive
    aadd( &( "vLibDefault"+DefineOohg3+DefinePelles+DefineXHarbour+Define64bits ), cPre+'gtwin'+cExt )
    aadd( &( "vLibDefault"+DefineOohg3+DefinePelles+DefineXHarbour+Define64bits ), cPre+'debug'+cExt )

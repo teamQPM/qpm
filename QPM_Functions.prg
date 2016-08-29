@@ -480,13 +480,26 @@ Function QPM_MemoWrit( p1, p2, bMute )
 Return .T.
 
 Function OutputExt()
-   if cOutputType == "SRCLIB" .and. Prj_Radio_Cpp == DEF_RG_MINGW
-      Return "A"
-   endif
-   if cOutputType == "DLLLIB" .and. Prj_Radio_Cpp == DEF_RG_MINGW
-      Return "A"
-   endif
-Return right( cOutputType, 3 )
+   Local cRet
+   do case
+   case Prj_Radio_OutputType == DEF_RG_EXE
+      cRet := 'EXE'
+   case Prj_Radio_OutputType == DEF_RG_LIB
+      if Prj_Radio_Cpp == DEF_RG_MINGW
+         cRet := "A"
+      else
+         cRet := "LIB"
+      endif
+   case Prj_Radio_OutputType == DEF_RG_IMPORT
+      if Prj_Radio_Cpp == DEF_RG_MINGW
+         cRet := "A"
+      else
+         cRet := "LIB"
+      endif
+   otherwise
+      cRet := ''
+   endcase
+Return cRet
 
 Function GetObjExt()
    if Prj_Radio_Cpp == DEF_RG_MINGW
@@ -1034,9 +1047,9 @@ Function GetOutputModuleName( bForDisplay )
       bForDisplay := .F.
    endif
    do case
-      case cOutputRename == "NEWNAME"
+      case Prj_Radio_OutputRename = DEF_RG_NEWNAME
          if empty( US_FileNameOnlyExt( Prj_Text_OutputRenameNewName ) )
-            if OutputExt() == "A" .and. bOutputPrefix
+            if OutputExt() == "A" .and. Prj_Check_OutputPrefix
                cOutputName        := US_ShortName(PUB_cProjectFolder) + DEF_SLASH + 'lib' + US_FileNameOnlyName( Prj_Text_OutputRenameNewName ) + '.' + lower( OutputExt() )
                cOutputNameDisplay := PUB_cProjectFolder + DEF_SLASH + 'lib' + US_FileNameOnlyName( Prj_Text_OutputRenameNewName ) + '.' + lower( OutputExt() )
             else
@@ -1044,7 +1057,7 @@ Function GetOutputModuleName( bForDisplay )
                cOutputNameDisplay := PUB_cProjectFolder + DEF_SLASH + US_FileNameOnlyName( Prj_Text_OutputRenameNewName ) + '.' + lower( OutputExt() )
             endif
          else
-            if OutputExt() == "A" .and. bOutputPrefix
+            if OutputExt() == "A" .and. Prj_Check_OutputPrefix
                cOutputName        := US_ShortName(PUB_cProjectFolder) + DEF_SLASH + 'lib' + US_FileNameOnlyNameAndExt( Prj_Text_OutputRenameNewName )
                cOutputNameDisplay := PUB_cProjectFolder + DEF_SLASH + 'lib' + US_FileNameOnlyNameAndExt( Prj_Text_OutputRenameNewName )
             else
@@ -1056,7 +1069,7 @@ Function GetOutputModuleName( bForDisplay )
          cOutputName        := US_ShortName(PUB_cProjectFolder) + DEF_SLASH + if( OutputExt() == "A", 'lib', '' ) + if( PUB_cConvert == "A DLL", substr( US_FileNameOnlyName( GetProperty( "VentanaMain", "GPrgFiles", "Cell", 1, NCOLPRGFULLNAME ) ), 4 ), US_FileNameOnlyName( GetProperty( "VentanaMain", "GPrgFiles", "Cell", 1, NCOLPRGFULLNAME ) ) ) + '.' + lower( OutputExt() )
          cOutputNameDisplay := PUB_cProjectFolder + DEF_SLASH + if( OutputExt() == "A", 'lib', '' ) + US_FileNameOnlyName( GetProperty( "VentanaMain", "GPrgFiles", "Cell", 1, NCOLPRGFULLNAME ) ) + '.' + lower( OutputExt() )
    endcase
-   if bOutputSuffix
+   if Prj_Check_OutputSuffix
       cOutputName        := US_FileNameOnlyPathAndName( cOutputName ) + "_" + GetSuffix() + '.' + lower( OutputExt() )
       cOutputNameDisplay := US_FileNameOnlyPathAndName( cOutputNameDisplay ) + "_" + GetSuffix() + '.' + lower( OutputExt() )
    endif
@@ -1159,15 +1172,15 @@ Function DebugOptions( cDire, cPath )
 return .T.
 
 Function ViewLog()
-   if ! File( AllTrim( Gbl_TEditor ) )
-      MsgStop( "Program Editor not Found: " + AllTrim( Gbl_TEditor ) + '. Look at ' + PUB_MenuGblOptions + ' of Settings menu.' )
+   if ! File( AllTrim( Gbl_Text_Editor ) )
+      MsgStop( "Program Editor not Found: " + AllTrim( Gbl_Text_Editor ) + '. Look at ' + PUB_MenuGblOptions + ' of Settings menu.' )
       Return .F.
    endif
-   If Empty( Gbl_TEditor )
+   If Empty( Gbl_Text_Editor )
       MyMsg( 'Operation Aborted', US_VarToStr( 'Program editor not defined. Look at ' + PUB_MenuGblOptions + ' of Settings menu.' ), "E", bAutoExit )
       Return .F.
    Endif
-   QPM_Execute( US_ShortName( AllTrim( Gbl_TEditor ) ), PUB_cQPM_Folder + DEF_SLASH + "QPM.log" )
+   QPM_Execute( US_ShortName( AllTrim( Gbl_Text_Editor ) ), PUB_cQPM_Folder + DEF_SLASH + "QPM.log" )
 Return .T.
 
 Function ActLibReimp()
