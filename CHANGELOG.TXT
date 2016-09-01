@@ -8,6 +8,16 @@
  * See "How to format your ChangeLog entries" in howtosvn.txt file.
  */
 
+2016-08-31 21:29:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * ./QPM_AutoProject.qpm
+     * Updated.
+   * ./QPM_Libraries.prg
+     + Missing libraries.
+   * ./QPM.prg
+     ! Minigui print libraries not found for xHarbour.
+     ! RTE when saving project options to .qpm file.
+     ! Compile error caused by wrong ppo parameter for xHarbour.
+
 2016-08-28 23:02:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * ./FuentesComunes/US_Classes.prg
      + Defines for colors.
