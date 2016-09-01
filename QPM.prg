@@ -313,9 +313,7 @@ Function Main( PAR_cP01, PAR_cP02, PAR_cP03, PAR_cP04, PAR_cP05, PAR_cP06, PAR_c
    PUBLIC vSuffix                       := { { DefineMiniGui1  + DefineBorland + DefineHarbour  + Define32bits, 'HMG 1.x with BCC32 and Harbour' }, ;                  
                                              { DefineMiniGui1  + DefineBorland + DefineXHarbour + Define32bits, 'HMG 1.x with BCC32 and xHarbour' }, ;
                                              { DefineMiniGui3  + DefineMinGW   + DefineHarbour  + Define32bits, 'HMG 3.x with MinGW and Harbour, 32 bits' }, ;
-                                             { DefineMiniGui3  + DefineMinGW   + DefineXHarbour + Define32bits, 'HMG 3.x with MinGW and xHarbour, 32 bits' }, ;
                                              { DefineMiniGui3  + DefineMinGW   + DefineHarbour  + Define64bits, 'HMG 3.x with MinGW and Harbour, 64 bits' }, ;
-                                             { DefineMiniGui3  + DefineMinGW   + DefineXHarbour + Define64bits, 'HMG 3.x with MinGW and xHarbour, 64 bits' }, ;
                                              { DefineExtended1 + DefineBorland + DefineHarbour  + Define32bits, 'HMG Extended with BCC32 and Harbour' }, ;
                                              { DefineExtended1 + DefineBorland + DefineXHarbour + Define32bits, 'HMG Extended with BCC32 and xHarbour' }, ;
                                              { DefineExtended1 + DefineMinGW   + DefineHarbour  + Define32bits, 'HMG Extended with MinGW and Harbour, 32 bits' }, ;
@@ -4994,7 +4992,7 @@ Function QPM_SaveProject( bCheck )
    cINI := cINI + 'VERSION '                    + QPM_VERSION_NUMBER + Hb_OsNewLine()
    cINI := cINI + 'PRJ_VERSION '                + MakePrj_Version() + Hb_OsNewLine()
    cINI := cINI + 'PROJECTFOLDER '              + US_StrTran( PUB_cProjectFolder, PUB_cThisFolder, '<ThisFolder>' ) + Hb_OsNewLine()
-   For i=1 to len( vSuffix )
+   For i := 1 to len( vSuffix )
       cINI := cINI + 'LASTLIBFOLDER'            + vSuffix[i][1]+' ' + &( 'cLastLibFolder'+vSuffix[i][1] ) + Hb_OsNewLine()
    next
    cINI := cINI + 'RUNFOLDER '                  + alltrim(ChgPathToRelative(VentanaMain.TRunProjectFolder.Value)) + Hb_OsNewLine()
@@ -5503,7 +5501,7 @@ Function QPM_Build2()
          BUILD_IN_PROGRESS := .F.
          DefinoWindowsHotKeys( .F. )
          Return .F.
-      case !QPM_IsXHarbour() .and. empty( GetHarbourFolder() )
+      case ! QPM_IsXHarbour() .and. empty( GetHarbourFolder() )
          MsgStop ( 'Folder for Harbour in ' + vSuffix[ AScan( vSuffix, { |x| x[1] == GetSuffix() } ) ][2] + ' is empty.' + Hb_OsNewLine() + 'Look at ' + PUB_MenuGblOptions + ' of Settings menu.' )
          BUILD_IN_PROGRESS := .F.
          DefinoWindowsHotKeys( .F. )
@@ -6331,19 +6329,22 @@ Function QPM_Build2()
                   //    Si no está la busco en el directorio de libs de BCC32 o en el subdirectorio PSDK
                   For i := 1 to len( &( 'vLibDefault'+GetSuffix() ) )
                      if aScan( vLibExcludeFiles, US_Upper( &( 'vLibDefault'+GetSuffix()+'['+str(i)+']' ) ) ) = 0
-                        if File( GetMiniguiLibFolder() + DEF_SLASH + ( if(QPM_IsXHarbour(),'x','') + &('vLibDefault'+GetSuffix()+'['+str(i)+']') ) )
-                           Out := Out + PUB_cCharTab + 'echo $(DIR_MINIGUI_LIB)' + DEF_SLASH + ( if(QPM_IsXHarbour(),'x','') + &('vLibDefault'+GetSuffix()+'['+str(i)+']') ) + ' + >> ' + SCRIPT_FILE + Hb_OsNewLine()
-                        elseif QPM_IsXHarbour() .and. ( Getminiguisuffix() == DefineExtended1 ) .and. File( GetMiniGuiFolder() + DEF_SLASH + 'xlib' + DEF_SLASH + &('vLibDefault'+GetSuffix()+'['+str(i)+']') )
+                        do case
+                        case QPM_IsXHarbour() .and. File( GetMiniguiLibFolder() + DEF_SLASH + 'x' + &('vLibDefault'+GetSuffix()+'['+str(i)+']') )
+                           Out := Out + PUB_cCharTab + 'echo $(DIR_MINIGUI_LIB)' + DEF_SLASH + 'x' + &('vLibDefault'+GetSuffix()+'['+str(i)+']') + ' + >> ' + SCRIPT_FILE + Hb_OsNewLine()
+                        case File( GetMiniguiLibFolder() + DEF_SLASH + &('vLibDefault'+GetSuffix()+'['+str(i)+']') )
+                           Out := Out + PUB_cCharTab + 'echo $(DIR_MINIGUI_LIB)' + DEF_SLASH + &('vLibDefault'+GetSuffix()+'['+str(i)+']') + ' + >> ' + SCRIPT_FILE + Hb_OsNewLine()
+                        case QPM_IsXHarbour() .and. ( Getminiguisuffix() == DefineExtended1 ) .and. File( GetMiniGuiFolder() + DEF_SLASH + 'xlib' + DEF_SLASH + &('vLibDefault'+GetSuffix()+'['+str(i)+']') )
                            Out := Out + PUB_cCharTab + 'echo $(DIR_MINIGUI)' + DEF_SLASH + 'xlib' + DEF_SLASH + &('vLibDefault'+GetSuffix()+'['+str(i)+']') + ' + >> ' + SCRIPT_FILE + Hb_OsNewLine()
-                        elseif File( GetHarbourLibFolder() + DEF_SLASH + ( if(QPM_IsXHarbour(),'x','') + &('vLibDefault'+GetSuffix()+'['+str(i)+']') ) )
-                           Out := Out + PUB_cCharTab + 'echo $(DIR_HARBOUR_LIB)' + DEF_SLASH + ( if(QPM_IsXHarbour(),'x','') + &('vLibDefault'+GetSuffix()+'['+str(i)+']') ) + ' + >> ' + SCRIPT_FILE + Hb_OsNewLine()
-                        elseif QPM_IsXHarbour() .and. File( GetHarbourLibFolder() + DEF_SLASH + &('vLibDefault'+GetSuffix()+'['+str(i)+']') )
+                        case QPM_IsXHarbour() .and. File( GetHarbourLibFolder() + DEF_SLASH + 'x' + &('vLibDefault'+GetSuffix()+'['+str(i)+']') )
+                           Out := Out + PUB_cCharTab + 'echo $(DIR_HARBOUR_LIB)' + DEF_SLASH + 'x' + &('vLibDefault'+GetSuffix()+'['+str(i)+']') + ' + >> ' + SCRIPT_FILE + Hb_OsNewLine()
+                        case File( GetHarbourLibFolder() + DEF_SLASH + &('vLibDefault'+GetSuffix()+'['+str(i)+']') )
                            Out := Out + PUB_cCharTab + 'echo $(DIR_HARBOUR_LIB)' + DEF_SLASH + &('vLibDefault'+GetSuffix()+'['+str(i)+']') + ' + >> ' + SCRIPT_FILE + Hb_OsNewLine()
-                        elseif File( GetCppLibFolder() + DEF_SLASH + &('vLibDefault'+GetSuffix()+'['+str(i)+']') )
+                        case File( GetCppLibFolder() + DEF_SLASH + &('vLibDefault'+GetSuffix()+'['+str(i)+']') )
                            Out := Out + PUB_cCharTab + 'echo $(DIR_COMPC_LIB)' + DEF_SLASH + &('vLibDefault'+GetSuffix()+'['+str(i)+']') + ' + >> ' + SCRIPT_FILE + Hb_OsNewLine()
-                        elseif File( GetCppLibFolder() + DEF_SLASH + 'PSDK' + DEF_SLASH + &('vLibDefault'+GetSuffix()+'['+str(i)+']') )
+                        case File( GetCppLibFolder() + DEF_SLASH + 'PSDK' + DEF_SLASH + &('vLibDefault'+GetSuffix()+'['+str(i)+']') )
                            Out := Out + PUB_cCharTab + 'echo $(DIR_COMPC_LIB2)' + DEF_SLASH + &('vLibDefault'+GetSuffix()+'['+str(i)+']') + ' + >> ' + SCRIPT_FILE + Hb_OsNewLine()
-                        endif
+                        endcase
                      endif
                   Next
 
@@ -6528,7 +6529,11 @@ Function QPM_Build2()
             Out := Out + PUB_cCharTab + if(! bLogActivity, '@', '') + '$(US_SHELL_EXE) ' + if(! bLogActivity, '-OFF ','') + 'COPYZAP $** $@' + Hb_OsNewLine()
          else
             Out := Out + PUB_cCharTab + if(! bLogActivity, '@', '') + '$(US_SHELL_EXE) ' + if(! bLogActivity, '-OFF ', '') + 'DELETE $@' + Hb_OsNewLine()
-            Out := Out + PUB_cCharTab + '$(HARBOUR_EXE) $(HARBOUR_FLAGS) /q /p' + US_ShortName( PUB_cProjectFolder ) + DEF_SLASH + US_FileNameOnlyName( PRGFILES[i] ) + '.ppo $** -o$@' + Hb_OsNewLine()
+            if QPM_IsXHarbour()
+               Out := Out + PUB_cCharTab + '$(HARBOUR_EXE) $(HARBOUR_FLAGS) /q /po' + US_ShortName( PUB_cProjectFolder ) + DEF_SLASH + US_FileNameOnlyName( PRGFILES[i] ) + '.ppo $** -o$@' + Hb_OsNewLine()
+            else
+               Out := Out + PUB_cCharTab + '$(HARBOUR_EXE) $(HARBOUR_FLAGS) /q /p' + US_ShortName( PUB_cProjectFolder ) + DEF_SLASH + US_FileNameOnlyName( PRGFILES[i] ) + '.ppo $** -o$@' + Hb_OsNewLine()
+            endif
             Out := Out + PUB_cCharTab + if(! bLogActivity, '@', '') + '$(US_SHELL_EXE) ' + if(! bLogActivity, '-OFF ', '') + 'MOVE ' + US_ShortName( PUB_cProjectFolder ) + DEF_SLASH + US_FileNameOnlyName( PRGFILES[i] ) + '.ppo $(DIR_OBJECTS)' + DEF_SLASH + US_FileNameOnlyName( PRGFILES[i] ) + '.ppo' + Hb_OsNewLine()
             Out := Out + PUB_cCharTab + if(! bLogActivity, '@', '') + '$(US_SHELL_EXE) ' + if(! bLogActivity, '-OFF ', '') + 'DELETE ' + US_ShortName( PUB_cProjectFolder ) + DEF_SLASH + US_FileNameOnlyName( PRGFILES[i] ) + '.ppo.MOVED.TXT' + Hb_OsNewLine()
             Out := Out + PUB_cCharTab + if(! bLogActivity, '@', '') + '$(US_SHELL_EXE) ' + if(! bLogActivity, '-OFF ', '') + 'CHECKRC NOTFILE $@' + Hb_OsNewLine()
