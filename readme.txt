@@ -8,6 +8,7 @@ En la versión 05_05_03:
 6. Corregido: Algunas opciones del proyecto no se pueden modificar.
 7. Modificado: AutoInc es ahora una opción del proyecto.
 8. Modificado: Se deja de modificar minigui.ch de HMG 3.x para forzar la GT por defecto.
+9. Nota: Se provee un archivo .zip de instalación ya que algunos antivirus detectan malware en el instalador .exe
 
 En la versión 05_05_03:
 1. Fixed: OOHG show an empty windows under console mode.
@@ -18,6 +19,7 @@ En la versión 05_05_03:
 6. Fixed: Some project options cannot be changed.
 7. Changed: AutoInc is now a project options.
 8. Changed: The minigui.ch file of HMG 3.x is no longer modified to force the default GT.
+9. Note: A .zip installation file is provided because some antivirus detect malware in the .exe installer.
 
 Versão 05_05_03:
 1. Fixo: OOHG mostra uma janela vazia em modo de console.
@@ -28,12 +30,7 @@ Versão 05_05_03:
 6. Fixo: Algumas opções de projeto não podem ser alteradas.
 7. Mudado: Auto Inc é agora uma opção do projeto.
 8. Mudado: O arquivo minigui.ch da HMG 3.x ja não é modificado para forçar o GT padrão.
-
-----
-
-Desde 2016-08-25 12:41:05 UTC, Virustotal reporta que el instalador .exe está libre de virus.
-Since 2016-08-25 12:41:05 UTC, Virustotal reports that the .exe installer is virus-free.
-A partir de 2016-08-25 12:41:05 UTC, Virustotal relata que o instalador .exe está livre de vírus.
+9. Nota: Um arquivo de instalação .zip é fornecido porque alguns antivírus detectan malware no arquivo instalador .exe
 
 ----
 
