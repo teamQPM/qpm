@@ -8,6 +8,17 @@
  * See "How to format your ChangeLog entries" in howtosvn.txt file.
  */
 
+2016-09-03 18:46:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * ./QPM_Libraries.prg
+     + Missing libraries.
+     - Unneeded libraries.
+   * ./QPM.prg
+     ! Console mode under OOHG does not show program's output.
+     ; Under OOHG gtgui must always be linked before gtwin.
+     ! xHarbour builds end with error because some libs are not linked.
+     ! BCC32 builds with debug option and new debugger show and
+       unneeded console window.
+
 2016-08-31 21:31:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * ./QPM.exe
      * Updated.
