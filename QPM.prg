@@ -3156,7 +3156,7 @@ Function QPM_AddFilesPRG2()
                TotCaption( 'PRG', +1 )
             endif
          endif
-         if AScan( vExtraFoldersForSearch, { |y| upper( US_VarToStr( y ) ) == upper( US_FileNameOnlyPath( ChgPathToReal( Files[x] ) ) ) } ) == 0
+         if AScan( vExtraFoldersForSearch, { |y| US_Upper( US_VarToStr( y ) ) == US_Upper( US_FileNameOnlyPath( ChgPathToReal( Files[x] ) ) ) } ) == 0
             aadd( vExtraFoldersForSearch, US_FileNameOnlyPath( ChgPathToReal( Files[x] ) ) )
          endif
       EndIf
@@ -3215,7 +3215,7 @@ Function QPM_AddFilesHEA2()
             endif
          endif
    //    if ascan( vExtraFoldersForSearch, US_FileNameOnlyPath( ChgPathToReal( Files[x] ) ) ) = 0
-         if AScan( vExtraFoldersForSearch, { |y| upper( US_VarToStr( y ) ) == upper( US_FileNameOnlyPath( ChgPathToReal( Files[x] ) ) ) } ) == 0
+         if AScan( vExtraFoldersForSearch, { |y| US_Upper( US_VarToStr( y ) ) == US_Upper( US_FileNameOnlyPath( ChgPathToReal( Files[x] ) ) ) } ) == 0
             aadd( vExtraFoldersForSearch, US_FileNameOnlyPath( ChgPathToReal( Files[x] ) ) )
          endif
       EndIf
@@ -3274,7 +3274,7 @@ Function QPM_AddFilesPAN2()
             endif
          endif
      //  if ascan( vExtraFoldersForSearch, US_FileNameOnlyPath( ChgPathToReal( Files[x] ) ) ) = 0
-         if AScan( vExtraFoldersForSearch, { |y| upper( US_VarToStr( y ) ) == upper( US_FileNameOnlyPath( ChgPathToReal( Files[x] ) ) ) } ) == 0
+         if AScan( vExtraFoldersForSearch, { |y| US_Upper( US_VarToStr( y ) ) == US_Upper( US_FileNameOnlyPath( ChgPathToReal( Files[x] ) ) ) } ) == 0
             aadd( vExtraFoldersForSearch, US_FileNameOnlyPath( ChgPathToReal( Files[x] ) ) )
          endif
       EndIf
@@ -3328,7 +3328,7 @@ Function QPM_AddFilesDBF2()
             endif
          endif
    //    if ascan( vExtraFoldersForSearch, US_FileNameOnlyPath( ChgPathToReal( Files[x] ) ) ) = 0
-       //if AScan( vExtraFoldersForSearch, { |y| upper( US_VarToStr( y ) ) == upper( US_FileNameOnlyPath( ChgPathToReal( Files[x] ) ) ) } ) == 0
+       //if AScan( vExtraFoldersForSearch, { |y| US_Upper( US_VarToStr( y ) ) == US_Upper( US_FileNameOnlyPath( ChgPathToReal( Files[x] ) ) ) } ) == 0
        //   aadd( vExtraFoldersForSearch, US_FileNameOnlyPath( ChgPathToReal( Files[x] ) ) )
        //endif
       EndIf
@@ -3364,8 +3364,8 @@ Function QPM_AddFilesLIB2()
                TotCaption( 'LIB', +1 )
             endif
          endif
-         if AScan( &('vExtraFoldersForLibs'+GetSuffix()), { |y| upper( US_VarToStr( y ) ) == upper( US_FileNameOnlyPath( ChgPathToReal( Files[x] ) ) ) } ) == 0
-            aadd( &('vExtraFoldersForLibs'+GetSuffix()), upper( US_FileNameOnlyPath( ChgPathToReal( Files[x] ) ) ) )
+         if AScan( &('vExtraFoldersForLibs'+GetSuffix()), { |y| US_Upper( US_VarToStr( y ) ) == US_Upper( US_FileNameOnlyPath( ChgPathToReal( Files[x] ) ) ) } ) == 0
+            aadd( &('vExtraFoldersForLibs'+GetSuffix()), US_Upper( US_FileNameOnlyPath( ChgPathToReal( Files[x] ) ) ) )
          endif
       EndIf
    Next x
@@ -3490,13 +3490,13 @@ Function QPM_EditPRG
       endif
       QPM_Execute( US_ShortName( PUB_cQPM_Folder ) + DEF_SLASH + 'US_Run.exe', 'QPM ' + RunParms )
    endif
-   if ( Rs := AScan( vSinLoadWindow, { |y| upper( US_VarToStr( y ) ) == US_Upper( ChgPathToReal( GetProperty( 'VentanaMain', 'GPrgFiles', 'Cell', VentanaMain.GPrgFiles.Value, NCOLPRGFULLNAME ) ) ) } ) ) > 0 // Para Forzar Scan de PRG en busca de xREF con FMG
+   if ( Rs := AScan( vSinLoadWindow, { |y| US_Upper( US_VarToStr( y ) ) == US_Upper( ChgPathToReal( GetProperty( 'VentanaMain', 'GPrgFiles', 'Cell', VentanaMain.GPrgFiles.Value, NCOLPRGFULLNAME ) ) ) } ) ) > 0 // Para Forzar Scan de PRG en busca de xREF con FMG
       adel( vSinLoadWindow, Rs ) // Para Forzar Scan de PRG en busca de xREF con FMG
       if bLogActivity
          QPM_MemoWrit( PUB_cQPM_Folder+DEF_SLASH + 'QPM.log', memoread( PUB_cQPM_Folder+DEF_SLASH + 'QPM.log' ) + Hb_OsNewLine() + 'xRefPrgFmg Delete ' + GetProperty( 'VentanaMain', 'GPrgFiles', 'Cell', VentanaMain.GPrgFiles.Value, NCOLPRGFULLNAME ) + ' from vSinLoadWindow by Edit' )
       endif
    endif
-   if ( Rs := ascan( vSinInclude, { |y| upper( US_VarToStr( y ) ) == US_Upper( ChgPathToReal( GetProperty( 'VentanaMain', 'GPrgFiles', 'Cell', VentanaMain.GPrgFiles.Value, NCOLPRGFULLNAME ) ) ) } ) ) > 0 // Para Forzar Scan de PRG en busca de xREF con Header
+   if ( Rs := ascan( vSinInclude, { |y| US_Upper( US_VarToStr( y ) ) == US_Upper( ChgPathToReal( GetProperty( 'VentanaMain', 'GPrgFiles', 'Cell', VentanaMain.GPrgFiles.Value, NCOLPRGFULLNAME ) ) ) } ) ) > 0 // Para Forzar Scan de PRG en busca de xREF con Header
       adel( vSinInclude, Rs ) // Para Forzar Scan de PRG en busca de xREF con HEA
       if bLogActivity
          QPM_MemoWrit( PUB_cQPM_Folder+DEF_SLASH + 'QPM.log', memoread( PUB_cQPM_Folder+DEF_SLASH + 'QPM.log' ) + Hb_OsNewLine() + 'xRefPrgHea Delete ' + GetProperty( 'VentanaMain', 'GPrgFiles', 'Cell', VentanaMain.GPrgFiles.Value, NCOLPRGFULLNAME ) + ' from vSinInclude by Edit' )
@@ -4162,7 +4162,7 @@ Function QPM_OpenProject( cParmProjectFileName )
          cProjectFileName := US_FileNameOnlyPath( cProjectFileName ) + DEF_SLASH + cFile
       endif
       // Rename .qac to .qpm
-      if upper( US_FileNameOnlyExt( cProjectFileName ) ) == 'QAC'
+      if US_Upper( US_FileNameOnlyExt( cProjectFileName ) ) == 'QAC'
          frename( cProjectFileName, US_FileNameOnlyPathAndName( cProjectFileName ) + '.qpm' )
          cProjectFileName := US_FileNameOnlyPathAndName( cProjectFileName ) + '.qpm'
       endif
@@ -4723,19 +4723,19 @@ Function QPM_OpenProject2()
                  endif
                  VentanaMain.GPrgFiles.AddItem( { PUB_nGridImgNone, cForceRecomp, US_FileNameOnlyNameAndExt( US_WordSubStr( LOC_cLine, 2 ) ), ChgPathToRelative( US_WordSubStr( LOC_cLine, 2 ) ), '0', '', '' } )
               // if ascan( vExtraFoldersForSearch, US_FileNameOnlyPath( ChgPathToReal( GetProperty( 'VentanaMain', 'GPrgFiles', 'Cell', VentanaMain.GPrgFiles.ItemCount, NCOLPRGFULLNAME ) ) ) ) = 0
-                 if AScan( vExtraFoldersForSearch, { |y| upper( US_VarToStr( y ) ) == upper( US_FileNameOnlyPath( ChgPathToReal( GetProperty( 'VentanaMain', 'GPrgFiles', 'Cell', VentanaMain.GPrgFiles.ItemCount, NCOLPRGFULLNAME ) ) ) ) } ) == 0
+                 if AScan( vExtraFoldersForSearch, { |y| US_Upper( US_VarToStr( y ) ) == US_Upper( US_FileNameOnlyPath( ChgPathToReal( GetProperty( 'VentanaMain', 'GPrgFiles', 'Cell', VentanaMain.GPrgFiles.ItemCount, NCOLPRGFULLNAME ) ) ) ) } ) == 0
                     aadd( vExtraFoldersForSearch, US_FileNameOnlyPath( ChgPathToReal( GetProperty( 'VentanaMain', 'GPrgFiles', 'Cell', VentanaMain.GPrgFiles.ItemCount, NCOLPRGFULLNAME ) ) ) )
                  endif
          ElseIf  US_Upper ( US_Word( LOC_cLine, 1 ) ) == 'HEAD'
                  VentanaMain.GHeaFiles.AddItem( { PUB_nGridImgNone, US_FileNameOnlyNameAndExt( US_WordSubStr( LOC_cLine, 2 ) ), ChgPathToRelative( US_WordSubStr( LOC_cLine, 2 ) ), '0', '', '' } )
               // if ascan( vExtraFoldersForSearch, US_FileNameOnlyPath( ChgPathToReal( GetProperty( 'VentanaMain', 'GHeaFiles', 'Cell', VentanaMain.GHeaFiles.ItemCount, NCOLHEAFULLNAME ) ) ) ) = 0
-                 if AScan( vExtraFoldersForSearch, { |y| upper( US_VarToStr( y ) ) == upper( US_FileNameOnlyPath( ChgPathToReal( GetProperty( 'VentanaMain', 'GHeaFiles', 'Cell', VentanaMain.GHeaFiles.ItemCount, NCOLHEAFULLNAME ) ) ) ) } ) == 0
+                 if AScan( vExtraFoldersForSearch, { |y| US_Upper( US_VarToStr( y ) ) == US_Upper( US_FileNameOnlyPath( ChgPathToReal( GetProperty( 'VentanaMain', 'GHeaFiles', 'Cell', VentanaMain.GHeaFiles.ItemCount, NCOLHEAFULLNAME ) ) ) ) } ) == 0
                     aadd( vExtraFoldersForSearch, US_FileNameOnlyPath( ChgPathToReal( GetProperty( 'VentanaMain', 'GHeaFiles', 'Cell', VentanaMain.GHeaFiles.ItemCount, NCOLHEAFULLNAME ) ) ) )
                  endif
          ElseIf  US_Upper ( US_Word( LOC_cLine, 1 ) ) == 'FORM'
                  VentanaMain.GPanFiles.AddItem( { PUB_nGridImgNone, US_FileNameOnlyNameAndExt( US_WordSubStr( LOC_cLine, 2 ) ), ChgPathToRelative( US_WordSubStr( LOC_cLine, 2 ) ), '0', '', '' } )
              //  if ascan( vExtraFoldersForSearch, US_FileNameOnlyPath( ChgPathToReal( GetProperty( 'VentanaMain', 'GPanFiles', 'Cell', VentanaMain.GPanFiles.ItemCount, NCOLPANFULLNAME ) ) ) ) = 0
-                 if AScan( vExtraFoldersForSearch, { |y| upper( US_VarToStr( y ) ) == upper( US_FileNameOnlyPath( ChgPathToReal( GetProperty( 'VentanaMain', 'GPanFiles', 'Cell', VentanaMain.GPanFiles.ItemCount, NCOLPANFULLNAME ) ) ) ) } ) == 0
+                 if AScan( vExtraFoldersForSearch, { |y| US_Upper( US_VarToStr( y ) ) == US_Upper( US_FileNameOnlyPath( ChgPathToReal( GetProperty( 'VentanaMain', 'GPanFiles', 'Cell', VentanaMain.GPanFiles.ItemCount, NCOLPANFULLNAME ) ) ) ) } ) == 0
                     aadd( vExtraFoldersForSearch, US_FileNameOnlyPath( ChgPathToReal( GetProperty( 'VentanaMain', 'GPanFiles', 'Cell', VentanaMain.GPanFiles.ItemCount, NCOLPANFULLNAME ) ) ) )
                  endif
          ElseIf  US_Upper ( US_Word( LOC_cLine, 1 ) ) == 'DBF'
@@ -5184,8 +5184,8 @@ Function CargoIncludeLibs( tipo )
    For i := 1 to len( &('IncludeLibs'+tipo) )
       VentanaMain.GIncFiles.AddItem( { PUB_nGridImgNone, US_FileNameOnlyNameAndExt( &('IncludeLibs'+tipo+'['+str(i)+']') ), '* ' + &('IncludeLibs'+tipo+'['+str(i)+']') } )
       LibPos( VentanaMain.GIncFiles.itemcount )
-      if ascan( &('vExtraFoldersForLibs'+GetSuffix()), upper( US_FileNameOnlyPath( ChgPathToReal( US_WordSubStr( &('IncludeLibs'+tipo+'['+str(i)+']'), 2 ) ) ) ) ) = 0
-         aadd( &('vExtraFoldersForLibs'+GetSuffix()), upper( US_FileNameOnlyPath( ChgPathToReal( US_WordSubStr( &('IncludeLibs'+tipo+'['+str(i)+']'), 2 ) ) ) ) )
+      if ascan( &('vExtraFoldersForLibs'+GetSuffix()), US_Upper( US_FileNameOnlyPath( ChgPathToReal( US_WordSubStr( &('IncludeLibs'+tipo+'['+str(i)+']'), 2 ) ) ) ) ) = 0
+         aadd( &('vExtraFoldersForLibs'+GetSuffix()), US_Upper( US_FileNameOnlyPath( ChgPathToReal( US_WordSubStr( &('IncludeLibs'+tipo+'['+str(i)+']'), 2 ) ) ) ) )
       endif
    Next
    LibsActiva := tipo
@@ -5404,7 +5404,7 @@ Function QPM_Build2()
    next
 
    if Prj_Radio_OutputType == DEF_RG_IMPORT
-      PUB_cConvert := upper( US_FileNameOnlyExt( ChgPathToReal( GetProperty( 'VentanaMain', 'GPrgFiles', 'Cell', 1, NCOLPRGFULLNAME ) ) ) ) + ' ' + OutputExt()
+      PUB_cConvert := US_Upper( US_FileNameOnlyExt( ChgPathToReal( GetProperty( 'VentanaMain', 'GPrgFiles', 'Cell', 1, NCOLPRGFULLNAME ) ) ) ) + ' ' + OutputExt()
       cInputName := US_ShortName( ChgPathToReal( GetProperty( 'VentanaMain', 'GPrgFiles', 'Cell', 1, NCOLPRGFULLNAME ) ) )
       cInputNameDisplay := ChgPathToReal( GetProperty( 'VentanaMain', 'GPrgFiles', 'Cell', 1, NCOLPRGFULLNAME ) )
       cInputNameLong := US_FileNameOnlyPath( cInputName ) + DEF_SLASH + US_FileNameOnlyNameAndExt( cInputNameDisplay )
@@ -5536,7 +5536,7 @@ Function QPM_Build2()
    DO EVENTS
 
    For i := 1 To VentanaMain.GPrgFiles.ItemCount
-      if upper( US_FileNameOnlyExt( ChgPathToReal( GetProperty( 'VentanaMain', 'GPrgFiles', 'Cell', i, NCOLPRGFULLNAME ) ) ) ) == 'CPP'
+      if US_Upper( US_FileNameOnlyExt( ChgPathToReal( GetProperty( 'VentanaMain', 'GPrgFiles', 'Cell', i, NCOLPRGFULLNAME ) ) ) ) == 'CPP'
          bIsCpp := .T.
       endif
       if ascan( PRGFILES, { |x| US_Upper( US_FileNameOnlyName( x ) ) == US_Upper( US_FileNameOnlyName( alltrim(GetProperty( 'VentanaMain', 'GPrgFiles', 'Cell', i, NCOLPRGFULLNAME )) ) ) } ) > 0
@@ -6044,7 +6044,7 @@ Function QPM_Build2()
             endif
 
 /*
- * Grabo objetos incluidos en las Default Libraries (estos objetos deben estar en la carpeta Resources) en script.ld
+ * Grabo objetos .o incluidos en las Default Libraries (estos objetos deben estar en la carpeta Resources) en script.ld
  */
             For i := 1 to len( &( 'vLibDefault'+GetSuffix() ) )
                if ascan( vLibExcludeFiles, US_Upper( &( 'vLibDefault'+GetSuffix()+'['+str(i)+']' ) ) ) = 0
@@ -6091,7 +6091,7 @@ Function QPM_Build2()
  * Grabo libraries en script.ld
  */
             if QPM_IsXHarbour() .and. !IsMinGW .and. file( GetHarbourLibFolder() + DEF_SLASH + 'bcc640' + PUB_xHarbourMT + '.lib' )
-               Out := Out + PUB_cCharTab + 'echo $(DIR_HARBOUR_LIB)'+DEF_SLASH+'bcc640'+PUB_xHarbourMT+'.lib + >> ' + SCRIPT_FILE + Hb_OsNewLine()
+               Out := Out + PUB_cCharTab + 'echo $(DIR_HARBOUR_LIB)' + DEF_SLASH + 'bcc640' + PUB_xHarbourMT + '.lib + >> ' + SCRIPT_FILE + Hb_OsNewLine()
             endif
 
             DO EVENTS
@@ -6106,7 +6106,7 @@ Function QPM_Build2()
  */
                   For i := 1 To Len ( vLibIncludeFiles )
                      if US_Upper( US_Word( GetProperty( 'VentanaMain', 'GIncFiles', 'Cell', i, NCOLINCFULLNAME ), 2 ) ) == '*FIRST*'
-                        if US_upper( US_FileNameOnlyExt( vLibIncludeFiles[i] ) ) == 'A'
+                        if US_Upper( US_FileNameOnlyExt( vLibIncludeFiles[i] ) ) == 'A'
                            w_hay := .t.
                            w_group += '-l' + substr( US_FileNameOnlyName( vLibIncludeFiles[i] ), 4 ) + ' '
                         else
@@ -6120,16 +6120,30 @@ Function QPM_Build2()
  * MINGW: add MiniGui main library
  */
                   if Prj_Check_Console
-                     if ascan( vLibExcludeFiles, US_Upper( GetMiniGuiName() ) ) = 0
+                     if ascan( vLibExcludeFiles, US_Upper( GetMiniGuiName() ) ) == 0
                         w_hay := .t.
                         w_group += '-l' + substr( US_FileNameOnlyName( GetMiniGuiName() ), 4 ) + ' '
-                        aadd( &( 'vLibDefault'+GetSuffix() ), 'libgtgui.a' )
+                        if ascan( &( 'vLibDefault'+GetSuffix() ), { |y| US_Upper( y ) == 'LIBGTGUI.A' } ) == 0
+                           aadd( &( 'vLibDefault'+GetSuffix() ), 'libgtgui.a' )
+                        endif
                      endif
                   else
                      w_hay := .t.
                      w_group += '-l' + substr( US_FileNameOnlyName( GetMiniGuiName() ), 4 ) + ' '
+                     do while ( i := ascan( &( 'vLibDefault'+GetSuffix() ), { |y| US_Upper( y ) == 'LIBGTGUI.A' } ) ) > 1
+                        adel( &( 'vLibDefault'+GetSuffix() ), i )
+                        asize( &( 'vLibDefault'+GetSuffix() ), Len( &( 'vLibDefault'+GetSuffix() ) ) - 1 )
+                     enddo
+                     if ascan( &( 'vLibDefault'+GetSuffix() ), { |y| US_Upper( y ) == 'LIBGTGUI.A' } ) == 0
+                        asize( &( 'vLibDefault'+GetSuffix() ), Len( &( 'vLibDefault'+GetSuffix() ) ) + 1 )
+                        ains( &( 'vLibDefault'+GetSuffix() ), 1 )
+                        &( 'vLibDefault'+GetSuffix()+'['+str(1)+']' ) := 'libgtgui.a'
+                     endif
                      if ascan( vLibExcludeFiles, US_Upper( GetMiniGuiName() ) ) > 0
-                        MsgInfo( 'Warning: ' + GetMiniGuiName() + ' excluded for Windows mode.' + Hb_OsNewLine() + 'QPM added it automatically.' + Hb_OsNewLine() + 'Look at tab ' + DBLQT + PageLIB + DBLQT )
+                        MsgInfo( 'Warning: ' + GetMiniGuiName() + ' was excluded for Windows mode.' + Hb_OsNewLine() + 'QPM added it automatically.' + Hb_OsNewLine() + 'Look at tab ' + DBLQT + PageLIB + DBLQT )
+                     endif
+                     if ascan( vLibExcludeFiles, 'LIBGTGUI.A' ) > 0
+                        MsgInfo( 'Warning: LIBGTGUI.A was excluded for Windows mode.' + Hb_OsNewLine() + 'QPM added it automatically.' + Hb_OsNewLine() + 'Look at tab ' + DBLQT + PageLIB + DBLQT )
                      endif
                   endif
 
@@ -6147,22 +6161,26 @@ Function QPM_Build2()
                   //    Si no está la busco en el directorio de libs de MINGW
                   For i := 1 to len( &( 'vLibDefault'+GetSuffix() ) )
                      if ascan( vLibExcludeFiles, US_Upper( &( 'vLibDefault'+GetSuffix()+'['+str(i)+']' ) ) ) = 0
-                        if File( GetMiniGuiLibFolder() + DEF_SLASH + ( 'lib' + if(QPM_IsXHarbour(),'x','') + substr( &('vLibDefault'+GetSuffix()+'['+str(i)+']'), 4 ) ) )
+                        do case
+                        case QPM_IsXHarbour() .and. File( GetMiniGuiLibFolder() + DEF_SLASH + ( 'libx' + substr( &('vLibDefault'+GetSuffix()+'['+str(i)+']'), 4 ) ) )
                            w_hay := .t.
-                           w_group += '-l' + if(QPM_IsXHarbour(),'x','') + substr( US_FileNameOnlyName( &( 'vLibDefault'+GetSuffix()+'['+str(i)+']' ) ), 4 ) + ' '
-                        elseif QPM_IsXHarbour() .and. ( Getminiguisuffix() == DefineExtended1 ) .and. File( GetMiniGuiFolder() + DEF_SLASH + 'xlib' + DEF_SLASH + ( 'lib' + substr( &('vLibDefault'+GetSuffix()+'['+str(i)+']'), 4 ) ) )
-                           w_hay := .t.
-                           w_group += '-l' + substr( US_FileNameOnlyName( &( 'vLibDefault'+GetSuffix()+'['+str(i)+']' ) ), 4 ) + ' '
-                        elseif File( GetHarbourLibFolder() + DEF_SLASH + ( 'lib' + if(QPM_IsXHarbour(),'x','') + substr( &('vLibDefault'+GetSuffix()+'['+str(i)+']'), 4 ) ) )
-                           w_hay := .t.
-                           w_group += '-l' + if(QPM_IsXHarbour(),'x','') + substr( US_FileNameOnlyName( &( 'vLibDefault'+GetSuffix()+'['+str(i)+']' ) ), 4 ) + ' '
-                        elseif QPM_IsXHarbour() .and. File( GetHarbourLibFolder() + DEF_SLASH + ( 'lib' + substr( &('vLibDefault'+GetSuffix()+'['+str(i)+']'), 4 ) ) )
+                           w_group += '-lx' + substr( US_FileNameOnlyName( &( 'vLibDefault'+GetSuffix()+'['+str(i)+']' ) ), 4 ) + ' '
+                        case File( GetMiniGuiLibFolder() + DEF_SLASH + &('vLibDefault'+GetSuffix()+'['+str(i)+']') )
                            w_hay := .t.
                            w_group += '-l' + substr( US_FileNameOnlyName( &( 'vLibDefault'+GetSuffix()+'['+str(i)+']' ) ), 4 ) + ' '
-                        elseif File( GetCppLibFolder() + DEF_SLASH + ( 'lib' + substr( &('vLibDefault'+GetSuffix()+'['+str(i)+']'), 4 ) ) )
+                        case QPM_IsXHarbour() .and. ( Getminiguisuffix() == DefineExtended1 ) .and. File( GetMiniGuiFolder() + DEF_SLASH + 'xlib' + DEF_SLASH + &('vLibDefault'+GetSuffix()+'['+str(i)+']') )
                            w_hay := .t.
                            w_group += '-l' + substr( US_FileNameOnlyName( &( 'vLibDefault'+GetSuffix()+'['+str(i)+']' ) ), 4 ) + ' '
-                        endif
+                        case QPM_IsXHarbour() .and. File( GetHarbourLibFolder() + DEF_SLASH + ( 'libx' + substr( &('vLibDefault'+GetSuffix()+'['+str(i)+']'), 4 ) ) )
+                           w_hay := .t.
+                           w_group += '-lx' + substr( US_FileNameOnlyName( &( 'vLibDefault'+GetSuffix()+'['+str(i)+']' ) ), 4 ) + ' '
+                        case File( GetHarbourLibFolder() + DEF_SLASH + &('vLibDefault'+GetSuffix()+'['+str(i)+']') )
+                           w_hay := .t.
+                           w_group += '-l' + substr( US_FileNameOnlyName( &( 'vLibDefault'+GetSuffix()+'['+str(i)+']' ) ), 4 ) + ' '
+                        case File( GetCppLibFolder() + DEF_SLASH + &('vLibDefault'+GetSuffix()+'['+str(i)+']') )
+                           w_hay := .t.
+                           w_group += '-l' + substr( US_FileNameOnlyName( &( 'vLibDefault'+GetSuffix()+'['+str(i)+']' ) ), 4 ) + ' '
+                        endcase
                      endif
                   next
 
@@ -6173,7 +6191,7 @@ Function QPM_Build2()
  */
                   For i := 1 To Len ( vLibIncludeFiles )
                      if US_Upper( US_Word( GetProperty( 'VentanaMain', 'GIncFiles', 'Cell', i, NCOLINCFULLNAME ), 2 ) ) == '*LAST*'
-                        if US_upper( US_FileNameOnlyExt( vLibIncludeFiles[i] ) ) == 'A'
+                        if US_Upper( US_FileNameOnlyExt( vLibIncludeFiles[i] ) ) == 'A'
                            w_hay := .t.
                            w_group += '-l' + substr( US_FileNameOnlyName( vLibIncludeFiles[i] ), 4 ) + ' '
                         else
@@ -6199,9 +6217,9 @@ Function QPM_Build2()
                   Out := Out + PUB_cCharTab + 'echo SEARCH_DIR( $(DIR_COMPC_LIB) ) >> ' + SCRIPT_FILE + Hb_OsNewLine()
                   For i := 1 To Len( &('vExtraFoldersForLibs'+GetSuffix()) )
                      if ! empty( &('vExtraFoldersForLibs'+GetSuffix()+'['+str(i)+']') ) .and. ;
-                         &('vExtraFoldersForLibs'+GetSuffix()+'['+str(i)+']') != upper( GetCppLibFolder() ) .and. ;
-                         &('vExtraFoldersForLibs'+GetSuffix()+'['+str(i)+']') != upper( GetMiniguiLibFolder() ) .and. ;
-                         &('vExtraFoldersForLibs'+GetSuffix()+'['+str(i)+']') != upper( GetHarbourLibFolder() )
+                         &('vExtraFoldersForLibs'+GetSuffix()+'['+str(i)+']') != US_Upper( GetCppLibFolder() ) .and. ;
+                         &('vExtraFoldersForLibs'+GetSuffix()+'['+str(i)+']') != US_Upper( GetMiniguiLibFolder() ) .and. ;
+                         &('vExtraFoldersForLibs'+GetSuffix()+'['+str(i)+']') != US_Upper( GetHarbourLibFolder() )
                         Out := Out + PUB_cCharTab + 'echo SEARCH_DIR( ' + US_ShortName( &('vExtraFoldersForLibs'+GetSuffix()+'['+str(i)+']') ) + ' ) >> ' + SCRIPT_FILE + Hb_OsNewLine()
                      endif
                   next
@@ -6213,14 +6231,28 @@ Function QPM_Build2()
                   Next i
 
                   if Prj_Check_Console
-                     if ascan( vLibExcludeFiles, US_Upper( GetMiniGuiName() ) ) = 0
+                     if ascan( vLibExcludeFiles, US_Upper( GetMiniGuiName() ) ) == 0
                         Out := Out + PUB_cCharTab + 'echo ' + GetMiniguiLibFolder() + DEF_SLASH + GetMiniGuiName() + ' >> ' + SCRIPT_FILE + Hb_OsNewLine()
-                        aadd( &( 'vLibDefault'+GetSuffix() ), 'gtgui.lib' )
+                        if ascan( &( 'vLibDefault'+GetSuffix() ), { |y| US_Upper( y ) == 'GTGUI.LIB' } ) == 0
+                           aadd( &( 'vLibDefault'+GetSuffix() ), 'gtgui.lib' )
+                        endif
                      endif
                   else
                      Out := Out + PUB_cCharTab + 'echo ' + GetMiniguiLibFolder() + DEF_SLASH + GetMiniGuiName() + ' >> ' + SCRIPT_FILE + Hb_OsNewLine()
+                     do while ( i := ascan( &( 'vLibDefault'+GetSuffix() ), { |y| US_Upper( y ) == 'GTGUI.LIB' } ) ) > 1
+                        adel( &( 'vLibDefault'+GetSuffix() ), i )
+                        asize( &( 'vLibDefault'+GetSuffix() ), Len( &( 'vLibDefault'+GetSuffix() ) ) - 1 )
+                     enddo
+                     if ascan( &( 'vLibDefault'+GetSuffix() ), { |y| US_Upper( y ) == 'GTGUI.LIB' } ) == 0
+                        asize( &( 'vLibDefault'+GetSuffix() ), Len( &( 'vLibDefault'+GetSuffix() ) ) + 1 )
+                        ains( &( 'vLibDefault'+GetSuffix() ), 1 )
+                        &( 'vLibDefault'+GetSuffix()+'['+str(1)+']' ) := 'gtgui.lib'
+                     endif
                      if ascan( vLibExcludeFiles, US_Upper( GetMiniGuiName() ) ) > 0
-                        MsgInfo( 'Warning: ' + GetMiniGuiName() + ' excluded for Windows mode.' + Hb_OsNewLine() + 'QPM added it automatically.' + Hb_OsNewLine() + 'Look at tab ' + DBLQT + PageLIB + DBLQT )
+                        MsgInfo( 'Warning: ' + GetMiniGuiName() + ' was excluded for Windows mode.' + Hb_OsNewLine() + 'QPM added it automatically.' + Hb_OsNewLine() + 'Look at tab ' + DBLQT + PageLIB + DBLQT )
+                     endif
+                     if ascan( vLibExcludeFiles, 'GTGUI.LIB' ) > 0
+                        MsgInfo( 'Warning: LIBGTGUI.A was excluded for Windows mode.' + Hb_OsNewLine() + 'QPM added it automatically.' + Hb_OsNewLine() + 'Look at tab ' + DBLQT + PageLIB + DBLQT )
                      endif
                   endif
 
@@ -6238,18 +6270,22 @@ Function QPM_Build2()
                   //    Si no está la busco en el directorio de libs de PELLES o en el subdirectorio WIN
                   For i := 1 to len( &( 'vLibDefault'+GetSuffix() ) )
                      if ascan( vLibExcludeFiles, US_Upper( &( 'vLibDefault'+GetSuffix()+'['+str(i)+']' ) ) ) = 0
-                        if File( GetMiniguiLibFolder() + DEF_SLASH + ( if(QPM_IsXHarbour(),'x','') + &('vLibDefault'+GetSuffix()+'['+str(i)+']') ) )
-                           Out := Out + PUB_cCharTab + 'echo $(DIR_MINIGUI_LIB)' + DEF_SLASH + ( if(QPM_IsXHarbour(),'x','') + &('vLibDefault'+GetSuffix()+'['+str(i)+']') ) + ' >> ' + SCRIPT_FILE + Hb_OsNewLine()
-                        elseif QPM_IsXHarbour() .and. ( Getminiguisuffix() == DefineExtended1 ) .and. File( GetMiniGuiFolder() + DEF_SLASH + 'xlib' + DEF_SLASH + substr( &('vLibDefault'+GetSuffix()+'['+str(i)+']'), 4 ) )
-                           Out := Out + PUB_cCharTab + 'echo $(DIR_MINIGUI)' + DEF_SLASH + 'xlib' + DEF_SLASH + &('vLibDefault'+GetSuffix()+'['+str(i)+']') + ' >> ' + SCRIPT_FILE + Hb_OsNewLine()
-                        elseif File( GetHarbourLibFolder() + DEF_SLASH + ( if(QPM_IsXHarbour(),'x','') + &('vLibDefault'+GetSuffix()+'['+str(i)+']') ) )
-                           Out := Out + PUB_cCharTab + 'echo $(DIR_HARBOUR_LIB)' + DEF_SLASH + ( if(QPM_IsXHarbour(),'x','') + &('vLibDefault'+GetSuffix()+'['+str(i)+']') ) + ' >> ' + SCRIPT_FILE + Hb_OsNewLine()
-                        elseif QPM_IsXHarbour() .and. File( GetHarbourLibFolder() + DEF_SLASH + &('vLibDefault'+GetSuffix()+'['+str(i)+']') )
-                           Out := Out + PUB_cCharTab + 'echo $(DIR_HARBOUR_LIB)' + DEF_SLASH + &('vLibDefault'+GetSuffix()+'['+str(i)+']') + ' >> ' + SCRIPT_FILE + Hb_OsNewLine()
-                        elseif File( GetCppLibFolder() + DEF_SLASH + &('vLibDefault'+GetSuffix()+'['+str(i)+']') ) .or. ;
-                               File( GetCppLibFolder() + DEF_SLASH + 'WIN' + DEF_SLASH + &('vLibDefault'+GetSuffix()+'['+str(i)+']') )
+                        do case
+                        case QPM_IsXHarbour() .and. File( GetMiniguiLibFolder() + DEF_SLASH + 'x' + &('vLibDefault'+GetSuffix()+'['+str(i)+']') )
+                           Out := Out + PUB_cCharTab + 'echo $(DIR_MINIGUI_LIB)' + DEF_SLASH + 'x' + &('vLibDefault'+GetSuffix()+'['+str(i)+']') + ' + >> ' + SCRIPT_FILE + Hb_OsNewLine()
+                        case File( GetMiniguiLibFolder() + DEF_SLASH + &('vLibDefault'+GetSuffix()+'['+str(i)+']') )
+                           Out := Out + PUB_cCharTab + 'echo $(DIR_MINIGUI_LIB)' + DEF_SLASH + &('vLibDefault'+GetSuffix()+'['+str(i)+']') + ' + >> ' + SCRIPT_FILE + Hb_OsNewLine()
+                        case QPM_IsXHarbour() .and. ( Getminiguisuffix() == DefineExtended1 ) .and. File( GetMiniGuiFolder() + DEF_SLASH + 'xlib' + DEF_SLASH + &('vLibDefault'+GetSuffix()+'['+str(i)+']') )
+                           Out := Out + PUB_cCharTab + 'echo $(DIR_MINIGUI)' + DEF_SLASH + 'xlib' + DEF_SLASH + &('vLibDefault'+GetSuffix()+'['+str(i)+']') + ' + >> ' + SCRIPT_FILE + Hb_OsNewLine()
+                        case QPM_IsXHarbour() .and. File( GetHarbourLibFolder() + DEF_SLASH + 'x' + &('vLibDefault'+GetSuffix()+'['+str(i)+']') )
+                           Out := Out + PUB_cCharTab + 'echo $(DIR_HARBOUR_LIB)' + DEF_SLASH + 'x' + &('vLibDefault'+GetSuffix()+'['+str(i)+']') + ' + >> ' + SCRIPT_FILE + Hb_OsNewLine()
+                        case File( GetHarbourLibFolder() + DEF_SLASH + &('vLibDefault'+GetSuffix()+'['+str(i)+']') )
+                           Out := Out + PUB_cCharTab + 'echo $(DIR_HARBOUR_LIB)' + DEF_SLASH + &('vLibDefault'+GetSuffix()+'['+str(i)+']') + ' + >> ' + SCRIPT_FILE + Hb_OsNewLine()
+                        case File( GetCppLibFolder() + DEF_SLASH + &('vLibDefault'+GetSuffix()+'['+str(i)+']') )
                            Out := Out + PUB_cCharTab + 'echo ' + &('vLibDefault'+GetSuffix()+'['+str(i)+']') + ' >> ' + SCRIPT_FILE + Hb_OsNewLine()
-                        endif
+                        case File( GetCppLibFolder() + DEF_SLASH + 'WIN' + DEF_SLASH + &('vLibDefault'+GetSuffix()+'['+str(i)+']') )
+                           Out := Out + PUB_cCharTab + 'echo ' + &('vLibDefault'+GetSuffix()+'['+str(i)+']') + ' >> ' + SCRIPT_FILE + Hb_OsNewLine()
+                        endcase
                      endif
                   Next
 
@@ -6304,14 +6340,28 @@ Function QPM_Build2()
                   Next i
 
                   if Prj_Check_Console
-                     if ascan( vLibExcludeFiles, US_Upper( GetMiniGuiName() ) ) = 0
+                     if ascan( vLibExcludeFiles, US_Upper( GetMiniGuiName() ) ) == 0
                         Out := Out + PUB_cCharTab + 'echo ' + GetMiniguiLibFolder() + DEF_SLASH + GetMiniGuiName() + ' + >> ' + SCRIPT_FILE + Hb_OsNewLine()
-                        aadd( &( 'vLibDefault'+GetSuffix() ), 'gtgui.lib' )
+                        if ascan( &( 'vLibDefault'+GetSuffix() ), { |y| US_Upper( y ) == 'GTGUI.LIB' } ) == 0
+                           aadd( &( 'vLibDefault'+GetSuffix() ), 'gtgui.lib' )
+                        endif
                      endif
                   else
                      Out := Out + PUB_cCharTab + 'echo ' + GetMiniguiLibFolder() + DEF_SLASH + GetMiniGuiName() + ' + >> ' + SCRIPT_FILE + Hb_OsNewLine()
+                     do while ( i := ascan( &( 'vLibDefault'+GetSuffix() ), { |y| US_Upper( y ) == 'GTGUI.LIB' } ) ) > 1
+                        adel( &( 'vLibDefault'+GetSuffix() ), i )
+                        asize( &( 'vLibDefault'+GetSuffix() ), Len( &( 'vLibDefault'+GetSuffix() ) ) - 1 )
+                     enddo
+                     if ascan( &( 'vLibDefault'+GetSuffix() ), { |y| US_Upper( y ) == 'GTGUI.LIB' } ) == 0
+                        asize( &( 'vLibDefault'+GetSuffix() ), Len( &( 'vLibDefault'+GetSuffix() ) ) + 1 )
+                        ains( &( 'vLibDefault'+GetSuffix() ), 1 )
+                        &( 'vLibDefault'+GetSuffix()+'['+str(1)+']' ) := 'gtgui.lib'
+                     endif
                      if ascan( vLibExcludeFiles, US_Upper( GetMiniGuiName() ) ) > 0
-                        MsgInfo( 'Warning: ' + GetMiniGuiName() + ' excluded for Windows mode.' + Hb_OsNewLine() + 'QPM added it automatically.' + Hb_OsNewLine() + 'Look at tab ' + DBLQT + PageLIB + DBLQT )
+                        MsgInfo( 'Warning: ' + GetMiniGuiName() + ' was excluded for Windows mode.' + Hb_OsNewLine() + 'QPM added it automatically.' + Hb_OsNewLine() + 'Look at tab ' + DBLQT + PageLIB + DBLQT )
+                     endif
+                     if ascan( vLibExcludeFiles, 'GTGUI.LIB' ) > 0
+                        MsgInfo( 'Warning: LIBGTGUI.A was excluded for Windows mode.' + Hb_OsNewLine() + 'QPM added it automatically.' + Hb_OsNewLine() + 'Look at tab ' + DBLQT + PageLIB + DBLQT )
                      endif
                   endif
 
@@ -6475,9 +6525,9 @@ Function QPM_Build2()
          case Prj_Radio_OutputType == DEF_RG_EXE
             Out := Out + PUB_cCharTab + '$(US_MSG_EXE) ' + PROGRESS_LOG + ' -MSG:Linking ' + cOutputNameDisplay + ' ...' + Hb_OsNewLine()
             if Empty( GetProperty( 'VentanaMain', 'OverrideLink', 'value' ) )
-               Out := Out + PUB_cCharTab + '$(ILINK_EXE) -x ' + if( !Prj_Check_Console, '-Gn -Tpe '+If(PUB_bDebugActive,'-ap ','-aa '), '-Gn ' ) + '-L' + GetCppLibFolder() + ' @' + SCRIPT_FILE + Hb_OsNewLine()
+               Out := Out + PUB_cCharTab + '$(ILINK_EXE) -x -Gn -Tpe ' + if( Prj_Check_Console, '-ap ', '-aa ' ) + '-L' + GetCppLibFolder() + ' @' + SCRIPT_FILE + Hb_OsNewLine()
             else
-               Out := Out + PUB_cCharTab + '$(ILINK_EXE) -x ' + if( !Prj_Check_Console, '-Gn -Tpe '+If(PUB_bDebugActive,'-ap ','-aa '), '-Gn ' ) + '$(USER_FLAGS_LINK) -L' + GetCppLibFolder() + ' @' + SCRIPT_FILE + Hb_OsNewLine()
+               Out := Out + PUB_cCharTab + '$(ILINK_EXE) -x -Gn -Tpe ' + if( Prj_Check_Console, '-ap ', '-aa ') + '$(USER_FLAGS_LINK) -L' + GetCppLibFolder() + ' @' + SCRIPT_FILE + Hb_OsNewLine()
             endif
             if Prj_Check_Upx
                Out := Out + PUB_cCharTab + '$(US_MSG_EXE) ' + PROGRESS_LOG + ' -MSG:Compressing ' + cOutputNameDisplay + ' with UPX ...' + Hb_OsNewLine()
@@ -6522,7 +6572,7 @@ Function QPM_Build2()
  */
       For i := 1 To Len ( PRGFILES )
          Out := Out + Hb_OsNewLine()
-         Out := Out + '$(C_DIR)' + DEF_SLASH + US_FileNameOnlyName( PRGFILES[i] ) + '.' + if( upper( US_FileNameOnlyExt( PRGFILES[i] ) ) == 'CPP', 'cpp', 'c' ) + ' : ' + US_ShortName( US_FileNameOnlyPath( PRGFILES[i] ) ) + DEF_SLASH + US_FileNameOnlyNameAndExt( PRGFILES[i] ) + Hb_OsNewLine()
+         Out := Out + '$(C_DIR)' + DEF_SLASH + US_FileNameOnlyName( PRGFILES[i] ) + '.' + if( US_Upper( US_FileNameOnlyExt( PRGFILES[i] ) ) == 'CPP', 'cpp', 'c' ) + ' : ' + US_ShortName( US_FileNameOnlyPath( PRGFILES[i] ) ) + DEF_SLASH + US_FileNameOnlyNameAndExt( PRGFILES[i] ) + Hb_OsNewLine()
          Out := Out + PUB_cCharTab + '$(US_MSG_EXE) ' + PROGRESS_LOG + ' -MSG:Processing ' + PRGFILES[i] + ' ...' + Hb_OsNewLine()
          if US_Upper( US_FileNameOnlyExt( PRGFILES[i] ) ) == US_Upper( 'C' ) .or. ;
             US_Upper( US_FileNameOnlyExt( PRGFILES[i] ) ) == US_Upper( 'CPP' )
@@ -6540,11 +6590,11 @@ Function QPM_Build2()
          endif
          Out := Out + Hb_OsNewLine()
          if IsMinGW
-            Out := Out + '$(DIR_OBJECTS)' + DEF_SLASH + US_FileNameOnlyName( PRGFILES[i] ) + '.o : $(C_DIR)' + DEF_SLASH + US_FileNameOnlyName( PRGFILES[i] ) + '.' + if( upper( US_FileNameOnlyExt( PRGFILES[i] ) ) == 'CPP', 'cpp', 'c' ) + Hb_OsNewLine()
+            Out := Out + '$(DIR_OBJECTS)' + DEF_SLASH + US_FileNameOnlyName( PRGFILES[i] ) + '.o : $(C_DIR)' + DEF_SLASH + US_FileNameOnlyName( PRGFILES[i] ) + '.' + if( US_Upper( US_FileNameOnlyExt( PRGFILES[i] ) ) == 'CPP', 'cpp', 'c' ) + Hb_OsNewLine()
          else
-            Out := Out + '$(DIR_OBJECTS)' + DEF_SLASH + US_FileNameOnlyName( PRGFILES[i] ) + '.obj : $(C_DIR)' + DEF_SLASH + US_FileNameOnlyName( PRGFILES[i] ) + '.' + if( upper( US_FileNameOnlyExt( PRGFILES[i] ) ) == 'CPP', 'cpp', 'c' ) + Hb_OsNewLine()
+            Out := Out + '$(DIR_OBJECTS)' + DEF_SLASH + US_FileNameOnlyName( PRGFILES[i] ) + '.obj : $(C_DIR)' + DEF_SLASH + US_FileNameOnlyName( PRGFILES[i] ) + '.' + if( US_Upper( US_FileNameOnlyExt( PRGFILES[i] ) ) == 'CPP', 'cpp', 'c' ) + Hb_OsNewLine()
          endif
-         Out := Out + PUB_cCharTab + '$(US_MSG_EXE) ' + PROGRESS_LOG + ' -MSG:Processing ' + US_FileNameOnlyName( PRGFILES[i] ) + '.' + if( upper( US_FileNameOnlyExt( PRGFILES[i] ) ) == 'CPP', 'cpp', 'c' ) + ' ...' + Hb_OsNewLine()
+         Out := Out + PUB_cCharTab + '$(US_MSG_EXE) ' + PROGRESS_LOG + ' -MSG:Processing ' + US_FileNameOnlyName( PRGFILES[i] ) + '.' + if( US_Upper( US_FileNameOnlyExt( PRGFILES[i] ) ) == 'CPP', 'cpp', 'c' ) + ' ...' + Hb_OsNewLine()
          Out := Out + PUB_cCharTab + if(! bLogActivity, '@', '') + '$(US_SHELL_EXE) ' + if(! bLogActivity, '-OFF ', '' ) + 'DELETE $@' + Hb_OsNewLine()
          do case
          case IsMinGW
@@ -7101,9 +7151,9 @@ La existencia del ejecutable se hace en BUILD.BAT teniendo en cuenta el COPY/MOV
          SetProperty( Venta, 'LStatusLabel', 'value', 'Status: Idle' )
          do case
             case estado == 'OK'
-               MsgOk( 'QPM (QAC based Project Manager)', 'Build Finished'+Hb_OsNewLine()+'OK', 'I', if( bBuildRun .or. !empty( Prj_ExtraRunCmdFINAL ), .T., bAutoexit ), if( bBuildRun, 2, ), if( !bBuildRun .and. empty( Prj_ExtraRunCmdFINAL ) .and. upper( OutputExt() ) == 'EXE', .T., .F. ) )
+               MsgOk( 'QPM (QAC based Project Manager)', 'Build Finished'+Hb_OsNewLine()+'OK', 'I', if( bBuildRun .or. !empty( Prj_ExtraRunCmdFINAL ), .T., bAutoexit ), if( bBuildRun, 2, ), if( !bBuildRun .and. empty( Prj_ExtraRunCmdFINAL ) .and. US_Upper( OutputExt() ) == 'EXE', .T., .F. ) )
             case estado == 'WARNING'
-               MsgOk( 'QPM (QAC based Project Manager)', 'Build Finished'+Hb_OsNewLine()+'with Warnings', 'W', if( bBuildRun .or. !empty( Prj_ExtraRunCmdFINAL ), .T., bAutoexit ), if( bBuildRun, 4, ), if( !bBuildRun .and. empty( Prj_ExtraRunCmdFINAL ) .and. upper( OutputExt() ) == 'EXE', .T., .F. ) )
+               MsgOk( 'QPM (QAC based Project Manager)', 'Build Finished'+Hb_OsNewLine()+'with Warnings', 'W', if( bBuildRun .or. !empty( Prj_ExtraRunCmdFINAL ), .T., bAutoexit ), if( bBuildRun, 4, ), if( !bBuildRun .and. empty( Prj_ExtraRunCmdFINAL ) .and. US_Upper( OutputExt() ) == 'EXE', .T., .F. ) )
             case estado == 'ERROR'
                MsgOk( 'QPM (QAC based Project Manager)', 'Build Finished'+Hb_OsNewLine()+'WITH ERRORS', 'E', bAutoExit )
             otherwise
@@ -7243,7 +7293,7 @@ Function QPM_RemoveFilePRG()
          endif
          SetProperty( 'VentanaMain', 'GPrgFiles', 'value', item )
          RichEditDisplay( 'PRG' )
-         Pos := AScan( vExtraFoldersForSearch, { |y| upper( US_VarToStr( y ) ) == upper( ChgPathToReal( dire ) ) } )
+         Pos := AScan( vExtraFoldersForSearch, { |y| US_Upper( US_VarToStr( y ) ) == US_Upper( ChgPathToReal( dire ) ) } )
          For i=1 to VentanaMain.GPrgFiles.ItemCount
             if dire == US_FileNameOnlyPath( GetProperty( 'VentanaMain', 'GPrgFiles', 'Cell', i, NCOLPRGFULLNAME ) )
                bBorrar := .F.
@@ -7297,7 +7347,7 @@ Function QPM_RemoveFileHEA()
          SetProperty( 'VentanaMain', 'GHeaFiles', 'value', item )
          RichEditDisplay( 'HEA' )
       // Pos := ascan( vExtraFoldersForSearch, ChgPathToReal( dire ) )
-         Pos := AScan( vExtraFoldersForSearch, { |y| upper( US_VarToStr( y ) ) == upper( ChgPathToReal( dire ) ) } )
+         Pos := AScan( vExtraFoldersForSearch, { |y| US_Upper( US_VarToStr( y ) ) == US_Upper( ChgPathToReal( dire ) ) } )
          For i=1 to VentanaMain.GPrgFiles.ItemCount
             if dire == US_FileNameOnlyPath( GetProperty( 'VentanaMain', 'GPrgFiles', 'Cell', i, NCOLPRGFULLNAME ) )
                bBorrar := .F.
@@ -7343,7 +7393,7 @@ Function QPM_RemoveFilePAN()
          SetProperty( 'VentanaMain', 'GPanFiles', 'value', item )
          RichEditDisplay( 'PAN' )
       // Pos := ascan( vExtraFoldersForSearch, ChgPathToReal( dire ) )
-         Pos := AScan( vExtraFoldersForSearch, { |y| upper( US_VarToStr( y ) ) == upper( ChgPathToReal( dire ) ) } )
+         Pos := AScan( vExtraFoldersForSearch, { |y| US_Upper( US_VarToStr( y ) ) == US_Upper( ChgPathToReal( dire ) ) } )
          For i=1 to VentanaMain.GPrgFiles.ItemCount
             if dire == US_FileNameOnlyPath( GetProperty( 'VentanaMain', 'GPrgFiles', 'Cell', i, NCOLPRGFULLNAME ) )
                bBorrar := .F.
@@ -7396,7 +7446,7 @@ Function QPM_RemoveFileLIB()
    Local item := VentanaMain.GIncFiles.Value
    If VentanaMain.GIncFiles.Value > 0
       If MyMsgYesNo( 'Remove file' + Hb_OsNewLIne() + DBLQT + ChgPathToReal( US_WordSubStr( GetProperty( 'VentanaMain', 'GIncFiles', 'Cell', VentanaMain.GIncFiles.Value, NCOLINCFULLNAME ), 3 ) ) + DBLQT + Hb_OsNewLine() + 'from project ?', 'Confirm' )
-         dire := upper( US_FileNameOnlyPath( ChgPathToReal( US_WordSubStr( GetProperty( 'VentanaMain', 'GIncFiles', 'Cell', VentanaMain.GIncFiles.Value, NCOLINCFULLNAME ), 3 ) ) ) )
+         dire := US_Upper( US_FileNameOnlyPath( ChgPathToReal( US_WordSubStr( GetProperty( 'VentanaMain', 'GIncFiles', 'Cell', VentanaMain.GIncFiles.Value, NCOLINCFULLNAME ), 3 ) ) ) )
          VentanaMain.GIncFiles.DeleteItem( VentanaMain.GIncFiles.Value )
          if item > VentanaMain.GIncFiles.ItemCount
             item := VentanaMain.GIncFiles.ItemCount
@@ -7408,7 +7458,7 @@ Function QPM_RemoveFileLIB()
          RichEditDisplay( 'INC' )
          Pos := ascan( &('vExtraFoldersForLibs'+GetSuffix()), dire )
          For i=1 to VentanaMain.GIncFiles.ItemCount
-            if dire == upper( US_FileNameOnlyPath( ChgPathToReal( US_WordSubStr( GetProperty( 'VentanaMain', 'GIncFiles', 'Cell', i, NCOLINCFULLNAME ), 3 ) ) ) )
+            if dire == US_Upper( US_FileNameOnlyPath( ChgPathToReal( US_WordSubStr( GetProperty( 'VentanaMain', 'GIncFiles', 'Cell', i, NCOLINCFULLNAME ), 3 ) ) ) )
                bBorrar := .F.
             endif
          next
@@ -8954,7 +9004,7 @@ Function PpoDisplay( bOnlyRenumering )
          VentanaMain.RichEditPrg.Value := ''
       else
          nRow := GetProperty( 'VentanaMain', 'GPrgFiles', 'value' )
-         if Upper( US_FileNameOnlyExt( GetProperty( 'VentanaMain', 'GPrgFiles', 'Cell', nRow, NCOLPRGNAME ) ) ) == 'PRG'
+         if US_Upper( US_FileNameOnlyExt( GetProperty( 'VentanaMain', 'GPrgFiles', 'Cell', nRow, NCOLPRGNAME ) ) ) == 'PRG'
             ppoFile := GetObjFolder() + DEF_SLASH + Us_FileNameOnlyName( GetProperty( 'VentanaMain', 'GPrgFiles', 'Cell', nRow, NCOLPRGNAME ) ) + '.ppo'
             if file( ppoFile )
                if val( US_FileDateTime( ppoFile ) ) < val( US_FileDateTime( ChgPathToReal( GetProperty( 'VentanaMain', 'GPrgFiles', 'Cell', nRow, NCOLPRGFULLNAME ) ) ) )
@@ -9237,13 +9287,13 @@ Function RichEditDisplay( tipo, bReload, nRow, bForce )
                                              "     Library '"+IncName+"' not found !!!"
          else
             do case
-               case US_upper( US_FileNameOnlyExt( IncName ) ) == 'LIB'
+               case US_Upper( US_FileNameOnlyExt( IncName ) ) == 'LIB'
                   cType := QPM_ModuleType( IncName ) + ' Library'
-               case US_upper( US_FileNameOnlyExt( IncName ) ) == 'A'
+               case US_Upper( US_FileNameOnlyExt( IncName ) ) == 'A'
                   cType := QPM_ModuleType( IncName ) + ' Library'
-               case US_upper( US_FileNameOnlyExt( IncName ) ) == "OBJ"
+               case US_Upper( US_FileNameOnlyExt( IncName ) ) == "OBJ"
                   cType := QPM_ModuleType( IncName ) + ' Object'
-               case US_upper( US_FileNameOnlyExt( IncName ) ) == 'O'
+               case US_Upper( US_FileNameOnlyExt( IncName ) ) == 'O'
                   cType := QPM_ModuleType( IncName ) + ' Object'
                otherwise
                   US_Log( 'Invalid Library extention' )
@@ -9284,13 +9334,13 @@ Function RichEditDisplay( tipo, bReload, nRow, bForce )
          endif
          if !empty( ListOut )
             do case
-               case US_upper( US_FileNameOnlyExt( ListOut ) ) == 'LIB'
+               case US_Upper( US_FileNameOnlyExt( ListOut ) ) == 'LIB'
                   cType := QPM_ModuleType( ListOut ) + ' Library'
-               case US_upper( US_FileNameOnlyExt( ListOut ) ) == 'A'
+               case US_Upper( US_FileNameOnlyExt( ListOut ) ) == 'A'
                   cType := QPM_ModuleType( ListOut ) + ' Library'
-               case US_upper( US_FileNameOnlyExt( ListOut ) ) == 'EXE'
+               case US_Upper( US_FileNameOnlyExt( ListOut ) ) == 'EXE'
                   cType := 'Executable ' + QPM_ModuleType( ListOut )
-               case US_upper( US_FileNameOnlyExt( ListOut ) ) == 'DLL'
+               case US_Upper( US_FileNameOnlyExt( ListOut ) ) == 'DLL'
                   cType := 'Dynamic Link Library'
                otherwise
                   MsgInfo( 'Error en Type for List Output' )
@@ -9445,7 +9495,7 @@ Function ListModule( ModName )
    endif
    ferase( ModName + '.Tmp' )
    ferase( ModName + '.TmpOut' )
-   if upper( US_FileNameOnlyExt( ModName ) ) == 'LIB'
+   if US_Upper( US_FileNameOnlyExt( ModName ) ) == 'LIB'
       TempLibType := QPM_ModuleType( ModName )
       do case
          case TempLibType == 'PELLES'
@@ -9468,7 +9518,7 @@ Function ListModule( ModName )
             MsgStop( 'Unknown LIB type: ' + ModName )
       endcase
    endif
-   if upper( US_FileNameOnlyExt( ModName ) ) == 'A'
+   if US_Upper( US_FileNameOnlyExt( ModName ) ) == 'A'
       QPM_MemoWrit( RUN_FILE, US_ShortName(PUB_cQPM_Folder) + DEF_SLASH + 'US_OBJDUMP.EXE -t -s ' + US_ShortName( ModName ) + ' > "' + US_ShortName( ModName ) + '.Tmp"' )
       QPM_Execute( RUN_FILE,, DEF_QPM_EXEC_WAIT, DEF_QPM_EXEC_MINIMIZE )
       ferase( RUN_FILE )
@@ -9477,14 +9527,14 @@ Function ListModule( ModName )
       QPM_Execute( RUN_FILE,, DEF_QPM_EXEC_WAIT, DEF_QPM_EXEC_MINIMIZE, LOC_RunWaitFileStop )
       ferase( RUN_FILE )
    endif
-   if upper( US_FileNameOnlyExt( ModName ) ) == 'DLL'
+   if US_Upper( US_FileNameOnlyExt( ModName ) ) == 'DLL'
       QPM_Execute( US_ShortName(PUB_cQPM_Folder) + DEF_SLASH + 'US_IMPDEF.EXE', US_ShortName( ModName ) + '.Tmp ' + US_ShortName( ModName ), DEF_QPM_EXEC_WAIT, DEF_QPM_EXEC_MINIMIZE )
 
       QPM_MemoWrit( RUN_FILE, US_ShortName(PUB_cQPM_Folder) + DEF_SLASH + 'US_SHELL.EXE QPM -OFF ANALIZE_DLL ' + US_ShortName( ModName ) + '.Tmp' + ' -FILESTOP ' + LOC_RunWaitFileStop + ' > "' + US_ShortName( ModName ) + '.TmpOut"' )
       QPM_Execute( RUN_FILE,, DEF_QPM_EXEC_WAIT, DEF_QPM_EXEC_MINIMIZE, LOC_RunWaitFileStop )
       ferase( RUN_FILE )
    endif
-   if upper( US_FileNameOnlyExt( ModName ) ) == 'EXE'
+   if US_Upper( US_FileNameOnlyExt( ModName ) ) == 'EXE'
       TempExeType := QPM_ModuleType( ModName )
       if TempExeType == 'COMPRESSED'
          ListModuleUnUpx( US_ShortName( ModName ), US_ShortName( ModName ) + '.UnUpx.Exe' )
@@ -9643,14 +9693,14 @@ Function DbfDataSearch( Txt )
                                        '     Text found at record: ' + alltrim( str( nRecord ) ) + Hb_OsNewLine() + ;
                                        '     Field: ' + cFieldName + Hb_OsNewLine() + ;
                                        '     Position: ' + alltrim( str( nFieldPos ) ) + Hb_OsNewLine() + ;
-                                       '     Content: ' + substr( cFieldTxt, at( us_upper( Txt ), US_Upper( cFieldTxt ), nFieldPos ), 200 ) + Hb_OsNewLine()
+                                       '     Content: ' + substr( cFieldTxt, at( US_Upper( Txt ), US_Upper( cFieldTxt ), nFieldPos ), 200 ) + Hb_OsNewLine()
 #ELSE
       VentanaMain.RichEditDbf.Value := '     ' + Hb_OsNewLine() + ;
                                        '     ' + Hb_OsNewLine() + ;
                                        '     Text found at record: ' + alltrim( str( nRecord ) ) + Hb_OsNewLine() + ;
                                        '     Field: ' + cFieldName + Hb_OsNewLine() + ;
                                        '     Position: ' + alltrim( str( nFieldPos ) ) + Hb_OsNewLine() + ;
-                                       '     Content: ' + substr( cFieldTxt, hb_at( us_upper( Txt ), US_Upper( cFieldTxt ), nFieldPos ), 200 ) + Hb_OsNewLine()
+                                       '     Content: ' + substr( cFieldTxt, hb_at( US_Upper( Txt ), US_Upper( cFieldTxt ), nFieldPos ), 200 ) + Hb_OsNewLine()
 #ENDIF
 
       VentanaMain.RichEditDbf.CaretPos := 1
@@ -9816,19 +9866,19 @@ Function GlobalSearch2( cType, Txt, nRow, bFunc, bDbfData, DBFcBaseType, nRecord
       if bChangeImg
          GridImage( 'VentanaMain', 'GPrgFiles', nRow, NCOLPRGSTATUS, '-', PUB_nGridImgSearchOk )
       endif
-      MemoAux := us_upper( MemoRead( ChgPathToReal( GetProperty( 'VentanaMain', 'GPrgFiles', 'Cell', nRow, NCOLPRGFULLNAME ) ) ) )
+      MemoAux := US_Upper( MemoRead( ChgPathToReal( GetProperty( 'VentanaMain', 'GPrgFiles', 'Cell', nRow, NCOLPRGFULLNAME ) ) ) )
       bSalir := .F.
       nPosition := 1
 
 #IFDEF __XHARBOUR__
-      do while ( Pos := at( us_upper( Txt ), MemoAux, nPosition ) ) > 0 .and. !bSalir
+      do while ( Pos := at( US_Upper( Txt ), MemoAux, nPosition ) ) > 0 .and. !bSalir
 #ELSE
-      do while ( Pos := hb_at( us_upper( Txt ), MemoAux, nPosition ) ) > 0 .and. !bSalir
+      do while ( Pos := hb_at( US_Upper( Txt ), MemoAux, nPosition ) ) > 0 .and. !bSalir
 #ENDIF
          nPosition := Pos + 1
          vAux := MPOSTOLC( MemoAux, 254, Pos )
          LineAux := MemoLine( MemoAux, 254, vAux[1] )
-         if at( us_upper( Txt ), LineAux ) > 0 .and. ;
+         if at( US_Upper( Txt ), LineAux ) > 0 .and. ;
             ( at( 'PROCEDURE',   LineAux ) > 0 .or. ;
               at( 'PROC',        LineAux ) > 0 .or. ;
               at( 'FUNCTION',    LineAux ) > 0 .or. ;
@@ -9869,9 +9919,9 @@ Function GlobalSearch2( cType, Txt, nRow, bFunc, bDbfData, DBFcBaseType, nRecord
                endif
             else
                if Prj_Radio_OutputType == DEF_RG_IMPORT
-                  nPosAux := at( US_upper( Txt ), US_upper( GetProperty( 'VentanaMain', 'RichEditPRG', 'value' ) ) )
+                  nPosAux := at( US_Upper( Txt ), US_Upper( GetProperty( 'VentanaMain', 'RichEditPRG', 'value' ) ) )
                else
-                  nPosAux := at( US_upper( Txt ), US_upper( MemoRead( ChgPathToReal( GetProperty( 'VentanaMain', 'GPrgFiles', 'Cell', nRow, NCOLPRGFULLNAME ) ) ) ) )
+                  nPosAux := at( US_Upper( Txt ), US_Upper( MemoRead( ChgPathToReal( GetProperty( 'VentanaMain', 'GPrgFiles', 'Cell', nRow, NCOLPRGFULLNAME ) ) ) ) )
                endif
             endif
             if nPosAux > 0
@@ -9888,7 +9938,7 @@ Function GlobalSearch2( cType, Txt, nRow, bFunc, bDbfData, DBFcBaseType, nRecord
             if bLastGlobalSearchCas
                nPosAux := at( Txt, MemoRead( ChgPathToReal( GetProperty( 'VentanaMain', 'GHeaFiles', 'Cell', nRow, NCOLHEAFULLNAME ) ) ) )
             else
-               nPosAux := at( US_upper( Txt ), US_upper( MemoRead( ChgPathToReal( GetProperty( 'VentanaMain', 'GHeaFiles', 'Cell', nRow, NCOLHEAFULLNAME ) ) ) ) )
+               nPosAux := at( US_Upper( Txt ), US_Upper( MemoRead( ChgPathToReal( GetProperty( 'VentanaMain', 'GHeaFiles', 'Cell', nRow, NCOLHEAFULLNAME ) ) ) ) )
             endif
             if nPosAux > 0
                if bChangeImg
@@ -9904,7 +9954,7 @@ Function GlobalSearch2( cType, Txt, nRow, bFunc, bDbfData, DBFcBaseType, nRecord
             if bLastGlobalSearchCas
                nPosAux := at( Txt, MemoRead( ChgPathToReal( GetProperty( 'VentanaMain', 'GPanFiles', 'Cell', nRow, NCOLPANFULLNAME ) ) ) )
             else
-               nPosAux := at( US_upper( Txt ), US_upper( MemoRead( ChgPathToReal( GetProperty( 'VentanaMain', 'GPanFiles', 'Cell', nRow, NCOLPANFULLNAME ) ) ) ) )
+               nPosAux := at( US_Upper( Txt ), US_Upper( MemoRead( ChgPathToReal( GetProperty( 'VentanaMain', 'GPanFiles', 'Cell', nRow, NCOLPANFULLNAME ) ) ) ) )
             endif
             if nPosAux > 0
                if bChangeImg
@@ -9925,7 +9975,7 @@ Function GlobalSearch2( cType, Txt, nRow, bFunc, bDbfData, DBFcBaseType, nRecord
                if ! bDbfData
                   VentanaMain.Check_SearchCas.Value := bLastGlobalSearchCas := .F.
                   FOR x := 1 TO LEN( aStru )
-                     if at( US_upper( Txt ), aStru[x][1] ) > 0
+                     if at( US_Upper( Txt ), aStru[x][1] ) > 0
                         bFound := .T.
                         exit
                      endif
@@ -10161,9 +10211,9 @@ Function GridImage( cWin, cGrid, nRow, nCol, cOper, nBitImage )
             cString := substr( cString, 1, nBits - nBitImage ) + '1' + substr( cString, nBits - nBitImage + 2 )
          case substr( cOper, i, 1 ) == '-'              /* sacarle */
             cString := substr( cString, 1, nBits - nBitImage ) + '0' + substr( cString, nBits - nBitImage + 2 )
-         case upper( substr( cOper, i, 1 ) ) == 'X'     /* limpiar */
+         case US_Upper( substr( cOper, i, 1 ) ) == 'X'     /* limpiar */
             cString := strtran( cString, '1', '0' )
- //      case upper( substr( cOper, i, 1 ) ) == '='     /* setear  */
+ //      case US_Upper( substr( cOper, i, 1 ) ) == '='     /* setear  */
  //         cString := strtran( cString, '1', '0' )
  //         cString := substr( cString, 1, nBits - nBitImage ) + '1' + substr( cString, nBits - nBitImage + 2 )
          otherwise
@@ -10201,7 +10251,7 @@ Function AddSearchTxtFound(email)
              Return .T.
           endif
        else
-          if upper(email) == upper(VentanaMain.CSearch.Item(i))
+          if US_Upper(email) == US_Upper(VentanaMain.CSearch.Item(i))
              Return .T.
           endif
        endif
@@ -10438,7 +10488,7 @@ Return bEna
 
 Function AddLastOpen( cPrj )
    Local r, i, cont:=0
-   If ( r := AScan( vLastOpen, { |x| us_upper( x ) == us_upper( cPrj ) } ) ) > 0
+   If ( r := AScan( vLastOpen, { |x| US_Upper( x ) == US_Upper( cPrj ) } ) ) > 0
       vLastOpen[r] := ''
    else
       aeval( vLastOpen, { |x| if( ! empty( x ), cont ++, ) } )
@@ -10892,15 +10942,15 @@ Function QPM_CompressUtilities()
    Out += 'COPY ' + US_ShortName(PUB_cQPM_Folder) + DEF_SLASH + 'US_UPX.EXE ' + US_ShortName(PUB_cQPM_Folder) + DEF_SLASH + 'XYZ_UPX.EXE' + Hb_OsNewLine()
    For i := 1 to len(vExeList)
       do case
-      case upper(right(vExeList[i], 04)) != '.EXE'
-      case upper(right(vExeList[i], 07)) == 'QPM.EXE'
-      case upper(right(vExeList[i], 10)) == 'US_RUN.EXE'
-      case upper(right(vExeList[i], 13)) == 'US_IMPDEF.EXE'
-      case upper(right(vExeList[i], 15)) == 'US_PEXPORTS.EXE'
-      case upper(right(vExeList[i], 12)) == 'US_REIMP.EXE'
-      case upper(right(vExeList[i], 13)) == 'US_IMPLIB.EXE'
-      case upper(right(vExeList[i], 14)) == 'US_OBJDUMP.EXE'
-      case upper(right(vExeList[i], 12)) == 'US_TDUMP.EXE'
+      case US_Upper(right(vExeList[i], 04)) != '.EXE'
+      case US_Upper(right(vExeList[i], 07)) == 'QPM.EXE'
+      case US_Upper(right(vExeList[i], 10)) == 'US_RUN.EXE'
+      case US_Upper(right(vExeList[i], 13)) == 'US_IMPDEF.EXE'
+      case US_Upper(right(vExeList[i], 15)) == 'US_PEXPORTS.EXE'
+      case US_Upper(right(vExeList[i], 12)) == 'US_REIMP.EXE'
+      case US_Upper(right(vExeList[i], 13)) == 'US_IMPLIB.EXE'
+      case US_Upper(right(vExeList[i], 14)) == 'US_OBJDUMP.EXE'
+      case US_Upper(right(vExeList[i], 12)) == 'US_TDUMP.EXE'
       otherwise
          Out += US_ShortName(PUB_cQPM_Folder) + DEF_SLASH + 'XYZ_UPX.EXE --no-progress ' + vExeList[i] + Hb_OsNewLine()
       endcase
@@ -10925,15 +10975,15 @@ Function QPM_DecompressUtilities()
    Out += 'COPY ' + US_ShortName(PUB_cQPM_Folder) + DEF_SLASH + 'US_UPX.EXE ' + US_ShortName(PUB_cQPM_Folder) + DEF_SLASH + 'XYZ_UPX.EXE' + Hb_OsNewLine()
    For i := 1 to len(vExeList)
       do case
-      case upper(right(vExeList[i], 04)) != '.EXE'
-      case upper(right(vExeList[i], 07)) == 'QPM.EXE'
-      case upper(right(vExeList[i], 10)) == 'US_RUN.EXE'
-      case upper(right(vExeList[i], 13)) == 'US_IMPDEF.EXE'
-      case upper(right(vExeList[i], 15)) == 'US_PEXPORTS.EXE'
-      case upper(right(vExeList[i], 12)) == 'US_REIMP.EXE'
-      case upper(right(vExeList[i], 13)) == 'US_IMPLIB.EXE'
-      case upper(right(vExeList[i], 14)) == 'US_OBJDUMP.EXE'
-      case upper(right(vExeList[i], 12)) == 'US_TDUMP.EXE'
+      case US_Upper(right(vExeList[i], 04)) != '.EXE'
+      case US_Upper(right(vExeList[i], 07)) == 'QPM.EXE'
+      case US_Upper(right(vExeList[i], 10)) == 'US_RUN.EXE'
+      case US_Upper(right(vExeList[i], 13)) == 'US_IMPDEF.EXE'
+      case US_Upper(right(vExeList[i], 15)) == 'US_PEXPORTS.EXE'
+      case US_Upper(right(vExeList[i], 12)) == 'US_REIMP.EXE'
+      case US_Upper(right(vExeList[i], 13)) == 'US_IMPLIB.EXE'
+      case US_Upper(right(vExeList[i], 14)) == 'US_OBJDUMP.EXE'
+      case US_Upper(right(vExeList[i], 12)) == 'US_TDUMP.EXE'
       otherwise
          Out += US_ShortName(PUB_cQPM_Folder) + DEF_SLASH + 'XYZ_UPX.EXE -d --no-progress ' + vExeList[i] + Hb_OsNewLine()
       endcase
