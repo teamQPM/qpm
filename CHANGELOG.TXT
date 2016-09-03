@@ -8,6 +8,10 @@
  * See "How to format your ChangeLog entries" in howtosvn.txt file.
  */
 
+2016-09-03 19:33:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * ./QPM.exe
+     * Updated to 05_05_03.
+
 2016-09-03 19:30:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * ./QPM.ch
    * ./QPM_AutoProject.qpm
