@@ -1,4 +1,36 @@
 
+En la versión 05_05_03:
+1. Corregido: OOHG en modo consola muestra una ventana vacía.
+2. Corregido: La compilación con xHarbour termina en error porque algunas librerías no se agregan.
+3. Corregido: La compilación con xHarbour termina en error por utilizar un parámetro erróneo.
+4. Corregido: Los ejecutables construidos con BCC32 y el nuevo debugger muestran una consola vacía.
+5. Corregido: QPM cancela al guardar el archivo .qpm
+6. Corregido: Algunas opciones del proyecto no se pueden modificar.
+7. Modificado: AutoInc es ahora una opción del proyecto.
+8. Modificado: Se deja de modificar minigui.ch de HMG 3.x para forzar la GT por defecto.
+
+En la versión 05_05_03:
+1. Fixed: OOHG show an empty windows under console mode.
+2. Fixed: xHarbour builds end with error because some libraries are not added.
+3. Fixed: xHarbour builds end with error because a wrong parameter.
+4. Fixed: Projects build with BCC32 and the new debugger show an empty console window.
+5. Fixed: QPM cancels when saving the .qpm file.
+6. Fixed: Some project options cannot be changed.
+7. Changed: AutoInc is now a project options.
+8. Changed: The minigui.ch file of HMG 3.x is no longer modified to force the default GT.
+
+Versão 05_05_03:
+1. Fixo: OOHG mostra uma janela vazia em modo de console.
+2. Fixo: As compilações com xHarbour terminam com erro porque algumas bibliotecas não são adicionadas.
+3. Fixo: As compilações com xHarbour terminam com erro por causa de um parâmetro errado.
+4. Fixo: Os projetos construidos com bcc32 e o novo depurador mostram uma janela do console vazia.
+5. Fixo: QPM cancela ao salvar o arquivo .qpm
+6. Fixo: Algumas opções de projeto não podem ser alteradas.
+7. Mudado: Auto Inc é agora uma opção do projeto.
+8. Mudado: O arquivo minigui.ch da HMG 3.x ja não é modificado para forçar o GT padrão.
+
+----
+
 Desde 2016-08-25 12:41:05 UTC, Virustotal reporta que el instalador .exe está libre de virus.
 Since 2016-08-25 12:41:05 UTC, Virustotal reports that the .exe installer is virus-free.
 A partir de 2016-08-25 12:41:05 UTC, Virustotal relata que o instalador .exe está livre de vírus.
