@@ -488,10 +488,10 @@ Function SwitchRadioOutputCopyMove()
    case WinPSettings.Radio_OutputCopyMove.value == 1
       WinPSettings.Text_CopyMove.Enabled := .F.
       WinPSettings.Button_CopyMove.Enabled := .F.
-   case WinPSettings.Radio_OutputCopyMove.value == 1 == 2
+   case WinPSettings.Radio_OutputCopyMove.value == 2
       WinPSettings.Text_CopyMove.Enabled := .T.
       WinPSettings.Button_CopyMove.Enabled := .T.
-   case WinPSettings.Radio_OutputCopyMove.value == 1 == 3
+   case WinPSettings.Radio_OutputCopyMove.value == 3
       WinPSettings.Text_CopyMove.Enabled := .T.
       WinPSettings.Button_CopyMove.Enabled := .T.
    endcase
