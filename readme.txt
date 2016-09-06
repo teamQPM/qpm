@@ -1,4 +1,21 @@
 
+En la versión 05_05_04:
+1. Corregido: RTE al modificar la opción Copy/Move en opciones del proyecto.
+2. Nota: Se provee un archivo .zip de instalación ya que algunos antivirus detectan malware en el instalador .exe
+3. Nota: Los archivos pueden verificarse individualmente en https://www.virustotal.com/es/
+
+En la versión 05_05_04:
+1. Fixed: RTE when changing option Copy/Move at project's options.
+2. Note: A .zip installation file is provided because some antivirus detect malware in the .exe installer.
+3. Note: Files can be checked separately at https://www.virustotal.com/es/
+
+Versão 05_05_04:
+1. Fixo: RTE ao mudar opção Copy/Move em opções do projeto.
+2. Nota: Um arquivo de instalação .zip é fornecido porque alguns antivírus detectan malware no arquivo instalador .exe
+3. Nota: Os arquivos podem ser verificados individualmente en https://www.virustotal.com/es/
+
+----
+
 En la versión 05_05_03:
 1. Corregido: OOHG en modo consola muestra una ventana vacía.
 2. Corregido: La compilación con xHarbour termina en error porque algunas librerías no se agregan.
