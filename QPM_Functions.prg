@@ -1366,7 +1366,8 @@ Return .T.
 
 Function MuestroErrorLog()
    SetProperty( "VentanaMain", "RichEditOut", "Value", QPM_Wait( "US_ViewErrorLog()") )
-   SetProperty( "VentanaMain", "RichEditOut", "CaretPos", Len( GetProperty( "VentanaMain", "RichEditOut", "Value" ) ) )
+//   SetProperty( "VentanaMain", "RichEditOut", "CaretPos", Len( GetProperty( "VentanaMain", "RichEditOut", "Value" ) ) )
+   SetProperty( "VentanaMain", "RichEditOut", "CaretPos", 1 )
 Return .T.
 
 Function US_ViewErrorLog()
@@ -1377,7 +1378,7 @@ Function US_ViewErrorLog()
    Local nPosAux
    Local nTopLenLog := 100000
    if cErrorLog == "*RUNFOLDER*"
-      Return "Program Running from another Folder that Project Folder" + HB_OsNewLine() + "MiniGui don't produce file 'ErrorLog'. This is a MiniGui limitation or bug"
+      Return "Program is not running from Project Folder" + HB_OsNewLine() + "MiniGui can't generate 'ErrorLog' file. This is a MiniGui limitation or bug"
    endif
    if !file( cErrorLog )
       Return "Error Log Not Found: " + cErrorLog

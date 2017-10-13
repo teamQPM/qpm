@@ -8,6 +8,17 @@
  * See "How to format your ChangeLog entries" in howtosvn.txt file.
  */
 
+2017-10-12 21:59:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * ./QPM.exe
+     * Rebuilded.
+   * ./TODO.TXT
+     + Added new entry.
+   * ./QPM_Libraries.prg
+     + gtwin library to Extended builds.
+   * ./QPM_Functions.prg
+     * Error log is positioned at the last added entry.
+     * Error message.
+
 2016-09-06 20:04:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * ./QPM_AutoProject.qpm
    * ./QPM.exe
