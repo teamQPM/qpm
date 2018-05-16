@@ -40,7 +40,7 @@
 // QPM version
 #define QPM_VERSION_NUMBER_MAYOR   '05'
 #define QPM_VERSION_NUMBER_MINOR   '05'
-#define QPM_VERSION_NUMBER_BUILD   '04'
+#define QPM_VERSION_NUMBER_BUILD   '05'
 #define QPM_VERSION_NUMBER_SHORT   ( QPM_VERSION_NUMBER_MAYOR + QPM_VERSION_NUMBER_MINOR + QPM_VERSION_NUMBER_BUILD )
 #define QPM_VERSION_NUMBER_LONG    ( QPM_VERSION_NUMBER_MAYOR + QPM_VERSION_NUMBER_MINOR + "00" + QPM_VERSION_NUMBER_BUILD )
 #define QPM_VERSION_DISPLAY_SHORT  ( QPM_VERSION_NUMBER_MAYOR + "." + QPM_VERSION_NUMBER_MINOR + '.' + QPM_VERSION_NUMBER_BUILD )
@@ -587,6 +587,9 @@ memvar PRI_COMPATIBILITY_THISFOLDER
 memvar Prj_Check_64bits
 memvar Prj_Check_Console
 memvar Prj_Check_HarbourIs31
+memvar Prj_Check_IgnoreLibRCs
+memvar Prj_Check_IgnoreMainRC
+memvar Prj_Check_IgnoreOtherRCs
 memvar Prj_Check_OutputPrefix
 memvar Prj_Check_OutputSuffix
 memvar Prj_Check_PlaceRCFirst

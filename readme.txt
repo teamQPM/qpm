@@ -1,4 +1,15 @@
 
+En la versión 05_05_05:
+1. Corregido: Al compilar en modo consola se ignoran los archivos de recursos del proyecto y de MINIGUI.
+
+En la versión 05_05_05:
+1. Fixed: MINIGUI and project resource files are being ignored when building in console mode,
+
+Versão 05_05_05:
+1. Fixo: os arquivos de recursos da MINIGUI e do projeto estão sendo ignorados ao construir en modo console.
+
+----
+
 En la versión 05_05_04:
 1. Corregido: RTE al modificar la opción Copy/Move en opciones del proyecto.
 2. Nota: Se provee un archivo .zip de instalación ya que algunos antivirus detectan malware en el instalador .exe
