@@ -8,7 +8,18 @@
  * See "How to format your ChangeLog entries" in howtosvn.txt file.
  */
 
-2018-05-15 21:00:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2018-05-15 21:40:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * ./HelpQPM/QPM_SHG.cdx
+   * ./HelpQPM/QPM_SHG.dbf
+   * ./HelpQPM/QPM_SHG.fpt
+     * Updated history of changes.
+   * ./QPM.chm
+   * ./QPM_AutoProject.qpm
+   * ./QPM_AutoProjectOnlyHelp.qpm
+   * ./readme.txt
+     * Updated.
+
+2018-05-15 21:13:06 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * ./QPM.exe
      * Rebuilded.
      * Updated to 05_05_05.

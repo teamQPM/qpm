@@ -102,14 +102,20 @@ Versão 05_05_01:
 
 ----
 
-En la versión 05_05_00:
+En la versión 05_04_09:
 1. Agregado: soporte para 64 bits.
+2. Se agrega la ubicación y el contenido del archivo INIT.CLD al log de actividad.
+3. Se quita el detalle del comando de linkedición bajo MinGW del log de actividad.
 
-Version 05_04_04:
+Version 05_04_09:
 1. Added: 64 bits support.
+2. Added: location and content of INIT.CLD is now written to the activity log.
+3. Removed: MinGW's linkedit command details from the activity log.
 
-Versão 05_04_04:
+Versão 05_04_09:
 1. Adicionado: suporte para 64 bits.
+2. Adicionado: localização e conteúdo do INIT.CLD agora estão gravados no log de atividades.
+3. Removido: detalhes do comando de linkedição do MinGW no log de atividades.
 
 ----
 
