@@ -8,6 +8,17 @@
  * See "How to format your ChangeLog entries" in howtosvn.txt file.
  */
 
+2018-08-22 21:40:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * ./QPM.exe
+     * Rebuilded.
+   * ./QPM_AutoProject.qpm
+   * ./QPM.ch
+   * ./QPM_AutoProject.qpm
+     * Updated to 05_05_06.
+   * ./QPM.prg
+     ! "Error en Type for List Output" caused by a folder's name not been
+       shortened when it has a space in it.
+
 2018-05-15 21:40:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * ./HelpQPM/QPM_SHG.cdx
    * ./HelpQPM/QPM_SHG.dbf

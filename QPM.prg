@@ -6618,7 +6618,7 @@ Function QPM_Build2()
 
       // Copy or Move
       if Prj_Radio_OutputCopyMove # DEF_RG_NONE
-         Out := Out + PUB_cCharTab + '$(US_MSG_EXE) ' + PROGRESS_LOG + ' -MSG:' + cOutputCopyMove() + ' '+cOutputNameDisplay+' to ' + Prj_Text_OutputCopyMoveFolder + DEF_SLASH + US_FileNameOnlyNameAndExt( cOutputNameDisplay ) + ' ...' + Hb_OsNewLine()
+         Out := Out + PUB_cCharTab + '$(US_MSG_EXE) ' + PROGRESS_LOG + ' -MSG:' + cOutputCopyMove() + ' ' + cOutputNameDisplay + ' to ' + Prj_Text_OutputCopyMoveFolder + DEF_SLASH + US_FileNameOnlyNameAndExt( cOutputNameDisplay ) + ' ...' + Hb_OsNewLine()
          Out := Out + PUB_cCharTab + if(! bLogActivity, '@', '') + '$(US_SHELL_EXE) ' + if(! bLogActivity, '-OFF ','') + cOutputCopyMove() + ' ' + cOutputName + ' ' + US_ShortName( Prj_Text_OutputCopyMoveFolder ) + DEF_SLASH + US_FileNameOnlyNameAndExt( cOutputName ) + Hb_OsNewLine()
       endif
 
@@ -6848,7 +6848,7 @@ Function QPM_Build2()
       #define BM_WIN_ERR ( "US_Res from Batch Error: WINDRES.EXE not found at MinGW's BIN folder" )
       #define BM_US_MAKE ( DBLQT + PUB_cQPM_Folder + DEF_SLASH + 'US_MAKE.EXE' + DBLQT )
       #define BM_EXE     ( DBLQT + cOutputNameDisplay + DBLQT )
-      #define BM_OUTPUT  ( DBLQT + Prj_Text_OutputCopyMoveFolder + DBLQT + DEF_SLASH + US_FileNameOnlyNameAndExt( cOutputName ) )
+      #define BM_OUTPUT  ( DBLQT + Prj_Text_OutputCopyMoveFolder + DEF_SLASH + US_FileNameOnlyNameAndExt( cOutputName ) + DBLQT )
 
                   bld_cmd := '@ECHO OFF'                                                                                                  + Hb_OsNewLine()
       if bLogActivity
@@ -6857,13 +6857,12 @@ Function QPM_Build2()
                   bld_cmd += 'IF EXIST ' + BM_TMP_ERR  + ' DEL ' + BM_TMP_ERR  + ' > NUL'                                                 + Hb_OsNewLine()
                   bld_cmd += 'IF EXIST ' + TEMP_LOG    + ' DEL ' + TEMP_LOG    + ' > NUL'                                                 + Hb_OsNewLine()
                   bld_cmd += 'IF EXIST ' + SCRIPT_FILE + ' DEL ' + SCRIPT_FILE + ' > NUL'                                                 + Hb_OsNewLine()
-
-      if Prj_Radio_OutputType != DEF_RG_IMPORT .and. ( ! Prj_Check_IgnoreMainRC .or. ! Prj_Check_IgnoreLibRCs )
                   bld_cmd += 'IF EXIST ' + BM_TEMP_RC  + ' DEL ' + BM_TEMP_RC  + ' > NUL'                                                 + Hb_OsNewLine()
                   bld_cmd += 'IF EXIST ' + BM_RC_CONF  + ' DEL ' + BM_RC_CONF  + ' > NUL'                                                 + Hb_OsNewLine()
                   bld_cmd += 'IF EXIST ' + BM_RC1_SHR  + ' DEL ' + BM_RC1_SHR  + ' > NUL'                                                 + Hb_OsNewLine()
                   bld_cmd += 'IF EXIST ' + BM_RC2_SHR  + ' DEL ' + BM_RC2_SHR  + ' > NUL'                                                 + Hb_OsNewLine()
 
+      if Prj_Radio_OutputType != DEF_RG_IMPORT .and. ( ! Prj_Check_IgnoreMainRC .or. ! Prj_Check_IgnoreLibRCs )
          if Prj_Check_IgnoreMainRC
             if ! Prj_Check_IgnoreLibRCs
                   bld_cmd += 'IF NOT EXIST ' + BM_RC_MINI + ' ECHO ' + BM_RCM_ERR + ' > ' + BM_TMP_ERR                                    + Hb_OsNewLine()
@@ -6933,13 +6932,10 @@ Function QPM_Build2()
                   bld_cmd += ':OK'                                                                                                        + Hb_OsNewLine()
                   bld_cmd += 'ECHO OK > ' + END_FILE                                                                                      + Hb_OsNewLine()
                   bld_cmd += ':END'                                                                                                       + Hb_OsNewLine()
-
-      if PUB_DeleteAux .and. Prj_Radio_OutputType != DEF_RG_IMPORT .and. ( ! Prj_Check_IgnoreMainRC .or. ! Prj_Check_IgnoreLibRCs )
                   bld_cmd += 'IF EXIST ' + BM_TEMP_RC  + ' DEL ' + BM_TEMP_RC + ' > NUL'                                                  + Hb_OsNewLine()
                   bld_cmd += 'IF EXIST ' + BM_RC_CONF  + ' DEL ' + BM_RC_CONF + ' > NUL'                                                  + Hb_OsNewLine()
                   bld_cmd += 'IF EXIST ' + BM_RC1_SHR  + ' DEL ' + BM_RC1_SHR + ' > NUL'                                                  + Hb_OsNewLine()
                   bld_cmd += 'IF EXIST ' + BM_RC2_SHR  + ' DEL ' + BM_RC2_SHR + ' > NUL'                                                  + Hb_OsNewLine()
-      endif
 
       QPM_MemoWrit( BUILD_BAT, bld_cmd )
    case ( IsBorland .or. IsPelles )
