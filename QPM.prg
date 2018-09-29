@@ -3757,7 +3757,7 @@ Function QPM_EditPAN( bForceEditor )
             QPM_MemoWrit( EditControlFile, 'Edit Control File for ' + ChgPathToReal( GetProperty( 'VentanaMain', 'GPanFiles', 'Cell', VentanaMain.GPanFiles.Value, NCOLPANFULLNAME ) ) )
             QPM_Execute( US_ShortName( PUB_cQPM_Folder ) + DEF_SLASH + 'US_Run.exe', 'QPM ' + RunParms )
          endif
-      case ToolAux == 'HMI'
+      case ToolAux == 'HMI' .OR. ToolAux == "OOHG"
          if GridImage( 'VentanaMain', 'GPanFiles', VentanaMain.GPanFiles.Value, NCOLPANSTATUS, '?', PUB_nGridImgEdited )
             MsgInfo( 'Already Opened' )
             Return .F.
@@ -3772,13 +3772,13 @@ Function QPM_EditPAN( bForceEditor )
             endif
             Editor := US_ShortName( alltrim( Gbl_Text_HMI ) )
          EndIf
-         if !( us_word( toolMake := CheckMakeForm( US_ShortName( ChgPathToReal( GetProperty( 'VentanaMain', 'GPanFiles', 'Cell', VentanaMain.GPanFiles.Value, NCOLPANFULLNAME ) ) ) ), 1 ) == 'HMI' )
+         if !( us_word( toolMake := CheckMakeForm( US_ShortName( ChgPathToReal( GetProperty( 'VentanaMain', 'GPanFiles', 'Cell', VentanaMain.GPanFiles.Value, NCOLPANFULLNAME ) ) ) ), 1 ) == 'HMI'  .OR. us_word( toolMake, 1 ) == "OOHG" )
             if US_Upper( US_Word( toolMake, 1 ) ) == 'UNKNOWN'
-               if ! MyMsgYesNo("Form was builded with tool '"+toolMake+"', do you want to edit with 'HMI+'?" )
+               if ! MyMsgYesNo( 'Form was builded with tool ' + DBLQT + toolMake + DBLQT + '.' + Hb_OsNewLine() + 'Do you want to edit with ' + DBLQT + 'OOHG IDE+' + DBLQT + '?' )
                   Return .F.
                endif
             else
-               MsgStop( 'Form was builded with tool ' + DBLQT + toolMake + DBLQT + '.' + Hb_OsNewLine() + 'the selected tool, ' + DBLQT + 'HMI' + DBLQT + ', is not compatible.' )
+               MsgStop( 'Form was builded with tool ' + DBLQT + toolMake + DBLQT + '.' + Hb_OsNewLine() + 'The selected tool, ' + DBLQT + 'OOHG IDE+' + DBLQT + ', is not compatible.' )
                Return .F.
             endif
          endif
@@ -3819,7 +3819,7 @@ Function QPM_EditPAN( bForceEditor )
             Editor := US_ShortName( alltrim( Gbl_Text_HMGSIDE ) )
          EndIf
          if !( us_word( toolMake := CheckMakeForm( US_ShortName( ChgPathToReal( GetProperty( 'VentanaMain', 'GPanFiles', 'Cell', VentanaMain.GPanFiles.Value, NCOLPANFULLNAME ) ) ) ), 1 ) == 'HMGSIDE' )
-            if !( US_Upper( US_Word( toolMake, 1 ) ) == 'HMI' )
+            if !( US_Upper( US_Word( toolMake, 1 ) ) == 'HMI' .OR. US_Upper( US_Word( toolMake, 1 ) ) == 'OOHG' )
                if ! MyMsgYesNo("Form was builded with tool '"+toolMake+"', do you want edit with 'HMGSIDE'?" )
                   Return .F.
                endif
@@ -8291,8 +8291,8 @@ Function CheckMakeForm( cForm )
             case at( '* HARBOUR MINIGUI IDE HMI+', US_Upper( cLinea ) ) > 0
                reto := 'HMI (by Ciro Vargas Clemow)'
                exit
-            case at( '* ooHG IDE Plus', US_Upper( cLinea ) ) > 0
-               reto := 'ooHGIDE+ (by Ciro Vargas Clemow)'
+            case at( '* OOHG IDE PLUS', US_Upper( cLinea ) ) > 0
+               reto := 'OOHG IDE+ (by ooHG development team)'
                exit
             case at( '* OOHG IDE', US_Upper( cLinea ) ) > 0
                reto := 'HMI (by Ciro Vargas Clemow)'
