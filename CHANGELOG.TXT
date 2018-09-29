@@ -8,6 +8,17 @@
  * See "How to format your ChangeLog entries" in howtosvn.txt file.
  */
 
+2018-09-29 14:26:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * ./QPM.exe
+     * Rebuilded.
+   * ./QPM_AutoProject.qpm
+   * ./QPM.ch
+   * ./QPM_AutoProject.qpm
+   * ./readme.txt
+     * Updated to 05_05_07.
+   * ./QPM.prg
+     ! Error when trying to edit .fmg file.
+
 2018-08-22 21:40:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * ./QPM.exe
      * Rebuilded.

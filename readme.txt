@@ -1,3 +1,23 @@
+En la versión 05_05_07:
+1. Corregido: Error al intentar editar archivo .fmg.
+
+En la versión 05_05_07:
+1. Fixed: Error when trying to edit .fmg file.
+
+Versão 05_05_07:
+1. Fixo: Erro ao tentar editar o arquivo .fmg.
+
+----
+En la versión 05_05_06:
+1. Corregido: Mensaje "Error en Type for List Output".
+
+En la versión 05_05_06:
+1. Fixed: Message "Error en Type for List Output".
+
+Versão 05_05_06:
+1. Fixo: Mensagem "Error en Type for List Output".
+
+----
 
 En la versión 05_05_05:
 1. Corregido: Al compilar en modo consola se ignoran los archivos de recursos del proyecto y de MINIGUI.
