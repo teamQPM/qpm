@@ -1,17 +1,30 @@
-En la versión 05_05_07:
+Versión 05_05_08:
+1. Agregado: soporte Multithread.
+2. Corregido: RTE al construir archivo .chm.
+
+Version 05_05_08:
+1. Added: soporte Multithread.
+2. Fixed: RTE when building .chm file.
+
+Versão 05_05_08:
+1. Adicionado: suporte Multithread.
+2. Fixo: RTE ao construir arquivo .chm.
+
+----
+Versión 05_05_07:
 1. Corregido: Error al intentar editar archivo .fmg.
 
-En la versión 05_05_07:
+Version 05_05_07:
 1. Fixed: Error when trying to edit .fmg file.
 
 Versão 05_05_07:
 1. Fixo: Erro ao tentar editar o arquivo .fmg.
 
 ----
-En la versión 05_05_06:
+Versión 05_05_06:
 1. Corregido: Mensaje "Error en Type for List Output".
 
-En la versión 05_05_06:
+Version 05_05_06:
 1. Fixed: Message "Error en Type for List Output".
 
 Versão 05_05_06:
@@ -19,10 +32,10 @@ Versão 05_05_06:
 
 ----
 
-En la versión 05_05_05:
+Versión 05_05_05:
 1. Corregido: Al compilar en modo consola se ignoran los archivos de recursos del proyecto y de MINIGUI.
 
-En la versión 05_05_05:
+Version 05_05_05:
 1. Fixed: MINIGUI and project resource files are being ignored when building in console mode,
 
 Versão 05_05_05:
@@ -30,12 +43,12 @@ Versão 05_05_05:
 
 ----
 
-En la versión 05_05_04:
+Versión 05_05_04:
 1. Corregido: RTE al modificar la opción Copy/Move en opciones del proyecto.
 2. Nota: Se provee un archivo .zip de instalación ya que algunos antivirus detectan malware en el instalador .exe
 3. Nota: Los archivos pueden verificarse individualmente en https://www.virustotal.com/es/
 
-En la versión 05_05_04:
+Version 05_05_04:
 1. Fixed: RTE when changing option Copy/Move at project's options.
 2. Note: A .zip installation file is provided because some antivirus detect malware in the .exe installer.
 3. Note: Files can be checked separately at https://www.virustotal.com/es/
@@ -47,7 +60,7 @@ Versão 05_05_04:
 
 ----
 
-En la versión 05_05_03:
+Versión 05_05_03:
 1. Corregido: OOHG en modo consola muestra una ventana vacía.
 2. Corregido: La compilación con xHarbour termina en error porque algunas librerías no se agregan.
 3. Corregido: La compilación con xHarbour termina en error por utilizar un parámetro erróneo.
@@ -58,7 +71,7 @@ En la versión 05_05_03:
 8. Modificado: Se deja de modificar minigui.ch de HMG 3.x para forzar la GT por defecto.
 9. Nota: Se provee un archivo .zip de instalación ya que algunos antivirus detectan malware en el instalador .exe
 
-En la versión 05_05_03:
+Version 05_05_03:
 1. Fixed: OOHG show an empty windows under console mode.
 2. Fixed: xHarbour builds end with error because some libraries are not added.
 3. Fixed: xHarbour builds end with error because a wrong parameter.
@@ -82,13 +95,13 @@ Versão 05_05_03:
 
 ----
 
-En la versión 05_05_02:
+Versión 05_05_02:
 1. Corregido: No se carga la configuración global desde la versión anterior al instalar una nueva.
 2. Corregido: Varios falsos positivos reportados por diferentes antivirus.
 3. Corregido: El color de fondo de la pantalla no es restaurado al final la edición de un fuente.
 4. Nota: Se provee un archivo .zip de instalación ya que algunos antivirus detectan malware en el instalador .exe
 
-En la versión 05_05_02:
+Version 05_05_02:
 1. Fixed: The global configuration is not copied from the previous version when installing a new one.
 2. Fixed: Some false positives reported by some antivirus.
 3. Fixed: Screen's background color is not restored after editing a source.
@@ -102,13 +115,13 @@ Versão 05_05_02:
 
 ----
 
-En la versión 05_05_01:
+Versión 05_05_01:
 1. Corregido: No se cargan las librerias adicionales al convertir desde versiones anteriores a la 05_05_00.
 2. Corregido: La información en la solapa 'LIB' no es correcta.
 3. Corregido: Los recursos cuyos nombres comienzan con '..\' no son correctamente procesados.
 4. Nota: Se provee un archivo .zip de instalación ya que algunos antivirus detectan malware en los archivos .exe
 
-En la versión 05_05_01:
+Version 05_05_01:
 1. Fixed: Added libraries are not loaded from old version .qpm files.
 2. Fixed: Info displayed at 'LIB' tab.
 3. Fixed: The resources whose names start with '.. \' are not properly processed.
@@ -122,7 +135,7 @@ Versão 05_05_01:
 
 ----
 
-En la versión 05_04_09:
+Versión 05_04_09:
 1. Agregado: soporte para 64 bits.
 2. Se agrega la ubicación y el contenido del archivo INIT.CLD al log de actividad.
 3. Se quita el detalle del comando de linkedición bajo MinGW del log de actividad.
@@ -139,7 +152,7 @@ Versão 05_04_09:
 
 ----
 
-En la versión 05_04_08:
+Versión 05_04_08:
 1. Corregido: no se crea el ejecutable ya que MinGW de HMG 3.4.2 no encuentra los archivos de los #include.
 
 Version 05_04_08:
@@ -150,7 +163,7 @@ Versão 05_04_08:
 
 ----
 
-En la versión 05_04_07:
+Versión 05_04_07:
 1. Corregido: el ejecutable se genera siempre con la extensión EXE (en mayúscula), aún cuando se haya especificado con minúsculas.
 
 Version 05_04_07:
@@ -161,7 +174,7 @@ Versão 05_04_07:
 
 ----
 
-En la versión 05_04_06:
+Versi+on 05_04_06:
 1. Corregido: la configuración global se pierde luego de un upgrade.
 
 Version 05_04_06:
@@ -172,7 +185,7 @@ Versão 05_04_06:
 
 ----
 
-En la versión 05_04_05:
+Versión 05_04_05:
 1. Corregido: cancelación al clickear un proyecto previo que ya no existe.
 
 Version 05_04_05:
@@ -183,7 +196,7 @@ Versão 05_04_05:
 
 ----
 
-En la versión 05_04_04:
+Versión 05_04_04:
 1. Agregado: librería iphlpapi.a para Harbour+MinGW+OOHG.
 2. Modificado: los fuentes de la librería socket para hacerlos compatibles con Harbour 3.2.
 3. Modificado: el log de ejecución ha sido mejorado.
@@ -200,7 +213,7 @@ Versão 05_04_04:
 
 ----
 
-En la versión 05_04_03:
+Versión 05_04_03:
 1. Corregido: no se puede compilar con Harbour 3.2, MinGW y OOHG.
 2. Agregado: QPM recuerda el valor de la opción DEBUG.
 
@@ -214,7 +227,7 @@ Versão 05_04_03:
 
 ----
 
-En la versión 05_04_02:
+Versión 05_04_02:
 1. Corregido: no se puede compilar con Harbour 3.0, MinGW y OOHG.
 
 Version 05_04_02:
@@ -225,7 +238,7 @@ Versão 05_04_02:
 
 ----
 
-En la versión 05_04_01:
+Versión 05_04_01:
 1. Corregido: no se puede compilar con Harbour 3.2, MinGW y OOHG.
 2. Modificado: varios defectos y artefactos visuales.
 3. Agregado: opción "Move item" en el menú contextual.
@@ -242,7 +255,7 @@ Versão 05_04_01:
 
 ----
 
-En la versión 05_04_00:
+Versión 05_04_00:
 1. Modificado: el log de ejecución ha sido mejorado (tanto en modo normal como batch).
 2. Modificado: al compilar con ooHG+MinGW se incluye automáticamente la librería LIBMSIMG32.A.
 NOTA: Esta es una versión de instalación completa. Para preservar la información de "Hot Recovery" se debe instalar en la misma carpeta en que está instalada la versión anterior.
@@ -259,7 +272,7 @@ NOTA: Esta é uma versão de instalação completa, estar ciente de que para preserv
 
 ----
 
-En la versión 05_03_22:
+Versión 05_03_22:
 1. Modificado: la librería CT se incluye por defecto al compilar con Extended 1.x + BCC + Harbour.
 2. Corregido: no se compilan los fuentes .c cuando el proyecto incluye fuentes de muchas carpetas diferentes.
 
@@ -273,7 +286,7 @@ Versão 05_03_22:
 
 ----
 
-En la versión 05_03_21:
+Versión 05_03_21:
 1. Modificado: la librería ZIPARCHIVE ya no se incluye por defecto.
 
 Version 05_03_21:
@@ -284,7 +297,7 @@ Versão 05_03_21:
 
 ----
 
-En la versión 05_03_20:
+Versión 05_03_20:
 1. Modificado: las librerías por defecto al compilar con OOHG + MinGW + Harbour.
 
 Version 05_03_20:
@@ -295,7 +308,7 @@ Versão 05_03_20:
 
 ----
 
-En la versión 05_03_19:
+Versión 05_03_19:
 1. Corregido: no se crea el archivo .LIB cuando se genera una librería de interfase para acceso a DLL.
 
 Version 05_03_19:
@@ -306,7 +319,7 @@ Versão 05_03_19:
 
 ----
 
-En la versión 05_03_18:
+Versión 05_03_18:
 1. Se agregó la constante __PROJECT_FOLDER__.
 
 Version 05_03_18:
@@ -317,7 +330,7 @@ Versão 05_03_18:
 
 ----
 
-En la versión 05_03_17:
+Versión 05_03_17:
 1. Al compilar con BCC se incluye automáticamente la librería LIB\PSDK\MSIMG32.LIB.
 
 Version 05_03_17:
@@ -328,7 +341,7 @@ Versão 05_03_17:
 
 ----
 
-En la versión 05_03_16:
+Versión 05_03_16:
 1. Se agregó soporte para las librerías de la carpeta PSDK cuando se utiliza BCC, debido a que en algunos casos BCC ignora los archivos de configuración.
 
 Version 05_03_16:
@@ -339,7 +352,7 @@ Versão 05_03_16:
 
 ----
 
-En la versión 05_03_15:
+Versión 05_03_15:
 1. Se hicieron cambios internos que no afectan la funcionalidad.
 
 Version 05_03_15:
@@ -350,7 +363,7 @@ Versão 05_03_15:
 
 ----
 
-En la versión 05_03_14:
+Versión 05_03_14:
 1. Se agregó la opción "Do not delete auxiliary files" al menú "Only for support". Evita que QPM borre los archivos auxiliares utilizados durante la construción del ejecutable.
 
 Version 05_03_14:
@@ -361,7 +374,7 @@ Versão 05_03_14:
 
 ----
 
-En la versión 05_03_13:
+Versión 05_03_13:
 1. Corregido: las teclas de función Fx quedan activas cuando la ventana de QPM pierde el foco.
 
 Version 05_03_13:
@@ -372,7 +385,7 @@ Versão 05_03_13:
 
 ----
 
-En la versión 05_03_12:
+Versión 05_03_12:
 1. Corregido: se pierden las opciones "Extra RUN" cuando se guarda la configuración del proyecto.
 
 Version 05_03_12:
@@ -383,7 +396,7 @@ Versão 05_03_12:
 
 ----
 
-En la versión 05_03_11:
+Versión 05_03_11:
 1. Corregido: cuando se modifica la ubicación del proyecto, no es posible cambiar la carpeta donde se guardan los archivos HTML correspondientes a la ayuda.
 
 Version 05_03_11:
@@ -394,7 +407,7 @@ Versão 05_03_11:
 
 ----
 
-En la versión 05_03_10:
+Versión 05_03_10:
 1. Corregido: no se muestra correctamente el nombre del compilador C en uso cuando se seleccionan las opciones Minigui Extended 1.x y MinGW en la ventana Project Options.
 
 Version 05_03_10:
@@ -405,7 +418,7 @@ Versão 05_03_10:
 
 ----
 
-En la versión 05_03_09:
+Versión 05_03_09:
 1. Corregido: los nombres de archivo que contienen "\" no se muestran correctamente en la pestaña "Output Error".
 
 Version 05_03_09:
@@ -416,7 +429,7 @@ Versão 05_03_09:
 
 ----
 
-En la versión 05_03_08:
+Versión 05_03_08:
 1. Se ha removido el parámetro -mno-cygwin al invocar al compilador MinGW, debido a que las nuevas versiones no lo soportan. Quienes tengan instalado el entorno Cygwin y quieran compilar con las librerías nativas de Windows deberán incluir dicho parámetro en el campo "Override Link Parm" de la pestaña "Log Build Process".
 
 Version 05_03_08:
@@ -427,7 +440,7 @@ Versão 05_03_08:
 
 ----
 
-En la versión 05_03_07 se ha:
+Versión 05_03_07 se ha:
 1. Agregado: uso de caracteres acentuados en los nombres de los archivos SHG.
 2. Corregido: linkedición con .obj obsoleto en BCC cuando un error en el .prg genera un .c que no compila.
 3. Corregido: no se puede linkeditar un proyecto para OOHG con MinGW y Harbour en modo DEBUG.
@@ -453,7 +466,7 @@ Versão 05_03_07:
 
 ----
 
-En la versión 05_03_06 se ha:
+Versión 05_03_06 se ha:
 1. Agregado: opciones para comprimir/descomprimir algunos de los utilitarios US_*.exe. Tener en cuenta que US_ImpDef.EXE, US_PExports.EXE, US_Reimp.EXE, US_ImpLib.EXE, US_DllTool.EXE, US_ObjDump.EXE and US_Tdump.EXE no puede ser comprimidos/descomprimidos por UPX.
 2. Corregido: se agregan líneas extras cuando se pega texto desde otro tópico en la pestaña SHG.
 3. Corregido: no se muestran los mensajes de error en el log de procesamiento cuando se utiliza Harbour 3.1 para Borland C.
@@ -485,7 +498,7 @@ Versão 05_03_06:
 
 ----
 
-En la versión 05_03_05:
+Versión 05_03_05:
 1. Se actualizó el utilitario UPXa la versión 3.08w para solucionar un problema con los ejecutables generados por HGM 3.0.40.
 
 Version 05_03_05:
