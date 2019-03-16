@@ -8,6 +8,33 @@
  * See "How to format your ChangeLog entries" in howtosvn.txt file.
  */
 
+2019-03-16 19:20:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * ./QPM.exe
+     * Rebuilded.
+   * ./QPM_AutoProject.qpm
+   * ./QPM.ch
+   * ./QPM_AutoProject.qpm
+   * ./QPM_AutoProjectOnlyHelp.qpm
+   * ./readme.txt
+     * Updated to 05_05_08.
+   * ./QPM.prg
+     ! RTE when building help file.
+     + Multithread support.
+     * BCC libraries "import32" and "cw32" are no longer forced.
+   * ./QPM.chm
+     * Updated.
+   * ./QPM_ProjectSettings.prg
+     + Multithread support.
+   * ./QPM_Libraries.prg
+     * Synchronized with last OOHG changes.
+     * BCC libraries "import32" and "cw32" are no longer forced.
+     + Multithread support.
+   * ./TODO.TXT
+     + Added new entries.
+   * ./HelpQPM/QPM_SHG.dbf
+   * ./HelpQPM/QPM_SHG.fpt
+     * History of changes was updated.
+
 2018-09-29 14:26:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * ./QPM.exe
      * Rebuilded.

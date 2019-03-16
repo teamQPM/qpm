@@ -11,6 +11,13 @@
 /******************************************************************************/
 
 Assigned to: <nobody>
+Added by...: 2018-12-06 18:07:00 UTC-0300 Fernando Yurisich <fyurisich>
+Status.....: Open.
+Details....: Add video to QPM site.
+
+/******************************************************************************/
+
+Assigned to: <nobody>
 Added by...: 2017-08-24 08:42:00 UTC-0300 Fernando Yurisich <fyurisich>
 Status.....: Open.
 Details....: Copy .QPM file to Activity Log just before building project.

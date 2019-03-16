@@ -184,9 +184,18 @@ Function ProjectSettings()
               CAPTION         'Console Mode'
               ROW             130
               COL             300
-              WIDTH           200
+              WIDTH           140
               VALUE           Prj_Check_Console
               TOOLTIP         'Build in console mode using associated (x)Harbour compiler'
+      END CHECKBOX
+
+      DEFINE CHECKBOX Check_MT
+              CAPTION         'MT Mode'
+              ROW             130
+              COL             450
+              WIDTH           100
+              VALUE           Prj_Check_MT
+              TOOLTIP         'Use multithread libraries'
       END CHECKBOX
 
       @ 138, 20 FRAME FOutputType ;
@@ -388,10 +397,11 @@ Return .T.
 Function ProjectChanged()
    if Prj_Radio_Harbour             != WinPSettings.Radio_Harbour.value        .or. ;
       Prj_Check_HarbourIs31         != WinPSettings.Chk_HBVersion.value        .or. ;
-      Prj_Check_64bits              != WinPSettings.Chk_64bits.value            .or. ;
+      Prj_Check_64bits              != WinPSettings.Chk_64bits.value           .or. ;
       Prj_Radio_Cpp                 != WinPSettings.Radio_Cpp.value            .or. ;
       Prj_Radio_MiniGui             != WinPSettings.Radio_MiniGui.value        .or. ;
       Prj_Check_Console             != WinPSettings.Check_Console.value        .or. ;
+      Prj_Check_MT                  != WinPSettings.Check_MT.value             .or. ;
       Prj_Radio_OutputType          != WinPSettings.Radio_OutputType.value     .or. ;
       Prj_Radio_OutputCopyMove      != WinPSettings.Radio_OutputCopyMove.value .or. ;
       Prj_Text_OutputCopyMoveFolder != WinPSettings.Text_CopyMove.value        .or. ;
@@ -438,6 +448,7 @@ Function ProjectSettingsSave()
       Prj_Radio_Cpp         != WinPSettings.Radio_Cpp.value        .or. ;
       Prj_Radio_MiniGui     != WinPSettings.Radio_MiniGui.value    .or. ;
       Prj_Check_Console     != WinPSettings.Check_Console.value    .or. ;
+      Prj_Check_MT          != WinPSettings.Check_MT.value         .or. ;
       Prj_Radio_OutputType  != WinPSettings.Radio_OutputType.value
 
       Prj_Radio_Harbour     := WinPSettings.Radio_Harbour.value
@@ -446,6 +457,7 @@ Function ProjectSettingsSave()
       Prj_Radio_Cpp         := WinPSettings.Radio_Cpp.value
       Prj_Radio_MiniGui     := WinPSettings.Radio_MiniGui.value
       Prj_Check_Console     := WinPSettings.Check_Console.value
+      Prj_Check_MT          := WinPSettings.Check_MT.value
       Prj_Radio_OutputType  := WinPSettings.Radio_OutputType.value
 
       if Prj_Radio_OutputType == DEF_RG_IMPORT

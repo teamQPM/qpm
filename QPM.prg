@@ -272,8 +272,8 @@ Function Main( PAR_cP01, PAR_cP02, PAR_cP03, PAR_cP04, PAR_cP05, PAR_cP06, PAR_c
    PUBLIC NCOLINCSTATUS                 := 1
    PUBLIC NCOLINCNAME                   := 2
    PUBLIC NCOLINCFULLNAME               := 3
-   PUBLIC nColLibStatus                 := NCOLINCSTATUS                                              // AuxIliar para procesos que no diferencian entre inc y exc
-   PUBLIC nColLibFullName               := NCOLINCFULLNAME                                            // Auxliar para procesos que no diferencian entre inc y exc
+   PUBLIC nColLibStatus                 := NCOLINCSTATUS                                              // Auxiliar para procesos que no diferencian entre inc y exc
+   PUBLIC nColLibFullName               := NCOLINCFULLNAME                                            // Auxiliar para procesos que no diferencian entre inc y exc
    PUBLIC bSortIncAsc                   := .T.
    PUBLIC aGridExc                      := {}
    PUBLIC NCOLEXCSTATUS                 := 1
@@ -348,6 +348,7 @@ Function Main( PAR_cP01, PAR_cP02, PAR_cP03, PAR_cP04, PAR_cP05, PAR_cP06, PAR_c
    PUBLIC Prj_Check_64bits              := .F.
    PUBLIC Prj_Check_Console             := .F.             
    PUBLIC Prj_Check_HarbourIs31         := .T.
+   PUBLIC Prj_Check_MT                  := .F.
    PUBLIC Prj_Check_OutputPrefix        := .T.
    PUBLIC Prj_Check_OutputSuffix        := .F.
    PUBLIC Prj_Check_Upx                 := .F.
@@ -4314,6 +4315,7 @@ Function QPM_OpenProject2()
       Prj_Radio_Cpp                             := DEF_RG_MINGW
       Prj_Radio_MiniGui                         := DEF_RG_OOHG3
       Prj_Check_Console                         := .F.
+      Prj_Check_MT                              := .F.
       Prj_Radio_OutputType                      := DEF_RG_EXE
       Prj_Radio_OutputCopyMove                  := DEF_RG_NONE
       Prj_Text_OutputCopyMoveFolder             := ''
@@ -4579,6 +4581,8 @@ Function QPM_OpenProject2()
                  PUB_bDebugActiveAnt := PUB_bDebugActive
          ElseIf  US_Upper( US_Word( LOC_cLine, 1 ) ) == 'CHECKCONSOLE'
                  Prj_Check_Console := if( US_Word( LOC_cLine, 2 ) == 'YES', .T., .F. )
+         ElseIf  US_Upper( US_Word( LOC_cLine, 1 ) ) == 'CHECKMT'
+                 Prj_Check_MT := if( US_Word( LOC_cLine, 2 ) == 'YES', .T., .F. )
          ElseIf  US_Upper( US_Word( LOC_cLine, 1 ) ) == 'OUTPUTTYPE'
                  do case
                  case US_Word( LOC_cLine, 2 ) == 'SRCEXE'
@@ -4979,7 +4983,7 @@ Function QPM_SetResumen()
       SetProperty( Venta, 'LExtra', 'visible', .F. )
    else
       SetProperty( Venta, 'LResumen', 'Value', vSuffix[ AScan( vSuffix, { |x| x[1] == GetSuffix() } ) ][ 2 ] )
-      SetProperty( Venta, 'LExtra', 'Value', if( Prj_Check_Console, 'Console Mode', '' ) + if( PUB_bDebugActive, ' With DEBUG', '' ) + if( VentanaMain.AutoInc.Checked, '', ' AutoInc OFF' ) )
+      SetProperty( Venta, 'LExtra', 'Value', LTrim( if( Prj_Check_MT, ' MT Mode', '' ) + if( Prj_Check_Console, ' Console Mode', '' ) + if( PUB_bDebugActive, ' With DEBUG', '' ) + if( VentanaMain.AutoInc.Checked, '', ' AutoInc OFF' ) ) )
       SetProperty( Venta, 'LFull', 'visible', .T. )
       SetProperty( Venta, 'LExtra', 'visible', .T. )
    endif
@@ -5062,6 +5066,7 @@ Function QPM_SaveProject( bCheck )
    cINI := cINI + 'CHECKCPP '                   + GetCppSuffix() + Hb_OsNewLine()
    cINI := cINI + 'CHECKMINIGUI '               + GetMiniGuiSuffix() + Hb_OsNewLine()
    cINI := cINI + 'CHECKCONSOLE '               + if( Prj_Check_Console, 'YES', 'NO' ) + Hb_OsNewLine()
+   cINI := cINI + 'CHECKMT '                    + if( Prj_Check_MT, 'YES', 'NO' ) + Hb_OsNewLine()
    cINI := cINI + 'CHECKUPX '                   + if( Prj_Check_Upx, 'YES', 'NO' ) + Hb_OsNewLine()
    cINI := cINI + 'CHECKFORMTOOL '              + cFormTool() + Hb_OsNewLine()
    cINI := cINI + 'CHECKDBFTOOL '               + cDbfTool() + Hb_OsNewLine()
@@ -5812,7 +5817,8 @@ Function QPM_Build2()
 
    // INI - El siguiente es un parche para cuando el ultimo folder a agregar en Search es del formato 'C:',
    //       ya que hay que agregarle algun folder del formato 'C:\xxxxx' para que no cancele
-   if US_IsRootFolder( vExtraFoldersForSearch[ nLastExtraFolderSearchAdded ] )
+   if nLastExtraFolderSearchAdded > 0 .AND. nLastExtraFolderSearchAdded <= Len( vExtraFoldersForSearch ) .AND. ;
+      US_IsRootFolder( vExtraFoldersForSearch[ nLastExtraFolderSearchAdded ] )
       do case
       case IsMinGW
          cExtraFoldersHB := cExtraFoldersHB + ';' + US_ShortName( DiskName() + ':' + DEF_SLASH + '_' + PUB_cSecu + 'SearchBug' )
@@ -6143,7 +6149,7 @@ Function QPM_Build2()
 /*
  * Grabo libraries en script.ld
  */
-            if QPM_IsXHarbour() .and. !IsMinGW .and. file( GetHarbourLibFolder() + DEF_SLASH + 'bcc640' + PUB_xHarbourMT + '.lib' )
+            if QPM_IsXHarbour() .and. ! IsMinGW .and. file( GetHarbourLibFolder() + DEF_SLASH + 'bcc640' + PUB_xHarbourMT + '.lib' )
                Out := Out + PUB_cCharTab + 'echo $(DIR_HARBOUR_LIB)' + DEF_SLASH + 'bcc640' + PUB_xHarbourMT + '.lib + >> ' + SCRIPT_FILE + Hb_OsNewLine()
             endif
 
@@ -6470,10 +6476,12 @@ Function QPM_Build2()
                      endif
                   Next i
 
-                  Out := Out + PUB_cCharTab + 'echo $(DIR_COMPC_LIB)' + DEF_SLASH + 'import32.lib + >> ' + SCRIPT_FILE + Hb_OsNewLine()
-                  Out := Out + PUB_cCharTab + 'echo $(DIR_COMPC_LIB)' + DEF_SLASH + 'cw32.lib,, + >> ' + SCRIPT_FILE + Hb_OsNewLine()
+/*
+ * BCC32: add resource files
+ */
+                  Out := Out + PUB_cCharTab + 'echo ,, + >> ' + SCRIPT_FILE + Hb_OsNewLine()
 
-                  if ! Prj_Check_IgnoreMainRC 
+                  if ! Prj_Check_IgnoreMainRC
                      if File( US_FileNameOnlyPathAndName( PRGFILES[1] ) + '.RC' )
                         Out := Out + PUB_cCharTab + 'echo $(DIR_OBJECTS)' + DEF_SLASH + US_FileNameOnlyName( PRGFILES[1] ) + '.res' + ' + >> ' + SCRIPT_FILE + Hb_OsNewLine()
                      endif
