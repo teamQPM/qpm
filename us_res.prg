@@ -5,8 +5,8 @@
 /*
  *    QPM - QAC based Project Manager
  *
- *    Copyright 2011-2016 Fernando Yurisich <fernando.yurisich@gmail.com>
- *    http://qpm.sourceforge.net
+ *    Copyright 2011-2019 Fernando Yurisich <fernando.yurisich@gmail.com>
+ *    https://qpm.sourceforge.io/
  *
  *    Based on QAC - Project Manager for (x)Harbour
  *    Copyright 2006-2011 Carozo de Quilmes <CarozoDeQuilmes@gmail.com>
@@ -23,7 +23,7 @@
  *    GNU General Public License for more details.
  *
  *    You should have received a copy of the GNU General Public License
- *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *    along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
 #include "FuentesComunes\US_Env.h"
@@ -72,7 +72,7 @@ PROCEDURE MAIN( ... )
 
    If bList
       QPM_Log( "US_Res " + Version )
-      QPM_Log( "US_Res 000I: by QPM_Support ( http://qpm.sourceforge.net )" )
+      QPM_Log( "US_Res 000I: by QPM_Support ( https://qpm.sourceforge.io/ )" )
       QPM_Log( "US_Res 999I: Log into: " + cQPMDir + "QPM.log" )
       QPM_Log( "US_Res 003I: FileIn  : " + cFileIn )
       QPM_Log( "US_Res 013I: FileOut : " + cFileOut )

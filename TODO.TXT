@@ -11,9 +11,37 @@
 /******************************************************************************/
 
 Assigned to: <nobody>
+Added by...: 2019-03-17 22:00:00 UTC-0300 Fernando Yurisich <fyurisich>
+Status.....: Open.
+Details....: Replace this non-working links in HELP project:
+             http://harbourminigui.com/
+             http://freewin.sytes.net"
+             http://lists.harbour-project.org/mailman/listinfo/harbour
+             http://lists.harbour-project.org/mailman/listinfo/harbour-users
+             http://support.microsoft.com/kb/896054
+             http://www.geocities.com/harbour_minigui/
+             http://www.hmgforum.com/site
+             http://www.htmlpoint.com
+             http://www.the-holms.org/xharbourgb.htm  ->  http://www.the-holms.org/xharbour/
+
+/******************************************************************************/
+
+Assigned to: <nobody>
+Added by...: 2019-03-17 22:00:00 UTC-0300 Fernando Yurisich <fyurisich>
+Status.....: Open.
+Details....: Review this references in HELP project:
+             liberado solo funciona con xHarbour
+             NO MANEJA EVENTOS
+
+/******************************************************************************/
+
+Assigned to: <nobody>
 Added by...: 2018-12-06 18:07:00 UTC-0300 Fernando Yurisich <fyurisich>
 Status.....: Open.
-Details....: Add video to QPM site.
+Details....: Add videos to QPM site:
+             #1 https://www.youtube.com/watch?v=aCZFsxm-DeI
+             #2 https://www.youtube.com/watch?v=3EP3QIEXVnQ
+             #3 https://www.youtube.com/watch?v=gB47f3p532s
 
 /******************************************************************************/
 

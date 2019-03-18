@@ -5,8 +5,8 @@
 /*
  *    QPM - QAC based Project Manager
  *
- *    Copyright 2011-2016 Fernando Yurisich <fernando.yurisich@gmail.com>
- *    http://qpm.sourceforge.net
+ *    Copyright 2011-2019 Fernando Yurisich <fernando.yurisich@gmail.com>
+ *    https://qpm.sourceforge.io/
  *
  *    Based on QAC - Project Manager for (x)Harbour
  *    Copyright 2006-2011 Carozo de Quilmes <CarozoDeQuilmes@gmail.com>
@@ -23,7 +23,7 @@
  *    GNU General Public License for more details.
  *
  *    You should have received a copy of the GNU General Public License
- *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *    along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
 #include "minigui.ch"
@@ -375,7 +375,7 @@ Function SHG_Generate( cBase , bGenHtml , PUB_cSecu , cWWW )
    Local cDirOutCHM := PUB_cProjectFolder + DEF_SLASH + "_" + PUB_cSecu + "HlpTemp"
    Local nRegistros, cMemoHeader , cMemoFooter , cFooterHTML
    Local cBackColor := "#FFFCEA"
-   Local wwwCdQ     := "http://qpm.sourceforge.net"
+   Local wwwCdQ     := "https://qpm.sourceforge.io/"
    Local cWWWDescri := "Powered by QPM"
    Local cAux
    Local nCinx
@@ -1204,7 +1204,7 @@ Function SHG_AddHlpHTML( accion )
          CopyToClipboard( '<A name="xxxxxxxx">' )
          SHG_Send_Paste()
       case upper( accion ) == "LINK"
-         CopyToClipboard( '<A href="http://qpm.sourceforge.net" target=blank>QPM Home Page</A>' )
+         CopyToClipboard( '<A href="https://qpm.sourceforge.io/" target=blank>QPM Home Page</A>' )
          SHG_Send_Paste()
       case upper( accion ) == "EMAIL"
          CopyToClipboard( '<A href="mailto:qpm-users@lists.sourceforge.net">Mail to QPM_Support</A>' )

@@ -30,14 +30,14 @@ linkedition, providing tools (interactive and batch) for:
 + Visualizing error files resulting from compilation and execution.
 + Visualizing .PPO files resulting from preprocessor.
 
-The QPM web site is at <URL:http://sourceforge.net/p/qpm/>. If you have any
-problem with this copy of QPM, please visit our web site and ensure that you are
-using the latest release.
+The QPM web site is at <URL:https://sourceforge.net/projects/qpm/>.
+If you have any problem with this copy of QPM, please visit our web site and
+ensure that you are using the latest release.
 
 If you have any questions about QPM, please subscribe to the users list at
-<URL:https://lists.sourceforge.net/lists/listinfo/qpm-users/> and ask there.
+<URL:https://sourceforge.net/projects/qpm/lists/qpm-users> and ask there.
 Also, please be sure to read the QPM's help file (from QPM menu or from this
-site: http://qpm.sourceforge.net) and the documentation that comes with QPM
+site: https://qpm.sourceforge.io/) and the documentation that comes with QPM
 (start with ./dirstruc.txt because is the map to the QPM files).
 
 
@@ -69,14 +69,14 @@ programas, al proveer herramientas (interactivas y batch) para:
 + Visualizar arhivos de errores resultantes de la compilación y ejecución.
 + Visualizar archivos .PPO resultantes de la ejecución del preprocesador.
 
-El sitio web de QPM está ubicado en <URL:http://sourceforge.net/p/qpm/>. Si
-tiene algún problema con esta copia de QPM, por favor visite dicho sitio y
+El sitio web de QPM está ubicado en <URL:https://sourceforge.net/projects/qpm/>.
+Si tiene algún problema con esta copia de QPM, por favor visite dicho sitio y
 verifique que está utilizando la última versión publicada.
 
 Si tiene alguna pregunta sobre QPM, por favor suscríbase a la lista de usuarios
-en <URL:https://lists.sourceforge.net/lists/listinfo/qpm-users/> y hágalas allí.
+en <URL:https://sourceforge.net/projects/qpm/lists/qpm-users> y hágalas allí.
 Además, por favor asegúrese de leer el archivo de ayuda de QPM (desde el menú o
-desde el sitio: http://qpm.sourceforge.net) y la documentación distribuida con
+desde el sitio: https://qpm.sourceforge.io/) y la documentación distribuida con
 QPM (comience con ./dirstruc.txt ya que es el mapa de los archivos de QPM).
 
 

@@ -5,8 +5,8 @@
 /*
  *    QPM - QAC based Project Manager
  *
- *    Copyright 2011-2016 Fernando Yurisich <fernando.yurisich@gmail.com>
- *    http://qpm.sourceforge.net
+ *    Copyright 2011-2019 Fernando Yurisich <fernando.yurisich@gmail.com>
+ *    https://qpm.sourceforge.io/
  *
  *    Based on QAC - Project Manager for (x)Harbour
  *    Copyright 2006-2011 Carozo de Quilmes <CarozoDeQuilmes@gmail.com>
@@ -23,7 +23,7 @@
  *    GNU General Public License for more details.
  *
  *    You should have received a copy of the GNU General Public License
- *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *    along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
 #include "minigui.ch"
@@ -92,7 +92,7 @@ Function Main( PAR_cP01, PAR_cP02, PAR_cP03, PAR_cP04, PAR_cP05, PAR_cP06, PAR_c
 // VARIABLES
    PUBLIC BUILD_IN_PROGRESS             := .F.
    PUBLIC MAIN_HAS_FOCUS                := .F.
-   PUBLIC PUB_cQPM_Support_Link         := 'http://qpm.sourceforge.net'
+   PUBLIC PUB_cQPM_Support_Link         := 'https://qpm.sourceforge.io/'
    PUBLIC PUB_cQPM_Support_Admin        := 'Fernando Yurisich (Uruguay)'
    PUBLIC PUB_cQPM_Support_eMail        := 'qpm-users@lists.sourceforge.net'
    PUBLIC PUB_cStatusLabel              := 'Status: Idle'
@@ -344,7 +344,6 @@ Function Main( PAR_cP01, PAR_cP02, PAR_cP03, PAR_cP04, PAR_cP05, PAR_cP06, PAR_c
    PUBLIC Prj_Check_PlaceRCFirst        := .F.
    PUBLIC Prj_Check_IgnoreMainRC        := .F.
    PUBLIC Prj_Check_IgnoreLibRCs        := .F.
-   PUBLIC Prj_Check_IgnoreOtherRCs      := .F.
    PUBLIC Prj_Check_64bits              := .F.
    PUBLIC Prj_Check_Console             := .F.             
    PUBLIC Prj_Check_HarbourIs31         := .T.
@@ -733,6 +732,9 @@ Function Main( PAR_cP01, PAR_cP02, PAR_cP03, PAR_cP04, PAR_cP05, PAR_cP06, PAR_c
       next
       MsgStop( cExeNotFoundMsg )
       Return .F.
+   endif
+   if ! file( PUB_cQPM_Folder + DEF_SLASH + 'filler' )
+      QPM_MemoWrit( PUB_cQPM_Folder + DEF_SLASH + 'filler', chr(13) + chr(10) )
    endif
 
 // ANALIZE PARAMETERS
@@ -1641,13 +1643,13 @@ Function Main( PAR_cP01, PAR_cP02, PAR_cP03, PAR_cP04, PAR_cP05, PAR_cP06, PAR_c
                  END BUTTONEX
 
                  DEFINE CHECKBOX Check_Place
-                         CAPTION         'Place Main .RC First (MinGW only)'
+                         CAPTION         'Place Main .RC First'
                          ROW             100
                          COL             12
                          WIDTH           282
                          HEIGHT          25
                          VALUE           .T.
-                         TOOLTIP         "The Main .RC content will be placed before the MINIGUI's .RC content when building _Temp.RC file."
+                         TOOLTIP         "The Main .RC content will be placed before the MINIGUI's .RC content."
                          TRANSPARENT     IsXPThemeActive()
                          ON CHANGE       Prj_Check_PlaceRCFirst := VentanaMain.Check_Place.Value
                  END CHECKBOX
@@ -1674,18 +1676,6 @@ Function Main( PAR_cP01, PAR_cP02, PAR_cP03, PAR_cP04, PAR_cP05, PAR_cP06, PAR_c
                          TOOLTIP         "Check this to ignore the MINIGUI's .RC file when building the project."
                          TRANSPARENT     IsXPThemeActive()
                          ON CHANGE       Prj_Check_IgnoreLibRCs := VentanaMain.Check_NoLibRCs.Value
-                 END CHECKBOX
-
-                 DEFINE CHECKBOX Check_NoOtherRCs
-                         CAPTION         "Don't compile other .RC files (BCC32 or Pelles)"
-                         ROW             190
-                         COL             12
-                         WIDTH           282
-                         HEIGHT          25
-                         VALUE           .T.
-                         TOOLTIP         "Check this to ignore other .RC files when building the project."
-                         TRANSPARENT     IsXPThemeActive()
-                         ON CHANGE       Prj_Check_IgnoreOtherRCs := VentanaMain.Check_NoOtherRCs.Value
                  END CHECKBOX
 
                  DEFINE BUTTONEX BSyncPan
@@ -4150,12 +4140,12 @@ Function QPM_GetFilesLIB()
       cFolderAux := PUB_cProjectFolder
    endif
    if Prj_Radio_Cpp == DEF_RG_BORLAND .or. Prj_Radio_Cpp == DEF_RG_PELLES
-      RetVal := BugGetFile( { {'Libs and objects for include on concatenation (*.lib,*.obj)','*.lib;*obj'}, {'Libs for include on concatenation (*.lib)','*.lib'}, {'Objects for include on concatenation (*.obj)','*.obj'} }, 'Libs and objects for include on concatenation', cFolderAux, .T., .T. )
+      RetVal := BugGetFile( { {'Libs and objects to include on concatenation (*.lib,*.obj)','*.lib;*obj'}, {'Libs to include on concatenation (*.lib)','*.lib'}, {'Objects to include on concatenation (*.obj)','*.obj'} }, 'Libs and objects to include on concatenation', cFolderAux, .T., .T. )
       if len( RetVal ) > 0
          &( 'cLastLibFolder'+GetSuffix() ) := US_FileNameOnlyPath( RetVal[ len( RetVal ) ] )
       endif
    elseif Prj_Radio_Cpp == DEF_RG_MINGW
-      RetVal := BugGetFile( { {'Libs and objects for include on concatenation (lib*.a,*.o)','lib*.a;*.o'}, {'Libs for include on concatenation (lib*.a)','lib*.a'}, {'Objects for include on concatenation (*.o)','*.o'} }, 'Libs and objects for include on concatenation', cFolderAux, .T., .T. )
+      RetVal := BugGetFile( { {'Libs and objects to include on concatenation (lib*.a,*.o)','lib*.a;*.o'}, {'Libs to include on concatenation (lib*.a)','lib*.a'}, {'Objects to include on concatenation (*.o)','*.o'} }, 'Libs and objects to include on concatenation', cFolderAux, .T., .T. )
       if len( RetVal ) > 0
          &( 'cLastLibFolder'+GetSuffix() ) := US_FileNameOnlyPath( RetVal[ len( RetVal ) ] )
       endif
@@ -4307,7 +4297,6 @@ Function QPM_OpenProject2()
       Prj_Check_PlaceRCFirst                    := .F.
       Prj_Check_IgnoreMainRC                    := .F.
       Prj_Check_IgnoreLibRCs                    := .F.
-      Prj_Check_IgnoreOtherRCs                  := .F.
 // Ini: Project Options default values
       Prj_Radio_Harbour                         := DEF_RG_HARBOUR
       Prj_Check_HarbourIs31                     := .T.
@@ -4549,9 +4538,6 @@ Function QPM_OpenProject2()
          ElseIf  US_Upper( US_Word( LOC_cLine, 1 ) ) == 'CHECKNOLIBRCS'
                  Prj_Check_IgnoreLibRCs := if( US_Word( LOC_cLine, 2 ) == 'YES', .T., .F. )
                  VentanaMain.Check_NoLibRCs.Value := Prj_Check_IgnoreLibRCs
-         ElseIf  US_Upper( US_Word( LOC_cLine, 1 ) ) == 'CHECKNOOTHERRCS'
-                 Prj_Check_IgnoreOtherRCs := if( US_Word( LOC_cLine, 2 ) == 'YES', .T., .F. )
-                 VentanaMain.Check_NoOtherRCs.Value := Prj_Check_IgnoreOtherRCs
          ElseIf  US_Upper( US_Word( LOC_cLine, 1 ) ) == 'CHECK64BITS'
                  Prj_Check_64bits := if( US_Word( LOC_cLine, 2 ) == 'YES', .T., .F. )
          ElseIf  US_Upper( US_Word( LOC_cLine, 1 ) ) == 'AUTOINC'
@@ -5060,7 +5046,6 @@ Function QPM_SaveProject( bCheck )
    cINI := cINI + 'CHECKPLACERCFIRST '          + if ( Prj_Check_PlaceRCFirst, 'YES', 'NO' ) + Hb_OsNewLine()
    cINI := cINI + 'CHECKNOMAINRC '              + if ( Prj_Check_IgnoreMainRC, 'YES', 'NO' ) + Hb_OsNewLine()
    cINI := cINI + 'CHECKNOLIBRCS '              + if ( Prj_Check_IgnoreLibRCs, 'YES', 'NO' ) + Hb_OsNewLine()
-   cINI := cINI + 'CHECKNOOTHERRCS '            + if ( Prj_Check_IgnoreOtherRCs, 'YES', 'NO' ) + Hb_OsNewLine()
    cINI := cINI + 'CHECK64BITS '                + if ( Prj_Check_64bits, 'YES', 'NO' ) + Hb_OsNewLine()
    cINI := cINI + 'AUTOINC '                    + if ( GetProperty( 'VentanaMain', 'AutoInc', 'checked' ), 'YES', 'NO' ) + Hb_OsNewLine()
    cINI := cINI + 'CHECKCPP '                   + GetCppSuffix() + Hb_OsNewLine()
@@ -5416,6 +5401,7 @@ Function QPM_Build2()
    Local vTemp3
    Local w_group
    Local w_hay
+   Local w_LibFolders
 
    BUILD_IN_PROGRESS := .T.
    LiberoWindowsHotKeys(.F.)
@@ -6060,18 +6046,16 @@ Function QPM_Build2()
  */
          For i := 1 To Len ( vLibIncludeFiles )
             if US_Upper( US_Word( GetProperty( 'VentanaMain', 'GIncFiles', 'Cell', i, NCOLINCFULLNAME ), 2 ) ) == '*FIRST*'
-               if file( GetMiniGuiFolder() + DEF_SLASH + 'RESOURCES' + DEF_SLASH + substr( US_FileNameOnlyName( vLibIncludeFiles[i] ), 4 ) + '.o' )
-                  do case
-                  case IsMinGW
-                     Out := Out + PUB_cCharTab + 'echo INPUT( $(DIR_MINIGUI_RES)' + DEF_SLASH + substr( US_FileNameOnlyName( vLibIncludeFiles[i] ), 4 ) + '.o ) >> ' + SCRIPT_FILE + Hb_OsNewLine()
-                  case IsPelles
-                     Out := Out + PUB_cCharTab + 'echo $(DIR_MINIGUI_RES)' + DEF_SLASH + substr( US_FileNameOnlyName( vLibIncludeFiles[i] ), 4 ) + '.obj >> ' + SCRIPT_FILE + Hb_OsNewLine()
-                  case IsBorland
-                     Out := Out + PUB_cCharTab + 'echo $(DIR_MINIGUI_RES)' + DEF_SLASH + substr( US_FileNameOnlyName( vLibIncludeFiles[i] ), 4 ) + '.obj >> ' + SCRIPT_FILE + Hb_OsNewLine()
-                  otherwise
-                     US_Log( 'Error 5671' )
-                  endcase
-               endif
+               do case
+               case IsMinGW
+                  Out := Out + PUB_cCharTab + 'echo INPUT( $(DIR_MINIGUI_RES)' + DEF_SLASH + substr( US_FileNameOnlyName( vLibIncludeFiles[i] ), 4 ) + '.o ) >> ' + SCRIPT_FILE + Hb_OsNewLine()
+               case IsPelles
+                  Out := Out + PUB_cCharTab + 'echo $(DIR_MINIGUI_RES)' + DEF_SLASH + substr( US_FileNameOnlyName( vLibIncludeFiles[i] ), 4 ) + '.obj >> ' + SCRIPT_FILE + Hb_OsNewLine()
+               case IsBorland
+                  Out := Out + PUB_cCharTab + 'echo $(DIR_MINIGUI_RES)' + DEF_SLASH + substr( US_FileNameOnlyName( vLibIncludeFiles[i] ), 4 ) + '.obj >> ' + SCRIPT_FILE + Hb_OsNewLine()
+               otherwise
+                  US_Log( 'Error 5671' )
+               endcase
             endif
          Next i
 
@@ -6120,7 +6104,7 @@ Function QPM_Build2()
  * en la carpeta Resources), y que estén marcados *LAST*, en script.ld
  */
             For i := 1 To Len ( vLibIncludeFiles )
-               if US_Upper( US_Word( GetProperty( 'VentanaMain', 'GIncFiles', 'Cell', i, NCOLINCFULLNAME ), 2 ) ) == '*LAST*' // for .res
+               if US_Upper( US_Word( GetProperty( 'VentanaMain', 'GIncFiles', 'Cell', i, NCOLINCFULLNAME ), 2 ) ) == '*LAST*' 
                   if file( GetMiniGuiFolder() + DEF_SLASH + 'RESOURCES' + DEF_SLASH + substr( US_FileNameOnlyName( vLibIncludeFiles[i] ), 4 ) + '.o' )
                      Out := Out + PUB_cCharTab + 'echo INPUT( $(DIR_MINIGUI_RES)' + DEF_SLASH + substr( US_FileNameOnlyName( vLibIncludeFiles[i] ), 4 ) + '.o ) >> ' + SCRIPT_FILE + Hb_OsNewLine()
                   endif
@@ -6159,7 +6143,7 @@ Function QPM_Build2()
                case IsMinGW
                   w_hay := .f.
                   w_group := 'GROUP( '
-                  
+
 /*
  * MINGW: add libraries marked FIRST
  */
@@ -6283,12 +6267,18 @@ Function QPM_Build2()
                      endif
                   next
                case IsPelles
+/*
+ * PELLES: add libraries marked FIRST
+ */
                   For i := 1 To Len ( vLibIncludeFiles )
                      if US_Upper( US_Word( GetProperty( 'VentanaMain', 'GIncFiles', 'Cell', i, NCOLINCFULLNAME ), 2 ) ) == '*FIRST*'
                         Out := Out + PUB_cCharTab + 'echo ' + US_ShortName(vLibIncludeFiles[i]) + ' >> ' + SCRIPT_FILE + Hb_OsNewLine()
                      endif
                   Next i
 
+/*
+ * PELLES: add MiniGui main library
+ */
                   if Prj_Check_Console
                      if ascan( vLibExcludeFiles, US_Upper( GetMiniGuiName() ) ) == 0
                         Out := Out + PUB_cCharTab + 'echo ' + GetMiniguiLibFolder() + DEF_SLASH + GetMiniGuiName() + ' >> ' + SCRIPT_FILE + Hb_OsNewLine()
@@ -6348,6 +6338,9 @@ Function QPM_Build2()
                      endif
                   Next
 
+/*
+ * PELLES: add libraries marked LAST
+ */
                   For i := 1 To Len ( vLibIncludeFiles )
                      if US_Upper( US_Word( GetProperty( 'VentanaMain', 'GIncFiles', 'Cell', i, NCOLINCFULLNAME ), 2 ) ) == '*LAST*'
                         Out := Out + PUB_cCharTab + 'echo ' + US_ShortName(vLibIncludeFiles[i]) + ' >> ' + SCRIPT_FILE + Hb_OsNewLine()
@@ -6356,59 +6349,25 @@ Function QPM_Build2()
 
                   DO EVENTS
 
-                  if ! Prj_Check_IgnoreMainRC
-                     if File( US_FileNameOnlyPathAndName( PRGFILES[1] ) + '.rc' )
-                        Out := Out + PUB_cCharTab + 'echo $(DIR_OBJECTS)' + DEF_SLASH + US_FileNameOnlyName( PRGFILES[1] ) + '.res' + ' >> ' + SCRIPT_FILE + Hb_OsNewLine()
-                     endif
-                  endif
-
-                  if ! Prj_Check_IgnoreOtherRCs
-                     For i := 1 To Len ( vLibIncludeFiles )
-                        if US_Upper( US_Word( GetProperty( 'VentanaMain', 'GIncFiles', 'Cell', i, NCOLINCFULLNAME ), 2 ) ) == '*FIRST*'
-                           if file( GetMiniGuiFolder() + DEF_SLASH + 'RESOURCES' + DEF_SLASH + US_FileNameOnlyName( vLibIncludeFiles[i] ) + '.res' )
-                              Out := Out + PUB_cCharTab + 'echo ' + US_ShortName( GetMiniGuiFolder()) + DEF_SLASH + 'RESOURCES' + DEF_SLASH + US_FileNameOnlyName( vLibIncludeFiles[i] ) + '.res' + ' >> ' + SCRIPT_FILE + Hb_OsNewLine()
-                           endif
-                        endif
-                     Next i
-
-                     DO EVENTS
-                  endif
-
-                  if ! Prj_Check_IgnoreLibRCs
-                     Out := Out + PUB_cCharTab + 'echo ' + US_ShortName( GetMiniGuiFolder() + DEF_SLASH + 'RESOURCES' ) + DEF_SLASH + cResourceFileName + '.res >> ' + SCRIPT_FILE + Hb_OsNewLine()
-                     For i := 1 to len( &( 'vLibDefault'+GetSuffix() ) )
-                        if ! ( Getminiguisuffix() == DefineOohg3 .and. ;
-                               ( US_Upper( &('vLibDefault'+GetSuffix()+'['+str(i)+']') ) == 'HBPRINTER.LIB' .or. ;
-                               US_Upper( &('vLibDefault'+GetSuffix()+'['+str(i)+']') ) == 'MINIPRINT.LIB' ) )
-                           if ascan( vLibExcludeFiles, US_Upper( &( 'vLibDefault'+GetSuffix()+'['+str(i)+']' ) ) ) = 0
-                              if file( GetMiniGuiFolder() + DEF_SLASH + 'RESOURCES' + DEF_SLASH + US_FileNameOnlyName( &('vLibDefault'+GetSuffix()+'['+str(i)+']') ) + '.res' )
-                                 Out := Out + PUB_cCharTab + 'echo ' + US_ShortName( GetMiniGuiFolder() + DEF_SLASH + 'RESOURCES' ) + DEF_SLASH + US_FileNameOnlyName( &('vLibDefault'+GetSuffix()+'['+str(i)+']') ) + '.res >> ' + SCRIPT_FILE + Hb_OsNewLine()
-                              endif
-                           endif
-                        endif
-                     Next i
-
-                     DO EVENTS
-                  endif
-
-                  if ! Prj_Check_IgnoreOtherRCs
-                     For i := 1 To Len ( vLibIncludeFiles )
-                        if US_Upper( US_Word( GetProperty( 'VentanaMain', 'GIncFiles', 'Cell', i, NCOLINCFULLNAME ), 2 ) ) == '*LAST*' // for .res
-                           if file( GetMiniGuiFolder() + DEF_SLASH + 'RESOURCES' + DEF_SLASH + US_FileNameOnlyName( vLibIncludeFiles[i] ) + '.res' )
-                              Out := Out + PUB_cCharTab + 'echo ' + US_ShortName( GetMiniGuiFolder() + DEF_SLASH + 'RESOURCES' ) + DEF_SLASH + US_FileNameOnlyName( vLibIncludeFiles[i] ) + '.res >> ' + SCRIPT_FILE + Hb_OsNewLine()
-                           endif
-                        endif
-                     Next i
-
-                     DO EVENTS
+/*
+ * PELLES: add resource files
+ */
+                  if ! Prj_Check_IgnoreMainRC .or. ! Prj_Check_IgnoreLibRCs
+                     Out := Out + PUB_cCharTab + 'echo $(DIR_OBJECTS)' + DEF_SLASH + '_Temp.o ' + ' + >> ' + SCRIPT_FILE + Hb_OsNewLine()
                   endif
                case IsBorland
+/*
+ * BCC32: add libraries marked FIRST
+ */
                   For i := 1 To Len ( vLibIncludeFiles )
                      if US_Upper( US_Word( GetProperty( 'VentanaMain', 'GIncFiles', 'Cell', i, NCOLINCFULLNAME ), 2 ) ) == '*FIRST*'
                         Out := Out + PUB_cCharTab + 'echo ' + US_ShortName(vLibIncludeFiles[i]) + ' + >> ' + SCRIPT_FILE + Hb_OsNewLine()
                      endif
                   Next i
 
+/*
+ * BCC32: add MiniGui main library
+ */
                   if Prj_Check_Console
                      if ascan( vLibExcludeFiles, US_Upper( GetMiniGuiName() ) ) == 0
                         Out := Out + PUB_cCharTab + 'echo ' + GetMiniguiLibFolder() + DEF_SLASH + GetMiniGuiName() + ' + >> ' + SCRIPT_FILE + Hb_OsNewLine()
@@ -6470,63 +6429,24 @@ Function QPM_Build2()
 
                   DO EVENTS
 
+/*
+ * BCC32: add libraries marked LAST
+ */
                   For i := 1 To Len ( vLibIncludeFiles )
                      if US_Upper( US_Word( GetProperty( 'VentanaMain', 'GIncFiles', 'Cell', i, NCOLINCFULLNAME ), 2 ) ) == '*LAST*'
                         Out := Out + PUB_cCharTab + 'echo ' + US_ShortName( vLibIncludeFiles[i] ) + ' + >> ' + SCRIPT_FILE + Hb_OsNewLine()
                      endif
                   Next i
 
+                  DO EVENTS
+
 /*
  * BCC32: add resource files
  */
                   Out := Out + PUB_cCharTab + 'echo ,, + >> ' + SCRIPT_FILE + Hb_OsNewLine()
-
-                  if ! Prj_Check_IgnoreMainRC
-                     if File( US_FileNameOnlyPathAndName( PRGFILES[1] ) + '.RC' )
-                        Out := Out + PUB_cCharTab + 'echo $(DIR_OBJECTS)' + DEF_SLASH + US_FileNameOnlyName( PRGFILES[1] ) + '.res' + ' + >> ' + SCRIPT_FILE + Hb_OsNewLine()
-                     endif
+                  if ! Prj_Check_IgnoreMainRC .or. ! Prj_Check_IgnoreLibRCs
+                     Out := Out + PUB_cCharTab + 'echo $(DIR_OBJECTS)' + DEF_SLASH + '_Temp.o ' + ' + >> ' + SCRIPT_FILE + Hb_OsNewLine()
                   endif
-
-                  if ! Prj_Check_IgnoreOtherRCs
-                     For i := 1 To Len ( vLibIncludeFiles )
-                        if US_Upper( US_Word( GetProperty( 'VentanaMain', 'GIncFiles', 'Cell', i, NCOLINCFULLNAME ), 2 ) ) == '*FIRST*'
-                           if file( GetMiniGuiFolder() + DEF_SLASH + 'RESOURCES' + DEF_SLASH + US_FileNameOnlyName( vLibIncludeFiles[i] ) + '.res' )
-                              Out := Out + PUB_cCharTab + 'echo ' + US_ShortName( GetMiniGuiFolder() + DEF_SLASH + 'RESOURCES' ) + DEF_SLASH + US_FileNameOnlyName( vLibIncludeFiles[i] ) + '.res' + ' + >> ' + SCRIPT_FILE + Hb_OsNewLine()
-                           endif
-                        endif
-                     Next i
-
-                     DO EVENTS
-                  endif
-
-                  if ! Prj_Check_IgnoreLibRCs
-                     Out := Out + PUB_cCharTab + 'echo ' + US_ShortName( GetMiniGuiFolder() + DEF_SLASH + 'RESOURCES' ) + DEF_SLASH + cResourceFileName + '.res' + ' + >> ' + SCRIPT_FILE + Hb_OsNewLine()
-                     For i := 1 to len( &( 'vLibDefault'+GetSuffix() ) )
-                        if ! ( Getminiguisuffix() == DefineOohg3 .and. ;
-                             ( US_Upper( &('vLibDefault'+GetSuffix()+'['+str(i)+']') ) == 'HBPRINTER.LIB' .or. ;
-                               US_Upper( &('vLibDefault'+GetSuffix()+'['+str(i)+']') ) == 'MINIPRINT.LIB' ) )
-                           if ascan( vLibExcludeFiles, US_Upper( &( 'vLibDefault'+GetSuffix()+'['+str(i)+']' ) ) ) = 0
-                              if file( GetMiniGuiFolder() + DEF_SLASH + 'RESOURCES' + DEF_SLASH + US_FileNameOnlyName( &('vLibDefault'+GetSuffix()+'['+str(i)+']') ) + '.res' )
-                                 Out := Out + PUB_cCharTab + 'echo ' + US_ShortName( GetMiniGuiFolder() + DEF_SLASH + 'RESOURCES' ) + DEF_SLASH + US_FileNameOnlyName( &('vLibDefault'+GetSuffix()+'['+str(i)+']') ) + '.res' + ' + >> ' + SCRIPT_FILE + Hb_OsNewLine()
-                              endif
-                           endif
-                        endif
-                     Next i
-
-                     DO EVENTS
-                  endif
-
-                  if ! Prj_Check_IgnoreOtherRCs
-                     For i := 1 To Len ( vLibIncludeFiles )
-                        if US_Upper( US_Word( GetProperty( 'VentanaMain', 'GIncFiles', 'Cell', i, NCOLINCFULLNAME ), 2 ) ) == '*LAST*' // for .res
-                           if file( GetMiniGuiFolder() + DEF_SLASH + 'RESOURCES' + DEF_SLASH + US_FileNameOnlyName( vLibIncludeFiles[i] ) + '.res' )
-                              Out := Out + PUB_cCharTab + 'echo ' + US_ShortName( GetMiniGuiFolder() + DEF_SLASH + 'RESOURCES' ) + DEF_SLASH + US_FileNameOnlyName( vLibIncludeFiles[i] ) + '.res' + ' + >> ' + SCRIPT_FILE + Hb_OsNewLine()
-                           endif
-                        endif
-                     Next i
-                  endif
-
-                  DO EVENTS
                otherwise
                   US_Log( 'Error 6127' )
             endcase
@@ -6603,10 +6523,12 @@ Function QPM_Build2()
          do case
          case Prj_Radio_OutputType == DEF_RG_EXE
             Out := Out + PUB_cCharTab + '$(US_MSG_EXE) ' + PROGRESS_LOG + ' -MSG:Linking ' + cOutputNameDisplay + ' ...' + Hb_OsNewLine()
+            w_LibFolders := GetCppLibFolder()
+            w_LibFolders += ";" + w_LibFolders + "\PSDK;"
             if Empty( GetProperty( 'VentanaMain', 'OverrideLink', 'value' ) )
-               Out := Out + PUB_cCharTab + '$(ILINK_EXE) -x -Gn -Tpe ' + if( Prj_Check_Console, '-ap ', '-aa ' ) + '-L' + GetCppLibFolder() + ' @' + SCRIPT_FILE + Hb_OsNewLine()
+               Out := Out + PUB_cCharTab + '$(ILINK_EXE) -x -Gn -Tpe ' + if( Prj_Check_Console, '-ap ', '-aa ' ) + '-L' + w_LibFolders + ' @' + SCRIPT_FILE + Hb_OsNewLine()
             else
-               Out := Out + PUB_cCharTab + '$(ILINK_EXE) -x -Gn -Tpe ' + if( Prj_Check_Console, '-ap ', '-aa ') + '$(USER_FLAGS_LINK) -L' + GetCppLibFolder() + ' @' + SCRIPT_FILE + Hb_OsNewLine()
+               Out := Out + PUB_cCharTab + '$(ILINK_EXE) -x -Gn -Tpe ' + if( Prj_Check_Console, '-ap ', '-aa ') + '$(USER_FLAGS_LINK) -L' + w_LibFolders + ' @' + SCRIPT_FILE + Hb_OsNewLine()
             endif
             if Prj_Check_Upx
                Out := Out + PUB_cCharTab + '$(US_MSG_EXE) ' + PROGRESS_LOG + ' -MSG:Compressing ' + cOutputNameDisplay + ' with UPX ...' + Hb_OsNewLine()
@@ -6840,6 +6762,8 @@ Function QPM_Build2()
       #define BM_TMP_ERR ( DBLQT + PUB_cProjectFolder + DEF_SLASH + '_' + PUB_cSecu + 'TEMP.ERR' + DBLQT )
       #define BM_RC_FOLD ( GetMiniGuiFolder() + DEF_SLASH + 'RESOURCES' )
       #define BM_RC_MINI ( DBLQT + BM_RC_FOLD + DEF_SLASH + cResourceFileName + '.RC' + DBLQT )
+      #define BM_RC_HBPR ( DBLQT + BM_RC_FOLD + DEF_SLASH + 'HBPRINTER.RC' + DBLQT )
+      #define BM_RC_MIPR ( DBLQT + BM_RC_FOLD + DEF_SLASH + 'MINIPRINT.RC' + DBLQT )
       #define BM_RCM_ERR ( "US_Res from Batch Error: Resource File Not Found: " + BM_RC_MINI )
       #define BM_RC_CONF ( DBLQT + US_FileNameOnlyPath( PRGFILES[1] ) + DEF_SLASH + GetResConfigFileName() + DBLQT )
       #define BM_RCF_ERR ( "US_Res from Batch Error: Can't create ResConfig File: " + BM_RC_CONF )
@@ -6848,7 +6772,7 @@ Function QPM_Build2()
       #define BM_RC_MA_S ( US_ShortName( US_FileNameOnlyPathAndName( PRGFILES[1] ) + '.RC' ) )
       #define BM_RC1_SHR ( BM_RC_MA_S + '1' )
       #define BM_RC2_SHR ( BM_RC_MA_S + '2' )
-      #define BM_FILLER  ( DBLQT + BM_RC_FOLD + DEF_SLASH + 'FILLER' + DBLQT )
+      #define BM_FILLER  ( DBLQT + PUB_cQPM_Folder + DEF_SLASH + 'FILLER' + DBLQT )
       #define BM_CPP_BIN ( US_ShortName( GetCppFolder() + DEF_SLASH + 'BIN' ) )
       #define BM_DLLTOOL ( DBLQT + GetCppFolder() + DEF_SLASH + 'BIN' + DEF_SLASH + 'DLLTOOL.EXE' + DBLQT )
       #define BM_DLL_ERR ( "US_Res from Batch Error: DLLTOOL.EXE not found at MinGW's BIN folder" )
@@ -6873,21 +6797,30 @@ Function QPM_Build2()
       if Prj_Radio_OutputType != DEF_RG_IMPORT .and. ( ! Prj_Check_IgnoreMainRC .or. ! Prj_Check_IgnoreLibRCs )
          if Prj_Check_IgnoreMainRC
             if ! Prj_Check_IgnoreLibRCs
-                  bld_cmd += 'IF NOT EXIST ' + BM_RC_MINI + ' ECHO ' + BM_RCM_ERR + ' > ' + BM_TMP_ERR                                    + Hb_OsNewLine()
                   bld_cmd += 'ECHO #define ' + GetResConfigVarName() + ' ' + GetMiniGuiFolder() + DEF_SLASH + 'RESOURCES > ' + BM_RC_CONF + HB_OsNewLIne()
                   bld_cmd += 'IF NOT EXIST ' + BM_RC_CONF + ' ECHO ' + BM_RCF_ERR + ' > ' + BM_TMP_ERR                                    + Hb_OsNewLine()
-
+                  bld_cmd += 'IF NOT EXIST ' + BM_RC_MINI + ' ECHO ' + BM_RCM_ERR + ' > ' + BM_TMP_ERR                                    + Hb_OsNewLine()
                   bld_cmd += 'COPY /B ' + BM_RC_MINI + ' ' + BM_TEMP_RC + ' > NUL'                                                        + Hb_OsNewLine()
+
+               For i := 1 to len( &( 'vLibDefault'+GetSuffix() ) )
+                  if ! Getminiguisuffix() == DefineOohg3
+                     if US_Upper( &('vLibDefault'+GetSuffix()+'['+str(i)+']') ) == 'LIBHBPRINTER.A'
+                        if ascan( vLibExcludeFiles, 'LIBHBPRINTER.A' ) == 0
+                  bld_cmd += 'COPY /B ' + BM_TEMP_RC + ' + ' + BM_FILLER + ' + ' + BM_RC_HBPR + ' ' + BM_TEMP_RC + ' > NUL'               + Hb_OsNewLine()
+                        endif
+                     elseif US_Upper( &('vLibDefault'+GetSuffix()+'['+str(i)+']') ) == 'LIBMINIPRINT.A'
+                        if ascan( vLibExcludeFiles, 'LIBMINIPRINT.A' ) == 0
+                  bld_cmd += 'COPY /B ' + BM_TEMP_RC + ' + ' + BM_FILLER + ' + ' + BM_RC_MIPR + ' ' + BM_TEMP_RC + ' > NUL'               + Hb_OsNewLine()
+                        endif
+                     endif
+                  endif
+               Next i
             endif
          else
-            if ! Prj_Check_IgnoreLibRCs
-                  bld_cmd += 'IF NOT EXIST ' + BM_RC_MINI + ' ECHO ' + BM_RCM_ERR + ' > ' + BM_TMP_ERR                                    + Hb_OsNewLine()
                   bld_cmd += 'ECHO #define ' + GetResConfigVarName() + ' ' + GetMiniGuiFolder() + DEF_SLASH + 'RESOURCES > ' + BM_RC_CONF + HB_OsNewLIne()
                   bld_cmd += 'IF NOT EXIST ' + BM_RC_CONF + ' ECHO ' + BM_RCF_ERR + ' > ' + BM_TMP_ERR                                    + Hb_OsNewLine()
-            endif
 
                   bld_cmd += 'IF NOT EXIST ' + BM_RC_MAIN + ' GOTO NORC'                                                                  + Hb_OsNewLine()
-
                   bld_cmd += BM_US_RES + ' -ONLYINCLUDE ' + BM_RC_MA_S + ' ' + BM_RC1_SHR                                                 + Hb_OsNewLine()
                   bld_cmd += 'IF ERRORLEVEL = 1 GOTO ERROR'                                                                               + Hb_OsNewLine()
                   bld_cmd += BM_US_RES  + ' ' + BM_RC1_SHR + ' ' + BM_RC2_SHR                                                             + Hb_OsNewLine()
@@ -6896,17 +6829,46 @@ Function QPM_Build2()
             if Prj_Check_IgnoreLibRCs
                   bld_cmd += 'COPY /B ' + BM_RC2_SHR + ' ' + BM_TEMP_RC + ' > NUL'                                                        + Hb_OsNewLine()
             else
+                  bld_cmd += 'IF NOT EXIST ' + BM_RC_MINI + ' ECHO ' + BM_RCM_ERR + ' > ' + BM_TMP_ERR                                    + Hb_OsNewLine()
                if Prj_Check_PlaceRCFirst
                   bld_cmd += 'COPY /B ' + BM_RC2_SHR + ' + ' + BM_FILLER + ' + ' + BM_RC_MINI + ' ' + BM_TEMP_RC + ' > NUL'               + Hb_OsNewLine()
                else
-                  bld_cmd += 'COPY /B ' + BM_RC_MINI + ' + ' + BM_RC2_SHR + ' + ' + BM_FILLER + ' ' + BM_TEMP_RC + ' > NUL'               + Hb_OsNewLine()
+                  bld_cmd += 'COPY /B ' + BM_RC_MINI + ' + ' + BM_FILLER + ' + ' + BM_RC2_SHR + ' ' + BM_TEMP_RC + ' > NUL'               + Hb_OsNewLine()
                endif
-            endif
 
+               For i := 1 to len( &( 'vLibDefault'+GetSuffix() ) )
+                  if ! Getminiguisuffix() == DefineOohg3
+                     if US_Upper( &('vLibDefault'+GetSuffix()+'['+str(i)+']') ) == 'LIBHBPRINTER.A'
+                        if ascan( vLibExcludeFiles, 'LIBHBPRINTER.A' ) == 0
+                  bld_cmd += 'COPY /B ' + BM_TEMP_RC + ' + ' + BM_FILLER + ' + ' + BM_RC_HBPR + ' ' + BM_TEMP_RC + ' > NUL'               + Hb_OsNewLine()
+                        endif
+                     elseif US_Upper( &('vLibDefault'+GetSuffix()+'['+str(i)+']') ) == 'LIBMINIPRINT.A'
+                        if ascan( vLibExcludeFiles, 'LIBMINIPRINT.A' ) == 0
+                  bld_cmd += 'COPY /B ' + BM_TEMP_RC + ' + ' + BM_FILLER + ' + ' + BM_RC_MIPR + ' ' + BM_TEMP_RC + ' > NUL'               + Hb_OsNewLine()
+                        endif
+                     endif
+                  endif
+               Next i
+            endif
                   bld_cmd += 'GOTO NEXT'                                                                                                  + Hb_OsNewLine()
                   bld_cmd += ':NORC'                                                                                                      + Hb_OsNewLine()
             if ! Prj_Check_IgnoreLibRCs
+                  bld_cmd += 'IF NOT EXIST ' + BM_RC_MINI + ' ECHO ' + BM_RCM_ERR + ' > ' + BM_TMP_ERR                                    + Hb_OsNewLine()
                   bld_cmd += 'COPY /B ' + BM_RC_MINI + ' ' + BM_TEMP_RC + ' > NUL'                                                        + Hb_OsNewLine()
+
+               For i := 1 to len( &( 'vLibDefault'+GetSuffix() ) )
+                  if ! Getminiguisuffix() == DefineOohg3
+                     if US_Upper( &('vLibDefault'+GetSuffix()+'['+str(i)+']') ) == 'LIBHBPRINTER.A'
+                        if ascan( vLibExcludeFiles, 'LIBHBPRINTER.A' ) == 0
+                  bld_cmd += 'COPY /B ' + BM_TEMP_RC + ' + ' + BM_FILLER + ' + ' + BM_RC_HBPR + ' ' + BM_TEMP_RC + ' > NUL'               + Hb_OsNewLine()
+                        endif
+                     elseif US_Upper( &('vLibDefault'+GetSuffix()+'['+str(i)+']') ) == 'LIBMINIPRINT.A'
+                        if ascan( vLibExcludeFiles, 'LIBMINIPRINT.A' ) == 0
+                  bld_cmd += 'COPY /B ' + BM_TEMP_RC + ' + ' + BM_FILLER + ' + ' + BM_RC_MIPR + ' ' + BM_TEMP_RC + ' > NUL'               + Hb_OsNewLine()
+                        endif
+                     endif
+                  endif
+               Next i
             endif
          endif
       endif
@@ -6976,6 +6938,36 @@ Function QPM_Build2()
                   bld_cmd += ':OK'                                                             + Hb_OsNewLine()
                   bld_cmd += 'ECHO OK > '    + END_FILE                                        + Hb_OsNewLine()
                   bld_cmd += ':END'                                                            + Hb_OsNewLine()
+
+/*
+xxx
+                  if ! Prj_Check_PlaceRCFirst .AND. ! Prj_Check_IgnoreMainRC
+                     if File( US_FileNameOnlyPathAndName( PRGFILES[1] ) + '.rc' )
+                        Out := Out + PUB_cCharTab + 'echo $(DIR_OBJECTS)' + DEF_SLASH + US_FileNameOnlyName( PRGFILES[1] ) + '.res' + ' >> ' + SCRIPT_FILE + Hb_OsNewLine()
+                     endif
+                  endif
+
+                  if ! Prj_Check_IgnoreLibRCs
+                     Out := Out + PUB_cCharTab + 'echo ' + US_ShortName( GetMiniGuiFolder() + DEF_SLASH + 'RESOURCES' ) + DEF_SLASH + cResourceFileName + '.res ' + ' + >> ' + SCRIPT_FILE + Hb_OsNewLine()
+                     For i := 1 to len( &( 'vLibDefault'+GetSuffix() ) )
+                        if ! ( Getminiguisuffix() == DefineOohg3 .and. ;
+                             ( US_Upper( &('vLibDefault'+GetSuffix()+'['+str(i)+']') ) == 'HBPRINTER.LIB' .or. ;
+                               US_Upper( &('vLibDefault'+GetSuffix()+'['+str(i)+']') ) == 'MINIPRINT.LIB' ) )
+                           if ascan( vLibExcludeFiles, US_Upper( &( 'vLibDefault'+GetSuffix()+'['+str(i)+']' ) ) ) = 0
+                              if file( GetMiniGuiFolder() + DEF_SLASH + 'RESOURCES' + DEF_SLASH + US_FileNameOnlyName( &('vLibDefault'+GetSuffix()+'['+str(i)+']') ) + '.res' )
+                                 Out := Out + PUB_cCharTab + 'echo ' + US_ShortName( GetMiniGuiFolder() + DEF_SLASH + 'RESOURCES' ) + DEF_SLASH + US_FileNameOnlyName( &('vLibDefault'+GetSuffix()+'['+str(i)+']') ) + '.res ' + ' + >> ' + SCRIPT_FILE + Hb_OsNewLine()
+                              endif
+                           endif
+                        endif
+                     Next i
+                  endif
+
+                  if ! Prj_Check_PlaceRCFirst .AND. ! Prj_Check_IgnoreMainRC
+                     if File( US_FileNameOnlyPathAndName( PRGFILES[1] ) + '.RC' )
+                        Out := Out + PUB_cCharTab + 'echo $(DIR_OBJECTS)' + DEF_SLASH + US_FileNameOnlyName( PRGFILES[1] ) + '.res ' + ' + >> ' + SCRIPT_FILE + Hb_OsNewLine()
+                     endif
+                  endif
+*/
 
       QPM_MemoWrit( BUILD_BAT, bld_cmd )
    otherwise
