@@ -8,6 +8,133 @@
  * See "How to format your ChangeLog entries" in howtosvn.txt file.
  */
 
+2019-03-17 22:33:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * ./ar.c
+   * ./doc\codestyl.txt
+   * ./FuentesComunes\TAxPrg.prg
+   * ./FuentesComunes\US_ActiveX.prg
+   * ./FuentesComunes\US_ActiveX_Eventos.c
+   * ./FuentesComunes\US_Clases.prg
+   * ./FuentesComunes\US_Edit_CharFijo.prg
+   * ./FuentesComunes\US_Env.h
+   * ./FuentesComunes\US_HB.PRG
+   * ./FuentesComunes\US_i_richeditbox.ch
+   * ./FuentesComunes\US_K.CH
+   * ./FuentesComunes\US_Log.h
+   * ./FuentesComunes\US_Log.prg
+   * ./FuentesComunes\US_l_richeditbox.prg
+   * ./FuentesComunes\US_MG.PRG
+   * ./FuentesComunes\US_MG_Null.prg
+   * ./FuentesComunes\US_ProcessWin.prg
+   * ./FuentesComunes\US_RichEdit.rc
+   * ./HelpQPM\SHG_Change.prg
+   * ./QPM.ch
+   * ./QPM.prg
+   * ./QPM.rc
+   * ./QPM_CompatibilityHotRecovery.ch
+   * ./QPM_CompatibilityOpenGlobal.ch
+   * ./QPM_CompatibilityOpenProject.ch
+   * ./QPM_CompatibilityStatistics.ch
+   * ./QPM_Environment.prg
+   * ./QPM_ExtraRun.prg
+   * ./QPM_Functions.prg
+   * ./QPM_GlobalSettings.prg
+   * ./QPM_HotRecovery.prg
+   * ./QPM_Killer.prg
+   * ./QPM_Libraries.prg
+   * ./QPM_ProjectSettings.prg
+   * ./QPM_Resources.ch
+   * ./QPM_SHG_AssistImage.prg
+   * ./QPM_SHG_AssistLink.prg
+   * ./QPM_SHG_SimpleHelpGenerator.prg
+   * ./QPM_SyncRecovery.prg
+   * ./QPM_Version.prg
+   * ./reimp.h
+   * ./resource.h
+   * ./us_msg.prg
+   * ./us_redir.c
+   * ./us_reimp.c
+   * ./us_res.prg
+   * ./us_run.prg
+   * ./us_run.rc
+   * ./us_shell.prg
+   * ./us_slash.prg
+   * ./util.c
+     * Copyright updated.
+
+   * ./QPM.exe
+     * Rebuilded.
+   * ./QPM.prg
+     - Don't compile other .RC files option at "FMG & RC" tab.
+       ; The implementation was faulty and this options is not needed.
+         If you want more than one RC file in your app you must pick on
+         file as master file and use #include directives to add the others.
+     * To avoid some linker errors under BCC a temporary RC is allways build
+       concatenating the app's RC file and the MINIGUI's RC file or files.
+     * For HMG Extended, hbprinter.rc and miniprint.rc files are excluded when
+       hbprinter and miniprint libraries are excluded.
+     * Links updated.
+
+   * ./TODO.TXT
+     + Added new entries.
+
+   * ./doc/codestyl.txt
+   * ./doc/howtosvn.txt
+   * ./doc/readme.txt
+   * ./FuentesComunes/TAxPrg.prg
+   * ./FuentesComunes/US_ActiveX.prg
+   * ./FuentesComunes/US_ActiveX_Eventos.c
+   * ./FuentesComunes/US_Clases.prg
+   * ./FuentesComunes/US_Edit_CharFijo.prg
+   * ./FuentesComunes/US_Env.h
+   * ./FuentesComunes/US_HB.PRG
+   * ./FuentesComunes/US_i_richeditbox.ch
+   * ./FuentesComunes/US_K.CH
+   * ./FuentesComunes/US_Log.h
+   * ./FuentesComunes/US_Log.prg
+   * ./FuentesComunes/US_l_richeditbox.prg
+   * ./FuentesComunes/US_MG.PRG
+   * ./FuentesComunes/US_MG_Null.prg
+   * ./FuentesComunes/US_ProcessWin.prg
+   * ./FuentesComunes/US_RichEdit.rc
+   * ./HelpQPM/SHG_Change.prg
+   * ./ar.c
+   * ./LICENSE.TXT
+   * ./QPM.ch
+   * ./QPM_CompatibilityHotRecovery.ch
+   * ./QPM_CompatibilityOpenGlobal.ch
+   * ./QPM_CompatibilityOpenProject.ch
+   * ./QPM_CompatibilityStatistics.ch
+   * ./QPM_Environment.prg
+   * ./QPM_ExtraRun.prg
+   * ./QPM_Functions.prg
+   * ./QPM_GlobalSettings.prg
+   * ./QPM_HotRecovery.prg
+   * ./QPM_Killer.prg
+   * ./QPM_Libraries.prg
+   * ./QPM_ProjectSettings.prg
+   * ./QPM_Resources.ch
+   * ./QPM_SHG_AssistImage.prg
+   * ./QPM_SHG_AssistLink.prg
+   * ./QPM_SHG_SimpleHelpGenerator.prg
+   * ./QPM_SyncRecovery.prg
+   * ./QPM_Version.prg
+   * ./reimp.h
+   * ./resource.h
+   * ./us_msg.prg
+   * ./us_redir.c
+   * ./us_reimp.c
+   * ./us_res.prg
+   * ./us_run.prg
+   * ./us_run.rc
+   * ./us_shell.prg
+   * ./us_slash.prg
+   * ./util.c
+     * Links updated.
+
+   * ./index.htm
+     * Added back link and look change.
+
 2019-03-16 20:15:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * ./readme.txt
      + Added new entry.
@@ -292,7 +419,7 @@
 2016-08-20 20:07:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * ./us_res.exe
    * ./us_res.prg
-     ! The resources whose names start with '.. \' are not properly processed.
+     ! The resources whose names start with '..\' are not properly processed.
    * ./QPM_US_Res.qpm
    * ./QPM.exe
      * Updated.

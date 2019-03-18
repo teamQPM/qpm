@@ -5,8 +5,8 @@
 /*
  *    QPM - QAC based Project Manager
  *
- *    Copyright 2011-2016 Fernando Yurisich <fernando.yurisich@gmail.com>
- *    http://qpm.sourceforge.net
+ *    Copyright 2011-2019 Fernando Yurisich <fernando.yurisich@gmail.com>
+ *    https://qpm.sourceforge.io/
  *
  *    Based on QAC - Project Manager for (x)Harbour
  *    Copyright 2006-2011 Carozo de Quilmes <CarozoDeQuilmes@gmail.com>
@@ -23,7 +23,7 @@
  *    GNU General Public License for more details.
  *
  *    You should have received a copy of the GNU General Public License
- *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *    along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
 FUNCTION MAIN(cP1,cP2,cP3,cP4,cP5,cP6,cP7,cP8,cP9,cP10,cP11,cP12,cP13,cP14,cP15,cP16,cP17,cP18,cP19,cP20)

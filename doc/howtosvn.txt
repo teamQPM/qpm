@@ -8,8 +8,8 @@ HOW TO USE THE SVN
 
 [01] Download and install a Subversion client:
 
-     http://tortoisesvn.net/downloads.html
-     http://subversion.tigris.org
+     https://tortoisesvn.net/downloads.html
+     http://subversion.apache.org/packages.html
 
 [02] If you don´t have one, create a sourceforge user:
 
@@ -29,7 +29,7 @@ HOW TO USE THE SVN
      files outside your local SVN tree and then copy the changes into it,
      because that leads to overwriting changes made by others.
 
-[06] When you're done, go on line and login to http://sourceforge.net/
+[06] When you're done, go on line and login to https://sourceforge.net/
      with your sourceforge user.
 
 [07] Do an update.  NEVER forget this step to avoid overwriting changes
@@ -127,10 +127,10 @@ HOW TO BUILD QPM FROM SVN
 
 Para configurar el ambiente de trabajo por primera vez:
 
-[1] Install the latest release from http://sourceforge.net/projects/qpm/files/
+[1] Install the latest release from https://sourceforge.net/projects/qpm/files/
 
-[2] Install Extended Minigui libraries, and xHarbour and BCC compiler from
-    http://sourceforge.net/projects/qpm/files/minigui_para_compilar_QPM/
+[2] Install Harbour MiniGUI Extended Edition and Borland C++ Compiler version 5.5
+    from http://hmgextended.com/download.html
 
 [3] Start QPM, go to Settings/Global Options menu, select the tab labeled
     "Extended 1.x with Borland C", and configure the fields "MiniGUI Folder",
@@ -139,7 +139,8 @@ Para configurar el ambiente de trabajo por primera vez:
 
 [4] Download the SVN from:
     svn://svn.code.sf.net/p/qpm/code (read/write access using SVN client)
-    https://svn.code.sf.net/p/qpm/code/ (read access using web browser)
+    https://sourceforge.net/p/qpm/code/HEAD/tarball (zip file)
+    https://sourceforge.net/p/qpm/code/HEAD/tree/ (read access using web browser)
     svn+ssh://USERNAME@svn.code.sf.net/p/qpm/code (read/write access using SVN client)
 
 [5] If you didn´t downloaded the SVN in C:\QPM folder, you must modify, build
@@ -222,12 +223,12 @@ HOW TO BUILD A NEW RELEASE
 HOW TO UPDATE INTERNET HELP
 ===========================
 
-[1] QPM's Internet Help is placed at: http://qpm.sourceforge.net/
+[1] QPM's Internet Help is placed at: https://qpm.sourceforge.io/
     It can be accessed from "QPM Web Site" link at
     https://sourceforge.net/projects/qpm/
 
 [2] If you don't have one, download and install a FTP client.
-    FileZilla is a fine choise: http://filezilla-project.org/
+    FileZilla is a fine choice: https://filezilla-project.org/
 
 [3] Open QPM_AutoProjectOnlyHelp.qpm and
     a) select SHG tab page and make all the necessary changes,
@@ -241,7 +242,7 @@ HOW TO UPDATE INTERNET HELP
 [4] Open you FTP client and
     a) set folder "htmlhelp" as your local site,
     b) set "web.sourceforge.net" as the server,
-    c) set "sftp" as transfer protocol,
+    c) set "sftp" as transfer protocol, set port to 22
     d) set "normal" as access mode,
     e) use your SourceForge's username and password to connect,
     f) list "/home/project-web/qpm/htdocs" directory,

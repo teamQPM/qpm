@@ -5,8 +5,8 @@
 /*
  *    QPM - QAC based Project Manager
  *
- *    Copyright 2011-2016 Fernando Yurisich <fernando.yurisich@gmail.com>
- *    http://qpm.sourceforge.net
+ *    Copyright 2011-2019 Fernando Yurisich <fernando.yurisich@gmail.com>
+ *    https://qpm.sourceforge.io/
  *
  *    Based on QAC - Project Manager for (x)Harbour
  *    Copyright 2006-2011 Carozo de Quilmes <CarozoDeQuilmes@gmail.com>
@@ -23,7 +23,7 @@
  *    GNU General Public License for more details.
  *
  *    You should have received a copy of the GNU General Public License
- *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *    along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
 // Resources ID definitions
@@ -140,7 +140,7 @@ BEGIN
    ID_LICENSE_LINE_5  "This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE."
    ID_LICENSE_LINE_6  "See the GNU General Public License for more details."
    ID_LICENSE_LINE_7  "You should have received a copy of the GNU General Public License along with this software; see the file LICENSE."
-   ID_LICENSE_LINE_8  "If not, see http://www.gnu.org/licenses/."
+   ID_LICENSE_LINE_8  "If not, see https://www.gnu.org/licenses/."
    ID_LICENSE_LINE_9  "QPM License"
 END
 
