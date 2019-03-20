@@ -1667,13 +1667,13 @@ Function Main( PAR_cP01, PAR_cP02, PAR_cP03, PAR_cP04, PAR_cP05, PAR_cP06, PAR_c
                  END CHECKBOX
 
                  DEFINE CHECKBOX Check_NoLibRCs
-                         CAPTION         "Don't compile MINIGUI's .RC file"
+                         CAPTION         "Don't compile MINIGUI's .RC files"
                          ROW             160
                          COL             12
                          WIDTH           282
                          HEIGHT          25
                          VALUE           .T.
-                         TOOLTIP         "Check this to ignore the MINIGUI's .RC file when building the project."
+                         TOOLTIP         "Check this to ignore the MINIGUI's .RC files when building the project."
                          TRANSPARENT     IsXPThemeActive()
                          ON CHANGE       Prj_Check_IgnoreLibRCs := VentanaMain.Check_NoLibRCs.Value
                  END CHECKBOX
@@ -4467,6 +4467,7 @@ Function QPM_OpenProject2()
          LOC_cLine := alltrim ( MEMOLINE( cMemoProjectFile, 254, 1 ) )
          if us_word( LOC_cLine, 1 ) == 'VERSION'
             cCfgVrsn := us_word( LOC_cLine, 2 ) + us_word( LOC_cLine, 3 ) + us_word( LOC_cLine, 4 )
+            cCfgVrsnEdtd := us_word( LOC_cLine, 2 ) + "." + us_word( LOC_cLine, 3 ) + "." + us_word( LOC_cLine, 4 )
          endif
       else
          Prj_IsNew := .T.
@@ -5369,19 +5370,19 @@ Function QPM_Build2()
    Local bIsCpp := .F.
    Local bld_cmd
    Local cAux
-   Local cDebugPath         := ''
+   Local cDebugPath := ''
    Local cExtraFoldersC := ''
    Local cExtraFoldersHB := ''
-   Local cInputName         := ''
-   Local cInputNameDisplay  := ''
-   Local cInputNameLong     := ''
+   Local cInputName := ''
+   Local cInputNameDisplay := ''
+   Local cInputNameLong := ''
    Local cInputReImpDef := ''
    Local cInputReImpName := ''
    Local cInputReImpNameDisplay := ''
    Local cOutputName
    Local cOutputNameDisplay
    Local cResourceFileName
-   Local HeaFILES           := {}
+   Local HeaFILES := {}
    Local i
    Local MemoAux
    Local MemoObj
@@ -5389,19 +5390,20 @@ Function QPM_Build2()
    Local nLastExtraFolderSearchAdded := 0
    Local OBJFOLDER
    Local Out := ''
-   Local PanFILES           := {}
-   Local PRGFILES           := {}
-   Local vConcatIncludeC    := {}
-   Local vConcatIncludeHB   := {}
-   Local vDebugPath         := {}
-   Local vLibExcludeFiles   := {}
-   Local vLibIncludeFiles   := {}
+   Local PanFILES := {}
+   Local PRGFILES := {}
+   Local vConcatIncludeC := {}
+   Local vConcatIncludeHB := {}
+   Local vDebugPath := {}
+   Local vLibExcludeFiles := {}
+   Local vLibIncludeFiles := {}
    Local vTemp
    Local vTemp2
    Local vTemp3
    Local w_group
    Local w_hay
    Local w_LibFolders
+   Local cOldFolder := GetCurrentFolder()
 
    BUILD_IN_PROGRESS := .T.
    LiberoWindowsHotKeys(.F.)
@@ -5869,7 +5871,7 @@ Function QPM_Build2()
       DefinoWindowsHotKeys( .F. )
       Return .F.
    endif
-   SetCurrentFolder( PUB_cQPM_Folder )
+   SetCurrentFolder( cOldFolder )
 
    OBJFOLDER          := US_ShortName( GetObjFolder() )
    cOutputName        := GetOutputModuleName( .F. )
@@ -5948,8 +5950,8 @@ Function QPM_Build2()
    Out := Out + 'PAUSE_EXE = '          + 'PAUSE'                                                                            + Hb_OsNewLine()
    Out := Out + 'DIR_OBJECTS = '        + OBJFOLDER                                                                          + Hb_OsNewLine()
    Out := Out + 'C_DIR = '              + OBJFOLDER                                                                          + Hb_OsNewLine()
-   Out := Out + 'USER_FLAGS_HARBOUR = ' + GetProperty( 'VentanaMain', 'OverrideCompile', 'value' )                         + Hb_OsNewLine()
-   Out := Out + 'USER_FLAGS_LINK = '    + GetProperty( 'VentanaMain', 'OverrideLink', 'value' )                            + Hb_OsNewLine()
+   Out := Out + 'USER_FLAGS_HARBOUR = ' + GetProperty( 'VentanaMain', 'OverrideCompile', 'value' )                           + Hb_OsNewLine()
+   Out := Out + 'USER_FLAGS_LINK = '    + GetProperty( 'VentanaMain', 'OverrideLink', 'value' )                              + Hb_OsNewLine()
 
    if Prj_Radio_OutputType != DEF_RG_IMPORT
       cPrj_Version := GetPrj_Version()
@@ -6008,7 +6010,7 @@ Function QPM_Build2()
  * Comandos para generar el ejecutable.
  * Esta lista NO debe estar separada de la anterior por renglones en blanco.
  */
- 
+
  /*
   * Comandos para compilar el archivo de recursos
   */
@@ -6016,16 +6018,16 @@ Function QPM_Build2()
          if IsMinGW
             if Prj_Radio_OutputType != DEF_RG_IMPORT
                Out := Out + PUB_cCharTab + '$(US_MSG_EXE) ' + PROGRESS_LOG + ' -MSG:Compiling Resource File _Temp.RC ...' + Hb_OsNewLine()
-               Out := Out + PUB_cCharTab + '$(RESOURCE_COMP) -I $(DIR_MINIGUI_RES) -i ' + Us_ShortName( US_FileNameOnlyPath( PRGFILES[1] ) ) + DEF_SLASH + '_Temp.RC -o $(DIR_OBJECTS)' + DEF_SLASH + '_Temp.o' + Hb_OsNewLine()
+               Out := Out + PUB_cCharTab + '$(RESOURCE_COMP) -I $(DIR_MINIGUI_RES);$(DIR_C_INCLUDE) -i ' + Us_ShortName( US_FileNameOnlyPath( PRGFILES[1] ) ) + DEF_SLASH + '_Temp.rc -o $(DIR_OBJECTS)' + DEF_SLASH + '_Temp.o' + Hb_OsNewLine()
             endif
          else
             do case
             case IsPelles
                Out := Out + PUB_cCharTab + '$(US_MSG_EXE) ' + PROGRESS_LOG + ' -MSG:Compiling Resource File ' + US_FileNameOnlyPathAndName( PRGFILES[1] ) + '.rc' + ' ...' + Hb_OsNewLine()
-               Out := Out + PUB_cCharTab + '$(RESOURCE_COMP) /Fo$(DIR_OBJECTS)' + DEF_SLASH + US_FileNameOnlyName( PRGFILES[1] ) + '.res ' + US_ShortName( US_FileNameOnlyPathAndName( PRGFILES[1] ) + '.rc' ) + ' ' + Hb_OsNewLine()
+               Out := Out + PUB_cCharTab + '$(RESOURCE_COMP) /I$(DIR_MINIGUI_RES);$(DIR_C_INCLUDE) /Fo$(DIR_OBJECTS)' + '_Temp.res ' + US_ShortName( US_FileNameOnlyPath( PRGFILES[1] ) ) + DEF_SLASH + '_Temp.rc' + Hb_OsNewLine()
             case IsBorland
                Out := Out + PUB_cCharTab + '$(US_MSG_EXE) ' + PROGRESS_LOG + ' -MSG:Compiling Resource File ' + US_FileNameOnlyPathAndName( PRGFILES[1] ) + '.rc' + ' ...' + Hb_OsNewLine()
-               Out := Out + PUB_cCharTab + '$(RESOURCE_COMP) -d__BORLANDC__ -r -fo$(DIR_OBJECTS)' + DEF_SLASH + US_FileNameOnlyName( PRGFILES[1] ) + '.res ' + US_ShortName( US_FileNameOnlyPathAndName( PRGFILES[1] ) + '.rc' ) + ' ' + Hb_OsNewLine()
+               Out := Out + PUB_cCharTab + '$(RESOURCE_COMP) -d__BORLANDC__ -i$(DIR_MINIGUI_RES);$(DIR_C_INCLUDE) -r -fo$(DIR_OBJECTS)' + DEF_SLASH + '_Temp.res ' + Us_ShortName( US_FileNameOnlyPath( PRGFILES[1] ) ) + DEF_SLASH + '_Temp.rc' + Hb_OsNewLine()
             otherwise
                US_Log( 'Error 5649' )
             endcase
@@ -6353,7 +6355,7 @@ Function QPM_Build2()
  * PELLES: add resource files
  */
                   if ! Prj_Check_IgnoreMainRC .or. ! Prj_Check_IgnoreLibRCs
-                     Out := Out + PUB_cCharTab + 'echo $(DIR_OBJECTS)' + DEF_SLASH + '_Temp.o ' + ' + >> ' + SCRIPT_FILE + Hb_OsNewLine()
+                     Out := Out + PUB_cCharTab + 'echo $(DIR_OBJECTS)' + DEF_SLASH + '_Temp.res ' + ' + >> ' + SCRIPT_FILE + Hb_OsNewLine()
                   endif
                case IsBorland
 /*
@@ -6445,7 +6447,7 @@ Function QPM_Build2()
  */
                   Out := Out + PUB_cCharTab + 'echo ,, + >> ' + SCRIPT_FILE + Hb_OsNewLine()
                   if ! Prj_Check_IgnoreMainRC .or. ! Prj_Check_IgnoreLibRCs
-                     Out := Out + PUB_cCharTab + 'echo $(DIR_OBJECTS)' + DEF_SLASH + '_Temp.o ' + ' + >> ' + SCRIPT_FILE + Hb_OsNewLine()
+                     Out := Out + PUB_cCharTab + 'echo $(DIR_OBJECTS)' + DEF_SLASH + '_Temp.res ' + ' + >> ' + SCRIPT_FILE + Hb_OsNewLine()
                   endif
                otherwise
                   US_Log( 'Error 6127' )
@@ -6776,95 +6778,95 @@ Function QPM_Build2()
       #define BM_CPP_BIN ( US_ShortName( GetCppFolder() + DEF_SLASH + 'BIN' ) )
       #define BM_DLLTOOL ( DBLQT + GetCppFolder() + DEF_SLASH + 'BIN' + DEF_SLASH + 'DLLTOOL.EXE' + DBLQT )
       #define BM_DLL_ERR ( "US_Res from Batch Error: DLLTOOL.EXE not found at MinGW's BIN folder" )
-      #define BM_WINDRES ( DBLQT + GetCppFolder() + DEF_SLASH + 'BIN' + DEF_SLASH + 'WINDRES.EXE' + DBLQT )
-      #define BM_WIN_ERR ( "US_Res from Batch Error: WINDRES.EXE not found at MinGW's BIN folder" )
+      #define BM_RC_COMP ( DBLQT + GetCppFolder() + DEF_SLASH + 'BIN' + DEF_SLASH + 'WINDRES.EXE' + DBLQT )
+      #define BM_RCC_ERR ( "US_Res from Batch Error: WINDRES.EXE not found at MinGW's BIN folder" )
       #define BM_US_MAKE ( DBLQT + PUB_cQPM_Folder + DEF_SLASH + 'US_MAKE.EXE' + DBLQT )
       #define BM_EXE     ( DBLQT + cOutputNameDisplay + DBLQT )
       #define BM_OUTPUT  ( DBLQT + Prj_Text_OutputCopyMoveFolder + DEF_SLASH + US_FileNameOnlyNameAndExt( cOutputName ) + DBLQT )
 
-                  bld_cmd := '@ECHO OFF'                                                                                                  + Hb_OsNewLine()
+                  bld_cmd := '@ECHO OFF'                                                                                    + Hb_OsNewLine()
       if bLogActivity
-                  bld_cmd += 'ECHO Writing Activity Log ...'                                                                              + Hb_OsNewLine()
+                  bld_cmd += 'ECHO Writing Activity Log ...'                                                                + Hb_OsNewLine()
       endif
-                  bld_cmd += 'IF EXIST ' + BM_TMP_ERR  + ' DEL ' + BM_TMP_ERR  + ' > NUL'                                                 + Hb_OsNewLine()
-                  bld_cmd += 'IF EXIST ' + TEMP_LOG    + ' DEL ' + TEMP_LOG    + ' > NUL'                                                 + Hb_OsNewLine()
-                  bld_cmd += 'IF EXIST ' + SCRIPT_FILE + ' DEL ' + SCRIPT_FILE + ' > NUL'                                                 + Hb_OsNewLine()
-                  bld_cmd += 'IF EXIST ' + BM_TEMP_RC  + ' DEL ' + BM_TEMP_RC  + ' > NUL'                                                 + Hb_OsNewLine()
-                  bld_cmd += 'IF EXIST ' + BM_RC_CONF  + ' DEL ' + BM_RC_CONF  + ' > NUL'                                                 + Hb_OsNewLine()
-                  bld_cmd += 'IF EXIST ' + BM_RC1_SHR  + ' DEL ' + BM_RC1_SHR  + ' > NUL'                                                 + Hb_OsNewLine()
-                  bld_cmd += 'IF EXIST ' + BM_RC2_SHR  + ' DEL ' + BM_RC2_SHR  + ' > NUL'                                                 + Hb_OsNewLine()
+                  bld_cmd += 'IF EXIST ' + BM_TMP_ERR  + ' DEL ' + BM_TMP_ERR  + ' > NUL'                                   + Hb_OsNewLine()
+                  bld_cmd += 'IF EXIST ' + TEMP_LOG    + ' DEL ' + TEMP_LOG    + ' > NUL'                                   + Hb_OsNewLine()
+                  bld_cmd += 'IF EXIST ' + SCRIPT_FILE + ' DEL ' + SCRIPT_FILE + ' > NUL'                                   + Hb_OsNewLine()
+                  bld_cmd += 'IF EXIST ' + BM_TEMP_RC  + ' DEL ' + BM_TEMP_RC  + ' > NUL'                                   + Hb_OsNewLine()
+                  bld_cmd += 'IF EXIST ' + BM_RC_CONF  + ' DEL ' + BM_RC_CONF  + ' > NUL'                                   + Hb_OsNewLine()
+                  bld_cmd += 'IF EXIST ' + BM_RC1_SHR  + ' DEL ' + BM_RC1_SHR  + ' > NUL'                                   + Hb_OsNewLine()
+                  bld_cmd += 'IF EXIST ' + BM_RC2_SHR  + ' DEL ' + BM_RC2_SHR  + ' > NUL'                                   + Hb_OsNewLine()
 
       if Prj_Radio_OutputType != DEF_RG_IMPORT .and. ( ! Prj_Check_IgnoreMainRC .or. ! Prj_Check_IgnoreLibRCs )
          if Prj_Check_IgnoreMainRC
             if ! Prj_Check_IgnoreLibRCs
-                  bld_cmd += 'ECHO #define ' + GetResConfigVarName() + ' ' + GetMiniGuiFolder() + DEF_SLASH + 'RESOURCES > ' + BM_RC_CONF + HB_OsNewLIne()
-                  bld_cmd += 'IF NOT EXIST ' + BM_RC_CONF + ' ECHO ' + BM_RCF_ERR + ' > ' + BM_TMP_ERR                                    + Hb_OsNewLine()
-                  bld_cmd += 'IF NOT EXIST ' + BM_RC_MINI + ' ECHO ' + BM_RCM_ERR + ' > ' + BM_TMP_ERR                                    + Hb_OsNewLine()
-                  bld_cmd += 'COPY /B ' + BM_RC_MINI + ' ' + BM_TEMP_RC + ' > NUL'                                                        + Hb_OsNewLine()
+                  bld_cmd += 'ECHO #define ' + GetResConfigVarName() + ' ' + BM_RC_FOLD + ' > ' + BM_RC_CONF                + HB_OsNewLIne()
+                  bld_cmd += 'IF NOT EXIST ' + BM_RC_CONF + ' ECHO ' + BM_RCF_ERR + ' > ' + BM_TMP_ERR                      + Hb_OsNewLine()
+                  bld_cmd += 'IF NOT EXIST ' + BM_RC_MINI + ' ECHO ' + BM_RCM_ERR + ' > ' + BM_TMP_ERR                      + Hb_OsNewLine()
+                  bld_cmd += 'COPY /B ' + BM_RC_MINI + ' ' + BM_TEMP_RC + ' > NUL'                                          + Hb_OsNewLine()
 
                For i := 1 to len( &( 'vLibDefault'+GetSuffix() ) )
                   if ! Getminiguisuffix() == DefineOohg3
                      if US_Upper( &('vLibDefault'+GetSuffix()+'['+str(i)+']') ) == 'LIBHBPRINTER.A'
                         if ascan( vLibExcludeFiles, 'LIBHBPRINTER.A' ) == 0
-                  bld_cmd += 'COPY /B ' + BM_TEMP_RC + ' + ' + BM_FILLER + ' + ' + BM_RC_HBPR + ' ' + BM_TEMP_RC + ' > NUL'               + Hb_OsNewLine()
+                  bld_cmd += 'COPY /B ' + BM_TEMP_RC + ' + ' + BM_FILLER + ' + ' + BM_RC_HBPR + ' ' + BM_TEMP_RC + ' > NUL' + Hb_OsNewLine()
                         endif
                      elseif US_Upper( &('vLibDefault'+GetSuffix()+'['+str(i)+']') ) == 'LIBMINIPRINT.A'
                         if ascan( vLibExcludeFiles, 'LIBMINIPRINT.A' ) == 0
-                  bld_cmd += 'COPY /B ' + BM_TEMP_RC + ' + ' + BM_FILLER + ' + ' + BM_RC_MIPR + ' ' + BM_TEMP_RC + ' > NUL'               + Hb_OsNewLine()
+                  bld_cmd += 'COPY /B ' + BM_TEMP_RC + ' + ' + BM_FILLER + ' + ' + BM_RC_MIPR + ' ' + BM_TEMP_RC + ' > NUL' + Hb_OsNewLine()
                         endif
                      endif
                   endif
                Next i
             endif
          else
-                  bld_cmd += 'ECHO #define ' + GetResConfigVarName() + ' ' + GetMiniGuiFolder() + DEF_SLASH + 'RESOURCES > ' + BM_RC_CONF + HB_OsNewLIne()
-                  bld_cmd += 'IF NOT EXIST ' + BM_RC_CONF + ' ECHO ' + BM_RCF_ERR + ' > ' + BM_TMP_ERR                                    + Hb_OsNewLine()
+                  bld_cmd += 'ECHO #define ' + GetResConfigVarName() + ' ' + BM_RC_FOLD + ' > ' + BM_RC_CONF                + HB_OsNewLIne()
+                  bld_cmd += 'IF NOT EXIST ' + BM_RC_CONF + ' ECHO ' + BM_RCF_ERR + ' > ' + BM_TMP_ERR                      + Hb_OsNewLine()
 
-                  bld_cmd += 'IF NOT EXIST ' + BM_RC_MAIN + ' GOTO NORC'                                                                  + Hb_OsNewLine()
-                  bld_cmd += BM_US_RES + ' -ONLYINCLUDE ' + BM_RC_MA_S + ' ' + BM_RC1_SHR                                                 + Hb_OsNewLine()
-                  bld_cmd += 'IF ERRORLEVEL = 1 GOTO ERROR'                                                                               + Hb_OsNewLine()
-                  bld_cmd += BM_US_RES  + ' ' + BM_RC1_SHR + ' ' + BM_RC2_SHR                                                             + Hb_OsNewLine()
-                  bld_cmd += 'IF ERRORLEVEL = 1 GOTO ERROR'                                                                               + Hb_OsNewLine()
+                  bld_cmd += 'IF NOT EXIST ' + BM_RC_MAIN + ' GOTO NORC'                                                    + Hb_OsNewLine()
+                  bld_cmd += BM_US_RES + ' -ONLYINCLUDE ' + BM_RC_MA_S + ' ' + BM_RC1_SHR                                   + Hb_OsNewLine()
+                  bld_cmd += 'IF ERRORLEVEL = 1 GOTO ERROR'                                                                 + Hb_OsNewLine()
+                  bld_cmd += BM_US_RES  + ' ' + BM_RC1_SHR + ' ' + BM_RC2_SHR                                               + Hb_OsNewLine()
+                  bld_cmd += 'IF ERRORLEVEL = 1 GOTO ERROR'                                                                 + Hb_OsNewLine()
 
             if Prj_Check_IgnoreLibRCs
-                  bld_cmd += 'COPY /B ' + BM_RC2_SHR + ' ' + BM_TEMP_RC + ' > NUL'                                                        + Hb_OsNewLine()
+                  bld_cmd += 'COPY /B ' + BM_RC2_SHR + ' ' + BM_TEMP_RC + ' > NUL'                                          + Hb_OsNewLine()
             else
-                  bld_cmd += 'IF NOT EXIST ' + BM_RC_MINI + ' ECHO ' + BM_RCM_ERR + ' > ' + BM_TMP_ERR                                    + Hb_OsNewLine()
+                  bld_cmd += 'IF NOT EXIST ' + BM_RC_MINI + ' ECHO ' + BM_RCM_ERR + ' > ' + BM_TMP_ERR                      + Hb_OsNewLine()
                if Prj_Check_PlaceRCFirst
-                  bld_cmd += 'COPY /B ' + BM_RC2_SHR + ' + ' + BM_FILLER + ' + ' + BM_RC_MINI + ' ' + BM_TEMP_RC + ' > NUL'               + Hb_OsNewLine()
+                  bld_cmd += 'COPY /B ' + BM_RC2_SHR + ' + ' + BM_FILLER + ' + ' + BM_RC_MINI + ' ' + BM_TEMP_RC + ' > NUL' + Hb_OsNewLine()
                else
-                  bld_cmd += 'COPY /B ' + BM_RC_MINI + ' + ' + BM_FILLER + ' + ' + BM_RC2_SHR + ' ' + BM_TEMP_RC + ' > NUL'               + Hb_OsNewLine()
+                  bld_cmd += 'COPY /B ' + BM_RC_MINI + ' + ' + BM_FILLER + ' + ' + BM_RC2_SHR + ' ' + BM_TEMP_RC + ' > NUL' + Hb_OsNewLine()
                endif
 
                For i := 1 to len( &( 'vLibDefault'+GetSuffix() ) )
                   if ! Getminiguisuffix() == DefineOohg3
                      if US_Upper( &('vLibDefault'+GetSuffix()+'['+str(i)+']') ) == 'LIBHBPRINTER.A'
                         if ascan( vLibExcludeFiles, 'LIBHBPRINTER.A' ) == 0
-                  bld_cmd += 'COPY /B ' + BM_TEMP_RC + ' + ' + BM_FILLER + ' + ' + BM_RC_HBPR + ' ' + BM_TEMP_RC + ' > NUL'               + Hb_OsNewLine()
+                  bld_cmd += 'COPY /B ' + BM_TEMP_RC + ' + ' + BM_FILLER + ' + ' + BM_RC_HBPR + ' ' + BM_TEMP_RC + ' > NUL' + Hb_OsNewLine()
                         endif
                      elseif US_Upper( &('vLibDefault'+GetSuffix()+'['+str(i)+']') ) == 'LIBMINIPRINT.A'
                         if ascan( vLibExcludeFiles, 'LIBMINIPRINT.A' ) == 0
-                  bld_cmd += 'COPY /B ' + BM_TEMP_RC + ' + ' + BM_FILLER + ' + ' + BM_RC_MIPR + ' ' + BM_TEMP_RC + ' > NUL'               + Hb_OsNewLine()
+                  bld_cmd += 'COPY /B ' + BM_TEMP_RC + ' + ' + BM_FILLER + ' + ' + BM_RC_MIPR + ' ' + BM_TEMP_RC + ' > NUL' + Hb_OsNewLine()
                         endif
                      endif
                   endif
                Next i
             endif
-                  bld_cmd += 'GOTO NEXT'                                                                                                  + Hb_OsNewLine()
-                  bld_cmd += ':NORC'                                                                                                      + Hb_OsNewLine()
+                  bld_cmd += 'GOTO NEXT'                                                                                    + Hb_OsNewLine()
+                  bld_cmd += ':NORC'                                                                                        + Hb_OsNewLine()
             if ! Prj_Check_IgnoreLibRCs
-                  bld_cmd += 'IF NOT EXIST ' + BM_RC_MINI + ' ECHO ' + BM_RCM_ERR + ' > ' + BM_TMP_ERR                                    + Hb_OsNewLine()
-                  bld_cmd += 'COPY /B ' + BM_RC_MINI + ' ' + BM_TEMP_RC + ' > NUL'                                                        + Hb_OsNewLine()
+                  bld_cmd += 'IF NOT EXIST ' + BM_RC_MINI + ' ECHO ' + BM_RCM_ERR + ' > ' + BM_TMP_ERR                      + Hb_OsNewLine()
+                  bld_cmd += 'COPY /B ' + BM_RC_MINI + ' ' + BM_TEMP_RC + ' > NUL'                                          + Hb_OsNewLine()
 
                For i := 1 to len( &( 'vLibDefault'+GetSuffix() ) )
                   if ! Getminiguisuffix() == DefineOohg3
                      if US_Upper( &('vLibDefault'+GetSuffix()+'['+str(i)+']') ) == 'LIBHBPRINTER.A'
                         if ascan( vLibExcludeFiles, 'LIBHBPRINTER.A' ) == 0
-                  bld_cmd += 'COPY /B ' + BM_TEMP_RC + ' + ' + BM_FILLER + ' + ' + BM_RC_HBPR + ' ' + BM_TEMP_RC + ' > NUL'               + Hb_OsNewLine()
+                  bld_cmd += 'COPY /B ' + BM_TEMP_RC + ' + ' + BM_FILLER + ' + ' + BM_RC_HBPR + ' ' + BM_TEMP_RC + ' > NUL' + Hb_OsNewLine()
                         endif
                      elseif US_Upper( &('vLibDefault'+GetSuffix()+'['+str(i)+']') ) == 'LIBMINIPRINT.A'
                         if ascan( vLibExcludeFiles, 'LIBMINIPRINT.A' ) == 0
-                  bld_cmd += 'COPY /B ' + BM_TEMP_RC + ' + ' + BM_FILLER + ' + ' + BM_RC_MIPR + ' ' + BM_TEMP_RC + ' > NUL'               + Hb_OsNewLine()
+                  bld_cmd += 'COPY /B ' + BM_TEMP_RC + ' + ' + BM_FILLER + ' + ' + BM_RC_MIPR + ' ' + BM_TEMP_RC + ' > NUL' + Hb_OsNewLine()
                         endif
                      endif
                   endif
@@ -6873,101 +6875,181 @@ Function QPM_Build2()
          endif
       endif
 
-                  bld_cmd += ':NEXT'                                                                                                      + Hb_OsNewLine()
-                  bld_cmd += 'SET PATH=' + BM_CPP_BIN                                                                                     + Hb_OsNewLine()
+                  bld_cmd += ':NEXT'                                                                                        + Hb_OsNewLine()
+                  bld_cmd += 'SET PATH=' + BM_CPP_BIN                                                                       + Hb_OsNewLine()
       if Prj_Radio_OutputType == DEF_RG_IMPORT
-                  bld_cmd += 'IF NOT EXIST ' + BM_DLLTOOL + ' ECHO ' + BM_DLL_ERR + ' > ' + BM_TMP_ERR                                    + Hb_OsNewLine()
+                  bld_cmd += 'IF NOT EXIST ' + BM_DLLTOOL + ' ECHO ' + BM_DLL_ERR + ' > ' + BM_TMP_ERR                      + Hb_OsNewLine()
       elseif ! Prj_Check_IgnoreMainRC .or. ! Prj_Check_IgnoreLibRCs
-                  bld_cmd += 'IF NOT EXIST ' + BM_WINDRES + ' ECHO ' + BM_WIN_ERR + ' > ' + BM_TMP_ERR                                    + Hb_OsNewLine()
+                  bld_cmd += 'IF NOT EXIST ' + BM_RC_COMP + ' ECHO ' + BM_RCC_ERR + ' > ' + BM_TMP_ERR                      + Hb_OsNewLine()
       endif
 
-                  bld_cmd += ':MAKE'                                                                                                      + Hb_OsNewLine()
-                  bld_cmd += BM_US_MAKE + ' ' + '-f' + MAKE_FILE + ' >> ' + TEMP_LOG + ' 2>&1'                                            + Hb_OsNewLine()
+                  bld_cmd += ':MAKE'                                                                                        + Hb_OsNewLine()
+                  bld_cmd += BM_US_MAKE + ' ' + '-f' + MAKE_FILE + ' >> ' + TEMP_LOG + ' 2>&1'                              + Hb_OsNewLine()
 
       do case
       case Prj_Radio_OutputCopyMove == DEF_RG_MOVE
-                  bld_cmd += 'IF EXIST ' + BM_EXE + ' GOTO ERROR'                                                                         + Hb_OsNewLine()
-                  bld_cmd += 'IF EXIST ' + BM_OUTPUT + ' GOTO OK'                                                                         + Hb_OsNewLine()
+                  bld_cmd += 'IF EXIST ' + BM_EXE + ' GOTO ERROR'                                                           + Hb_OsNewLine()
+                  bld_cmd += 'IF EXIST ' + BM_OUTPUT + ' GOTO OK'                                                           + Hb_OsNewLine()
       case Prj_Radio_OutputCopyMove == DEF_RG_COPY
-                  bld_cmd += 'IF NOT EXIST ' + BM_EXE + ' GOTO ERROR'                                                                     + Hb_OsNewLine()
-                  bld_cmd += 'IF EXIST ' + BM_OUTPUT + ' GOTO OK'                                                                         + Hb_OsNewLine()
+                  bld_cmd += 'IF NOT EXIST ' + BM_EXE + ' GOTO ERROR'                                                       + Hb_OsNewLine()
+                  bld_cmd += 'IF EXIST ' + BM_OUTPUT + ' GOTO OK'                                                           + Hb_OsNewLine()
       otherwise
-                  bld_cmd += 'IF EXIST ' + BM_EXE + ' GOTO OK'                                                                            + Hb_OsNewLine()
+                  bld_cmd += 'IF EXIST ' + BM_EXE + ' GOTO OK'                                                              + Hb_OsNewLine()
       endcase
 
-                  bld_cmd += ':ERROR'                                                                                                     + Hb_OsNewLine()
-                  bld_cmd += 'IF EXIST ' + BM_TMP_ERR + ' COPY ' + BM_TMP_ERR + ' ' + TEMP_LOG + ' > NUL'                                 + Hb_OsNewLine()
-                  bld_cmd += 'ECHO ERROR > ' + END_FILE                                                                                   + Hb_OsNewLine()
-                  bld_cmd += 'GOTO END'                                                                                                   + Hb_OsNewLine()
-                  bld_cmd += ':OK'                                                                                                        + Hb_OsNewLine()
-                  bld_cmd += 'ECHO OK > ' + END_FILE                                                                                      + Hb_OsNewLine()
-                  bld_cmd += ':END'                                                                                                       + Hb_OsNewLine()
-                  bld_cmd += 'IF EXIST ' + BM_TEMP_RC  + ' DEL ' + BM_TEMP_RC + ' > NUL'                                                  + Hb_OsNewLine()
-                  bld_cmd += 'IF EXIST ' + BM_RC_CONF  + ' DEL ' + BM_RC_CONF + ' > NUL'                                                  + Hb_OsNewLine()
-                  bld_cmd += 'IF EXIST ' + BM_RC1_SHR  + ' DEL ' + BM_RC1_SHR + ' > NUL'                                                  + Hb_OsNewLine()
-                  bld_cmd += 'IF EXIST ' + BM_RC2_SHR  + ' DEL ' + BM_RC2_SHR + ' > NUL'                                                  + Hb_OsNewLine()
+                  bld_cmd += ':ERROR'                                                                                       + Hb_OsNewLine()
+                  bld_cmd += 'IF EXIST ' + BM_TMP_ERR + ' COPY ' + BM_TMP_ERR + ' ' + TEMP_LOG + ' > NUL'                   + Hb_OsNewLine()
+                  bld_cmd += 'ECHO ERROR > ' + END_FILE                                                                     + Hb_OsNewLine()
+                  bld_cmd += 'GOTO END'                                                                                     + Hb_OsNewLine()
+                  bld_cmd += ':OK'                                                                                          + Hb_OsNewLine()
+                  bld_cmd += 'ECHO OK > ' + END_FILE                                                                        + Hb_OsNewLine()
+                  bld_cmd += ':END'                                                                                         + Hb_OsNewLine()
+                  bld_cmd += 'IF EXIST ' + BM_TEMP_RC  + ' DEL ' + BM_TEMP_RC + ' > NUL'                                    + Hb_OsNewLine()
+                  bld_cmd += 'IF EXIST ' + BM_RC_CONF  + ' DEL ' + BM_RC_CONF + ' > NUL'                                    + Hb_OsNewLine()
+                  bld_cmd += 'IF EXIST ' + BM_RC1_SHR  + ' DEL ' + BM_RC1_SHR + ' > NUL'                                    + Hb_OsNewLine()
+                  bld_cmd += 'IF EXIST ' + BM_RC2_SHR  + ' DEL ' + BM_RC2_SHR + ' > NUL'                                    + Hb_OsNewLine()
 
       QPM_MemoWrit( BUILD_BAT, bld_cmd )
    case ( IsBorland .or. IsPelles )
+      #define BO_TEMP_RC ( DBLQT + US_FileNameOnlyPath( PRGFILES[1] ) + DEF_SLASH + '_TEMP.RC' + DBLQT )
+      #define BO_TMP_ERR ( DBLQT + PUB_cProjectFolder + DEF_SLASH + '_' + PUB_cSecu + 'TEMP.ERR' + DBLQT )
+      #define BO_RC_FOLD ( GetMiniGuiFolder() + DEF_SLASH + 'RESOURCES' )
+      #define BO_RC_MINI ( DBLQT + BO_RC_FOLD + DEF_SLASH + cResourceFileName + '.RC' + DBLQT )
+      #define BO_RC_HBPR ( DBLQT + BO_RC_FOLD + DEF_SLASH + 'HBPRINTER.RC' + DBLQT )
+      #define BO_RC_MIPR ( DBLQT + BO_RC_FOLD + DEF_SLASH + 'MINIPRINT.RC' + DBLQT )
+      #define BO_RCM_ERR ( "US_Res from Batch Error: Resource File Not Found: " + BO_RC_MINI )
+      #define BO_RC_CONF ( DBLQT + US_FileNameOnlyPath( PRGFILES[1] ) + DEF_SLASH + GetResConfigFileName() + DBLQT )
+      #define BO_RCF_ERR ( "US_Res from Batch Error: Can't create ResConfig File: " + BO_RC_CONF )
+      #define BO_RC_MAIN ( DBLQT + US_FileNameOnlyPathAndName( PRGFILES[1] ) + '.RC' + DBLQT )
+      #define BO_US_RES  ( DBLQT + PUB_cQPM_Folder + DEF_SLASH + 'US_Res.exe' + DBLQT + ' QPM' + if( bLogActivity, ' -LIST' + US_ShortName(PUB_cQPM_Folder), '' ) )
+      #define BO_RC_MA_S ( US_ShortName( US_FileNameOnlyPathAndName( PRGFILES[1] ) + '.RC' ) )
+      #define BO_RC1_SHR ( BO_RC_MA_S + '1' )
+      #define BO_RC2_SHR ( BO_RC_MA_S + '2' )
+      #define BO_FILLER  ( DBLQT + PUB_cQPM_Folder + DEF_SLASH + 'FILLER' + DBLQT )
+      #define BO_CPP_BIN ( DBLQT + GetCppFolder() + DEF_SLASH + 'BIN' + DBLQT )
+      #define BO_RC_COMP ( DBLQT + GetCppFolder() + DEF_SLASH + 'BIN' + DEF_SLASH + 'BCC32.EXE' + DBLQT )
+      #define BO_RCC_ERR ( "US_Res from Batch Error: BCC32.EXE not found at BCC's BIN folder" )
+      #define BO_US_MAKE ( DBLQT + PUB_cQPM_Folder + DEF_SLASH + 'US_MAKE.EXE' + DBLQT )
       #define BO_EXE     ( DBLQT + cOutputNameDisplay + DBLQT )
       #define BO_OUTPUT  ( DBLQT + Prj_Text_OutputCopyMoveFolder + DBLQT + DEF_SLASH + US_FileNameOnlyNameAndExt( cOutputName ) )
-      #define BO_CPP_BIN ( DBLQT + GetCppFolder() + DEF_SLASH + 'BIN' + DBLQT )
-      #define BO_US_MAKE ( DBLQT + PUB_cQPM_Folder + DEF_SLASH + 'US_MAKE.EXE' + DBLQT )
 
-                  bld_cmd := '@ECHO OFF' + Hb_OsNewLine()
+                  bld_cmd := '@ECHO OFF'                                                                                    + Hb_OsNewLine()
       if bLogActivity
-                  bld_cmd += 'ECHO Writing Log Activity ...'                                   + Hb_OsNewLine()
+                  bld_cmd += 'ECHO Writing Log Activity ...'                                                                + Hb_OsNewLine()
       endif
-                  bld_cmd += 'IF EXIST ' + TEMP_LOG    + ' DEL ' + TEMP_LOG + ' > NUL'         + Hb_OsNewLine()
-                  bld_cmd += 'IF EXIST ' + SCRIPT_FILE + ' DEL ' + TEMP_LOG + ' > NUL'         + Hb_OsNewLine()
-                  bld_cmd += 'PUSHD ' + BO_CPP_BIN                                             + Hb_OsNewLine()
-                  bld_cmd += BO_US_MAKE + ' ' + '-f' + MAKE_FILE + ' >> ' + TEMP_LOG + ' 2>&1' + Hb_OsNewLine()
+                  bld_cmd += 'IF EXIST ' + BO_TMP_ERR  + ' DEL ' + BO_TMP_ERR  + ' > NUL'                                   + Hb_OsNewLine()
+                  bld_cmd += 'IF EXIST ' + TEMP_LOG    + ' DEL ' + TEMP_LOG    + ' > NUL'                                   + Hb_OsNewLine()
+                  bld_cmd += 'IF EXIST ' + SCRIPT_FILE + ' DEL ' + SCRIPT_FILE + ' > NUL'                                   + Hb_OsNewLine()
+                  bld_cmd += 'IF EXIST ' + BO_TEMP_RC  + ' DEL ' + BO_TEMP_RC  + ' > NUL'                                   + Hb_OsNewLine()
+                  bld_cmd += 'IF EXIST ' + BO_RC_CONF  + ' DEL ' + BO_RC_CONF  + ' > NUL'                                   + Hb_OsNewLine()
+                  bld_cmd += 'IF EXIST ' + BO_RC1_SHR  + ' DEL ' + BO_RC1_SHR  + ' > NUL'                                   + Hb_OsNewLine()
+                  bld_cmd += 'IF EXIST ' + BO_RC2_SHR  + ' DEL ' + BO_RC2_SHR  + ' > NUL'                                   + Hb_OsNewLine()
+
+      if ! Prj_Check_IgnoreMainRC .or. ! Prj_Check_IgnoreLibRCs
+         if Prj_Check_IgnoreMainRC
+            if ! Prj_Check_IgnoreLibRCs
+                  bld_cmd += 'ECHO #define ' + GetResConfigVarName() + ' ' + BO_RC_FOLD + ' > ' + BO_RC_CONF                + HB_OsNewLIne()
+                  bld_cmd += 'IF NOT EXIST ' + BO_RC_CONF + ' ECHO ' + BO_RCF_ERR + ' > ' + BO_TMP_ERR                      + Hb_OsNewLine()
+                  bld_cmd += 'IF NOT EXIST ' + BO_RC_MINI + ' ECHO ' + BO_RCM_ERR + ' > ' + BO_TMP_ERR                      + Hb_OsNewLine()
+                  bld_cmd += 'COPY /B ' + BO_RC_MINI + ' ' + BO_TEMP_RC + ' > NUL'                                          + Hb_OsNewLine()
+
+               For i := 1 to len( &( 'vLibDefault'+GetSuffix() ) )
+                  if ! Getminiguisuffix() == DefineOohg3
+                     if US_Upper( &('vLibDefault'+GetSuffix()+'['+str(i)+']') ) == 'HBPRINTER.LIB'
+                        if ascan( vLibExcludeFiles, 'HBPRINTER.LIB' ) == 0
+                  bld_cmd += 'COPY /B ' + BO_TEMP_RC + ' + ' + BO_FILLER + ' + ' + BO_RC_HBPR + ' ' + BO_TEMP_RC + ' > NUL' + Hb_OsNewLine()
+                        endif
+                     elseif US_Upper( &('vLibDefault'+GetSuffix()+'['+str(i)+']') ) == 'MINIPRINT.LIB'
+                        if ascan( vLibExcludeFiles, 'MINIPRINT.LIB' ) == 0
+                  bld_cmd += 'COPY /B ' + BO_TEMP_RC + ' + ' + BO_FILLER + ' + ' + BO_RC_MIPR + ' ' + BO_TEMP_RC + ' > NUL' + Hb_OsNewLine()
+                        endif
+                     endif
+                  endif
+               Next i
+            endif
+         else
+                  bld_cmd += 'ECHO #define ' + GetResConfigVarName() + ' ' + BO_RC_FOLD + ' > ' + BO_RC_CONF                + HB_OsNewLIne()
+                  bld_cmd += 'IF NOT EXIST ' + BO_RC_CONF + ' ECHO ' + BO_RCF_ERR + ' > ' + BO_TMP_ERR                      + Hb_OsNewLine()
+
+                  bld_cmd += 'IF NOT EXIST ' + BO_RC_MAIN + ' GOTO NORC'                                                    + Hb_OsNewLine()
+                  bld_cmd += BO_US_RES + ' -ONLYINCLUDE ' + BO_RC_MA_S + ' ' + BO_RC1_SHR                                   + Hb_OsNewLine()
+                  bld_cmd += 'IF ERRORLEVEL = 1 GOTO ERROR'                                                                 + Hb_OsNewLine()
+                  bld_cmd += BO_US_RES  + ' ' + BO_RC1_SHR + ' ' + BO_RC2_SHR                                               + Hb_OsNewLine()
+                  bld_cmd += 'IF ERRORLEVEL = 1 GOTO ERROR'                                                                 + Hb_OsNewLine()
+
+            if Prj_Check_IgnoreLibRCs
+                  bld_cmd += 'COPY /B ' + BO_RC2_SHR + ' ' + BO_TEMP_RC + ' > NUL'                                          + Hb_OsNewLine()
+            else
+                  bld_cmd += 'IF NOT EXIST ' + BO_RC_MINI + ' ECHO ' + BO_RCM_ERR + ' > ' + BO_TMP_ERR                      + Hb_OsNewLine()
+               if Prj_Check_PlaceRCFirst
+                  bld_cmd += 'COPY /B ' + BO_RC2_SHR + ' + ' + BO_FILLER + ' + ' + BO_RC_MINI + ' ' + BO_TEMP_RC + ' > NUL' + Hb_OsNewLine()
+               else
+                  bld_cmd += 'COPY /B ' + BO_RC_MINI + ' + ' + BO_FILLER + ' + ' + BO_RC2_SHR + ' ' + BO_TEMP_RC + ' > NUL' + Hb_OsNewLine()
+               endif
+
+               For i := 1 to len( &( 'vLibDefault'+GetSuffix() ) )
+                  if ! Getminiguisuffix() == DefineOohg3
+                     if US_Upper( &('vLibDefault'+GetSuffix()+'['+str(i)+']') ) == 'HBPRINTER.LIB'
+                        if ascan( vLibExcludeFiles, 'HBPRINTER.LIB' ) == 0
+                  bld_cmd += 'COPY /B ' + BO_TEMP_RC + ' + ' + BO_FILLER + ' + ' + BO_RC_HBPR + ' ' + BO_TEMP_RC + ' > NUL' + Hb_OsNewLine()
+                        endif
+                     elseif US_Upper( &('vLibDefault'+GetSuffix()+'['+str(i)+']') ) == 'MINIPRINT.LIB'
+                        if ascan( vLibExcludeFiles, 'MINIPRINT.LIB' ) == 0
+                  bld_cmd += 'COPY /B ' + BO_TEMP_RC + ' + ' + BO_FILLER + ' + ' + BO_RC_MIPR + ' ' + BO_TEMP_RC + ' > NUL' + Hb_OsNewLine()
+                        endif
+                     endif
+                  endif
+               Next i
+            endif
+                  bld_cmd += 'GOTO NEXT'                                                                                    + Hb_OsNewLine()
+                  bld_cmd += ':NORC'                                                                                        + Hb_OsNewLine()
+            if ! Prj_Check_IgnoreLibRCs
+                  bld_cmd += 'IF NOT EXIST ' + BO_RC_MINI + ' ECHO ' + BO_RCM_ERR + ' > ' + BO_TMP_ERR                      + Hb_OsNewLine()
+                  bld_cmd += 'COPY /B ' + BO_RC_MINI + ' ' + BO_TEMP_RC + ' > NUL'                                          + Hb_OsNewLine()
+
+               For i := 1 to len( &( 'vLibDefault'+GetSuffix() ) )
+                  if ! Getminiguisuffix() == DefineOohg3
+                     if US_Upper( &('vLibDefault'+GetSuffix()+'['+str(i)+']') ) == 'HBPRINTER.LIB'
+                        if ascan( vLibExcludeFiles, 'HBPRINTER.LIB' ) == 0
+                  bld_cmd += 'COPY /B ' + BO_TEMP_RC + ' + ' + BO_FILLER + ' + ' + BO_RC_HBPR + ' ' + BO_TEMP_RC + ' > NUL' + Hb_OsNewLine()
+                        endif
+                     elseif US_Upper( &('vLibDefault'+GetSuffix()+'['+str(i)+']') ) == 'MINIPRINT.LIB'
+                        if ascan( vLibExcludeFiles, 'MINIPRINT.LIB' ) == 0
+                  bld_cmd += 'COPY /B ' + BO_TEMP_RC + ' + ' + BO_FILLER + ' + ' + BO_RC_MIPR + ' ' + BO_TEMP_RC + ' > NUL' + Hb_OsNewLine()
+                        endif
+                     endif
+                  endif
+               Next i
+            endif
+         endif
+      endif
+                  bld_cmd += ':NEXT'                                                                                        + Hb_OsNewLine()
+      if ! Prj_Check_IgnoreMainRC .or. ! Prj_Check_IgnoreLibRCs
+                  bld_cmd += 'IF NOT EXIST ' + BO_RC_COMP + ' ECHO ' + BO_RCC_ERR + ' > ' + BO_TMP_ERR                      + Hb_OsNewLine()
+      endif
+                  bld_cmd += 'PUSHD ' + BO_CPP_BIN                                                                          + Hb_OsNewLine()
+                  bld_cmd += BO_US_MAKE + ' ' + '-f' + MAKE_FILE + ' >> ' + TEMP_LOG + ' 2>&1'                              + Hb_OsNewLine()
       do case
       case Prj_Radio_OutputCopyMove == DEF_RG_MOVE
-                  bld_cmd += 'IF EXIST '     + BO_EXE +    ' GOTO ERROR'                       + Hb_OsNewLine()
-                  bld_cmd += 'IF EXIST '     + BO_OUTPUT + ' GOTO OK'                          + Hb_OsNewLine()
+                  bld_cmd += 'IF EXIST ' + BO_EXE + ' GOTO ERROR'                                                           + Hb_OsNewLine()
+                  bld_cmd += 'IF EXIST ' + BO_OUTPUT + ' GOTO OK'                                                           + Hb_OsNewLine()
       case Prj_Radio_OutputCopyMove == DEF_RG_COPY
-                  bld_cmd += 'IF NOT EXIST ' + BO_EXE +    ' GOTO ERROR'                       + Hb_OsNewLine()
-                  bld_cmd += 'IF EXIST '     + BO_OUTPUT + ' GOTO OK'                          + Hb_OsNewLine()
+                  bld_cmd += 'IF NOT EXIST ' + BO_EXE + ' GOTO ERROR'                                                       + Hb_OsNewLine()
+                  bld_cmd += 'IF EXIST ' + BO_OUTPUT + ' GOTO OK'                                                           + Hb_OsNewLine()
       otherwise
-                  bld_cmd += 'IF EXIST '     + BO_EXE +    ' GOTO OK'                          + Hb_OsNewLine()
+                  bld_cmd += 'IF EXIST ' + BO_EXE + ' GOTO OK'                                                              + Hb_OsNewLine()
       endcase
-                  bld_cmd += ':ERROR'                                                          + Hb_OsNewLine()
-                  bld_cmd += 'ECHO ERROR > ' + END_FILE                                        + Hb_OsNewLine()
-                  bld_cmd += 'GOTO END'                                                        + Hb_OsNewLine()
-                  bld_cmd += ':OK'                                                             + Hb_OsNewLine()
-                  bld_cmd += 'ECHO OK > '    + END_FILE                                        + Hb_OsNewLine()
-                  bld_cmd += ':END'                                                            + Hb_OsNewLine()
-
-/*
-xxx
-                  if ! Prj_Check_PlaceRCFirst .AND. ! Prj_Check_IgnoreMainRC
-                     if File( US_FileNameOnlyPathAndName( PRGFILES[1] ) + '.rc' )
-                        Out := Out + PUB_cCharTab + 'echo $(DIR_OBJECTS)' + DEF_SLASH + US_FileNameOnlyName( PRGFILES[1] ) + '.res' + ' >> ' + SCRIPT_FILE + Hb_OsNewLine()
-                     endif
-                  endif
-
-                  if ! Prj_Check_IgnoreLibRCs
-                     Out := Out + PUB_cCharTab + 'echo ' + US_ShortName( GetMiniGuiFolder() + DEF_SLASH + 'RESOURCES' ) + DEF_SLASH + cResourceFileName + '.res ' + ' + >> ' + SCRIPT_FILE + Hb_OsNewLine()
-                     For i := 1 to len( &( 'vLibDefault'+GetSuffix() ) )
-                        if ! ( Getminiguisuffix() == DefineOohg3 .and. ;
-                             ( US_Upper( &('vLibDefault'+GetSuffix()+'['+str(i)+']') ) == 'HBPRINTER.LIB' .or. ;
-                               US_Upper( &('vLibDefault'+GetSuffix()+'['+str(i)+']') ) == 'MINIPRINT.LIB' ) )
-                           if ascan( vLibExcludeFiles, US_Upper( &( 'vLibDefault'+GetSuffix()+'['+str(i)+']' ) ) ) = 0
-                              if file( GetMiniGuiFolder() + DEF_SLASH + 'RESOURCES' + DEF_SLASH + US_FileNameOnlyName( &('vLibDefault'+GetSuffix()+'['+str(i)+']') ) + '.res' )
-                                 Out := Out + PUB_cCharTab + 'echo ' + US_ShortName( GetMiniGuiFolder() + DEF_SLASH + 'RESOURCES' ) + DEF_SLASH + US_FileNameOnlyName( &('vLibDefault'+GetSuffix()+'['+str(i)+']') ) + '.res ' + ' + >> ' + SCRIPT_FILE + Hb_OsNewLine()
-                              endif
-                           endif
-                        endif
-                     Next i
-                  endif
-
-                  if ! Prj_Check_PlaceRCFirst .AND. ! Prj_Check_IgnoreMainRC
-                     if File( US_FileNameOnlyPathAndName( PRGFILES[1] ) + '.RC' )
-                        Out := Out + PUB_cCharTab + 'echo $(DIR_OBJECTS)' + DEF_SLASH + US_FileNameOnlyName( PRGFILES[1] ) + '.res ' + ' + >> ' + SCRIPT_FILE + Hb_OsNewLine()
-                     endif
-                  endif
-*/
+                  bld_cmd += ':ERROR'                                                                                       + Hb_OsNewLine()
+                  bld_cmd += 'IF EXIST ' + BO_TMP_ERR + ' COPY ' + BO_TMP_ERR + ' ' + TEMP_LOG + ' > NUL'                   + Hb_OsNewLine()
+                  bld_cmd += 'ECHO ERROR > ' + END_FILE                                                                     + Hb_OsNewLine()
+                  bld_cmd += 'GOTO END'                                                                                     + Hb_OsNewLine()
+                  bld_cmd += ':OK'                                                                                          + Hb_OsNewLine()
+                  bld_cmd += 'ECHO OK > ' + END_FILE                                                                        + Hb_OsNewLine()
+                  bld_cmd += ':END'                                                                                         + Hb_OsNewLine()
+                  bld_cmd += 'IF EXIST ' + BO_TEMP_RC  + ' DEL ' + BO_TEMP_RC + ' > NUL'                                    + Hb_OsNewLine()
+                  bld_cmd += 'IF EXIST ' + BO_RC_CONF  + ' DEL ' + BO_RC_CONF + ' > NUL'                                    + Hb_OsNewLine()
+                  bld_cmd += 'IF EXIST ' + BO_RC1_SHR  + ' DEL ' + BO_RC1_SHR + ' > NUL'                                    + Hb_OsNewLine()
+                  bld_cmd += 'IF EXIST ' + BO_RC2_SHR  + ' DEL ' + BO_RC2_SHR + ' > NUL'                                    + Hb_OsNewLine()
 
       QPM_MemoWrit( BUILD_BAT, bld_cmd )
    otherwise
