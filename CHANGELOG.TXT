@@ -8,6 +8,22 @@
  * See "How to format your ChangeLog entries" in howtosvn.txt file.
  */
 
+2019-03-19 22:18:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * ./QPM.exe
+     * Rebuilded.
+   * ./QPM.prg
+     ! Error message when version is newer.
+     ! QPM resources are not compiled.
+     ! Project's RC is not compiled under BCC.
+   * ./QPM_AutoProject.qpm
+     * Updated.
+   * ./QPM_Functions.prg
+     * Function GetResConfigFileName now returns
+       "_oohg_resconfig.h" for OOHG 3.x
+       "_hmg_resconfig.h" for HMG Extended
+       "_hmg_resconfig.h" for MiniGui 3.x
+       "_resconfig.h" for other flavors
+
 2019-03-17 22:33:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * ./ar.c
    * ./doc\codestyl.txt

@@ -51,10 +51,10 @@ Return
 
 /*
 Function QPM_CartelCancelByBug()
-   MsgInfo( "Selection canceled by user" + HB_OsNewLine() + ;   // esto es debido a un bug que prodeuce que cuando se de escape sin seleccionar archivos la rutina siguiente no termina
+   MsgInfo( "Selection canceled by user" + HB_OsNewLine() + ;   // esto es debido a un bug que se produce cuando se da escape sin seleccionar archivos: la rutina siguiente no termina
                                            HB_OsNewLine() + ;
-            "Note: This msgbox is used for resolve a litle bug in Extended Minigui" + HB_OsNewLine() + ;
-            "when Release the GetFile function pressing the Cancel Button" )
+            "Note: This msgbox fixes an Extended Minigui bug at the GetFile" + HB_OsNewLine() + ;
+            "function that hangs the app if Cancel or Esc key are pressed." )
 Return .T.
 */
 Function BugGetFile( a, b, c, d, e, f )
@@ -652,16 +652,16 @@ Return cNombre
 
 Function GetResConfigFileName()
    Local cType, cNombre
-   cType := GetMiniGuiSuffix() + GetCppSuffix()
+   cType := GetMiniGuiSuffix()       // + GetCppSuffix()
    do case
-   case cType == DefineOohg3 + DefineMinGW
+   case cType == DefineOohg3         // + DefineMinGW
       cNombre := "_oohg_resconfig.h"
-   case cType == DefineExtended1 + DefineMinGW
+   case cType == DefineExtended1     // + DefineMinGW
       cNombre := "_hmg_resconfig.h"
-   case cType == DefineMiniGui3 + DefineMinGW
+   case cType == DefineMiniGui3      // + DefineMinGW
       cNombre := "_hmg_resconfig.h"
    otherwise
-      cNombre := ""
+      cNombre := "_resconfig.h"
    endcase
 Return cNombre
 
