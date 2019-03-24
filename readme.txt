@@ -1,14 +1,17 @@
 Versión 05_05_08:
 1. Agregado: soporte Multithread.
 2. Corregido: RTE al construir archivo .chm.
+3. Corregido: No se puede compilar con BCC cuando el archivo de recursos no está en la misma carpeta que los fuentes.
 
 Version 05_05_08:
 1. Added: soporte Multithread.
 2. Fixed: RTE when building .chm file.
+3. Fixed: Can't compile under BCC when the resources file is not at the same folder than the sources.
 
 Versão 05_05_08:
 1. Adicionado: suporte Multithread.
-2. Fixo: RTE ao construir arquivo .chm.
+2. Corrigido: RTE ao construir arquivo .chm.
+3. Corrigido: não pode ser compilado com o BCC quando o arquivo de recursos não está na mesma pasta que os fontes.
 
 ----
 Versión 05_05_07:
@@ -18,7 +21,7 @@ Version 05_05_07:
 1. Fixed: Error when trying to edit .fmg file.
 
 Versão 05_05_07:
-1. Fixo: Erro ao tentar editar o arquivo .fmg.
+1. Corrigido: Erro ao tentar editar o arquivo .fmg.
 
 ----
 Versión 05_05_06:
@@ -28,7 +31,7 @@ Version 05_05_06:
 1. Fixed: Message "Error en Type for List Output".
 
 Versão 05_05_06:
-1. Fixo: Mensagem "Error en Type for List Output".
+1. Corrigido: Mensagem "Error en Type for List Output".
 
 ----
 
@@ -39,7 +42,7 @@ Version 05_05_05:
 1. Fixed: MINIGUI and project resource files are being ignored when building in console mode,
 
 Versão 05_05_05:
-1. Fixo: os arquivos de recursos da MINIGUI e do projeto estão sendo ignorados ao construir en modo console.
+1. Corrigido: os arquivos de recursos da MINIGUI e do projeto estão sendo ignorados ao construir en modo console.
 
 ----
 
@@ -54,7 +57,7 @@ Version 05_05_04:
 3. Note: Files can be checked separately at https://www.virustotal.com/es/
 
 Versão 05_05_04:
-1. Fixo: RTE ao mudar opção Copy/Move em opções do projeto.
+1. Corrigido: RTE ao mudar opção Copy/Move em opções do projeto.
 2. Nota: Um arquivo de instalação .zip é fornecido porque alguns antivírus detectan malware no arquivo instalador .exe
 3. Nota: Os arquivos podem ser verificados individualmente en https://www.virustotal.com/es/
 
@@ -83,12 +86,12 @@ Version 05_05_03:
 9. Note: A .zip installation file is provided because some antivirus detect malware in the .exe installer.
 
 Versão 05_05_03:
-1. Fixo: OOHG mostra uma janela vazia em modo de console.
-2. Fixo: As compilações com xHarbour terminam com erro porque algumas bibliotecas não são adicionadas.
-3. Fixo: As compilações com xHarbour terminam com erro por causa de um parâmetro errado.
-4. Fixo: Os projetos construidos com bcc32 e o novo depurador mostram uma janela do console vazia.
-5. Fixo: QPM cancela ao salvar o arquivo .qpm
-6. Fixo: Algumas opções de projeto não podem ser alteradas.
+1. Corrigido: OOHG mostra uma janela vazia em modo de console.
+2. Corrigido: As compilações com xHarbour terminam com erro porque algumas bibliotecas não são adicionadas.
+3. Corrigido: As compilações com xHarbour terminam com erro por causa de um parâmetro errado.
+4. Corrigido: Os projetos construidos com bcc32 e o novo depurador mostram uma janela do console vazia.
+5. Corrigido: QPM cancela ao salvar o arquivo .qpm
+6. Corrigido: Algumas opções de projeto não podem ser alteradas.
 7. Mudado: Auto Inc é agora uma opção do projeto.
 8. Mudado: O arquivo minigui.ch da HMG 3.x ja não é modificado para forçar o GT padrão.
 9. Nota: Um arquivo de instalação .zip é fornecido porque alguns antivírus detectan malware no arquivo instalador .exe
@@ -108,9 +111,9 @@ Version 05_05_02:
 4. Note: A .zip installation file is provided because some antivirus detect malware in the .exe installer.
 
 Versão 05_05_02:
-1. Fixo: A configuração global não é carregada a partir da versão anterior ao instalar uma nova versão.
-2. Fixo: Alguns falsos positivos relatados por alguns antivírus.
-3. Fixo: O cor de fundo da tela não é restaurado depois de editar um programa fonte.
+1. Corrigido: A configuração global não é carregada a partir da versão anterior ao instalar uma nova versão.
+2. Corrigido: Alguns falsos positivos relatados por alguns antivírus.
+3. Corrigido: O cor de fundo da tela não é restaurado depois de editar um programa fonte.
 4. Nota: Um arquivo de instalação .zip é fornecido porque alguns antivírus detectan malware no arquivo instalador .exe
 
 ----
@@ -128,9 +131,9 @@ Version 05_05_01:
 4. Note: A .zip installation  file is provided because some antivirus detect malware in the .exe files.
 
 Versão 05_05_01:
-1. Fixo: as bibliotecas adicionais não são carregadas ao converter versões anteriores a 05_05_00 .
-2. Fixo: A informaçõe no separador "LIB" está incorreta.
-3. Fixo: Os recursos cujos nomes começam com ".. \" não são devidamente processados.
+1. Corrigido: as bibliotecas adicionais não são carregadas ao converter versões anteriores a 05_05_00 .
+2. Corrigido: A informaçõe no separador "LIB" está incorreta.
+3. Corrigido: Os recursos cujos nomes começam com ".. \" não são devidamente processados.
 4. Nota: Um arquivo de instalação .zip é fornecido porque alguns antivírus detectar malware nos arquivos .exe.
 
 ----
@@ -159,7 +162,7 @@ Version 05_04_08:
 1. Fixed: exe file is not builded because MinGW in HMG 3.4.2 couldn't find the #include files.
 
 Versão 05_04_08:
-1. Fixo: o executável não é gerado porque MinGW de HMG 3.4.2 não pode encontrar os arquivos.
+1. Corrigido: o executável não é gerado porque MinGW de HMG 3.4.2 não pode encontrar os arquivos.
 
 ----
 
@@ -170,7 +173,7 @@ Version 05_04_07:
 1. Fixed: executable file is always named with EXE extention (uppercase), even when lowercase was specified.
 
 Versão 05_04_07:
-1. Fixo: o executável é sempre gerado com a extensão EXE (maiúsculas), mesmo quando especificado com letras minúsculas.
+1. Corrigido: o executável é sempre gerado com a extensão EXE (maiúsculas), mesmo quando especificado com letras minúsculas.
 
 ----
 
@@ -181,7 +184,7 @@ Version 05_04_06:
 1. Fixed: global configuration is lost after upgrade.
 
 Versão 05_04_06:
-1. Fixo: a configuração geral é perdida após um upgrade.
+1. Corrigido: a configuração geral é perdida após um upgrade.
 
 ----
 
@@ -192,7 +195,7 @@ Version 05_04_05:
 1. Fixed: cancelation when clicking a previous project that no longer exists.
 
 Versão 05_04_05:
-1. Fixo: cancelamento al clicar em um projeto anterior que já não existe.
+1. Corrigido: cancelamento al clicar em um projeto anterior que já não existe.
 
 ----
 
@@ -222,7 +225,7 @@ Version 05_04_03:
 2. Added: DEBUG option is now remembered.
 
 Versão 05_04_03:
-1. Fixo: Não é possível compilar com Harbour 3.2, MinGW y OOHG.
+1. Corrigido: Não é possível compilar com Harbour 3.2, MinGW y OOHG.
 2. Adicionado: opção DEBUG é lembrada.
 
 ----
@@ -234,7 +237,7 @@ Version 05_04_02:
 1. Fixed: can't compile with Harbour 3.0, MinGW y OOHG.
 
 Versão 05_04_02:
-1. Fixo: Não é possível compilar com Harbour 3.0, MinGW y OOHG.
+1. Corrigido: Não é possível compilar com Harbour 3.0, MinGW y OOHG.
 
 ----
 
@@ -249,7 +252,7 @@ Version 05_04_01:
 3. Added: "Move item" option to context menu.
 
 Versão 05_04_01:
-1. Fixo: Não é possível compilar com Harbour 3.2, MinGW y OOHG.
+1. Corrigido: Não é possível compilar com Harbour 3.2, MinGW y OOHG.
 2. Mudado: vários defeitos e artefatos visuais.
 3. Adicionado: opção "Move item" ao menu de contexto.
 
@@ -282,7 +285,7 @@ Version 05_03_22:
 
 Versão 05_03_22:
 1. Mudado: biblioteca CT é incluída por padrão durante a compilação com Extended 1.x + BCC + Harbour.
-2. Fixo: Arquivos .c não são compilados quando o projeto inclui fontes de muitas pastas diferentes.
+2. Corrigido: Arquivos .c não são compilados quando o projeto inclui fontes de muitas pastas diferentes.
 
 ----
 
@@ -315,7 +318,7 @@ Version 05_03_19:
 1. Fixed: .LIB file is not generated when building an interface library to access a DLL.
 
 Versão 05_03_19:
-1. Fixo: arquivo. LIB não é gerado quando a construção de uma biblioteca de interface para acessar uma DLL.
+1. Corrigido: arquivo. LIB não é gerado quando a construção de uma biblioteca de interface para acessar uma DLL.
 
 ----
 
@@ -381,7 +384,7 @@ Version 05_03_13:
 1. Fixed: Fx keys not released when QPM lost focus.
 
 Versão 05_03_13:
-1. Fixo: teclas de função Fx ainda estão ativas quando a janela QPM perde o foco QPM.
+1. Corrigido: teclas de função Fx ainda estão ativas quando a janela QPM perde o foco QPM.
 
 ----
 
@@ -392,7 +395,7 @@ Version 05_03_12:
 1. Fixed: extra run options are lost when saving project settings.
 
 Versão 05_03_12:
-1. Fixo: opções "Extra RUN" são perdidas ao salvar as configurações do projeto.
+1. Corrigido: opções "Extra RUN" são perdidas ao salvar as configurações do projeto.
 
 ----
 
@@ -403,7 +406,7 @@ Version 05_03_11:
 1. Fixed: when the project location is changed, the folder for HTML output can't be changed.
 
 Versão 05_03_11:
-1. Fixo: quando a localização do projeto é alterada, a pasta de saída HTML não pode ser alterada.
+1. Corrigido: quando a localização do projeto é alterada, a pasta de saída HTML não pode ser alterada.
 
 ----
 
@@ -414,7 +417,7 @@ Version 05_03_10:
 1. Fixed: C compiler in use is not shown correctly when Minigui Extended 1.x and MinGW are selected in Project Options.
 
 Versão 05_03_10:
-1. Fixo: não exibe corretamente o nome do compilador C em uso ao selecionar as opções Minigui Extended 1.x e MinGW em janela Project Options.
+1. Corrigido: não exibe corretamente o nome do compilador C em uso ao selecionar as opções Minigui Extended 1.x e MinGW em janela Project Options.
 
 ----
 
@@ -425,7 +428,7 @@ Version 05_03_09:
 1. Fixed: file names with "\" are shown incorrectly in "Output Error" tab.
 
 Versão 05_03_09:
-1. Fixo: os nomes de arquivos que contenham "\" não são exibidos corretamente no tab "Output Error".
+1. Corrigido: os nomes de arquivos que contenham "\" não são exibidos corretamente no tab "Output Error".
 
 ----
 
@@ -458,11 +461,11 @@ Version 05_03_07:
 
 Versão 05_03_07:
 1. Adicionado: nomes de arquivo SHG pode ter caracteres acentuados.
-2. Fixo: BCC foi linkediting um .obj obsoleto quando um erro no .prg produz um .c que não compila.
-3. Fixo: não pode linkeditar um projeto OOHG + MinGW + Harbour no modo DEBUG.
+2. Corrigido: BCC foi linkediting um .obj obsoleto quando um erro no .prg produz um .c que não compila.
+3. Corrigido: não pode linkeditar um projeto OOHG + MinGW + Harbour no modo DEBUG.
 4. Mudado: bibliotecas usadas durante a compilação com OOHG + MinGW + Harbour.
-5. Fixo: falta mensagens para alguns erros e avisos.
-6. Fixo: o tema estava sendo marcado como modificado em ventana "Topic Description", mesmo quando nenhuma alteração foi feita.
+5. Corrigido: falta mensagens para alguns erros e avisos.
+6. Corrigido: o tema estava sendo marcado como modificado em ventana "Topic Description", mesmo quando nenhuma alteração foi feita.
 
 ----
 
@@ -488,13 +491,13 @@ Version 05_03_06:
 
 Versão 05_03_06:
 1. Adicionado: Opções para compactar/descompactar alguns utilitários US_*.exe. Note-se que US_ImpDef.EXE, US_PExports.EXE, US_Reimp.EXE, US_ImpLib.EXE, US_DllTool.EXE, US_Tdump.EXE US_ObjDump.EXE não pode ser comprimido/descomprimido pelo UPX.
-2. Fixo: linhas extra adicionadas quando colar texto de outro tópico SHG.
-3. Fixo: nenhuma mensagem de erro exibida no log de processamento ao usar Borland C para Harbour 3.1.
-4. Fixed: no linkeditan-se livrarias quando OOHG é usado com Borland C.
-5. Fixos: os temas do ajuda SHG são marcados como modificados sem quaisquer modificações feitas.
-6. Fixo: não pode copiar/cortar o texto do primeiro tópico do ajuda SHG.
-7. Fixo: não pode colar texto retirado do controle RichEdit de ajuda SHG.
-8. Fixo: erro "índice não encontrado" ao abrir o arquivo de ajuda SHG sob certas condições.
+2. Corrigido: linhas extra adicionadas quando colar texto de outro tópico SHG.
+3. Corrigido: nenhuma mensagem de erro exibida no log de processamento ao usar Borland C para Harbour 3.1.
+4. Corrigido: no linkeditan-se livrarias quando OOHG é usado com Borland C.
+5. Corrigido: os temas do ajuda SHG são marcados como modificados sem quaisquer modificações feitas.
+6. Corrigido: não pode copiar/cortar o texto do primeiro tópico do ajuda SHG.
+7. Corrigido: não pode colar texto retirado do controle RichEdit de ajuda SHG.
+8. Corrigido: erro "índice não encontrado" ao abrir o arquivo de ajuda SHG sob certas condições.
 
 ----
 
