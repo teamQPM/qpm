@@ -621,6 +621,8 @@ Function GetResourceFileName()
    case GetMiniGuiSuffix() == DefineOohg3
       if QPM_IsXHarbour() .and. File( GetMiniGuiFolder() + DEF_SLASH + 'RESOURCES' + DEF_SLASH + "xoohg.rc" )
          cNombre := "xoohg"
+      elseif GetCppSuffix() == DefineBorland .and. File( GetMiniGuiFolder() + DEF_SLASH + 'RESOURCES' + DEF_SLASH + "oohg_bcc.rc" )
+         cNombre := "oohg_bcc"
       else
          cNombre := "oohg"
       endif
@@ -667,16 +669,16 @@ Return cNombre
 
 Function GetResConfigVarName()
    Local cType, cNombre
-   cType := GetMiniGuiSuffix() + GetCppSuffix()
+   cType := GetMiniGuiSuffix()       // + GetCppSuffix()
    do case
-   case cType == DefineOohg3 + DefineMinGW
-      cNombre := "oohgpath"
-   case cType == DefineExtended1 + DefineMinGW
+   case cType == DefineOohg3         // + DefineMinGW
+      cNombre := "OOHGPATH"
+   case cType == DefineExtended1     // + DefineMinGW
       cNombre := "HMGRPATH"
-   case cType == DefineMiniGui3 + DefineMinGW
+   case cType == DefineMiniGui3      // + DefineMinGW
       cNombre := "HMGRPATH"
    otherwise
-      cNombre := ""
+      cNombre := "MINIGUIPATH"
    endcase
 Return cNombre
 
