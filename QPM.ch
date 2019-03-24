@@ -776,7 +776,8 @@ memvar vExtraFoldersForLibsO3PH_32
 memvar vExtraFoldersForLibsO3PH_64
 memvar vExtraFoldersForLibsO3PX_32
 memvar vExtraFoldersForLibsO3PX_64
-memvar vExtraFoldersForSearch
+memvar vExtraFoldersForSearchC
+memvar vExtraFoldersForSearchHB
 memvar vImagesGrid
 memvar vLastOpen
 memvar vLastSearch

@@ -385,7 +385,8 @@ Function Main( PAR_cP01, PAR_cP02, PAR_cP03, PAR_cP04, PAR_cP05, PAR_cP06, PAR_c
    PUBLIC Prj_IsNew                     := .F.
    PUBLIC cProjectFileName
    PUBLIC PUB_cConvert                  := ''
-   PUBLIC vExtraFoldersForSearch        := {}
+   PUBLIC vExtraFoldersForSearchC       := {}
+   PUBLIC vExtraFoldersForSearchHB      := {}
    PUBLIC bWarningCpp                   := .T.
    PUBLIC vExeNotFound                  := {}
    PUBLIC cExeNotFoundMsg               := {}
@@ -3149,10 +3150,7 @@ Function QPM_AddFilesPRG2()
    if len( Files ) == 1
       if ! ( US_Upper( US_FileNameOnlyExt( Files[1] ) ) == 'PRG' ) .and. ;
          ! ( US_Upper( US_FileNameOnlyExt( Files[1] ) ) == 'C' ) .and. ;
-         ! ( US_Upper( US_FileNameOnlyExt( Files[1] ) ) == 'CPP' ) .and. ;
-         ! ( US_Upper( US_FileNameOnlyExt( Files[1] ) ) == 'LIB' ) .and. ;
-         ! ( US_Upper( US_FileNameOnlyExt( Files[1] ) ) == 'A' ) .and. ;
-         ! ( US_Upper( US_FileNameOnlyExt( Files[1] ) ) == 'DLL' )
+         ! ( US_Upper( US_FileNameOnlyExt( Files[1] ) ) == 'CPP' )
          Files[1] := Files[1] + '.PRG'
       endif
       if ! file( Files[1] )
@@ -3186,8 +3184,14 @@ Function QPM_AddFilesPRG2()
                TotCaption( 'PRG', +1 )
             endif
          endif
-         if AScan( vExtraFoldersForSearch, { |y| US_Upper( US_VarToStr( y ) ) == US_Upper( US_FileNameOnlyPath( ChgPathToReal( Files[x] ) ) ) } ) == 0
-            aadd( vExtraFoldersForSearch, US_FileNameOnlyPath( ChgPathToReal( Files[x] ) ) )
+         if US_Upper( US_FileNameOnlyExt( Files[1] ) ) == 'PRG'
+            if AScan( vExtraFoldersForSearchHB, { |y| US_Upper( US_VarToStr( y ) ) == US_Upper( US_FileNameOnlyPath( ChgPathToReal( Files[x] ) ) ) } ) == 0
+               aadd( vExtraFoldersForSearchHB, US_FileNameOnlyPath( ChgPathToReal( Files[x] ) ) )
+            endif
+         elseif US_Upper( US_FileNameOnlyExt( Files[1] ) ) == 'CPP' .or. US_Upper( US_FileNameOnlyExt( Files[1] ) ) == 'C'
+            if AScan( vExtraFoldersForSearchC, { |y| US_Upper( US_VarToStr( y ) ) == US_Upper( US_FileNameOnlyPath( ChgPathToReal( Files[x] ) ) ) } ) == 0
+               aadd( vExtraFoldersForSearchC, US_FileNameOnlyPath( ChgPathToReal( Files[x] ) ) )
+            endif
          endif
       EndIf
    Next x
@@ -3244,9 +3248,11 @@ Function QPM_AddFilesHEA2()
                TotCaption( 'HEA', +1 )
             endif
          endif
-   //    if ascan( vExtraFoldersForSearch, US_FileNameOnlyPath( ChgPathToReal( Files[x] ) ) ) = 0
-         if AScan( vExtraFoldersForSearch, { |y| US_Upper( US_VarToStr( y ) ) == US_Upper( US_FileNameOnlyPath( ChgPathToReal( Files[x] ) ) ) } ) == 0
-            aadd( vExtraFoldersForSearch, US_FileNameOnlyPath( ChgPathToReal( Files[x] ) ) )
+         if AScan( vExtraFoldersForSearchHB, { |y| US_Upper( US_VarToStr( y ) ) == US_Upper( US_FileNameOnlyPath( ChgPathToReal( Files[x] ) ) ) } ) == 0
+            aadd( vExtraFoldersForSearchHB, US_FileNameOnlyPath( ChgPathToReal( Files[x] ) ) )
+         endif
+         if AScan( vExtraFoldersForSearchC, { |y| US_Upper( US_VarToStr( y ) ) == US_Upper( US_FileNameOnlyPath( ChgPathToReal( Files[x] ) ) ) } ) == 0
+            aadd( vExtraFoldersForSearchC, US_FileNameOnlyPath( ChgPathToReal( Files[x] ) ) )
          endif
       EndIf
    Next x
@@ -3303,9 +3309,8 @@ Function QPM_AddFilesPAN2()
                TotCaption( 'PAN', +1 )
             endif
          endif
-     //  if ascan( vExtraFoldersForSearch, US_FileNameOnlyPath( ChgPathToReal( Files[x] ) ) ) = 0
-         if AScan( vExtraFoldersForSearch, { |y| US_Upper( US_VarToStr( y ) ) == US_Upper( US_FileNameOnlyPath( ChgPathToReal( Files[x] ) ) ) } ) == 0
-            aadd( vExtraFoldersForSearch, US_FileNameOnlyPath( ChgPathToReal( Files[x] ) ) )
+         if AScan( vExtraFoldersForSearchHB, { |y| US_Upper( US_VarToStr( y ) ) == US_Upper( US_FileNameOnlyPath( ChgPathToReal( Files[x] ) ) ) } ) == 0
+            aadd( vExtraFoldersForSearchHB, US_FileNameOnlyPath( ChgPathToReal( Files[x] ) ) )
          endif
       EndIf
    Next x
@@ -3357,10 +3362,6 @@ Function QPM_AddFilesDBF2()
                TotCaption( 'DBF', +1 )
             endif
          endif
-   //    if ascan( vExtraFoldersForSearch, US_FileNameOnlyPath( ChgPathToReal( Files[x] ) ) ) = 0
-       //if AScan( vExtraFoldersForSearch, { |y| US_Upper( US_VarToStr( y ) ) == US_Upper( US_FileNameOnlyPath( ChgPathToReal( Files[x] ) ) ) } ) == 0
-       //   aadd( vExtraFoldersForSearch, US_FileNameOnlyPath( ChgPathToReal( Files[x] ) ) )
-       //endif
       EndIf
    Next x
    if VentanaMain.GDbfFiles.Value = 0
@@ -3957,7 +3958,7 @@ Return .T.
 #endif
 
 Function QPM_EditRES
-   Local Editor, FileRC
+   Local Editor, FileRC, Alt_RC
    if Empty( PUB_cProjectFolder ) .or. ! US_IsDirectory( PUB_cProjectFolder )
       MsgStop( DBLQT + "Project Folder" + DBLQT + " is not a valid folder:" + Hb_OsNewLine() + PUB_cProjectFolder + Hb_OsNewLine() + 'Look at tab ' + DBLQT + PagePRG + DBLQT )
       Return .F.
@@ -3977,10 +3978,19 @@ Function QPM_EditRES
    Editor := US_ShortName( alltrim( Gbl_Text_Editor ) )
    FileRC := US_FileNameOnlyPathAndName( ChgPathToReal( GetProperty( 'VentanaMain', 'GPrgFiles', 'Cell', 1, NCOLPRGFULLNAME ) ) ) + '.RC'
    if ! File( FileRC )
-      if ! MyMsgYesNo( 'File not found: ' + DBLQT + FileRC + DBLQT + Hb_OsNewLine() + 'Do you want create an empty file ?' )
-         Return .F.
+      Alt_RC := PUB_cProjectFolder + DEF_SLASH + US_FileNameOnlyName( ChgPathToReal( GetProperty( 'VentanaMain', 'GPrgFiles', 'Cell', 1, NCOLPRGFULLNAME ) ) ) + '.RC'
+      if File( Alt_RC )
+         FileRC := Alt_RC
+      else
+         if ! MyMsgYesNo( 'Main resources file not found' + ;
+                          'at: ' + DBLQT + FileRC + DBLQT + Hb_OsNewLine() + ;
+                          'nor at: ' + DBLQT + Alt_RC + DBLQT + Hb_OsNewLine() + ;
+                          'Do you want to create an empty file ?' )
+            Return .F.
+         endif
+         QPM_MemoWrit( FileRC, 'MAIN ICON     .' + DEF_SLASH + 'RESOURCES' + DEF_SLASH + 'MAIN.ICO' )
+         MsgInfo( "Main resource file was created:" + Hb_OsNewLine() + DBLQT + FileRC + DBLQT )
       endif
-      QPM_MemoWrit( FileRC, 'MAIN ICON     .' + DEF_SLASH + 'RESOURCES' + DEF_SLASH + 'MAIN.ICO' )
    endif
    QPM_Execute( Editor, if( bEditorLongName, FileRC, US_ShortName( FileRC ) ) )
 Return .T.
@@ -4261,6 +4271,7 @@ Function QPM_OpenProject2()
    Local cForceRecomp
    Local LOC_nOpenError
    Local i
+   Local cFile
    Local cMemoProjectFile
    Local cMemoProjectFileAux := ""
    Local cCfgVrsn := '010001'
@@ -4397,7 +4408,8 @@ Function QPM_OpenProject2()
       &( 'ExcludeLibs'+vSuffix[i][1] )          := {}
       &( 'vExtraFoldersForLibs'+vSuffix[i][1] ) := {}
       Next
-      vExtraFoldersForSearch                    := {}
+      vExtraFoldersForSearchC                   := {}
+      vExtraFoldersForSearchHB                  := {}
       vSinLoadWindow                            := {}
       vSinInclude                               := {}
       vXRefPrgHea                               := {}
@@ -4451,7 +4463,7 @@ Function QPM_OpenProject2()
       // Lock project's file
       QPM_ProjectFileUnLock()
       if ! ( ( LOC_nOpenError := QPM_ProjectFileLock( cProjectFileName ) ) == 0 )
-         if LOC_nOpenError == 5
+         if LOC_nOpenError == 5 .or. LOC_nOpenError == 32
             MsgInfo( "Project already in use: " + DBLQT + cProjectFileName + DBLQT )
          else
             MsgInfo( "Error #" + US_VarToStr( LOC_nOpenError ) + " opening project: " + DBLQT + cProjectFileName + DBLQT )
@@ -4764,22 +4776,29 @@ Function QPM_OpenProject2()
                     LOC_cLine := StrTran( LOC_cLine, '<FR> ', '' )
                     cForceRecomp := 'R'
                  endif
-                 VentanaMain.GPrgFiles.AddItem( { PUB_nGridImgNone, cForceRecomp, US_FileNameOnlyNameAndExt( US_WordSubStr( LOC_cLine, 2 ) ), ChgPathToRelative( US_WordSubStr( LOC_cLine, 2 ) ), '0', '', '' } )
-              // if ascan( vExtraFoldersForSearch, US_FileNameOnlyPath( ChgPathToReal( GetProperty( 'VentanaMain', 'GPrgFiles', 'Cell', VentanaMain.GPrgFiles.ItemCount, NCOLPRGFULLNAME ) ) ) ) = 0
-                 if AScan( vExtraFoldersForSearch, { |y| US_Upper( US_VarToStr( y ) ) == US_Upper( US_FileNameOnlyPath( ChgPathToReal( GetProperty( 'VentanaMain', 'GPrgFiles', 'Cell', VentanaMain.GPrgFiles.ItemCount, NCOLPRGFULLNAME ) ) ) ) } ) == 0
-                    aadd( vExtraFoldersForSearch, US_FileNameOnlyPath( ChgPathToReal( GetProperty( 'VentanaMain', 'GPrgFiles', 'Cell', VentanaMain.GPrgFiles.ItemCount, NCOLPRGFULLNAME ) ) ) )
+                 cFile := US_WordSubStr( LOC_cLine, 2 )
+                 VentanaMain.GPrgFiles.AddItem( { PUB_nGridImgNone, cForceRecomp, US_FileNameOnlyNameAndExt( US_WordSubStr( LOC_cLine, 2 ) ), ChgPathToRelative( cFile ), '0', '', '' } )
+                 if US_Upper( US_FileNameOnlyExt( cFile ) ) == 'PRG'
+                    if AScan( vExtraFoldersForSearchHB, { |y| US_Upper( US_VarToStr( y ) ) == US_Upper( US_FileNameOnlyPath( cFile ) ) } ) == 0
+                       aadd( vExtraFoldersForSearchHB, US_FileNameOnlyPath( cFile ) )
+                    endif
+                 else
+                    if AScan( vExtraFoldersForSearchC, { |y| US_Upper( US_VarToStr( y ) ) == US_Upper( US_FileNameOnlyPath( cFile ) ) } ) == 0
+                       aadd( vExtraFoldersForSearchC, US_FileNameOnlyPath( cFile ) )
+                    endif
                  endif
          ElseIf  US_Upper ( US_Word( LOC_cLine, 1 ) ) == 'HEAD'
                  VentanaMain.GHeaFiles.AddItem( { PUB_nGridImgNone, US_FileNameOnlyNameAndExt( US_WordSubStr( LOC_cLine, 2 ) ), ChgPathToRelative( US_WordSubStr( LOC_cLine, 2 ) ), '0', '', '' } )
-              // if ascan( vExtraFoldersForSearch, US_FileNameOnlyPath( ChgPathToReal( GetProperty( 'VentanaMain', 'GHeaFiles', 'Cell', VentanaMain.GHeaFiles.ItemCount, NCOLHEAFULLNAME ) ) ) ) = 0
-                 if AScan( vExtraFoldersForSearch, { |y| US_Upper( US_VarToStr( y ) ) == US_Upper( US_FileNameOnlyPath( ChgPathToReal( GetProperty( 'VentanaMain', 'GHeaFiles', 'Cell', VentanaMain.GHeaFiles.ItemCount, NCOLHEAFULLNAME ) ) ) ) } ) == 0
-                    aadd( vExtraFoldersForSearch, US_FileNameOnlyPath( ChgPathToReal( GetProperty( 'VentanaMain', 'GHeaFiles', 'Cell', VentanaMain.GHeaFiles.ItemCount, NCOLHEAFULLNAME ) ) ) )
+                 if AScan( vExtraFoldersForSearchHB, { |y| US_Upper( US_VarToStr( y ) ) == US_Upper( US_FileNameOnlyPath( ChgPathToReal( GetProperty( 'VentanaMain', 'GHeaFiles', 'Cell', VentanaMain.GHeaFiles.ItemCount, NCOLHEAFULLNAME ) ) ) ) } ) == 0
+                    aadd( vExtraFoldersForSearchHB, US_FileNameOnlyPath( ChgPathToReal( GetProperty( 'VentanaMain', 'GHeaFiles', 'Cell', VentanaMain.GHeaFiles.ItemCount, NCOLHEAFULLNAME ) ) ) )
+                 endif
+                 if AScan( vExtraFoldersForSearchC, { |y| US_Upper( US_VarToStr( y ) ) == US_Upper( US_FileNameOnlyPath( ChgPathToReal( GetProperty( 'VentanaMain', 'GHeaFiles', 'Cell', VentanaMain.GHeaFiles.ItemCount, NCOLHEAFULLNAME ) ) ) ) } ) == 0
+                    aadd( vExtraFoldersForSearchC, US_FileNameOnlyPath( ChgPathToReal( GetProperty( 'VentanaMain', 'GHeaFiles', 'Cell', VentanaMain.GHeaFiles.ItemCount, NCOLHEAFULLNAME ) ) ) )
                  endif
          ElseIf  US_Upper ( US_Word( LOC_cLine, 1 ) ) == 'FORM'
                  VentanaMain.GPanFiles.AddItem( { PUB_nGridImgNone, US_FileNameOnlyNameAndExt( US_WordSubStr( LOC_cLine, 2 ) ), ChgPathToRelative( US_WordSubStr( LOC_cLine, 2 ) ), '0', '', '' } )
-             //  if ascan( vExtraFoldersForSearch, US_FileNameOnlyPath( ChgPathToReal( GetProperty( 'VentanaMain', 'GPanFiles', 'Cell', VentanaMain.GPanFiles.ItemCount, NCOLPANFULLNAME ) ) ) ) = 0
-                 if AScan( vExtraFoldersForSearch, { |y| US_Upper( US_VarToStr( y ) ) == US_Upper( US_FileNameOnlyPath( ChgPathToReal( GetProperty( 'VentanaMain', 'GPanFiles', 'Cell', VentanaMain.GPanFiles.ItemCount, NCOLPANFULLNAME ) ) ) ) } ) == 0
-                    aadd( vExtraFoldersForSearch, US_FileNameOnlyPath( ChgPathToReal( GetProperty( 'VentanaMain', 'GPanFiles', 'Cell', VentanaMain.GPanFiles.ItemCount, NCOLPANFULLNAME ) ) ) )
+                 if AScan( vExtraFoldersForSearchHB, { |y| US_Upper( US_VarToStr( y ) ) == US_Upper( US_FileNameOnlyPath( ChgPathToReal( GetProperty( 'VentanaMain', 'GPanFiles', 'Cell', VentanaMain.GPanFiles.ItemCount, NCOLPANFULLNAME ) ) ) ) } ) == 0
+                    aadd( vExtraFoldersForSearchHB, US_FileNameOnlyPath( ChgPathToReal( GetProperty( 'VentanaMain', 'GPanFiles', 'Cell', VentanaMain.GPanFiles.ItemCount, NCOLPANFULLNAME ) ) ) )
                  endif
          ElseIf  US_Upper ( US_Word( LOC_cLine, 1 ) ) == 'DBF'
                  VentanaMain.GDbfFiles.AddItem( { PUB_nGridImgNone, US_FileNameOnlyNameAndExt( US_WordSubStr( LOC_cLine, 2 ) ), ChgPathToRelative( US_WordSubStr( LOC_cLine, 2 ) ), '0 0', '', '0 ** 0' } )
@@ -5370,6 +5389,29 @@ Function QPM_Build2()
    Local bIsCpp := .F.
    Local bld_cmd
    Local cAux
+   Local cB_CPP_BIN
+   Local cB_DLLTOOL
+   Local cB_DLL_ERR
+   Local cB_EXE
+   Local cB_FILLER
+   Local cB_OUTPUT
+   Local cB_RC1_SHR
+   Local cB_RC2_SHR
+   Local cB_RCC_ERR
+   Local cB_RCF_ERR
+   Local cB_RCM_ERR
+   Local cB_RC_COMP
+   Local cB_RC_CONF
+   Local cB_RC_FOLD
+   Local cB_RC_HBPR
+   Local cB_RC_MAIN
+   Local cB_RC_MA_S
+   Local cB_RC_MINI
+   Local cB_RC_MIPR
+   Local cB_TEMP_RC
+   Local cB_TMP_ERR
+   Local cB_US_MAKE
+   Local cB_US_RES
    Local cDebugPath := ''
    Local cExtraFoldersC := ''
    Local cExtraFoldersHB := ''
@@ -5379,6 +5421,7 @@ Function QPM_Build2()
    Local cInputReImpDef := ''
    Local cInputReImpName := ''
    Local cInputReImpNameDisplay := ''
+   Local cOldFolder := GetCurrentFolder()
    Local cOutputName
    Local cOutputNameDisplay
    Local cResourceFileName
@@ -5403,7 +5446,6 @@ Function QPM_Build2()
    Local w_group
    Local w_hay
    Local w_LibFolders
-   Local cOldFolder := GetCurrentFolder()
 
    BUILD_IN_PROGRESS := .T.
    LiberoWindowsHotKeys(.F.)
@@ -5758,18 +5800,17 @@ Function QPM_Build2()
 
    DO EVENTS
 
-   For i := 1 to len( vExtraFoldersForSearch )
-      if ! empty( vExtraFoldersForSearch[i] )
-         cAux := US_ShortName( vExtraFoldersForSearch[i] )
+   For i := 1 to len( vExtraFoldersForSearchHB )
+      if ! empty( vExtraFoldersForSearchHB[i] )
+         cAux := US_ShortName( vExtraFoldersForSearchHB[i] )
          if ! empty( cAux )
             nLastExtraFolderSearchAdded := i
-            if US_IsRootFolder( vExtraFoldersForSearch[ i ] )
+            if US_IsRootFolder( vExtraFoldersForSearchHB[ i ] )
                bExtraFolderSearchRoot := .T.
             else
                bExtraFolderSearchRoot := .F.
             endif
             aadd( vConcatIncludeHB, cAux )
-            aadd( vConcatIncludeC, cAux )
 
             if bExtraFolderSearchRoot
                cAux += DEF_SLASH
@@ -5787,6 +5828,42 @@ Function QPM_Build2()
                   US_Log( 'Error 5445' )
                endcase
             endif
+         endif
+      endif
+   Next i
+
+   // INI - El siguiente es un parche para cuando el ultimo folder a agregar en Search es del formato 'C:',
+   //       ya que hay que agregarle algun folder del formato 'C:\xxxxx' para que no cancele
+   if nLastExtraFolderSearchAdded > 0 .AND. nLastExtraFolderSearchAdded <= Len( vExtraFoldersForSearchHB ) .AND. ;
+      US_IsRootFolder( vExtraFoldersForSearchHB[ nLastExtraFolderSearchAdded ] )
+      do case
+      case IsMinGW
+         cExtraFoldersHB := cExtraFoldersHB + ';' + US_ShortName( DiskName() + ':' + DEF_SLASH + '_' + PUB_cSecu + 'SearchBug' )
+      case IsPelles
+         cExtraFoldersHB := cExtraFoldersHB + ';' + US_ShortName( DiskName() + ':' + DEF_SLASH + '_' + PUB_cSecu + 'SearchBug' )
+      case IsBorland
+         cExtraFoldersHB := cExtraFoldersHB + ';' + US_ShortName( DiskName() + ':' + DEF_SLASH + '_' + PUB_cSecu + 'SearchBug' )
+      otherwise
+         US_Log( 'Error 5446' )
+      endcase
+   endif
+
+   For i := 1 to len( vExtraFoldersForSearchC )
+      if ! empty( vExtraFoldersForSearchC[i] )
+         cAux := US_ShortName( vExtraFoldersForSearchC[i] )
+         if ! empty( cAux )
+            nLastExtraFolderSearchAdded := i
+            if US_IsRootFolder( vExtraFoldersForSearchC[ i ] )
+               bExtraFolderSearchRoot := .T.
+            else
+               bExtraFolderSearchRoot := .F.
+            endif
+            aadd( vConcatIncludeHB, cAux )
+
+            if bExtraFolderSearchRoot
+               cAux += DEF_SLASH
+            endif
+
             if ! cAux $ cExtraFoldersC
                do case
                case IsMinGW
@@ -5796,7 +5873,7 @@ Function QPM_Build2()
                case IsBorland
                   cExtraFoldersC := cExtraFoldersC + ';' + cAux
                otherwise
-                  US_Log( 'Error 5446' )
+                  US_Log( 'Error 5447' )
                endcase
             endif
          endif
@@ -5805,20 +5882,17 @@ Function QPM_Build2()
 
    // INI - El siguiente es un parche para cuando el ultimo folder a agregar en Search es del formato 'C:',
    //       ya que hay que agregarle algun folder del formato 'C:\xxxxx' para que no cancele
-   if nLastExtraFolderSearchAdded > 0 .AND. nLastExtraFolderSearchAdded <= Len( vExtraFoldersForSearch ) .AND. ;
-      US_IsRootFolder( vExtraFoldersForSearch[ nLastExtraFolderSearchAdded ] )
+   if nLastExtraFolderSearchAdded > 0 .AND. nLastExtraFolderSearchAdded <= Len( vExtraFoldersForSearchC ) .AND. ;
+      US_IsRootFolder( vExtraFoldersForSearchC[ nLastExtraFolderSearchAdded ] )
       do case
       case IsMinGW
-         cExtraFoldersHB := cExtraFoldersHB + ';' + US_ShortName( DiskName() + ':' + DEF_SLASH + '_' + PUB_cSecu + 'SearchBug' )
          cExtraFoldersC  := cExtraFoldersC  + ' -I' + US_ShortName( DiskName() + ':' + DEF_SLASH + '_' + PUB_cSecu + 'SearchBug' )
       case IsPelles
-         cExtraFoldersHB := cExtraFoldersHB + ';' + US_ShortName( DiskName() + ':' + DEF_SLASH + '_' + PUB_cSecu + 'SearchBug' )
          cExtraFoldersC  := cExtraFoldersC  + ' /I' + US_ShortName( DiskName() + ':' + DEF_SLASH + '_' + PUB_cSecu + 'SearchBug' )
       case IsBorland
-         cExtraFoldersHB := cExtraFoldersHB + ';' + US_ShortName( DiskName() + ':' + DEF_SLASH + '_' + PUB_cSecu + 'SearchBug' )
          cExtraFoldersC  := cExtraFoldersC  + ';' + US_ShortName( DiskName() + ':' + DEF_SLASH + '_' + PUB_cSecu + 'SearchBug' )
       otherwise
-         US_Log( 'Error 5447' )
+         US_Log( 'Error 5448' )
       endcase
    endif
 
@@ -5833,7 +5907,7 @@ Function QPM_Build2()
       cExtraFoldersHB := SubStr( cExtraFoldersHB, 2 )  // get rid of first ';'
       cExtraFoldersC  := SubStr( cExtraFoldersC, 2 )   // get rid of first ';'
    otherwise
-      US_Log( 'Error 5445')
+      US_Log( 'Error 5449')
    endcase
 
    DO EVENTS
@@ -6017,17 +6091,17 @@ Function QPM_Build2()
       if ! Prj_Check_IgnoreMainRC .or. ! Prj_Check_IgnoreLibRCs
          if IsMinGW
             if Prj_Radio_OutputType != DEF_RG_IMPORT
-               Out := Out + PUB_cCharTab + '$(US_MSG_EXE) ' + PROGRESS_LOG + ' -MSG:Compiling Resource File _Temp.RC ...' + Hb_OsNewLine()
-               Out := Out + PUB_cCharTab + '$(RESOURCE_COMP) -I $(DIR_MINIGUI_RES);$(DIR_C_INCLUDE) -i ' + Us_ShortName( US_FileNameOnlyPath( PRGFILES[1] ) ) + DEF_SLASH + '_Temp.rc -o $(DIR_OBJECTS)' + DEF_SLASH + '_Temp.o' + Hb_OsNewLine()
+               Out := Out + PUB_cCharTab + '$(US_MSG_EXE) ' + PROGRESS_LOG + ' -MSG:Compiling Resource File ...' + Hb_OsNewLine()
+               Out := Out + PUB_cCharTab + '$(RESOURCE_COMP) -I $(DIR_MINIGUI_RES);$(DIR_C_INCLUDE) -i ' + PUB_cProjectFolder + DEF_SLASH + '_Temp.rc -o $(DIR_OBJECTS)' + DEF_SLASH + '_Temp.o' + Hb_OsNewLine()
             endif
          else
             do case
             case IsPelles
-               Out := Out + PUB_cCharTab + '$(US_MSG_EXE) ' + PROGRESS_LOG + ' -MSG:Compiling Resource File ' + US_FileNameOnlyPathAndName( PRGFILES[1] ) + '.rc' + ' ...' + Hb_OsNewLine()
-               Out := Out + PUB_cCharTab + '$(RESOURCE_COMP) /I$(DIR_MINIGUI_RES);$(DIR_C_INCLUDE) /Fo$(DIR_OBJECTS)' + '_Temp.res ' + US_ShortName( US_FileNameOnlyPath( PRGFILES[1] ) ) + DEF_SLASH + '_Temp.rc' + Hb_OsNewLine()
+               Out := Out + PUB_cCharTab + '$(US_MSG_EXE) ' + PROGRESS_LOG + ' -MSG:Compiling Resource File ...' + Hb_OsNewLine()
+               Out := Out + PUB_cCharTab + '$(RESOURCE_COMP) /I$(DIR_MINIGUI_RES);$(DIR_C_INCLUDE) /Fo$(DIR_OBJECTS)' + '_Temp.res ' + PUB_cProjectFolder + DEF_SLASH + '_Temp.rc' + Hb_OsNewLine()
             case IsBorland
-               Out := Out + PUB_cCharTab + '$(US_MSG_EXE) ' + PROGRESS_LOG + ' -MSG:Compiling Resource File ' + US_FileNameOnlyPathAndName( PRGFILES[1] ) + '.rc' + ' ...' + Hb_OsNewLine()
-               Out := Out + PUB_cCharTab + '$(RESOURCE_COMP) -d__BORLANDC__ -i$(DIR_MINIGUI_RES);$(DIR_C_INCLUDE) -r -fo$(DIR_OBJECTS)' + DEF_SLASH + '_Temp.res ' + Us_ShortName( US_FileNameOnlyPath( PRGFILES[1] ) ) + DEF_SLASH + '_Temp.rc' + Hb_OsNewLine()
+               Out := Out + PUB_cCharTab + '$(US_MSG_EXE) ' + PROGRESS_LOG + ' -MSG:Compiling Resource File ...' + Hb_OsNewLine()
+               Out := Out + PUB_cCharTab + '$(RESOURCE_COMP) -d__BORLANDC__ -i$(DIR_MINIGUI_RES);$(DIR_C_INCLUDE) -r -fo$(DIR_OBJECTS)' + DEF_SLASH + '_Temp.res ' + PUB_cProjectFolder + DEF_SLASH + '_Temp.rc' + Hb_OsNewLine()
             otherwise
                US_Log( 'Error 5649' )
             endcase
@@ -6064,7 +6138,7 @@ Function QPM_Build2()
 /*
  * Grabo lista de objetos derivados de los .prg en script.ld
  */
-         For i := 1 To Len ( PrgFiles )
+         For i := 1 To Len ( PRGFILES )
             do case
             case IsMinGW
                Out := Out + PUB_cCharTab + 'echo INPUT( $(DIR_OBJECTS)' + DEF_SLASH + US_FileNameOnlyName( PRGFILES[i] ) + '.o ) >> ' + SCRIPT_FILE + Hb_OsNewLine()
@@ -6758,95 +6832,105 @@ Function QPM_Build2()
 /*
  * Create BUILD.BAT
  */
+      cB_TEMP_RC := ( DBLQT + PUB_cProjectFolder + DEF_SLASH + '_TEMP.RC' + DBLQT )
+      cB_TMP_ERR := ( DBLQT + PUB_cProjectFolder + DEF_SLASH + '_' + PUB_cSecu + 'TEMP.ERR' + DBLQT )
+      cB_RC_FOLD := ( GetMiniGuiFolder() + DEF_SLASH + 'RESOURCES' )
+      cB_RC_MINI := ( DBLQT + cB_RC_FOLD + DEF_SLASH + cResourceFileName + '.RC' + DBLQT )
+      cB_RC_HBPR := ( DBLQT + cB_RC_FOLD + DEF_SLASH + 'HBPRINTER.RC' + DBLQT )
+      cB_RC_MIPR := ( DBLQT + cB_RC_FOLD + DEF_SLASH + 'MINIPRINT.RC' + DBLQT )
+      cB_RCM_ERR := ( "US_Res from Batch Error: Resource File Not Found: " + cB_RC_MINI )
+      cB_RC_CONF := ( DBLQT + PUB_cProjectFolder + DEF_SLASH + GetResConfigFileName() + DBLQT )
+      cB_RCF_ERR := ( "US_Res from Batch Error: Can't create ResConfig File: " + cB_RC_CONF )
+      cB_US_RES  := ( DBLQT + PUB_cQPM_Folder + DEF_SLASH + 'US_Res.exe' + DBLQT + ' QPM' + if( bLogActivity, ' -LIST' + US_ShortName(PUB_cQPM_Folder), '' ) )
+   if  file( US_FileNameOnlyPathAndName( PRGFILES[1] ) + '.RC' )
+      cB_RC_MAIN := ( DBLQT + US_FileNameOnlyPathAndName( PRGFILES[1] ) + '.RC' + DBLQT )
+      cB_RC_MA_S := ( US_ShortName( US_FileNameOnlyPathAndName( PRGFILES[1] ) + '.RC' ) )
+   else
+      cB_RC_MAIN := ( DBLQT + PUB_cProjectFolder + DEF_SLASH + US_FileNameOnlyName( PRGFILES[1] ) + '.RC' + DBLQT )
+      cB_RC_MA_S := ( US_ShortName( PUB_cProjectFolder + DEF_SLASH + US_FileNameOnlyName( PRGFILES[1] ) + '.RC' ) )
+   endif
+      cB_RC1_SHR := ( cB_RC_MA_S + '1' )
+      cB_RC2_SHR := ( cB_RC_MA_S + '2' )
+      cB_FILLER  := ( DBLQT + PUB_cQPM_Folder + DEF_SLASH + 'FILLER' + DBLQT )
+      cB_CPP_BIN := ( US_ShortName( GetCppFolder() + DEF_SLASH + 'BIN' ) )
+   if IsMinGW
+      cB_DLLTOOL := ( DBLQT + GetCppFolder() + DEF_SLASH + 'BIN' + DEF_SLASH + 'DLLTOOL.EXE' + DBLQT )
+      cB_DLL_ERR := ( "US_Res from Batch Error: DLLTOOL.EXE not found at MinGW's BIN folder" )
+      cB_RC_COMP := ( DBLQT + GetCppFolder() + DEF_SLASH + 'BIN' + DEF_SLASH + 'WINDRES.EXE' + DBLQT )
+      cB_RCC_ERR := ( "US_Res from Batch Error: WINDRES.EXE not found at MinGW's BIN folder" )
+   else
+      cB_RC_COMP := ( DBLQT + GetCppFolder() + DEF_SLASH + 'BIN' + DEF_SLASH + 'BCC32.EXE' + DBLQT )
+      cB_RCC_ERR := ( "US_Res from Batch Error: BCC32.EXE not found at BCC's BIN folder" )
+   endif
+      cB_US_MAKE := ( DBLQT + PUB_cQPM_Folder + DEF_SLASH + 'US_MAKE.EXE' + DBLQT )
+      cB_EXE     := ( DBLQT + cOutputNameDisplay + DBLQT )
+      cB_OUTPUT  := ( DBLQT + Prj_Text_OutputCopyMoveFolder + DEF_SLASH + US_FileNameOnlyNameAndExt( cOutputName ) + DBLQT )
+
    do case
    case IsMinGW
-      #define BM_TEMP_RC ( DBLQT + US_FileNameOnlyPath( PRGFILES[1] ) + DEF_SLASH + '_TEMP.RC' + DBLQT )
-      #define BM_TMP_ERR ( DBLQT + PUB_cProjectFolder + DEF_SLASH + '_' + PUB_cSecu + 'TEMP.ERR' + DBLQT )
-      #define BM_RC_FOLD ( GetMiniGuiFolder() + DEF_SLASH + 'RESOURCES' )
-      #define BM_RC_MINI ( DBLQT + BM_RC_FOLD + DEF_SLASH + cResourceFileName + '.RC' + DBLQT )
-      #define BM_RC_HBPR ( DBLQT + BM_RC_FOLD + DEF_SLASH + 'HBPRINTER.RC' + DBLQT )
-      #define BM_RC_MIPR ( DBLQT + BM_RC_FOLD + DEF_SLASH + 'MINIPRINT.RC' + DBLQT )
-      #define BM_RCM_ERR ( "US_Res from Batch Error: Resource File Not Found: " + BM_RC_MINI )
-      #define BM_RC_CONF ( DBLQT + US_FileNameOnlyPath( PRGFILES[1] ) + DEF_SLASH + GetResConfigFileName() + DBLQT )
-      #define BM_RCF_ERR ( "US_Res from Batch Error: Can't create ResConfig File: " + BM_RC_CONF )
-      #define BM_RC_MAIN ( DBLQT + US_FileNameOnlyPathAndName( PRGFILES[1] ) + '.RC' + DBLQT )
-      #define BM_US_RES  ( DBLQT + PUB_cQPM_Folder + DEF_SLASH + 'US_Res.exe' + DBLQT + ' QPM' + if( bLogActivity, ' -LIST' + US_ShortName(PUB_cQPM_Folder), '' ) )
-      #define BM_RC_MA_S ( US_ShortName( US_FileNameOnlyPathAndName( PRGFILES[1] ) + '.RC' ) )
-      #define BM_RC1_SHR ( BM_RC_MA_S + '1' )
-      #define BM_RC2_SHR ( BM_RC_MA_S + '2' )
-      #define BM_FILLER  ( DBLQT + PUB_cQPM_Folder + DEF_SLASH + 'FILLER' + DBLQT )
-      #define BM_CPP_BIN ( US_ShortName( GetCppFolder() + DEF_SLASH + 'BIN' ) )
-      #define BM_DLLTOOL ( DBLQT + GetCppFolder() + DEF_SLASH + 'BIN' + DEF_SLASH + 'DLLTOOL.EXE' + DBLQT )
-      #define BM_DLL_ERR ( "US_Res from Batch Error: DLLTOOL.EXE not found at MinGW's BIN folder" )
-      #define BM_RC_COMP ( DBLQT + GetCppFolder() + DEF_SLASH + 'BIN' + DEF_SLASH + 'WINDRES.EXE' + DBLQT )
-      #define BM_RCC_ERR ( "US_Res from Batch Error: WINDRES.EXE not found at MinGW's BIN folder" )
-      #define BM_US_MAKE ( DBLQT + PUB_cQPM_Folder + DEF_SLASH + 'US_MAKE.EXE' + DBLQT )
-      #define BM_EXE     ( DBLQT + cOutputNameDisplay + DBLQT )
-      #define BM_OUTPUT  ( DBLQT + Prj_Text_OutputCopyMoveFolder + DEF_SLASH + US_FileNameOnlyNameAndExt( cOutputName ) + DBLQT )
-
                   bld_cmd := '@ECHO OFF'                                                                                    + Hb_OsNewLine()
       if bLogActivity
                   bld_cmd += 'ECHO Writing Activity Log ...'                                                                + Hb_OsNewLine()
       endif
-                  bld_cmd += 'IF EXIST ' + BM_TMP_ERR  + ' DEL ' + BM_TMP_ERR  + ' > NUL'                                   + Hb_OsNewLine()
+                  bld_cmd += 'IF EXIST ' + cB_TMP_ERR  + ' DEL ' + cB_TMP_ERR  + ' > NUL'                                   + Hb_OsNewLine()
                   bld_cmd += 'IF EXIST ' + TEMP_LOG    + ' DEL ' + TEMP_LOG    + ' > NUL'                                   + Hb_OsNewLine()
                   bld_cmd += 'IF EXIST ' + SCRIPT_FILE + ' DEL ' + SCRIPT_FILE + ' > NUL'                                   + Hb_OsNewLine()
-                  bld_cmd += 'IF EXIST ' + BM_TEMP_RC  + ' DEL ' + BM_TEMP_RC  + ' > NUL'                                   + Hb_OsNewLine()
-                  bld_cmd += 'IF EXIST ' + BM_RC_CONF  + ' DEL ' + BM_RC_CONF  + ' > NUL'                                   + Hb_OsNewLine()
-                  bld_cmd += 'IF EXIST ' + BM_RC1_SHR  + ' DEL ' + BM_RC1_SHR  + ' > NUL'                                   + Hb_OsNewLine()
-                  bld_cmd += 'IF EXIST ' + BM_RC2_SHR  + ' DEL ' + BM_RC2_SHR  + ' > NUL'                                   + Hb_OsNewLine()
+                  bld_cmd += 'IF EXIST ' + cB_TEMP_RC  + ' DEL ' + cB_TEMP_RC  + ' > NUL'                                   + Hb_OsNewLine()
+                  bld_cmd += 'IF EXIST ' + cB_RC_CONF  + ' DEL ' + cB_RC_CONF  + ' > NUL'                                   + Hb_OsNewLine()
+                  bld_cmd += 'IF EXIST ' + cB_RC1_SHR  + ' DEL ' + cB_RC1_SHR  + ' > NUL'                                   + Hb_OsNewLine()
+                  bld_cmd += 'IF EXIST ' + cB_RC2_SHR  + ' DEL ' + cB_RC2_SHR  + ' > NUL'                                   + Hb_OsNewLine()
 
       if Prj_Radio_OutputType != DEF_RG_IMPORT .and. ( ! Prj_Check_IgnoreMainRC .or. ! Prj_Check_IgnoreLibRCs )
          if Prj_Check_IgnoreMainRC
             if ! Prj_Check_IgnoreLibRCs
-                  bld_cmd += 'ECHO #define ' + GetResConfigVarName() + ' ' + BM_RC_FOLD + ' > ' + BM_RC_CONF                + HB_OsNewLIne()
-                  bld_cmd += 'IF NOT EXIST ' + BM_RC_CONF + ' ECHO ' + BM_RCF_ERR + ' > ' + BM_TMP_ERR                      + Hb_OsNewLine()
-                  bld_cmd += 'IF NOT EXIST ' + BM_RC_MINI + ' ECHO ' + BM_RCM_ERR + ' > ' + BM_TMP_ERR                      + Hb_OsNewLine()
-                  bld_cmd += 'COPY /B ' + BM_RC_MINI + ' ' + BM_TEMP_RC + ' > NUL'                                          + Hb_OsNewLine()
+                  bld_cmd += 'ECHO #define ' + GetResConfigVarName() + ' ' + cB_RC_FOLD + ' > ' + cB_RC_CONF                + HB_OsNewLIne()
+                  bld_cmd += 'IF NOT EXIST ' + cB_RC_CONF + ' ECHO ' + cB_RCF_ERR + ' > ' + cB_TMP_ERR                      + Hb_OsNewLine()
+                  bld_cmd += 'IF NOT EXIST ' + cB_RC_MINI + ' ECHO ' + cB_RCM_ERR + ' > ' + cB_TMP_ERR                      + Hb_OsNewLine()
+                  bld_cmd += 'COPY /B ' + cB_RC_MINI + ' ' + cB_TEMP_RC + ' > NUL'                                          + Hb_OsNewLine()
 
                For i := 1 to len( &( 'vLibDefault'+GetSuffix() ) )
                   if ! Getminiguisuffix() == DefineOohg3
                      if US_Upper( &('vLibDefault'+GetSuffix()+'['+str(i)+']') ) == 'LIBHBPRINTER.A'
                         if ascan( vLibExcludeFiles, 'LIBHBPRINTER.A' ) == 0
-                  bld_cmd += 'COPY /B ' + BM_TEMP_RC + ' + ' + BM_FILLER + ' + ' + BM_RC_HBPR + ' ' + BM_TEMP_RC + ' > NUL' + Hb_OsNewLine()
+                  bld_cmd += 'COPY /B ' + cB_TEMP_RC + ' + ' + cB_FILLER + ' + ' + cB_RC_HBPR + ' ' + cB_TEMP_RC + ' > NUL' + Hb_OsNewLine()
                         endif
                      elseif US_Upper( &('vLibDefault'+GetSuffix()+'['+str(i)+']') ) == 'LIBMINIPRINT.A'
                         if ascan( vLibExcludeFiles, 'LIBMINIPRINT.A' ) == 0
-                  bld_cmd += 'COPY /B ' + BM_TEMP_RC + ' + ' + BM_FILLER + ' + ' + BM_RC_MIPR + ' ' + BM_TEMP_RC + ' > NUL' + Hb_OsNewLine()
+                  bld_cmd += 'COPY /B ' + cB_TEMP_RC + ' + ' + cB_FILLER + ' + ' + cB_RC_MIPR + ' ' + cB_TEMP_RC + ' > NUL' + Hb_OsNewLine()
                         endif
                      endif
                   endif
                Next i
             endif
          else
-                  bld_cmd += 'ECHO #define ' + GetResConfigVarName() + ' ' + BM_RC_FOLD + ' > ' + BM_RC_CONF                + HB_OsNewLIne()
-                  bld_cmd += 'IF NOT EXIST ' + BM_RC_CONF + ' ECHO ' + BM_RCF_ERR + ' > ' + BM_TMP_ERR                      + Hb_OsNewLine()
+                  bld_cmd += 'ECHO #define ' + GetResConfigVarName() + ' ' + cB_RC_FOLD + ' > ' + cB_RC_CONF                + HB_OsNewLIne()
+                  bld_cmd += 'IF NOT EXIST ' + cB_RC_CONF + ' ECHO ' + cB_RCF_ERR + ' > ' + cB_TMP_ERR                      + Hb_OsNewLine()
 
-                  bld_cmd += 'IF NOT EXIST ' + BM_RC_MAIN + ' GOTO NORC'                                                    + Hb_OsNewLine()
-                  bld_cmd += BM_US_RES + ' -ONLYINCLUDE ' + BM_RC_MA_S + ' ' + BM_RC1_SHR                                   + Hb_OsNewLine()
+                  bld_cmd += 'IF NOT EXIST ' + cB_RC_MAIN + ' GOTO NORC'                                                    + Hb_OsNewLine()
+                  bld_cmd += cB_US_RES + ' -ONLYINCLUDE ' + cB_RC_MA_S + ' ' + cB_RC1_SHR                                   + Hb_OsNewLine()
                   bld_cmd += 'IF ERRORLEVEL = 1 GOTO ERROR'                                                                 + Hb_OsNewLine()
-                  bld_cmd += BM_US_RES  + ' ' + BM_RC1_SHR + ' ' + BM_RC2_SHR                                               + Hb_OsNewLine()
+                  bld_cmd += cB_US_RES  + ' ' + cB_RC1_SHR + ' ' + cB_RC2_SHR                                               + Hb_OsNewLine()
                   bld_cmd += 'IF ERRORLEVEL = 1 GOTO ERROR'                                                                 + Hb_OsNewLine()
 
             if Prj_Check_IgnoreLibRCs
-                  bld_cmd += 'COPY /B ' + BM_RC2_SHR + ' ' + BM_TEMP_RC + ' > NUL'                                          + Hb_OsNewLine()
+                  bld_cmd += 'COPY /B ' + cB_RC2_SHR + ' ' + cB_TEMP_RC + ' > NUL'                                          + Hb_OsNewLine()
             else
-                  bld_cmd += 'IF NOT EXIST ' + BM_RC_MINI + ' ECHO ' + BM_RCM_ERR + ' > ' + BM_TMP_ERR                      + Hb_OsNewLine()
+                  bld_cmd += 'IF NOT EXIST ' + cB_RC_MINI + ' ECHO ' + cB_RCM_ERR + ' > ' + cB_TMP_ERR                      + Hb_OsNewLine()
                if Prj_Check_PlaceRCFirst
-                  bld_cmd += 'COPY /B ' + BM_RC2_SHR + ' + ' + BM_FILLER + ' + ' + BM_RC_MINI + ' ' + BM_TEMP_RC + ' > NUL' + Hb_OsNewLine()
+                  bld_cmd += 'COPY /B ' + cB_RC2_SHR + ' + ' + cB_FILLER + ' + ' + cB_RC_MINI + ' ' + cB_TEMP_RC + ' > NUL' + Hb_OsNewLine()
                else
-                  bld_cmd += 'COPY /B ' + BM_RC_MINI + ' + ' + BM_FILLER + ' + ' + BM_RC2_SHR + ' ' + BM_TEMP_RC + ' > NUL' + Hb_OsNewLine()
+                  bld_cmd += 'COPY /B ' + cB_RC_MINI + ' + ' + cB_FILLER + ' + ' + cB_RC2_SHR + ' ' + cB_TEMP_RC + ' > NUL' + Hb_OsNewLine()
                endif
 
                For i := 1 to len( &( 'vLibDefault'+GetSuffix() ) )
                   if ! Getminiguisuffix() == DefineOohg3
                      if US_Upper( &('vLibDefault'+GetSuffix()+'['+str(i)+']') ) == 'LIBHBPRINTER.A'
                         if ascan( vLibExcludeFiles, 'LIBHBPRINTER.A' ) == 0
-                  bld_cmd += 'COPY /B ' + BM_TEMP_RC + ' + ' + BM_FILLER + ' + ' + BM_RC_HBPR + ' ' + BM_TEMP_RC + ' > NUL' + Hb_OsNewLine()
+                  bld_cmd += 'COPY /B ' + cB_TEMP_RC + ' + ' + cB_FILLER + ' + ' + cB_RC_HBPR + ' ' + cB_TEMP_RC + ' > NUL' + Hb_OsNewLine()
                         endif
                      elseif US_Upper( &('vLibDefault'+GetSuffix()+'['+str(i)+']') ) == 'LIBMINIPRINT.A'
                         if ascan( vLibExcludeFiles, 'LIBMINIPRINT.A' ) == 0
-                  bld_cmd += 'COPY /B ' + BM_TEMP_RC + ' + ' + BM_FILLER + ' + ' + BM_RC_MIPR + ' ' + BM_TEMP_RC + ' > NUL' + Hb_OsNewLine()
+                  bld_cmd += 'COPY /B ' + cB_TEMP_RC + ' + ' + cB_FILLER + ' + ' + cB_RC_MIPR + ' ' + cB_TEMP_RC + ' > NUL' + Hb_OsNewLine()
                         endif
                      endif
                   endif
@@ -6855,18 +6939,18 @@ Function QPM_Build2()
                   bld_cmd += 'GOTO NEXT'                                                                                    + Hb_OsNewLine()
                   bld_cmd += ':NORC'                                                                                        + Hb_OsNewLine()
             if ! Prj_Check_IgnoreLibRCs
-                  bld_cmd += 'IF NOT EXIST ' + BM_RC_MINI + ' ECHO ' + BM_RCM_ERR + ' > ' + BM_TMP_ERR                      + Hb_OsNewLine()
-                  bld_cmd += 'COPY /B ' + BM_RC_MINI + ' ' + BM_TEMP_RC + ' > NUL'                                          + Hb_OsNewLine()
+                  bld_cmd += 'IF NOT EXIST ' + cB_RC_MINI + ' ECHO ' + cB_RCM_ERR + ' > ' + cB_TMP_ERR                      + Hb_OsNewLine()
+                  bld_cmd += 'COPY /B ' + cB_RC_MINI + ' ' + cB_TEMP_RC + ' > NUL'                                          + Hb_OsNewLine()
 
                For i := 1 to len( &( 'vLibDefault'+GetSuffix() ) )
                   if ! Getminiguisuffix() == DefineOohg3
                      if US_Upper( &('vLibDefault'+GetSuffix()+'['+str(i)+']') ) == 'LIBHBPRINTER.A'
                         if ascan( vLibExcludeFiles, 'LIBHBPRINTER.A' ) == 0
-                  bld_cmd += 'COPY /B ' + BM_TEMP_RC + ' + ' + BM_FILLER + ' + ' + BM_RC_HBPR + ' ' + BM_TEMP_RC + ' > NUL' + Hb_OsNewLine()
+                  bld_cmd += 'COPY /B ' + cB_TEMP_RC + ' + ' + cB_FILLER + ' + ' + cB_RC_HBPR + ' ' + cB_TEMP_RC + ' > NUL' + Hb_OsNewLine()
                         endif
                      elseif US_Upper( &('vLibDefault'+GetSuffix()+'['+str(i)+']') ) == 'LIBMINIPRINT.A'
                         if ascan( vLibExcludeFiles, 'LIBMINIPRINT.A' ) == 0
-                  bld_cmd += 'COPY /B ' + BM_TEMP_RC + ' + ' + BM_FILLER + ' + ' + BM_RC_MIPR + ' ' + BM_TEMP_RC + ' > NUL' + Hb_OsNewLine()
+                  bld_cmd += 'COPY /B ' + cB_TEMP_RC + ' + ' + cB_FILLER + ' + ' + cB_RC_MIPR + ' ' + cB_TEMP_RC + ' > NUL' + Hb_OsNewLine()
                         endif
                      endif
                   endif
@@ -6876,126 +6960,104 @@ Function QPM_Build2()
       endif
 
                   bld_cmd += ':NEXT'                                                                                        + Hb_OsNewLine()
-                  bld_cmd += 'SET PATH=' + BM_CPP_BIN                                                                       + Hb_OsNewLine()
+                  bld_cmd += 'SET PATH=' + cB_CPP_BIN                                                                       + Hb_OsNewLine()
       if Prj_Radio_OutputType == DEF_RG_IMPORT
-                  bld_cmd += 'IF NOT EXIST ' + BM_DLLTOOL + ' ECHO ' + BM_DLL_ERR + ' > ' + BM_TMP_ERR                      + Hb_OsNewLine()
+                  bld_cmd += 'IF NOT EXIST ' + cB_DLLTOOL + ' ECHO ' + cB_DLL_ERR + ' > ' + cB_TMP_ERR                      + Hb_OsNewLine()
       elseif ! Prj_Check_IgnoreMainRC .or. ! Prj_Check_IgnoreLibRCs
-                  bld_cmd += 'IF NOT EXIST ' + BM_RC_COMP + ' ECHO ' + BM_RCC_ERR + ' > ' + BM_TMP_ERR                      + Hb_OsNewLine()
+                  bld_cmd += 'IF NOT EXIST ' + cB_RC_COMP + ' ECHO ' + cB_RCC_ERR + ' > ' + cB_TMP_ERR                      + Hb_OsNewLine()
       endif
 
                   bld_cmd += ':MAKE'                                                                                        + Hb_OsNewLine()
-                  bld_cmd += BM_US_MAKE + ' ' + '-f' + MAKE_FILE + ' >> ' + TEMP_LOG + ' 2>&1'                              + Hb_OsNewLine()
+                  bld_cmd += cB_US_MAKE + ' ' + '-f' + MAKE_FILE + ' >> ' + TEMP_LOG + ' 2>&1'                              + Hb_OsNewLine()
 
       do case
       case Prj_Radio_OutputCopyMove == DEF_RG_MOVE
-                  bld_cmd += 'IF EXIST ' + BM_EXE + ' GOTO ERROR'                                                           + Hb_OsNewLine()
-                  bld_cmd += 'IF EXIST ' + BM_OUTPUT + ' GOTO OK'                                                           + Hb_OsNewLine()
+                  bld_cmd += 'IF EXIST ' + cB_EXE + ' GOTO ERROR'                                                           + Hb_OsNewLine()
+                  bld_cmd += 'IF EXIST ' + cB_OUTPUT + ' GOTO OK'                                                           + Hb_OsNewLine()
       case Prj_Radio_OutputCopyMove == DEF_RG_COPY
-                  bld_cmd += 'IF NOT EXIST ' + BM_EXE + ' GOTO ERROR'                                                       + Hb_OsNewLine()
-                  bld_cmd += 'IF EXIST ' + BM_OUTPUT + ' GOTO OK'                                                           + Hb_OsNewLine()
+                  bld_cmd += 'IF NOT EXIST ' + cB_EXE + ' GOTO ERROR'                                                       + Hb_OsNewLine()
+                  bld_cmd += 'IF EXIST ' + cB_OUTPUT + ' GOTO OK'                                                           + Hb_OsNewLine()
       otherwise
-                  bld_cmd += 'IF EXIST ' + BM_EXE + ' GOTO OK'                                                              + Hb_OsNewLine()
+                  bld_cmd += 'IF EXIST ' + cB_EXE + ' GOTO OK'                                                              + Hb_OsNewLine()
       endcase
 
                   bld_cmd += ':ERROR'                                                                                       + Hb_OsNewLine()
-                  bld_cmd += 'IF EXIST ' + BM_TMP_ERR + ' COPY ' + BM_TMP_ERR + ' ' + TEMP_LOG + ' > NUL'                   + Hb_OsNewLine()
+                  bld_cmd += 'IF EXIST ' + cB_TMP_ERR + ' COPY ' + cB_TMP_ERR + ' ' + TEMP_LOG + ' > NUL'                   + Hb_OsNewLine()
                   bld_cmd += 'ECHO ERROR > ' + END_FILE                                                                     + Hb_OsNewLine()
                   bld_cmd += 'GOTO END'                                                                                     + Hb_OsNewLine()
                   bld_cmd += ':OK'                                                                                          + Hb_OsNewLine()
                   bld_cmd += 'ECHO OK > ' + END_FILE                                                                        + Hb_OsNewLine()
                   bld_cmd += ':END'                                                                                         + Hb_OsNewLine()
-                  bld_cmd += 'IF EXIST ' + BM_TEMP_RC  + ' DEL ' + BM_TEMP_RC + ' > NUL'                                    + Hb_OsNewLine()
-                  bld_cmd += 'IF EXIST ' + BM_RC_CONF  + ' DEL ' + BM_RC_CONF + ' > NUL'                                    + Hb_OsNewLine()
-                  bld_cmd += 'IF EXIST ' + BM_RC1_SHR  + ' DEL ' + BM_RC1_SHR + ' > NUL'                                    + Hb_OsNewLine()
-                  bld_cmd += 'IF EXIST ' + BM_RC2_SHR  + ' DEL ' + BM_RC2_SHR + ' > NUL'                                    + Hb_OsNewLine()
+                  bld_cmd += 'IF EXIST ' + cB_TEMP_RC  + ' DEL ' + cB_TEMP_RC + ' > NUL'                                    + Hb_OsNewLine()
+                  bld_cmd += 'IF EXIST ' + cB_RC_CONF  + ' DEL ' + cB_RC_CONF + ' > NUL'                                    + Hb_OsNewLine()
+                  bld_cmd += 'IF EXIST ' + cB_RC1_SHR  + ' DEL ' + cB_RC1_SHR + ' > NUL'                                    + Hb_OsNewLine()
+                  bld_cmd += 'IF EXIST ' + cB_RC2_SHR  + ' DEL ' + cB_RC2_SHR + ' > NUL'                                    + Hb_OsNewLine()
 
       QPM_MemoWrit( BUILD_BAT, bld_cmd )
    case ( IsBorland .or. IsPelles )
-      #define BO_TEMP_RC ( DBLQT + US_FileNameOnlyPath( PRGFILES[1] ) + DEF_SLASH + '_TEMP.RC' + DBLQT )
-      #define BO_TMP_ERR ( DBLQT + PUB_cProjectFolder + DEF_SLASH + '_' + PUB_cSecu + 'TEMP.ERR' + DBLQT )
-      #define BO_RC_FOLD ( GetMiniGuiFolder() + DEF_SLASH + 'RESOURCES' )
-      #define BO_RC_MINI ( DBLQT + BO_RC_FOLD + DEF_SLASH + cResourceFileName + '.RC' + DBLQT )
-      #define BO_RC_HBPR ( DBLQT + BO_RC_FOLD + DEF_SLASH + 'HBPRINTER.RC' + DBLQT )
-      #define BO_RC_MIPR ( DBLQT + BO_RC_FOLD + DEF_SLASH + 'MINIPRINT.RC' + DBLQT )
-      #define BO_RCM_ERR ( "US_Res from Batch Error: Resource File Not Found: " + BO_RC_MINI )
-      #define BO_RC_CONF ( DBLQT + US_FileNameOnlyPath( PRGFILES[1] ) + DEF_SLASH + GetResConfigFileName() + DBLQT )
-      #define BO_RCF_ERR ( "US_Res from Batch Error: Can't create ResConfig File: " + BO_RC_CONF )
-      #define BO_RC_MAIN ( DBLQT + US_FileNameOnlyPathAndName( PRGFILES[1] ) + '.RC' + DBLQT )
-      #define BO_US_RES  ( DBLQT + PUB_cQPM_Folder + DEF_SLASH + 'US_Res.exe' + DBLQT + ' QPM' + if( bLogActivity, ' -LIST' + US_ShortName(PUB_cQPM_Folder), '' ) )
-      #define BO_RC_MA_S ( US_ShortName( US_FileNameOnlyPathAndName( PRGFILES[1] ) + '.RC' ) )
-      #define BO_RC1_SHR ( BO_RC_MA_S + '1' )
-      #define BO_RC2_SHR ( BO_RC_MA_S + '2' )
-      #define BO_FILLER  ( DBLQT + PUB_cQPM_Folder + DEF_SLASH + 'FILLER' + DBLQT )
-      #define BO_CPP_BIN ( DBLQT + GetCppFolder() + DEF_SLASH + 'BIN' + DBLQT )
-      #define BO_RC_COMP ( DBLQT + GetCppFolder() + DEF_SLASH + 'BIN' + DEF_SLASH + 'BCC32.EXE' + DBLQT )
-      #define BO_RCC_ERR ( "US_Res from Batch Error: BCC32.EXE not found at BCC's BIN folder" )
-      #define BO_US_MAKE ( DBLQT + PUB_cQPM_Folder + DEF_SLASH + 'US_MAKE.EXE' + DBLQT )
-      #define BO_EXE     ( DBLQT + cOutputNameDisplay + DBLQT )
-      #define BO_OUTPUT  ( DBLQT + Prj_Text_OutputCopyMoveFolder + DBLQT + DEF_SLASH + US_FileNameOnlyNameAndExt( cOutputName ) )
-
                   bld_cmd := '@ECHO OFF'                                                                                    + Hb_OsNewLine()
       if bLogActivity
                   bld_cmd += 'ECHO Writing Log Activity ...'                                                                + Hb_OsNewLine()
       endif
-                  bld_cmd += 'IF EXIST ' + BO_TMP_ERR  + ' DEL ' + BO_TMP_ERR  + ' > NUL'                                   + Hb_OsNewLine()
+                  bld_cmd += 'IF EXIST ' + cB_TMP_ERR  + ' DEL ' + cB_TMP_ERR  + ' > NUL'                                   + Hb_OsNewLine()
                   bld_cmd += 'IF EXIST ' + TEMP_LOG    + ' DEL ' + TEMP_LOG    + ' > NUL'                                   + Hb_OsNewLine()
                   bld_cmd += 'IF EXIST ' + SCRIPT_FILE + ' DEL ' + SCRIPT_FILE + ' > NUL'                                   + Hb_OsNewLine()
-                  bld_cmd += 'IF EXIST ' + BO_TEMP_RC  + ' DEL ' + BO_TEMP_RC  + ' > NUL'                                   + Hb_OsNewLine()
-                  bld_cmd += 'IF EXIST ' + BO_RC_CONF  + ' DEL ' + BO_RC_CONF  + ' > NUL'                                   + Hb_OsNewLine()
-                  bld_cmd += 'IF EXIST ' + BO_RC1_SHR  + ' DEL ' + BO_RC1_SHR  + ' > NUL'                                   + Hb_OsNewLine()
-                  bld_cmd += 'IF EXIST ' + BO_RC2_SHR  + ' DEL ' + BO_RC2_SHR  + ' > NUL'                                   + Hb_OsNewLine()
+                  bld_cmd += 'IF EXIST ' + cB_TEMP_RC  + ' DEL ' + cB_TEMP_RC  + ' > NUL'                                   + Hb_OsNewLine()
+                  bld_cmd += 'IF EXIST ' + cB_RC_CONF  + ' DEL ' + cB_RC_CONF  + ' > NUL'                                   + Hb_OsNewLine()
+                  bld_cmd += 'IF EXIST ' + cB_RC1_SHR  + ' DEL ' + cB_RC1_SHR  + ' > NUL'                                   + Hb_OsNewLine()
+                  bld_cmd += 'IF EXIST ' + cB_RC2_SHR  + ' DEL ' + cB_RC2_SHR  + ' > NUL'                                   + Hb_OsNewLine()
 
       if ! Prj_Check_IgnoreMainRC .or. ! Prj_Check_IgnoreLibRCs
          if Prj_Check_IgnoreMainRC
             if ! Prj_Check_IgnoreLibRCs
-                  bld_cmd += 'ECHO #define ' + GetResConfigVarName() + ' ' + BO_RC_FOLD + ' > ' + BO_RC_CONF                + HB_OsNewLIne()
-                  bld_cmd += 'IF NOT EXIST ' + BO_RC_CONF + ' ECHO ' + BO_RCF_ERR + ' > ' + BO_TMP_ERR                      + Hb_OsNewLine()
-                  bld_cmd += 'IF NOT EXIST ' + BO_RC_MINI + ' ECHO ' + BO_RCM_ERR + ' > ' + BO_TMP_ERR                      + Hb_OsNewLine()
-                  bld_cmd += 'COPY /B ' + BO_RC_MINI + ' ' + BO_TEMP_RC + ' > NUL'                                          + Hb_OsNewLine()
+                  bld_cmd += 'ECHO #define ' + GetResConfigVarName() + ' ' + cB_RC_FOLD + ' > ' + cB_RC_CONF                + HB_OsNewLIne()
+                  bld_cmd += 'IF NOT EXIST ' + cB_RC_CONF + ' ECHO ' + cB_RCF_ERR + ' > ' + cB_TMP_ERR                      + Hb_OsNewLine()
+                  bld_cmd += 'IF NOT EXIST ' + cB_RC_MINI + ' ECHO ' + cB_RCM_ERR + ' > ' + cB_TMP_ERR                      + Hb_OsNewLine()
+                  bld_cmd += 'COPY /B ' + cB_RC_MINI + ' ' + cB_TEMP_RC + ' > NUL'                                          + Hb_OsNewLine()
 
                For i := 1 to len( &( 'vLibDefault'+GetSuffix() ) )
                   if ! Getminiguisuffix() == DefineOohg3
                      if US_Upper( &('vLibDefault'+GetSuffix()+'['+str(i)+']') ) == 'HBPRINTER.LIB'
                         if ascan( vLibExcludeFiles, 'HBPRINTER.LIB' ) == 0
-                  bld_cmd += 'COPY /B ' + BO_TEMP_RC + ' + ' + BO_FILLER + ' + ' + BO_RC_HBPR + ' ' + BO_TEMP_RC + ' > NUL' + Hb_OsNewLine()
+                  bld_cmd += 'COPY /B ' + cB_TEMP_RC + ' + ' + cB_FILLER + ' + ' + cB_RC_HBPR + ' ' + cB_TEMP_RC + ' > NUL' + Hb_OsNewLine()
                         endif
                      elseif US_Upper( &('vLibDefault'+GetSuffix()+'['+str(i)+']') ) == 'MINIPRINT.LIB'
                         if ascan( vLibExcludeFiles, 'MINIPRINT.LIB' ) == 0
-                  bld_cmd += 'COPY /B ' + BO_TEMP_RC + ' + ' + BO_FILLER + ' + ' + BO_RC_MIPR + ' ' + BO_TEMP_RC + ' > NUL' + Hb_OsNewLine()
+                  bld_cmd += 'COPY /B ' + cB_TEMP_RC + ' + ' + cB_FILLER + ' + ' + cB_RC_MIPR + ' ' + cB_TEMP_RC + ' > NUL' + Hb_OsNewLine()
                         endif
                      endif
                   endif
                Next i
             endif
          else
-                  bld_cmd += 'ECHO #define ' + GetResConfigVarName() + ' ' + BO_RC_FOLD + ' > ' + BO_RC_CONF                + HB_OsNewLIne()
-                  bld_cmd += 'IF NOT EXIST ' + BO_RC_CONF + ' ECHO ' + BO_RCF_ERR + ' > ' + BO_TMP_ERR                      + Hb_OsNewLine()
+                  bld_cmd += 'ECHO #define ' + GetResConfigVarName() + ' ' + cB_RC_FOLD + ' > ' + cB_RC_CONF                + HB_OsNewLIne()
+                  bld_cmd += 'IF NOT EXIST ' + cB_RC_CONF + ' ECHO ' + cB_RCF_ERR + ' > ' + cB_TMP_ERR                      + Hb_OsNewLine()
 
-                  bld_cmd += 'IF NOT EXIST ' + BO_RC_MAIN + ' GOTO NORC'                                                    + Hb_OsNewLine()
-                  bld_cmd += BO_US_RES + ' -ONLYINCLUDE ' + BO_RC_MA_S + ' ' + BO_RC1_SHR                                   + Hb_OsNewLine()
+                  bld_cmd += 'IF NOT EXIST ' + cB_RC_MAIN + ' GOTO NORC'                                                    + Hb_OsNewLine()
+                  bld_cmd += cB_US_RES + ' -ONLYINCLUDE ' + cB_RC_MA_S + ' ' + cB_RC1_SHR                                   + Hb_OsNewLine()
                   bld_cmd += 'IF ERRORLEVEL = 1 GOTO ERROR'                                                                 + Hb_OsNewLine()
-                  bld_cmd += BO_US_RES  + ' ' + BO_RC1_SHR + ' ' + BO_RC2_SHR                                               + Hb_OsNewLine()
+                  bld_cmd += cB_US_RES  + ' ' + cB_RC1_SHR + ' ' + cB_RC2_SHR                                               + Hb_OsNewLine()
                   bld_cmd += 'IF ERRORLEVEL = 1 GOTO ERROR'                                                                 + Hb_OsNewLine()
 
             if Prj_Check_IgnoreLibRCs
-                  bld_cmd += 'COPY /B ' + BO_RC2_SHR + ' ' + BO_TEMP_RC + ' > NUL'                                          + Hb_OsNewLine()
+                  bld_cmd += 'COPY /B ' + cB_RC2_SHR + ' ' + cB_TEMP_RC + ' > NUL'                                          + Hb_OsNewLine()
             else
-                  bld_cmd += 'IF NOT EXIST ' + BO_RC_MINI + ' ECHO ' + BO_RCM_ERR + ' > ' + BO_TMP_ERR                      + Hb_OsNewLine()
+                  bld_cmd += 'IF NOT EXIST ' + cB_RC_MINI + ' ECHO ' + cB_RCM_ERR + ' > ' + cB_TMP_ERR                      + Hb_OsNewLine()
                if Prj_Check_PlaceRCFirst
-                  bld_cmd += 'COPY /B ' + BO_RC2_SHR + ' + ' + BO_FILLER + ' + ' + BO_RC_MINI + ' ' + BO_TEMP_RC + ' > NUL' + Hb_OsNewLine()
+                  bld_cmd += 'COPY /B ' + cB_RC2_SHR + ' + ' + cB_FILLER + ' + ' + cB_RC_MINI + ' ' + cB_TEMP_RC + ' > NUL' + Hb_OsNewLine()
                else
-                  bld_cmd += 'COPY /B ' + BO_RC_MINI + ' + ' + BO_FILLER + ' + ' + BO_RC2_SHR + ' ' + BO_TEMP_RC + ' > NUL' + Hb_OsNewLine()
+                  bld_cmd += 'COPY /B ' + cB_RC_MINI + ' + ' + cB_FILLER + ' + ' + cB_RC2_SHR + ' ' + cB_TEMP_RC + ' > NUL' + Hb_OsNewLine()
                endif
 
                For i := 1 to len( &( 'vLibDefault'+GetSuffix() ) )
                   if ! Getminiguisuffix() == DefineOohg3
                      if US_Upper( &('vLibDefault'+GetSuffix()+'['+str(i)+']') ) == 'HBPRINTER.LIB'
                         if ascan( vLibExcludeFiles, 'HBPRINTER.LIB' ) == 0
-                  bld_cmd += 'COPY /B ' + BO_TEMP_RC + ' + ' + BO_FILLER + ' + ' + BO_RC_HBPR + ' ' + BO_TEMP_RC + ' > NUL' + Hb_OsNewLine()
+                  bld_cmd += 'COPY /B ' + cB_TEMP_RC + ' + ' + cB_FILLER + ' + ' + cB_RC_HBPR + ' ' + cB_TEMP_RC + ' > NUL' + Hb_OsNewLine()
                         endif
                      elseif US_Upper( &('vLibDefault'+GetSuffix()+'['+str(i)+']') ) == 'MINIPRINT.LIB'
                         if ascan( vLibExcludeFiles, 'MINIPRINT.LIB' ) == 0
-                  bld_cmd += 'COPY /B ' + BO_TEMP_RC + ' + ' + BO_FILLER + ' + ' + BO_RC_MIPR + ' ' + BO_TEMP_RC + ' > NUL' + Hb_OsNewLine()
+                  bld_cmd += 'COPY /B ' + cB_TEMP_RC + ' + ' + cB_FILLER + ' + ' + cB_RC_MIPR + ' ' + cB_TEMP_RC + ' > NUL' + Hb_OsNewLine()
                         endif
                      endif
                   endif
@@ -7004,18 +7066,18 @@ Function QPM_Build2()
                   bld_cmd += 'GOTO NEXT'                                                                                    + Hb_OsNewLine()
                   bld_cmd += ':NORC'                                                                                        + Hb_OsNewLine()
             if ! Prj_Check_IgnoreLibRCs
-                  bld_cmd += 'IF NOT EXIST ' + BO_RC_MINI + ' ECHO ' + BO_RCM_ERR + ' > ' + BO_TMP_ERR                      + Hb_OsNewLine()
-                  bld_cmd += 'COPY /B ' + BO_RC_MINI + ' ' + BO_TEMP_RC + ' > NUL'                                          + Hb_OsNewLine()
+                  bld_cmd += 'IF NOT EXIST ' + cB_RC_MINI + ' ECHO ' + cB_RCM_ERR + ' > ' + cB_TMP_ERR                      + Hb_OsNewLine()
+                  bld_cmd += 'COPY /B ' + cB_RC_MINI + ' ' + cB_TEMP_RC + ' > NUL'                                          + Hb_OsNewLine()
 
                For i := 1 to len( &( 'vLibDefault'+GetSuffix() ) )
                   if ! Getminiguisuffix() == DefineOohg3
                      if US_Upper( &('vLibDefault'+GetSuffix()+'['+str(i)+']') ) == 'HBPRINTER.LIB'
                         if ascan( vLibExcludeFiles, 'HBPRINTER.LIB' ) == 0
-                  bld_cmd += 'COPY /B ' + BO_TEMP_RC + ' + ' + BO_FILLER + ' + ' + BO_RC_HBPR + ' ' + BO_TEMP_RC + ' > NUL' + Hb_OsNewLine()
+                  bld_cmd += 'COPY /B ' + cB_TEMP_RC + ' + ' + cB_FILLER + ' + ' + cB_RC_HBPR + ' ' + cB_TEMP_RC + ' > NUL' + Hb_OsNewLine()
                         endif
                      elseif US_Upper( &('vLibDefault'+GetSuffix()+'['+str(i)+']') ) == 'MINIPRINT.LIB'
                         if ascan( vLibExcludeFiles, 'MINIPRINT.LIB' ) == 0
-                  bld_cmd += 'COPY /B ' + BO_TEMP_RC + ' + ' + BO_FILLER + ' + ' + BO_RC_MIPR + ' ' + BO_TEMP_RC + ' > NUL' + Hb_OsNewLine()
+                  bld_cmd += 'COPY /B ' + cB_TEMP_RC + ' + ' + cB_FILLER + ' + ' + cB_RC_MIPR + ' ' + cB_TEMP_RC + ' > NUL' + Hb_OsNewLine()
                         endif
                      endif
                   endif
@@ -7025,31 +7087,31 @@ Function QPM_Build2()
       endif
                   bld_cmd += ':NEXT'                                                                                        + Hb_OsNewLine()
       if ! Prj_Check_IgnoreMainRC .or. ! Prj_Check_IgnoreLibRCs
-                  bld_cmd += 'IF NOT EXIST ' + BO_RC_COMP + ' ECHO ' + BO_RCC_ERR + ' > ' + BO_TMP_ERR                      + Hb_OsNewLine()
+                  bld_cmd += 'IF NOT EXIST ' + cB_RC_COMP + ' ECHO ' + cB_RCC_ERR + ' > ' + cB_TMP_ERR                      + Hb_OsNewLine()
       endif
-                  bld_cmd += 'PUSHD ' + BO_CPP_BIN                                                                          + Hb_OsNewLine()
-                  bld_cmd += BO_US_MAKE + ' ' + '-f' + MAKE_FILE + ' >> ' + TEMP_LOG + ' 2>&1'                              + Hb_OsNewLine()
+                  bld_cmd += 'PUSHD ' + cB_CPP_BIN                                                                          + Hb_OsNewLine()
+                  bld_cmd += cB_US_MAKE + ' ' + '-f' + MAKE_FILE + ' >> ' + TEMP_LOG + ' 2>&1'                              + Hb_OsNewLine()
       do case
       case Prj_Radio_OutputCopyMove == DEF_RG_MOVE
-                  bld_cmd += 'IF EXIST ' + BO_EXE + ' GOTO ERROR'                                                           + Hb_OsNewLine()
-                  bld_cmd += 'IF EXIST ' + BO_OUTPUT + ' GOTO OK'                                                           + Hb_OsNewLine()
+                  bld_cmd += 'IF EXIST ' + cB_EXE + ' GOTO ERROR'                                                           + Hb_OsNewLine()
+                  bld_cmd += 'IF EXIST ' + cB_OUTPUT + ' GOTO OK'                                                           + Hb_OsNewLine()
       case Prj_Radio_OutputCopyMove == DEF_RG_COPY
-                  bld_cmd += 'IF NOT EXIST ' + BO_EXE + ' GOTO ERROR'                                                       + Hb_OsNewLine()
-                  bld_cmd += 'IF EXIST ' + BO_OUTPUT + ' GOTO OK'                                                           + Hb_OsNewLine()
+                  bld_cmd += 'IF NOT EXIST ' + cB_EXE + ' GOTO ERROR'                                                       + Hb_OsNewLine()
+                  bld_cmd += 'IF EXIST ' + cB_OUTPUT + ' GOTO OK'                                                           + Hb_OsNewLine()
       otherwise
-                  bld_cmd += 'IF EXIST ' + BO_EXE + ' GOTO OK'                                                              + Hb_OsNewLine()
+                  bld_cmd += 'IF EXIST ' + cB_EXE + ' GOTO OK'                                                              + Hb_OsNewLine()
       endcase
                   bld_cmd += ':ERROR'                                                                                       + Hb_OsNewLine()
-                  bld_cmd += 'IF EXIST ' + BO_TMP_ERR + ' COPY ' + BO_TMP_ERR + ' ' + TEMP_LOG + ' > NUL'                   + Hb_OsNewLine()
+                  bld_cmd += 'IF EXIST ' + cB_TMP_ERR + ' COPY ' + cB_TMP_ERR + ' ' + TEMP_LOG + ' > NUL'                   + Hb_OsNewLine()
                   bld_cmd += 'ECHO ERROR > ' + END_FILE                                                                     + Hb_OsNewLine()
                   bld_cmd += 'GOTO END'                                                                                     + Hb_OsNewLine()
                   bld_cmd += ':OK'                                                                                          + Hb_OsNewLine()
                   bld_cmd += 'ECHO OK > ' + END_FILE                                                                        + Hb_OsNewLine()
                   bld_cmd += ':END'                                                                                         + Hb_OsNewLine()
-                  bld_cmd += 'IF EXIST ' + BO_TEMP_RC  + ' DEL ' + BO_TEMP_RC + ' > NUL'                                    + Hb_OsNewLine()
-                  bld_cmd += 'IF EXIST ' + BO_RC_CONF  + ' DEL ' + BO_RC_CONF + ' > NUL'                                    + Hb_OsNewLine()
-                  bld_cmd += 'IF EXIST ' + BO_RC1_SHR  + ' DEL ' + BO_RC1_SHR + ' > NUL'                                    + Hb_OsNewLine()
-                  bld_cmd += 'IF EXIST ' + BO_RC2_SHR  + ' DEL ' + BO_RC2_SHR + ' > NUL'                                    + Hb_OsNewLine()
+                  bld_cmd += 'IF EXIST ' + cB_TEMP_RC  + ' DEL ' + cB_TEMP_RC + ' > NUL'                                    + Hb_OsNewLine()
+                  bld_cmd += 'IF EXIST ' + cB_RC_CONF  + ' DEL ' + cB_RC_CONF + ' > NUL'                                    + Hb_OsNewLine()
+                  bld_cmd += 'IF EXIST ' + cB_RC1_SHR  + ' DEL ' + cB_RC1_SHR + ' > NUL'                                    + Hb_OsNewLine()
+                  bld_cmd += 'IF EXIST ' + cB_RC2_SHR  + ' DEL ' + cB_RC2_SHR + ' > NUL'                                    + Hb_OsNewLine()
 
       QPM_MemoWrit( BUILD_BAT, bld_cmd )
    otherwise
@@ -7446,13 +7508,14 @@ Function QPM_CopyFile( orig, dest )
 Return .F.
 
 Function QPM_RemoveFilePRG()
-   Local Pos, dire, i, bBorrar := .T.
+   Local Pos, dire, exte, i, bBorrar := .T.
    Local item := VentanaMain.GPrgFiles.Value
    Local bTop := if( item == 1, .T., .F. )
    If VentanaMain.GPrgFiles.Value > 0
       If MyMsgYesNo( 'Remove file' + Hb_OsNewLIne() + DBLQT + ChgPathToReal( GetProperty( 'VentanaMain', 'GPrgFiles', 'Cell', VentanaMain.GPrgFiles.Value, NCOLPRGFULLNAME ) ) + DBLQT + Hb_OsNewLine() + 'from project ?', 'Confirm' )
       // QPM_ForceRecompExclude( ChgPathToReal( GetProperty( 'VentanaMain', 'GPrgFiles', 'Cell', VentanaMain.GPrgFiles.Value, NCOLPRGFULLNAME ) ), VentanaMain.GPrgFiles.Value )
          dire := US_FileNameOnlyPath( GetProperty( 'VentanaMain', 'GPrgFiles', 'Cell', VentanaMain.GPrgFiles.Value, NCOLPRGFULLNAME ) )
+         exte := US_Upper( US_FileNameOnlyExt( GetProperty( 'VentanaMain', 'GPrgFiles', 'Cell', VentanaMain.GPrgFiles.Value, NCOLPRGFULLNAME ) ) )
          VentanaMain.GPrgFiles.DeleteItem( VentanaMain.GPrgFiles.Value )
          SetProperty( 'VentanaMain', 'GPrgFiles', 'tooltip', '' )
          if item > VentanaMain.GPrgFiles.ItemCount
@@ -7463,7 +7526,6 @@ Function QPM_RemoveFilePRG()
          endif
          SetProperty( 'VentanaMain', 'GPrgFiles', 'value', item )
          RichEditDisplay( 'PRG' )
-         Pos := AScan( vExtraFoldersForSearch, { |y| US_Upper( US_VarToStr( y ) ) == US_Upper( ChgPathToReal( dire ) ) } )
          For i=1 to VentanaMain.GPrgFiles.ItemCount
             if dire == US_FileNameOnlyPath( GetProperty( 'VentanaMain', 'GPrgFiles', 'Cell', i, NCOLPRGFULLNAME ) )
                bBorrar := .F.
@@ -7484,8 +7546,18 @@ Function QPM_RemoveFilePRG()
                bBorrar := .F.
             endif
          next
-         if Pos > 0 .and. bBorrar
-            adel( vExtraFoldersForSearch, Pos )
+         if bBorrar
+            if exte == "PRG"
+               Pos := AScan( vExtraFoldersForSearchHB, { |y| US_Upper( US_VarToStr( y ) ) == US_Upper( ChgPathToReal( dire ) ) } )
+               if Pos > 0
+                  adel( vExtraFoldersForSearchHB, Pos )
+               endif
+            else
+               Pos := AScan( vExtraFoldersForSearchC, { |y| US_Upper( US_VarToStr( y ) ) == US_Upper( ChgPathToReal( dire ) ) } )
+               if Pos > 0
+                  adel( vExtraFoldersForSearchC, Pos )
+               endif
+            endif
          endif
          if bTop
             CambioTitulo()
@@ -7516,8 +7588,6 @@ Function QPM_RemoveFileHEA()
          endif
          SetProperty( 'VentanaMain', 'GHeaFiles', 'value', item )
          RichEditDisplay( 'HEA' )
-      // Pos := ascan( vExtraFoldersForSearch, ChgPathToReal( dire ) )
-         Pos := AScan( vExtraFoldersForSearch, { |y| US_Upper( US_VarToStr( y ) ) == US_Upper( ChgPathToReal( dire ) ) } )
          For i=1 to VentanaMain.GPrgFiles.ItemCount
             if dire == US_FileNameOnlyPath( GetProperty( 'VentanaMain', 'GPrgFiles', 'Cell', i, NCOLPRGFULLNAME ) )
                bBorrar := .F.
@@ -7538,8 +7608,13 @@ Function QPM_RemoveFileHEA()
                bBorrar := .F.
             endif
          next
+         Pos := AScan( vExtraFoldersForSearchHB, { |y| US_Upper( US_VarToStr( y ) ) == US_Upper( ChgPathToReal( dire ) ) } )
          if Pos > 0 .and. bBorrar
-            adel( vExtraFoldersForSearch, Pos )
+            adel( vExtraFoldersForSearchHB, Pos )
+         endif
+         Pos := AScan( vExtraFoldersForSearchC, { |y| US_Upper( US_VarToStr( y ) ) == US_Upper( ChgPathToReal( dire ) ) } )
+         if Pos > 0 .and. bBorrar
+            adel( vExtraFoldersForSearchC, Pos )
          endif
       EndIf
    EndIf
@@ -7562,8 +7637,6 @@ Function QPM_RemoveFilePAN()
          endif
          SetProperty( 'VentanaMain', 'GPanFiles', 'value', item )
          RichEditDisplay( 'PAN' )
-      // Pos := ascan( vExtraFoldersForSearch, ChgPathToReal( dire ) )
-         Pos := AScan( vExtraFoldersForSearch, { |y| US_Upper( US_VarToStr( y ) ) == US_Upper( ChgPathToReal( dire ) ) } )
          For i=1 to VentanaMain.GPrgFiles.ItemCount
             if dire == US_FileNameOnlyPath( GetProperty( 'VentanaMain', 'GPrgFiles', 'Cell', i, NCOLPRGFULLNAME ) )
                bBorrar := .F.
@@ -7579,8 +7652,9 @@ Function QPM_RemoveFilePAN()
                bBorrar := .F.
             endif
          next
+         Pos := AScan( vExtraFoldersForSearchHB, { |y| US_Upper( US_VarToStr( y ) ) == US_Upper( ChgPathToReal( dire ) ) } )
          if Pos > 0 .and. bBorrar
-            adel( vExtraFoldersForSearch, Pos )
+            adel( vExtraFoldersForSearchHB, Pos )
          endif
       EndIf
    EndIf
