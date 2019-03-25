@@ -2,16 +2,19 @@ Versión 05_05_08:
 1. Agregado: soporte Multithread.
 2. Corregido: RTE al construir archivo .chm.
 3. Corregido: No se puede compilar con BCC cuando el archivo de recursos no está en la misma carpeta que los fuentes.
+4. Agregado: MINIPRINT.RC es compilado siempre que la librería MINIPRINT2 es incluida.
 
 Version 05_05_08:
 1. Added: soporte Multithread.
 2. Fixed: RTE when building .chm file.
 3. Fixed: Can't compile under BCC when the resources file is not at the same folder than the sources.
+4. Added: MINIPRINT.RC is compiled whenever MINIPRINT2 library is included.
 
 Versão 05_05_08:
 1. Adicionado: suporte Multithread.
 2. Corrigido: RTE ao construir arquivo .chm.
 3. Corrigido: não pode ser compilado com o BCC quando o arquivo de recursos não está na mesma pasta que os fontes.
+4. Adicionado: MINIPRINT.RC é compilado sempre que a biblioteca MINIPRINT2 é incluída.
 
 ----
 Versión 05_05_07:

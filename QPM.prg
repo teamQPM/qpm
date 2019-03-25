@@ -5427,6 +5427,7 @@ Function QPM_Build2()
    Local cResourceFileName
    Local HeaFILES := {}
    Local i
+   Local lIncludeMiniPrintRC
    Local MemoAux
    Local MemoObj
    Local nCant
@@ -5732,7 +5733,7 @@ Function QPM_Build2()
    DO EVENTS
 
    For i := 1 To VentanaMain.GIncFiles.ItemCount
-      aadd( vLibIncludeFiles, ChgPathToReal( US_WordSubStr( GetProperty( 'VentanaMain', 'GIncFiles', 'Cell', i, NCOLINCFULLNAME ), 3 ) ) )
+      aadd( vLibIncludeFiles, US_Upper( ChgPathToReal( US_WordSubStr( GetProperty( 'VentanaMain', 'GIncFiles', 'Cell', i, NCOLINCFULLNAME ), 3 ) ) ) )
       if ! file( vLibIncludeFiles[ i ] )
          MsgStop( "File '" + vLibIncludeFiles[ i ] + "' not found !!!" )
          BUILD_IN_PROGRESS := .F.
@@ -6124,11 +6125,11 @@ Function QPM_Build2()
             if US_Upper( US_Word( GetProperty( 'VentanaMain', 'GIncFiles', 'Cell', i, NCOLINCFULLNAME ), 2 ) ) == '*FIRST*'
                do case
                case IsMinGW
-                  Out := Out + PUB_cCharTab + 'echo INPUT( $(DIR_MINIGUI_RES)' + DEF_SLASH + substr( US_FileNameOnlyName( vLibIncludeFiles[i] ), 4 ) + '.o ) >> ' + SCRIPT_FILE + Hb_OsNewLine()
+                  Out := Out + PUB_cCharTab + 'echo INPUT( $(DIR_MINIGUI_RES)' + DEF_SLASH + US_FileNameOnlyName( vLibIncludeFiles[i] ) + '.o ) >> ' + SCRIPT_FILE + Hb_OsNewLine()
                case IsPelles
-                  Out := Out + PUB_cCharTab + 'echo $(DIR_MINIGUI_RES)' + DEF_SLASH + substr( US_FileNameOnlyName( vLibIncludeFiles[i] ), 4 ) + '.obj >> ' + SCRIPT_FILE + Hb_OsNewLine()
+                  Out := Out + PUB_cCharTab + 'echo $(DIR_MINIGUI_RES)' + DEF_SLASH + US_FileNameOnlyName( vLibIncludeFiles[i] ) + '.obj >> ' + SCRIPT_FILE + Hb_OsNewLine()
                case IsBorland
-                  Out := Out + PUB_cCharTab + 'echo $(DIR_MINIGUI_RES)' + DEF_SLASH + substr( US_FileNameOnlyName( vLibIncludeFiles[i] ), 4 ) + '.obj >> ' + SCRIPT_FILE + Hb_OsNewLine()
+                  Out := Out + PUB_cCharTab + 'echo $(DIR_MINIGUI_RES)' + DEF_SLASH + US_FileNameOnlyName( vLibIncludeFiles[i] ) + '.obj >> ' + SCRIPT_FILE + Hb_OsNewLine()
                otherwise
                   US_Log( 'Error 5671' )
                endcase
@@ -6181,8 +6182,8 @@ Function QPM_Build2()
  */
             For i := 1 To Len ( vLibIncludeFiles )
                if US_Upper( US_Word( GetProperty( 'VentanaMain', 'GIncFiles', 'Cell', i, NCOLINCFULLNAME ), 2 ) ) == '*LAST*' 
-                  if file( GetMiniGuiFolder() + DEF_SLASH + 'RESOURCES' + DEF_SLASH + substr( US_FileNameOnlyName( vLibIncludeFiles[i] ), 4 ) + '.o' )
-                     Out := Out + PUB_cCharTab + 'echo INPUT( $(DIR_MINIGUI_RES)' + DEF_SLASH + substr( US_FileNameOnlyName( vLibIncludeFiles[i] ), 4 ) + '.o ) >> ' + SCRIPT_FILE + Hb_OsNewLine()
+                  if file( GetMiniGuiFolder() + DEF_SLASH + 'RESOURCES' + DEF_SLASH + US_FileNameOnlyName( vLibIncludeFiles[i] ) + '.o' )
+                     Out := Out + PUB_cCharTab + 'echo INPUT( $(DIR_MINIGUI_RES)' + DEF_SLASH + US_FileNameOnlyName( vLibIncludeFiles[i] ) + '.o ) >> ' + SCRIPT_FILE + Hb_OsNewLine()
                   endif
                endif
             Next i
@@ -6225,7 +6226,7 @@ Function QPM_Build2()
  */
                   For i := 1 To Len ( vLibIncludeFiles )
                      if US_Upper( US_Word( GetProperty( 'VentanaMain', 'GIncFiles', 'Cell', i, NCOLINCFULLNAME ), 2 ) ) == '*FIRST*'
-                        if US_Upper( US_FileNameOnlyExt( vLibIncludeFiles[i] ) ) == 'A'
+                        if US_FileNameOnlyExt( vLibIncludeFiles[i] ) == 'A'
                            w_hay := .t.
                            w_group += '-l' + substr( US_FileNameOnlyName( vLibIncludeFiles[i] ), 4 ) + ' '
                         else
@@ -6310,7 +6311,7 @@ Function QPM_Build2()
  */
                   For i := 1 To Len ( vLibIncludeFiles )
                      if US_Upper( US_Word( GetProperty( 'VentanaMain', 'GIncFiles', 'Cell', i, NCOLINCFULLNAME ), 2 ) ) == '*LAST*'
-                        if US_Upper( US_FileNameOnlyExt( vLibIncludeFiles[i] ) ) == 'A'
+                        if US_FileNameOnlyExt( vLibIncludeFiles[i] ) == 'A'
                            w_hay := .t.
                            w_group += '-l' + substr( US_FileNameOnlyName( vLibIncludeFiles[i] ), 4 ) + ' '
                         else
@@ -6348,7 +6349,7 @@ Function QPM_Build2()
  */
                   For i := 1 To Len ( vLibIncludeFiles )
                      if US_Upper( US_Word( GetProperty( 'VentanaMain', 'GIncFiles', 'Cell', i, NCOLINCFULLNAME ), 2 ) ) == '*FIRST*'
-                        Out := Out + PUB_cCharTab + 'echo ' + US_ShortName(vLibIncludeFiles[i]) + ' >> ' + SCRIPT_FILE + Hb_OsNewLine()
+                        Out := Out + PUB_cCharTab + 'echo ' + US_ShortName( vLibIncludeFiles[i] ) + ' >> ' + SCRIPT_FILE + Hb_OsNewLine()
                      endif
                   Next i
 
@@ -6419,7 +6420,7 @@ Function QPM_Build2()
  */
                   For i := 1 To Len ( vLibIncludeFiles )
                      if US_Upper( US_Word( GetProperty( 'VentanaMain', 'GIncFiles', 'Cell', i, NCOLINCFULLNAME ), 2 ) ) == '*LAST*'
-                        Out := Out + PUB_cCharTab + 'echo ' + US_ShortName(vLibIncludeFiles[i]) + ' >> ' + SCRIPT_FILE + Hb_OsNewLine()
+                        Out := Out + PUB_cCharTab + 'echo ' + US_ShortName( vLibIncludeFiles[i] ) + ' >> ' + SCRIPT_FILE + Hb_OsNewLine()
                      endif
                   Next i
 
@@ -6437,7 +6438,7 @@ Function QPM_Build2()
  */
                   For i := 1 To Len ( vLibIncludeFiles )
                      if US_Upper( US_Word( GetProperty( 'VentanaMain', 'GIncFiles', 'Cell', i, NCOLINCFULLNAME ), 2 ) ) == '*FIRST*'
-                        Out := Out + PUB_cCharTab + 'echo ' + US_ShortName(vLibIncludeFiles[i]) + ' + >> ' + SCRIPT_FILE + Hb_OsNewLine()
+                        Out := Out + PUB_cCharTab + 'echo ' + US_ShortName( vLibIncludeFiles[i] ) + ' + >> ' + SCRIPT_FILE + Hb_OsNewLine()
                      endif
                   Next i
 
@@ -6888,6 +6889,7 @@ Function QPM_Build2()
                   bld_cmd += 'IF NOT EXIST ' + cB_RC_MINI + ' ECHO ' + cB_RCM_ERR + ' > ' + cB_TMP_ERR                      + Hb_OsNewLine()
                   bld_cmd += 'COPY /B ' + cB_RC_MINI + ' ' + cB_TEMP_RC + ' > NUL'                                          + Hb_OsNewLine()
 
+               lIncludeMiniPrintRC := .F.
                For i := 1 to len( &( 'vLibDefault'+GetSuffix() ) )
                   if ! Getminiguisuffix() == DefineOohg3
                      if US_Upper( &('vLibDefault'+GetSuffix()+'['+str(i)+']') ) == 'LIBHBPRINTER.A'
@@ -6896,11 +6898,19 @@ Function QPM_Build2()
                         endif
                      elseif US_Upper( &('vLibDefault'+GetSuffix()+'['+str(i)+']') ) == 'LIBMINIPRINT.A'
                         if ascan( vLibExcludeFiles, 'LIBMINIPRINT.A' ) == 0
-                  bld_cmd += 'COPY /B ' + cB_TEMP_RC + ' + ' + cB_FILLER + ' + ' + cB_RC_MIPR + ' ' + cB_TEMP_RC + ' > NUL' + Hb_OsNewLine()
+                           lIncludeMiniPrintRC := .T.
                         endif
                      endif
                   endif
                Next i
+               if ! lIncludeMiniPrintRC
+                  if ascan( vLibIncludeFiles, { |y| US_FileNameOnlyNameAndExt( y ) == 'LIBMINIPRINT2.A' } ) # 0
+                     lIncludeMiniPrintRC := .T.
+                  endif
+               endif
+               if lIncludeMiniPrintRC
+                  bld_cmd += 'COPY /B ' + cB_TEMP_RC + ' + ' + cB_FILLER + ' + ' + cB_RC_MIPR + ' ' + cB_TEMP_RC + ' > NUL' + Hb_OsNewLine()
+               endif
             endif
          else
                   bld_cmd += 'ECHO #define ' + GetResConfigVarName() + ' ' + cB_RC_FOLD + ' > ' + cB_RC_CONF                + HB_OsNewLIne()
@@ -6922,6 +6932,7 @@ Function QPM_Build2()
                   bld_cmd += 'COPY /B ' + cB_RC_MINI + ' + ' + cB_FILLER + ' + ' + cB_RC2_SHR + ' ' + cB_TEMP_RC + ' > NUL' + Hb_OsNewLine()
                endif
 
+               lIncludeMiniPrintRC := .F.
                For i := 1 to len( &( 'vLibDefault'+GetSuffix() ) )
                   if ! Getminiguisuffix() == DefineOohg3
                      if US_Upper( &('vLibDefault'+GetSuffix()+'['+str(i)+']') ) == 'LIBHBPRINTER.A'
@@ -6930,11 +6941,19 @@ Function QPM_Build2()
                         endif
                      elseif US_Upper( &('vLibDefault'+GetSuffix()+'['+str(i)+']') ) == 'LIBMINIPRINT.A'
                         if ascan( vLibExcludeFiles, 'LIBMINIPRINT.A' ) == 0
-                  bld_cmd += 'COPY /B ' + cB_TEMP_RC + ' + ' + cB_FILLER + ' + ' + cB_RC_MIPR + ' ' + cB_TEMP_RC + ' > NUL' + Hb_OsNewLine()
+                           lIncludeMiniPrintRC := .T.
                         endif
                      endif
                   endif
                Next i
+               if ! lIncludeMiniPrintRC
+                  if ascan( vLibIncludeFiles, { |y| US_FileNameOnlyNameAndExt( y ) == 'LIBMINIPRINT2.A' } ) # 0
+                     lIncludeMiniPrintRC := .T.
+                  endif
+               endif
+               if lIncludeMiniPrintRC
+                  bld_cmd += 'COPY /B ' + cB_TEMP_RC + ' + ' + cB_FILLER + ' + ' + cB_RC_MIPR + ' ' + cB_TEMP_RC + ' > NUL' + Hb_OsNewLine()
+               endif
             endif
                   bld_cmd += 'GOTO NEXT'                                                                                    + Hb_OsNewLine()
                   bld_cmd += ':NORC'                                                                                        + Hb_OsNewLine()
@@ -6942,6 +6961,7 @@ Function QPM_Build2()
                   bld_cmd += 'IF NOT EXIST ' + cB_RC_MINI + ' ECHO ' + cB_RCM_ERR + ' > ' + cB_TMP_ERR                      + Hb_OsNewLine()
                   bld_cmd += 'COPY /B ' + cB_RC_MINI + ' ' + cB_TEMP_RC + ' > NUL'                                          + Hb_OsNewLine()
 
+               lIncludeMiniPrintRC := .F.
                For i := 1 to len( &( 'vLibDefault'+GetSuffix() ) )
                   if ! Getminiguisuffix() == DefineOohg3
                      if US_Upper( &('vLibDefault'+GetSuffix()+'['+str(i)+']') ) == 'LIBHBPRINTER.A'
@@ -6950,11 +6970,19 @@ Function QPM_Build2()
                         endif
                      elseif US_Upper( &('vLibDefault'+GetSuffix()+'['+str(i)+']') ) == 'LIBMINIPRINT.A'
                         if ascan( vLibExcludeFiles, 'LIBMINIPRINT.A' ) == 0
-                  bld_cmd += 'COPY /B ' + cB_TEMP_RC + ' + ' + cB_FILLER + ' + ' + cB_RC_MIPR + ' ' + cB_TEMP_RC + ' > NUL' + Hb_OsNewLine()
+                           lIncludeMiniPrintRC := .T.
                         endif
                      endif
                   endif
                Next i
+               if ! lIncludeMiniPrintRC
+                  if ascan( vLibIncludeFiles, { |y| US_FileNameOnlyNameAndExt( y ) == 'LIBMINIPRINT2.A' } ) # 0
+                     lIncludeMiniPrintRC := .T.
+                  endif
+               endif
+               if lIncludeMiniPrintRC
+                  bld_cmd += 'COPY /B ' + cB_TEMP_RC + ' + ' + cB_FILLER + ' + ' + cB_RC_MIPR + ' ' + cB_TEMP_RC + ' > NUL' + Hb_OsNewLine()
+               endif
             endif
          endif
       endif
@@ -7015,6 +7043,7 @@ Function QPM_Build2()
                   bld_cmd += 'IF NOT EXIST ' + cB_RC_MINI + ' ECHO ' + cB_RCM_ERR + ' > ' + cB_TMP_ERR                      + Hb_OsNewLine()
                   bld_cmd += 'COPY /B ' + cB_RC_MINI + ' ' + cB_TEMP_RC + ' > NUL'                                          + Hb_OsNewLine()
 
+               lIncludeMiniPrintRC := .F.
                For i := 1 to len( &( 'vLibDefault'+GetSuffix() ) )
                   if ! Getminiguisuffix() == DefineOohg3
                      if US_Upper( &('vLibDefault'+GetSuffix()+'['+str(i)+']') ) == 'HBPRINTER.LIB'
@@ -7023,11 +7052,19 @@ Function QPM_Build2()
                         endif
                      elseif US_Upper( &('vLibDefault'+GetSuffix()+'['+str(i)+']') ) == 'MINIPRINT.LIB'
                         if ascan( vLibExcludeFiles, 'MINIPRINT.LIB' ) == 0
-                  bld_cmd += 'COPY /B ' + cB_TEMP_RC + ' + ' + cB_FILLER + ' + ' + cB_RC_MIPR + ' ' + cB_TEMP_RC + ' > NUL' + Hb_OsNewLine()
+                           lIncludeMiniPrintRC := .T.
                         endif
                      endif
                   endif
                Next i
+               if ! lIncludeMiniPrintRC
+                  if ascan( vLibIncludeFiles, { |y| US_FileNameOnlyNameAndExt( y ) == 'MINIPRINT2.LIB' } ) # 0
+                     lIncludeMiniPrintRC := .T.
+                  endif
+               endif
+               if lIncludeMiniPrintRC
+                  bld_cmd += 'COPY /B ' + cB_TEMP_RC + ' + ' + cB_FILLER + ' + ' + cB_RC_MIPR + ' ' + cB_TEMP_RC + ' > NUL' + Hb_OsNewLine()
+               endif
             endif
          else
                   bld_cmd += 'ECHO #define ' + GetResConfigVarName() + ' ' + cB_RC_FOLD + ' > ' + cB_RC_CONF                + HB_OsNewLIne()
@@ -7049,6 +7086,7 @@ Function QPM_Build2()
                   bld_cmd += 'COPY /B ' + cB_RC_MINI + ' + ' + cB_FILLER + ' + ' + cB_RC2_SHR + ' ' + cB_TEMP_RC + ' > NUL' + Hb_OsNewLine()
                endif
 
+               lIncludeMiniPrintRC := .F.
                For i := 1 to len( &( 'vLibDefault'+GetSuffix() ) )
                   if ! Getminiguisuffix() == DefineOohg3
                      if US_Upper( &('vLibDefault'+GetSuffix()+'['+str(i)+']') ) == 'HBPRINTER.LIB'
@@ -7057,11 +7095,19 @@ Function QPM_Build2()
                         endif
                      elseif US_Upper( &('vLibDefault'+GetSuffix()+'['+str(i)+']') ) == 'MINIPRINT.LIB'
                         if ascan( vLibExcludeFiles, 'MINIPRINT.LIB' ) == 0
-                  bld_cmd += 'COPY /B ' + cB_TEMP_RC + ' + ' + cB_FILLER + ' + ' + cB_RC_MIPR + ' ' + cB_TEMP_RC + ' > NUL' + Hb_OsNewLine()
+                           lIncludeMiniPrintRC := .T.
                         endif
                      endif
                   endif
                Next i
+               if ! lIncludeMiniPrintRC
+                  if ascan( vLibIncludeFiles, { |y| US_FileNameOnlyNameAndExt( y ) == 'MINIPRINT2.LIB' } ) # 0
+                     lIncludeMiniPrintRC := .T.
+                  endif
+               endif
+               if lIncludeMiniPrintRC
+                  bld_cmd += 'COPY /B ' + cB_TEMP_RC + ' + ' + cB_FILLER + ' + ' + cB_RC_MIPR + ' ' + cB_TEMP_RC + ' > NUL' + Hb_OsNewLine()
+               endif
             endif
                   bld_cmd += 'GOTO NEXT'                                                                                    + Hb_OsNewLine()
                   bld_cmd += ':NORC'                                                                                        + Hb_OsNewLine()
@@ -7069,6 +7115,7 @@ Function QPM_Build2()
                   bld_cmd += 'IF NOT EXIST ' + cB_RC_MINI + ' ECHO ' + cB_RCM_ERR + ' > ' + cB_TMP_ERR                      + Hb_OsNewLine()
                   bld_cmd += 'COPY /B ' + cB_RC_MINI + ' ' + cB_TEMP_RC + ' > NUL'                                          + Hb_OsNewLine()
 
+               lIncludeMiniPrintRC := .F.
                For i := 1 to len( &( 'vLibDefault'+GetSuffix() ) )
                   if ! Getminiguisuffix() == DefineOohg3
                      if US_Upper( &('vLibDefault'+GetSuffix()+'['+str(i)+']') ) == 'HBPRINTER.LIB'
@@ -7077,11 +7124,19 @@ Function QPM_Build2()
                         endif
                      elseif US_Upper( &('vLibDefault'+GetSuffix()+'['+str(i)+']') ) == 'MINIPRINT.LIB'
                         if ascan( vLibExcludeFiles, 'MINIPRINT.LIB' ) == 0
-                  bld_cmd += 'COPY /B ' + cB_TEMP_RC + ' + ' + cB_FILLER + ' + ' + cB_RC_MIPR + ' ' + cB_TEMP_RC + ' > NUL' + Hb_OsNewLine()
+                           lIncludeMiniPrintRC := .T.
                         endif
                      endif
                   endif
                Next i
+               if ! lIncludeMiniPrintRC
+                  if ascan( vLibIncludeFiles, { |y| US_FileNameOnlyNameAndExt( y ) == 'MINIPRINT2.LIB' } ) # 0
+                     lIncludeMiniPrintRC := .T.
+                  endif
+               endif
+               if lIncludeMiniPrintRC
+                  bld_cmd += 'COPY /B ' + cB_TEMP_RC + ' + ' + cB_FILLER + ' + ' + cB_RC_MIPR + ' ' + cB_TEMP_RC + ' > NUL' + Hb_OsNewLine()
+               endif
             endif
          endif
       endif

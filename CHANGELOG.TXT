@@ -8,6 +8,14 @@
  * See "How to format your ChangeLog entries" in howtosvn.txt file.
  */
 
+2019-03-24 22:22:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * ./QPM.exe
+     * Rebuilded.
+   * ./QPM.prg
+     + MINIPRINT.RC is compiled whenever MINIPRINT2 library is included.
+   * ./readme.txt
+     + Added new entry.
+
 2019-03-24 20:43:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * ./readme.txt
      + Added new entry.
