@@ -1,3 +1,13 @@
+Versión 05_05_09:
+1. Corregido: La compilación con MINGW falla con el mensaje: "WINDRES: can't open file `oohgpath\Windows.Manifest': Invalid argument".
+
+Version 05_05_09:
+1. Fixed: Compilation under MinGW fails with message: "WINDRES: can't open file `oohgpath\Windows.Manifest': Invalid argument".
+
+Versão 05_05_09:
+1. Corrigido: A compilação sob MinGW falha com mensagem: "WINDRES: can't open file `oohgpath\Windows.Manifest': Invalid argument".
+
+----
 Versión 05_05_08:
 1. Agregado: soporte Multithread.
 2. Corregido: RTE al construir archivo .chm.

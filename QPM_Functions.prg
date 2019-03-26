@@ -672,7 +672,7 @@ Function GetResConfigVarName()
    cType := GetMiniGuiSuffix()       // + GetCppSuffix()
    do case
    case cType == DefineOohg3         // + DefineMinGW
-      cNombre := "OOHGPATH"
+      cNombre := "oohgpath"
    case cType == DefineExtended1     // + DefineMinGW
       cNombre := "HMGRPATH"
    case cType == DefineMiniGui3      // + DefineMinGW
