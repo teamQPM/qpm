@@ -1,3 +1,13 @@
+Versión 05_05_10:
+1. Corregido: Algunos archivos .FMG no se abren con el IDE PLUS de OOHG.
+
+Version 05_05_10:
+1. Fixed: Some .FMG files are not opened with OOHG's IDE PLUS.
+
+Versão 05_05_10:
+1. Corrigido: Alguns arquivos .FMG não abrem com o OOHG IDE PLUS.
+
+----
 Versión 05_05_09:
 1. Corregido: La compilación con MINGW falla con el mensaje: "WINDRES: can't open file `oohgpath\Windows.Manifest': Invalid argument".
 

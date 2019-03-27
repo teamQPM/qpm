@@ -8,6 +8,18 @@
  * See "How to format your ChangeLog entries" in howtosvn.txt file.
  */
 
+2019-03-26 22:34:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * ./QPM.exe
+     * Rebuilded.
+   * ./QPM.ch
+   * ./QPM_AutoProject.qpm
+     * Updated to 05_05_10.
+   * ./readme.txt
+     + Added new entry.
+   * ./QPM.prg
+     ! Some .FMG files are not opened with OOHG's IDE PLUS.
+     ! Fontcolor is not restored after editing a .FMG file.
+
 2019-03-26 20:22:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * ./QPM.exe
      * Rebuilded.
