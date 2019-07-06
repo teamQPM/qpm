@@ -615,39 +615,76 @@ Return cDir
 Function GetMiniGuiType()
 Return Substr( GetMiniGuiSuffix(), 1, 1 )
 
-Function GetResourceFileName()
+Function Get_RC_FileName()
    Local cNombre
    do case
    case GetMiniGuiSuffix() == DefineOohg3
       if QPM_IsXHarbour() .and. File( GetMiniGuiFolder() + DEF_SLASH + 'RESOURCES' + DEF_SLASH + "xoohg.rc" )
-         cNombre := "xoohg"
+         cNombre := "xoohg.rc"
       elseif GetCppSuffix() == DefineBorland .and. File( GetMiniGuiFolder() + DEF_SLASH + 'RESOURCES' + DEF_SLASH + "oohg_bcc.rc" )
-         cNombre := "oohg_bcc"
+         cNombre := "oohg_bcc.rc"
       else
-         cNombre := "oohg"
+         cNombre := "oohg.rc"
       endif
    case ( GetMiniGuiSuffix() + GetCppSuffix() ) == DefineMiniGui3 + DefineMinGW
       if QPM_IsXHarbour() .and. File( GetMiniGuiFolder() + DEF_SLASH + 'RESOURCES' + DEF_SLASH + "xhmg.rc" )
-         cNombre := "xhmg"
+         cNombre := "xhmg.rc"
       else
-         cNombre := "hmg"
+         cNombre := "hmg.rc"
       endif
       cNombre += if( Prj_Check_64bits, "64", "32" )
    case ( GetMiniGuiSuffix() + GetCppSuffix() ) == DefineExtended1 + DefineMinGW
       if QPM_IsXHarbour() .and. File( GetMiniGuiFolder() + DEF_SLASH + 'RESOURCES' + DEF_SLASH + "xhmg.rc" )
-         cNombre := "xhmg"
+         cNombre := "xhmg.rc"
       elseif QPM_IsXHarbour() .and. File( GetMiniGuiFolder() + DEF_SLASH + 'RESOURCES' + DEF_SLASH + "xminigui.rc" )
-         cNombre := "xminigui"
+         cNombre := "xminigui.rc"
       elseif File( GetMiniGuiFolder() + DEF_SLASH + 'RESOURCES' + DEF_SLASH + "hmg.rc" )
-         cNombre := "hmg"
+         cNombre := "hmg.rc"
       else
-         cNombre := "minigui"
+         cNombre := "minigui.rc"
       endif
    otherwise
       if QPM_IsXHarbour() .and. File( GetMiniGuiFolder() + DEF_SLASH + 'RESOURCES' + DEF_SLASH + "xminigui.rc" )
-         cNombre := "xminigui"
+         cNombre := "xminigui.rc"
       else
-         cNombre := "minigui"
+         cNombre := "minigui.rc"
+      endif
+   endcase
+Return cNombre
+
+Function Get_RES_FileName()
+   Local cNombre
+   do case
+   case GetMiniGuiSuffix() == DefineOohg3
+      if QPM_IsXHarbour() .and. File( GetMiniGuiFolder() + DEF_SLASH + 'RESOURCES' + DEF_SLASH + "xoohg.rc" )
+         cNombre := "xoohg.res"
+      elseif GetCppSuffix() == DefineBorland .and. File( GetMiniGuiFolder() + DEF_SLASH + 'RESOURCES' + DEF_SLASH + "oohg_bcc.rc" )
+         cNombre := "oohg.res"
+      else
+         cNombre := "oohg.res"
+      endif
+   case ( GetMiniGuiSuffix() + GetCppSuffix() ) == DefineMiniGui3 + DefineMinGW
+      if QPM_IsXHarbour() .and. File( GetMiniGuiFolder() + DEF_SLASH + 'RESOURCES' + DEF_SLASH + "xhmg.rc" )
+         cNombre := "xhmg.res"
+      else
+         cNombre := "hmg.res"
+      endif
+      cNombre += if( Prj_Check_64bits, "64", "32" )
+   case ( GetMiniGuiSuffix() + GetCppSuffix() ) == DefineExtended1 + DefineMinGW
+      if QPM_IsXHarbour() .and. File( GetMiniGuiFolder() + DEF_SLASH + 'RESOURCES' + DEF_SLASH + "xhmg.rc" )
+         cNombre := "xhmg.res"
+      elseif QPM_IsXHarbour() .and. File( GetMiniGuiFolder() + DEF_SLASH + 'RESOURCES' + DEF_SLASH + "xminigui.rc" )
+         cNombre := "xminigui.res"
+      elseif File( GetMiniGuiFolder() + DEF_SLASH + 'RESOURCES' + DEF_SLASH + "hmg.rc" )
+         cNombre := "hmg.res"
+      else
+         cNombre := "minigui.res"
+      endif
+   otherwise
+      if QPM_IsXHarbour() .and. File( GetMiniGuiFolder() + DEF_SLASH + 'RESOURCES' + DEF_SLASH + "xminigui.rc" )
+         cNombre := "xminigui.res"
+      else
+         cNombre := "minigui.res"
       endif
    endcase
 Return cNombre
@@ -1039,6 +1076,10 @@ Function QPM_ModuleType( cFile )
    endif
    if Upper( US_FileNameOnlyExt( cFile ) ) == "O"
       Return "MINGW"
+   endif
+   if Upper( US_FileNameOnlyExt( cFile ) ) == "RES" .and. ;
+      at( CHR(0)+CHR(0)+CHR(0)+CHR(0)+CHR(32)+CHR(0)+CHR(0)+CHR(0)+CHR(255)+CHR(255)+CHR(0)+CHR(0)+CHR(255)+CHR(255), MemoAux ) > 0
+      Return "BORLAND"
    endif
 Return "UNKNOWN"
 
