@@ -162,9 +162,12 @@ HOW TO BUILD A NEW RELEASE
 
 [2] Open your working version of QPM and load ./QPM_AutoProject.qpm
 
-[3] Change version, release and build to one less than the release to build.
+[3] If AUTOINC option is set to ON then change version, release and
+    build to one less than the release to build.
     E.G. if you want to build 5.01.10, set QPM to 5.01.09
     if you want to build 5.01.00, set QPM to 5.00.9999
+    If AUTOINC option is set to OFF then change version, release and
+    build to the desired values.
 
 [4] Build the project.
 

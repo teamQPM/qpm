@@ -1,3 +1,16 @@
+Versión 05_05_11:
+1. Corregido: No se compila el archivo RC cuando se utiliza BCC por lo que no se genera el EXE.
+2. Agregado: soporte para archivos de recursos adicionales cuando se utiliza BCC.
+
+Version 05_05_11:
+1. Fixed: RC file is not compiled when BCC is used thus the EXE file is not generated.
+2. Added: support for aditional resource files under BCC.
+
+Versão 05_05_11:
+1. Corrigido: o arquivo RC não é compilado quando o BCC é usado pelo que o arquivo EXE não e gerado.
+2. Adicionado: suporte para arquivos de recursos adicionais no BCC.
+
+----
 Versión 05_05_10:
 1. Corregido: Algunos archivos .FMG no se abren con el IDE PLUS de OOHG.
 
@@ -193,7 +206,7 @@ Versión 05_04_07:
 1. Corregido: el ejecutable se genera siempre con la extensión EXE (en mayúscula), aún cuando se haya especificado con minúsculas.
 
 Version 05_04_07:
-1. Fixed: executable file is always named with EXE extention (uppercase), even when lowercase was specified.
+1. Fixed: executable file is always named with EXE extension (uppercase), even when lowercase was specified.
 
 Versão 05_04_07:
 1. Corrigido: o executável é sempre gerado com a extensão EXE (maiúsculas), mesmo quando especificado com letras minúsculas.

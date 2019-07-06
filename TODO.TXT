@@ -11,6 +11,23 @@
 /******************************************************************************/
 
 Assigned to: <nobody>
+Added by...: 2019-07-05 21:26:00 UTC-0300 Fernando Yurisich <fyurisich>
+Status.....: Open.
+Details....: Function keys remain active after QPM losts the focus.
+
+/******************************************************************************/
+
+Assigned to: <nobody>
+Added by...: 2019-07-01 21:26:00 UTC-0300 Fernando Yurisich <fyurisich>
+Status.....: Open.
+Details....: Check if these files are needed:
+             us_reimp.exe
+             us_dlltool.exe
+             us_windres.exe
+
+/******************************************************************************/
+
+Assigned to: <nobody>
 Added by...: 2019-03-17 22:00:00 UTC-0300 Fernando Yurisich <fyurisich>
 Status.....: Open.
 Details....: Replace this non-working links in HELP project:
