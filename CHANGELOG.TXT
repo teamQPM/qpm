@@ -8,6 +8,38 @@
  * See "How to format your ChangeLog entries" in howtosvn.txt file.
  */
 
+2019-07-29 21:21:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * ./QPM.exe
+   * ./QPM.ch
+   * ./QPM_AutoProject.qpm
+     * Updated to 05_05_12.
+     * Compiled with Harbour MiniGUI Extended Edition 19.04 (Update 1).
+   * ./QPM.prg
+     ! Building with BCC aborts when the main resource file contains icons.
+     ! Building with MinGW aborts when the main resource file contains entries
+       with long filenames.
+     ! xHarbour+MinGW compilation aborts because of missing mainstd.o or
+       mainwin.o files.
+   * ./QPM_US_Res.qpm
+   * ./us_res.exe
+   * ./us_res.prg
+     * Updated to 01.09.
+     + Support for long or short filenames.
+   * ./readme.txt
+     + Added new entry.
+   * ./QPM_US_Shell.qpm
+   * ./us_shell.prg
+   * ./us_shell.exe
+     * Updated to 01.06.
+     * Calls to QPM_Log replaced by calls to Say function.
+   * ./QPM_Environment.prg
+     ! RTE on certain version migrations.
+   * ./QPM_Libraries.prg
+     - hbnulsys is no longer added automatically to avoid "multiple definition"
+       error at link time. If needed add it at the LIB tab.
+     + hbpcre2 library
+   + .doc/OOHG_Configuration.txt
+
 2019-07-05 22:32:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * ./QPM.exe
      * Rebuilded.

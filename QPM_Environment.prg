@@ -198,7 +198,7 @@ Function LoadEnvironment
       EnvironmentMemo := MemoRead ( US_FileNameOnlyPathAndName( PUB_cProjectFile ) + ".cfg" )
    else
       if File( PUB_cQPM_Folder + DEF_SLASH + 'QPM_' + QPM_VERSION_NUMBER_LONG + '.cfg' )
-         if US_DirWrite( GetWindowsFolder() )
+         if US_DirWrite( cWinFolder := GetWindowsFolder() )
             if File( GetWindowsFolder() + DEF_SLASH + 'QPM_' + QPM_VERSION_NUMBER_LONG + '.path' )
                if ! ( MemoRead( GetWindowsFolder() + DEF_SLASH + 'QPM_' + QPM_VERSION_NUMBER_LONG + '.path' ) == PUB_cQPM_Folder )
                   QPM_MemoWrit( GetWindowsFolder() + DEF_SLASH + 'QPM_' + QPM_VERSION_NUMBER_LONG + '.path', PUB_cQPM_Folder )
@@ -258,7 +258,7 @@ Function LoadEnvironment
          if len( vConfig ) > 0
             aSort( vConfig, , , { |x, y| US_Upper( substr( x, 5, 8 ) ) > US_Upper( substr( y, 5, 8 ) ) })
             if US_Upper( US_FileNameOnlyExt( vConfig[1] ) ) == "PATH"
-               PUB_MigrateFolderFrom := alltrim( memoline( memoread( cWinFolder + DEF_SLASH + vConfig[1] ), , 1 ) )
+               PUB_MigrateFolderFrom := alltrim( memoline( memoread( cWinFolder + DEF_SLASH + vConfig[1] ), 254, 1 ) )
             else
                PUB_MigrateFolderFrom := PUB_cQPM_Folder
             endif

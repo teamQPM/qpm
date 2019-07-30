@@ -1,3 +1,22 @@
+Versión 05_05_12:
+1. Agregado: librería faltante para Harbour 3.4.
+2. Corregido: xHarbour+Mingw no compila por que faltan los objetos mainstd.o o mainwin.o.
+3. Corregido: MinGW no compila cuando se utilizan nombres de archivo largos para las carpetas o archivos del proyecto.
+4. Corregido: BCC no compila cuando se agregan iconos o cursores en el archivo de recursos del proyecto.
+
+Version 05_05_12:
+1. Added: missing library for Harbour 3.4.
+2. Fixed: xHarbour+MinGW does not compile because objets mainstd.o or mainwin.o are missing.
+3. Fixed: MinGW does not compile when long filenames are used in project's folders or files.
+4. Fixed: BBC does not compile when icons or cursors are added in the project's resource file.
+
+Versão 05_05_12:
+1. Adicionado: biblioteca ausente para o Harbor 3.4.
+2. Corrigido: xHarbour + MinGW não compila porque os objectos mainstd.o ou mainwin.o estão faltando.
+3. Corrigido: O MinGW não compila quando nomes extensos de arquivos são usados para pastas ou arquivos de projeto.
+4. Corrigido: o BCC não compila quando ícones ou cursores são adicionados ao arquivo de recursos do projeto.
+
+----
 Versión 05_05_11:
 1. Corregido: No se compila el archivo RC cuando se utiliza BCC por lo que no se genera el EXE.
 2. Agregado: soporte para archivos de recursos adicionales cuando se utiliza BCC.

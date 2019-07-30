@@ -31,7 +31,7 @@
 
 FUNCTION MAIN( ... )
    Local aParams := hb_aParams()
-   Local Version := "01.05", cTxtAux := "", cTxtAux2 := "", i := 0
+   Local Version := "01.06", cTxtAux := "", cTxtAux2 := "", i := 0
    Local cModuleNameAux := "?", cLineaAux := "", cLineaAux2 := "", bEncontroValido := .F.
    Local nPos := 0, bObjLst := .F., bExpLst := .F., cObjExt := ".ObjLst", cExpExt := ".ExpLst"
    Local MemoObjLst := "", MemoExpLst := "EXPORTS"
@@ -739,7 +739,7 @@ RETURN IIF(POSICION>0,ALLTRIM(SUBSTR(ESTRING,1,US_WORDIND(ESTRING,POSICION)-1)+S
 // ESTA FUNCION RETORNA EL BYTE DONDE EMPIEZA LA PALABRA
 //========================================================================
 FUNCTION US_WORDIND(ESTRING, POSICION)
-   LOCAL CONT , ESTR , ESTR2
+   LOCAL CONT, ESTR, ESTR2
    if ESTRING == NIL
       ESTRING := ""
    ENDIF
@@ -796,11 +796,11 @@ RETURN 0
 //========================================================================
 // FUNCION PARA retornar un substr a partir de la posicion de una palabra
 //========================================================================
-FUNCTION US_WordSubstr( estring , pos )
+FUNCTION US_WordSubstr( estring, pos )
    if Estring == NIL
       Estring := ""
    endif
-RETURN substr( estring , us_wordind( estring , pos ) )
+RETURN substr( estring, us_wordind( estring, pos ) )
 
 //========================================================================
 // FUNCION PARA CONTAR LAS PALABRAS EN UN ESTRING
@@ -826,7 +826,7 @@ FUNCTION US_WORDS(ESTRING)
 RETURN 0
 
 FUNCTION US_VarToStr(X)
-   LOCAL T, StringAux:="" , i
+   LOCAL T, StringAux:="", i
    if X == NIL
       X := "*NIL*"
    endif
@@ -880,30 +880,28 @@ FUNCTION US_StrCero(NUM,LONG,DEC)
 RETURN NUM
 
 Function US_FileChar26Zap( cFile )
-   Local nHndIn , reto := -1 , cAux := " " , cLinea := Space( 1024 ) , nLeidosTotal, nLenFileOut, nLeidosLoop
+   Local nHndIn, reto := -1, cAux := " ", cLinea := Space( 1024 ), nLeidosTotal, nLenFileOut, nLeidosLoop
    Local cFileOut := US_FileNameOnlyPathAndName( cFile ) + "_T" + ALLTRIM( STR( INT( SECONDS() ) ) ) + "." + US_FileNameOnlyExt( cFile )
    Local nHndOut
-   nHndIn := fopen( cFile , FO_READWRITE )
-   fseek( nHndIn , -1 , 2 )
-   if fread( nHndIn , @cAux , 1 ) == 1
+   nHndIn := fopen( cFile, FO_READWRITE )
+   fseek( nHndIn, -1, 2 )
+   if fread( nHndIn, @cAux, 1 ) == 1
       if cAux == chr( 26 )
-         fseek( nHndIn , 0 , 0 )
+         fseek( nHndIn, 0, 0 )
          nLeidosTotal := 0
          if ( nHndOut := fcreate( cFileOut ) ) >= 0
             nLenFileOut :=  US_FileSize( cFile ) - 1
-            do while ( nLeidosLoop := fread( nHndIn , @cLinea , if( ( nLenFileOut - nLeidosTotal ) > 1024 , 1024 , nLenFileOut - nLeidosTotal ) ) ) > 0
+            do while ( nLeidosLoop := fread( nHndIn, @cLinea, if( ( nLenFileOut - nLeidosTotal ) > 1024, 1024, nLenFileOut - nLeidosTotal ) ) ) > 0
                nLeidosTotal := nLeidosTotal + nLeidosLoop
-               if fwrite( nHndOut , cLinea , nLeidosLoop ) != nLeidosLoop
+               if fwrite( nHndOut, cLinea, nLeidosLoop ) != nLeidosLoop
                   fclose( nHndIn )
                   fclose( nHndOut )
-                  QPM_Log( "Error writing output file '" + cFileOut + "'" + HB_OsNewLine() )
                   return -1
                endif
             enddo
             fclose( nHndOut )
          else
             fclose( nHndIn )
-            QPM_Log( "Error creating file '" + cFileOut + "', fError=" + US_VarToStr( fError() ) + HB_OsNewLine() )
             return -1
          endif
          reto := 1
@@ -914,83 +912,63 @@ Function US_FileChar26Zap( cFile )
    fclose( nHndIn )
    if reto == 1
       ferase( cFile )
-      frename( cFileOut , cFile )
+      frename( cFileOut, cFile )
    endif
-Return Reto
-
-STATIC FUNCTION QPM_Log( string )
-   Local LogArchi := cQPMDir + "QPM.LOG"
-   Local msg := Dtos( Date() ) + " " + Time() + " Stack(" + AllTrim( Str( US_Stack() ) ) + ") " + ProcName( 1 ) + "(" + AllTrim( Str( ProcLine( 1 ) ) ) + ")" + " " + string
-
-   SET CONSOLE OFF
-   SET ALTERNATE TO ( LogArchi ) ADDITIVE
-   SET ALTERNATE ON
-   ? msg
-   SET ALTERNATE OFF
-   SET ALTERNATE TO
-   SET CONSOLE ON
-RETURN .T.
-
-FUNCTION US_Stack()
-   LOCAL n := 1
-   WHILE ! Empty( ProcName( n ) )
-      n++
-   ENDDO
-RETURN n - 1
+RETURN Reto
 
 FUNCTION US_FileNameOnlyExt( arc )
-   arc := substr( arc , rat( DEF_SLASH , arc ) + 1 )
+   arc := SubStr( arc, RAt( DEF_SLASH, arc ) + 1 )
    if US_IsDirectory( arc )
       Return ""
    endif
-   if rat( "." , arc ) == 0
-      return ""
+   if RAt( ".", arc ) == 0
+      RETURN ""
    endif
-RETURN substr( arc , rat( "." , arc ) + 1 )
+RETURN substr( arc, rat( ".", arc ) + 1 )
 
-Function US_FileNameOnlyName( arc )
-   Local barra , punto , reto
+FUNCTION US_FileNameOnlyName( arc )
+   LOCAL barra, punto, reto
    if arc == NIL
       arc := ""
    endif
-   barra:=rat( DEF_SLASH , arc )
-   punto:=rat( "." , arc )
+   barra := RAt( DEF_SLASH, arc )
+   punto := RAt( ".", arc )
    do case
-      case punto > barra
-         reto := substr( arc , barra + 1 , punto - barra - 1 )
-      case punto = 0
-         reto := substr( arc , barra + 1 )
-      case punto < barra
-         reto := substr( arc , barra + 1 )
+   case punto > barra
+      reto := SubStr( arc, barra + 1, punto - barra - 1 )
+   case punto = 0
+      reto := SubStr( arc, barra + 1 )
+   case punto < barra
+      reto := SubStr( arc, barra + 1 )
    endcase
-Return reto
+RETURN reto
 
-Function US_FileSize(cFile)
-   Local vFile
-   vFile:=DIRECTORY( cFile , "HS" )
-   if len(vFile) = 1
-      Return vFile[1][2]
+FUNCTION US_FileSize( cFile )
+   LOCAL vFile
+   vFile := Directory( cFile, "HS" )
+   if Len( vFile ) == 1
+      RETURN vFile[1][2]
    endif
-Return -1
+RETURN -1
 
-Function US_FileNameOnlyPath( arc )
+FUNCTION US_FileNameOnlyPath( arc )
    if arc == NIL
-      Return ""
+      RETURN ""
    endif
    if US_IsDirectory( arc )
-      return arc
+      RETURN arc
    endif
-Return substr( arc , 1 , rat( DEF_SLASH , arc ) - 1 )
+RETURN SubStr( arc, 1, RAt( DEF_SLASH, arc ) - 1 )
 
-Function US_FileNameOnlyPathAndName( arc )
-   Local cPath := US_FileNameOnlyPath( arc ) , cName := US_FileNameOnlyName( arc )
-Return cPath + if( !empty( cPath ) .and. !empty( cName ) , DEF_SLASH , "" ) + cName
+FUNCTION US_FileNameOnlyPathAndName( arc )
+   LOCAL cPath := US_FileNameOnlyPath( arc ), cName := US_FileNameOnlyName( arc )
+RETURN cPath + iif( ! Empty( cPath ) .AND. ! Empty( cName ), DEF_SLASH, "" ) + cName
 
-Function US_FileNameOnlyNameAndExt( arc )
-   Local cExt := US_FileNameOnlyExt( arc )
-Return US_FileNameOnlyName( arc ) + if( !empty( cExt ) , "." , "" ) + cExt
+FUNCTION US_FileNameOnlyNameAndExt( arc )
+   LOCAL cExt := US_FileNameOnlyExt( arc )
+RETURN US_FileNameOnlyName( arc ) + iif( ! Empty( cExt ), ".", "" ) + cExt
 
-Function US_IsDirectory( Dire )
-Return IsDirectory( Dire )
+FUNCTION US_IsDirectory( Dire )
+RETURN IsDirectory( Dire )
 
 /* eof */
