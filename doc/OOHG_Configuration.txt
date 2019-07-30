@@ -1,0 +1,85 @@
+/*
+ * $Id$
+ */
+
+QPM configuration for OOHG based projects
+-----------------------------------------
+
+HM30 = Harbour 30 + MinGW 4.5.2 - 32 bits
+
+   Project Configuration
+      Compilers  = Harbour + MinGW
+      GUI        = OOHG + MT Mode
+      FMG Editor = OOHG IDE+
+
+   Global Configuration
+      OOHG Folder          = C:\OOHG_HM30
+      OOHG Libs Folder     = C:\OOHG_HM30\lib
+      MinGW Folder         = C:\OOHG_HM30\hb30\comp\mingw
+      MinGW Libs Folder    = C:\OOHG_HM30\hb30\comp\mingw\lib
+      Harbour Folder       = C:\OOHG_HM30\hb30
+      Harbour Libs Folder  = C:\OOHG_HM30\hb30\lib\win\mingw
+
+HM32 = Harbour 32 + MinGW 8.1.0 - 32 bits
+
+   Project Configuration
+      Compilers  = Harbour + Harbour 3.1 or later + MinGW
+      GUI        = OOHG + MT Mode
+      FMG Editor = OOHG IDE+
+
+   Global Configuration
+      OOHG Folder          = C:\OOHG_HM32
+      OOHG Libs Folder     = C:\OOHG_HM32\lib\hb\mingw
+      MinGW Folder         = C:\OOHG_HM32\hb32\comp\mingw
+      MinGW Libs Folder    = C:\OOHG_HM32\hb32\comp\mingw\i686-w64-mingw32\lib
+      Harbour Folder       = C:\OOHG_HM32\hb32
+      Harbour Libs Folder  = C:\OOHG_HM32\hb32\lib\win\mingw
+
+HM34 = Harbour 34 + cLang/LLVM 5.0.0 - 32 bits
+
+   Project Configuration
+      Compilers  = Harbour + Harbour 3.1 or later + MinGW
+      GUI        = OOHG + MT Mode
+      FMG Editor = OOHG IDE+
+
+   Global Configuration
+      OOHG Folder          = C:\OOHG_HM34
+      OOHG Libs Folder     = C:\OOHG_HM34\lib\hb34\mingw
+      MinGW Folder         = C:\OOHG_HM34\hb34\comp\mingw
+      MinGW Libs Folder    = C:\OOHG_HM34\hb34\comp\mingw\i686-w64-mingw32\lib
+      Harbour Folder       = C:\OOHG_HM34\hb34
+      Harbour Libs Folder  = C:\OOHG_HM34\hb34\lib\win\clang
+
+   You may need to add libhbpcre2.a from Harbour Libs Folder.
+
+XM = XHarbour 1.2.3 build 20181212 + MinGW 7.3.0 - 32 bits
+
+   Project Configuration
+      Compilers  = xHarbour + MinGW
+      GUI        = OOHG + MT Mode
+      FMG Editor = OOHG IDE+
+
+   Global Configuration
+      OOHG Folder          = C:\OOHG_XM
+      OOHG Libs Folder     = C:\OOHG_XM\lib\xhb\mingw
+      MinGW Folder         = C:\OOHG_XM\xhmingw\comp\mingw
+      MinGW Libs Folder    = C:\OOHG_XM\xhmingw\comp\mingw\i686-w64-mingw32\lib
+      xHarbour Folder      = C:\OOHG_XM\xhmingw
+      xHarbour Libs Folder = C:\OOHG_XM\xhmingw\lib
+
+   You may need add mainwin.o from Harbour Libs Folder.
+
+XB = XHarbour 1.2.3 build 20181212 + BCC 5.5.1 - 32 bits
+
+   Project Configuration
+      Compilers  = xHarbour + BCC
+      GUI        = OOHG + MT Mode
+      FMG Editor = OOHG IDE+
+
+   Global Configuration
+      OOHG Folder          = C:\OOHG_XB
+      OOHG Libs Folder     = C:\OOHG_XB\lib\xhb\bcc
+      BCC Folder           = C:\Borland\BCC55
+      BCC Libs Folder      = C:\Borland\BCC55\lib
+      xHarbour Folder      = C:\OOHG_XB\xhbcc
+      xHarbour Libs Folder = C:\OOHG_XB\xhbcc\lib
