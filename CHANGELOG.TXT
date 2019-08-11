@@ -8,6 +8,14 @@
  * See "How to format your ChangeLog entries" in howtosvn.txt file.
  */
 
+2019-08-11 10:19:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * ./QPM_Libraries.prg
+     ! Libraries for HARUPDF.
+   * ./QPM.prg
+     ! BCC and Pelles compilations ignore .o objects added at LIB tab.
+   * ./readme.txt
+     ! Previous entry.
+
 2019-07-29 21:21:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * ./QPM.exe
    * ./QPM.ch
