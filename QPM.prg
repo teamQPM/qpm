@@ -6226,7 +6226,7 @@ FUNCTION QPM_Build2()
                   ENDIF
                CASE IsBorland
                   IF US_FileNameOnlyExt( vLibIncludeFiles[i] ) == 'OBJ'
-                     Out := Out + PUB_cCharTab + 'echo ' + US_ShortName( vLibIncludeFiles[i] ) + ' >> ' + SCRIPT_FILE + hb_osNewLine()
+                     Out := Out + PUB_cCharTab + 'echo ' + US_ShortName( vLibIncludeFiles[i] ) + ' + >> ' + SCRIPT_FILE + hb_osNewLine()
                   ENDIF
                OTHERWISE
                   US_Log( 'Error 5671' )
@@ -6288,12 +6288,24 @@ FUNCTION QPM_Build2()
             NEXT i
 
          CASE IsPelles
+/*
+ * Grabo en script.ld los objetos listados en las Include Libraries que estén marcados *LAST*
+ */
+            IF US_FileNameOnlyExt( vLibIncludeFiles[i] ) == 'OBJ'
+               Out := Out + PUB_cCharTab + 'echo ' + US_ShortName( vLibIncludeFiles[i] ) + ' + >> ' + SCRIPT_FILE + hb_osNewLine()
+            ENDIF
             Out := Out + PUB_cCharTab + 'echo /OUT:$(APP_NAME) >> ' + SCRIPT_FILE + hb_osNewLine()
             Out := Out + PUB_cCharTab + 'echo /FORCE:MULTIPLE >> ' + SCRIPT_FILE + hb_osNewLine()
             Out := Out + PUB_cCharTab + 'echo /LIBPATH:' + GetCppLibFolder() + ' >> ' + SCRIPT_FILE + hb_osNewLine()
             Out := Out + PUB_cCharTab + 'echo /LIBPATH:' + GetCppLibFolder() + DEF_SLASH + 'WIN' + ' >> ' + SCRIPT_FILE + hb_osNewLine()
 
          CASE IsBorland
+/*
+ * Grabo en script.ld los objetos listados en las Include Libraries que estén marcados *LAST*
+ */
+            IF US_FileNameOnlyExt( vLibIncludeFiles[i] ) == 'OBJ'
+               Out := Out + PUB_cCharTab + 'echo ' + US_ShortName( vLibIncludeFiles[i] ) + ' + >> ' + SCRIPT_FILE + hb_osNewLine()
+            ENDIF
             DO CASE
             CASE Prj_Check_Console
                Out := Out + PUB_cCharTab + 'echo ' + GetCppLibFolder() + DEF_SLASH + 'c0x32.obj, + >> ' + SCRIPT_FILE + hb_osNewLine()
