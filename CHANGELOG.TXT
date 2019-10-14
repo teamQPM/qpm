@@ -8,6 +8,21 @@
  * See "How to format your ChangeLog entries" in howtosvn.txt file.
  */
 
+2019-10-14 20:07:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * .doc/OOHG_Configuration.txt
+     * Updated.
+   * ./TODO.TXT
+     + Added new entry.
+   * ./QPM.prg
+     * Include and exclude libraries handlers.
+   * ./QPM_Libraries.prg
+     + zebra and png libraries.
+   * ./QPM.exe
+   * ./QPM.ch
+   * ./QPM_AutoProject.qpm
+     * Updated to 05_05_13.
+     * Complied with Harbour MiniGUI Extended Edition 19.08 (Update 2)
+
 2019-08-11 10:19:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * ./QPM_Libraries.prg
      ! Libraries for HARUPDF.

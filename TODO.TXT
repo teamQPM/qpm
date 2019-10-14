@@ -11,6 +11,13 @@
 /******************************************************************************/
 
 Assigned to: <nobody>
+Added by...: 2019-09-13 23:34:00 UTC-0300 Fernando Yurisich <fyurisich>
+Status.....: Open.
+Details....: PNG library must come last in the link chain.
+
+/******************************************************************************/
+
+Assigned to: <nobody>
 Added by...: 2019-07-05 21:26:00 UTC-0300 Fernando Yurisich <fyurisich>
 Status.....: Open.
 Details....: Function keys remain active after QPM losts the focus.

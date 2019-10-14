@@ -3492,7 +3492,7 @@ FUNCTION QPM_AddExcludeFilesLIB
    FOR x := 1 TO Len ( Files )
        Exists := .F.
        FOR i := 1 TO VentanaMain.GExcFiles.ItemCount
-          IF US_Upper( AllTrim( Files[x] ) ) == US_Upper( US_WordSubStr( GetProperty( 'VentanaMain', 'GExcFiles', 'Cell', i, NCOLEXCNAME ), 3 ) )
+          IF US_Upper( Files[x] ) == US_Upper( GetProperty( 'VentanaMain', 'GExcFiles', 'Cell', i, NCOLEXCNAME ) )
              Exists := .T.
              EXIT
           ENDIF
@@ -4167,19 +4167,24 @@ FUNCTION QPM_GetFilesDBF()
 RETURN US_GetFile( { {'DBF files (*.DBF)', '*.dbf'} }, 'Select DBF files', BaseFolder, .T., .T. )
 
 FUNCTION QPM_GetExcludeFilesLIB()
-   LOCAL RetVal := {}
-   LOCAL vAux
-   QPM_CargoLibraries()
-   vAux := array( Len( &( 'vLibDefault'+GetSuffix() ) ) )
+   LOCAL RetVal := {}, i, vAux
    IF Empty( PUB_cProjectFolder ) .OR. ! US_IsDirectory( PUB_cProjectFolder )
       MsgStop( DBLQT + "Project Folder" + DBLQT + " is not a valid folder:" + hb_osNewLine() + PUB_cProjectFolder + hb_osNewLine() + 'Look at tab ' + DBLQT + PagePRG + DBLQT )
       RETURN ( {} )
    ENDIF
+   QPM_CargoLibraries()
+   vAux := Array( Len( &( 'vLibDefault'+GetSuffix() ) ) )
    ACopy( &( 'vLibDefault'+GetSuffix() ), vAux )
    IF Prj_Check_Console
       AAdd( vAux, GetMiniGuiName() )
    ENDIF
    ASort( vAux, NIL, NIL, { |x, y| US_Upper(x) < US_Upper( y ) } )
+   FOR i := Len( vAux ) TO 1 STEP -1
+      IF ! File( GetCppLibFolder() + DEF_SLASH + vAux[i] ) .AND. ! File( GetHarbourLibFolder() + DEF_SLASH + vAux[i] )
+         ADel( vAux, i )
+         ASize( vAux, Len( vAux ) - 1 )
+      ENDIF
+   NEXT i
 
    DEFINE WINDOW GetExcludeLibFiles ;
       AT 0,0 ;
@@ -4898,10 +4903,10 @@ FUNCTION QPM_OpenProject2()
                   ENDIF
          ELSEIF  SubStr( US_Word( US_Upper ( LOC_cLine ), 1 ), 1, 7 ) == 'EXCLUDE'
                   IF US_IsVar( 'ExcludeLibs' + SubStr( US_Upper( US_Word( LOC_cLine, 1 ) ), 8 ) )
-                     AAdd( &( 'ExcludeLibs' + SubStr( US_Upper( US_Word( LOC_cLine, 1 ) ), 8 ) ), US_Word( LOC_cLine, 2 ) + ' ' + SubStr( LOC_cLine, US_WordInd( LOC_cLine, 3 ) ) )
+                     AAdd( &( 'ExcludeLibs' + SubStr( US_Upper( US_Word( LOC_cLine, 1 ) ), 8 ) ), AllTrim( US_Word( LOC_cLine, 2 ) + ' ' + SubStr( LOC_cLine, US_WordInd( LOC_cLine, 3 ) ) ) )
                   ELSE
                      IF US_IsVar( 'ExcludeLibs' + SubStr( US_Upper( US_Word( LOC_cLine, 1 ) ), 8 ) + Define32bits )
-                        AAdd( &( 'ExcludeLibs' + SubStr( US_Upper( US_Word( LOC_cLine, 1 ) ), 8 ) + Define32bits ), US_Word( LOC_cLine, 2 ) + ' ' + SubStr( LOC_cLine, US_WordInd( LOC_cLine, 3 ) ) )
+                        AAdd( &( 'ExcludeLibs' + SubStr( US_Upper( US_Word( LOC_cLine, 1 ) ), 8 ) + Define32bits ), AllTrim( US_Word( LOC_cLine, 2 ) + ' ' + SubStr( LOC_cLine, US_WordInd( LOC_cLine, 3 ) ) ) )
                      ENDIF
                   ENDIF
          ENDIF
@@ -5330,14 +5335,24 @@ FUNCTION MakePrj_Version()
 RETURN SubStr( GetPrj_Version(), 1, 2 ) + ' ' + SubStr( GetPrj_Version(), 3, 2 ) + ' ' + SubStr( GetPrj_Version(), 5, 4 )
 
 FUNCTION CargoIncludeLibs( tipo )
-   LOCAL i
+   LOCAL i, Exists, cFile, k
    VentanaMain.GIncFiles.DeleteAllItems
    FOR i := 1 TO Len( &('IncludeLibs'+tipo) )
-      VentanaMain.GIncFiles.AddItem( { PUB_nGridImgNone, US_FileNameOnlyNameAndExt( &('IncludeLibs'+tipo+'['+Str(i)+']') ), '* ' + &('IncludeLibs'+tipo+'['+Str(i)+']') } )
-      LibPos( VentanaMain.GIncFiles.itemcount )
-      IF AScan( &('vExtraFoldersForLibs'+GetSuffix()), US_Upper( US_FileNameOnlyPath( ChgPathToReal( US_WordSubStr( &('IncludeLibs'+tipo+'['+Str(i)+']'), 2 ) ) ) ) ) == 0
-         AAdd( &('vExtraFoldersForLibs'+GetSuffix()), US_Upper( US_FileNameOnlyPath( ChgPathToReal( US_WordSubStr( &('IncludeLibs'+tipo+'['+Str(i)+']'), 2 ) ) ) ) )
-      ENDIF
+       cFile := US_FileNameOnlyNameAndExt( &('IncludeLibs'+tipo+'['+Str(i)+']') )
+       Exists := .F.
+       FOR k := 1 TO VentanaMain.GIncFiles.ItemCount
+          IF US_Upper( cFile ) == US_Upper( GetProperty( 'VentanaMain', 'GIncFiles', 'Cell', k, NCOLEXCNAME ) )
+             Exists := .T.
+             EXIT
+          ENDIF
+       NEXT
+       IF ! Exists
+          VentanaMain.GIncFiles.AddItem( { PUB_nGridImgNone, cFile, '* ' + &('IncludeLibs'+tipo+'['+Str(i)+']') } )
+          LibPos( VentanaMain.GIncFiles.ItemCount )
+          IF AScan( &('vExtraFoldersForLibs'+GetSuffix()), US_Upper( US_FileNameOnlyPath( ChgPathToReal( US_WordSubStr( &('IncludeLibs'+tipo+'['+Str(i)+']'), 2 ) ) ) ) ) == 0
+             AAdd( &('vExtraFoldersForLibs'+GetSuffix()), US_Upper( US_FileNameOnlyPath( ChgPathToReal( US_WordSubStr( &('IncludeLibs'+tipo+'['+Str(i)+']'), 2 ) ) ) ) )
+          ENDIF
+       ENDIF
    NEXT
    LibsActiva := tipo
    IF VentanaMain.GDbfFiles.Value == 0
@@ -5378,10 +5393,20 @@ FUNCTION DesCargoIncludeLibs( tipo )
 RETURN .T.
 
 FUNCTION CargoExcludeLibs( tipo )
-   LOCAL i
+   LOCAL i, Exists, cFile, k
    VentanaMain.GExcFiles.DeleteAllItems
    FOR i := 1 TO Len( &('ExcludeLibs'+tipo) )
-      VentanaMain.GExcFiles.AddItem( { PUB_nGridImgNone, &('ExcludeLibs'+tipo+'['+Str(i)+']') } )
+       cFile := &('ExcludeLibs'+tipo+'['+Str(i)+']')
+       Exists := .F.
+       FOR k := 1 TO VentanaMain.GExcFiles.ItemCount
+          IF US_Upper( cFile ) == US_Upper( GetProperty( 'VentanaMain', 'GExcFiles', 'Cell', k, NCOLEXCNAME ) )
+             Exists := .T.
+             EXIT
+          ENDIF
+       NEXT
+       IF ! Exists
+          VentanaMain.GExcFiles.AddItem( { PUB_nGridImgNone, cFile } )
+       ENDIF
    NEXT
    LibsActiva := tipo
 RETURN .T.
@@ -5819,16 +5844,22 @@ FUNCTION QPM_Build2()
    DO EVENTS
 
    FOR i := 1 TO VentanaMain.GIncFiles.ItemCount
-      AAdd( vLibIncludeFiles, US_Upper( ChgPathToReal( US_WordSubStr( GetProperty( 'VentanaMain', 'GIncFiles', 'Cell', i, NCOLINCFULLNAME ), 3 ) ) ) )
-      IF ! File( vLibIncludeFiles[ i ] )
-         MsgStop( "File '" + vLibIncludeFiles[ i ] + "' not found !!!" )
-         BUILD_IN_PROGRESS := .F.
-         DefinoWindowsHotKeys( .F. )
-         RETURN .F.
+      vTemp := US_Upper( ChgPathToReal( US_WordSubStr( GetProperty( 'VentanaMain', 'GIncFiles', 'Cell', i, NCOLINCFULLNAME ), 3 ) ) )
+      IF AScan( vLibIncludeFiles, vTemp ) == 0
+         AAdd( vLibIncludeFiles, vTemp )
+         IF ! File( vTemp )
+            MsgStop( "File '" + vTemp + "' not found !!!" )
+            BUILD_IN_PROGRESS := .F.
+            DefinoWindowsHotKeys( .F. )
+            RETURN .F.
+         ENDIF
       ENDIF
    NEXT i
    FOR i := 1 TO VentanaMain.GExcFiles.ItemCount
-      AAdd( vLibExcludeFiles, US_Upper( AllTrim( GetProperty( 'VentanaMain', 'GExcFiles', 'Cell', i, NCOLEXCNAME ) ) ) )
+      vTemp := US_Upper( AllTrim( GetProperty( 'VentanaMain', 'GExcFiles', 'Cell', i, NCOLEXCNAME ) ) )
+      IF AScan( vLibExcludeFiles, vTemp ) == 0
+         AAdd( vLibExcludeFiles, vTemp )
+      ENDIF
    NEXT i
 
    AAdd( vConcatIncludeHB, US_ShortName( GetHarbourFolder() ) + DEF_SLASH + 'INCLUDE' )
@@ -6291,9 +6322,11 @@ FUNCTION QPM_Build2()
 /*
  * Grabo en script.ld los objetos listados en las Include Libraries que estén marcados *LAST*
  */
-            IF US_FileNameOnlyExt( vLibIncludeFiles[i] ) == 'OBJ'
-               Out := Out + PUB_cCharTab + 'echo ' + US_ShortName( vLibIncludeFiles[i] ) + ' + >> ' + SCRIPT_FILE + hb_osNewLine()
-            ENDIF
+            FOR i := 1 TO Len ( vLibIncludeFiles )
+               IF US_FileNameOnlyExt( vLibIncludeFiles[i] ) == 'OBJ'
+                  Out := Out + PUB_cCharTab + 'echo ' + US_ShortName( vLibIncludeFiles[i] ) + ' + >> ' + SCRIPT_FILE + hb_osNewLine()
+               ENDIF
+            NEXT i
             Out := Out + PUB_cCharTab + 'echo /OUT:$(APP_NAME) >> ' + SCRIPT_FILE + hb_osNewLine()
             Out := Out + PUB_cCharTab + 'echo /FORCE:MULTIPLE >> ' + SCRIPT_FILE + hb_osNewLine()
             Out := Out + PUB_cCharTab + 'echo /LIBPATH:' + GetCppLibFolder() + ' >> ' + SCRIPT_FILE + hb_osNewLine()
@@ -6303,9 +6336,11 @@ FUNCTION QPM_Build2()
 /*
  * Grabo en script.ld los objetos listados en las Include Libraries que estén marcados *LAST*
  */
-            IF US_FileNameOnlyExt( vLibIncludeFiles[i] ) == 'OBJ'
-               Out := Out + PUB_cCharTab + 'echo ' + US_ShortName( vLibIncludeFiles[i] ) + ' + >> ' + SCRIPT_FILE + hb_osNewLine()
-            ENDIF
+            FOR i := 1 TO Len ( vLibIncludeFiles )
+               IF US_FileNameOnlyExt( vLibIncludeFiles[i] ) == 'OBJ'
+                  Out := Out + PUB_cCharTab + 'echo ' + US_ShortName( vLibIncludeFiles[i] ) + ' + >> ' + SCRIPT_FILE + hb_osNewLine()
+               ENDIF
+            NEXT i
             DO CASE
             CASE Prj_Check_Console
                Out := Out + PUB_cCharTab + 'echo ' + GetCppLibFolder() + DEF_SLASH + 'c0x32.obj, + >> ' + SCRIPT_FILE + hb_osNewLine()
@@ -8016,8 +8051,8 @@ RETURN .T.
 FUNCTION LibExcludeInfo()
    LOCAL a, c
    IF VentanaMain.GExcFiles.Value > 0
-      a:='Library name: ' + GetProperty( 'VentanaMain', 'GExcFiles', 'Cell', VentanaMain.GExcFiles.Value, NCOLEXCNAME )
-      c:='Will be EXCLUDE of Library Concatenated'
+      a:='Library ' + GetProperty( 'VentanaMain', 'GExcFiles', 'Cell', VentanaMain.GExcFiles.Value, NCOLEXCNAME )
+      c:='will be excluded from the build process-'
       MsgInfo( a + hb_osNewLine() + ;
                ' ' + hb_osNewLine() + ;
                c )
@@ -9493,7 +9528,6 @@ RETURN .T.
 FUNCTION RichEditDisplay( tipo, bReload, nRow, bForce )
    LOCAL DbfName
    LOCAL IncName
-// LOCAL EXCName := ''
    LOCAL aStru, x, DbfCode
    LOCAL ListOut, cType := '', AuxRegistro
    LOCAL nInx, LinesKeys, aLines
@@ -9507,7 +9541,6 @@ FUNCTION RichEditDisplay( tipo, bReload, nRow, bForce )
 
    DbfName := ChgPathToReal( GetProperty( 'VentanaMain', 'GDbfFiles', 'Cell', nRow, NCOLDBFFULLNAME ) )
    IncName := ChgPathToReal( US_WordSubStr( GetProperty( 'VentanaMain', 'GIncFiles', 'Cell', nRow, NCOLINCFULLNAME ), 3 ) )
-// EXCName := ChgPathToReal( US_WordSubStr( GetProperty( 'VentanaMain', 'GExcFiles', 'Cell', nRow, NCOLEXCNAME ), 3 ) )
    DEFAULT bReload TO .F.
    DEFAULT bForce  TO .F.
    DO CASE
@@ -9659,7 +9692,7 @@ FUNCTION RichEditDisplay( tipo, bReload, nRow, bForce )
                                                 hb_osNewLine() + ;
                                                 hb_osNewLine() + ;
                                                 hb_osNewLine() + ;
-                                                "     Database '"+DbfName+"' is open EXCLUSIVE for another process .OR. DBT file is missing"
+                                                "     Database '"+DbfName+"' is open EXCLUSIVE by another process or DBT file is missing"
             ELSE
                VentanaMain.RichEditDbf.Value := hb_osNewLine() + ;
                                                 hb_osNewLine() + ;
@@ -9780,7 +9813,6 @@ FUNCTION RichEditDisplay( tipo, bReload, nRow, bForce )
    //       VentanaMain.RichEditLib.Value := ''
    //       RETURN .F.
    //    ENDIF
-   //    VentanaMain.RichEditLib.Value := Enumeracion( MemoRead( ChgPathToReal( GetProperty( 'VentanaMain', 'GExcFiles', 'Cell', nRow, NCOLEXCNAME ) ) ), tipo )
       CASE tipo == 'OUT'
          ListOut := GetOutputModuleName()
          IF ! File( ListOut )

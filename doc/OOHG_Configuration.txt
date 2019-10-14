@@ -72,7 +72,7 @@ XM = XHarbour 1.2.3 build 20181212 + MinGW 7.3.0 - 32 bits
 XB = XHarbour 1.2.3 build 20181212 + BCC 5.5.1 - 32 bits
 
    Project Configuration
-      Compilers  = xHarbour + BCC
+      Compilers  = xHarbour + BCC32
       GUI        = OOHG + MT Mode
       FMG Editor = OOHG IDE+
 
@@ -83,3 +83,39 @@ XB = XHarbour 1.2.3 build 20181212 + BCC 5.5.1 - 32 bits
       BCC Libs Folder      = C:\Borland\BCC55\lib
       xHarbour Folder      = C:\OOHG_XB\xhbcc
       xHarbour Libs Folder = C:\OOHG_XB\xhbcc\lib
+
+
+
+QPM configuration for HMG Extended based projects
+-----------------------------------------
+
+Harbour 3.2 + MinGW 8.1 - 32-bit
+
+   Project Configuration
+      Compilers  = Harbour + MinGW
+      GUI        = HMG Extended
+      FMG Editor = HMGS-IDE
+
+   Global Configuration
+      Extended Folder       = C:\minigui
+      Extended  Libs Folder = C:\minigui\lib
+      MinGW Folder          = C:\hmg\mingw32
+      MinGW Libs Folder     = C:\hmg\mingw32\i686-w64-mingw32\lib
+      Harbour Folder        = C:\hmg\harbour
+      Harbour Libs Folder   = C:\hmg\harbour\lib\win\mingw
+
+Harbour 3.2 + BCC 5.5.1 - 32 bits
+
+   Project Configuration
+      Compilers  = Harbour + BCC32
+      GUI        = HMG Extended
+      FMG Editor = HMGS-IDE
+
+   Global Configuration
+      Extended Folder       = C:\MINIGUI
+      Extended  Libs Folder = C:\MINIGUI\Lib
+      BCC32 Folder          = C:\Herramientas\Borland\BCC55
+      BCC32 Libs Folder     = C:\Herramientas\Borland\BCC55\Lib
+      Harbour Folder        = C:\MINIGUI\Harbour
+      Harbour Libs Folder   = C:\MINIGUI\Harbour\lib
+
