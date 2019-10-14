@@ -14,10 +14,7 @@ Descargar desde http://www.jrsoftware.org/isinfo.php
 El Help está generado desde QPM con la utilidad SHG, al igual que el sitio de
 internet (excepto el index.htm que está hecho a mano).
 
-us_dlltool.exe es una herramienta de MinGW que sirve para convertir una DLL
-a libreria.
-
-us_r2h.exe es un programita que convierte texto rtf a html, se usa para el
+us_r2h.exe es un programa que convierte texto rtf a html, se usa para el
 help, el fuente es Visual Basic y esta en el paquete de QPM.
 
 /* eof */
