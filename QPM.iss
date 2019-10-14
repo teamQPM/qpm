@@ -29,14 +29,14 @@
 
 [Setup]
 AppName=QPM (QAC based Project Manager)
-AppVerName=QPM v05.05 build 0005
+AppVerName=QPM v05.05 build 0013
 AppPublisher=fernando.yurisich
 DefaultDirName=C:\QPM
 UsePreviousAppDir=no
 DefaultGroupName=QPM (QAC based Project Manager)
 AllowNoIcons=yes
 OutputDir=..\QPM Distribution
-OutputBaseFilename=QPM_05_05_0005_Install
+OutputBaseFilename=QPM_05_05_0013_Install
 SetupIconFile=.\Resource\QPM_Install.ico
 Compression=lzma2
 ChangesAssociations=yes
@@ -70,6 +70,7 @@ Source: "us_pexports.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: "us_podump.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: "us_polib.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: "us_r2h.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "us_redir.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: "us_reimp.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: "us_res.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: "us_run.exe"; DestDir: "{app}"; Flags: ignoreversion
