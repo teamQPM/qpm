@@ -8,6 +8,11 @@
  * See "How to format your ChangeLog entries" in howtosvn.txt file.
  */
 
+2019-10-14 20:13:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * ./QPM.ch
+   * ./QPM.exe
+     * Updated to 05_05_13.
+
 2019-10-14 20:07:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * .doc/OOHG_Configuration.txt
      * Updated.
@@ -18,7 +23,6 @@
    * ./QPM_Libraries.prg
      + zebra and png libraries.
    * ./QPM.exe
-   * ./QPM.ch
    * ./QPM_AutoProject.qpm
      * Updated to 05_05_13.
      * Complied with Harbour MiniGUI Extended Edition 19.08 (Update 2)
