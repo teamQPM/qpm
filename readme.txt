@@ -1,3 +1,13 @@
+Versión 05_05_14:
+1. Corregido: BCC 5.8 no compila el archivo de recursos.
+
+Version 05_05_14:
+1. Fixed:    BCC 5.8 does not compile the resource file.
+
+Versão 05_05_14:
+1. Corrigido:  BCC 5.8 nao compila o arquivo de recursos.
+
+----
 Versión 05_05_13:
 1. Corregido: Se muestra un 0 en los grids.
 2. Corregido: Soporte para librería HARUPDF.

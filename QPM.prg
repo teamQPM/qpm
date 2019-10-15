@@ -234,7 +234,6 @@ FUNCTION Main( PAR_cP01, PAR_cP02, PAR_cP03, PAR_cP04, PAR_cP05, PAR_cP06, PAR_c
    PUBLIC PUB_cAutoLogTmp               := ''
    PUBLIC PUB_bLogOnlyError             := .F.
    PUBLIC PUB_cSecu                     := dtos(date()) + US_strCero( int(seconds()), 5 ) + PUB_cCharFileNameTemp
-   PUBLIC PUB_cUS_RedirOpt              := ' -eo -o '
    PUBLIC PUB_bDebugActive              := .F.
    PUBLIC PUB_bDebugActiveAnt           := .F.
    PUBLIC PUB_bIsProcessing             := .F.
@@ -572,7 +571,6 @@ FUNCTION Main( PAR_cP01, PAR_cP02, PAR_cP03, PAR_cP04, PAR_cP05, PAR_cP06, PAR_c
                                              PUB_cQPM_Folder + DEF_SLASH + 'US_tdump.exe', ;     // Dumps info from EXEOBJLIB modules Check for 64 bits files
                                              PUB_cQPM_Folder + DEF_SLASH + 'US_tlib.exe', ;      // Lists LIB (BCC32)
                                              PUB_cQPM_Folder + DEF_SLASH + 'US_upx.exe' }        // EXE compressor
-//                                           PUB_cQPM_Folder + DEF_SLASH + 'US_redir.exe', ;     // MinGW's command redirector
 #ifdef QPM_HOTRECOVERY
    QPM_HotInitPublicVariables()
 #endif
@@ -6124,7 +6122,6 @@ FUNCTION QPM_Build2()
       OTHERWISE
          US_Log( 'Error 5549' )
    ENDCASE
-//   Out := Out + 'REDIR = ' + US_ShortName(PUB_cQPM_Folder) + DEF_SLASH + 'US_REDIR.EXE' + PUB_cUS_RedirOpt + TEMP_LOG + hb_osNewLine()
    Out := Out + 'HARBOUR_EXE = '        + US_ShortName( GetHarbourFolder() ) + DEF_SLASH + 'BIN' + DEF_SLASH + 'HARBOUR.EXE' + hb_osNewLine()
    Out := Out + 'US_MSG_EXE = '         + US_ShortName(PUB_cQPM_Folder) + DEF_SLASH + 'US_MSG.EXE'                           + hb_osNewLine()
    Out := Out + 'US_UPX_EXE = '         + US_ShortName(PUB_cQPM_Folder) + DEF_SLASH + 'US_UPX.EXE'                           + hb_osNewLine()
@@ -6218,7 +6215,7 @@ FUNCTION QPM_Build2()
            Out := Out + PUB_cCharTab + '$(RESOURCE_COMP) /I$(DIR_MINIGUI_RES);$(DIR_C_INCLUDE) /Fo$(DIR_OBJECTS)' + DEF_SLASH + '_Temp.res ' + QPM_TMP_RC + hb_osNewLine()
         CASE IsBorland
            Out := Out + PUB_cCharTab + '$(US_MSG_EXE) ' + PROGRESS_LOG + ' -MSG:Compiling Resource File ...' + hb_osNewLine()
-           Out := Out + PUB_cCharTab + '$(RESOURCE_COMP) -d__BORLANDC__ -i$(DIR_MINIGUI_RES);$(DIR_C_INCLUDE) -r -fo$(DIR_OBJECTS)' + DEF_SLASH + '_Temp.res ' + QPM_TMP_RC + hb_osNewLine()
+           Out := Out + PUB_cCharTab + '$(RESOURCE_COMP) -i$(DIR_MINIGUI_RES);$(DIR_C_INCLUDE) -r -fo$(DIR_OBJECTS)' + DEF_SLASH + '_Temp.res ' + QPM_TMP_RC + hb_osNewLine()
         OTHERWISE
            US_Log( 'Error 5649' )
         ENDCASE
@@ -8112,7 +8109,6 @@ FUNCTION TranslateLog( Log )
    LOCAL ImpLibBor    := hb_osNewLine() + 'Borland Implib Version 3.0.22 Copyright (c) 1991, 2000 Inprise Corporation' + hb_osNewLine()
    LOCAL ImpDefBor    := hb_osNewLine() + 'Borland Impdef Version 3.0.22 Copyright (c) 1991, 2000 Inprise Corporation' + hb_osNewLine()
    LOCAL reimp        := US_ShortName(PUB_cQPM_Folder) + DEF_SLASH + 'US_REIMP.EXE'
-// LOCAL myredir      := US_ShortName(PUB_cQPM_Folder) + DEF_SLASH + 'US_REDIR.EXE' + PUB_cUS_RedirOpt + TEMP_LOG + ' '
    LOCAL QPM_Ver      := '/D__QPM_VERSION__="' + "'" + QPM_VERSION_NUMBER_SHORT + "'" + '" '
    LOCAL PRJ_Ver      := '/D__PRJ_VERSION__="' + "'" + cPrj_Version + "'" + '" '
    LOCAL PRJ_Folder   := '/D__PROJECT_FOLDER__="' + "'" + VentanaMain.TProjectFolder.Value + "'" + '" '
