@@ -1,3 +1,25 @@
+Versión 05_05_13:
+1. Corregido: Se muestra un 0 en los grids.
+2. Corregido: Soporte para librería HARUPDF.
+3. Corregido: BCC y Pelles ignoran los archivos .o agregados en la pestaña LIB.
+4. Agregado:  Soporte para librerías PNG y ZEBRA.
+5. Mejorado:  Gestión de librerías incluidas y excluidas.
+
+Version 05_05_13:
+1. Fixed:    Grids show a 0.
+2. Fixed:    HARUPDF lib support.
+3. Fixed:    BCC and Pelles ignore .o files added at LIB tab.
+4. Added:    Support for PNG and ZEBRA libs.
+5. Improved: Included and excluded libraries support.
+
+Versão 05_05_13:
+1. Corrigido:  Um 0 é mostrado nos Grids.
+2. Corrigido:  Suporte para a biblioteca HARUPDF.
+3. Corrigido:  BCC e Pelles ignoram os arquivos .o adicionados no separador LIB.
+4. Adicionado: Suporte para bibliotecas PNG e ZEBRA.
+5. Melhorado:  Gerenciamento de bibliotecas incluídas e excluídas.
+
+----
 Versión 05_05_12:
 1. Agregado: librería faltante para Harbour 3.4.
 2. Corregido: xHarbour+Mingw no compila porque faltan los objetos mainstd.o o mainwin.o.
