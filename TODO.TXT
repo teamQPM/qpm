@@ -11,13 +11,6 @@
 /******************************************************************************/
 
 Assigned to: <nobody>
-Added by...: 2019-10-14 20:30:00 UTC-0300 Fernando Yurisich <fyurisich>
-Status.....: Open.
-Details....: Check us_redir usage and related vars.
-
-/******************************************************************************/
-
-Assigned to: <nobody>
 Added by...: 2019-09-13 23:34:00 UTC-0300 Fernando Yurisich <fyurisich>
 Status.....: Open.
 Details....: PNG library must come last in the link chain.

@@ -8,6 +8,24 @@
  * See "How to format your ChangeLog entries" in howtosvn.txt file.
  */
 
+2019-10-15 18:57:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * ./readme.txt
+     + New entry.
+   * ./TODO.TXT
+     * Updated.
+   * ./QPM.iss
+   * ./QPM.ch
+   * ./QPM_AutoProject.qpm
+     * Updated to 05_05_14.
+   * ./QPM.prg
+     - References to REDIR.
+     * BRCC32 is no longer called with -d__BORLANDC__, first because is not
+       needed and second because it breaks compilation under BCC 5.8
+     * Updated to 05_05_14.
+   * ./QPM.exe
+     * Updated to 05_05_14.
+     * Builded with BCC 5.8
+
 2019-10-14 21:08:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * ./readme.txt
      + New entry.
@@ -22,7 +40,7 @@
 2019-10-14 20:13:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * ./QPM.ch
    * ./QPM.exe
-     ! Versión.
+     ! Version.
 
 2019-10-14 20:07:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * .doc/OOHG_Configuration.txt
