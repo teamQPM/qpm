@@ -8,6 +8,52 @@
  * See "How to format your ChangeLog entries" in howtosvn.txt file.
  */
 
+2020-04-20 18:00:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * ./QPM.ch
+     + Memvars cEditControlFileRC and HR_ControlFileRC.
+   * ./QPM.exe
+   * ./QPM.iss
+   * ./QPM_AutoProject.qpm
+     * Updated to 05_05_15.
+   * ./QPM.prg
+     + PUBLIC cEditControlFileRC.
+     * Some messages and titles were updated.
+     * Functions QPM_EditPRG, QPM_EditPPO, QPM_EditHEA,
+       QPM_EditDBF, QPM_EditPAN and QPM_EditRES:
+       + Support for edit control file and activity log.
+     ! Fixed: can't remove empty SHG database from project.
+     ! Fixed: compilation with MinGW 64 bits links wrong version of lib.
+     ! Fixed: PRG text has wrong fontcolor after edition.
+     ! Added support for RC file at the edit window.
+   * ./QPM_Environment.prg
+     + Parameter lDefaultFile to function SaveEnvironment.
+       When set to .F. the function will ask the user for a
+       file to to save the environment to.
+   * ./QPM_Functions.prg
+     + Parameters cFile and EditControlFile to procedure QPM_Execute.
+     * Use the received files instead of local ones.
+   * ./QPM_GlobalSettings.prg
+     * "Editor and Forms Tools" and "DBF Tool" tabs were redesigned.
+     + An option to export the settings to a file.
+   * ./QPM_HotRecovery.prg
+     + PUBLIC HR_ControlFileRC.
+     * One message.
+   * ./QPM_Libraries.prg
+     + Commentd added.
+   * ./QPM_SHG_SimpleHelpGenerator.prg
+     ! Fixed compile error.
+   * ./QPM_US_Run.qpm
+   * ./us_run.exe
+     ! Updated to version 01.02.0032.
+   * ./readme.txt
+     + New entry.
+   * ./TODO.TXT
+     * Updated.
+   * ./us_run.prg
+     ! Typo.
+   * ./us_upx.exe
+     * Updated to version 3.96w
+
 2019-10-15 18:57:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * ./readme.txt
      + New entry.

@@ -1313,62 +1313,51 @@ Function Enumeracion2( cMemoIn )
    ferase( cFileOut )
 Return cMemoOut
 
-Procedure QPM_Execute( cCMD, cParms, bWait, nSize, RunWaitFileStop )
-   Local RunWaitControlFile, RunWaitParms, cSize
+PROCEDURE QPM_Execute( cCMD, cParms, bWait, nSize, RunWaitFileStop, cFile, EditControlFile )
+   LOCAL RunWaitControlFile, RunWaitParms
    DEFAULT cParms TO ""
    DEFAULT bWait TO .F.
-   DEFAULT nSize TO 1      // normal
-   if !bWait
-      do case
-         case nSize == -1           // hide
-            EXECUTE FILE ( cCMD ) PARAMETERS ( cParms ) HIDE
-         case nSize == 0            // minimized
-            EXECUTE FILE ( cCMD ) PARAMETERS ( cParms ) MINIMIZE
-         case nSize == 1            // normal
-            EXECUTE FILE ( cCMD ) PARAMETERS ( cParms )
-         case nSize == 2            // maximized
-            EXECUTE FILE ( cCMD ) PARAMETERS ( cParms ) MAXIMIZE
-         otherwise
-            MsgInfo( "Invalid nSize parm in function QPM_Execute: " + US_VarToStr( nSize ) )
-      endcase
-   else
-      do case
-         case nSize == -1           // hide
-            cSize := "HIDE"
-         case nSize == 0            // minimized
-            cSize := "MINIMIZE"
-         case nSize == 1            // normal
-            cSize := "NORMAL"
-         case nSize == 2            // maximized
-            cSize := "MAXIMIZE"
-         otherwise
-            MsgInfo( "Invalid nSize parm in function QPM_Execute (2): " + US_VarToStr( nSize ) )
-      endcase
-      RunWaitControlFile := US_ShortName( PUB_cProjectFolder ) + DEF_SLASH + "_" + PUB_cSecu + "RWCF" + US_DateTimeCen() + ".cnt"
-      RunWaitParms       := US_ShortName( PUB_cProjectFolder ) + DEF_SLASH + "_" + PUB_cSecu + "RWP" + US_DateTimeCen() + ".cng"
-      QPM_MemoWrit( RunWaitParms, "Run Wait Parms" + HB_OsNewLine() + ;
-                               "COMMAND " + cCMD + " " + cParms + HB_OsNewLine() + ;
-                               "CONTROL " + RunWaitControlFile + HB_OsNewLine() + ;
-                               "MODE " + cSize )
-      QPM_MemoWrit( RunWaitControlFile, "Run Wait Control File" )
-      EXECUTE FILE ( US_ShortName( PUB_cQPM_Folder ) + DEF_SLASH + "US_Run.exe" ) PARAMETERS ( "QPM " + RunWaitParms ) HIDE
-      do while file( RunWaitControlFile )
+   DEFAULT cFile to ""
+   IF ! bWait
+      DEFAULT nSize TO 1      // normal
+      DO CASE
+      CASE nSize == -1           // hide
+         EXECUTE FILE ( cCMD ) PARAMETERS ( cParms ) HIDE
+      CASE nSize == 0            // minimized
+         EXECUTE FILE ( cCMD ) PARAMETERS ( cParms ) MINIMIZE
+      CASE nSize == 1            // normal
+         EXECUTE FILE ( cCMD ) PARAMETERS ( cParms )
+      CASE nSize == 2            // maximized
+         EXECUTE FILE ( cCMD ) PARAMETERS ( cParms ) MAXIMIZE
+      OTHERWISE
+         MsgInfo( "Invalid nSize parm in function QPM_Execute: " + US_VarToStr( nSize ) )
+      ENDCASE
+   ELSE
+      IF Empty( EditControlFile )
+         RunWaitControlFile := US_ShortName( PUB_cProjectFolder ) + DEF_SLASH + "_" + PUB_cSecu + "RWCF" + US_DateTimeCen() + ".cnt"
+      ELSE
+         RunWaitControlFile := EditControlFile
+         QPM_MemoWrit( RunWaitControlFile, "Run Wait Control File" )
+      ENDIF
+      RunWaitParms := US_ShortName( PUB_cProjectFolder ) + DEF_SLASH + "_" + PUB_cSecu + "RWP" + US_DateTimeCen() + ".cng"
+      QPM_MemoWrit( RunWaitParms, "Run Wait Parms" + hb_osNewLine() + ;
+                                  "COMMAND " + cCMD + " " + cFile + hb_osNewLine() + ;
+                                  "CONTROL " + RunWaitControlFile + hb_osNewLine() )
+      EXECUTE FILE ( US_ShortName( PUB_cQPM_Folder ) + DEF_SLASH + "US_Run.exe" ) PARAMETERS ( "QPM " + RunWaitParms )
+      DO WHILE File( RunWaitControlFile )
          DO EVENTS
-         if GetMGWaitStop()
-            if !( RunWaitFileStop == NIL )
-               //MsgStop( "QPM_Execute: Stop detected but StopFile not received from parameters" )
-               //Return .F.
-               //endif
+         IF GetMGWaitStop()
+            IF RunWaitFileStop != NIL
                QPM_MemoWrit( RunWaitFileStop, "Run Wait File Stop" )
-               do while file( RunWaitFileStop ) .and. file( RunWaitControlFile )
+               DO WHILE File( RunWaitFileStop ) .and. file( RunWaitControlFile )
                   DO EVENTS
-               enddo
-               ferase( RunWaitFileStop )
-            endif
-         endif
-      enddo
-   endif
-Return
+               ENDDO
+               FErase( RunWaitFileStop )
+            ENDIF
+         ENDIF
+      ENDDO
+   ENDIF
+RETURN
 
 Function ErrorLogName()
    Local cErrorLog := ""

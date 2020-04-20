@@ -81,30 +81,8 @@ Function GlobalSettings()
                     ONCLICK         If ( !Empty( FileName := BugGetFile( { {'Application','*.exe'} }, 'Select Program Editor', US_FileNameOnlyPath( WinGSettings.TEditor.Value ), .F., .T. ) ), WinGSettings.TEditor.Value := FileName, )
             END BUTTON
 
-            DEFINE CHECKBOX Check_EditorLongName
-                    CAPTION         "Use Long Name"
-                    ROW             100
-                    COL             15
-                    WIDTH           150
-                    HEIGHT          20
-                    VALUE           bEditorLongName
-                    TOOLTIP         "Use long filenames when opening source editor. Default is short filename (8.3 format)"
-                    ON CHANGE       bEditorLongName := WinGSettings.Check_EditorLongName.Value
-            END CHECKBOX
-
-            DEFINE CHECKBOX Check_EditorSuspendControl
-                    CAPTION         "Suspend Control Edit"
-                    ROW             130
-                    COL             15
-                    WIDTH           150
-                    HEIGHT          20
-                    VALUE           bSuspendControlEdit
-                    TOOLTIP         "Suspend control of editing process"
-                    ON CHANGE       bSuspendControlEdit := WinGSettings.Check_EditorSuspendControl.Value
-            END CHECKBOX
-
-            @ 160, 10 LABEL LDummy_Form ;
-               VALUE 'Forms Tools Location:' ;
+            @ 130, 10 LABEL LDummy_Form ;
+               VALUE 'Forms Tools:' ;
                WIDTH 275 ;
                FONT 'arial' SIZE 10 BOLD ;
                TRANSPARENT ;
@@ -112,19 +90,19 @@ Function GlobalSettings()
 
             DEFINE LABEL Label_HMI
                     VALUE           ' OOHG IDE+ (By Ciro Vargas):'
-                    ROW             190
+                    ROW             160
                     COL             10
                     AUTOSIZE        .T.
                     TRANSPARENT     .T.
             END LABEL
             DEFINE TEXTBOX Text_HMI
                     VALUE           Gbl_Text_HMI
-                    ROW             190
+                    ROW             160
                     COL             220
                     WIDTH           461
             END TEXTBOX
             DEFINE BUTTON Button_HMI
-                    ROW             190
+                    ROW             160
                     COL             691
                     WIDTH           25
                     HEIGHT          25
@@ -135,19 +113,19 @@ Function GlobalSettings()
 
             DEFINE LABEL Label_HMGSIDE
                     VALUE           'HMGS-IDE (By Walter Formigoni):'
-                    ROW             220
+                    ROW             190
                     COL             10
                     AUTOSIZE        .T.
                     TRANSPARENT     .T.
             END LABEL
             DEFINE TEXTBOX Text_HMGSIDE
                     VALUE           Gbl_Text_HMGSIDE
-                    ROW             220
+                    ROW             190
                     COL             220
                     WIDTH           461
             END TEXTBOX
             DEFINE BUTTON Button_HMGSIDE
-                    ROW             220
+                    ROW             190
                     COL             691
                     WIDTH           25
                     HEIGHT          25
@@ -155,6 +133,37 @@ Function GlobalSettings()
                     TOOLTIP         'Select tool'
                     ONCLICK         FormToolCheck( "HMGSIDE" )
             END BUTTON
+
+            @ 250, 10 LABEL LDummy_All1 ;
+               VALUE 'Global settings:' ;
+               WIDTH 275 ;
+               FONT 'arial' SIZE 10 BOLD ;
+               TRANSPARENT ;
+               FONTCOLOR DEF_COLORBLUE
+
+            DEFINE CHECKBOX Check_EditorLongName1
+                    CAPTION         "Use Long Filenames"
+                    ROW             280
+                    COL             15
+                    WIDTH           150
+                    HEIGHT          20
+                    VALUE           bEditorLongName
+                    TOOLTIP         "Use long filenames when opening the editors. Default is short filename (8.3 format)"
+                    ON CHANGE       { || bEditorLongName := WinGSettings.Check_EditorLongName1.Value, ;
+                                         WinGSettings.Check_EditorLongName2.Value := bEditorLongName }
+            END CHECKBOX
+
+            DEFINE CHECKBOX Check_EditorSuspendControl1
+                    CAPTION         "Suspend Control Edit"
+                    ROW             310
+                    COL             15
+                    WIDTH           150
+                    HEIGHT          20
+                    VALUE           bSuspendControlEdit
+                    TOOLTIP         "Suspend control of the editing process"
+                    ON CHANGE       { || bSuspendControlEdit := WinGSettings.Check_EditorSuspendControl1.Value, ;
+                                         WinGSettings.Check_EditorSuspendControl2.Value := bSuspendControlEdit }
+            END CHECKBOX
 
          END PAGE
 
@@ -200,6 +209,37 @@ Function GlobalSettings()
                     VALUE           if( Gbl_Comillas_DBF == '"', .F., .T. )
                     TOOLTIP         "Do not use quotes when opening DBF tool"
                     ON CHANGE       Gbl_Comillas_DBF := if( WinGSettings.Check_DBF_NoComillas.Value, '', '"' )
+            END CHECKBOX
+
+            @ 250, 10 LABEL LDummy_All2 ;
+               VALUE 'Global settings:' ;
+               WIDTH 275 ;
+               FONT 'arial' SIZE 10 BOLD ;
+               TRANSPARENT ;
+               FONTCOLOR DEF_COLORBLUE
+
+            DEFINE CHECKBOX Check_EditorLongName2
+                    CAPTION         "Use Long Filenames"
+                    ROW             280
+                    COL             15
+                    WIDTH           150
+                    HEIGHT          20
+                    VALUE           bEditorLongName
+                    TOOLTIP         "Use long filenames when opening the editors. Default is short filename (8.3 format)"
+                    ON CHANGE       { || bEditorLongName := WinGSettings.Check_EditorLongName2.Value, ;
+                                         WinGSettings.Check_EditorLongName1.Value := bEditorLongName }
+            END CHECKBOX
+
+            DEFINE CHECKBOX Check_EditorSuspendControl2
+                    CAPTION         "Suspend Control Edit"
+                    ROW             310
+                    COL             15
+                    WIDTH           150
+                    HEIGHT          20
+                    VALUE           bSuspendControlEdit
+                    TOOLTIP         "Suspend control of the editing process"
+                    ON CHANGE       { || bSuspendControlEdit := WinGSettings.Check_EditorSuspendControl2.Value, ;
+                                         WinGSettings.Check_EditorSuspendControl1.Value := bSuspendControlEdit }
             END CHECKBOX
 
          END PAGE
@@ -3288,21 +3328,31 @@ Function GlobalSettings()
 
       DEFINE BUTTON B_OK
              ROW             370
-             COL             100
-             WIDTH           200
+             COL             396
+             WIDTH           100
              HEIGHT          25
-             CAPTION         'OK'
-             TOOLTIP         'Confirm changes'
-             ONCLICK         ( GlobalSettingsSave(), WinGSettings.Release() )
+             CAPTION         'Apply'
+             TOOLTIP         "Apply changes and save to configuration file."
+             ONCLICK         ( GlobalSettingsSave( .T. ), WinGSettings.Release() )
+      END BUTTON
+
+      DEFINE BUTTON B_EXPORT
+             ROW             370
+             COL             506
+             WIDTH           100
+             HEIGHT          25
+             CAPTION         'Export'
+             TOOLTIP         'Apply changes, save to chosen file and to configuration file.'
+             ONCLICK         ( GlobalSettingsSave( .F. ), WinGSettings.Release() )
       END BUTTON
 
       DEFINE BUTTON B_CANCEL
              ROW             370
-             COL             635
-             WIDTH            80
+             COL             616
+             WIDTH           100
              HEIGHT          25
              CAPTION         'Cancel'
-             TOOLTIP         'Cancel changes'
+             TOOLTIP         'Discard changes.'
              ONCLICK         WinGSettings.Release()
       END BUTTON
 
@@ -3570,7 +3620,7 @@ Function GlobalChanged()
    endif
 Return .F.
 
-Function GlobalSettingsSave()
+Function GlobalSettingsSave( lDefaultFile )
    Gbl_Text_Editor  := WinGSettings.TEditor.value
    Gbl_Text_HMI     := WinGSettings.Text_HMI.value
    Gbl_Text_HMGSIDE := WinGSettings.Text_HMGSIDE.value
@@ -3715,6 +3765,8 @@ Function GlobalSettingsSave()
    &("Gbl_T_M_LIBS_" + DefineOohg3     + DefinePelles  + DefineXHarbour + Define64bits) := WinGSettings.&("TM_LIBS_" + DefineOohg3     + DefinePelles  + DefineXHarbour + Define64bits).value
    &("Gbl_T_P_"      + DefineOohg3     + DefinePelles  + DefineXHarbour + Define64bits) := WinGSettings.&("TP_"      + DefineOohg3     + DefinePelles  + DefineXHarbour + Define64bits).value
    &("Gbl_T_P_LIBS_" + DefineOohg3     + DefinePelles  + DefineXHarbour + Define64bits) := WinGSettings.&("TP_LIBS_" + DefineOohg3     + DefinePelles  + DefineXHarbour + Define64bits).value
+
+   SaveEnvironment( lDefaultFile )
 Return .T.
 
 /* eof */

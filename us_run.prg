@@ -58,14 +58,14 @@ FUNCTION MAIN( ... )
    EndIf
 
    If Empty( cParam )
-      MsgInfo( "US_Run 123: Missing Parameters" )     
+      MsgInfo( "US_Run 123: Missing Parameters" )
       ERRORLEVEL( 1 )
       bOk := .F.
       Return bOk
    EndIf
 
    If ! File( cParam )
-      MsgInfo( "US_Run 124: Paramters File Not Found: " + cParam )
+      MsgInfo( "US_Run 124: Parameters File Not Found: " + cParam )
       ERRORLEVEL( 1 )
       bOk := .F.
       Return bOk
