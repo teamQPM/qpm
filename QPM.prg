@@ -358,6 +358,7 @@ FUNCTION Main( PAR_cP01, PAR_cP02, PAR_cP03, PAR_cP04, PAR_cP05, PAR_cP06, PAR_c
    PUBLIC NCOLPRGOFFSET                 := 5
    PUBLIC NCOLPRGEDIT                   := 6
    PUBLIC NCOLPRGRECOVERY               := 7
+   PUBLIC cEditControlFileRC            := ""
    PUBLIC bSortPrgAsc                   := .T.
    PUBLIC aGridHea                      := {}
    PUBLIC nGridHeaLastRow               := 0
@@ -1087,14 +1088,14 @@ FUNCTION Main( PAR_cP01, PAR_cP02, PAR_cP03, PAR_cP04, PAR_cP05, PAR_cP06, PAR_c
    DEFINE WINDOW VentanaMain ;
       AT GetDesktopRealTop(), GetDesktopRealLeft() ;
       WIDTH GetDesktopRealWidth() HEIGHT GetDesktopRealHeight() ;
-      TITLE PUB_cQPM_Title + ' [ Project not opened !!! ]' ;
+      TITLE PUB_cQPM_Title + ' [ Project not opened! ]' ;
       ICON 'QPM' ;
       MAIN ;
       ON GOTFOCUS DefinoWindowsHotKeys(.T.) ;
       ON LOSTFOCUS LiberoWindowsHotKeys(.T.) ;
       ON MINIMIZE LiberoWindowsHotKeys(.T.) ;
       ON INIT MainInitAutoRun() ;
-      ON RELEASE iif( PUB_bLite, NIL, SaveEnvironment() ) ;
+      ON RELEASE iif( PUB_bLite, NIL, SaveEnvironment( .T. ) ) ;
       ON INTERACTIVECLOSE QPM_Exit( .T. )
 
       DEFINE TOOLBAR ToolBar_1 OF VentanaMain
@@ -1124,7 +1125,7 @@ FUNCTION Main( PAR_cP01, PAR_cP02, PAR_cP03, PAR_cP04, PAR_cP05, PAR_cP06, PAR_c
          ITEM 'Add Link to Internet' ACTION SHG_AddHlpHTML('Link')                           NAME ItC_AddHlpHTMLLink
          ITEM 'Add Link to Topic'    ACTION SHG_AddHlpHTML('LinkTopic')                      NAME ItC_AddHlpHTMLLinkTopic
          ITEM 'Add Ancora'           ACTION SHG_AddHlpHTML('Ancora')                         NAME ItC_AddHlpHTMLAncora
-         #else
+#else
          ITEM '&Copy'                ACTION US_Send_Copy()              IMAGE 'US_EditCopy'  NAME ItC_Copy
          ITEM 'C&ut'                 ACTION US_Send_Cut()               IMAGE 'US_EditCut'   NAME ItC_Cut
          ITEM '&Paste'               ACTION US_Send_Paste()             IMAGE 'US_EditPaste' NAME ItC_Paste
@@ -1310,7 +1311,7 @@ FUNCTION Main( PAR_cP01, PAR_cP02, PAR_cP03, PAR_cP04, PAR_cP05, PAR_cP06, PAR_c
                HEIGHT 25
                PICTURE 'Edit'
                TOOLTIP 'Edit selected file'
-               ONCLICK QPM_EditPRG ()
+               ONCLICK QPM_EditPRG()
             END BUTTONEX
 
             DEFINE BUTTONEX SetTopPRG
@@ -1480,7 +1481,7 @@ FUNCTION Main( PAR_cP01, PAR_cP02, PAR_cP03, PAR_cP04, PAR_cP05, PAR_cP06, PAR_c
                               { || SortPRG( 'VentanaMain', 'GPrgFiles', 2 ) }, ;
                               { || SortPRG( 'VentanaMain', 'GPrgFiles', 3 ) }, ;
                               { || SortPRG( 'VentanaMain', 'GPrgFiles', 4 ) } } ;
-               ON DBLCLICK { QPM_EditPRG() } ;
+               ON DBLCLICK { || QPM_EditPRG() } ;
                ON CHANGE { || iif( ! bPrgSorting .AND. ! PUB_bLite, ;
                                    iif( bNumberOnPrg, ;
                                         QPM_Wait( "RichEditDisplay('PRG')", 'Reloading' ), ;
@@ -1582,7 +1583,7 @@ FUNCTION Main( PAR_cP01, PAR_cP02, PAR_cP03, PAR_cP04, PAR_cP05, PAR_cP06, PAR_c
                WIDTH 30
                HEIGHT 25
                PICTURE 'hotrec'
-               TOOLTIP 'Force the saving of a Hot Recovery Version for this header'
+               TOOLTIP 'Force the saving of a Hot Recovery Version for the selected header'
                ONCLICK QPM_ForceHotRecovery( 'HEA' )
             END BUTTONEX
 #endif
@@ -1715,7 +1716,7 @@ FUNCTION Main( PAR_cP01, PAR_cP02, PAR_cP03, PAR_cP04, PAR_cP05, PAR_cP06, PAR_c
                WIDTH 30
                HEIGHT 25
                PICTURE 'hotrec'
-               TOOLTIP 'Force the saving of a Hot Recovery Version for this form'
+               TOOLTIP 'Force the saving of a Hot Recovery Version for the selected form'
                ONCLICK QPM_ForceHotRecovery( 'PAN' )
             END BUTTONEX
 #endif
@@ -2244,7 +2245,7 @@ FUNCTION Main( PAR_cP01, PAR_cP02, PAR_cP03, PAR_cP04, PAR_cP05, PAR_cP06, PAR_c
                COL 85
                WIDTH 65
                HEIGHT 25
-               CAPTION 'Save all ?'
+               CAPTION 'Save all?'
                TOOLTIP 'Save all unsaved topics'
                ONCLICK QPM_WAIT( 'SHG_CheckSave()', 'Checking for save ...' )
             END BUTTONEX
@@ -2797,7 +2798,7 @@ FUNCTION Main( PAR_cP01, PAR_cP02, PAR_cP03, PAR_cP04, PAR_cP05, PAR_cP06, PAR_c
                COL 10
                WIDTH 124
                HEIGHT 25
-               CAPTION 'Cancel changes ?'
+               CAPTION 'Cancel changes?'
                TOOLTIP 'Select "Yes" to discard changes'
                ONCLICK         { || QPM_Wait( 'SHG_CancelChangesTopic()', 'Checking for restore ...' ) }
             END BUTTONEX
@@ -3229,7 +3230,7 @@ FUNCTION QPM_AddFilesPRG2()
          Files[1] := Files[1] + '.PRG'
       ENDIF
       IF ! File( Files[1] )
-         IF ! MyMsgYesNo( 'File not found: ' + DBLQT + Files[1] + DBLQT + hb_osNewLine() + 'Do you want to create an Empty file ?' )
+         IF ! MyMsgYesNo( 'File not found: ' + DBLQT + Files[1] + DBLQT + hb_osNewLine() + 'Do you want to create an empty file?' )
             RETURN .F.
          ENDIF
          IF US_Upper( US_FileNameOnlyExt( Files[1] ) ) == 'PRG'
@@ -3300,7 +3301,7 @@ FUNCTION QPM_AddFilesHEA2()
          Files[1] := Files[1] + '.H'
       ENDIF
       IF ! File( Files[1] )
-         IF MyMsgYesNo( 'File not found: ' + DBLQT + Files[1] + DBLQT + hb_osNewLine() + 'Do you want create an Empty file ?' )
+         IF MyMsgYesNo( 'File not found: ' + DBLQT + Files[1] + DBLQT + hb_osNewLine() + 'Do you want to create an empty file?' )
             QPM_CreateNewFile( 'HEA', Files[1] )
          ELSE
             RETURN .F.
@@ -3354,7 +3355,7 @@ FUNCTION QPM_AddFilesPAN2()
          Files[1] := Files[1] + '.FMG'
       ENDIF
       IF ! File( Files[1] )
-         IF MyMsgYesNo( "File '"+Files[1]+"' not found.  Do you want to create an Empty file?" )
+         IF MyMsgYesNo( 'File not found: ' + DBLQT + Files[1] + DBLQT + hb_osNewLine() + 'Do you want to create an empty file?' )
             IF ! QPM_CreateNewFile( 'PAN', Files[1] )
                RETURN .F.
             ENDIF
@@ -3413,7 +3414,7 @@ FUNCTION QPM_AddFilesDBF2()
          Files[1] := Files[1] + '.dbf'
       ENDIF
       IF ! File( Files[1] )
-         IF MyMsgYesNo( 'File not found: ' + DBLQT + Files[1] + DBLQT + hb_osNewLine() + 'Do you want create an Empty file ?' )
+         IF MyMsgYesNo( 'File not found: ' + DBLQT + Files[1] + DBLQT + hb_osNewLine() + 'Do you want to create an empty file?' )
             IF ! QPM_CreateNewFile( 'DBF', Files[1] )
                RETURN .F.
             ENDIF
@@ -3511,7 +3512,7 @@ FUNCTION QPM_AddFilesHLP()
    //    SetMGWaitShow()
          VentanaMain.GHlpFiles.AddItem( { 0, cAuxTopic, cAuxNick, '0', 'E' } )
          GridImage( 'VentanaMain', 'GHlpFiles', VentanaMain.GHlpFiles.ItemCount, NCOLHLPSTATUS, '+', PUB_nGridImgHlpPage )
-         SHG_AddRecord( 'P', VentanaMain.GHlpFiles.ItemCount, cAuxTopic, cAuxNick, 'New Topic !!!' )
+         SHG_AddRecord( 'P', VentanaMain.GHlpFiles.ItemCount, cAuxTopic, cAuxNick, 'New Topic!' )
          VentanaMain.GHlpFiles.Value := VentanaMain.GHlpFiles.ItemCount
          DoMethod( 'VentanaMain', 'GHlpFiles', 'ColumnsAutoFitH' )
    // ELSE
@@ -3525,7 +3526,7 @@ RETURN .T.
 
 FUNCTION QPM_EditPRG
    LOCAL Editor, Rs, i, vAux := {}
-   LOCAL EditControlFile, RunParms, cLineCmd
+   LOCAL EditControlFile, RunParms, cLineCmd, cLineFile
 #ifdef QPM_HOTRECOVERY
    LOCAL HotRecoveryControlFile
 #endif
@@ -3541,29 +3542,29 @@ FUNCTION QPM_EditPRG
       MsgStop( 'File not found: ' + i )
       RETURN .F.
    ENDIF
-   IF ! File( AllTrim( Gbl_Text_Editor ) )
-      MsgStop( 'Program editor not found: ' + AllTrim( Gbl_Text_Editor ) + hb_osNewLine() + 'Look at ' + PUB_MenuGblOptions + ' of Settings menu.' )
+   IF Empty( Gbl_Text_Editor )
+      MyMsg( 'Operation Aborted', 'Editor is not defined.' + hb_osNewLine() + ' Look at ' + PUB_MenuGblOptions + ' of Settings menu.', 'E', bAutoEXIT )
       RETURN .F.
    ENDIF
-   IF Empty( Gbl_Text_Editor )
-      MyMsg( 'Operation aborted.', 'Program editor is not defined.' + hb_osNewLine() + ' Look at ' + PUB_MenuGblOptions + ' of Settings menu.', 'E', bAutoEXIT )
+   IF ! File( Editor := ChgPathToReal( AllTrim( Gbl_Text_Editor ) ) )
+      MsgStop( 'Editor not found: ' + AllTrim( Gbl_Text_Editor ) + hb_osNewLine() + 'Look at ' + PUB_MenuGblOptions + ' of Settings menu.' )
       RETURN .F.
-   ELSE
-      Editor := US_ShortName( AllTrim( Gbl_Text_Editor ) )
    ENDIF
    IF bLogActivity
-      QPM_MemoWrit( PUB_cQPM_Folder+DEF_SLASH + 'QPM.log', memoread( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log' ) + hb_osNewLine() + 'xRefPrgFmg Edit ' + GetProperty( 'VentanaMain', 'GPrgFiles', 'Cell', VentanaMain.GPrgFiles.Value, NCOLPRGFULLNAME ) )
+      QPM_MemoWrit( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log', MemoRead( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log' ) + hb_osNewLine() + 'Edit PRG ' + i )
    ENDIF
    IF bSuspendControlEdit
       IF bEditorLongName
-         cLineCmd := ChgPathToReal( GetProperty( 'VentanaMain', 'GPrgFiles', 'Cell', VentanaMain.GPrgFiles.Value, NCOLPRGFULLNAME ) )
+         cLineCmd := Editor
+         cLineFile := i
       ELSE
-         cLineCmd := US_ShortName( ChgPathToReal( GetProperty( 'VentanaMain', 'GPrgFiles', 'Cell', VentanaMain.GPrgFiles.Value, NCOLPRGFULLNAME ) ) )
+         cLineCmd := US_ShortName( Editor )
+         cLineFile := US_ShortName( i )
       ENDIF
+      QPM_Execute( cLineCmd, cLineFile )
       IF bLogActivity
-         QPM_MemoWrit( PUB_cQPM_Folder+DEF_SLASH + 'QPM.log', memoread( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log' ) + hb_osNewLine() + 'Editor  ' + Editor + hb_osNewLine() + 'CmdLine ' + cLineCmd )
+         QPM_MemoWrit( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log', MemoRead( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log' ) + hb_osNewLine() + "COMMAND " + cLineCmd + hb_osNewLine() + "FILE " + cLineFile )
       ENDIF
-      QPM_Execute( Editor, cLineCmd )
    ELSE
       IF GridImage( 'VentanaMain', 'GPrgFiles', VentanaMain.GPrgFiles.Value, NCOLPRGSTATUS, '?', PUB_nGridImgEdited )
          MsgInfo( 'The file is already open.' )
@@ -3575,8 +3576,8 @@ FUNCTION QPM_EditPRG
       EditControlFile := US_ShortName( PUB_cProjectFolder ) + DEF_SLASH + '_' + PUB_cSecu + 'ECF' + US_DateTimeCen() + '.cnt'
 #ifdef QPM_HOTRECOVERY
       HotRecoveryControlFile := US_ShortName( PUB_cProjectFolder ) + DEF_SLASH + '_' + PUB_cSecu + 'SrcHOTRecovery' + US_DateTimeCen() + '.hot'
-      US_FileCopy( ChgPathToReal( GetProperty( 'VentanaMain', 'GPrgFiles', 'Cell', VentanaMain.GPrgFiles.Value, NCOLPRGFULLNAME ) ), HotRecoveryControlFile )
-      SetFDaTi( HotRecoveryControlFile, US_FileDate( ChgPathToReal( GetProperty( 'VentanaMain', 'GPrgFiles', 'Cell', VentanaMain.GPrgFiles.Value, NCOLPRGFULLNAME ) ) ), US_FileTime( ChgPathToReal( GetProperty( 'VentanaMain', 'GPrgFiles', 'Cell', VentanaMain.GPrgFiles.Value, NCOLPRGFULLNAME ) ) ) )
+      US_FileCopy( i, HotRecoveryControlFile )
+      SetFDaTi( HotRecoveryControlFile, US_FileDate( i ), US_FileTime( i ) )
       SetProperty( 'VentanaMain', 'GPrgFiles', 'Cell', VentanaMain.GPrgFiles.Value, NCOLPRGRECOVERY, HotRecoveryControlFile )
       IF _IsControlDefined( 'HR_GridItemTargetPRG', 'WinHotRecovery' )
          GridImage( 'WinHotRecovery', 'HR_GridItemTargetPRG', GetProperty( 'VentanaMain', 'GPrgFiles', 'Value' ), DEF_N_ITEM_COLIMAGE, '+', PUB_nGridImgEdited )
@@ -3585,18 +3586,23 @@ FUNCTION QPM_EditPRG
       SetProperty( 'VentanaMain', 'GPrgFiles', 'Cell', VentanaMain.GPrgFiles.Value, NCOLPRGEDIT, EditControlFile )
       RunParms := US_ShortName( PUB_cProjectFolder ) + DEF_SLASH + '_' + PUB_cSecu + 'RP' + US_DateTimeCen() + '.cng'
       IF bEditorLongName
-         cLineCmd := 'COMMAND ' + Editor + ' ' + ChgPathToReal( GetProperty( 'VentanaMain', 'GPrgFiles', 'Cell', VentanaMain.GPrgFiles.Value, NCOLPRGFULLNAME ) )
+         cLineCmd := Editor
+         cLineFile := i
       ELSE
-         cLineCmd := 'COMMAND ' + Editor + ' ' + US_ShortName( ChgPathToReal( GetProperty( 'VentanaMain', 'GPrgFiles', 'Cell', VentanaMain.GPrgFiles.Value, NCOLPRGFULLNAME ) ) )
+         cLineCmd := US_ShortName( Editor )
+         cLineFile := US_ShortName( i )
       ENDIF
-      QPM_MemoWrit( RunParms, 'Run Parms For' + ChgPathToReal( GetProperty( 'VentanaMain', 'GPrgFiles', 'Cell', VentanaMain.GPrgFiles.Value, NCOLPRGFULLNAME ) ) + hb_osNewLine() + ;
-                              cLineCmd + hb_osNewLine() + ;
-                              'CONTROL ' + EditControlFile )
-      QPM_MemoWrit( EditControlFile, 'Edit Control File For ' + ChgPathToReal( GetProperty( 'VentanaMain', 'GPrgFiles', 'Cell', VentanaMain.GPrgFiles.Value, NCOLPRGFULLNAME ) ) )
+      QPM_MemoWrit( RunParms, 'Run Parms For ' + i + hb_osNewLine() + ;
+                              "COMMAND " + cLineCmd + hb_osNewLine() + ;
+                              "FILE " + cLineFile + hb_osNewLine() + ;
+                              'CONTROL ' + EditControlFile + hb_osNewLine() )
+      QPM_MemoWrit( EditControlFile, 'Edit Control File For ' + i )
+      QPM_Execute( cLineCmd, "", .T., -1, NIL, cLineFile, EditControlFile )
+      FErase( EditControlFile )
       IF bLogActivity
-         QPM_MemoWrit( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log', MemoRead( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log' ) + hb_osNewLine() + 'RunParms ' + RunParms )
+         QPM_MemoWrit( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log', MemoRead( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log' ) + hb_osNewLine() + MemoRead( RunParms ) )
       ENDIF
-      QPM_Execute( US_ShortName( PUB_cQPM_Folder ) + DEF_SLASH + 'US_Run.exe', 'QPM ' + RunParms )
+      FErase( RunParms )
    ENDIF
    IF ( Rs := AScan( vSinLoadWindow, { |y| US_Upper( US_VarToStr( y ) ) == US_Upper( ChgPathToReal( GetProperty( 'VentanaMain', 'GPrgFiles', 'Cell', VentanaMain.GPrgFiles.Value, NCOLPRGFULLNAME ) ) ) } ) ) > 0 // Para Forzar Scan de PRG en busca de xREF con FMG
       ADel( vSinLoadWindow, Rs ) // Para Forzar Scan de PRG en busca de xREF con FMG
@@ -3636,39 +3642,46 @@ FUNCTION QPM_EditPRG
 RETURN .T.
 
 FUNCTION QPM_EditPPO
-   LOCAL Editor
-   LOCAL cLineCmd
+   LOCAL Editor, i, cLineCmd, cLineFile
    IF Empty( PUB_cProjectFolder ) .OR. ! US_IsDirectory( PUB_cProjectFolder )
       MsgStop( DBLQT + "Project Folder" + DBLQT + " is not a valid folder:" + hb_osNewLine() + PUB_cProjectFolder + hb_osNewLine() + 'Look at tab ' + DBLQT + PagePRG + DBLQT )
-      RETURN .F.
-   ENDIF
-   IF ! File( AllTrim( Gbl_Text_Editor ) )
-      MsgStop( 'Program editor not found: ' + AllTrim( Gbl_Text_Editor ) + hb_osNewLine() + 'Look at ' + PUB_MenuGblOptions + ' of Settings menu.' )
       RETURN .F.
    ENDIF
    IF VentanaMain.GPrgFiles.Value < 1
       MsgStop( 'No file has been selected.' )
       RETURN .F.
    ENDIF
-   IF Empty( Gbl_Text_Editor )
-      MyMsg( 'Operation Aborted', 'Program Editor Not Defined.' + hb_osNewLine() + 'Look at ' + PUB_MenuGblOptions + ' of Settings menu.', 'E', bAutoEXIT )
+   IF ! File( i := ChgPathToReal( GetObjFolder() + DEF_SLASH + US_FileNameOnlyName( GetProperty( 'VentanaMain', 'GPrgFiles', 'Cell', VentanaMain.GPrgFiles.Value, NCOLPRGNAME ) ) + '.ppo' ) )
+      MsgStop( 'File not found: ' + i )
       RETURN .F.
    ENDIF
-   Editor := US_ShortName( AllTrim( Gbl_Text_Editor ) )
-   IF bEditorLongName
-      cLineCmd := GetObjFolder() + DEF_SLASH + US_FileNameOnlyName( GetProperty( 'VentanaMain', 'GPrgFiles', 'Cell', VentanaMain.GPrgFiles.Value, NCOLPRGNAME ) ) + '.ppo'
-   ELSE
-      cLineCmd := US_ShortName( GetObjFolder() + DEF_SLASH + US_FileNameOnlyName( GetProperty( 'VentanaMain', 'GPrgFiles', 'Cell', VentanaMain.GPrgFiles.Value, NCOLPRGNAME ) ) + '.ppo' )
+   IF Empty( Gbl_Text_Editor )
+      MyMsg( 'Operation Aborted', 'Editor is not defined.' + hb_osNewLine() + ' Look at ' + PUB_MenuGblOptions + ' of Settings menu.', 'E', bAutoEXIT )
+      RETURN .F.
+   ENDIF
+   IF ! File( Editor := ChgPathToReal( AllTrim( Gbl_Text_Editor ) ) )
+      MsgStop( 'Editor not found: ' + AllTrim( Gbl_Text_Editor ) + hb_osNewLine() + 'Look at ' + PUB_MenuGblOptions + ' of Settings menu.' )
+      RETURN .F.
    ENDIF
    IF bLogActivity
-      QPM_MemoWrit( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log', memoread( PUB_cQPM_Folder+DEF_SLASH + 'QPM.log' ) + hb_osNewLine() + 'xRefPrgHea Edit Ppo ' + cLineCmd )
+      QPM_MemoWrit( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log', MemoRead( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log' ) + hb_osNewLine() + 'Edit PPO ' + i )
    ENDIF
-   QPM_Execute( Editor, cLineCmd )
+   IF bEditorLongName
+      cLineCmd := Editor
+      cLineFile := i
+   ELSE
+      cLineCmd := US_ShortName( Editor )
+      cLineFile := US_ShortName( i )
+   ENDIF
+   QPM_Execute( cLineCmd, cLineFile )
+   IF bLogActivity
+      QPM_MemoWrit( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log', MemoRead( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log' ) + hb_osNewLine() + "COMMAND " + cLineCmd + hb_osNewLine() + "FILE " + cLineFile )
+   ENDIF
 RETURN .T.
 
 FUNCTION QPM_EditHEA
    LOCAL Editor, i
-   LOCAL EditControlFile, RunParms, cLineCmd
+   LOCAL EditControlFile, RunParms, cLineCmd, cLineFile
 #ifdef QPM_HOTRECOVERY
    LOCAL HotRecoveryControlFile
 #endif
@@ -3685,24 +3698,28 @@ FUNCTION QPM_EditHEA
       RETURN .F.
    ENDIF
    IF Empty( Gbl_Text_Editor )
-      MyMsg( 'Operation Aborted', "Editor's folder is Empty." + hb_osNewLine() + 'Look at ' + PUB_MenuGblOptions + ' of Settings menu.', 'E', bAutoEXIT )
+      MyMsg( 'Operation Aborted', 'Editor is not defined.' + hb_osNewLine() + ' Look at ' + PUB_MenuGblOptions + ' of Settings menu.', 'E', bAutoEXIT )
       RETURN .F.
    ENDIF
-   IF ! File( AllTrim( Gbl_Text_Editor ) )
-      MsgStop( 'Editor program not found: ' + AllTrim( Gbl_Text_Editor ) + '.' + hb_osNewLine() + 'Look at ' + PUB_MenuGblOptions + ' of Settings menu.' )
+   IF ! File( Editor := ChgPathToReal( AllTrim( Gbl_Text_Editor ) ) )
+      MsgStop( 'Editor not found: ' + AllTrim( Gbl_Text_Editor ) + hb_osNewLine() + 'Look at ' + PUB_MenuGblOptions + ' of Settings menu.' )
       RETURN .F.
    ENDIF
-   Editor := US_ShortName( AllTrim( Gbl_Text_Editor ) )
+   IF bLogActivity
+      QPM_MemoWrit( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log', MemoRead( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log' ) + hb_osNewLine() + 'Edit Header ' + i )
+   ENDIF
    IF bSuspendControlEdit
       IF bEditorLongName
-         cLineCmd := ChgPathToReal( GetProperty( 'VentanaMain', 'GHeaFiles', 'Cell', VentanaMain.GHeaFiles.Value, NCOLHEAFULLNAME ) )
+         cLineCmd := Editor
+         cLineFile := i
       ELSE
-         cLineCmd := US_ShortName( ChgPathToReal( GetProperty( 'VentanaMain', 'GHeaFiles', 'Cell', VentanaMain.GHeaFiles.Value, NCOLHEAFULLNAME ) ) )
+         cLineCmd := US_ShortName( Editor )
+         cLineFile := US_ShortName( i )
       ENDIF
+      QPM_Execute( cLineCmd, cLineFile )
       IF bLogActivity
-         QPM_MemoWrit( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log', memoread( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log' ) + hb_osNewLine() + 'xRefPrgHea Edit Hea ' + cLineCmd )
+         QPM_MemoWrit( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log', MemoRead( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log' ) + hb_osNewLine() + "COMMAND " + cLineCmd + hb_osNewLine() + "FILE " + cLineFile )
       ENDIF
-      QPM_Execute( Editor, cLineCmd )
    ELSE
       IF GridImage( 'VentanaMain', 'GHeaFiles', VentanaMain.GHeaFiles.Value, NCOLHEASTATUS, '?', PUB_nGridImgEdited )
          MsgInfo( 'The file is already open.' )
@@ -3714,8 +3731,8 @@ FUNCTION QPM_EditHEA
       EditControlFile := US_ShortName( PUB_cProjectFolder ) + DEF_SLASH + '_' + PUB_cSecu + 'ECF' + US_DateTimeCen() + '.cnt'
 #ifdef QPM_HOTRECOVERY
       HotRecoveryControlFile := US_ShortName( PUB_cProjectFolder ) + DEF_SLASH + '_' + PUB_cSecu + 'HeaHOTRecovery' + US_DateTimeCen() + '.hot'
-      US_FileCopy( ChgPathToReal( GetProperty( 'VentanaMain', 'GHeaFiles', 'Cell', VentanaMain.GHeaFiles.Value, NCOLHEAFULLNAME ) ), HotRecoveryControlFile )
-      SetFDaTi( HotRecoveryControlFile, US_FileDate( ChgPathToReal( GetProperty( 'VentanaMain', 'GHeaFiles', 'Cell', VentanaMain.GHeaFiles.Value, NCOLHEAFULLNAME ) ) ), US_FileTime( ChgPathToReal( GetProperty( 'VentanaMain', 'GHeaFiles', 'Cell', VentanaMain.GHeaFiles.Value, NCOLHEAFULLNAME ) ) ) )
+      US_FileCopy( i, HotRecoveryControlFile )
+      SetFDaTi( HotRecoveryControlFile, US_FileDate( i ), US_FileTime( i ) )
       SetProperty( 'VentanaMain', 'GHeaFiles', 'Cell', VentanaMain.GHeaFiles.Value, NCOLHEARECOVERY, HotRecoveryControlFile )
       IF _IsControlDefined( 'HR_GridItemTargetHea', 'WinHotRecovery' )
          GridImage( 'WinHotRecovery', 'HR_GridItemTargetHea', GetProperty( 'VentanaMain', 'GHeaFiles', 'Value' ), DEF_N_ITEM_COLIMAGE, '+', PUB_nGridImgEdited )
@@ -3724,24 +3741,27 @@ FUNCTION QPM_EditHEA
       SetProperty( 'VentanaMain', 'GHeaFiles', 'Cell', VentanaMain.GHeaFiles.Value, NCOLHEAEDIT, EditControlFile )
       RunParms := US_ShortName( PUB_cProjectFolder ) + DEF_SLASH + '_' + PUB_cSecu + 'RP' + US_DateTimeCen() + '.cng'
       IF bEditorLongName
-         cLineCmd := 'COMMAND ' + Editor + ' ' + ChgPathToReal( GetProperty( 'VentanaMain', 'GHeaFiles', 'Cell', VentanaMain.GHeaFiles.Value, NCOLHEAFULLNAME ) )
+         cLineCmd := Editor
+         cLineFile := i
       ELSE
-         cLineCmd := 'COMMAND ' + Editor + ' ' + US_ShortName( ChgPathToReal( GetProperty( 'VentanaMain', 'GHeaFiles', 'Cell', VentanaMain.GHeaFiles.Value, NCOLHEAFULLNAME ) ) )
+         cLineCmd := US_ShortName( Editor )
+         cLineFile := US_ShortName( i )
       ENDIF
-      QPM_MemoWrit( RunParms, 'Run Parms For ' + ChgPathToReal( GetProperty( 'VentanaMain', 'GHeaFiles', 'Cell', VentanaMain.GHeaFiles.Value, NCOLHEAFULLNAME ) ) + hb_osNewLine() + ;
-                              cLineCmd + hb_osNewLine() + ;
+      QPM_MemoWrit( RunParms, 'Run Parms For ' + i + hb_osNewLine() + ;
+                              "COMMAND " + cLineCmd + hb_osNewLine() + ;
+                              "FILE " + cLineFile + hb_osNewLine() + ;
                               'CONTROL ' + EditControlFile )
-      QPM_MemoWrit( EditControlFile, 'Edit Control File For ' + ChgPathToReal( GetProperty( 'VentanaMain', 'GHeaFiles', 'Cell', VentanaMain.GHeaFiles.Value, NCOLHEAFULLNAME ) ) )
-      IF bLogActivity
-         QPM_MemoWrit( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log', memoread( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log' ) + hb_osNewLine() + 'xRefPrgHea Edit Hea ' + cLineCmd )
-      ENDIF
+      QPM_MemoWrit( EditControlFile, 'Edit Control File For ' + i )
       QPM_Execute( US_ShortName( PUB_cQPM_Folder ) + DEF_SLASH + 'US_Run.exe', 'QPM ' + RunParms )
+      IF bLogActivity
+         QPM_MemoWrit( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log', MemoRead( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log' ) + hb_osNewLine() + MemoRead( RunParms ) )
+      ENDIF
    ENDIF
 RETURN .T.
 
 FUNCTION QPM_EditPAN( bForceEditor )
    LOCAL Editor, toolMake, ToolAux, i
-   LOCAL EditControlFile, RunParms, cLineCmd
+   LOCAL EditControlFile, RunParms, cLineCmd, cLineFile
 #ifdef QPM_HOTRECOVERY
    LOCAL HotRecoveryControlFile
 #endif
@@ -3764,7 +3784,7 @@ FUNCTION QPM_EditPAN( bForceEditor )
       ToolAux := 'EDITOR'
    ELSE
       IF Prj_Radio_FormTool == DEF_RG_EDITOR
-         IF US_Word( toolMake := CheckMakeForm( US_ShortName( ChgPathToReal( GetProperty( 'VentanaMain', 'GPanFiles', 'Cell', VentanaMain.GPanFiles.Value, NCOLPANFULLNAME ) ) ) ), 1 ) == 'UNKNOWN'
+         IF US_Word( toolMake := CheckMakeForm( US_ShortName( i ) ), 1 ) == 'UNKNOWN'
             ToolAux := 'EDITOR'
          ELSE
             ToolAux := US_Word( toolMake, 1 )
@@ -3779,25 +3799,31 @@ FUNCTION QPM_EditPAN( bForceEditor )
    DO CASE
       CASE ToolAux == 'EDITOR'
          IF Empty( Gbl_Text_Editor )
-            MyMsg( 'Operation Aborted', 'Editor is not configured.' + hb_osNewLine() + 'Look at ' + PUB_MenuGblOptions + ' of Settings menu.', 'E', bAutoEXIT )
+            MyMsg( 'Operation Aborted', 'Editor is not defined.' + hb_osNewLine() + 'Look at ' + PUB_MenuGblOptions + ' of Settings menu.', 'E', bAutoEXIT )
             RETURN .F.
-         ELSE
-            IF ! File( AllTrim( Gbl_Text_Editor ) )
-               MsgStop( 'Program editor not found: ' + AllTrim( Gbl_Text_Editor ) + '.' + hb_osNewLine() + 'Look at ' + PUB_MenuGblOptions + ' of Settings menu.' )
-               RETURN .F.
-            ENDIF
-            Editor := US_ShortName( AllTrim( Gbl_Text_Editor ) )
+         ENDIF
+         IF ! File( Editor := ChgPathToReal( AllTrim( Gbl_Text_Editor ) ) )
+            MsgStop( 'Editor not found: ' + AllTrim( Gbl_Text_Editor ) + hb_osNewLine() + 'Look at ' + PUB_MenuGblOptions + ' of Settings menu.' )
+            RETURN .F.
+         ENDIF
+         IF bLogActivity
+            QPM_MemoWrit( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log', MemoRead( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log' ) + hb_osNewLine() + 'Edit PAN ' + i )
          ENDIF
          IF bSuspendControlEdit
             IF bEditorLongName
-               cLineCmd := ChgPathToReal( GetProperty( 'VentanaMain', 'GPanFiles', 'Cell', VentanaMain.GPanFiles.Value, NCOLPANFULLNAME ) )
+               cLineCmd := Editor
+               cLineFile := i
             ELSE
-               cLineCmd := US_ShortName( ChgPathToReal( GetProperty( 'VentanaMain', 'GPanFiles', 'Cell', VentanaMain.GPanFiles.Value, NCOLPANFULLNAME ) ) )
+               cLineCmd := US_ShortName( Editor )
+               cLineFile := US_ShortName( i )
             ENDIF
-            QPM_Execute( Editor, cLineCmd )
+            QPM_Execute( cLineCmd, cLineFile )
+            IF bLogActivity
+               QPM_MemoWrit( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log', MemoRead( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log' ) + hb_osNewLine() + "COMMAND " + cLineCmd + hb_osNewLine() + "FILE " + cLineFile )
+            ENDIF
          ELSE
             IF GridImage( 'VentanaMain', 'GPanFiles', VentanaMain.GPanFiles.Value, NCOLPANSTATUS, '?', PUB_nGridImgEdited )
-               MsgInfo( 'Already Opened' )
+               MsgInfo( 'The file is already open.' )
                RETURN .F.
             ENDIF
             GridImage( 'VentanaMain', 'GPanFiles', VentanaMain.GPanFiles.Value, NCOLPANSTATUS, '+', PUB_nGridImgEdited )
@@ -3806,8 +3832,9 @@ FUNCTION QPM_EditPAN( bForceEditor )
             EditControlFile := US_ShortName( PUB_cProjectFolder ) + DEF_SLASH + '_' + PUB_cSecu + 'ECF' + US_DateTimeCen() + '.cnt'
 #ifdef QPM_HOTRECOVERY
             HotRecoveryControlFile := US_ShortName( PUB_cProjectFolder ) + DEF_SLASH + '_' + PUB_cSecu + 'PanHOTRecovery' + US_DateTimeCen() + '.hot'
-            US_FileCopy( ChgPathToReal( GetProperty( 'VentanaMain', 'GPanFiles', 'Cell', VentanaMain.GPanFiles.Value, NCOLPANFULLNAME ) ), HotRecoveryControlFile )
-            SetFDaTi( HotRecoveryControlFile, US_FileDate( ChgPathToReal( GetProperty( 'VentanaMain', 'GPanFiles', 'Cell', VentanaMain.GPanFiles.Value, NCOLPANFULLNAME ) ) ), US_FileTime( ChgPathToReal( GetProperty( 'VentanaMain', 'GPanFiles', 'Cell', VentanaMain.GPanFiles.Value, NCOLPANFULLNAME ) ) ) )
+            US_FileCopy( i, HotRecoveryControlFile )
+            SetFDaTi( HotRecoveryControlFile, US_FileDate( i ), US_FileTime( i ) )
+
             SetProperty( 'VentanaMain', 'GPanFiles', 'Cell', VentanaMain.GPanFiles.Value, NCOLPANRECOVERY, HotRecoveryControlFile )
             IF _IsControlDefined( 'HR_GridItemTargetPan', 'WinHotRecovery' )
                GridImage( 'WinHotRecovery', 'HR_GridItemTargetPan', GetProperty( 'VentanaMain', 'GPanFiles', 'Value' ), DEF_N_ITEM_COLIMAGE, '+', PUB_nGridImgEdited )
@@ -3816,121 +3843,185 @@ FUNCTION QPM_EditPAN( bForceEditor )
             SetProperty( 'VentanaMain', 'GPanFiles', 'Cell', VentanaMain.GPanFiles.Value, NCOLPANEDIT, EditControlFile )
             RunParms := US_ShortName( PUB_cProjectFolder ) + DEF_SLASH + '_' + PUB_cSecu + 'RP' + US_DateTimeCen() + '.cng'
             IF bEditorLongName
-               cLineCmd := 'COMMAND ' + Editor + ' ' + ChgPathToReal( GetProperty( 'VentanaMain', 'GPanFiles', 'Cell', VentanaMain.GPanFiles.Value, NCOLPANFULLNAME ) )
+               cLineCmd := Editor
+               cLineFile := i
             ELSE
-               cLineCmd := 'COMMAND ' + Editor + ' ' + US_ShortName( ChgPathToReal( GetProperty( 'VentanaMain', 'GPanFiles', 'Cell', VentanaMain.GPanFiles.Value, NCOLPANFULLNAME ) ) )
+               cLineCmd := US_ShortName( Editor )
+               cLineFile := US_ShortName( i )
             ENDIF
-            QPM_MemoWrit( RunParms, 'Run Parms For ' + ChgPathToReal( GetProperty( 'VentanaMain', 'GPanFiles', 'Cell', VentanaMain.GPanFiles.Value, NCOLPANFULLNAME ) ) + hb_osNewLine() + ;
-                                    cLineCmd + hb_osNewLine() + ;
+            QPM_MemoWrit( RunParms, 'Run Parms For ' + i + hb_osNewLine() + ;
+                                    "COMMAND " + cLineCmd + hb_osNewLine() + ;
+                                    "FILE " + cLineFile + hb_osNewLine() + ;
                                     'CONTROL ' + EditControlFile )
-            QPM_MemoWrit( EditControlFile, 'Edit Control File For ' + ChgPathToReal( GetProperty( 'VentanaMain', 'GPanFiles', 'Cell', VentanaMain.GPanFiles.Value, NCOLPANFULLNAME ) ) )
+            QPM_MemoWrit( EditControlFile, 'Edit Control File For ' + i )
             QPM_Execute( US_ShortName( PUB_cQPM_Folder ) + DEF_SLASH + 'US_Run.exe', 'QPM ' + RunParms )
+            IF bLogActivity
+               QPM_MemoWrit( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log', MemoRead( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log' ) + hb_osNewLine() + MemoRead( RunParms ) )
+            ENDIF
          ENDIF
       CASE ToolAux == 'HMI' .OR. ToolAux == "OOHG"
-         IF GridImage( 'VentanaMain', 'GPanFiles', VentanaMain.GPanFiles.Value, NCOLPANSTATUS, '?', PUB_nGridImgEdited )
-            MsgInfo( 'Already Opened' )
-            RETURN .F.
-         ENDIF
          IF Empty( Gbl_Text_HMI )
-            MyMsg( 'Operation Aborted', 'Form Tool is not configured.' + hb_osNewLine() + 'Look at ' + PUB_MenuGblOptions + ' of Settings menu.', 'E', bAutoEXIT )
+            MyMsg( 'Operation Aborted', 'Form tool is not defined.' + hb_osNewLine() + 'Look at ' + PUB_MenuGblOptions + ' of Settings menu.', 'E', bAutoEXIT )
             RETURN .F.
+         ENDIF
+         IF ! File( Editor := ChgPathToReal( AllTrim( Gbl_Text_HMI ) ) )
+            MsgStop( 'Form tool not found: ' + AllTrim( Gbl_Text_HMI ) + hb_osNewLine() + 'Look at ' + PUB_MenuGblOptions + ' of Settings menu.' )
+            RETURN .F.
+         ENDIF
+         IF bSuspendControlEdit
+            IF bEditorLongName
+               cLineCmd := Editor
+               cLineFile := i
+            ELSE
+               cLineCmd := US_ShortName( Editor )
+               cLineFile := US_ShortName( i )
+            ENDIF
+            QPM_Execute( cLineCmd, cLineFile )
+            IF bLogActivity
+               QPM_MemoWrit( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log', MemoRead( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log' ) + hb_osNewLine() + "COMMAND " + cLineCmd + hb_osNewLine() + "FILE " + cLineFile )
+            ENDIF
          ELSE
-            IF ! File( AllTrim( Gbl_Text_HMI ) )
-               MsgStop( 'Form Tool not found: ' + AllTrim( Gbl_Text_HMI ) + '.' + hb_osNewLine() + 'Look at ' + PUB_MenuGblOptions + ' of Settings menu.' )
+            IF GridImage( 'VentanaMain', 'GPanFiles', VentanaMain.GPanFiles.Value, NCOLPANSTATUS, '?', PUB_nGridImgEdited )
+               MsgInfo( 'The file is already open.' )
                RETURN .F.
             ENDIF
-            Editor := US_ShortName( AllTrim( Gbl_Text_HMI ) )
-         ENDIF
-         IF ! ( US_Word( toolMake := CheckMakeForm( US_ShortName( ChgPathToReal( GetProperty( 'VentanaMain', 'GPanFiles', 'Cell', VentanaMain.GPanFiles.Value, NCOLPANFULLNAME ) ) ) ), 1 ) == 'HMI'  .OR. US_Word( toolMake, 1 ) == "OOHG" )
-            IF US_Upper( US_Word( toolMake, 1 ) ) == 'UNKNOWN'
-               IF ! MyMsgYesNo( 'Form was builded with tool ' + DBLQT + toolMake + DBLQT + '.' + hb_osNewLine() + 'Do you want to edit with ' + DBLQT + 'OOHG IDE+' + DBLQT + '?' )
+            IF ! ( US_Word( toolMake := CheckMakeForm( US_ShortName( i ) ), 1 ) == 'HMI'  .OR. US_Word( toolMake, 1 ) == "OOHG" )
+               IF US_Upper( US_Word( toolMake, 1 ) ) == 'UNKNOWN'
+                  IF ! MyMsgYesNo( 'Form was builded with tool: ' + DBLQT + toolMake + DBLQT + '.' + hb_osNewLine() + 'Do you want to edit with ' + DBLQT + 'OOHG IDE+' + DBLQT + '?' )
+                     RETURN .F.
+                  ENDIF
+               ELSE
+                  MsgStop( 'Form was builded with tool ' + DBLQT + toolMake + DBLQT + '.' + hb_osNewLine() + 'The selected tool, ' + DBLQT + 'OOHG IDE+' + DBLQT + ', is not compatible.' )
                   RETURN .F.
                ENDIF
+            ENDIF
+            IF bSuspendControlEdit
+               IF bEditorLongName
+                  cLineCmd := Editor
+                  cLineFile := i
+               ELSE
+                  cLineCmd := US_ShortName( Editor )
+                  cLineFile := US_ShortName( i )
+               ENDIF
+               QPM_Execute( cLineCmd, cLineFile )
+               IF bLogActivity
+                  QPM_MemoWrit( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log', MemoRead( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log' ) + hb_osNewLine() + "COMMAND " + cLineCmd + hb_osNewLine() + "FILE " + cLineFile )
+               ENDIF
             ELSE
-               MsgStop( 'Form was builded with tool ' + DBLQT + toolMake + DBLQT + '.' + hb_osNewLine() + 'The selected tool, ' + DBLQT + 'OOHG IDE+' + DBLQT + ', is not compatible.' )
-               RETURN .F.
+               GridImage( 'VentanaMain', 'GPanFiles', VentanaMain.GPanFiles.Value, NCOLPANSTATUS, '+', PUB_nGridImgEdited )
+               VentanaMain.RichEditPan.BackColor := DEF_COLORBACKEXTERNALEDIT
+               VentanaMain.RichEditPan.FontColor := DEF_COLORFONTEXTERNALEDIT
+               EditControlFile := US_ShortName( PUB_cProjectFolder ) + DEF_SLASH + '_' + PUB_cSecu + 'ECF' + US_DateTimeCen() + '.cnt'
+#ifdef QPM_HOTRECOVERY
+               HotRecoveryControlFile := US_ShortName( PUB_cProjectFolder ) + DEF_SLASH + '_' + PUB_cSecu + 'PanHOTRecovery' + US_DateTimeCen() + '.hot'
+               US_FileCopy( i, HotRecoveryControlFile )
+               SetFDaTi( HotRecoveryControlFile, US_FileDate( i ), US_FileTime( i ) )
+               SetProperty( 'VentanaMain', 'GPanFiles', 'Cell', VentanaMain.GPanFiles.Value, NCOLPANRECOVERY, HotRecoveryControlFile )
+               IF _IsControlDefined( 'HR_GridItemTargetPan', 'WinHotRecovery' )
+                  GridImage( 'WinHotRecovery', 'HR_GridItemTargetPan', GetProperty( 'VentanaMain', 'GPanFiles', 'Value' ), DEF_N_ITEM_COLIMAGE, '+', PUB_nGridImgEdited )
+               ENDIF
+#endif
+               SetProperty( 'VentanaMain', 'GPanFiles', 'Cell', VentanaMain.GPanFiles.Value, NCOLPANEDIT, EditControlFile )
+               RunParms := US_ShortName( PUB_cProjectFolder ) + DEF_SLASH + '_' + PUB_cSecu + 'RP' + US_DateTimeCen() + '.cng'
+               IF bEditorLongName
+                  cLineCmd := Editor
+                  cLineFile := i
+               ELSE
+                  cLineCmd := US_ShortName( Editor )
+                  cLineFile := US_ShortName( i )
+               ENDIF
+               QPM_MemoWrit( RunParms, 'Run Parms For ' + i + hb_osNewLine() + ;
+                                       "COMMAND " + cLineCmd + hb_osNewLine() + ;
+                                       "FILE " + cLineFile + hb_osNewLine() + ;
+                                       'CONTROL ' + EditControlFile )
+               QPM_MemoWrit( EditControlFile, 'Edit Control File For ' + i )
+               QPM_Execute( US_ShortName( PUB_cQPM_Folder ) + DEF_SLASH + 'US_Run.exe', 'QPM ' + RunParms )
+               IF bLogActivity
+                  QPM_MemoWrit( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log', MemoRead( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log' ) + hb_osNewLine() + MemoRead( RunParms ) )
+               ENDIF
             ENDIF
          ENDIF
-         GridImage( 'VentanaMain', 'GPanFiles', VentanaMain.GPanFiles.Value, NCOLPANSTATUS, '+', PUB_nGridImgEdited )
-         VentanaMain.RichEditPan.BackColor := DEF_COLORBACKEXTERNALEDIT
-         VentanaMain.RichEditPan.FontColor := DEF_COLORFONTEXTERNALEDIT
-         EditControlFile := US_ShortName( PUB_cProjectFolder ) + DEF_SLASH + '_' + PUB_cSecu + 'ECF' + US_DateTimeCen() + '.cnt'
-#ifdef QPM_HOTRECOVERY
-         HotRecoveryControlFile := US_ShortName( PUB_cProjectFolder ) + DEF_SLASH + '_' + PUB_cSecu + 'PanHOTRecovery' + US_DateTimeCen() + '.hot'
-         US_FileCopy( ChgPathToReal( GetProperty( 'VentanaMain', 'GPanFiles', 'Cell', VentanaMain.GPanFiles.Value, NCOLPANFULLNAME ) ), HotRecoveryControlFile )
-         SetFDaTi( HotRecoveryControlFile, US_FileDate( ChgPathToReal( GetProperty( 'VentanaMain', 'GPanFiles', 'Cell', VentanaMain.GPanFiles.Value, NCOLPANFULLNAME ) ) ), US_FileTime( ChgPathToReal( GetProperty( 'VentanaMain', 'GPanFiles', 'Cell', VentanaMain.GPanFiles.Value, NCOLPANFULLNAME ) ) ) )
-         SetProperty( 'VentanaMain', 'GPanFiles', 'Cell', VentanaMain.GPanFiles.Value, NCOLPANRECOVERY, HotRecoveryControlFile )
-         IF _IsControlDefined( 'HR_GridItemTargetPan', 'WinHotRecovery' )
-            GridImage( 'WinHotRecovery', 'HR_GridItemTargetPan', GetProperty( 'VentanaMain', 'GPanFiles', 'Value' ), DEF_N_ITEM_COLIMAGE, '+', PUB_nGridImgEdited )
-         ENDIF
-#endif
-         SetProperty( 'VentanaMain', 'GPanFiles', 'Cell', VentanaMain.GPanFiles.Value, NCOLPANEDIT, EditControlFile )
-         RunParms := US_ShortName( PUB_cProjectFolder ) + DEF_SLASH + '_' + PUB_cSecu + 'RP' + US_DateTimeCen() + '.cng'
-         cLineCmd := 'COMMAND ' + Editor + ' ' + US_ShortName( US_FileNameOnlyPath( ChgPathToReal( GetProperty( 'VentanaMain', 'GPanFiles', 'Cell', VentanaMain.GPanFiles.Value, NCOLPANFULLNAME ) ) ) ) + DEF_SLASH + US_FileNameOnlyName( ChgPathToReal( GetProperty( 'VentanaMain', 'GPanFiles', 'Cell', VentanaMain.GPanFiles.Value, NCOLPANFULLNAME ) ) )
-         QPM_MemoWrit( RunParms, 'Run Parms For ' + ChgPathToReal( GetProperty( 'VentanaMain', 'GPanFiles', 'Cell', VentanaMain.GPanFiles.Value, NCOLPANFULLNAME ) ) + hb_osNewLine() + ;
-                                 cLineCmd + hb_osNewLine() + ;
-                                 'CONTROL ' + EditControlFile )
-         QPM_MemoWrit( EditControlFile, 'Edit Control File For ' + ChgPathToReal( GetProperty( 'VentanaMain', 'GPanFiles', 'Cell', VentanaMain.GPanFiles.Value, NCOLPANFULLNAME ) ) )
-         QPM_Execute( US_ShortName( PUB_cQPM_Folder ) + DEF_SLASH + 'US_Run.exe', 'QPM ' + RunParms )
       CASE ToolAux == 'HMGSIDE'
-         IF GridImage( 'VentanaMain', 'GPanFiles', VentanaMain.GPanFiles.Value, NCOLPANSTATUS, '?', PUB_nGridImgEdited )
-            MsgInfo( 'Already Opened' )
-            RETURN .F.
-         ENDIF
          IF Empty( Gbl_Text_HMGSIDE )
-            MyMsg( 'Operation Aborted', 'Folder For Form Tool Not Completed.' + hb_osNewLine() + 'Look at ' + PUB_MenuGblOptions + ' of Settings menu.', 'E', bAutoEXIT )
+            MyMsg( 'Operation Aborted', 'Form tool is not defined.' + hb_osNewLine() + 'Look at ' + PUB_MenuGblOptions + ' of Settings menu.', 'E', bAutoEXIT )
             RETURN .F.
-         ELSE
-            IF ! File( AllTrim( Gbl_Text_HMGSIDE ) )
-               MsgStop( 'Form Tool not found: ' + AllTrim( Gbl_Text_HMGSIDE ) + '.' + hb_osNewLine() + 'Look at ' + PUB_MenuGblOptions + ' of Settings menu.' )
-               RETURN .F.
-            ENDIF
-            Editor := US_ShortName( AllTrim( Gbl_Text_HMGSIDE ) )
          ENDIF
-         IF ! ( US_Word( toolMake := CheckMakeForm( US_ShortName( ChgPathToReal( GetProperty( 'VentanaMain', 'GPanFiles', 'Cell', VentanaMain.GPanFiles.Value, NCOLPANFULLNAME ) ) ) ), 1 ) == 'HMGSIDE' )
+         IF ! File( Editor := ChgPathToReal( AllTrim( Gbl_Text_HMGSIDE ) ) )
+            MsgStop( 'Form tool not found: ' + AllTrim( Gbl_Text_HMGSIDE ) + hb_osNewLine() + 'Look at ' + PUB_MenuGblOptions + ' of Settings menu.' )
+            RETURN .F.
+         ENDIF
+         IF GridImage( 'VentanaMain', 'GPanFiles', VentanaMain.GPanFiles.Value, NCOLPANSTATUS, '?', PUB_nGridImgEdited )
+            MsgInfo( 'The file is already open.' )
+            RETURN .F.
+         ENDIF
+         IF ! ( US_Word( toolMake := CheckMakeForm( US_ShortName( i ) ), 1 ) == 'HMGSIDE' )
             IF ! ( US_Upper( US_Word( toolMake, 1 ) ) == 'HMI' .OR. US_Upper( US_Word( toolMake, 1 ) ) == 'OOHG' )
-               IF ! MyMsgYesNo("Form was builded with tool '"+toolMake+"', do you want edit with 'HMGSIDE'?" )
+
+               IF ! MyMsgYesNo( 'Form was builded with tool: ' + DBLQT + toolMake + DBLQT + '.' + hb_osNewLine() + 'Do you want to edit with ' + DBLQT + 'HMGSIDE' + DBLQT + '?' )
                   RETURN .F.
                ENDIF
             ELSE
-               MsgStop( 'Form was builded with tool ' + DBLQT + toolMake + DBLQT + '.' + hb_osNewLine() + 'The selected tool, ' + DBLQT + 'HMGSIDE' + DBLQT + ', is not compatible.' )
+               MsgStop( 'Form was builded with tool: ' + DBLQT + toolMake + DBLQT + '.' + hb_osNewLine() + 'The selected tool, ' + DBLQT + 'HMGSIDE' + DBLQT + ', is not compatible.' )
                RETURN .F.
             ENDIF
          ENDIF
-         GridImage( 'VentanaMain', 'GPanFiles', VentanaMain.GPanFiles.Value, NCOLPANSTATUS, '+', PUB_nGridImgEdited )
-         VentanaMain.RichEditPan.BackColor := DEF_COLORBACKEXTERNALEDIT
-         VentanaMain.RichEditPan.FontColor := DEF_COLORFONTEXTERNALEDIT
-         EditControlFile := US_ShortName( PUB_cProjectFolder ) + DEF_SLASH + '_' + PUB_cSecu + 'ECF' + US_DateTimeCen() + '.cnt'
+         IF bSuspendControlEdit
+            IF bEditorLongName
+               cLineCmd := Editor
+               cLineFile := i
+            ELSE
+               cLineCmd := US_ShortName( Editor )
+               cLineFile := US_ShortName( i )
+            ENDIF
+            QPM_Execute( cLineCmd, cLineFile )
+            IF bLogActivity
+               QPM_MemoWrit( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log', MemoRead( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log' ) + hb_osNewLine() + "COMMAND " + cLineCmd + hb_osNewLine() + "FILE " + cLineFile )
+            ENDIF
+         ELSE
+            GridImage( 'VentanaMain', 'GPanFiles', VentanaMain.GPanFiles.Value, NCOLPANSTATUS, '+', PUB_nGridImgEdited )
+            VentanaMain.RichEditPan.BackColor := DEF_COLORBACKEXTERNALEDIT
+            VentanaMain.RichEditPan.FontColor := DEF_COLORFONTEXTERNALEDIT
+            EditControlFile := US_ShortName( PUB_cProjectFolder ) + DEF_SLASH + '_' + PUB_cSecu + 'ECF' + US_DateTimeCen() + '.cnt'
 #ifdef QPM_HOTRECOVERY
-         HotRecoveryControlFile := US_ShortName( PUB_cProjectFolder ) + DEF_SLASH + '_' + PUB_cSecu + 'PanHOTRecovery' + US_DateTimeCen() + '.hot'
-         US_FileCopy( ChgPathToReal( GetProperty( 'VentanaMain', 'GPanFiles', 'Cell', VentanaMain.GPanFiles.Value, NCOLPANFULLNAME ) ), HotRecoveryControlFile )
-         SetFDaTi( HotRecoveryControlFile, US_FileDate( ChgPathToReal( GetProperty( 'VentanaMain', 'GPanFiles', 'Cell', VentanaMain.GPanFiles.Value, NCOLPANFULLNAME ) ) ), US_FileTime( ChgPathToReal( GetProperty( 'VentanaMain', 'GPanFiles', 'Cell', VentanaMain.GPanFiles.Value, NCOLPANFULLNAME ) ) ) )
-         SetProperty( 'VentanaMain', 'GPanFiles', 'Cell', VentanaMain.GPanFiles.Value, NCOLPANRECOVERY, HotRecoveryControlFile )
-         IF _IsControlDefined( 'HR_GridItemTargetPan', 'WinHotRecovery' )
-            GridImage( 'WinHotRecovery', 'HR_GridItemTargetPan', GetProperty( 'VentanaMain', 'GPanFiles', 'Value' ), DEF_N_ITEM_COLIMAGE, '+', PUB_nGridImgEdited )
-         ENDIF
+            HotRecoveryControlFile := US_ShortName( PUB_cProjectFolder ) + DEF_SLASH + '_' + PUB_cSecu + 'PanHOTRecovery' + US_DateTimeCen() + '.hot'
+            US_FileCopy( i, HotRecoveryControlFile )
+            SetFDaTi( HotRecoveryControlFile, US_FileDate( i ), US_FileTime( i ) )
+            SetProperty( 'VentanaMain', 'GPanFiles', 'Cell', VentanaMain.GPanFiles.Value, NCOLPANRECOVERY, HotRecoveryControlFile )
+            IF _IsControlDefined( 'HR_GridItemTargetPan', 'WinHotRecovery' )
+               GridImage( 'WinHotRecovery', 'HR_GridItemTargetPan', GetProperty( 'VentanaMain', 'GPanFiles', 'Value' ), DEF_N_ITEM_COLIMAGE, '+', PUB_nGridImgEdited )
+            ENDIF
 #endif
-         SetProperty( 'VentanaMain', 'GPanFiles', 'Cell', VentanaMain.GPanFiles.Value, NCOLPANEDIT, EditControlFile )
-         RunParms := US_ShortName( PUB_cProjectFolder ) + DEF_SLASH + '_' + PUB_cSecu + 'RP' + US_DateTimeCen() + '.cng'
-         cLineCmd := 'COMMAND ' + Editor + ' ' + US_ShortName( US_FileNameOnlyPath( ChgPathToReal( GetProperty( 'VentanaMain', 'GPanFiles', 'Cell', VentanaMain.GPanFiles.Value, NCOLPANFULLNAME ) ) ) ) + DEF_SLASH + US_FileNameOnlyName( ChgPathToReal( GetProperty( 'VentanaMain', 'GPanFiles', 'Cell', VentanaMain.GPanFiles.Value, NCOLPANFULLNAME ) ) )
-         QPM_MemoWrit( RunParms, 'Run Parms For ' + ChgPathToReal( GetProperty( 'VentanaMain', 'GPanFiles', 'Cell', VentanaMain.GPanFiles.Value, NCOLPANFULLNAME ) ) + hb_osNewLine() + ;
-                                 cLineCmd + hb_osNewLine() + ;
-                                 'DEFAULTPATH ' + US_FileNameOnlyPath( Editor ) + hb_osNewLine() + ;
-                                 'CONTROL ' + EditControlFile )
-         QPM_MemoWrit( EditControlFile, 'Edit Control File For ' + ChgPathToReal( GetProperty( 'VentanaMain', 'GPanFiles', 'Cell', VentanaMain.GPanFiles.Value, NCOLPANFULLNAME ) ) )
-         QPM_Execute( US_ShortName( PUB_cQPM_Folder ) + DEF_SLASH + 'US_Run.exe', 'QPM ' + RunParms )
+            SetProperty( 'VentanaMain', 'GPanFiles', 'Cell', VentanaMain.GPanFiles.Value, NCOLPANEDIT, EditControlFile )
+            RunParms := US_ShortName( PUB_cProjectFolder ) + DEF_SLASH + '_' + PUB_cSecu + 'RP' + US_DateTimeCen() + '.cng'
+            IF bEditorLongName
+               cLineCmd := Editor
+               cLineFile := i
+            ELSE
+               cLineCmd := US_ShortName( Editor )
+               cLineFile := US_ShortName( i )
+            ENDIF
+            QPM_MemoWrit( RunParms, 'Run Parms For ' + i + hb_osNewLine() + ;
+                                    "COMMAND " + cLineCmd + hb_osNewLine() + ;
+                                    "FILE " + cLineFile + hb_osNewLine() + ;
+                                    'CONTROL ' + EditControlFile )
+            QPM_MemoWrit( EditControlFile, 'Edit Control File For ' + i )
+            QPM_Execute( US_ShortName( PUB_cQPM_Folder ) + DEF_SLASH + 'US_Run.exe', 'QPM ' + RunParms )
+            IF bLogActivity
+               QPM_MemoWrit( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log', MemoRead( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log' ) + hb_osNewLine() + MemoRead( RunParms ) )
+            ENDIF
+         ENDIF
       OTHERWISE
-         MsgInfo( 'Invalid FormTool in FUNCTION EditPan: '+ToolAux )
+         IF bLogActivity
+            QPM_MemoWrit( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log', MemoRead( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log' ) + hb_osNewLine() + 'Edit PAN ' + i + hb_osNewLine() + 'Form tool is not supported: ' + ToolAux )
+         ENDIF
+         MsgInfo( 'Form tool is not supported: ' + ToolAux )
    ENDCASE
-   IF bLogActivity
-      QPM_MemoWrit( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log', memoread( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log' ) + hb_osNewLine() + 'xRefPrgFmg Edit Form ' + GetProperty( 'VentanaMain', 'GPanFiles', 'Cell', VentanaMain.GPanFiles.Value, NCOLPANFULLNAME ) )
-   ENDIF
 RETURN .T.
 
 FUNCTION QPM_EditDBF()
-   LOCAL EditControlFile, RunParms, cLineCmd, Editor, i
+   LOCAL EditControlFile, RunParms, cLineCmd, Editor, i, cLineFile
    IF GridImage( 'VentanaMain', 'GDbfFiles', VentanaMain.GDbfFiles.Value, NCOLDBFSTATUS, '?', PUB_nGridImgEdited )
-      MsgInfo( 'The DBF is already open.' )
+      MsgInfo( 'The file is already open.' )
       RETURN .F.
    ENDIF
    IF Empty( PUB_cProjectFolder ) .OR. ! US_IsDirectory( PUB_cProjectFolder )
@@ -3945,50 +4036,99 @@ FUNCTION QPM_EditDBF()
       MsgStop( 'File not found: ' + i )
       RETURN .F.
    ENDIF
+   IF bLogActivity
+      QPM_MemoWrit( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log', MemoRead( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log' ) + hb_osNewLine() + 'Edit DBF ' + i )
+   ENDIF
    IF Prj_Radio_DbfTool == DEF_RG_DBFTOOL
-      GridImage( 'VentanaMain', 'GDbfFiles', VentanaMain.GDbfFiles.Value, NCOLDBFSTATUS, '+', PUB_nGridImgEdited )
-      VentanaMain.RichEditDbf.BackColor := DEF_COLORBACKEXTERNALEDIT
-      VentanaMain.RichEditDbf.FontColor := DEF_COLORFONTEXTERNALEDIT
-      CloseDbfAutoView()
-      DefineRichEditForNotDbfView( 'DBF Open with external tool !!!' )
-      Editor := US_ShortName( AllTrim( PUB_cQPM_Folder ) ) + DEF_SLASH + 'US_DBFVIEW.exe'
-      EditControlFile := US_ShortName( PUB_cProjectFolder ) + DEF_SLASH + '_' + PUB_cSecu + 'ECF' + US_DateTimeCen() + '.cnt'
-      SetProperty( 'VentanaMain', 'GDbfFiles', 'Cell', VentanaMain.GDbfFiles.Value, NCOLDBFEDIT, EditControlFile )
-      RunParms := US_ShortName( PUB_cProjectFolder ) + DEF_SLASH + '_' + PUB_cSecu + 'RP' + US_DateTimeCen() + '.cng'
-      cLineCmd := 'COMMAND ' + Editor + ' ' + US_ShortName( US_FileNameOnlyPath( ChgPathToReal( GetProperty( 'VentanaMain', 'GDbfFiles', 'Cell', VentanaMain.GDbfFiles.Value, NCOLDBFFULLNAME ) ) ) ) + DEF_SLASH + US_FileNameOnlyNameAndExt( ChgPathToReal( GetProperty( 'VentanaMain', 'GDbfFiles', 'Cell', VentanaMain.GDbfFiles.Value, NCOLDBFFULLNAME ) ) )
-      QPM_MemoWrit( RunParms, 'Run Parms For ' + ChgPathToReal( GetProperty( 'VentanaMain', 'GDbfFiles', 'Cell', VentanaMain.GDbfFiles.Value, NCOLDBFFULLNAME ) ) + hb_osNewLine() + ;
-                              cLineCmd + hb_osNewLine() + ;
-                              'CONTROL ' + EditControlFile )
-      QPM_MemoWrit( EditControlFile, 'Edit Control File For ' + ChgPathToReal( GetProperty( 'VentanaMain', 'GDbfFiles', 'Cell', VentanaMain.GDbfFiles.Value, NCOLDBFFULLNAME ) ) )
-      QPM_Execute( US_ShortName( PUB_cQPM_Folder ) + DEF_SLASH + 'US_Run.exe', 'QPM ' + RunParms )
+      IF ! File( Editor := ChgPathToReal( AllTrim( PUB_cQPM_Folder ) + DEF_SLASH + 'US_DBFVIEW.exe' ) )
+         MsgStop( 'Editor not found: ' + Editor + hb_osNewLine() + 'Reinstall QPM.' )
+         RETURN .F.
+      ENDIF
+      IF bSuspendControlEdit
+         IF bEditorLongName
+            cLineCmd := Editor
+            cLineFile := i
+         ELSE
+            cLineCmd := US_ShortName( Editor )
+            cLineFile := US_ShortName( i )
+         ENDIF
+         QPM_Execute( cLineCmd, cLineFile )
+         IF bLogActivity
+            QPM_MemoWrit( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log', MemoRead( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log' ) + hb_osNewLine() + "COMMAND " + cLineCmd + hb_osNewLine() + "FILE " + cLineFile )
+         ENDIF
+      ELSE
+         GridImage( 'VentanaMain', 'GDbfFiles', VentanaMain.GDbfFiles.Value, NCOLDBFSTATUS, '+', PUB_nGridImgEdited )
+         VentanaMain.RichEditDbf.BackColor := DEF_COLORBACKEXTERNALEDIT
+         VentanaMain.RichEditDbf.FontColor := DEF_COLORFONTEXTERNALEDIT
+         CloseDbfAutoView()
+         DefineRichEditForNotDbfView( 'DBF Open with QPM tool!' )
+         EditControlFile := US_ShortName( PUB_cProjectFolder ) + DEF_SLASH + '_' + PUB_cSecu + 'ECF' + US_DateTimeCen() + '.cnt'
+         SetProperty( 'VentanaMain', 'GDbfFiles', 'Cell', VentanaMain.GDbfFiles.Value, NCOLDBFEDIT, EditControlFile )
+         RunParms := US_ShortName( PUB_cProjectFolder ) + DEF_SLASH + '_' + PUB_cSecu + 'RP' + US_DateTimeCen() + '.cng'
+         IF bEditorLongName
+            cLineCmd := Editor
+            cLineFile := i
+         ELSE
+            cLineCmd := US_ShortName( Editor )
+            cLineFile := US_ShortName( i )
+         ENDIF
+         QPM_MemoWrit( RunParms, 'Run Parms For ' + i + hb_osNewLine() + ;
+                                 "COMMAND " + cLineCmd + hb_osNewLine() + ;
+                                 "FILE " + cLineFile + hb_osNewLine() + ;
+                                 'CONTROL ' + EditControlFile )
+         QPM_MemoWrit( EditControlFile, 'Edit Control File For ' + i )
+         QPM_Execute( US_ShortName( PUB_cQPM_Folder ) + DEF_SLASH + 'US_Run.exe', 'QPM ' + RunParms )
+         IF bLogActivity
+            QPM_MemoWrit( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log', MemoRead( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log' ) + hb_osNewLine() + MemoRead( RunParms ) )
+         ENDIF
+      ENDIF
    ELSE // 'OTHER'
       IF Empty( Gbl_Text_DBF )
-         MyMsg( 'Operation Aborted', 'Folder For Dbf Tool Not Completed.' + hb_osNewLine() + 'Look at ' + PUB_MenuGblOptions + ' of Settings menu.', 'E', bAutoEXIT )
+         MyMsg( 'Operation Aborted', 'DBF tool is not defined.' + hb_osNewLine() + 'Look at ' + PUB_MenuGblOptions + ' of Settings menu.', 'E', bAutoEXIT )
          RETURN .F.
-      ELSE
-         IF ! File( AllTrim( Gbl_Text_DBF ) )
-            MsgStop( 'Dbf tool not found: ' + AllTrim( Gbl_Text_DBF ) + '.' + hb_osNewLine() + 'Look at ' + PUB_MenuGblOptions + ' of Settings menu.' )
-            RETURN .F.
-         ENDIF
-         Editor := US_ShortName( AllTrim( Gbl_Text_DBF ) )
       ENDIF
-      GridImage( 'VentanaMain', 'GDbfFiles', VentanaMain.GDbfFiles.Value, NCOLDBFSTATUS, '+', PUB_nGridImgEdited )
-      VentanaMain.RichEditDbf.BackColor := DEF_COLORBACKEXTERNALEDIT
-      VentanaMain.RichEditDbf.FontColor := DEF_COLORFONTEXTERNALEDIT
-      CloseDbfAutoView()
-      DefineRichEditForNotDbfView( 'DBF Open with external tool !!!' )
-      EditControlFile := US_ShortName( PUB_cProjectFolder ) + DEF_SLASH + '_' + PUB_cSecu + 'ECF' + US_DateTimeCen() + '.cnt'
-      SetProperty( 'VentanaMain', 'GDbfFiles', 'Cell', VentanaMain.GDbfFiles.Value, NCOLDBFEDIT, EditControlFile )
-      RunParms := US_ShortName( PUB_cProjectFolder ) + DEF_SLASH + '_' + PUB_cSecu + 'RP' + US_DateTimeCen() + '.cng'
-      cLineCmd := 'COMMAND ' + Editor + ' ' + Gbl_Comillas_DBF + US_ShortName( US_FileNameOnlyPath( ChgPathToReal( GetProperty( 'VentanaMain', 'GDbfFiles', 'Cell', VentanaMain.GDbfFiles.Value, NCOLDBFFULLNAME ) ) ) ) + DEF_SLASH + US_FileNameOnlyNameAndExt( ChgPathToReal( GetProperty( 'VentanaMain', 'GDbfFiles', 'Cell', VentanaMain.GDbfFiles.Value, NCOLDBFFULLNAME ) ) ) + Gbl_Comillas_DBF
-      QPM_MemoWrit( RunParms, 'Run Parms For ' + ChgPathToReal( GetProperty( 'VentanaMain', 'GDbfFiles', 'Cell', VentanaMain.GDbfFiles.Value, NCOLDBFFULLNAME ) ) + hb_osNewLine() + ;
-                              cLineCmd + hb_osNewLine() + ;
-                              'CONTROL ' + EditControlFile )
-      QPM_MemoWrit( EditControlFile, 'Edit Control File For ' + ChgPathToReal( GetProperty( 'VentanaMain', 'GDbfFiles', 'Cell', VentanaMain.GDbfFiles.Value, NCOLDBFFULLNAME ) ) )
-      QPM_Execute( US_ShortName( PUB_cQPM_Folder ) + DEF_SLASH + 'US_Run.exe', 'QPM ' + RunParms )
-   ENDIF
-   IF bLogActivity
-      QPM_MemoWrit( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log', memoread( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log' ) + hb_osNewLine() + 'xRefPrgFmg Edit Dbf ' + GetProperty( 'VentanaMain', 'GDbfFiles', 'Cell', VentanaMain.GDbfFiles.Value, NCOLDBFFULLNAME ) )
+      IF ! File( Editor := ChgPathToReal( AllTrim( Gbl_Text_DBF ) ) )
+         MsgStop( 'DBF tool not found: ' + AllTrim( Gbl_Text_DBF ) + hb_osNewLine() + 'Look at ' + PUB_MenuGblOptions + ' of Settings menu.' )
+         RETURN .F.
+      ENDIF
+      IF bSuspendControlEdit
+         IF bEditorLongName
+            cLineCmd := Editor
+            cLineFile := i
+         ELSE
+            cLineCmd := US_ShortName( Editor )
+            cLineFile := US_ShortName( i )
+         ENDIF
+         QPM_Execute( cLineCmd, cLineFile )
+         IF bLogActivity
+            QPM_MemoWrit( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log', MemoRead( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log' ) + hb_osNewLine() + "COMMAND " + cLineCmd + hb_osNewLine() + "FILE " + cLineFile )
+         ENDIF
+      ELSE
+         GridImage( 'VentanaMain', 'GDbfFiles', VentanaMain.GDbfFiles.Value, NCOLDBFSTATUS, '+', PUB_nGridImgEdited )
+         VentanaMain.RichEditDbf.BackColor := DEF_COLORBACKEXTERNALEDIT
+         VentanaMain.RichEditDbf.FontColor := DEF_COLORFONTEXTERNALEDIT
+         CloseDbfAutoView()
+         DefineRichEditForNotDbfView( 'DBF Open with external tool!' )
+         EditControlFile := US_ShortName( PUB_cProjectFolder ) + DEF_SLASH + '_' + PUB_cSecu + 'ECF' + US_DateTimeCen() + '.cnt'
+         SetProperty( 'VentanaMain', 'GDbfFiles', 'Cell', VentanaMain.GDbfFiles.Value, NCOLDBFEDIT, EditControlFile )
+         RunParms := US_ShortName( PUB_cProjectFolder ) + DEF_SLASH + '_' + PUB_cSecu + 'RP' + US_DateTimeCen() + '.cng'
+         IF bEditorLongName
+            cLineCmd := Editor
+            cLineFile := Gbl_Comillas_DBF + i + Gbl_Comillas_DBF
+         ELSE
+            cLineCmd := US_ShortName( Editor )
+            cLineFile := Gbl_Comillas_DBF + US_ShortName( i ) + Gbl_Comillas_DBF
+         ENDIF
+         QPM_MemoWrit( RunParms, 'Run Parms For ' + i + hb_osNewLine() + ;
+                                 "COMMAND " + cLineCmd + hb_osNewLine() + ;
+                                 "FILE " + cLineFile + hb_osNewLine() + ;
+                                 'CONTROL ' + EditControlFile )
+         QPM_MemoWrit( EditControlFile, 'Edit Control File For ' + i )
+         QPM_Execute( US_ShortName( PUB_cQPM_Folder ) + DEF_SLASH + 'US_Run.exe', 'QPM ' + RunParms )
+         IF bLogActivity
+            QPM_MemoWrit( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log', MemoRead( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log' ) + hb_osNewLine() + MemoRead( RunParms ) )
+         ENDIF
+      ENDIF
    ENDIF
 RETURN .T.
 
@@ -3996,7 +4136,7 @@ RETURN .T.
 FUNCTION QPM_EditHLP()
    LOCAL cAuxTopic := '', cAuxNick
    IF VentanaMain.GHlpFiles.Value == 1
-      MsgInfo( "Global foot can't be edited, it's a System topic !!!" )
+      MsgInfo( "Global foot can't be edited, it's a System's topic!" )
       RETURN .T.
    ENDIF
    IF VentanaMain.GHlpFiles.Value > 1
@@ -4036,6 +4176,10 @@ RETURN .T.
 
 FUNCTION QPM_EditRES
    LOCAL Editor, FileRC, Alt_RC
+   LOCAL EditControlFile, RunParms, cLineCmd, cLineFile
+#ifdef QPM_HOTRECOVERY
+   LOCAL HotRecoveryControlFile
+#endif
    IF Empty( PUB_cProjectFolder ) .OR. ! US_IsDirectory( PUB_cProjectFolder )
       MsgStop( DBLQT + "Project Folder" + DBLQT + " is not a valid folder:" + hb_osNewLine() + PUB_cProjectFolder + hb_osNewLine() + 'Look at tab ' + DBLQT + PagePRG + DBLQT )
       RETURN .F.
@@ -4045,31 +4189,78 @@ FUNCTION QPM_EditRES
       RETURN .F.
    ENDIF
    IF Empty( Gbl_Text_Editor )
-      MyMsg( 'Operation Aborted', "Editor's folder is Empty." + hb_osNewLine() + 'Look at ' + PUB_MenuGblOptions + ' of Settings menu.', 'E', bAutoEXIT )
+      MyMsg( 'Operation Aborted', 'Editor is not defined.' + hb_osNewLine() + ' Look at ' + PUB_MenuGblOptions + ' of Settings menu.', 'E', bAutoEXIT )
       RETURN .F.
    ENDIF
-   IF ! File( AllTrim( Gbl_Text_Editor ) )
-      MsgStop( 'Editor program not found: ' + AllTrim( Gbl_Text_Editor ) + '.' + hb_osNewLine() + 'Look at ' + PUB_MenuGblOptions + ' of Settings menu.' )
+   IF ! File( Editor := ChgPathToReal( AllTrim( Gbl_Text_Editor ) ) )
+      MsgStop( 'Editor not found: ' + AllTrim( Gbl_Text_Editor ) + hb_osNewLine() + 'Look at ' + PUB_MenuGblOptions + ' of Settings menu.' )
       RETURN .F.
    ENDIF
-   Editor := US_ShortName( AllTrim( Gbl_Text_Editor ) )
    FileRC := US_FileNameOnlyPathAndName( ChgPathToReal( GetProperty( 'VentanaMain', 'GPrgFiles', 'Cell', 1, NCOLPRGFULLNAME ) ) ) + '.RC'
    IF ! File( FileRC )
       Alt_RC := PUB_cProjectFolder + DEF_SLASH + US_FileNameOnlyName( ChgPathToReal( GetProperty( 'VentanaMain', 'GPrgFiles', 'Cell', 1, NCOLPRGFULLNAME ) ) ) + '.RC'
       IF File( Alt_RC )
          FileRC := Alt_RC
       ELSE
-         IF ! MyMsgYesNo( 'Main resources file not found' + ;
+         IF ! MyMsgYesNo( 'Main resources file not found' + hb_osNewLine() + ;
                           'at: ' + DBLQT + FileRC + DBLQT + hb_osNewLine() + ;
                           'nor at: ' + DBLQT + Alt_RC + DBLQT + hb_osNewLine() + ;
-                          'Do you want to create an Empty file ?' )
+                          'Do you want to create an empty file?' )
             RETURN .F.
+         ENDIF
+         IF bLogActivity
+            QPM_MemoWrit( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log', MemoRead( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log' ) + hb_osNewLine() + 'New RC ' + FileRC )
          ENDIF
          QPM_MemoWrit( FileRC, 'MAIN ICON     .' + DEF_SLASH + 'RESOURCES' + DEF_SLASH + 'MAIN.ICO' )
          MsgInfo( "Main resource file was created:" + hb_osNewLine() + DBLQT + FileRC + DBLQT )
       ENDIF
    ENDIF
-   QPM_Execute( Editor, iif( bEditorLongName, FileRC, US_ShortName( FileRC ) ) )
+   IF bLogActivity
+      QPM_MemoWrit( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log', MemoRead( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log' ) + hb_osNewLine() + 'Edit RC ' + FileRC )
+   ENDIF
+   IF bSuspendControlEdit
+      IF bEditorLongName
+         cLineCmd := Editor
+         cLineFile := FileRC
+      ELSE
+         cLineCmd := US_ShortName( Editor )
+         cLineFile := US_ShortName( FileRC )
+      ENDIF
+      VentanaMain.BEditRC.Enabled := .F.
+      QPM_Execute( cLineCmd, cLineFile )
+      VentanaMain.BEditRC.Enabled := .T.
+      IF bLogActivity
+         QPM_MemoWrit( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log', MemoRead( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log' ) + hb_osNewLine() + "COMMAND " + cLineCmd + hb_osNewLine() + "FILE " + cLineFile )
+      ENDIF
+   ELSE
+      VentanaMain.RichEditPrg.BackColor := DEF_COLORBACKEXTERNALEDIT
+      VentanaMain.RichEditPrg.FontColor := DEF_COLORFONTEXTERNALEDIT
+      EditControlFile := US_ShortName( PUB_cProjectFolder ) + DEF_SLASH + '_' + PUB_cSecu + 'ECF' + US_DateTimeCen() + '.cnt'
+#ifdef QPM_HOTRECOVERY
+      HotRecoveryControlFile := US_ShortName( PUB_cProjectFolder ) + DEF_SLASH + '_' + PUB_cSecu + 'SrcHOTRecovery' + US_DateTimeCen() + '.hot'
+      US_FileCopy( FileRC, HotRecoveryControlFile )
+      SetFDaTi( HotRecoveryControlFile, US_FileDate( FileRC ), US_FileTime( FileRC ) )
+      HR_ControlFileRC := HotRecoveryControlFile
+#endif
+      cEditControlFileRC := EditControlFile
+      RunParms := US_ShortName( PUB_cProjectFolder ) + DEF_SLASH + '_' + PUB_cSecu + 'RP' + US_DateTimeCen() + '.cng'
+      IF bEditorLongName
+         cLineCmd := Editor
+         cLineFile := FileRC
+      ELSE
+         cLineCmd := US_ShortName( Editor )
+         cLineFile := US_ShortName( FileRC )
+      ENDIF
+      QPM_MemoWrit( RunParms, 'Run Parms For ' + FileRC + hb_osNewLine() + ;
+                              "COMMAND " + cLineCmd + hb_osNewLine() + ;
+                              "FILE " + cLineFile + hb_osNewLine() + ;
+                              'CONTROL ' + EditControlFile )
+      QPM_MemoWrit( EditControlFile, 'Edit Control File For ' + FileRC )
+      QPM_Execute( US_ShortName( PUB_cQPM_Folder ) + DEF_SLASH + 'US_Run.exe', 'QPM ' + RunParms )
+      IF bLogActivity
+         QPM_MemoWrit( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log', MemoRead( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log' ) + hb_osNewLine() + MemoRead( RunParms ) )
+      ENDIF
+   ENDIF
 RETURN .T.
 
 FUNCTION QPM_SetTopPRG
@@ -4306,14 +4497,14 @@ FUNCTION QPM_OpenProject( cParmProjectFileName )
       ENDIF
       // Create new project
       IF ! File( cProjectFileName )
-         IF ! MyMsgYesNo( 'Create new project: ' + DBLQT + cProjectFileName + DBLQT + '?', 'Create Project' )
+         IF ! MyMsgYesNo( 'Create new project ' + DBLQT + cProjectFileName + DBLQT + '?', 'Create Project' )
             QPM_Wait( "RichEditDisplay( 'DBF', .T., NIL, .F. )", 'DBF reloading ...' )
             RETURN .F.
          ENDIF
          Prj_IsNew := .T.
 #ifdef QPM_SHG
          Temp_SHG_Database := SHG_StrTran( SHG_GetDatabaseName( US_FileNameOnlyPathAndName( cProjectFileName ) ) + '_SHG.dbf' )
-         IF MyMsgYesNo( 'Create Simple Help Generator (SHG) database: ' + DBLQT + Temp_SHG_Database + DBLQT + "?", 'Create Project' )
+         IF MyMsgYesNo( 'Create Simple Help Generator (SHG) database ' + DBLQT + Temp_SHG_Database + DBLQT + "?", 'Create Project' )
             SHG_CreateDatabase( Temp_SHG_Database )
          ELSE
             Temp_SHG_Database := '*NONE*'
@@ -4572,7 +4763,7 @@ FUNCTION QPM_OpenProject2()
       ENDIF
       configversion := Val( cCfgVrsn )
       IF configVersion > Val( QPM_VERSION_NUMBER_SHORT ) .AND. ! PUB_bIgnoreVersionProject
-         IF ! MyMsgYesNo( "The project's version (" + cCfgVrsnEdtd + ") is newer than QPM's version (" + QPM_VERSION_DISPLAY_SHORT + ').' + hb_osNewLine() + 'If you go on some information might be discarded.' + hb_osNewLine() + 'Continue ?' )
+         IF ! MyMsgYesNo( "The project's version (" + cCfgVrsnEdtd + ") is newer than QPM's version (" + QPM_VERSION_DISPLAY_SHORT + ').' + hb_osNewLine() + 'If you go on some information might be discarded.' + hb_osNewLine() + 'Continue?' )
             PUB_cProjectFile := ''
             PUB_cProjectFolder := ''
             RETURN .F.
@@ -4926,16 +5117,20 @@ FUNCTION QPM_OpenProject2()
          ENDIF
       ENDIF
       VentanaMain.TWWWHlp.Value      := SHG_WWW
-      VentanaMain.THlpDataBase.Value := SHG_Database
       SetProperty( 'VentanaMain', 'RichEditHlp', 'readonly', .T. )
       IF ! Empty( SHG_Database )
          IF File( SHG_Database )
             SHG_LoadDatabase( SHG_Database )
             SetProperty( 'VentanaMain', 'RichEditHlp', 'readonly', .F. )
          ELSE
-            MsgInfo( 'Simple Help Generator (SHG) database not found: ' + SHG_Database + hb_osNewLine() + 'Look at tab ' + DBLQT + PageHlp + DBLQT  )
+            IF MyMsgYesNo( 'Simple Help Generator (SHG) database not found: ' + SHG_Database + hb_osNewLine() + ;
+                           'Erase setting?' + hb_osNewLine() + ;
+                           'Use tab ' + DBLQT + PageHlp + DBLQT + ' to select or create a new one.' )
+               SHG_Database := ""
+            ENDIF
          ENDIF
       ENDIF
+      VentanaMain.THlpDataBase.Value := SHG_Database
 #endif
       RichEditDisplay('OUT')
       VentanaMain.LFull.FontColor := DEF_COLORGREEN
@@ -5292,7 +5487,7 @@ FUNCTION QPM_SaveProject( bCheck )
       ENDIF
       IF bDiff
          IF !bAutoEXIT
-            IF MyMsgYesNo( 'Save changes made to project ' + DBLQT + US_FileNameOnlyNameAndExt( PUB_cProjectFile) + DBLQT + " ?" )
+            IF MyMsgYesNo( 'Save changes made to project ' + DBLQT + US_FileNameOnlyNameAndExt( PUB_cProjectFile) + DBLQT + "?" )
                IF Empty( PUB_cProjectFile )
                   QPM_SaveAsProject( .T. )
                ELSE
@@ -5460,7 +5655,7 @@ FUNCTION QPM_EXIT( bWait )
          ENDIF
       ENDIF
       IF ! PUB_bLite .AND. ! bWaitForBuild .AND. ( ! Empty( PUB_cProjectFile ) .OR. ! Empty( PUB_cProjectFolder ) )
-         r := MyMsgYesNo( 'Are you sure ?', 'EXIT QPM' )
+         r := MyMsgYesNo( 'Are you sure?', 'EXIT QPM' )
       ELSE
          r := .T.
       ENDIF
@@ -5748,7 +5943,7 @@ FUNCTION QPM_Build2()
       AAdd( PRGFILES, ChgPathToReal( GetProperty( 'VentanaMain', 'GPrgFiles', 'Cell', i, NCOLPRGFULLNAME ) ) )
 
       IF ! File( PRGFILES[ i ] )
-         MsgStop( "File '" + PRGFILES[ i ] + "' not found !!!" )
+         MsgStop( "File '" + PRGFILES[ i ] + "' not found!" )
          BUILD_IN_PROGRESS := .F.
          DefinoWindowsHotKeys( .F. )
          RETURN .F.
@@ -5832,7 +6027,7 @@ FUNCTION QPM_Build2()
       ENDIF
       AAdd( HeaFILES, ChgPathToReal( GetProperty( 'VentanaMain', 'GHeaFiles', 'Cell', i, NCOLHEAFULLNAME ) ) )
       IF ! File( HeaFILES[ i ] )
-         MsgStop( "Header (include) '"+HeaFILES[ i ]+"' not found." )
+         MsgStop( "Header (include) '"+HeaFILES[ i ]+"' not found!" )
          BUILD_IN_PROGRESS := .F.
          DefinoWindowsHotKeys( .F. )
          RETURN .F.
@@ -5846,7 +6041,7 @@ FUNCTION QPM_Build2()
       IF AScan( vLibIncludeFiles, vTemp ) == 0
          AAdd( vLibIncludeFiles, vTemp )
          IF ! File( vTemp )
-            MsgStop( "File '" + vTemp + "' not found !!!" )
+            MsgStop( "File '" + vTemp + "' not found!" )
             BUILD_IN_PROGRESS := .F.
             DefinoWindowsHotKeys( .F. )
             RETURN .F.
@@ -6750,9 +6945,13 @@ FUNCTION QPM_Build2()
          CASE Prj_Radio_OutputType == DEF_RG_EXE
             Out := Out + PUB_cCharTab + '$(US_MSG_EXE) ' + PROGRESS_LOG + ' -MSG:Linking ' + cOutputNameDisplay + ' ...' + hb_osNewLine()
             IF Empty( GetProperty( 'VentanaMain', 'OverrideLink', 'value' ) )
-               Out := Out + PUB_cCharTab + '$(ILINK_EXE) -Wall -o $(APP_NAME) ' + SCRIPT_FILE + iif( Prj_Check_Console, ' -mconsole', ' -mwindows' ) + hb_osNewLine()
+               Out := Out + PUB_cCharTab + '$(ILINK_EXE) -Wall -o $(APP_NAME) ' + SCRIPT_FILE + ;
+                            iif( Prj_Check_64bits, ' -m64', ' -m32' ) + ;
+                            iif( Prj_Check_Console, ' -mconsole', ' -mwindows' ) + hb_osNewLine()
             ELSE
-               Out := Out + PUB_cCharTab + '$(ILINK_EXE) -Wall $(USER_FLAGS_LINK) -o $(APP_NAME) ' + SCRIPT_FILE + iif( Prj_Check_Console, ' -mconsole', ' -mwindows' ) + hb_osNewLine()
+               Out := Out + PUB_cCharTab + '$(ILINK_EXE) -Wall $(USER_FLAGS_LINK) -o $(APP_NAME) ' + SCRIPT_FILE + ;
+                            iif( Prj_Check_64bits, ' -m64', ' -m32' ) + ;
+                            iif( Prj_Check_Console, ' -mconsole', ' -mwindows' ) + hb_osNewLine()
             ENDIF
             IF Prj_Check_Upx
                Out := Out + PUB_cCharTab + '$(US_MSG_EXE) ' + PROGRESS_LOG + ' -MSG:Compressing ' + cOutputNameDisplay + ' with UPX ...' + hb_osNewLine()
@@ -7493,11 +7692,11 @@ FUNCTION QPM_Run( bWithParm )
 
       CloseDbfAutoView()
       IF VentanaMain.GDbfFiles.Value > 0
-         DefineRichEditForNotDbfView( 'DBF view is disable while running application !!!' )
+         DefineRichEditForNotDbfView( 'DBF view is disable while running application!' )
       ENDIF
       cRunParms := US_ShortName( PUB_cProjectFolder ) + DEF_SLASH + '_' + PUB_cSecu + 'RUN' + US_DateTimeCen() + '.cng'
       AAdd( RunControlFile, US_ShortName( PUB_cProjectFolder ) + DEF_SLASH + '_' + PUB_cSecu + 'RCF' + US_DateTimeCen() + '.cnt' )
-      QPM_MemoWrit( cRunParms, 'Run Parms for ' + App + hb_osNewLine() + ;
+      QPM_MemoWrit( cRunParms, 'Run Parms For ' + App + hb_osNewLine() + ;
                                'COMMAND ' + App + ' ' + cParm + hb_osNewLine() + ;
                                'CONTROL ' + RunControlFile[ Len( RunControlFile ) ] )
       QPM_MemoWrit( RunControlFile[ Len( RunControlFile ) ], 'Run Control File for ' + App )
@@ -7761,7 +7960,7 @@ FUNCTION QPM_RemoveFilePRG()
    LOCAL item := VentanaMain.GPrgFiles.Value
    LOCAL bTop := iif( item == 1, .T., .F. )
    IF VentanaMain.GPrgFiles.Value > 0
-      IF MyMsgYesNo( 'Remove file' + hb_osNewLine() + DBLQT + ChgPathToReal( GetProperty( 'VentanaMain', 'GPrgFiles', 'Cell', VentanaMain.GPrgFiles.Value, NCOLPRGFULLNAME ) ) + DBLQT + hb_osNewLine() + 'from project ?', 'Confirm' )
+      IF MyMsgYesNo( 'Remove file' + hb_osNewLine() + DBLQT + ChgPathToReal( GetProperty( 'VentanaMain', 'GPrgFiles', 'Cell', VentanaMain.GPrgFiles.Value, NCOLPRGFULLNAME ) ) + DBLQT + hb_osNewLine() + 'from project?', 'Confirm' )
       // QPM_ForceRecompExclude( ChgPathToReal( GetProperty( 'VentanaMain', 'GPrgFiles', 'Cell', VentanaMain.GPrgFiles.Value, NCOLPRGFULLNAME ) ), VentanaMain.GPrgFiles.Value )
          dire := US_FileNameOnlyPath( GetProperty( 'VentanaMain', 'GPrgFiles', 'Cell', VentanaMain.GPrgFiles.Value, NCOLPRGFULLNAME ) )
          exte := US_Upper( US_FileNameOnlyExt( GetProperty( 'VentanaMain', 'GPrgFiles', 'Cell', VentanaMain.GPrgFiles.Value, NCOLPRGFULLNAME ) ) )
@@ -7825,7 +8024,7 @@ FUNCTION QPM_RemoveFileHEA()
    LOCAL pos, dire, i, bBorrar := .T.
    LOCAL item := VentanaMain.GHeaFiles.Value
    IF VentanaMain.GHeaFiles.Value > 0
-      IF MyMsgYesNo( 'Remove file' + hb_osNewLine() + DBLQT + ChgPathToReal( GetProperty( 'VentanaMain', 'GHeaFiles', 'Cell', VentanaMain.GHeaFiles.Value, NCOLHEAFULLNAME ) ) + DBLQT + hb_osNewLine() + 'from project ?', 'Confirm' )
+      IF MyMsgYesNo( 'Remove file' + hb_osNewLine() + DBLQT + ChgPathToReal( GetProperty( 'VentanaMain', 'GHeaFiles', 'Cell', VentanaMain.GHeaFiles.Value, NCOLHEAFULLNAME ) ) + DBLQT + hb_osNewLine() + 'from project?', 'Confirm' )
          dire := US_FileNameOnlyPath( GetProperty( 'VentanaMain', 'GHeaFiles', 'Cell', VentanaMain.GHeaFiles.Value, NCOLHEAFULLNAME ) )
          VentanaMain.GHeaFiles.DeleteItem( VentanaMain.GHeaFiles.Value )
          SetProperty( 'VentanaMain', 'GHeaFiles', 'tooltip', '' )
@@ -7874,7 +8073,7 @@ FUNCTION QPM_RemoveFilePAN()
    LOCAL pos, dire, i, bBorrar := .T.
    LOCAL item := VentanaMain.GPanFiles.Value
    IF VentanaMain.GPanFiles.Value > 0
-      IF MyMsgYesNo( 'Remove file' + hb_osNewLine() + DBLQT + ChgPathToReal( GetProperty( 'VentanaMain', 'GPanFiles', 'Cell', VentanaMain.GPanFiles.Value, NCOLPANFULLNAME ) ) + DBLQT + hb_osNewLine() + 'from project ?', 'Confirm' )
+      IF MyMsgYesNo( 'Remove file' + hb_osNewLine() + DBLQT + ChgPathToReal( GetProperty( 'VentanaMain', 'GPanFiles', 'Cell', VentanaMain.GPanFiles.Value, NCOLPANFULLNAME ) ) + DBLQT + hb_osNewLine() + 'from project?', 'Confirm' )
          dire := US_FileNameOnlyPath( GetProperty( 'VentanaMain', 'GPanFiles', 'Cell', VentanaMain.GPanFiles.Value, NCOLPANFULLNAME ) )
          VentanaMain.GPanFiles.DeleteItem( VentanaMain.GPanFiles.Value )
          SetProperty( 'VentanaMain', 'GPanFiles', 'tooltip', '' )
@@ -7913,7 +8112,7 @@ RETURN .T.
 FUNCTION QPM_RemoveFileDBF()
    LOCAL item := VentanaMain.GDbfFiles.Value
    IF VentanaMain.GDbfFiles.Value > 0
-      IF MyMsgYesNo( 'Remove file' + hb_osNewLine() + DBLQT + ChgPathToReal( GetProperty( 'VentanaMain', 'GDbfFiles', 'Cell', VentanaMain.GDbfFiles.Value, NCOLDBFFULLNAME ) ) + DBLQT + hb_osNewLine() + 'from project ?', 'Confirm' )
+      IF MyMsgYesNo( 'Remove file' + hb_osNewLine() + DBLQT + ChgPathToReal( GetProperty( 'VentanaMain', 'GDbfFiles', 'Cell', VentanaMain.GDbfFiles.Value, NCOLDBFFULLNAME ) ) + DBLQT + hb_osNewLine() + 'from project?', 'Confirm' )
          VentanaMain.GDbfFiles.DeleteItem( VentanaMain.GDbfFiles.Value )
          SetProperty( 'VentanaMain', 'GDbfFiles', 'tooltip', '' )
          IF item > VentanaMain.GDbfFiles.ItemCount
@@ -7938,7 +8137,7 @@ FUNCTION QPM_RemoveFileLIB()
    LOCAL pos, dire, i, bBorrar := .T.
    LOCAL item := VentanaMain.GIncFiles.Value
    IF VentanaMain.GIncFiles.Value > 0
-      IF MyMsgYesNo( 'Remove file' + hb_osNewLine() + DBLQT + ChgPathToReal( US_WordSubStr( GetProperty( 'VentanaMain', 'GIncFiles', 'Cell', VentanaMain.GIncFiles.Value, NCOLINCFULLNAME ), 3 ) ) + DBLQT + hb_osNewLine() + 'from project ?', 'Confirm' )
+      IF MyMsgYesNo( 'Remove file' + hb_osNewLine() + DBLQT + ChgPathToReal( US_WordSubStr( GetProperty( 'VentanaMain', 'GIncFiles', 'Cell', VentanaMain.GIncFiles.Value, NCOLINCFULLNAME ), 3 ) ) + DBLQT + hb_osNewLine() + 'from project?', 'Confirm' )
          dire := US_Upper( US_FileNameOnlyPath( ChgPathToReal( US_WordSubStr( GetProperty( 'VentanaMain', 'GIncFiles', 'Cell', VentanaMain.GIncFiles.Value, NCOLINCFULLNAME ), 3 ) ) ) )
          VentanaMain.GIncFiles.DeleteItem( VentanaMain.GIncFiles.Value )
          IF item > VentanaMain.GIncFiles.ItemCount
@@ -7966,7 +8165,7 @@ RETURN .T.
 FUNCTION QPM_RemoveExcludeFileLIB()
    LOCAL item := VentanaMain.GExcFiles.Value
    IF VentanaMain.GExcFiles.Value > 0
-      IF MyMsgYesNo( 'Remove file' + hb_osNewLine() + DBLQT + GetProperty( 'VentanaMain', 'GExcFiles', 'Cell', VentanaMain.GExcFiles.Value, NCOLEXCNAME ) + DBLQT + hb_osNewLine() + 'from exclude list ?', 'Confirm' )
+      IF MyMsgYesNo( 'Remove file' + hb_osNewLine() + DBLQT + GetProperty( 'VentanaMain', 'GExcFiles', 'Cell', VentanaMain.GExcFiles.Value, NCOLEXCNAME ) + DBLQT + hb_osNewLine() + 'from exclude list?', 'Confirm' )
          VentanaMain.GExcFiles.DeleteItem( VentanaMain.GExcFiles.Value )
          IF item > VentanaMain.GExcFiles.ItemCount
             item := VentanaMain.GExcFiles.ItemCount
@@ -7982,7 +8181,7 @@ RETURN .T.
 FUNCTION QPM_RemoveFileHLP()
    LOCAL nAuxRecord, item := VentanaMain.GHlpFiles.Value
    IF VentanaMain.GHlpFiles.Value > 2
-      IF MyMsgYesNo('Remove Toppic ' + AllTrim( GetProperty( 'VentanaMain', 'GHlpFiles', 'Cell', VentanaMain.GHlpFiles.Value, NCOLHLPTOPIC ) ) + ' From Help ?','Confirm')
+      IF MyMsgYesNo('Remove topic ' + AllTrim( GetProperty( 'VentanaMain', 'GHlpFiles', 'Cell', VentanaMain.GHlpFiles.Value, NCOLHLPTOPIC ) ) + ' From Help?','Confirm')
          bHlpMoving := .T.
          nAuxRecord := VentanaMain.GHlpFiles.Value
          VentanaMain.GHlpFiles.DeleteItem( VentanaMain.GHlpFiles.Value )
@@ -8001,11 +8200,11 @@ FUNCTION QPM_RemoveFileHLP()
       ENDIF
    ELSE
       IF VentanaMain.GHlpFiles.Value == 1
-         MsgInfo( "Global foot can't be edited, it's a System topic !!!" )
+         MsgInfo( "Global foot can't be edited, it's a System topic!" )
          RETURN .F.
       ENDIF
       IF VentanaMain.GHlpFiles.Value == 2
-         MsgInfo( "Welcome page can't be deleted, it's a System topic !!!" )
+         MsgInfo( "Welcome page can't be deleted, it's a System topic!" )
          RETURN .F.
       ENDIF
    ENDIF
@@ -8262,11 +8461,11 @@ FUNCTION FormToolCheck( tool )
    LOCAL FileName
    DO CASE
    CASE tool == 'HMI'
-      IF ! Empty( FileName := BugGetFile( { {'IDE+ by Ciro (MGIde.exe or oIDE*.exe)','MGIde.exe;oIDE*.exe'} }, 'Select Form Tool', US_FileNameOnlyPath( GetProperty( 'WinGSettings', 'Text_HMI', 'value' ) ), .F., .T. ) )
+      IF ! Empty( FileName := BugGetFile( { {'IDE+ by Ciro (MGIde.exe or oIDE*.exe)','MGIde.exe;oIDE*.exe'} }, 'Select Form tool', US_FileNameOnlyPath( GetProperty( 'WinGSettings', 'Text_HMI', 'value' ) ), .F., .T. ) )
          SetProperty( 'WinGSettings', 'Text_HMI', 'value', FileName )
       ENDIF
    CASE tool == 'HMGSIDE'
-      IF ! Empty( FileName := BugGetFile( { {'HMGS-IDE by Walter (HMGSIDE.exe or IDE.exe)','HMGSIDE.exe;IDE.exe'} }, 'Select Form Tool', US_FileNameOnlyPath( GetProperty( 'WinGSettings', 'Text_HMGSIDE', 'value' ) ), .F., .T. ) )
+      IF ! Empty( FileName := BugGetFile( { {'HMGS-IDE by Walter (HMGSIDE.exe or IDE.exe)','HMGSIDE.exe;IDE.exe'} }, 'Select Form tool', US_FileNameOnlyPath( GetProperty( 'WinGSettings', 'Text_HMGSIDE', 'value' ) ), .F., .T. ) )
          SetProperty( 'WinGSettings', 'Text_HMGSIDE', 'value', FileName )
       ENDIF
    OTHERWISE
@@ -9100,7 +9299,7 @@ FUNCTION UpHlp()
    LOCAL cAux := GetProperty( 'VentanaMain', 'GHlpFiles', 'item', i )
    LOCAL cAux2 := GetProperty( 'VentanaMain', 'GHlpFiles', 'item', i - 1 )
    IF i == 3
-      MsgInfo( "Global foot and Welcome page can't be moved, they're system topics !!!" )
+      MsgInfo( "Global foot and Welcome page can't be moved, they're system topics!" )
    ENDIF
    IF i > 3
       bHlpMoving := .T.
@@ -9122,10 +9321,10 @@ FUNCTION DownHlp()
    LOCAL cAux := GetProperty( 'VentanaMain', 'GHlpFiles', 'item', i )
    LOCAL cAux2 := GetProperty( 'VentanaMain', 'GHlpFiles', 'item', i + 1 )
    IF i == 1
-      MsgInfo( "Global foot can't be moved, it's a system topic !!!" )
+      MsgInfo( "Global foot can't be moved, it's a system topic!" )
    ENDIF
    IF i == 2
-      MsgInfo( "Welcome page can't be moved, it's a system topic !!!" )
+      MsgInfo( "Welcome page can't be moved, it's a system topic!" )
    ENDIF
    IF i < GetProperty( 'VentanaMain', 'GHlpFiles', 'itemcount' ) .AND. i > 2
       bHlpMoving := .T.
@@ -9637,7 +9836,7 @@ FUNCTION RichEditDisplay( tipo, bReload, nRow, bForce )
       CASE tipo == 'DBF'
          IF nRow == 0
             VentanaMain.RichEditDbf.Value := ''
-         // DefineRichEditForNotDbfView( 'DBF view is disable while Run Appl !!!' )
+         // DefineRichEditForNotDbfView( 'DBF view is disable while Run Appl!' )
             RETURN .F.
          ENDIF
 
@@ -9698,7 +9897,7 @@ FUNCTION RichEditDisplay( tipo, bReload, nRow, bForce )
                                                 hb_osNewLine() + ;
                                                 "     Database '"+DbfName+"' is not valid DBF"
             ENDIF
-            DefineRichEditForNotDbfView( 'DBF Not Open !!!' )
+            DefineRichEditForNotDbfView( 'DBF Not Open!' )
          ELSE
             VentanaMain.RichEditDbf.Value := hb_osNewLine() + ;
                                              'Structure for Database: '+DbfName + hb_osNewLine() + hb_osNewLine() + ;
@@ -9754,9 +9953,9 @@ FUNCTION RichEditDisplay( tipo, bReload, nRow, bForce )
             ELSE
                CloseDbfAutoView()
                IF bRunApp
-                  DefineRichEditForNotDbfView( 'DBF view is disable while Run Appl !!!' )
+                  DefineRichEditForNotDbfView( 'DBF view is disable while Run Appl!' )
                ELSE
-                  DefineRichEditForNotDbfView( 'DBF AutoView is OFF !!!' )
+                  DefineRichEditForNotDbfView( 'DBF AutoView is OFF!' )
                ENDIF
             ENDIF
          ENDIF
@@ -9776,7 +9975,7 @@ FUNCTION RichEditDisplay( tipo, bReload, nRow, bForce )
                                              hb_osNewLine() + ;
                                              hb_osNewLine() + ;
                                              hb_osNewLine() + ;
-                                             "     Library '"+IncName+"' not found !!!"
+                                             "     Library '"+IncName+"' not found!"
          ELSE
             DO CASE
                CASE US_Upper( US_FileNameOnlyExt( IncName ) ) == 'LIB'
@@ -9821,7 +10020,7 @@ FUNCTION RichEditDisplay( tipo, bReload, nRow, bForce )
                                                 hb_osNewLine() + ;
                                                 hb_osNewLine() + ;
                                                 hb_osNewLine() + ;
-                                                "     Output Module file not found: '" + ListOut + "' !!!"
+                                                "     Output Module file not found: '" + ListOut + "'!"
                ListOut := ''
             ENDIF
          ENDIF
@@ -9983,7 +10182,7 @@ FUNCTION ListModule( ModName )
    LOCAL MemoAux, TempExeType, LOC_RunWaitFileStop := US_ShortName( PUB_cProjectFolder ) + DEF_SLASH + '_' + PUB_cSecu + 'RWFS' + US_DateTimeCen() + '.cnt'
    LOCAL OrigModName := ModName, TempLibType
    IF ! File( ModName )
-      MemoAux := "File '" + ModName + "' not found !!!"
+      MemoAux := "File '" + ModName + "' not found!"
       RETURN MemoAux
    ENDIF
    ferase( ModName + '.Tmp' )
@@ -10151,7 +10350,7 @@ FUNCTION DbfDataSearch( Txt )
    nAuxRecord := nOldRecord
    AddSearchTxt()
    IF bAvisoDbfDataSearchLow .OR. ! ( Val( US_Word( GetProperty( 'VentanaMain', 'GDbfFiles', 'Cell', VentanaMain.GDbfFiles.Value, NCOLDBFSEARCH ), 1 ) ) == nOldRecord )
-      IF ! MyMsgYesNo( "Search 'Dbf Data' is very slow. Do you want to continue ?" )
+      IF ! MyMsgYesNo( "Search 'Dbf Data' is very slow." + hb_osNewLine() + "Do you want to continue?" )
          RETURN .F.
       ENDIF
       bAvisoDbfDataSearchLow := .F.
@@ -10294,7 +10493,7 @@ FUNCTION GlobalSearch( Txt )
 // VentanaMain.Check_SearchDbf.value := bSearchDbfData
    TotCaption( 'DBF', 0 )
    IF bSearchDbfData
-      IF ! MyMsgYesNo( "Global Search with 'Dbf Data' set true is very slow.  Do you want to continue ?" )
+      IF ! MyMsgYesNo( "Global Search with 'Dbf Data' is very slow." + hb_osNewLine() + "Do you want to continue?" )
          VentanaMain.Check_SearchDbf.value := .F.
          bLastGlobalSearchDbf := .F.
          RETURN .F.
@@ -10324,7 +10523,7 @@ FUNCTION GlobalSearch( Txt )
    nFound := 0
    TotCaption( 'HLP', 0 )
    IF SHG_BaseOk
-      IF ! MyMsgYesNo( 'Skip search of Help Topics ?', NIL, .T. )
+      IF ! MyMsgYesNo( 'Skip search of Help Topics?', NIL, .T. )
          FOR i := 1 TO VentanaMain.GHlpFiles.ItemCount
             IF GlobalSearch2( 'HLP', Txt, i )
                nFound++
@@ -10817,7 +11016,7 @@ FUNCTION FormQuickView()
 RETURN .T.
 
 FUNCTION QPM_Timer_Edit()
-   LOCAL i, FechaCnt
+   LOCAL i, FechaCnt, FileRC
    FOR i := 1 TO VentanaMain.GPrgFiles.ItemCount
       IF ! Empty( GetProperty( 'VentanaMain', 'GPrgFiles', 'Cell', i, NCOLPRGEDIT ) )
          IF ! File( GetProperty( 'VentanaMain', 'GPrgFiles', 'Cell', i, NCOLPRGEDIT ) )
@@ -10869,6 +11068,7 @@ FUNCTION QPM_Timer_Edit()
 #endif
             ELSE
                VentanaMain.RichEditHea.BackColor := DEF_COLORBACKHEA
+               VentanaMain.RichEditPrg.FontColor := DEF_COLORFONTVIEW
 #ifdef QPM_HOTRECOVERY
                ferase( GetProperty( 'VentanaMain', 'GHeaFiles', 'Cell', i, NCOLHEARECOVERY ) )
                SetProperty( 'VentanaMain', 'GHeaFiles', 'Cell', i, NCOLHEARECOVERY, '' )
@@ -10915,6 +11115,41 @@ FUNCTION QPM_Timer_Edit()
          ENDIF
       ENDIF
    NEXT i
+
+   IF ! Empty( PUB_cProjectFolder ) .AND. US_IsDirectory( PUB_cProjectFolder )
+      IF VentanaMain.GPrgFiles.ItemCount > 0
+         FileRC := US_FileNameOnlyPathAndName( ChgPathToReal( GetProperty( 'VentanaMain', 'GPrgFiles', 'Cell', 1, NCOLPRGFULLNAME ) ) ) + '.RC'
+         IF ! File( FileRC )
+            FileRC := PUB_cProjectFolder + DEF_SLASH + US_FileNameOnlyName( ChgPathToReal( GetProperty( 'VentanaMain', 'GPrgFiles', 'Cell', 1, NCOLPRGFULLNAME ) ) ) + '.RC'
+         ENDIF
+         IF File( FileRC )
+            IF ! Empty( cEditControlFileRC )
+               IF ! File( cEditControlFileRC )
+                  FechaCnt := Val( Right( US_FileNameOnlyName( cEditControlFileRC ), 16 ) )
+                  cEditControlFileRC := ""
+                  IF FechaCnt < Val( US_FileDateTime( ChgPathToReal( FileRC ) ) + '00' )
+                     QPM_Wait( "RichEditDisplay( 'PAN', .T., " + Str( i ) + ')', 'Reloading ...' )
+#ifdef QPM_HOTRECOVERY
+                     QPM_Wait( "QPM_HotRecovery( 'ADD', 'EDIT', 'PAN', '" + FileRC + "', '" + HR_ControlFileRC + "' )", 'Creating Version File for Hot Recovery ...' )
+                     HR_ControlFileRC := ""
+                     IF _IsControlDefined( 'HR_GridItemTargetPRG', 'WinHotRecovery' ) .AND. ;
+                        i == GetProperty( 'WinHotRecovery', 'HR_GridItemTargetPRG', 'value' )
+                        Eval( { || iif( !bPrgSorting .AND. !PUB_bLite, iif( HR_bNumberOnPrg, QPM_Wait( "QPM_HotChangeGrid( 'TARGET', 'ITEM', 'PRG' )", 'Comparing' ), QPM_HotChangeGrid( 'TARGET', 'ITEM', 'PRG' ) ), US_NOP() ) } )
+                     ENDIF
+#endif
+                  ELSE
+                     VentanaMain.RichEditPAN.BackColor := DEF_COLORBACKPAN
+                     VentanaMain.RichEditPAN.FontColor := DEF_COLORFONTVIEW
+#ifdef QPM_HOTRECOVERY
+                     FErase( HR_ControlFileRC )
+                     HR_ControlFileRC := ""
+#endif
+                  ENDIF
+               ENDIF
+            ENDIF
+         ENDIF
+      ENDIF
+   ENDIF
 
    FOR i := 1 TO VentanaMain.GDbfFiles.ItemCount
       IF ! Empty( GetProperty( 'VentanaMain', 'GDbfFiles', 'Cell', i, NCOLDBFEDIT ) )
@@ -11103,15 +11338,15 @@ FUNCTION QPM_DefinoMainMenu()
          ITEM '&EXIT' ACTION QPM_EXIT( .T. )
       END POPUP
       POPUP '&Edit'
-      #ifdef QPM_SHG
+#ifdef QPM_SHG
          ITEM '&Copy' ACTION SHG_Send_Copy() NAME ItC_CopyM
          ITEM 'C&ut' ACTION SHG_Send_Cut() NAME ItC_CutM
          ITEM '&Paste' ACTION SHG_Send_Paste() NAME ItC_PasteM
-      #else
+#else
          ITEM '&Copy' ACTION US_Send_Copy() NAME ItC_CopyM
          ITEM 'C&ut' ACTION US_Send_Cut() NAME ItC_CutM
          ITEM '&Paste' ACTION US_Send_Paste() NAME ItC_PasteM
-      #endif
+#endif
          ITEM '&Select All' ACTION QPM_Send_SelectAll()
       END POPUP
       POPUP '&Debug'
@@ -11130,10 +11365,10 @@ FUNCTION QPM_DefinoMainMenu()
          ITEM PUB_MenuPrjOptions ACTION ProjectSettings()
          SEPARATOR
          ITEM PUB_MenuGblOptions ACTION GlobalSettings()
-      #ifdef QPM_HOTRECOVERYWINDOW
+#ifdef QPM_HOTRECOVERYWINDOW
          SEPARATOR
          ITEM 'Hot Recovery &Options' ACTION QPM_HotRecoveryOptions()
-      #endif
+#endif
          SEPARATOR
          ITEM 'Compress QPM Utilities' ACTION QPM_CompressUtilities()
          ITEM 'Decompress QPM Utilities' ACTION QPM_DecompressUtilities()
@@ -11145,7 +11380,7 @@ FUNCTION QPM_DefinoMainMenu()
       ENDIF
       END POPUP
 
-   #ifdef QPM_HOTRECOVERYWINDOW
+#ifdef QPM_HOTRECOVERYWINDOW
       POPUP '&Recovery'
          ITEM '&Hot Recovery' ACTION QPM_HotRecoveryMenu()
          SEPARATOR
@@ -11154,18 +11389,18 @@ FUNCTION QPM_DefinoMainMenu()
          ITEM '&Import Versions from Another Hot Recovery Database' ACTION HotRecoveryImport()
          SEPARATOR
          ITEM '&Reindex Hot Recovery Database' ACTION QPM_Wait( 'HotRecoveryReindex()', 'Reindexing Hot Recovery Database' )
-      #ifdef QPM_SYNCRECOVERY
+#ifdef QPM_SYNCRECOVERY
          SEPARATOR
          ITEM '&Sync Point Recovery' ACTION QPM_SyncRecoveryMenu()
-      #endif
+#endif
       END POPUP
-   #else
-   #ifdef QPM_SYNCRECOVERY
+#else
+#ifdef QPM_SYNCRECOVERY
       POPUP '&Recovery'
          ITEM '&Sync Point Recovery' ACTION QPM_SyncRecoveryMenu()
       END POPUP
-   #endif
-   #endif
+#endif
+#endif
       POPUP '&Help'
       ITEM 'QPM &Help' ACTION US_DisplayHelpTopic( GetActiveHelpFile(), 1 )
          SEPARATOR
@@ -11333,7 +11568,7 @@ FUNCTION QPM_CompressUtilities()
    QPM_MemoWrit( PUB_cQPM_Folder + DEF_SLASH + 'Compress.bat', Out )
    QPM_Execute( PUB_cQPM_Folder + DEF_SLASH + 'Compress.bat', '', DEF_QPM_EXEC_WAIT, DEF_QPM_EXEC_NORMAL )
 
-   MsgInfo('Compression finished !!!' + hb_osNewLine() + ;
+   MsgInfo('Compression finished!' + hb_osNewLine() + ;
            'To compress QPM.EXE, you must close it and then manually do:' + hb_osNewLine() + ;
            'US_upx QPM.EXE')
 RETURN NIL
@@ -11368,7 +11603,7 @@ FUNCTION QPM_DecompressUtilities()
 
    QPM_Execute( PUB_cQPM_Folder + DEF_SLASH + 'Decompress.bat', '', DEF_QPM_EXEC_WAIT, DEF_QPM_EXEC_NORMAL )
 
-   MsgInfo('Decompression finished !!!' + hb_osNewLine() + ;
+   MsgInfo('Decompression finished!' + hb_osNewLine() + ;
            'To decompress QPM.EXE, you must close it and then manually do:' + hb_osNewLine() + ;
            'US_UPX -d QPM.EXE')
 RETURN NIL

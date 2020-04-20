@@ -298,6 +298,7 @@ memvar BUILD_IN_PROGRESS
 memvar bWaitForBuild
 memvar bWarningCpp
 memvar cDbfDataSearchAskRpta
+memvar cEditControlFileRC
 memvar cExeNotFoundMsg
 memvar cLastGlobalSearch
 memvar cLastLibFolderE1BH_32
@@ -489,6 +490,7 @@ memvar Gbl_Text_HMI
 memvar HR_bNumberOnHEA
 memvar HR_bNumberOnPAN
 memvar HR_bNumberOnPRG
+memvar HR_ControlFileRC
 memvar IncludeLibsE1BH_32
 memvar IncludeLibsE1BX_32
 memvar IncludeLibsE1GH_32

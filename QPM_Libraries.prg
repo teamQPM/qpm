@@ -1851,7 +1851,7 @@ Function QPM_CargoLibraries()
    aadd( &( "vLibDefault"+DefineOohg3+DefinePelles+DefineHarbour+Define32bits ), cPre+'user32'+cExt )
    aadd( &( "vLibDefault"+DefineOohg3+DefinePelles+DefineHarbour+Define32bits ), cPre+'uuid'+cExt )
    aadd( &( "vLibDefault"+DefineOohg3+DefinePelles+DefineHarbour+Define32bits ), cPre+'vfw32'+cExt )
-   aadd( &( "vLibDefault"+DefineOohg3+DefinePelles+DefineHarbour+Define32bits ), cPre+'winmm'+cExt )
+   aadd( &( "vLibDefault"+DefineOohg3+DefinePelles+DefineHarbour+Define32bits ), cPre+'winmm'+cExt )   // must come before kernel32
    aadd( &( "vLibDefault"+DefineOohg3+DefinePelles+DefineHarbour+Define32bits ), cPre+'winspool'+cExt )
    aadd( &( "vLibDefault"+DefineOohg3+DefinePelles+DefineHarbour+Define32bits ), cPre+'ws2_32'+cExt )
    aadd( &( "vLibDefault"+DefineOohg3+DefinePelles+DefineHarbour+Define32bits ), cPre+'wsock32'+cExt )

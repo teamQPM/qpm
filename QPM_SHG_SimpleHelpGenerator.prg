@@ -1410,7 +1410,7 @@ Function SHG_InputTopic( cTopic , cNick )
              ONCLICK         ( bReto := .F. , DoMethod( "PanInputTopic" , "Release" ) )
       END BUTTON
       
-      ON KEY ESCAPE OF ( PanInputTopic ) ACTION ( bReto := .F. , DoMethod( "PanInputTopic" , "Release" ) )
+      ON KEY ESCAPE OF PanInputTopic ACTION ( bReto := .F. , DoMethod( "PanInputTopic" , "Release" ) )
 
    END WINDOW
 

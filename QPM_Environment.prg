@@ -407,8 +407,8 @@ Function LoadEnvironment
    EndIf
 Return .T.
 
-Function SaveEnvironment
-   Local c := '', i
+Function SaveEnvironment( lDefaultFile )
+   Local c := '', i, TmpName
    c := c + 'VERSION '            + QPM_VERSION_NUMBER + Hb_OsNewLine()
    c := c + 'PROGRAMEDITOR '      + alltrim( Gbl_Text_Editor) + Hb_OsNewLine()
    c := c + 'EDITLONGNAME '       + US_VarToStr( bEditorLongName ) + Hb_OsNewLine()
@@ -582,7 +582,14 @@ Function SaveEnvironment
       endif
    Next i
 
-   QPM_MemoWrit( PUB_cQPM_Folder + DEF_SLASH + 'QPM_' + QPM_VERSION_NUMBER_LONG + '.cfg', c )
+  QPM_MemoWrit( PUB_cQPM_Folder + DEF_SLASH + 'QPM_' + QPM_VERSION_NUMBER_LONG + '.cfg', c )
+
+   IF ! lDefaultFile
+      TmpName := AllTrim ( PutFile( { {'QPM Configuration Files (*.cfg)','*.cfg'} }, 'Save Global Settings', cLastProjectFolder, .T. ) )
+      IF ! Empty( TmpName )
+         QPM_MemoWrit( TmpName, c )
+      ENDIF
+   ENDIF
 Return .T.
 
 /* eof */

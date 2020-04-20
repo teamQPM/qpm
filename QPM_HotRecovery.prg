@@ -110,6 +110,7 @@ Return ( field->HR_COD + 1 )
 
 Function QPM_HotInitPublicVariables()
    $US_Log()
+   PUBLIC HR_ControlFileRC := ""
    PUBLIC QPM_HR_Database := ""
    PUBLIC HR_nLookTimeOut      := 20  // Seconds()
    PUBLIC HR_nVersionsDefault := 100 // Versiones a Conservar
@@ -1837,7 +1838,7 @@ Function QPM_ForceHotRecovery( cType )
       MsgStop( "File not found !!!" )
       Return .F.
    endif
-   if MyMsgYesNo( "Do you create new Hot Recovery Version for" + HB_OsNewLine() + HB_OsNewLine() + ;
+   if MyMsgYesNo( "Create new Hot Recovery Version for" + HB_OsNewLine() + HB_OsNewLine() + ;
                 ChgPathToReal( GetProperty( "VentanaMain" , "G"+cType+"Files" , "Cell" , nValue , &( "nCol"+cType+"FullName" ) ) ) )
       US_FileCopy( ChgPathToReal( GetProperty( "VentanaMain" , "G"+cType+"Files" , "Cell" , nValue , &( "nCol"+cType+"FullName" ) ) ) , HotRecoveryControlFile )
       SetFDaTi( HotRecoveryControlFile , US_FileDate( ChgPathToReal( GetProperty( "VentanaMain" , "G"+cType+"Files" , "Cell" , nValue , &( "nCol"+cType+"FullName" ) ) ) ) , US_FileTime( ChgPathToReal( GetProperty( "VentanaMain" , "G"+cType+"Files" , "Cell" , nValue , &( "nCol"+cType+"FullName" ) ) ) ) )
