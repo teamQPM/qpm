@@ -628,11 +628,11 @@ Function Get_RC_FileName()
       endif
    case ( GetMiniGuiSuffix() + GetCppSuffix() ) == DefineMiniGui3 + DefineMinGW
       if QPM_IsXHarbour() .and. File( GetMiniGuiFolder() + DEF_SLASH + 'RESOURCES' + DEF_SLASH + "xhmg.rc" )
-         cNombre := "xhmg.rc"
+         cNombre := "xhmg"
       else
-         cNombre := "hmg.rc"
+         cNombre := "hmg"
       endif
-      cNombre += if( Prj_Check_64bits, "64", "32" )
+      cNombre += if( Prj_Check_64bits, "64.rc", "32.rc" )
    case ( GetMiniGuiSuffix() + GetCppSuffix() ) == DefineExtended1 + DefineMinGW
       if QPM_IsXHarbour() .and. File( GetMiniGuiFolder() + DEF_SLASH + 'RESOURCES' + DEF_SLASH + "xhmg.rc" )
          cNombre := "xhmg.rc"
