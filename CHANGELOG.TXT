@@ -8,6 +8,12 @@
  * See "How to format your ChangeLog entries" in howtosvn.txt file.
  */
 
+2020-04-25 09:28:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * ./QPM.exe
+   * ./QPM.prg
+   * ./QPM_Functions.prg
+     ! Compilation aborts because RC filenames for HMG flavor are wrong.
+
 2020-04-20 19:08:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * ./QPM.ch
    * ./QPM_AutoProject.qpm
