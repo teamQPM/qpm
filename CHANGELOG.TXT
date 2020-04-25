@@ -8,6 +8,12 @@
  * See "How to format your ChangeLog entries" in howtosvn.txt file.
  */
 
+2020-04-25 09:42:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * ./QPM.exe
+   * ./QPM.prg
+     + Support for .o modules when building MinGW libs.
+     * Some NIL parameters replaced by "".
+
 2020-04-25 09:28:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * ./QPM.exe
    * ./QPM.prg
