@@ -6962,6 +6962,18 @@ FUNCTION QPM_Build2()
             FOR i := 1 TO Len ( PRGFILES )
                Out := Out + PUB_cCharTab + '$(TLIB_EXE) rc ' + cOutputName + ' $(DIR_OBJECTS)' + DEF_SLASH + US_FileNameOnlyName( PRGFILES[i] ) + '.o ' + hb_osNewLine()
             NEXT i
+/*
+ * Grabo los objetos listados en las Default Libraries
+ */
+            FOR i := 1 TO Len ( vLibIncludeFiles )
+               IF US_FileNameOnlyExt( vLibIncludeFiles[i] ) == 'O'
+                  IF ! ( US_Upper( US_FileNameOnlyName( vLibIncludeFiles[i] ) ) $ ( 'MAINSTD' + CRLF + 'MAINWIN' ) )
+                     IF File( vLibIncludeFiles[i] )
+                        Out := Out + PUB_cCharTab + '$(TLIB_EXE) rc ' + cOutputName + ' ' + vLibIncludeFiles[i] + hb_osNewLine()
+                     ENDIF
+                  ENDIF
+               ENDIF
+            NEXT i
          OTHERWISE
             Out := Out + PUB_cCharTab + '$(US_MSG_EXE) ' + PROGRESS_LOG + ' -MSG:Output Type Invalid: '+ US_VarToStr( Prj_Radio_OutputType ) + hb_osNewLine()
          ENDCASE
@@ -7168,7 +7180,7 @@ FUNCTION QPM_Build2()
             Out := Out + PUB_cCharTab + '$(US_SHELL_EXE) ANALIZE_LIB_MINGW ' + OBJFOLDER + DEF_SLASH + US_FileNameOnlyNameAndExt( cInputName ) + '.lst ' + hb_osNewLine()
             //
             QPM_MemoWrit( RUN_FILE, US_ShortName(PUB_cQPM_Folder) + DEF_SLASH + 'US_OBJDUMP.EXE -t ' + cInputName + ' > ' + OBJFOLDER + DEF_SLASH + US_FileNameOnlyNameAndExt( cInputName ) + '.lst' )
-            QPM_Execute( RUN_FILE,, DEF_QPM_EXEC_WAIT, DEF_QPM_EXEC_MINIMIZE )
+            QPM_Execute( RUN_FILE, "", DEF_QPM_EXEC_WAIT, DEF_QPM_EXEC_MINIMIZE )
             ferase( RUN_FILE )
             QPM_Execute( US_ShortName(PUB_cQPM_Folder) + DEF_SLASH + 'US_SHELL.EXE', 'QPM ANALIZE_LIB_MINGW ' + OBJFOLDER + DEF_SLASH + US_FileNameOnlyNameAndExt( cInputName ) + '.lst -OBJLST -EXPLST', DEF_QPM_EXEC_WAIT, DEF_QPM_EXEC_MINIMIZE )
             //
@@ -7594,7 +7606,7 @@ FUNCTION QPM_Build2()
 
    DO EVENTS
 
-   QPM_Execute( BUILD_BAT, NIL, DEF_QPM_EXEC_NOWAIT, DEF_QPM_EXEC_HIDE )
+   QPM_Execute( BUILD_BAT, "", DEF_QPM_EXEC_NOWAIT, DEF_QPM_EXEC_HIDE )
 
 RETURN .T.
 
@@ -8744,9 +8756,9 @@ FUNCTION xRefPrgHea( vConcatIncludeC )
       FOR i := 1 TO Len( vConcatIncludeC )
          IF File( vConcatIncludeC[i]+DEF_SLASH+US_FileNameOnlyNameAndExt( vHeaFiles[f] ) )
             IF ! ( US_Upper( US_ShortName( vConcatIncludeC[i]+DEF_SLASH+US_FileNameOnlyNameAndExt( vHeaFiles[f] ) ) ) == US_Upper( US_ShortName(vHeaFiles[f]) ) )
-               MsgWarn( 'In Folder '+vConcatIncludeC[i]+' exists the Header '+US_FileNameOnlyNameAndExt( vHeaFiles[f] ) + hb_osNewLine() + ;
-                        "If you code #include with caracters '<' and '>', the search process of Harbour and C compilers will locate THIS header first," + hb_osNewLine() + ;
-                        'then the header in '+US_FileNameOnlyPath( vHeaFiles[f] ) +' will be ignored.' )
+               MsgWarn( 'Folder ' + vConcatIncludeC[i] + ' contains the header ' + US_FileNameOnlyNameAndExt( vHeaFiles[f] ) + "." + hb_osNewLine() + ;
+                        "If the #include is coded with characters '<' and '>', the search processes of Harbour and C compilers will locate THIS header first, and the header in " + ;
+                        US_FileNameOnlyPath( vHeaFiles[f] ) + ' will be ignored.' )
             ELSE
                EXIT
             ENDIF
@@ -10192,17 +10204,17 @@ FUNCTION ListModule( ModName )
       DO CASE
          CASE TempLibType == 'PELLES'
             QPM_MemoWrit( RUN_FILE, US_ShortName(PUB_cQPM_Folder) + DEF_SLASH + 'US_PODUMP.EXE -LINKERMEMBER:2 -ARCHIVEMEMBERS ' + US_ShortName( ModName ) + ' > "' + US_ShortName( ModName ) + '.Tmp"' )
-            QPM_Execute( RUN_FILE,, DEF_QPM_EXEC_WAIT, DEF_QPM_EXEC_MINIMIZE )
+            QPM_Execute( RUN_FILE, "", DEF_QPM_EXEC_WAIT, DEF_QPM_EXEC_MINIMIZE )
             ferase( RUN_FILE )
 
             QPM_MemoWrit( RUN_FILE, US_ShortName(PUB_cQPM_Folder) + DEF_SLASH + 'US_SHELL.EXE QPM ANALIZE_LIB_PELLES ' + US_ShortName( ModName ) + '.Tmp' + ' -FILESTOP ' + LOC_RunWaitFileStop + ' > "' + US_ShortName( ModName ) + '.TmpOut"' )
-            QPM_Execute( RUN_FILE,, DEF_QPM_EXEC_WAIT, DEF_QPM_EXEC_MINIMIZE, LOC_RunWaitFileStop )
+            QPM_Execute( RUN_FILE, "", DEF_QPM_EXEC_WAIT, DEF_QPM_EXEC_MINIMIZE, LOC_RunWaitFileStop )
             ferase( RUN_FILE )
          CASE TempLibType == 'BORLAND'
             QPM_Execute( US_ShortName(PUB_cQPM_Folder) + DEF_SLASH + 'US_TLIB.EXE', US_ShortName( ModName ) + ', ' + US_ShortName( ModName ) + '.Tmp', DEF_QPM_EXEC_WAIT, DEF_QPM_EXEC_MINIMIZE )
 
             QPM_MemoWrit( RUN_FILE, US_ShortName(PUB_cQPM_Folder) + DEF_SLASH + 'US_SHELL.EXE QPM ANALIZE_LIB_BORLAND ' + US_ShortName( ModName ) + '.Tmp' + ' -FILESTOP ' + LOC_RunWaitFileStop + ' > "' + US_ShortName( ModName ) + '.TmpOut"' )
-            QPM_Execute( RUN_FILE,, DEF_QPM_EXEC_WAIT, DEF_QPM_EXEC_MINIMIZE, LOC_RunWaitFileStop )
+            QPM_Execute( RUN_FILE, "", DEF_QPM_EXEC_WAIT, DEF_QPM_EXEC_MINIMIZE, LOC_RunWaitFileStop )
             ferase( RUN_FILE )
          CASE TempLibType == 'NONE'
             QPM_MemoWrit( ModName + '.TmpOut', 'File not found' )
@@ -10211,17 +10223,17 @@ FUNCTION ListModule( ModName )
       ENDCASE
    ELSEIF US_Upper( US_FileNameOnlyExt( ModName ) ) == 'A'
       QPM_MemoWrit( RUN_FILE, US_ShortName(PUB_cQPM_Folder) + DEF_SLASH + 'US_OBJDUMP.EXE -t -s ' + US_ShortName( ModName ) + ' > "' + US_ShortName( ModName ) + '.Tmp"' )
-      QPM_Execute( RUN_FILE,, DEF_QPM_EXEC_WAIT, DEF_QPM_EXEC_MINIMIZE )
+      QPM_Execute( RUN_FILE, "", DEF_QPM_EXEC_WAIT, DEF_QPM_EXEC_MINIMIZE )
       ferase( RUN_FILE )
 
       QPM_MemoWrit( RUN_FILE, US_ShortName(PUB_cQPM_Folder) + DEF_SLASH + 'US_SHELL.EXE QPM ANALIZE_LIB_MINGW ' + US_ShortName( ModName ) + '.Tmp' + ' -FILESTOP ' + LOC_RunWaitFileStop + ' > "' + US_ShortName( ModName ) + '.TmpOut"' )
-      QPM_Execute( RUN_FILE,, DEF_QPM_EXEC_WAIT, DEF_QPM_EXEC_MINIMIZE, LOC_RunWaitFileStop )
+      QPM_Execute( RUN_FILE, "", DEF_QPM_EXEC_WAIT, DEF_QPM_EXEC_MINIMIZE, LOC_RunWaitFileStop )
       ferase( RUN_FILE )
    ELSEIF US_Upper( US_FileNameOnlyExt( ModName ) ) == 'DLL'
       QPM_Execute( US_ShortName(PUB_cQPM_Folder) + DEF_SLASH + 'US_IMPDEF.EXE', US_ShortName( ModName ) + '.Tmp ' + US_ShortName( ModName ), DEF_QPM_EXEC_WAIT, DEF_QPM_EXEC_MINIMIZE )
 
       QPM_MemoWrit( RUN_FILE, US_ShortName(PUB_cQPM_Folder) + DEF_SLASH + 'US_SHELL.EXE QPM -OFF ANALIZE_DLL ' + US_ShortName( ModName ) + '.Tmp' + ' -FILESTOP ' + LOC_RunWaitFileStop + ' > "' + US_ShortName( ModName ) + '.TmpOut"' )
-      QPM_Execute( RUN_FILE,, DEF_QPM_EXEC_WAIT, DEF_QPM_EXEC_MINIMIZE, LOC_RunWaitFileStop )
+      QPM_Execute( RUN_FILE, "", DEF_QPM_EXEC_WAIT, DEF_QPM_EXEC_MINIMIZE, LOC_RunWaitFileStop )
       ferase( RUN_FILE )
    ELSEIF US_Upper( US_FileNameOnlyExt( ModName ) ) == 'EXE'
       TempExeType := QPM_ModuleType( ModName )
@@ -10233,17 +10245,17 @@ FUNCTION ListModule( ModName )
       DO CASE
       CASE TempExeType == 'BORLAND'
          QPM_MemoWrit( RUN_FILE, US_ShortName(PUB_cQPM_Folder) + DEF_SLASH + 'US_TDUMP.EXE ' + US_ShortName( ModName ) + ' > "' + US_ShortName( ModName ) + '.TmpOut"' )
-         QPM_Execute( RUN_FILE,, DEF_QPM_EXEC_WAIT, DEF_QPM_EXEC_MINIMIZE )
+         QPM_Execute( RUN_FILE, "", DEF_QPM_EXEC_WAIT, DEF_QPM_EXEC_MINIMIZE )
          ferase( RUN_FILE )
       CASE TempExeType == 'PELLES'
       // QPM_MemoWrit( RUN_FILE, US_ShortName(PUB_cQPM_Folder) + DEF_SLASH + 'US_PODUMP.EXE /ALL ' + US_ShortName( ModName ) + ' > "' + US_ShortName( ModName ) + '.TmpOut"' )
          QPM_MemoWrit( RUN_FILE, US_ShortName(PUB_cQPM_Folder) + DEF_SLASH + 'US_TDUMP.EXE ' + US_ShortName( ModName ) + ' > "' + US_ShortName( ModName ) + '.TmpOut"' )
-         QPM_Execute( RUN_FILE,, DEF_QPM_EXEC_WAIT, DEF_QPM_EXEC_MINIMIZE )
+         QPM_Execute( RUN_FILE, "", DEF_QPM_EXEC_WAIT, DEF_QPM_EXEC_MINIMIZE )
          ferase( RUN_FILE )
       CASE TempExeType == 'MINGW'
        //QPM_MemoWrit( RUN_FILE, US_ShortName(PUB_cQPM_Folder) + DEF_SLASH + 'US_OBJDUMP.EXE -x ' + US_ShortName( ModName ) + ' > "' + US_ShortName( ModName ) + '.TmpOut"' )
          QPM_MemoWrit( RUN_FILE, US_ShortName(PUB_cQPM_Folder) + DEF_SLASH + 'US_TDUMP.EXE ' + US_ShortName( ModName ) + ' > "' + US_ShortName( ModName ) + '.TmpOut"' )
-         QPM_Execute( RUN_FILE,, DEF_QPM_EXEC_WAIT, DEF_QPM_EXEC_MINIMIZE )
+         QPM_Execute( RUN_FILE, "", DEF_QPM_EXEC_WAIT, DEF_QPM_EXEC_MINIMIZE )
          ferase( RUN_FILE )
       CASE TempExeType == 'NONE'
          QPM_MemoWrit( ModName + '.TmpOut', 'File not found' )
@@ -10263,7 +10275,7 @@ RETURN MemoAux
 
 FUNCTION ListModuleUnUpx( cIn, cOut )
    QPM_MemoWrit( RUN_FILE, US_ShortName(PUB_cQPM_Folder) + DEF_SLASH + 'US_UPX.EXE -d -o' + cOut + ' ' + cIn + ' > "' + cIn + '.TmpOut"' )
-   QPM_Execute( RUN_FILE,, DEF_QPM_EXEC_WAIT, DEF_QPM_EXEC_MINIMIZE )
+   QPM_Execute( RUN_FILE, "", DEF_QPM_EXEC_WAIT, DEF_QPM_EXEC_MINIMIZE )
    ferase( RUN_FILE )
 RETURN .T.
 
