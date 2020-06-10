@@ -66,12 +66,9 @@
 #include <hbapi.h>
 #include <hbvm.h>
 #include <hbstack.h>
-    //#include "oohg.h"
-      #define HWNDparam( pos )          ( ( HWND ) hb_parnl( pos ) )
-      #define HWNDret( hWnd )           ( hb_retnl( ( long ) hWnd ) )
-      #define HWNDpush( hWnd )          ( hb_vmPushLong( ( long ) hWnd ) )
 #include <ocidl.h>
 #include <hbapiitm.h>
+#include "qpm.h"
 
 #ifdef HB_ITEM_NIL
    #define hb_dynsymSymbol( pDynSym )        ( ( pDynSym )->pSymbol )

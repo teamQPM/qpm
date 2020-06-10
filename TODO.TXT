@@ -11,58 +11,58 @@
 /******************************************************************************/
 
 Assigned to: <nobody>
-Added by...: 2019-07-05 21:26:00 UTC-0300 Fernando Yurisich <fyurisich>
+Added by...: 2020-05-10 21:26:00 UTC-0300 Fernando Yurisich <fyurisich>
 Status.....: Open.
-Details....: Function keys remain active after QPM losts the focus.
+Details....: Commit changes to SourceForge and GitHub.
 
 /******************************************************************************/
 
 Assigned to: <nobody>
-Added by...: 2019-03-17 22:00:00 UTC-0300 Fernando Yurisich <fyurisich>
+Added by...: 2020-05-10 21:26:00 UTC-0300 Fernando Yurisich <fyurisich>
 Status.....: Open.
-Details....: Replace this non-working links in HELP project:
-             http://harbourminigui.com/
-             http://freewin.sytes.net"
-             http://lists.harbour-project.org/mailman/listinfo/harbour
-             http://lists.harbour-project.org/mailman/listinfo/harbour-users
-             http://support.microsoft.com/kb/896054
-             http://www.geocities.com/harbour_minigui/
-             http://www.hmgforum.com/site
-             http://www.htmlpoint.com
-             http://www.the-holms.org/xharbourgb.htm  ->  http://www.the-holms.org/xharbour/
+Details....: Copy auxiliary files to the log.
 
 /******************************************************************************/
 
 Assigned to: <nobody>
-Added by...: 2019-03-17 22:00:00 UTC-0300 Fernando Yurisich <fyurisich>
+Added by...: 2020-05-10 21:26:00 UTC-0300 Fernando Yurisich <fyurisich>
 Status.....: Open.
-Details....: Review this references in HELP project:
-             liberado solo funciona con xHarbour
-             NO MANEJA EVENTOS
+Details....: Display the real RC line number.
 
 /******************************************************************************/
 
 Assigned to: <nobody>
-Added by...: 2018-12-06 18:07:00 UTC-0300 Fernando Yurisich <fyurisich>
+Added by...: 2020-05-10 21:26:00 UTC-0300 Fernando Yurisich <fyurisich>
 Status.....: Open.
-Details....: Add videos to QPM site:
-             #1 https://www.youtube.com/watch?v=aCZFsxm-DeI
-             #2 https://www.youtube.com/watch?v=3EP3QIEXVnQ
-             #3 https://www.youtube.com/watch?v=gB47f3p532s
+Details....: QPM_ProjectSettings:
+             Add support for BCC64.
+             Add support for Extended + Pelles.
+             Add support for Extended + Open Watcom.
+             Add support for OOHG     + Open Watcom.
 
 /******************************************************************************/
 
 Assigned to: <nobody>
-Added by...: 2017-08-24 08:42:00 UTC-0300 Fernando Yurisich <fyurisich>
+Added by...: 2020-04-27 21:26:00 UTC-0300 Fernando Yurisich <fyurisich>
 Status.....: Open.
-Details....: Copy .QPM file to Activity Log just before building project.
+Details....: An app builded with 64 bit Minigui under MinGW can't restore a
+             zip file created with HB_Zip using HB_Unzip.
 
 /******************************************************************************/
 
 Assigned to: <nobody>
-Added by...: 2016-08-19 21:48:00 UTC-0300 Fernando Yurisich <fyurisich>
+Added by...: 2020-04-27 21:26:00 UTC-0300 Fernando Yurisich <fyurisich>
 Status.....: Open.
-Details....: Update help file to last version.
+Details....: Update task killer to handle 64 bits apps.
+
+/******************************************************************************/
+
+Assigned to: <nobody>
+Added by...: 2020-04-27 21:26:00 UTC-0300 Fernando Yurisich <fyurisich>
+Status.....: Open.
+Details....: Publish new version and send a mail to Pierpaolo.
+Details....: Post the last changes on the users list.
+Details....: Ask users if the problem with VERSIONINFO was resolved.
 
 /******************************************************************************/
 
@@ -70,13 +70,6 @@ Assigned to: <nobody>
 Added by...: 2016-01-08 22:18:00 UTC-0300 Fernando Yurisich <fyurisich>
 Status.....: Open.
 Details....: Add an option to disable Hot Recovery.
-
-/******************************************************************************/
-
-Assigned to: <nobody>
-Added by...: 2014-06-12 15:27:00 UTC-0300 Fernando Yurisich <fyurisich>
-Status.....: Open.
-Details....: Sometimes a yellow warning window is show but all was OK.
 
 /******************************************************************************/
 
@@ -98,13 +91,6 @@ Details....: Agregar funcionalidad Sync Recovery.
 Assigned to: <nobody>
 Added by...: 2011-12-19 09:32:00 UTC-0300 Fernando Yurisich <fyurisich>
 Status.....: Open.
-Details....: Update sourceforge help.
-
-/******************************************************************************/
-
-Assigned to: <nobody>
-Added by...: 2011-12-19 09:32:00 UTC-0300 Fernando Yurisich <fyurisich>
-Status.....: Open.
 Details....: Use a table to code libraries and other options of each minigui,
              so the user can add multiple version. Clean code so libraries
              are no longer hardwired.
@@ -119,26 +105,13 @@ Details....: Remove US_dtree.im, US_dtree.js and US_dtree.css
 /******************************************************************************/
 
 Assigned to: <nobody>
-Added by...: 2011-11-29 12:20:00 UTC-0300 Fernando Yurisich <fyurisich>
-Status.....: Open.
-Details....: Delete ./FuentesComunes/US_K.ch and ./FuentesComunes/US.ch
-
-/******************************************************************************/
-
-Assigned to: <nobody>
-Added by...: 2011-11-27 12:20:00 UTC-0300 Fernando Yurisich <fyurisich>
-Status.....: Open.
-Details....: US_FileDate( cRecoveryFile ) is not returning DATE value.
-
-/******************************************************************************/
-
-Assigned to: <nobody>
 Added by...: 2011-09-23 15:00:00 UTC-0300 Fernando Yurisich <fyurisich>
 Status.....: Open.
 Details....: In HELP:
              - Spell check and refresh images from topic
              - Update KEYS
                "¿Cómo construir MiniGui para xHarbour?"
+             - Update everything.
 
 /******************************************************************************/
 Assigned to: <nobody>

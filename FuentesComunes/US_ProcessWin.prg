@@ -39,27 +39,56 @@
 //   [5]    121
 //   [6]    d:\xxxxx\xxxxxxx\rte.exe
 //------------------------------------------------------------------------
+
 Function US_GetProcessesNT()
 Return US_2GETPROCESSESNT()
 
+Function US_GetProcessesW9X()
+Return US_2GETPROCESSESW9X()
+
+//========================================================================
+// Function US_SetPriorityToProcess( nPId , nPriority )     Cambiar prioridad a un proceso
+// Recibe como parámetro el numero de Proceso y la nueva prioridad
+// Retorna 0 (success) o -1 (failed) y -2 (failed)
+//------------------------------------------------------------------------
+
+#define ABOVE_NORMAL_PRIORITY_CLASS    0x00008000
+#define BELOW_NORMAL_PRIORITY_CLASS    0x00004000
+#define HIGH_PRIORITY_CLASS            0x00000080
+#define IDLE_PRIORITY_CLASS            0x00000040
+#define NORMAL_PRIORITY_CLASS          0x00000020
+#define REALTIME_PRIORITY_CLASS        0x00000100
+
+Function US_SetPriorityToProcess( nPId , nPriority )
+   local nReto
+   do case
+      case nPriority == 1
+         nReto := US_2SetPriorityToProcess( nPId , ABOVE_NORMAL_PRIORITY_CLASS )
+      case nPriority == 2
+         nReto := US_2SetPriorityToProcess( nPId , BELOW_NORMAL_PRIORITY_CLASS )
+      case nPriority == 3
+         nReto := US_2SetPriorityToProcess( nPId , HIGH_PRIORITY_CLASS )
+      case nPriority == 4
+         nReto := US_2SetPriorityToProcess( nPId , IDLE_PRIORITY_CLASS )
+      case nPriority == 5
+         nReto := US_2SetPriorityToProcess( nPId , NORMAL_PRIORITY_CLASS )
+      case nPriority == 6
+         nReto := US_2SetPriorityToProcess( nPId , REALTIME_PRIORITY_CLASS )
+      OTHERWISE
+         MsgStop( "Invalid Priority Class: " + alltrim( str( nPriority ) ) + " in function " + Procname(), NIL, NIL, .F. )   // this is not translated
+         nReto := -3
+   endcase
+Return nReto
+
 #pragma BEGINDUMP
+
 #include <windows.h>
 #include <stdio.h>
 #include <tchar.h>
+#include <tlhelp32.h>
 #include "psapi.h"
 #include "hbapi.h"
-
-#ifdef __XHARBOUR__
-   #define HB_STORC( n, x, y )    hb_storc( n, x, y )
-   #define HB_STORNI( n, x, y )   hb_storni( n, x, y )
-   #define HB_STORL( n, x, y )    hb_storl( n, x, y )
-   #define HB_STORNL( n, x, y )   hb_stornl( n, x, y )
-#else
-   #define HB_STORC( n, x, y )    hb_storvc( n, x, y )
-   #define HB_STORNI( n, x, y )   hb_storvni( n, x, y )
-   #define HB_STORL( n, x, y )    hb_storvl( n, x, y )
-   #define HB_STORNL( n, x, y )   hb_storvnl( n, x, y )
-#endif
+#include "qpm.h"
 
 /*
 typedef ULONG (FAR PASCAL MAPILOGON)(
@@ -219,7 +248,7 @@ HB_FUNC(US_2GETPROCESSESNT)
        };
    FreeLibrary(hPsApiLib);
 }
-#pragma ENDDUMP
+
 //------------------------------------------------------------------------
 // Fin Function US_GetProcessesNT()
 //========================================================================
@@ -237,14 +266,6 @@ HB_FUNC(US_2GETPROCESSESNT)
 //   [5]    121
 //   [6]    d:\xxxxx\xxxxxxx\rte.exe
 //------------------------------------------------------------------------
-Function US_GetProcessesW9X()
-Return US_2GETPROCESSESW9X()
-
-#pragma BEGINDUMP
-#include <windows.h>
-#include <tlhelp32.h>
-#include <stdio.h>
-#include "hbapi.h"
 
 /*
 typedef ULONG (FAR PASCAL MAPILOGON)(
@@ -381,24 +402,12 @@ HB_FUNC(US_2GETPROCESSESW9X)
    FreeLibrary(bKernelDll);
    return;
 }
-#pragma ENDDUMP
-//------------------------------------------------------------------------
-// Fin Function US_GetProcessesW9X()
-//========================================================================
 
 //========================================================================
 // Function US_KillProcess(nPid)         Termina un proceso
 // Recibe como parámetro el numero de Proceso
 // Retorna 0 (success) o -1 (failed)
 //------------------------------------------------------------------------
-#pragma BEGINDUMP
-#include <windows.h>
-#include <stdio.h>
-#include <stdio.h>
-#include "psapi.h"
-#include "hbapi.h"
-
-#pragma hdrstop
 
 void getDebugPriv( void )
 {
@@ -459,51 +468,6 @@ HB_FUNC(US_KILLPROCESS)
            CloseHandle( hProcess );
            }
 }
-#pragma ENDDUMP
-//------------------------------------------------------------------------
-// Fin Function US_KillProcess(nPid)
-//========================================================================
-
-//========================================================================
-// Function US_SetPriorityToProcess( nPId , nPriority )     Cambiar prioridad a un proceso
-// Recibe como parámetro el numero de Proceso y la nueva prioridad
-// Retorna 0 (success) o -1 (failed) y -2 (failed)
-//------------------------------------------------------------------------
-
-#define ABOVE_NORMAL_PRIORITY_CLASS    0x00008000
-#define BELOW_NORMAL_PRIORITY_CLASS    0x00004000
-#define HIGH_PRIORITY_CLASS            0x00000080
-#define IDLE_PRIORITY_CLASS            0x00000040
-#define NORMAL_PRIORITY_CLASS          0x00000020
-#define REALTIME_PRIORITY_CLASS        0x00000100
-
-Function US_SetPriorityToProcess( nPId , nPriority )
-   local nReto
-   do case
-      case nPriority == 1
-         nReto := US_2SetPriorityToProcess( nPId , ABOVE_NORMAL_PRIORITY_CLASS )
-      case nPriority == 2
-         nReto := US_2SetPriorityToProcess( nPId , BELOW_NORMAL_PRIORITY_CLASS )
-      case nPriority == 3
-         nReto := US_2SetPriorityToProcess( nPId , HIGH_PRIORITY_CLASS )
-      case nPriority == 4
-         nReto := US_2SetPriorityToProcess( nPId , IDLE_PRIORITY_CLASS )
-      case nPriority == 5
-         nReto := US_2SetPriorityToProcess( nPId , NORMAL_PRIORITY_CLASS )
-      case nPriority == 6
-         nReto := US_2SetPriorityToProcess( nPId , REALTIME_PRIORITY_CLASS )
-      OTHERWISE
-         MsgStop( "Invalid Priority Class: " + alltrim( str( nPriority ) ) + " in function " + Procname(), NIL, NIL, .F. )   // this is not translated
-         nReto := -3
-   endcase
-Return nReto
-
-#pragma BEGINDUMP
-#include <windows.h>
-#include <stdio.h>
-#include <stdio.h>
-#include "psapi.h"
-#include "hbapi.h"
 
 HB_FUNC(US_2SETPRIORITYTOPROCESS)
    {
@@ -526,9 +490,7 @@ HB_FUNC(US_2SETPRIORITYTOPROCESS)
       }
    return;
    }
+
 #pragma ENDDUMP
-//------------------------------------------------------------------------
-// Fin Function US_SetPriorityToProcess( nPId , nPriority )
-//========================================================================
 
 /* eof */

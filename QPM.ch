@@ -29,8 +29,11 @@
 #include "US_Env.h"
 
 // String related defines
-#define DBLQT '"'
-#define SNGQT "'"
+#define DBLQT             '"'
+#define SNGQT             "'"
+#define StripDBLQT( str ) SubStr( str, 2, Len( str ) - 2 )
+#define AddDBLQT( str )   ( DBLQT + str + DBLQT )
+#define CRLF              hb_osNewLine()
 
 // Project version
 #define DEF_LEN_VER_VERSION        2
@@ -40,7 +43,7 @@
 // QPM version
 #define QPM_VERSION_NUMBER_MAYOR   '05'
 #define QPM_VERSION_NUMBER_MINOR   '05'
-#define QPM_VERSION_NUMBER_BUILD   '15'
+#define QPM_VERSION_NUMBER_BUILD   '16'
 #define QPM_VERSION_NUMBER_SHORT   ( QPM_VERSION_NUMBER_MAYOR + QPM_VERSION_NUMBER_MINOR + QPM_VERSION_NUMBER_BUILD )
 #define QPM_VERSION_NUMBER_LONG    ( QPM_VERSION_NUMBER_MAYOR + QPM_VERSION_NUMBER_MINOR + "00" + QPM_VERSION_NUMBER_BUILD )
 #define QPM_VERSION_DISPLAY_SHORT  ( QPM_VERSION_NUMBER_MAYOR + "." + QPM_VERSION_NUMBER_MINOR + '.' + QPM_VERSION_NUMBER_BUILD )
@@ -515,7 +518,6 @@ memvar IsBorland
 memvar IsMinGW
 memvar IsPelles
 memvar LibsActiva
-memvar MAIN_HAS_FOCUS
 memvar NCOLDBFEDIT
 memvar NCOLDBFFULLNAME
 memvar NCOLDBFNAME
@@ -634,6 +636,7 @@ memvar PUB_bAutoInc
 memvar PUB_bDebugActive
 memvar PUB_bDebugActiveAnt
 memvar PUB_bForceRunFromMsgOk
+memvar PUB_bHotKeys
 memvar PUB_bIgnoreVersionProject
 memvar PUB_bIsProcessing
 memvar PUB_bLite
@@ -710,6 +713,12 @@ memvar PUB_RunTabAutoSync
 memvar PUB_RunTabChange
 memvar PUB_vAutoRun
 memvar PUB_xHarbourMT
+memvar Q_END_FILE
+memvar Q_MAKE_FILE
+memvar Q_PROGRESS_LOG
+memvar Q_QPM_TMP_RC
+memvar Q_SCRIPT_FILE
+memvar Q_TEMP_LOG
 memvar QPM_bKiller
 memvar QPM_HR_Database
 memvar QPM_KillerbLate

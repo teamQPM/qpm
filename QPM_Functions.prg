@@ -35,6 +35,735 @@ memvar PrivAutoExit
 memvar SM_oMGWait
 memvar cMemoInP
 
+FUNCTION QPM_CreatePublicVars()
+
+// VARIABLES FOR FLAVOR IDENTIFICATION
+   QPM_VAR0 PUBLIC DefineMiniGui1       := DEF_MG_MINIGUI1
+   QPM_VAR0 PUBLIC DefineMiniGui3       := DEF_MG_MINIGUI3
+   QPM_VAR0 PUBLIC DefineExtended1      := DEF_MG_EXTENDED1
+   QPM_VAR0 PUBLIC DefineOohg3          := DEF_MG_OOHG3
+   QPM_VAR0 PUBLIC DefineHarbour        := DEF_MG_HARBOUR
+   QPM_VAR0 PUBLIC DefineXHarbour       := DEF_MG_XHARBOUR
+   QPM_VAR0 PUBLIC DefineBorland        := DEF_MG_BORLAND
+   QPM_VAR0 PUBLIC DefineMinGW          := DEF_MG_MINGW
+   QPM_VAR0 PUBLIC DefinePelles         := DEF_MG_PELLES
+   QPM_VAR0 PUBLIC Define32bits         := DEF_MG_32
+   QPM_VAR0 PUBLIC Define64bits         := DEF_MG_64
+
+// VARIABLES
+   PUBLIC BUILD_IN_PROGRESS             := .F.
+   PUBLIC PUB_cQPM_Support_Link         := 'https://qpm.sourceforge.io/'
+   PUBLIC PUB_cQPM_Support_Admin        := 'Fernando Yurisich (Uruguay)'
+   PUBLIC PUB_cQPM_Support_eMail        := 'qpm-users@lists.sourceforge.net'
+   PUBLIC PUB_cStatusLabel              := 'Status: Idle'
+   PUBLIC PUB_MenuPrjOptions            := 'Project Options'
+   PUBLIC PUB_MenuGblOptions            := 'Global Options (folders for [x]Harbour, MiniGUI, C++ and others)'
+   PUBLIC PUB_cCharTab                  := Chr( 09 )
+   PUBLIC PUB_cCharFileNameTemp         := '_'   // MinGW's MAKE doesn't support $, # prevents TEMP.LOG generation
+   PUBLIC PUB_cQPM_Title                := 'QPM (QAC based Project Manager) - Project Manager for MiniGui (' + QPM_VERSION_DISPLAY_LONG + ')'
+   PUBLIC PUB_cQPM_Folder               := US_FileNameOnlyPath( GetModuleFileName( GetInstance() ) )
+   PUBLIC PUB_cTempFolder               := GetTempFolder()
+   PUBLIC PUB_cThisFolder               := ''
+   PUBLIC PUB_cProjectFile              := ''
+   PUBLIC PUB_cProjectFolder            := ''
+   PUBLIC cProjectFolderIdent           := '<ProjectFolder>'
+   PUBLIC PUB_bOpenProjectFromParm      := .F.
+   PUBLIC PUB_nProjectFileHandle        := 0
+   PUBLIC PUB_bIgnoreVersionProject     := .F.
+   PUBLIC PUB_bW800                     := iif( GetDesktopWidth() <     1024, .T., .F. )
+   PUBLIC PUB_cAutoLog                  := ''
+   PUBLIC PUB_cAutoLogTmp               := ''
+   PUBLIC PUB_bLogOnlyError             := .F.
+   PUBLIC PUB_cSecu                     := dtos(date()) + US_strCero( int(seconds()), 5 ) + PUB_cCharFileNameTemp
+   PUBLIC PUB_bDebugActive              := .F.
+   PUBLIC PUB_bDebugActiveAnt           := .F.
+   PUBLIC PUB_bIsProcessing             := .F.
+   PUBLIC PUB_xHarbourMT                := ''
+   PUBLIC PUB_bAutoInc                  := .T.
+   PUBLIC PUB_bHotKeys                  := .T.
+   PUBLIC IsBorland                     := .F.
+   PUBLIC IsMinGW                       := .F.
+   PUBLIC IsPelles                      := .F.
+   PUBLIC ProgLength                    := 0
+   PUBLIC bAutoExit                     := .F.
+   PUBLIC cUpxOpt                       := '--no-progress'   // By default icons are compressed except the first one, for no compression add '--compress-icons=0'
+   PUBLIC LibsActiva                    := ''
+   PUBLIC PagePRG                       := iif( PUB_bW800, 'SRC', 'Sources' )
+   PUBLIC PageHEA                       := 'H && CH'
+   PUBLIC PagePAN                       := 'FMG && RC'
+   PUBLIC PageDBF                       := 'DBF'
+   PUBLIC PageLIB                       := 'LIB'
+   PUBLIC PageHLP                       := 'SHG'
+   PUBLIC PageSysout                    := iif( PUB_bW800, 'Log', 'Log Build Process' )
+   PUBLIC PageOUT                       := iif( PUB_bW800, 'Out', 'Output Error/Module' )
+   PUBLIC PageWWW                       := iif( PUB_bW800, 'www', 'www' )
+   PUBLIC PageCdQ                       := iif( PUB_bW800, 'QPM', 'QPM' )
+   PUBLIC vSinLoadWindow                := {}
+   PUBLIC vSinInclude                   := {}
+   PUBLIC vXRefPrgHea                   := {}
+   PUBLIC vXRefPrgFmg                   := {}
+   PUBLIC cLastProjectFolder            := ''
+   PUBLIC bLogActivity                  := .F.
+   PUBLIC PUB_DeleteAux                 := .T.
+   PUBLIC PUB_vAutoRun                  := {}
+   PUBLIC RunControlFile                := {}
+   PUBLIC bRunApp                       := .F.
+   PUBLIC PUB_bLite                     := .F.
+   PUBLIC bWaitForBuild                 := .F.
+   PUBLIC nPagePrg                      := 1
+   PUBLIC nPageHea                      := 2
+   PUBLIC nPagePan                      := 3
+   PUBLIC nPageDbf                      := 4
+   PUBLIC nPageLib                      := 5
+#ifdef QPM_SHG
+   PUBLIC nPageHlp                      := 6
+   PUBLIC nPageSysout                   := 7
+   PUBLIC nPageOut                      := 8
+#else
+   PUBLIC nPageHlp                      := 10000
+   PUBLIC nPageSysout                   := 6
+   PUBLIC nPageOut                      := 7
+#endif
+   PUBLIC GBL_TabGridNameFocus          := ''
+   PUBLIC PUB_ErrorLogTime              := 0
+   PUBLIC GBL_HR_cLastExternalFileName  := ''
+   PUBLIC vDbfHeaders                   := { 'One', 'Two' }
+   PUBLIC vDbfWidths                    := { 50, 50 }
+   PUBLIC vDbfJustify                   := { BROWSE_JTFY_LEFT, BROWSE_JTFY_LEFT }
+   PUBLIC bEditorLongName               := .F.
+   PUBLIC bSuspendControlEdit           := .F.
+   PUBLIC bPrgSorting                   := .F.
+   PUBLIC bHeaSorting                   := .F.
+   PUBLIC bPanSorting                   := .F.
+   PUBLIC bDbfSorting                   := .F.
+   PUBLIC bIncSorting                   := .F.
+   PUBLIC bExcSorting                   := .F.
+   PUBLIC bHlpSorting                   := .F.
+   PUBLIC bPrgMoving                    := .F.
+   PUBLIC bHeaMoving                    := .F.
+   PUBLIC bPanMoving                    := .F.
+   PUBLIC bDbfMoving                    := .F.
+   PUBLIC bIncMoving                    := .F.
+   PUBLIC bExcMoving                    := .F.
+   PUBLIC bHlpMoving                    := .F.
+   PUBLIC PUB_nGridImgNone              := 0
+   PUBLIC PUB_nGridImgTilde             := 1
+   PUBLIC PUB_nGridImgEquis             := 2
+   PUBLIC PUB_nGridImgSearchOk          := 3   // this means 'to compress this image activate bit 3'
+   PUBLIC PUB_nGridImgEdited            := 4
+   PUBLIC PUB_nGridImgSearchNotOk       := 5
+   PUBLIC PUB_nGridImgHlpGlobalFoot     := 6
+   PUBLIC PUB_nGridImgHlpWelcome        := 7
+   PUBLIC PUB_nGridImgHlpBook           := 8
+   PUBLIC PUB_nGridImgHlpPage           := 9
+   PUBLIC PUB_nGridImgTop               := 9   // equal to the last variable of GridImg ...
+   PUBLIC vImagesGrid                   := { 'GridNone', ;
+                                             'GridTilde', ;
+                                             'GridEquis', ;
+                                             'GridTildeEquis', ;
+                                             'GridSearchok', ;
+                                             'GridTildeSearchok', ;
+                                             'GridEquisSearchok', ;
+                                             'GridTildeEquisSearchok', ;
+                                             'GridEdited', ;
+                                             'GridTildeEdited', ;
+                                             'GridEquisEdited', ;
+                                             'GridTildeEquisEdited', ;
+                                             'GridSearchokEdited', ;
+                                             'GridTildeSearchokEdited', ;
+                                             'GridEquisSearchokEdited', ;
+                                             'GridTildeEquisSearchokEdited', ;
+                                             'GridSearchNotOk', ;
+                                             'GridHlpGlobalFoot', ;
+                                             'GridHlpGlobalFootSearchOk', ;
+                                             'GridHlpWelcome', ;
+                                             'GridHlpWelcomeSearchOk', ;
+                                             'GridHlpBook', ;
+                                             'GridHlpBookSearchOk', ;
+                                             'GridHlpPage', ;
+                                             'GridHlpPageSearchOk' }   // See FUNCTION GridImage
+   PUBLIC bGlobalSearch                 := .F.   // .T. means Global Search is active
+   PUBLIC cLastGlobalSearch             := ''
+   PUBLIC bLastGlobalSearchFun          := .F.
+   PUBLIC bLastGlobalSearchDbf          := .F.
+   PUBLIC bLastGlobalSearchCas          := .F.
+   PUBLIC bAvisoDbfGlobalSearchLow      := .T.
+   PUBLIC bAvisoDbfDataSearchLow        := .T.
+   PUBLIC bDbfDataSearchAsk             := .T.
+   PUBLIC cDbfDataSearchAskRpta         := ''
+   PUBLIC aGridPrg                      := {}
+   PUBLIC nGridPrgLastRow               := 0
+   PUBLIC NCOLPRGSTATUS                 := 1
+   PUBLIC NCOLPRGRECOMP                 := 2
+   PUBLIC NCOLPRGNAME                   := 3
+   PUBLIC NCOLPRGFULLNAME               := 4
+   PUBLIC NCOLPRGOFFSET                 := 5
+   PUBLIC NCOLPRGEDIT                   := 6
+   PUBLIC NCOLPRGRECOVERY               := 7
+   PUBLIC cEditControlFileRC            := ""
+   PUBLIC bSortPrgAsc                   := .T.
+   PUBLIC aGridHea                      := {}
+   PUBLIC nGridHeaLastRow               := 0
+   PUBLIC NCOLHEASTATUS                 := 1
+   PUBLIC NCOLHEANAME                   := 2
+   PUBLIC NCOLHEAFULLNAME               := 3
+   PUBLIC NCOLHEAOFFSET                 := 4
+   PUBLIC NCOLHEAEDIT                   := 5
+   PUBLIC NCOLHEARECOVERY               := 6
+   PUBLIC bSortHeaAsc                   := .T.
+   PUBLIC aGridPan                      := {}
+   PUBLIC nGridPanLastRow               := 0
+   PUBLIC NCOLPANSTATUS                 := 1
+   PUBLIC NCOLPANNAME                   := 2
+   PUBLIC NCOLPANFULLNAME               := 3
+   PUBLIC NCOLPANOFFSET                 := 4
+   PUBLIC NCOLPANEDIT                   := 5
+   PUBLIC NCOLPANRECOVERY               := 6
+   PUBLIC bSortPanAsc                   := .T.
+   PUBLIC aGridDbf                      := {}
+   PUBLIC nGridDbfLastRow               := 0
+   PUBLIC NCOLDBFSTATUS                 := 1
+   PUBLIC NCOLDBFNAME                   := 2
+   PUBLIC NCOLDBFFULLNAME               := 3
+   PUBLIC NCOLDBFOFFSET                 := 4
+   PUBLIC NCOLDBFEDIT                   := 5
+   PUBLIC NCOLDBFSEARCH                 := 6
+   PUBLIC bSortDbfAsc                   := .T.
+   PUBLIC aGridInc                      := {}
+   PUBLIC NCOLINCSTATUS                 := 1
+   PUBLIC NCOLINCNAME                   := 2
+   PUBLIC NCOLINCFULLNAME               := 3
+   PUBLIC nColLibStatus                 := NCOLINCSTATUS     // auxiliar var for processes that don't differentiate between inc and exc
+   PUBLIC nColLibFullName               := NCOLINCFULLNAME   // auxiliar var for processes that don't differentiate between inc and exc
+   PUBLIC bSortIncAsc                   := .T.
+   PUBLIC aGridExc                      := {}
+   PUBLIC NCOLEXCSTATUS                 := 1
+   PUBLIC NCOLEXCNAME                   := 2
+   PUBLIC bSortExcAsc                   := .T.
+   PUBLIC aGridHlp                      := {}
+   PUBLIC nGridHlpLastRow               := 0
+   PUBLIC NCOLHLPSTATUS                 := 1
+   PUBLIC NCOLHLPTOPIC                  := 2
+   PUBLIC NCOLHLPNICK                   := 3
+   PUBLIC NCOLHLPOFFSET                 := 4
+   PUBLIC NCOLHLPEDIT                   := 5
+   PUBLIC bSortHlpAsc                   := .T.
+   PUBLIC SHG_Database                  := ''
+   PUBLIC SHG_DbSize                    := 0
+   PUBLIC SHG_LastFolderImg             := ''
+   PUBLIC SHG_CheckTypeOutput           := .F.
+   PUBLIC SHG_HtmlFolder                := ''
+   PUBLIC SHG_WWW                       := ''
+   PUBLIC SHG_BaseOK                    := .F.
+   PUBLIC bAutoSyncTab                  := .T.
+   PUBLIC bRunParm                      := .F.
+   PUBLIC GBL_cRunParm                  := ''
+   PUBLIC bBuildRun                     := .F.
+   PUBLIC PUB_bForceRunFromMsgOk        := .F.
+   PUBLIC bBuildRunBack                 := .F.
+   PUBLIC bNumberOnPrg                  := .F.
+   PUBLIC bNumberOnHea                  := .F.
+   PUBLIC bNumberOnPan                  := .F.
+   PUBLIC bPPODisplayado                := .F.
+   PUBLIC cPpoCaretPrg                  := '1'
+   PUBLIC nGDbfRecord                   := 1
+   PUBLIC bDbfAutoView :=               .T.
+   PUBLIC oHlpRichEdit                  := US_RichEdit():New()
+   PUBLIC vLastOpen                     :={}
+   PUBLIC vLastSearch                   :={}
+   PUBLIC vSuffix                       := { { DefineMiniGui1  + DefineBorland + DefineHarbour  + Define32bits, 'HMG 1.x with BCC32 and Harbour' }, ;
+                                             { DefineMiniGui1  + DefineBorland + DefineXHarbour + Define32bits, 'HMG 1.x with BCC32 and xHarbour' }, ;
+                                             { DefineMiniGui3  + DefineMinGW   + DefineHarbour  + Define32bits, 'HMG 3.x with MinGW and Harbour, 32 bits' }, ;
+                                             { DefineMiniGui3  + DefineMinGW   + DefineHarbour  + Define64bits, 'HMG 3.x with MinGW and Harbour, 64 bits' }, ;
+                                             { DefineExtended1 + DefineBorland + DefineHarbour  + Define32bits, 'HMG Extended with BCC32 and Harbour' }, ;
+                                             { DefineExtended1 + DefineBorland + DefineXHarbour + Define32bits, 'HMG Extended with BCC32 and xHarbour' }, ;
+                                             { DefineExtended1 + DefineMinGW   + DefineHarbour  + Define32bits, 'HMG Extended with MinGW and Harbour, 32 bits' }, ;
+                                             { DefineExtended1 + DefineMinGW   + DefineXHarbour + Define32bits, 'HMG Extended with MinGW and xHarbour, 32 bits' }, ;
+                                             { DefineExtended1 + DefineMinGW   + DefineHarbour  + Define64bits, 'HMG Extended with MinGW and Harbour, 64 bits' }, ;
+                                             { DefineExtended1 + DefineMinGW   + DefineXHarbour + Define64bits, 'HMG Extended with MinGW and xHarbour, 64 bits' }, ;
+                                             { DefineOohg3     + DefineBorland + DefineHarbour  + Define32bits, 'OOHG with BCC32 and Harbour' }, ;
+                                             { DefineOohg3     + DefineBorland + DefineXHarbour + Define32bits, 'OOHG with BCC32 and xHarbour' }, ;
+                                             { DefineOohg3     + DefineMinGW   + DefineHarbour  + Define32bits, 'OOHG with MinGW and Harbour, 32 bits' }, ;
+                                             { DefineOohg3     + DefineMinGW   + DefineXHarbour + Define32bits, 'OOHG with MinGW and xHarbour, 32 bits' }, ;
+                                             { DefineOohg3     + DefineMinGW   + DefineHarbour  + Define64bits, 'OOHG with MinGW and Harbour, 64 bits' }, ;
+                                             { DefineOohg3     + DefineMinGW   + DefineXHarbour + Define64bits, 'OOHG with MinGW and xHarbour, 64 bits' }, ;
+                                             { DefineOohg3     + DefinePelles  + DefineHarbour  + Define32bits, 'OOHG with Pelles C and Harbour, 32 bits' }, ;
+                                             { DefineOohg3     + DefinePelles  + DefineXHarbour + Define32bits, 'OOHG with Pelles C and xHarbour, 32 bits' }, ;
+                                             { DefineOohg3     + DefinePelles  + DefineHarbour  + Define64bits, 'OOHG with Pelles C and Harbour, 64 bits' }, ;
+                                             { DefineOohg3     + DefinePelles  + DefineXHarbour + Define64bits, 'OOHG with Pelles C and xHarbour, 64 bits' } }
+   PUBLIC Gbl_Text_DBF                  := ''
+   PUBLIC Gbl_Text_Editor               := ''
+   PUBLIC Gbl_Text_HMGSIDE              := ''
+   PUBLIC Gbl_Text_HMI                  := ''
+   PUBLIC Gbl_Comillas_DBF              := '"'
+   PUBLIC QPM_KillerProcessLast         := {}
+   PUBLIC QPM_KillerbLate               := .T.
+   PUBLIC QPM_KillerModule              := ''
+   PUBLIC QPM_bKiller                   := .F.
+   PUBLIC cPrj_VersionAnt               := '00000000'
+   PUBLIC cPrj_Version                  := '00000000'
+   PUBLIC Prj_Check_PlaceRCFirst        := .F.
+   PUBLIC Prj_Check_IgnoreMainRC        := .F.
+   PUBLIC Prj_Check_IgnoreLibRCs        := .F.
+   PUBLIC Prj_Check_64bits              := .F.
+   PUBLIC Prj_Check_Console             := .F.
+   PUBLIC Prj_Check_HarbourIs31         := .T.
+   PUBLIC Prj_Check_MT                  := .F.
+   PUBLIC Prj_Check_OutputPrefix        := .T.
+   PUBLIC Prj_Check_OutputSuffix        := .F.
+   PUBLIC Prj_Check_Upx                 := .F.
+   PUBLIC Prj_Radio_Cpp                 := DEF_RG_MINGW
+   PUBLIC Prj_Radio_DbFTool             := DEF_RG_DBFTOOL
+   PUBLIC Prj_Radio_FormTool            := DEF_RG_EDITOR
+   PUBLIC Prj_Radio_Harbour             := DEF_RG_HARBOUR
+   PUBLIC Prj_Radio_MiniGui             := DEF_RG_OOHG3
+   PUBLIC Prj_Radio_OutputCopyMove      := DEF_RG_NONE
+   PUBLIC Prj_Radio_OutputRename        := DEF_RG_NONE
+   PUBLIC Prj_Radio_OutputType          := DEF_RG_EXE
+   PUBLIC Prj_Text_OutputCopyMoveFolder := ''
+   PUBLIC Prj_Text_OutputRenameNewName  := ''
+   PUBLIC Prj_ExtraRunCmdFINAL          := ''
+   PUBLIC Prj_ExtraRunProjQPM           := ''
+   PUBLIC Prj_ExtraRunCmdEXE            := ''
+   PUBLIC Prj_ExtraRunCmdFREE           := ''
+   PUBLIC Prj_ExtraRunCmdQPMParm        := ''
+   PUBLIC Prj_ExtraRunCmdEXEParm        := ''
+   PUBLIC Prj_ExtraRunCmdFREEParm       := ''
+   PUBLIC Prj_ExtraRunType              := 'NONE'
+   PUBLIC Prj_ExtraRunQPMRadio          := 'BUILD'
+   PUBLIC Prj_ExtraRunQPMLite           := .T.
+   PUBLIC Prj_ExtraRunQPMForceFull      := .F.
+   PUBLIC Prj_ExtraRunQPMRun            := .F.
+   PUBLIC Prj_ExtraRunQPMButtonRun      := .F.
+   PUBLIC Prj_ExtraRunQPMClear          := .F.
+   PUBLIC Prj_ExtraRunQPMLog            := .F.
+   PUBLIC Prj_ExtraRunQPMLogOnlyError   := .F.
+   PUBLIC Prj_ExtraRunQPMAutoExit       := .T.
+   PUBLIC Prj_ExtraRunExeWait           := .T.
+   PUBLIC Prj_ExtraRunExePause          := .T.
+   PUBLIC Prj_ExtraRunFreeWait          := .T.
+   PUBLIC Prj_ExtraRunFreePause         := .T.
+   PUBLIC Prj_IsNew                     := .F.
+   PUBLIC cProjectFileName
+   PUBLIC PUB_cConvert                  := ''
+   PUBLIC vExtraFoldersForSearchC       := {}
+   PUBLIC vExtraFoldersForSearchHB      := {}
+   PUBLIC bWarningCpp                   := .T.
+   PUBLIC vExeNotFound                  := {}
+   PUBLIC cExeNotFoundMsg               := {}
+   PUBLIC Q_SCRIPT_FILE
+   PUBLIC Q_TEMP_LOG
+   PUBLIC Q_END_FILE
+   PUBLIC Q_MAKE_FILE
+   PUBLIC Q_PROGRESS_LOG
+   PUBLIC Q_QPM_TMP_RC
+   PUBLIC PUB_RunTabChange              := .T.
+   PUBLIC PUB_RunTabAutoSync            := .T.
+   PUBLIC PUB_MigrateFolderFrom         := ''
+   PUBLIC PUB_MigrateVersionFrom        := ''
+   PUBLIC PUB_MI_bExeAssociation        := .F.
+   PUBLIC PUB_MI_cExeAssociation        := ''
+   PUBLIC PUB_MI_nExeAssociationIcon    := 1
+   PUBLIC PUB_MI_bExeBackupOption       := .F.
+   PUBLIC PUB_MI_bNewFile               := .F.
+   PUBLIC PUB_MI_nNewFileSuggested      := 1
+   PUBLIC PUB_MI_cNewFileLeyend         := ''
+   PUBLIC PUB_MI_nNewFileEmpty          := 1
+   PUBLIC PUB_MI_cNewFileUserFile       := ''
+   PUBLIC PUB_MI_nDestinationPath       := 1
+   PUBLIC PUB_MI_cDestinationPath       := ''
+   PUBLIC PUB_MI_nLeyendSuggested       := 1
+   PUBLIC PUB_MI_cLeyendUserText        := ''
+   PUBLIC PUB_MI_bDesktopShortCut       := .T.
+   PUBLIC PUB_MI_nDesktopShortCut       := 1
+   PUBLIC PUB_MI_bStartMenuShortCut     := .T.
+   PUBLIC PUB_MI_nStartMenuShortCut     := 1
+   PUBLIC PUB_MI_bLaunchApplication     := .T.
+   PUBLIC PUB_MI_nLaunchApplication     := 1
+   PUBLIC PUB_MI_bLaunchBackupOption    := .F.
+   PUBLIC PUB_MI_bReboot                := .F.
+   PUBLIC PUB_MI_cDefaultLanguage       := 'EN'
+   PUBLIC PUB_MI_nInstallerName         := 1
+   PUBLIC PUB_MI_cInstallerName         := ''
+   PUBLIC PUB_MI_cImage                 := ''
+   PUBLIC PUB_MI_vFiles                 := {}
+   PUBLIC PUB_MI_bSelectAllPRG          := .F.
+   PUBLIC PUB_MI_bSelectAllHEA          := .F.
+   PUBLIC PUB_MI_bSelectAllPAN          := .F.
+   PUBLIC PUB_MI_bSelectAllDBF          := .F.
+   PUBLIC PUB_MI_bSelectAllLIB          := .F.
+   PUBLIC vExeList                      := { PUB_cQPM_Folder + DEF_SLASH + 'QPM.EXE', ;          // TODO: check if these files are necessary
+                                             PUB_cQPM_Folder + DEF_SLASH + 'QPM.chm', ;
+                                             PUB_cQPM_Folder + DEF_SLASH + 'US_dbfview.exe', ;   // by Grigory Filatov
+                                             PUB_cQPM_Folder + DEF_SLASH + 'US_dif.exe', ;       // CSDiff file-difference analysis tool
+                                             PUB_cQPM_Folder + DEF_SLASH + 'US_difwi.dll', ;     // CSDiff file-difference analysis tool
+                                             PUB_cQPM_Folder + DEF_SLASH + 'US_dtree.css', ;     // Tree for HTML Help
+                                             PUB_cQPM_Folder + DEF_SLASH + 'US_dtree.im', ;      // Images for HTML Help
+                                             PUB_cQPM_Folder + DEF_SLASH + 'US_dtree.js', ;      // Java function for HTML Help
+                                             PUB_cQPM_Folder + DEF_SLASH + 'US_hha.dll', ;       // HTML HELP WorkShop Compiler
+                                             PUB_cQPM_Folder + DEF_SLASH + 'US_hhc.exe', ;       // HTML HELP WorkShop Compiler
+                                             PUB_cQPM_Folder + DEF_SLASH + 'US_impdef.exe', ;    // Generates .DEF from DLL (BCC32)       TODO: Delete and use from compiler
+                                             PUB_cQPM_Folder + DEF_SLASH + 'US_implib.exe', ;    // Converts DLL to LIB (BCC32)           TODO: Delete and use from compiler
+                                             PUB_cQPM_Folder + DEF_SLASH + 'US_itcc.dll', ;      // HTML HELP WorkShop Compiler
+                                             PUB_cQPM_Folder + DEF_SLASH + 'US_make.exe', ;      // Make utility to compile and link
+                                             PUB_cQPM_Folder + DEF_SLASH + 'US_msg.exe', ;       // Generates log messages
+                                             PUB_cQPM_Folder + DEF_SLASH + 'US_objdump.exe', ;   // Lists MinGW's modules
+                                             PUB_cQPM_Folder + DEF_SLASH + 'US_pexports.exe', ;  // Generates .DEF from DLL (MinGW)
+                                             PUB_cQPM_Folder + DEF_SLASH + 'US_podump.exe', ;    // Lists modules (Pelles)                TODO: Delete and use from compiler
+                                             PUB_cQPM_Folder + DEF_SLASH + 'US_polib.exe', ;     // Lists Libs (Pelles)                   TODO: Delete and use from compiler
+                                             PUB_cQPM_Folder + DEF_SLASH + 'US_r2h.exe', ;       // Rtf to HTML
+                                             PUB_cQPM_Folder + DEF_SLASH + 'US_reimp.exe', ;     // Generates .DEF from LIB (MinGW)
+                                             PUB_cQPM_Folder + DEF_SLASH + 'US_res.exe', ;       // Preprocess rc files for MinGW
+                                             PUB_cQPM_Folder + DEF_SLASH + 'US_run.exe', ;       // Executes other programs
+                                             PUB_cQPM_Folder + DEF_SLASH + 'US_shell.exe', ;     // Executes batch scripts
+                                             PUB_cQPM_Folder + DEF_SLASH + 'US_slash.exe', ;     // Preprocess and compiles C file using MinGW gcc
+                                             PUB_cQPM_Folder + DEF_SLASH + 'US_tdump.exe', ;     // Dumps info from EXEOBJLIB modules Check for 64 bits files
+                                             PUB_cQPM_Folder + DEF_SLASH + 'US_tlib.exe', ;      // Lists LIB (BCC32)
+                                             PUB_cQPM_Folder + DEF_SLASH + 'US_upx.exe' }        // EXE compressor
+#ifdef QPM_HOTRECOVERY
+   QPM_HotInitPublicVariables()
+#endif
+
+// QPM_GLOBALSETTINGS VARIABLES
+   /* MiniGui Oficial 1 with BCC */
+   QPM_VAR2 PUBLIC Gbl_T_C_      DEF_MG_MINIGUI1  DEF_MG_BORLAND DEF_MG_HARBOUR  DEF_MG_32 := ''           // c compiler
+   QPM_VAR2 PUBLIC Gbl_T_C_      DEF_MG_MINIGUI1  DEF_MG_BORLAND DEF_MG_XHARBOUR DEF_MG_32 := ''
+   QPM_VAR2 PUBLIC Gbl_T_C_LIBS_ DEF_MG_MINIGUI1  DEF_MG_BORLAND DEF_MG_HARBOUR  DEF_MG_32 := ''           // c compiler libs
+   QPM_VAR2 PUBLIC Gbl_T_C_LIBS_ DEF_MG_MINIGUI1  DEF_MG_BORLAND DEF_MG_XHARBOUR DEF_MG_32 := ''
+   QPM_VAR2 PUBLIC Gbl_T_M_      DEF_MG_MINIGUI1  DEF_MG_BORLAND DEF_MG_HARBOUR  DEF_MG_32 := ''           // minigui
+   QPM_VAR2 PUBLIC Gbl_T_M_      DEF_MG_MINIGUI1  DEF_MG_BORLAND DEF_MG_XHARBOUR DEF_MG_32 := ''
+   QPM_VAR2 PUBLIC Gbl_T_M_LIBS_ DEF_MG_MINIGUI1  DEF_MG_BORLAND DEF_MG_HARBOUR  DEF_MG_32 := ''           // minigui libs
+   QPM_VAR2 PUBLIC Gbl_T_M_LIBS_ DEF_MG_MINIGUI1  DEF_MG_BORLAND DEF_MG_XHARBOUR DEF_MG_32 := ''
+   QPM_VAR2 PUBLIC Gbl_T_P_      DEF_MG_MINIGUI1  DEF_MG_BORLAND DEF_MG_HARBOUR  DEF_MG_32 := ''           // (x)harbour compiler
+   QPM_VAR2 PUBLIC Gbl_T_P_      DEF_MG_MINIGUI1  DEF_MG_BORLAND DEF_MG_XHARBOUR DEF_MG_32 := ''
+   QPM_VAR2 PUBLIC Gbl_T_P_LIBS_ DEF_MG_MINIGUI1  DEF_MG_BORLAND DEF_MG_HARBOUR  DEF_MG_32 := ''           // (x)harbour compiler libs
+   QPM_VAR2 PUBLIC Gbl_T_P_LIBS_ DEF_MG_MINIGUI1  DEF_MG_BORLAND DEF_MG_XHARBOUR DEF_MG_32 := ''
+   /* MiniGui Oficial 3 with MinGW */
+   QPM_VAR2 PUBLIC Gbl_T_C_      DEF_MG_MINIGUI3  DEF_MG_MINGW   DEF_MG_HARBOUR  DEF_MG_32 := ''
+   QPM_VAR2 PUBLIC Gbl_T_C_      DEF_MG_MINIGUI3  DEF_MG_MINGW   DEF_MG_HARBOUR  DEF_MG_64 := ''
+   QPM_VAR2 PUBLIC Gbl_T_C_LIBS_ DEF_MG_MINIGUI3  DEF_MG_MINGW   DEF_MG_HARBOUR  DEF_MG_32 := ''
+   QPM_VAR2 PUBLIC Gbl_T_C_LIBS_ DEF_MG_MINIGUI3  DEF_MG_MINGW   DEF_MG_HARBOUR  DEF_MG_64 := ''
+   QPM_VAR2 PUBLIC Gbl_T_M_      DEF_MG_MINIGUI3  DEF_MG_MINGW   DEF_MG_HARBOUR  DEF_MG_32 := ''
+   QPM_VAR2 PUBLIC Gbl_T_M_      DEF_MG_MINIGUI3  DEF_MG_MINGW   DEF_MG_HARBOUR  DEF_MG_64 := ''
+   QPM_VAR2 PUBLIC Gbl_T_M_LIBS_ DEF_MG_MINIGUI3  DEF_MG_MINGW   DEF_MG_HARBOUR  DEF_MG_32 := ''
+   QPM_VAR2 PUBLIC Gbl_T_M_LIBS_ DEF_MG_MINIGUI3  DEF_MG_MINGW   DEF_MG_HARBOUR  DEF_MG_64 := ''
+   QPM_VAR2 PUBLIC Gbl_T_P_      DEF_MG_MINIGUI3  DEF_MG_MINGW   DEF_MG_HARBOUR  DEF_MG_32 := ''
+   QPM_VAR2 PUBLIC Gbl_T_P_      DEF_MG_MINIGUI3  DEF_MG_MINGW   DEF_MG_HARBOUR  DEF_MG_64 := ''
+   QPM_VAR2 PUBLIC Gbl_T_P_LIBS_ DEF_MG_MINIGUI3  DEF_MG_MINGW   DEF_MG_HARBOUR  DEF_MG_32 := ''
+   QPM_VAR2 PUBLIC Gbl_T_P_LIBS_ DEF_MG_MINIGUI3  DEF_MG_MINGW   DEF_MG_HARBOUR  DEF_MG_64 := ''
+   /* MiniGui Extended 1 with BCC */
+   QPM_VAR2 PUBLIC Gbl_T_C_      DEF_MG_EXTENDED1 DEF_MG_BORLAND DEF_MG_HARBOUR  DEF_MG_32 := ''
+   QPM_VAR2 PUBLIC Gbl_T_C_      DEF_MG_EXTENDED1 DEF_MG_BORLAND DEF_MG_XHARBOUR DEF_MG_32 := ''
+   QPM_VAR2 PUBLIC Gbl_T_C_LIBS_ DEF_MG_EXTENDED1 DEF_MG_BORLAND DEF_MG_HARBOUR  DEF_MG_32 := ''
+   QPM_VAR2 PUBLIC Gbl_T_C_LIBS_ DEF_MG_EXTENDED1 DEF_MG_BORLAND DEF_MG_XHARBOUR DEF_MG_32 := ''
+   QPM_VAR2 PUBLIC Gbl_T_M_      DEF_MG_EXTENDED1 DEF_MG_BORLAND DEF_MG_HARBOUR  DEF_MG_32 := ''
+   QPM_VAR2 PUBLIC Gbl_T_M_      DEF_MG_EXTENDED1 DEF_MG_BORLAND DEF_MG_XHARBOUR DEF_MG_32 := ''
+   QPM_VAR2 PUBLIC Gbl_T_M_LIBS_ DEF_MG_EXTENDED1 DEF_MG_BORLAND DEF_MG_HARBOUR  DEF_MG_32 := ''
+   QPM_VAR2 PUBLIC Gbl_T_M_LIBS_ DEF_MG_EXTENDED1 DEF_MG_BORLAND DEF_MG_XHARBOUR DEF_MG_32 := ''
+   QPM_VAR2 PUBLIC Gbl_T_P_      DEF_MG_EXTENDED1 DEF_MG_BORLAND DEF_MG_HARBOUR  DEF_MG_32 := ''
+   QPM_VAR2 PUBLIC Gbl_T_P_      DEF_MG_EXTENDED1 DEF_MG_BORLAND DEF_MG_XHARBOUR DEF_MG_32 := ''
+   QPM_VAR2 PUBLIC Gbl_T_P_LIBS_ DEF_MG_EXTENDED1 DEF_MG_BORLAND DEF_MG_HARBOUR  DEF_MG_32 := ''
+   QPM_VAR2 PUBLIC Gbl_T_P_LIBS_ DEF_MG_EXTENDED1 DEF_MG_BORLAND DEF_MG_XHARBOUR DEF_MG_32 := ''
+   /* MiniGui Extended 1 with MinGW */
+   QPM_VAR2 PUBLIC Gbl_T_C_      DEF_MG_EXTENDED1 DEF_MG_MINGW   DEF_MG_HARBOUR  DEF_MG_32 := ''
+   QPM_VAR2 PUBLIC Gbl_T_C_      DEF_MG_EXTENDED1 DEF_MG_MINGW   DEF_MG_HARBOUR  DEF_MG_64 := ''
+   QPM_VAR2 PUBLIC Gbl_T_C_      DEF_MG_EXTENDED1 DEF_MG_MINGW   DEF_MG_XHARBOUR DEF_MG_32 := ''
+   QPM_VAR2 PUBLIC Gbl_T_C_      DEF_MG_EXTENDED1 DEF_MG_MINGW   DEF_MG_XHARBOUR DEF_MG_64 := ''
+   QPM_VAR2 PUBLIC Gbl_T_C_LIBS_ DEF_MG_EXTENDED1 DEF_MG_MINGW   DEF_MG_HARBOUR  DEF_MG_32 := ''
+   QPM_VAR2 PUBLIC Gbl_T_C_LIBS_ DEF_MG_EXTENDED1 DEF_MG_MINGW   DEF_MG_HARBOUR  DEF_MG_64 := ''
+   QPM_VAR2 PUBLIC Gbl_T_C_LIBS_ DEF_MG_EXTENDED1 DEF_MG_MINGW   DEF_MG_XHARBOUR DEF_MG_32 := ''
+   QPM_VAR2 PUBLIC Gbl_T_C_LIBS_ DEF_MG_EXTENDED1 DEF_MG_MINGW   DEF_MG_XHARBOUR DEF_MG_64 := ''
+   QPM_VAR2 PUBLIC Gbl_T_M_      DEF_MG_EXTENDED1 DEF_MG_MINGW   DEF_MG_HARBOUR  DEF_MG_32 := ''
+   QPM_VAR2 PUBLIC Gbl_T_M_      DEF_MG_EXTENDED1 DEF_MG_MINGW   DEF_MG_HARBOUR  DEF_MG_64 := ''
+   QPM_VAR2 PUBLIC Gbl_T_M_      DEF_MG_EXTENDED1 DEF_MG_MINGW   DEF_MG_XHARBOUR DEF_MG_32 := ''
+   QPM_VAR2 PUBLIC Gbl_T_M_      DEF_MG_EXTENDED1 DEF_MG_MINGW   DEF_MG_XHARBOUR DEF_MG_64 := ''
+   QPM_VAR2 PUBLIC Gbl_T_M_LIBS_ DEF_MG_EXTENDED1 DEF_MG_MINGW   DEF_MG_HARBOUR  DEF_MG_32 := ''
+   QPM_VAR2 PUBLIC Gbl_T_M_LIBS_ DEF_MG_EXTENDED1 DEF_MG_MINGW   DEF_MG_HARBOUR  DEF_MG_64 := ''
+   QPM_VAR2 PUBLIC Gbl_T_M_LIBS_ DEF_MG_EXTENDED1 DEF_MG_MINGW   DEF_MG_XHARBOUR DEF_MG_32 := ''
+   QPM_VAR2 PUBLIC Gbl_T_M_LIBS_ DEF_MG_EXTENDED1 DEF_MG_MINGW   DEF_MG_XHARBOUR DEF_MG_64 := ''
+   QPM_VAR2 PUBLIC Gbl_T_P_      DEF_MG_EXTENDED1 DEF_MG_MINGW   DEF_MG_HARBOUR  DEF_MG_32 := ''
+   QPM_VAR2 PUBLIC Gbl_T_P_      DEF_MG_EXTENDED1 DEF_MG_MINGW   DEF_MG_HARBOUR  DEF_MG_64 := ''
+   QPM_VAR2 PUBLIC Gbl_T_P_      DEF_MG_EXTENDED1 DEF_MG_MINGW   DEF_MG_XHARBOUR DEF_MG_32 := ''
+   QPM_VAR2 PUBLIC Gbl_T_P_      DEF_MG_EXTENDED1 DEF_MG_MINGW   DEF_MG_XHARBOUR DEF_MG_64 := ''
+   QPM_VAR2 PUBLIC Gbl_T_P_LIBS_ DEF_MG_EXTENDED1 DEF_MG_MINGW   DEF_MG_HARBOUR  DEF_MG_32 := ''
+   QPM_VAR2 PUBLIC Gbl_T_P_LIBS_ DEF_MG_EXTENDED1 DEF_MG_MINGW   DEF_MG_HARBOUR  DEF_MG_64 := ''
+   QPM_VAR2 PUBLIC Gbl_T_P_LIBS_ DEF_MG_EXTENDED1 DEF_MG_MINGW   DEF_MG_XHARBOUR DEF_MG_32 := ''
+   QPM_VAR2 PUBLIC Gbl_T_P_LIBS_ DEF_MG_EXTENDED1 DEF_MG_MINGW   DEF_MG_XHARBOUR DEF_MG_64 := ''
+   /* OOHG with BCC */
+   QPM_VAR2 PUBLIC Gbl_T_C_      DEF_MG_OOHG3    DEF_MG_BORLAND DEF_MG_HARBOUR  DEF_MG_32 := ''
+   QPM_VAR2 PUBLIC Gbl_T_C_      DEF_MG_OOHG3    DEF_MG_BORLAND DEF_MG_XHARBOUR DEF_MG_32 := ''
+   QPM_VAR2 PUBLIC Gbl_T_C_LIBS_ DEF_MG_OOHG3    DEF_MG_BORLAND DEF_MG_HARBOUR  DEF_MG_32 := ''
+   QPM_VAR2 PUBLIC Gbl_T_C_LIBS_ DEF_MG_OOHG3    DEF_MG_BORLAND DEF_MG_XHARBOUR DEF_MG_32 := ''
+   QPM_VAR2 PUBLIC Gbl_T_M_      DEF_MG_OOHG3    DEF_MG_BORLAND DEF_MG_HARBOUR  DEF_MG_32 := ''
+   QPM_VAR2 PUBLIC Gbl_T_M_      DEF_MG_OOHG3    DEF_MG_BORLAND DEF_MG_XHARBOUR DEF_MG_32 := ''
+   QPM_VAR2 PUBLIC Gbl_T_M_LIBS_ DEF_MG_OOHG3    DEF_MG_BORLAND DEF_MG_HARBOUR  DEF_MG_32 := ''
+   QPM_VAR2 PUBLIC Gbl_T_M_LIBS_ DEF_MG_OOHG3    DEF_MG_BORLAND DEF_MG_XHARBOUR DEF_MG_32 := ''
+   QPM_VAR2 PUBLIC Gbl_T_P_      DEF_MG_OOHG3    DEF_MG_BORLAND DEF_MG_HARBOUR  DEF_MG_32 := ''
+   QPM_VAR2 PUBLIC Gbl_T_P_      DEF_MG_OOHG3    DEF_MG_BORLAND DEF_MG_XHARBOUR DEF_MG_32 := ''
+   QPM_VAR2 PUBLIC Gbl_T_P_LIBS_ DEF_MG_OOHG3    DEF_MG_BORLAND DEF_MG_HARBOUR  DEF_MG_32 := ''
+   QPM_VAR2 PUBLIC Gbl_T_P_LIBS_ DEF_MG_OOHG3    DEF_MG_BORLAND DEF_MG_XHARBOUR DEF_MG_32 := ''
+   /* OOHG with MinGW */
+   QPM_VAR2 PUBLIC Gbl_T_C_      DEF_MG_OOHG3    DEF_MG_MINGW   DEF_MG_HARBOUR  DEF_MG_32 := ''
+   QPM_VAR2 PUBLIC Gbl_T_C_      DEF_MG_OOHG3    DEF_MG_MINGW   DEF_MG_HARBOUR  DEF_MG_64 := ''
+   QPM_VAR2 PUBLIC Gbl_T_C_      DEF_MG_OOHG3    DEF_MG_MINGW   DEF_MG_XHARBOUR DEF_MG_32 := ''
+   QPM_VAR2 PUBLIC Gbl_T_C_      DEF_MG_OOHG3    DEF_MG_MINGW   DEF_MG_XHARBOUR DEF_MG_64 := ''
+   QPM_VAR2 PUBLIC Gbl_T_C_LIBS_ DEF_MG_OOHG3    DEF_MG_MINGW   DEF_MG_HARBOUR  DEF_MG_32 := ''
+   QPM_VAR2 PUBLIC Gbl_T_C_LIBS_ DEF_MG_OOHG3    DEF_MG_MINGW   DEF_MG_HARBOUR  DEF_MG_64 := ''
+   QPM_VAR2 PUBLIC Gbl_T_C_LIBS_ DEF_MG_OOHG3    DEF_MG_MINGW   DEF_MG_XHARBOUR DEF_MG_32 := ''
+   QPM_VAR2 PUBLIC Gbl_T_C_LIBS_ DEF_MG_OOHG3    DEF_MG_MINGW   DEF_MG_XHARBOUR DEF_MG_64 := ''
+   QPM_VAR2 PUBLIC Gbl_T_M_      DEF_MG_OOHG3    DEF_MG_MINGW   DEF_MG_HARBOUR  DEF_MG_32 := ''
+   QPM_VAR2 PUBLIC Gbl_T_M_      DEF_MG_OOHG3    DEF_MG_MINGW   DEF_MG_HARBOUR  DEF_MG_64 := ''
+   QPM_VAR2 PUBLIC Gbl_T_M_      DEF_MG_OOHG3    DEF_MG_MINGW   DEF_MG_XHARBOUR DEF_MG_32 := ''
+   QPM_VAR2 PUBLIC Gbl_T_M_      DEF_MG_OOHG3    DEF_MG_MINGW   DEF_MG_XHARBOUR DEF_MG_64 := ''
+   QPM_VAR2 PUBLIC Gbl_T_M_LIBS_ DEF_MG_OOHG3    DEF_MG_MINGW   DEF_MG_HARBOUR  DEF_MG_32 := ''
+   QPM_VAR2 PUBLIC Gbl_T_M_LIBS_ DEF_MG_OOHG3    DEF_MG_MINGW   DEF_MG_HARBOUR  DEF_MG_64 := ''
+   QPM_VAR2 PUBLIC Gbl_T_M_LIBS_ DEF_MG_OOHG3    DEF_MG_MINGW   DEF_MG_XHARBOUR DEF_MG_32 := ''
+   QPM_VAR2 PUBLIC Gbl_T_M_LIBS_ DEF_MG_OOHG3    DEF_MG_MINGW   DEF_MG_XHARBOUR DEF_MG_64 := ''
+   QPM_VAR2 PUBLIC Gbl_T_P_      DEF_MG_OOHG3    DEF_MG_MINGW   DEF_MG_HARBOUR  DEF_MG_32 := ''
+   QPM_VAR2 PUBLIC Gbl_T_P_      DEF_MG_OOHG3    DEF_MG_MINGW   DEF_MG_HARBOUR  DEF_MG_64 := ''
+   QPM_VAR2 PUBLIC Gbl_T_P_      DEF_MG_OOHG3    DEF_MG_MINGW   DEF_MG_XHARBOUR DEF_MG_32 := ''
+   QPM_VAR2 PUBLIC Gbl_T_P_      DEF_MG_OOHG3    DEF_MG_MINGW   DEF_MG_XHARBOUR DEF_MG_64 := ''
+   QPM_VAR2 PUBLIC Gbl_T_P_LIBS_ DEF_MG_OOHG3    DEF_MG_MINGW   DEF_MG_HARBOUR  DEF_MG_32 := ''
+   QPM_VAR2 PUBLIC Gbl_T_P_LIBS_ DEF_MG_OOHG3    DEF_MG_MINGW   DEF_MG_HARBOUR  DEF_MG_64 := ''
+   QPM_VAR2 PUBLIC Gbl_T_P_LIBS_ DEF_MG_OOHG3    DEF_MG_MINGW   DEF_MG_XHARBOUR DEF_MG_32 := ''
+   QPM_VAR2 PUBLIC Gbl_T_P_LIBS_ DEF_MG_OOHG3    DEF_MG_MINGW   DEF_MG_XHARBOUR DEF_MG_64 := ''
+   /* OOHG with Pelles */
+   QPM_VAR2 PUBLIC Gbl_T_C_      DEF_MG_OOHG3    DEF_MG_PELLES  DEF_MG_HARBOUR  DEF_MG_32 := ''
+   QPM_VAR2 PUBLIC Gbl_T_C_      DEF_MG_OOHG3    DEF_MG_PELLES  DEF_MG_HARBOUR  DEF_MG_64 := ''
+   QPM_VAR2 PUBLIC Gbl_T_C_      DEF_MG_OOHG3    DEF_MG_PELLES  DEF_MG_XHARBOUR DEF_MG_32 := ''
+   QPM_VAR2 PUBLIC Gbl_T_C_      DEF_MG_OOHG3    DEF_MG_PELLES  DEF_MG_XHARBOUR DEF_MG_64 := ''
+   QPM_VAR2 PUBLIC Gbl_T_C_LIBS_ DEF_MG_OOHG3    DEF_MG_PELLES  DEF_MG_HARBOUR  DEF_MG_32 := ''
+   QPM_VAR2 PUBLIC Gbl_T_C_LIBS_ DEF_MG_OOHG3    DEF_MG_PELLES  DEF_MG_HARBOUR  DEF_MG_64 := ''
+   QPM_VAR2 PUBLIC Gbl_T_C_LIBS_ DEF_MG_OOHG3    DEF_MG_PELLES  DEF_MG_XHARBOUR DEF_MG_32 := ''
+   QPM_VAR2 PUBLIC Gbl_T_C_LIBS_ DEF_MG_OOHG3    DEF_MG_PELLES  DEF_MG_XHARBOUR DEF_MG_64 := ''
+   QPM_VAR2 PUBLIC Gbl_T_M_      DEF_MG_OOHG3    DEF_MG_PELLES  DEF_MG_HARBOUR  DEF_MG_32 := ''
+   QPM_VAR2 PUBLIC Gbl_T_M_      DEF_MG_OOHG3    DEF_MG_PELLES  DEF_MG_HARBOUR  DEF_MG_64 := ''
+   QPM_VAR2 PUBLIC Gbl_T_M_      DEF_MG_OOHG3    DEF_MG_PELLES  DEF_MG_XHARBOUR DEF_MG_32 := ''
+   QPM_VAR2 PUBLIC Gbl_T_M_      DEF_MG_OOHG3    DEF_MG_PELLES  DEF_MG_XHARBOUR DEF_MG_64 := ''
+   QPM_VAR2 PUBLIC Gbl_T_M_LIBS_ DEF_MG_OOHG3    DEF_MG_PELLES  DEF_MG_HARBOUR  DEF_MG_32 := ''
+   QPM_VAR2 PUBLIC Gbl_T_M_LIBS_ DEF_MG_OOHG3    DEF_MG_PELLES  DEF_MG_HARBOUR  DEF_MG_64 := ''
+   QPM_VAR2 PUBLIC Gbl_T_M_LIBS_ DEF_MG_OOHG3    DEF_MG_PELLES  DEF_MG_XHARBOUR DEF_MG_32 := ''
+   QPM_VAR2 PUBLIC Gbl_T_M_LIBS_ DEF_MG_OOHG3    DEF_MG_PELLES  DEF_MG_XHARBOUR DEF_MG_64 := ''
+   QPM_VAR2 PUBLIC Gbl_T_P_      DEF_MG_OOHG3    DEF_MG_PELLES  DEF_MG_HARBOUR  DEF_MG_32 := ''
+   QPM_VAR2 PUBLIC Gbl_T_P_      DEF_MG_OOHG3    DEF_MG_PELLES  DEF_MG_HARBOUR  DEF_MG_64 := ''
+   QPM_VAR2 PUBLIC Gbl_T_P_      DEF_MG_OOHG3    DEF_MG_PELLES  DEF_MG_XHARBOUR DEF_MG_32 := ''
+   QPM_VAR2 PUBLIC Gbl_T_P_      DEF_MG_OOHG3    DEF_MG_PELLES  DEF_MG_XHARBOUR DEF_MG_64 := ''
+   QPM_VAR2 PUBLIC Gbl_T_P_LIBS_ DEF_MG_OOHG3    DEF_MG_PELLES  DEF_MG_HARBOUR  DEF_MG_32 := ''
+   QPM_VAR2 PUBLIC Gbl_T_P_LIBS_ DEF_MG_OOHG3    DEF_MG_PELLES  DEF_MG_HARBOUR  DEF_MG_64 := ''
+   QPM_VAR2 PUBLIC Gbl_T_P_LIBS_ DEF_MG_OOHG3    DEF_MG_PELLES  DEF_MG_XHARBOUR DEF_MG_32 := ''
+   QPM_VAR2 PUBLIC Gbl_T_P_LIBS_ DEF_MG_OOHG3    DEF_MG_PELLES  DEF_MG_XHARBOUR DEF_MG_64 := ''
+
+// VARIABLES FOR LIB HANDLING
+   /* MiniGui Oficial 1 with BCC */
+   QPM_VAR2 PUBLIC IncludeLibs          DEF_MG_MINIGUI1  DEF_MG_BORLAND  DEF_MG_HARBOUR  DEF_MG_32 := {}
+   QPM_VAR2 PUBLIC ExcludeLibs          DEF_MG_MINIGUI1  DEF_MG_BORLAND  DEF_MG_HARBOUR  DEF_MG_32 := {}
+   QPM_VAR2 PUBLIC vExtraFoldersForLibs DEF_MG_MINIGUI1  DEF_MG_BORLAND  DEF_MG_HARBOUR  DEF_MG_32 := {}
+   QPM_VAR2 PUBLIC cLastLibFolder       DEF_MG_MINIGUI1  DEF_MG_BORLAND  DEF_MG_HARBOUR  DEF_MG_32 := ''
+   QPM_VAR2 PUBLIC vLibDefault          DEF_MG_MINIGUI1  DEF_MG_BORLAND  DEF_MG_HARBOUR  DEF_MG_32 := {}
+   QPM_VAR2 PUBLIC IncludeLibs          DEF_MG_MINIGUI1  DEF_MG_BORLAND  DEF_MG_XHARBOUR DEF_MG_32 := {}
+   QPM_VAR2 PUBLIC ExcludeLibs          DEF_MG_MINIGUI1  DEF_MG_BORLAND  DEF_MG_XHARBOUR DEF_MG_32 := {}
+   QPM_VAR2 PUBLIC vExtraFoldersForLibs DEF_MG_MINIGUI1  DEF_MG_BORLAND  DEF_MG_XHARBOUR DEF_MG_32 := {}
+   QPM_VAR2 PUBLIC cLastLibFolder       DEF_MG_MINIGUI1  DEF_MG_BORLAND  DEF_MG_XHARBOUR DEF_MG_32 := ''
+   QPM_VAR2 PUBLIC vLibDefault          DEF_MG_MINIGUI1  DEF_MG_BORLAND  DEF_MG_XHARBOUR DEF_MG_32 := {}
+   /* MiniGui Oficial 3 with MinGW */
+   QPM_VAR2 PUBLIC IncludeLibs          DEF_MG_MINIGUI3  DEF_MG_MINGW    DEF_MG_HARBOUR  DEF_MG_32 := {}
+   QPM_VAR2 PUBLIC ExcludeLibs          DEF_MG_MINIGUI3  DEF_MG_MINGW    DEF_MG_HARBOUR  DEF_MG_32 := {}
+   QPM_VAR2 PUBLIC vExtraFoldersForLibs DEF_MG_MINIGUI3  DEF_MG_MINGW    DEF_MG_HARBOUR  DEF_MG_32 := {}
+   QPM_VAR2 PUBLIC cLastLibFolder       DEF_MG_MINIGUI3  DEF_MG_MINGW    DEF_MG_HARBOUR  DEF_MG_32 := ''
+   QPM_VAR2 PUBLIC vLibDefault          DEF_MG_MINIGUI3  DEF_MG_MINGW    DEF_MG_HARBOUR  DEF_MG_32 := {}
+   QPM_VAR2 PUBLIC IncludeLibs          DEF_MG_MINIGUI3  DEF_MG_MINGW    DEF_MG_HARBOUR  DEF_MG_64 := {}
+   QPM_VAR2 PUBLIC ExcludeLibs          DEF_MG_MINIGUI3  DEF_MG_MINGW    DEF_MG_HARBOUR  DEF_MG_64 := {}
+   QPM_VAR2 PUBLIC vExtraFoldersForLibs DEF_MG_MINIGUI3  DEF_MG_MINGW    DEF_MG_HARBOUR  DEF_MG_64 := {}
+   QPM_VAR2 PUBLIC cLastLibFolder       DEF_MG_MINIGUI3  DEF_MG_MINGW    DEF_MG_HARBOUR  DEF_MG_64 := ''
+   QPM_VAR2 PUBLIC vLibDefault          DEF_MG_MINIGUI3  DEF_MG_MINGW    DEF_MG_HARBOUR  DEF_MG_64 := {}
+   /* MiniGui Extended 1 with BCC */
+   QPM_VAR2 PUBLIC IncludeLibs          DEF_MG_EXTENDED1 DEF_MG_BORLAND  DEF_MG_HARBOUR  DEF_MG_32 := {}
+   QPM_VAR2 PUBLIC ExcludeLibs          DEF_MG_EXTENDED1 DEF_MG_BORLAND  DEF_MG_HARBOUR  DEF_MG_32 := {}
+   QPM_VAR2 PUBLIC vExtraFoldersForLibs DEF_MG_EXTENDED1 DEF_MG_BORLAND  DEF_MG_HARBOUR  DEF_MG_32 := {}
+   QPM_VAR2 PUBLIC cLastLibFolder       DEF_MG_EXTENDED1 DEF_MG_BORLAND  DEF_MG_HARBOUR  DEF_MG_32 := ''
+   QPM_VAR2 PUBLIC vLibDefault          DEF_MG_EXTENDED1 DEF_MG_BORLAND  DEF_MG_HARBOUR  DEF_MG_32 := {}
+   QPM_VAR2 PUBLIC IncludeLibs          DEF_MG_EXTENDED1 DEF_MG_BORLAND  DEF_MG_XHARBOUR DEF_MG_32 := {}
+   QPM_VAR2 PUBLIC ExcludeLibs          DEF_MG_EXTENDED1 DEF_MG_BORLAND  DEF_MG_XHARBOUR DEF_MG_32 := {}
+   QPM_VAR2 PUBLIC vExtraFoldersForLibs DEF_MG_EXTENDED1 DEF_MG_BORLAND  DEF_MG_XHARBOUR DEF_MG_32 := {}
+   QPM_VAR2 PUBLIC cLastLibFolder       DEF_MG_EXTENDED1 DEF_MG_BORLAND  DEF_MG_XHARBOUR DEF_MG_32 := ''
+   QPM_VAR2 PUBLIC vLibDefault          DEF_MG_EXTENDED1 DEF_MG_BORLAND  DEF_MG_XHARBOUR DEF_MG_32 := {}
+   /* MiniGui Extended 1 with MinGW */
+   QPM_VAR2 PUBLIC IncludeLibs          DEF_MG_EXTENDED1 DEF_MG_MINGW    DEF_MG_HARBOUR  DEF_MG_32 := {}
+   QPM_VAR2 PUBLIC ExcludeLibs          DEF_MG_EXTENDED1 DEF_MG_MINGW    DEF_MG_HARBOUR  DEF_MG_32 := {}
+   QPM_VAR2 PUBLIC vExtraFoldersForLibs DEF_MG_EXTENDED1 DEF_MG_MINGW    DEF_MG_HARBOUR  DEF_MG_32 := {}
+   QPM_VAR2 PUBLIC cLastLibFolder       DEF_MG_EXTENDED1 DEF_MG_MINGW    DEF_MG_HARBOUR  DEF_MG_32 := ''
+   QPM_VAR2 PUBLIC vLibDefault          DEF_MG_EXTENDED1 DEF_MG_MINGW    DEF_MG_HARBOUR  DEF_MG_32 := {}
+   QPM_VAR2 PUBLIC IncludeLibs          DEF_MG_EXTENDED1 DEF_MG_MINGW    DEF_MG_XHARBOUR DEF_MG_32 := {}
+   QPM_VAR2 PUBLIC ExcludeLibs          DEF_MG_EXTENDED1 DEF_MG_MINGW    DEF_MG_XHARBOUR DEF_MG_32 := {}
+   QPM_VAR2 PUBLIC vExtraFoldersForLibs DEF_MG_EXTENDED1 DEF_MG_MINGW    DEF_MG_XHARBOUR DEF_MG_32 := {}
+   QPM_VAR2 PUBLIC cLastLibFolder       DEF_MG_EXTENDED1 DEF_MG_MINGW    DEF_MG_XHARBOUR DEF_MG_32 := ''
+   QPM_VAR2 PUBLIC vLibDefault          DEF_MG_EXTENDED1 DEF_MG_MINGW    DEF_MG_XHARBOUR DEF_MG_32 := {}
+   QPM_VAR2 PUBLIC IncludeLibs          DEF_MG_EXTENDED1 DEF_MG_MINGW    DEF_MG_HARBOUR  DEF_MG_64 := {}
+   QPM_VAR2 PUBLIC ExcludeLibs          DEF_MG_EXTENDED1 DEF_MG_MINGW    DEF_MG_HARBOUR  DEF_MG_64 := {}
+   QPM_VAR2 PUBLIC vExtraFoldersForLibs DEF_MG_EXTENDED1 DEF_MG_MINGW    DEF_MG_HARBOUR  DEF_MG_64 := {}
+   QPM_VAR2 PUBLIC cLastLibFolder       DEF_MG_EXTENDED1 DEF_MG_MINGW    DEF_MG_HARBOUR  DEF_MG_64 := ''
+   QPM_VAR2 PUBLIC vLibDefault          DEF_MG_EXTENDED1 DEF_MG_MINGW    DEF_MG_HARBOUR  DEF_MG_64 := {}
+   QPM_VAR2 PUBLIC IncludeLibs          DEF_MG_EXTENDED1 DEF_MG_MINGW    DEF_MG_XHARBOUR DEF_MG_64 := {}
+   QPM_VAR2 PUBLIC ExcludeLibs          DEF_MG_EXTENDED1 DEF_MG_MINGW    DEF_MG_XHARBOUR DEF_MG_64 := {}
+   QPM_VAR2 PUBLIC vExtraFoldersForLibs DEF_MG_EXTENDED1 DEF_MG_MINGW    DEF_MG_XHARBOUR DEF_MG_64 := {}
+   QPM_VAR2 PUBLIC cLastLibFolder       DEF_MG_EXTENDED1 DEF_MG_MINGW    DEF_MG_XHARBOUR DEF_MG_64 := ''
+   QPM_VAR2 PUBLIC vLibDefault          DEF_MG_EXTENDED1 DEF_MG_MINGW    DEF_MG_XHARBOUR DEF_MG_64 := {}
+   /* OOHG with BCC */
+   QPM_VAR2 PUBLIC IncludeLibs          DEF_MG_OOHG3     DEF_MG_BORLAND  DEF_MG_HARBOUR  DEF_MG_32 := {}
+   QPM_VAR2 PUBLIC ExcludeLibs          DEF_MG_OOHG3     DEF_MG_BORLAND  DEF_MG_HARBOUR  DEF_MG_32 := {}
+   QPM_VAR2 PUBLIC vExtraFoldersForLibs DEF_MG_OOHG3     DEF_MG_BORLAND  DEF_MG_HARBOUR  DEF_MG_32 := {}
+   QPM_VAR2 PUBLIC cLastLibFolder       DEF_MG_OOHG3     DEF_MG_BORLAND  DEF_MG_HARBOUR  DEF_MG_32 := ''
+   QPM_VAR2 PUBLIC vLibDefault          DEF_MG_OOHG3     DEF_MG_BORLAND  DEF_MG_HARBOUR  DEF_MG_32 := {}
+   QPM_VAR2 PUBLIC IncludeLibs          DEF_MG_OOHG3     DEF_MG_BORLAND  DEF_MG_XHARBOUR DEF_MG_32 := {}
+   QPM_VAR2 PUBLIC ExcludeLibs          DEF_MG_OOHG3     DEF_MG_BORLAND  DEF_MG_XHARBOUR DEF_MG_32 := {}
+   QPM_VAR2 PUBLIC vExtraFoldersForLibs DEF_MG_OOHG3     DEF_MG_BORLAND  DEF_MG_XHARBOUR DEF_MG_32 := {}
+   QPM_VAR2 PUBLIC cLastLibFolder       DEF_MG_OOHG3     DEF_MG_BORLAND  DEF_MG_XHARBOUR DEF_MG_32 := ''
+   QPM_VAR2 PUBLIC vLibDefault          DEF_MG_OOHG3     DEF_MG_BORLAND  DEF_MG_XHARBOUR DEF_MG_32 := {}
+   /* OOHG with MinGW */
+   QPM_VAR2 PUBLIC IncludeLibs          DEF_MG_OOHG3     DEF_MG_MINGW    DEF_MG_HARBOUR  DEF_MG_32 := {}
+   QPM_VAR2 PUBLIC ExcludeLibs          DEF_MG_OOHG3     DEF_MG_MINGW    DEF_MG_HARBOUR  DEF_MG_32 := {}
+   QPM_VAR2 PUBLIC vExtraFoldersForLibs DEF_MG_OOHG3     DEF_MG_MINGW    DEF_MG_HARBOUR  DEF_MG_32 := {}
+   QPM_VAR2 PUBLIC cLastLibFolder       DEF_MG_OOHG3     DEF_MG_MINGW    DEF_MG_HARBOUR  DEF_MG_32 := ''
+   QPM_VAR2 PUBLIC vLibDefault          DEF_MG_OOHG3     DEF_MG_MINGW    DEF_MG_HARBOUR  DEF_MG_32 := {}
+   QPM_VAR2 PUBLIC IncludeLibs          DEF_MG_OOHG3     DEF_MG_MINGW    DEF_MG_XHARBOUR DEF_MG_32 := {}
+   QPM_VAR2 PUBLIC ExcludeLibs          DEF_MG_OOHG3     DEF_MG_MINGW    DEF_MG_XHARBOUR DEF_MG_32 := {}
+   QPM_VAR2 PUBLIC vExtraFoldersForLibs DEF_MG_OOHG3     DEF_MG_MINGW    DEF_MG_XHARBOUR DEF_MG_32 := {}
+   QPM_VAR2 PUBLIC cLastLibFolder       DEF_MG_OOHG3     DEF_MG_MINGW    DEF_MG_XHARBOUR DEF_MG_32 := ''
+   QPM_VAR2 PUBLIC vLibDefault          DEF_MG_OOHG3     DEF_MG_MINGW    DEF_MG_XHARBOUR DEF_MG_32 := {}
+   QPM_VAR2 PUBLIC IncludeLibs          DEF_MG_OOHG3     DEF_MG_MINGW    DEF_MG_HARBOUR  DEF_MG_64 := {}
+   QPM_VAR2 PUBLIC ExcludeLibs          DEF_MG_OOHG3     DEF_MG_MINGW    DEF_MG_HARBOUR  DEF_MG_64 := {}
+   QPM_VAR2 PUBLIC vExtraFoldersForLibs DEF_MG_OOHG3     DEF_MG_MINGW    DEF_MG_HARBOUR  DEF_MG_64 := {}
+   QPM_VAR2 PUBLIC cLastLibFolder       DEF_MG_OOHG3     DEF_MG_MINGW    DEF_MG_HARBOUR  DEF_MG_64 := ''
+   QPM_VAR2 PUBLIC vLibDefault          DEF_MG_OOHG3     DEF_MG_MINGW    DEF_MG_HARBOUR  DEF_MG_64 := {}
+   QPM_VAR2 PUBLIC IncludeLibs          DEF_MG_OOHG3     DEF_MG_MINGW    DEF_MG_XHARBOUR DEF_MG_64 := {}
+   QPM_VAR2 PUBLIC ExcludeLibs          DEF_MG_OOHG3     DEF_MG_MINGW    DEF_MG_XHARBOUR DEF_MG_64 := {}
+   QPM_VAR2 PUBLIC vExtraFoldersForLibs DEF_MG_OOHG3     DEF_MG_MINGW    DEF_MG_XHARBOUR DEF_MG_64 := {}
+   QPM_VAR2 PUBLIC cLastLibFolder       DEF_MG_OOHG3     DEF_MG_MINGW    DEF_MG_XHARBOUR DEF_MG_64 := ''
+   QPM_VAR2 PUBLIC vLibDefault          DEF_MG_OOHG3     DEF_MG_MINGW    DEF_MG_XHARBOUR DEF_MG_64 := {}
+   /* OOHG with Pelles */
+   QPM_VAR2 PUBLIC IncludeLibs          DEF_MG_OOHG3     DEF_MG_PELLES   DEF_MG_HARBOUR  DEF_MG_32 := {}
+   QPM_VAR2 PUBLIC ExcludeLibs          DEF_MG_OOHG3     DEF_MG_PELLES   DEF_MG_HARBOUR  DEF_MG_32 := {}
+   QPM_VAR2 PUBLIC vExtraFoldersForLibs DEF_MG_OOHG3     DEF_MG_PELLES   DEF_MG_HARBOUR  DEF_MG_32 := {}
+   QPM_VAR2 PUBLIC cLastLibFolder       DEF_MG_OOHG3     DEF_MG_PELLES   DEF_MG_HARBOUR  DEF_MG_32 := ''
+   QPM_VAR2 PUBLIC vLibDefault          DEF_MG_OOHG3     DEF_MG_PELLES   DEF_MG_HARBOUR  DEF_MG_32 := {}
+   QPM_VAR2 PUBLIC IncludeLibs          DEF_MG_OOHG3     DEF_MG_PELLES   DEF_MG_XHARBOUR DEF_MG_32 := {}
+   QPM_VAR2 PUBLIC ExcludeLibs          DEF_MG_OOHG3     DEF_MG_PELLES   DEF_MG_XHARBOUR DEF_MG_32 := {}
+   QPM_VAR2 PUBLIC vExtraFoldersForLibs DEF_MG_OOHG3     DEF_MG_PELLES   DEF_MG_XHARBOUR DEF_MG_32 := {}
+   QPM_VAR2 PUBLIC cLastLibFolder       DEF_MG_OOHG3     DEF_MG_PELLES   DEF_MG_XHARBOUR DEF_MG_32 := ''
+   QPM_VAR2 PUBLIC vLibDefault          DEF_MG_OOHG3     DEF_MG_PELLES   DEF_MG_XHARBOUR DEF_MG_32 := {}
+   QPM_VAR2 PUBLIC IncludeLibs          DEF_MG_OOHG3     DEF_MG_PELLES   DEF_MG_HARBOUR  DEF_MG_64 := {}
+   QPM_VAR2 PUBLIC ExcludeLibs          DEF_MG_OOHG3     DEF_MG_PELLES   DEF_MG_HARBOUR  DEF_MG_64 := {}
+   QPM_VAR2 PUBLIC vExtraFoldersForLibs DEF_MG_OOHG3     DEF_MG_PELLES   DEF_MG_HARBOUR  DEF_MG_64 := {}
+   QPM_VAR2 PUBLIC cLastLibFolder       DEF_MG_OOHG3     DEF_MG_PELLES   DEF_MG_HARBOUR  DEF_MG_64 := ''
+   QPM_VAR2 PUBLIC vLibDefault          DEF_MG_OOHG3     DEF_MG_PELLES   DEF_MG_HARBOUR  DEF_MG_64 := {}
+   QPM_VAR2 PUBLIC IncludeLibs          DEF_MG_OOHG3     DEF_MG_PELLES   DEF_MG_XHARBOUR DEF_MG_64 := {}
+   QPM_VAR2 PUBLIC ExcludeLibs          DEF_MG_OOHG3     DEF_MG_PELLES   DEF_MG_XHARBOUR DEF_MG_64 := {}
+   QPM_VAR2 PUBLIC vExtraFoldersForLibs DEF_MG_OOHG3     DEF_MG_PELLES   DEF_MG_XHARBOUR DEF_MG_64 := {}
+   QPM_VAR2 PUBLIC cLastLibFolder       DEF_MG_OOHG3     DEF_MG_PELLES   DEF_MG_XHARBOUR DEF_MG_64 := ''
+   QPM_VAR2 PUBLIC vLibDefault          DEF_MG_OOHG3     DEF_MG_PELLES   DEF_MG_XHARBOUR DEF_MG_64 := {}
+
+RETURN NIL
+
+FUNCTION QPM_About()
+   MsgInfo( 'QPM (QAC based Project Manager)' + CRLF + ;
+            'Project Manager For MiniGui (' + QPM_VERSION_DISPLAY_LONG + ')' + CRLF + ;
+            CRLF + ;
+            'Created by CarozoDeQuilmes (Argentina)' + CRLF + ;
+            'Supported by ' + PUB_cQPM_Support_Admin + CRLF + ;
+            CRLF + ;
+            'Home Site: ' + PUB_cQPM_Support_Link + CRLF + ;
+            'Users list: ' + PUB_cQPM_Support_eMail + CRLF + ;
+            CRLF + ;
+            'Based on MPM Harbour MiniGUI Project Manager' + CRLF + ;
+            'Created by Roberto Lopez <roblez@ciudad.com.ar>' + CRLF + ;
+            '(c) 2003-2006 Roberto Lopez <roblez@ciudad.com.ar>' + CRLF + ;
+            CRLF + ;
+            'This release was built with previous QPM version ' + CRLF + ;
+            Get_QPM_Builder_VersionDisplay() + ' using: ' + CRLF + ;
+            '- ' + MiniGuiVersion() + '    ' + CRLF + ;
+            '- ' + hb_Compiler() + CRLF + ;
+            '- ' + Version() + CRLF + ;
+            CRLF + ;
+            'Building date: ' + SubStr( GetLinkDate(), 1, 4 ) + '.' + SubStr( GetLinkDate(), 5, 2 ) + '.' + SubStr( GetLinkDate(), 7, 2 ) + CRLF + ;
+            'Building time: ' + GetLinkTime(), 'About QPM' ) // this is not translated
+RETURN .T.
+
+FUNCTION QPM_Licence()
+   MsgInfo( hb_LoadString( ID_LICENSE_LINE_1 ) + CRLF + ;
+            CRLF + ;
+            hb_LoadString( ID_LICENSE_LINE_2 ) + CRLF + ;
+            hb_LoadString( ID_LICENSE_LINE_3 ) + CRLF + ;
+            CRLF + ;
+            hb_LoadString( ID_LICENSE_LINE_4 ) + CRLF + ;
+            CRLF + ;
+            hb_LoadString( ID_LICENSE_LINE_5 ) + ' ' + hb_LoadString( ID_LICENSE_LINE_6 ) + CRLF + ;
+            CRLF + ;
+            hb_LoadString( ID_LICENSE_LINE_7 ) + CRLF + ;
+            hb_LoadString( ID_LICENSE_LINE_8 ), hb_LoadString( ID_LICENSE_LINE_9 ) ) // this is not translated
+RETURN .T.
+
+FUNCTION QPM_CopyFile( orig, dest )
+
+   LOCAL bError, oSaveHandler
+
+   IF File( orig )
+      IF File( dest )
+         ferase( dest )
+
+         IF File( dest )
+            RETURN .F.
+         ENDIF
+      ENDIF
+
+      bError := .F.
+      oSaveHandler := errorblock( { |x| break(x) } )
+      BEGIN SEQUENCE
+         COPY FILE ( orig ) TO ( dest )
+      RECOVER
+         bError := .T.
+      END SEQUENCE
+      errorblock( oSaveHandler )
+
+      IF ! bError .AND. File( dest )
+         RETURN .T.
+      ENDIF
+   ENDIF
+
+RETURN .F.
+
+FUNCTION US_GetFile( aFilter, title, cIniFolder, multiselect, nochangedir )
+   LOCAL reto
+   SetMGWaitHide()
+   Reto := US_GetFile2( aFilter, title, cIniFolder, multiselect, nochangedir )
+   SetMGWaitShow()
+RETURN reto
+
+FUNCTION US_GetFile2( aFilter, title, cIniFolder, multiselect, nochangedir )
+   LOCAL c := '', cfiles, fileslist := {}, n
+   IF aFilter == NIL
+      aFilter := {}
+   ENDIF
+   FOR n := 1 TO Len( aFilter )
+      c += aFilter[n][1] + Chr( 0 ) + aFilter[n][2] + Chr( 0 )
+   NEXT
+   IF ValType( multiselect ) == 'U'
+      multiselect := .F.
+   ENDIF
+   IF ! multiselect
+      RETURN ( US_C_GetFile( c, title, cIniFolder, multiselect,nochangedir ) )
+   ELSE
+      cfiles := US_C_GetFile( c, title, cIniFolder, multiselect,nochangedir )
+      IF Len( cfiles ) > 0
+         IF ValType( cfiles ) == 'A'
+            fileslist := aclone( cfiles )
+         ELSE
+            AAdd( fileslist, cfiles )
+         ENDIF
+      ENDIF
+      RETURN ( fileslist )
+   ENDIF
+RETURN NIL
+
 Function Get_QPM_Builder_VersionDisplay()
    Local cVer := Get_QPM_Builder_Version()
 Return "v" + substr( cVer, 1, 2 ) + "." + substr( cVer, 3, 2 ) + " Build " + substr( cVer, 5, 2 )
@@ -832,9 +1561,9 @@ Return cLinea
 Function ChgPathToRelative( cLinea )
    cLinea := US_StrTran( cLinea, HB_OsNewLine(),                          "<NewLine>" )
    cLinea := US_StrTran( cLinea, PUB_cQPM_Folder + DEF_SLASH + "QPM.EXE", "<QPM>" )
-   cLinea := US_StrTran( cLinea, PUB_cQPM_Folder,                         "<QPMFolder>" )
-   cLinea := US_StrTran( cLinea, PUB_cProjectFolder,                      "<ProjectFolder>" )
-   cLinea := US_StrTran( cLinea, PUB_cThisFolder,                         "<ThisFolder>" )
+   cLinea := US_StrTran( cLinea, PUB_cQPM_Folder + DEF_SLASH,             "<QPMFolder>" + DEF_SLASH )
+   cLinea := US_StrTran( cLinea, PUB_cProjectFolder + DEF_SLASH,          "<ProjectFolder>" + DEF_SLASH )
+   cLinea := US_StrTran( cLinea, PUB_cThisFolder + DEF_SLASH,             "<ThisFolder>" + DEF_SLASH )
 Return cLinea
 
 Function MsgOK( titulo, txt, tipo, autoexit, Ptiempo, bButtonRun )
@@ -1313,13 +2042,12 @@ Function Enumeracion2( cMemoIn )
    ferase( cFileOut )
 Return cMemoOut
 
-PROCEDURE QPM_Execute( cCMD, cParms, bWait, nSize, RunWaitFileStop, cFile, EditControlFile )
-   LOCAL RunWaitControlFile, RunWaitParms
+PROCEDURE QPM_Execute( cCMD, cParms, bWait, nSize, RunWaitFileStop )
+   LOCAL RunWaitControlFile, RunWaitParms, cSize
    DEFAULT cParms TO ""
    DEFAULT bWait TO .F.
-   DEFAULT cFile to ""
+   DEFAULT nSize TO 1
    IF ! bWait
-      DEFAULT nSize TO 1      // normal
       DO CASE
       CASE nSize == -1           // hide
          EXECUTE FILE ( cCMD ) PARAMETERS ( cParms ) HIDE
@@ -1333,17 +2061,26 @@ PROCEDURE QPM_Execute( cCMD, cParms, bWait, nSize, RunWaitFileStop, cFile, EditC
          MsgInfo( "Invalid nSize parm in function QPM_Execute: " + US_VarToStr( nSize ) )
       ENDCASE
    ELSE
-      IF Empty( EditControlFile )
-         RunWaitControlFile := US_ShortName( PUB_cProjectFolder ) + DEF_SLASH + "_" + PUB_cSecu + "RWCF" + US_DateTimeCen() + ".cnt"
-      ELSE
-         RunWaitControlFile := EditControlFile
-         QPM_MemoWrit( RunWaitControlFile, "Run Wait Control File" )
-      ENDIF
-      RunWaitParms := US_ShortName( PUB_cProjectFolder ) + DEF_SLASH + "_" + PUB_cSecu + "RWP" + US_DateTimeCen() + ".cng"
-      QPM_MemoWrit( RunWaitParms, "Run Wait Parms" + hb_osNewLine() + ;
-                                  "COMMAND " + cCMD + " " + cFile + hb_osNewLine() + ;
-                                  "CONTROL " + RunWaitControlFile + hb_osNewLine() )
-      EXECUTE FILE ( US_ShortName( PUB_cQPM_Folder ) + DEF_SLASH + "US_Run.exe" ) PARAMETERS ( "QPM " + RunWaitParms )
+      DO CASE
+      CASE nSize == -1           // hide
+         cSize := "HIDE"
+      CASE nSize == 0            // minimized
+         cSize := "MINIMIZE"
+      CASE nSize == 1            // normal
+         cSize := "NORMAL"
+      CASE nSize == 2            // maximized
+         cSize := "MAXIMIZE"
+      OTHERWISE
+         MsgInfo( "Invalid nSize parm in function QPM_Execute (2): " + US_VarToStr( nSize ) )
+      ENDCASE
+      RunWaitControlFile := US_ShortName( PUB_cProjectFolder ) + DEF_SLASH + "_" + PUB_cSecu + "RWCF" + US_DateTimeCen() + ".cnt"
+      RunWaitParms       := US_ShortName( PUB_cProjectFolder ) + DEF_SLASH + "_" + PUB_cSecu + "RWP" + US_DateTimeCen() + ".cng"
+      QPM_MemoWrit( RunWaitParms, "Run Wait Parms" + HB_OsNewLine() + ;
+                               "COMMAND " + cCMD + " " + cParms + HB_OsNewLine() + ;
+                               "CONTROL " + RunWaitControlFile + HB_OsNewLine() + ;
+                               "MODE " + cSize )
+      QPM_MemoWrit( RunWaitControlFile, "Run Wait Control File" )
+      EXECUTE FILE ( US_ShortName( PUB_cQPM_Folder ) + DEF_SLASH + "US_Run.exe" ) PARAMETERS ( "QPM " + RunWaitParms ) HIDE
       DO WHILE File( RunWaitControlFile )
          DO EVENTS
          IF GetMGWaitStop()
@@ -1473,6 +2210,7 @@ Function QPM_Send_SelectAll()
          Return .F.
    endcase
    US_Send_SelectAll( "RichEdit" + cType, "VentanaMain" )
+   DO EVENTS
 Return .T.
 
 Function QPM_Wait( cFun, cTexto, nFila, bStop )

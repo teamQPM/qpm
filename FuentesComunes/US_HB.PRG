@@ -34,12 +34,15 @@
 #xcommand ? <texto> => US_LOG( <texto> , .T. )
 #translate inkey(0) => US_LOG("Inkey(0) , Presione Enter" , .T. )
 
+/*
 Function US_FirstChar( cLine )
 Return Len( cLine ) - Len( ltrim( cLine ) ) + 1
+*/
 
 Function US_IsRootFolder( cFolder )
 Return if( substr( alltrim( cFolder ) , 2 , 1 ) == ":" .and. len( alltrim( cFolder ) ) == 2 , .T. , .F. )
 
+/*
 Function US_ListAlias()
    LOCAL aLista := {} , nInx
    for nInx := 1 to 254
@@ -48,6 +51,7 @@ Function US_ListAlias()
       endif
    next
 Return aLista
+*/
 
 Function US_Use( bNew , cDriver , cName , cAlias , ExclusiveShared , WriteRead )
 
@@ -717,7 +721,7 @@ Function US_Setup()
    Descend("P") && PARA CARGAR LA FUNCION DESCEND QUE ES UTILIZADA EN INDICES
 
 RETURN .T.
-*/
+
 
 Function US_DBSkip( num )
    if empty( num )
@@ -734,10 +738,12 @@ Function US_DBSkip( num )
       DBSkip( num )
    endif
 Return .T.
+*/
 
 Function US_NameRandom()
 Return ALLTRIM(strtran(strtran(STR(seconds()),".",alltrim(str(US_Rand(seconds())))),"-","M"))
 
+/*
 *FUNCTION OSVER()
 *RETURN "00"
 
@@ -772,14 +778,13 @@ Return ALLTRIM(strtran(strtran(STR(seconds()),".",alltrim(str(US_Rand(seconds())
 *INKEY(0)
 *RETURN
 
-/*
 #ifndef __XHARBOUR__
 FUNCTION DISKFREE(Param)
 ? "Funcion DISKFREE no disponible en Harbour, Use US_DiskSpace"
 INKEY(0)
 RETURN
 #endif
-*/
+
 
 *FUNCTION NUMFILES(Param)
 *? "Funcion NUMFILES no disponible en Harbour"
@@ -803,6 +808,7 @@ RETURN US_DBCLOSE(PARAM)
 *? "Funcion OCTALTODEC no estaba disponible, mensaje enviado desde RN_HB.prg"
 *INKEY(0)
 *RETURN
+*/
 
 Function US_FileSize(cFile)
    Local vFile
@@ -818,7 +824,7 @@ Function US_FileDate(cFile)
    if len(vFile) = 1
       Return vFile[1][3]
    endif
-Return -1
+Return Date()
 
 Function US_FileTime(cFile)
    Local vFile
@@ -856,6 +862,7 @@ Function US_FileType(cFile)
    endif
 Return ""
 
+/*
 Function US_DiskSpace(Letra)
    Local DiskTemp, nTam := -1, CurDir
    DiskTemp:=Diskname()
@@ -866,6 +873,7 @@ Function US_DiskSpace(Letra)
       DirChange(CurDir)
    endif
 Return nTam
+*/
 
 //==================================================================================\\
 //= Function US_SeekFile                                                           =\\
@@ -959,6 +967,7 @@ Return nCant
 //=  -30 = Idioma incorrecto - Bad Language                                        =\\
 //= -100 = Error en calculo de longitud de salida, Ver Log                         =\\
 //----------------------------------------------------------------------------------\\
+/*
 Function US_SplitFile( cEnt, nSize, vFilesResult, bStop, nIdioma, cMsgRetorno, EvaluoTotal, EvaluoParcial, bHomogeneo, cArchivoRebuild )
 Local archivo_de_entrada, ;
       cArmarFinal      :="@ECHO OFF",;
@@ -1253,6 +1262,7 @@ Return cant_arch_sal
 
 //= END Function US_SplitFile                                                      =\\
 //==================================================================================\\
+*/
 
 //==================================================================================\\
 //= INI Function US_StackList                                                      =\\
@@ -1306,6 +1316,7 @@ RETURN .T.
 //   NEXT
 //Return .F.
 
+/*
 FUNCTION US_CENTER(LONGI,ESTRING)
    ESTRING=ALLTRIM(ESTRING)
    IF LEN(ESTRING) > LONGI
@@ -1315,6 +1326,7 @@ RETURN PADR(REPLICATE(" ",INT((LONGI-LEN(ESTRING))/2))+ESTRING,LONGI," ")
 
 Function US_PosCenter(ESTRING)
 Return ( ( 80 - LEN( ESTRING ) ) / 2 )
+*/
 
 Function US_VarToStr(X)
    Local T, StringAux:="" , i
@@ -1480,6 +1492,7 @@ RETURN US_STRCERO(HH,2)+":"+US_STRCERO(MM,2)+":"+US_STRCERO(SS,2)
 *//========================================================================\\*
 *// ESTA FUNCION CONVIERTE SEGUNDOS con Centesimas EN FORMATO HH:MM:SS.cc
 *//========================================================================\\*
+/*
 FUNCTION US_SecTimeCen(SEC)
    LOCAL HH,MM,SS,Cen:=(SEC-int(SEC))*100
    SEC:=int(SEC)
@@ -1487,10 +1500,11 @@ FUNCTION US_SecTimeCen(SEC)
    MM=INT((SEC % 3600) / 60)
    SS=INT((SEC % 3600) % 60)
 RETURN US_STRCERO(HH,2)+":"+US_STRCERO(MM,2)+":"+US_STRCERO(SS,2)+"."+US_StrCero(Cen,2)
-
+*/
 *//========================================================================\\*
 *// ESTA FUNCION CONVIERTE Mili-SEGUNDOS EN FORMATO HH:MM:SS.mmm
 *//========================================================================\\*
+/*
 Function US_MilSecTime(nMilSec)
 LOCAL nHH,nMM,nSS,nMil,nResto
 nHH=int(nMilSec / 3600000)
@@ -1500,7 +1514,7 @@ nResto=(nResto % 60000)
 nSS=int(nResto / 1000)
 nMil:=(nResto % 1000)
 RETURN US_StrCero(nHH,2)+":"+US_StrCero(nMM,2)+":"+US_StrCero(nSS,2)+"."+US_StrCero(nMil,3)
-
+*/
 *//========================================================================\\*
 *// ESTA FUNCION CONVIERTE TIME de FORMATO HH:MM:SS EN SEGUNDOS
 *//========================================================================\\*
@@ -1510,12 +1524,15 @@ Return (VAL(SUBSTR(TIEMPO,1,2))*3600)+(VAL(SUBSTR(TIEMPO,4,2))*60)+VAL(SUBSTR(TI
 *//========================================================================\\*
 *// ESTA FUNCION CONVIERTE TIME de FORMATO HH:MM:SS.mmm EN MILI-SEGUNDOS
 *//========================================================================\\*
+/*
 Function US_TimeMilSec(cTime)
 Return (US_TimeSec(substr(cTime,1,8))*1000)+val(substr(cTime,10,3))
+*/
 
 *//========================================================================\\*
 *// ESTA FUNCION Calcula el elapsed entre tiempos de FORMATO AAAAMMDDHHMMSScc
 *//========================================================================\\*
+/*
 Function US_ElapsedMil( cDesde , cHasta )
    Local nCenDesde := val( Substr( cDesde , 15 , 2 ) ) , ;
          nCenHasta := val( Substr( cHasta , 15 , 2 ) )
@@ -1550,6 +1567,7 @@ Function US_ElapsedMil( cDesde , cHasta )
       endif
    endif
 Return ( nSecHasta - nSecDesde ) + nSecAcum
+*/
 
 *//========================================================================\\*
 *// ESTA FUNCION DISPLAYA UN CAMPO TIME SIN CEROS A LA IZQUIERDA
@@ -1598,6 +1616,7 @@ FUNCTION US_IsDBF(cDBF)
      ENDIF
 RETURN nUsError
 
+/*
 * Revisar si la siguiente funcion no es especifica de Vinilos Perdidos
 FUNCTION US_OKDBF(DBF)
    LOCAL USERROR
@@ -1620,6 +1639,7 @@ FUNCTION US_OKDBF(DBF)
    // Restore the default error handler
    errorblock( bSaveHandler )
 RETURN USERROR
+*/
 
 *//========================================================================\\*
 *// FUNCION PARA EXTRAER UNA PALABRA DE UN ESTRING
@@ -1732,6 +1752,7 @@ RETURN IIF(POSICION>0,ALLTRIM(SUBSTR(ESTRING,1,US_WORDIND(ESTRING,POSICION)-1)+S
 *// FUNCION PARA INSERTAR UNA PALABRA EN UN STRING
 *// POSICION SE REFIERE A PALABRA, NO A OFFSET
 *//========================================================================\\*
+/*
 FUNCTION US_WORDINS(ESTRING,PAL,POSICION)
    IF POSICION > US_WORDS(ESTRING)
       RETURN ESTRING+" "+PAL
@@ -1739,7 +1760,7 @@ FUNCTION US_WORDINS(ESTRING,PAL,POSICION)
       RETURN SUBSTR(ESTRING,1,US_WORDIND(ESTRING,POSICION)-1)+PAL+" "+SUBSTR(ESTRING,US_WORDIND(ESTRING,POSICION))
    ENDIF
 Return ""
-
+*/
 *//========================================================================\\*
 *// FUNCION PARA CONVERTIR A MINUSCULAS CON LA PRIMER LETRA EN MAYUSCULA
 *//========================================================================\\*
@@ -1763,6 +1784,7 @@ RETURN ESTRING
 *//========================================================================\\*
 *// PROCEDIMIENTO GENERAL PARA CERRAR BASES
 *//========================================================================\\*
+/*
 Function US_DBClose( AREA )
    LOCAL AREAACTUAL
    AREAACTUAL = DBF()
@@ -1772,12 +1794,15 @@ Function US_DBClose( AREA )
       DBSELECTAREA(AREAACTUAL)
    ENDIF
 return NIL
+*/
 
 *//========================================================================\\*
 *// ESTA FUNCION SAE USA PARA MOSTRAR EN DBEDIT MENOS DEL LARGO DEL CAMPO
 *//========================================================================\\*
+/*
 FUNCTION US_DB_SUBSTR(CAMPO,INICIO,LONGITUD)
 Return IF( LEN(SUBSTR(RTRIM(CAMPO),INICIO)) > LONGITUD , SUBSTR(CAMPO,INICIO,LONGITUD - 3)+"..." , SUBSTR(CAMPO,INICIO,LONGITUD) )
+*/
 
 *//========================================================================\\*
 *// ESTA FUNCION TRANSFORMA EN MAYUSCULAS STRINGS, INCLUSO CON ACENTOS.
@@ -1809,6 +1834,7 @@ return upper(STRTRAN(STRTRAN(STRTRAN(STRTRAN(STRTRAN(STRTRAN(STRTRAN(STRTRAN(STR
 *//     PARSEADOS
 *//
 *//========================================================================\\*
+/*
 FUNCTION US_PARSER(PREFIJO,PARAM)
 LOCAL PARAM2,POS,POS2,VAR,CONTE,VARNAME,SALIR,CONTADOR,A
 LOCAL bSaveHandler
@@ -1860,6 +1886,7 @@ DO WHILE SALIR == "N"
    ENDIF
 ENDDO
 RETURN CONTADOR
+*/
 
 *//========================================================================\\*
 *// FUNCION PARA OBTENER TODAS LAS COMBINATORIAS DE ELEMENTOS DE UNA FRASE
@@ -1876,6 +1903,7 @@ RETURN CONTADOR
 *// DECLARE VECTOR[FIL][COL]
 *//
 *//========================================================================\\*
+/*
 Function US_Combinatoria(PAL,VECTOR,BASEFIL,BASECOL)
 LOCAL L,C
 IF BASEFIL=NIL
@@ -1899,13 +1927,15 @@ FOR C=1 TO US_WORDS(PAL)
    BASEFIL=BASEFIL+US_FACTORIAL(US_WORDS(PAL))/US_WORDS(PAL)
 NEXT
 RETURN NIL
+*/
 
 *//========================================================================\\*
 *// FUNCION PARA CALCULAR EL FACTORIAL DE UN NUMERO
 *//========================================================================\\*
+/*
 Function US_Factorial(NUMERO)
 Return if( NUMERO = 1 , 1 , US_FACTORIAL( NUMERO - 1 ) * NUMERO )
-
+*/
 FUNCTION US_DateSeconds()
 RETURN DTOS(DATE())+US_STRCERO(SECONDS(),5)
 
@@ -1933,6 +1963,7 @@ FUNCTION US_Dis_DateSeconds2(DS, bInvertido)
    endif
 RETURN cReto
 
+/*
 FUNCTION US_DIS_DATETIME(DT, bInvertido)
    Local cReto
    if empty( bInvertido )
@@ -1956,6 +1987,7 @@ FUNCTION US_DIS_DateTimeCen(DTM , bInvertido)
       cReto := SUBSTR(DTM,7,2)+"/"+SUBSTR(DTM,5,2)+"/"+SUBSTR(DTM,1,4)+" "+SUBSTR(DTM,9,2)+":"+SUBSTR(DTM,11,2)+":"+SUBSTR(DTM,13,2)+"."+Substr(DTM,15,2)
    endif
 RETURN cReto
+*/
 
 FUNCTION US_DirWrite(cPath)
    LOCAL ARC:=cPath+If(Right(cPath,1)!=DEF_SLASH,DEF_SLASH,'')+"US_"+ALLTRIM(STR(INT(SECONDS())))+".CHK"
@@ -1965,6 +1997,7 @@ FUNCTION US_DirWrite(cPath)
    ENDIF
 Return .F.
 
+/*
 FUNCTION US_DiskOK(DISCO,MODO)
    LOCAL ARC:=DISCO+":"+DEF_SLASH+"US_"+ALLTRIM(STR(INT(SECONDS())))+".CHK", DiskTemp , CurDir
    IF MODO = NIL
@@ -2019,6 +2052,7 @@ RETURN 0
 
 Function US_Abend()
 Return "A"+0
+*/
 
 Function US_FileTmp( prefix )
    Local cFile
@@ -2036,7 +2070,7 @@ return cFile
 /*
 FUNCTION US_MENU(PTOP,PLEFT,PBOTTOM,PRIGHT,VECTOR,VECTORBOOL,USERFUNC)
 RETURN US_MGMenu(PTOP,PLEFT,PBOTTOM,PRIGHT,VECTOR,VECTORBOOL,USERFUNC)
-*/
+
 Function US_DB_CodePage( cbase , cNewCode )
    Local cMode, i, vEstructura
    do case
@@ -2070,18 +2104,16 @@ Function US_DB_CodePage( cbase , cNewCode )
    DbCloseArea()
 Return .T.
 
-/*
 FUNCTION US_ISURL(URL,FILA,COLUMNA)
 RETURN 0
 
 FUNCTION US_ISISBN(ISBN,FILA,COLUMNA)
 RETURN 0
-*/
-*//========================================================================\\*
-*// $INI FUNCIONES para manejo de bits y numeros hexadecimales
-*//------------------------------------------------------------------------\\*
 
-/*
+//========================================================================
+// $INI FUNCIONES para manejo de bits y numeros hexadecimales
+//------------------------------------------------------------------------
+
 #ifdef _CATOOLS
 
    FUNCTION US_BIT(CHAR,POS)
@@ -2851,7 +2883,7 @@ HB_FUNC (HDGETSERIAL)
    GetVolumeInformation(hb_parc(1),NULL,0,&SerialNumber,NULL,NULL,NULL,0);
    hb_retnl(SerialNumber);
 }
-#pragma enddump
+#pragma ENDDUMP
 //---------------------------------------------------------------------------------------------------------
 // Fin Leer numero de serie de disco
 //=========================================================================================================
@@ -3084,25 +3116,32 @@ RETURN 0
 //=========================================================================================================
 */
 #pragma BEGINDUMP
+
 #define _WIN32_IE      0x0500
-#define HB_OS_WIN_32_USED
-#define _WIN32_WINNT   0x0400
 
 #include <windows.h>
+#include <winbase.h>
 #include "hbapi.h"
+#include <shlobj.h>
+#include <shlwapi.h>
+#include <winerror.h>
+#include <lmcons.h>
+#include <commctrl.h>
+#include "qpm.h"
 
-HB_FUNC(USAUX_GETSHORTPATHNAME)
+HB_FUNC( USAUX_GETSHORTPATHNAME )
 {
    char buffer[ MAX_PATH + 1 ] = {0};
    DWORD iRet;
 
-   iRet = GetShortPathName( hb_parc(1), buffer, MAX_PATH ) ;
-   if (iRet < MAX_PATH) {
-   hb_storclen( buffer, iRet, 2);
+   iRet = GetShortPathName( hb_parc( 1 ), buffer, MAX_PATH ) ;
+   if( iRet < MAX_PATH )
+   {
+      hb_storclen( buffer, iRet, 2 );
    }
    else
    {
-   hb_storc( "", 2 );
+      hb_storc( "", 2 );
    }
    hb_retnl( iRet ) ;
 }
@@ -3120,6 +3159,7 @@ HB_FUNC ( US_GETCOMPUTERNAME )
    GetComputerName( lpBuffer, &nSize );
    hb_retc( lpBuffer );
 }
+
 // BOOL GetUserName( LPTSTR lpBuffer, LPDWORD nSize );
 // http://msdn.microsoft.com/library/default.asp?url=/library/en-us/sysinfo/base/getusername.asp
 // Devuelve el nombre del usuario.
@@ -3130,41 +3170,34 @@ HB_FUNC ( US_GETUSERNAME )
    GetUserName( lpBuffer, &nSize );
    hb_retc( lpBuffer );
 }
+
 //---------------------------------------------------------------------------------------------------------
 // Fin Leer nombre de computadora y usuario
 //=========================================================================================================
 
-//=========================================================================================================
-// Ini Verificar Directorio
-//---------------------------------------------------------------------------------------------------------
-#include <winbase.h>
-#include "hbvm.h"
-#include "hbstack.h"
-#include "hbapiitm.h"
-
 BOOL DirectoryExists( LPTSTR szDirName )
 {
    unsigned int nAttributes;
-   if ( ( nAttributes = GetFileAttributes( szDirName ) ) == -1 ) return FALSE;
-   if ( ( nAttributes & FILE_ATTRIBUTE_DIRECTORY ) != 0 ) return TRUE;
+
+   if( ( nAttributes = GetFileAttributes( szDirName ) ) == -1 )
+      return FALSE;
+   if( ( nAttributes & FILE_ATTRIBUTE_DIRECTORY ) != 0 )
+      return TRUE;
    return FALSE;
 }
 HB_FUNC( MYISDIRECTORY )
 {
-   hb_retl( DirectoryExists( (LPTSTR) hb_parc(1) ) ) ;
+   hb_retl( DirectoryExists( (LPTSTR) hb_parc( 1 ) ) ) ;
 }
-//---------------------------------------------------------------------------------------------------------
-// Fin Verificar Directorio
-//=========================================================================================================
 
-//==================================================================================\\
+/*==================================================================================\\
 //= Function US_NT_Administrator                                                   =\\
 //= USE:                                                                           =\\
 //= US_NT_Administrator()                                                          *\\
 //= Idiomas: 0 Espa±ol (Default) - 1 Ingles                                        =\\
 //= Retorna:                                                                       =\\
 //=    0 = ---- los codigos de retorno no estan implementados                      =\\
-//----------------------------------------------------------------------------------\\
+//----------------------------------------------------------------------------------*/
 HB_FUNC( US_NT_ADMINISTRATOR )
 {
    LUID tmpLuid;
@@ -3172,29 +3205,20 @@ HB_FUNC( US_NT_ADMINISTRATOR )
    DWORD lBufferNeeded;
    HANDLE hdlTokenHandle;
    HANDLE hdlProcessHandle = GetCurrentProcess();
-   OpenProcessToken(hdlProcessHandle, TOKEN_ADJUST_PRIVILEGES | TOKEN_QUERY, &hdlTokenHandle);
-   LookupPrivilegeValue(NULL, "SeShutdownPrivilege", &tmpLuid);
+
+   OpenProcessToken( hdlProcessHandle, TOKEN_ADJUST_PRIVILEGES | TOKEN_QUERY, &hdlTokenHandle );
+   LookupPrivilegeValue( NULL, "SeShutdownPrivilege", &tmpLuid );
    tkp.PrivilegeCount            = 1;
    tkp.Privileges[0].Luid        = tmpLuid;
    tkp.Privileges[0].Attributes  = SE_PRIVILEGE_ENABLED;
-   AdjustTokenPrivileges(hdlTokenHandle, FALSE, &tkp, sizeof(tkpNewButIgnored), &tkpNewButIgnored, &lBufferNeeded);
+   AdjustTokenPrivileges( hdlTokenHandle, FALSE, &tkp, sizeof( tkpNewButIgnored ), &tkpNewButIgnored, &lBufferNeeded );
 }
-//= END Function US_NT_Administrator                                               =\\
-//==================================================================================\\
 
-#include <shlobj.h>
-#include <shlwapi.h>
-#include <winerror.h>
-#include <lmcons.h>
-#include <commctrl.h>
-#include "hbapifs.h"
-#include "tchar.h"
-#include "item.api"
 HB_FUNC( US_PROCESSMESS )
 {
-   MSG   Msg;
+   MSG Msg;
 
-   if( PeekMessage((LPMSG) & Msg, 0, 0, 0, PM_REMOVE) )
+   if( PeekMessage( (LPMSG) &Msg, 0, 0, 0, PM_REMOVE ) )
    {
       TranslateMessage( &Msg );
       DispatchMessage( &Msg );
@@ -3205,6 +3229,92 @@ HB_FUNC( US_PROCESSMESS )
       hb_retl( FALSE );
    }
 }
+
+HB_FUNC( HB_LOADSTRING )
+{
+   LPBYTE cBuffer;
+   cBuffer = GlobalAlloc( GPTR, 255 );
+   LoadString( GetModuleHandle( NULL ), hb_parni( 1 ), (LPSTR) cBuffer, 254 );
+   hb_retc( ( char * ) cBuffer );
+   GlobalFree( cBuffer );
+}
+
+HB_FUNC( US_C_GETFILE )
+{
+   OPENFILENAME ofn;
+   char buffer[32768];
+   char cFullName[64][1024];
+   char cCurDir[512];
+   char cFileName[512];
+   int iPosition = 0;
+   int iNumSelected = 0;
+   int n;
+   int flags = 0 ;
+// int flags = OFN_FILEMUSTEXIST ;
+
+   buffer[0] = 0 ;
+   if ( hb_parl( 4 ) )
+   {
+      flags = flags | OFN_ALLOWMULTISELECT | OFN_EXPLORER;
+   }
+   if ( hb_parl( 5 ) )
+   {
+      flags = flags | OFN_NOCHANGEDIR;
+   }
+
+   memset( (void*) &ofn, 0, sizeof( OPENFILENAME ) );
+   ofn.lStructSize = sizeof( ofn );
+   ofn.hwndOwner = GetActiveWindow();
+   ofn.lpstrFilter = hb_parc( 1 );
+   ofn.nFilterIndex = 1;
+   ofn.lpstrFile = buffer;
+   ofn.nMaxFile = sizeof( buffer );
+   ofn.lpstrInitialDir = hb_parc( 3 );
+   ofn.lpstrTitle = hb_parc( 2 );
+   ofn.nMaxFileTitle = 512;
+   ofn.Flags = flags;
+
+   if ( GetOpenFileName( &ofn ) )
+   {
+      if(ofn.nFileExtension!=0)
+      {
+         hb_retc( ofn.lpstrFile );
+      }
+      else
+      {
+         wsprintf(cCurDir,"%s",&buffer[iPosition]);
+         iPosition=iPosition+strlen(cCurDir)+1;
+
+         do
+         {
+            iNumSelected++;
+            wsprintf( cFileName, "%s", &buffer[iPosition] );
+            iPosition = iPosition + strlen( cFileName ) + 1;
+            wsprintf( cFullName[iNumSelected], "%s\\%s", cCurDir, cFileName );
+         }
+         while( ( strlen( cFileName ) != 0 ) && ( iNumSelected <= 63 ) );
+
+         if ( iNumSelected > 1 )
+         {
+            hb_reta( iNumSelected - 1 );
+
+            for ( n = 1; n < iNumSelected; n++ )
+            {
+               HB_STORC( cFullName[n], -1, n );
+            }
+         }
+         else
+         {
+            hb_retc( &buffer[0] );
+         }
+      }
+   }
+   else
+   {
+      hb_retc( "" );
+   }
+}
+
 #pragma ENDDUMP
 
 /* eof */

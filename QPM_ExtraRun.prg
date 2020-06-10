@@ -41,7 +41,7 @@ Function QPM_GetExtraRun()
       MODAL ;
       FONT 'MS Sans Serif' ;
       SIZE 10 ;
-      ON INIT QPM_GetExtraRunInit() ;
+      ON INIT QPM_GetExtraRunInit()
 
       @ 05,16 FRAME ExtraRunSelectFrame ;
          CAPTION "" ;
@@ -172,7 +172,13 @@ Function QPM_GetExtraRun()
 
       @ 344,464 BUTTON ExtraRunExeButton ;
          PICTURE 'FolderSelect';
-         ACTION ( If( !Empty( FileName := BugGetFile( { {'EXE and BAT Programs','*.BAT;*.EXE'} }, 'Select Program or Process', US_FileNameOnlyPath( ChgPathToReal( ExtraRun.ExtraRunExeText.Value ) ), .F., .T. ) ), ExtraRun.ExtraRunExeText.Value := ChgPathToRelative( FileName ), ), ExtraRun.ExtraRunExePause.Enabled := if( upper( US_FileNameOnlyExt( ExtraRun.ExtraRunExeText.Value ) ) == "EXE", .F., .T. ) ) ;
+         ACTION ( iif( ! Empty( FileName := BugGetFile( { {'EXE and BAT Programs','*.BAT;*.EXE'} }, ;
+                                                        'Select Program or Process', ;
+                                                        US_FileNameOnlyPath( ChgPathToReal( ExtraRun.ExtraRunExeText.Value ) ), ;
+                                                        .F., .T. ) ), ;
+                       ExtraRun.ExtraRunExeText.Value := ChgPathToRelative( FileName ), ;
+                       NIL ), ;
+                  ExtraRun.ExtraRunExePause.Enabled := ! Upper( US_FileNameOnlyExt( ExtraRun.ExtraRunExeText.Value ) ) == "EXE" ) ;
          WIDTH 35 ;
          HEIGHT 31 ;
 
@@ -249,6 +255,7 @@ Function QPM_GetExtraRun()
          WIDTH 100 ;
          HEIGHT 28 ;
 
+      ON KEY ESCAPE OF ExtraRun ACTION ExtraRun.release()
    END WINDOW
 
    center window ExtraRun

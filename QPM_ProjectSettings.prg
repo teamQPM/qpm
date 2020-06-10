@@ -315,7 +315,6 @@ Function ProjectSettings()
               ROW             360
               COL             300
               WIDTH           150
-              READONLY        .T.
       END TEXTBOX
       DEFINE BUTTON Button_ExtraRun
               ROW             360
@@ -703,11 +702,67 @@ Function CheckCombination( lAfterOnInit )
    endcase
 Return .T.
 
-/*
- * TODO: Add support for BCC64
- * TODO: Add support for Extended + Pelles
- * TODO: Add support for Extended + Open Watcom
- * TODO: Add support for OOHG     + Open Watcom
- /
+FUNCTION cFormTool()
+   LOCAL cRet
+   DO CASE
+   CASE Prj_Radio_FormTool == DEF_RG_EDITOR
+      cRet := 'EDITOR'
+   CASE Prj_Radio_FormTool == DEF_RG_HMI
+      cRet := 'HMI'
+   CASE Prj_Radio_FormTool == DEF_RG_HMGS
+      cRet := 'HMGSIDE'
+   OTHERWISE
+      cRet := 'ERROR'
+   ENDCASE
+RETURN cRet
+
+FUNCTION cDbfTool()
+   LOCAL cRet
+   IF Prj_Radio_DbfTool == DEF_RG_DBFTOOL
+      cRet := 'DBFVIEW'
+   ELSE
+      cRet := 'OTHER'
+   ENDIF
+RETURN cRet
+
+FUNCTION cOutputCopyMove()
+   LOCAL cRet
+   DO CASE
+   CASE Prj_Radio_OutputCopyMove == DEF_RG_NONE
+      cRet := 'NONE'
+   CASE Prj_Radio_OutputCopyMove == DEF_RG_COPY
+      cRet := 'COPY'
+   CASE Prj_Radio_OutputCopyMove == DEF_RG_MOVE
+      cRet := 'MOVE'
+   OTHERWISE
+      cRet := 'ERROR'
+   ENDCASE
+RETURN cRet
+
+FUNCTION cOutputRename()
+   LOCAL cRet
+   DO CASE
+   CASE Prj_Radio_OutputRename == DEF_RG_NONE
+      cRet := 'NONE'
+   CASE Prj_Radio_OutputRename == DEF_RG_NEWNAME
+      cRet := 'NEWNAME'
+   OTHERWISE
+      cRet := 'ERROR'
+   ENDCASE
+RETURN cRet
+
+FUNCTION cOutputType()
+   LOCAL cRet
+   DO CASE
+   CASE Prj_Radio_OutputType == DEF_RG_EXE
+      cRet := 'SRCEXE'
+   CASE Prj_Radio_OutputType == DEF_RG_LIB
+      cRet := 'SRCLIB'
+   CASE Prj_Radio_OutputType == DEF_RG_IMPORT
+      cRet := 'DLLLIB'
+   OTHERWISE
+      cRet := 'ERROR'
+   ENDCASE
+RETURN cRet
 
 /* eof */

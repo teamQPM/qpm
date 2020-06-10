@@ -37,9 +37,9 @@ memvar vFilesToCompile
 
 #ifdef QPM_SHG
 
-Function SHG_CreateDatabase( cFile )
-   Local auxName
-   auxName := US_FileTmp( US_FileNameOnlyPath( cFile ) + DEF_SLASH + "_AddDbf" )
+FUNCTION SHG_CreateDatabase( cFile )
+   LOCAL auxName := US_FileTmp( US_FileNameOnlyPath( cFile ) + DEF_SLASH + "_AddDbf" )
+
    CREATE ( auxName )
    APPEND BLANK
    REPLACE Field_name WITH "SHG_NEW",;
@@ -864,9 +864,9 @@ Function SHG_DisplayHelp( cName )
       DISPLAY HELP MAIN
    else
       if empty( GetProperty( "VentanaMain" , "GHlpFiles" , "Cell" , GetProperty( "VentanaMain" , "GHlpFiles" , "value" ) , NCOLHLPNICK ) )
-         DisplayHelpTopic( US_FileNameOnlyName( SHG_GetOutputName() ) + "_" + alltrim( str( GetProperty( "VentanaMain" , "GHlpFiles" , "value" ) - 1 ) ) )
+         SHG_DisplayHelpTopic( US_FileNameOnlyName( SHG_GetOutputName() ) + "_" + alltrim( str( GetProperty( "VentanaMain" , "GHlpFiles" , "value" ) - 1 ) ) )
       else
-         DisplayHelpTopic( US_FileNameOnlyName( GetProperty( "VentanaMain" , "GHlpFiles" , "Cell" , GetProperty( "VentanaMain" , "GHlpFiles" , "value" ) , NCOLHLPNICK ) ) )
+         SHG_DisplayHelpTopic( US_FileNameOnlyName( GetProperty( "VentanaMain" , "GHlpFiles" , "Cell" , GetProperty( "VentanaMain" , "GHlpFiles" , "value" ) , NCOLHLPNICK ) ) )
       endif
    endif
    if !empty( cOldHelp )
@@ -874,7 +874,7 @@ Function SHG_DisplayHelp( cName )
    endif
 Return .T.
 
-Function DisplayHelpTopic( xTopic , nMet )
+Function SHG_DisplayHelpTopic( xTopic , nMet )
     LOCAL LOC_cParam := ""
     If empty( GetActiveHelpFile() )
         Return .F.
@@ -1291,8 +1291,11 @@ Function SHG_Send_Copy()
       DoMethod( oHlpRichEdit:US_WinEdit , oHlpRichEdit:cRichControlName, "SetFocus" )
    else
       US_Send_Copy()
+      DO EVENTS
    endif
-   ON KEY CONTROL+C OF VentanaMain ACTION SHG_Send_Copy()
+   IF PUB_bHotKeys
+      ON KEY CONTROL+C OF VentanaMain ACTION SHG_Send_Copy()
+   ENDIF
 Return .T.
 
 Function SHG_Send_Cut()
@@ -1308,8 +1311,11 @@ Function SHG_Send_Cut()
       DoMethod( oHlpRichEdit:US_WinEdit , oHlpRichEdit:cRichControlName, "SetFocus" )
    else
       US_Send_Cut()
+      DO EVENTS
    endif
-   ON KEY CONTROL+X OF VentanaMain ACTION SHG_Send_Cut()
+   IF PUB_bHotKeys
+      ON KEY CONTROL+X OF VentanaMain ACTION SHG_Send_Cut()
+   ENDIF
 Return .T.
 
 Function SHG_Send_Paste()
@@ -1319,8 +1325,11 @@ Function SHG_Send_Paste()
       oHlpRichEdit:US_EditRtfPaste()
    else
       US_Send_Paste()
+      DO EVENTS
    endif
-   ON KEY CONTROL+V OF VentanaMain ACTION SHG_Send_Paste()
+   IF PUB_bHotKeys
+      ON KEY CONTROL+V OF VentanaMain ACTION SHG_Send_Paste()
+   ENDIF
 Return .T.
 
 Function SHG_Post_Paste()
@@ -1813,7 +1822,7 @@ Return .T.
 
 #include <windows.h>
 #include "hbapi.h"
-#include "hbapiitm.h"
+#include "qpm.h"
 
 #define HDIB HANDLE
 #define IS_WIN30_DIB(lpbi)  ((*(LPDWORD)(lpbi)) == sizeof(BITMAPINFOHEADER))
@@ -2110,7 +2119,7 @@ HB_FUNC( _SAVEBITMAP )                   // hBitmap, cFile
 {
    HANDLE hDIB;
 
-   hDIB = DDBToDIB( ( HBITMAP ) ( HWND ) hb_parnl( 1 ), NULL );
+   hDIB = DDBToDIB( ( HBITMAP ) ( HWND ) HB_PARNL( 1 ), NULL );
    SaveDIB( hDIB, ( LPSTR ) hb_parc( 2 ) );
    GlobalFree( hDIB );
 }
