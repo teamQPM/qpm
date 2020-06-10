@@ -3366,6 +3366,22 @@ Function GlobalSettings()
 
 Return .T.
 
+FUNCTION FormToolCheck( tool )
+   LOCAL FileName
+   DO CASE
+   CASE tool == 'HMI'
+      IF ! Empty( FileName := BugGetFile( { {'IDE+ by Ciro (MGIde.exe or oIDE*.exe)','MGIde.exe;oIDE*.exe'} }, 'Select Form tool', US_FileNameOnlyPath( GetProperty( 'WinGSettings', 'Text_HMI', 'value' ) ), .F., .T. ) )
+         SetProperty( 'WinGSettings', 'Text_HMI', 'value', FileName )
+      ENDIF
+   CASE tool == 'HMGSIDE'
+      IF ! Empty( FileName := BugGetFile( { {'HMGS-IDE by Walter (HMGSIDE.exe or IDE.exe)','HMGSIDE.exe;IDE.exe'} }, 'Select Form tool', US_FileNameOnlyPath( GetProperty( 'WinGSettings', 'Text_HMGSIDE', 'value' ) ), .F., .T. ) )
+         SetProperty( 'WinGSettings', 'Text_HMGSIDE', 'value', FileName )
+      ENDIF
+   OTHERWISE
+      MsgStop( 'Tool inválida en función FormToolCheck: '+tool )
+   ENDCASE
+RETURN .T.
+
 Function SelectTab
 
    if empty( PUB_cProjectFolder )

@@ -156,8 +156,7 @@ RETURN .T.
 #include <windows.h>
 #include <commctrl.h>
 #include <hbapi.h>
-#include <hbvm.h>
-#include <hbstack.h>
+#include "qpm.h"
 
 typedef HRESULT ( WINAPI *LPAtlAxWinInit )    ( void );
 typedef HRESULT ( WINAPI *LPAtlAxGetControl ) ( HWND hwnd, IUnknown** unk );
@@ -193,17 +192,17 @@ HB_FUNC( ATLAXGETDISP ) // hWnd -> pDisp
    IUnknown *pUnk;
    IDispatch *pDisp;
    _Ax_Init();
-   AtlAxGetControl( (HWND)hb_parnl( 1 ), &pUnk );
+   AtlAxGetControl( (HWND) HB_PARNL( 1 ), &pUnk );
    pUnk->lpVtbl->QueryInterface( pUnk, &IID_IDispatch, ( void ** ) &pDisp );
-   hb_retnl( (LONG)pDisp );
+   HB_RETNL( (LONG_PTR) pDisp );
 }
 
 HB_FUNC_STATIC( CREATEWINDOWEX ) // hWnd, cProgId -> hActiveXWnd
 {
    HWND hControl;
    hControl = CreateWindowEx( 0, "AtlAxWin", hb_parc( 2 ),
-              WS_VISIBLE|WS_CHILD, 0, 0, 0, 0, (HWND)hb_parnl( 1 ), 0, 0, NULL );
-   hb_retnl( (LONG) hControl );
+              WS_VISIBLE|WS_CHILD, 0, 0, 0, 0, (HWND) HB_PARNL( 1 ), 0, 0, NULL );
+   HB_RETNL( (LONG_PTR) hControl );
 }
 
 #pragma ENDDUMP

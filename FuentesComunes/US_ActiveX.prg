@@ -176,13 +176,14 @@ RETURN NIL
 
 ///*-----------------------------------------------------------------------------------------------*/
 #pragma BEGINDUMP
+
 #include <windows.h>
 #include "hbapi.h"
+#include "qpm.h"
 
-HB_FUNC_STATIC( DESTROYWINDOW ) // hWnd
+HB_FUNC_STATIC( DESTROYWINDOW )
 {
-    DestroyWindow( (HWND)hb_parnl( 1 ) );
-    return;
+   DestroyWindow( (HWND) HB_PARNL( 1 ) );
 }
 
 #pragma ENDDUMP

@@ -37,4 +37,5 @@ Function US_OPCION()
    __Run( "ECHO Function " + Procname() + "suspend for compatibility from US_MG_Null.prg" )
 Return
 */
+
 /* eof */

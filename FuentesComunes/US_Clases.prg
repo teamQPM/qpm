@@ -1530,9 +1530,11 @@ METHOD Ejecutar( cFun ) CLASS US_MGWait
       DO EVENTS
    endif
 
+/*
    if ::cSkin = "VP"
-//      US_WinStackAdd( @RN_WinStack , ::MGWaitPan )
+      US_WinStackAdd( @RN_WinStack , ::MGWaitPan )
    endif
+*/
 
    ACTIVATE WINDOW &( ::MGWaitPan )
 

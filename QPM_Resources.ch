@@ -49,7 +49,7 @@
    OPEN                         BITMAP     .\resource\OPEN.BMP
    RUN                          BITMAP     .\resource\run.bmp
    BUILD                        BITMAP     .\resource\Build.bmp
-   HELP                         BITMAP     .\resource\HELP.BMP
+   HELPBMP                      BITMAP     .\resource\HELP.BMP
    ADD                          BITMAP     .\resource\ADD.BMP
    REMOVE                       BITMAP     .\resource\REMOVE.BMP
    HOTREC                       BITMAP     .\resource\HotRecovery.bmp

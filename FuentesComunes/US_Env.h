@@ -27,28 +27,8 @@
 */
 
 #ifndef DEF_SLASH
+   #undef DEF_SLASH
    #define DEF_SLASH "\"
-   #ifdef HB_OS_WIN
-      // defined(HB_OS_WIN_CE) || \
-      // defined(HB_OS_WIN_32) || \
-      // defined(HB_OS_WIN_64)
-      #undef  DEF_SLASH
-      #define DEF_SLASH "\"
-   #endif
-   #ifdef HB_OS_UNIX
-      // defined(HB_OS_UNIX_COMPATIBLE) || \
-      // defined(HB_OS_LINUX) || \
-      // defined(HB_OS_DARWIN) || \
-      // defined(HB_OS_BSD) || \
-      // defined(HB_OS_SUNOS) || \
-      // defined(HB_OS_HPUX)
-      #undef  DEF_SLASH
-      #define DEF_SLASH "/"
-   #endif
-   #ifdef HB_OS_OS2
-      #undef  DEF_SLASH
-      #define DEF_SLASH "\"
-   #endif
 #endif
 
 #ifndef __US_ENV

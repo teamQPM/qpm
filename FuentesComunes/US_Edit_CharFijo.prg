@@ -440,7 +440,7 @@ METHOD Init( cMemo ) CLASS US_RichEdit
             HEIGHT ::nButtonHeight ;
             WIDTH ( ::nButtonWidth * 3.2 ) ;
             TOOLTIP ::Lan( "SeleTodoToolTip" ) ;
-            ACTION ( DoMethod( ::US_WinEdit , ::cRichControlName, "SetFocus" ) , US_Send_SelectAll( ::cRichControlName , ::US_WinEdit ) ) ;
+            ACTION ( DoMethod( ::US_WinEdit , ::cRichControlName, "SetFocus" ) , US_Send_SelectAll( ::cRichControlName , ::US_WinEdit ), DoEvents() ) ;
 
          @ US_TFil( if( GetDesktopWidth() < 1024 , 1.4 , 1.3 ) ), GetProperty( ::US_WinEdit , "CB_Sele" , "col" ) + ( ( ::nButtonWidth + ::nEspacio ) * 3 ) BUTTONEX BVerPortapapeles ;
             OF &(::US_WinEdit) ;
@@ -655,7 +655,7 @@ METHOD Init( cMemo ) CLASS US_RichEdit
          CAPTION "Cortar (Ctrl+X)" ;
          WIDTH US_Cols(14) ;
          HEIGHT US_Fils(1.5) ;
-         ACTION ( DoMethod( ::US_WinEdit , ::cRichControlName, "SetFocus" ) , US_Send_Cut() ) ;
+         ACTION ( DoMethod( ::US_WinEdit , ::cRichControlName, "SetFocus" ) , US_Send_Cut(), DoEvents() ) ;
          TOOLTIP ::Lan( "Cortar el texto seleccionado" ) ;
          FONT "VPArial" SIZE US_WFont(9)
 
@@ -664,7 +664,7 @@ METHOD Init( cMemo ) CLASS US_RichEdit
          CAPTION "Copiar (Ctrl+C)" ;
          WIDTH US_Cols(14) ;
          HEIGHT US_Fils(1.5) ;
-         ACTION ( DoMethod( ::US_WinEdit , ::cRichControlName, "SetFocus" ) , US_Send_Copy() ) ;
+         ACTION ( DoMethod( ::US_WinEdit , ::cRichControlName, "SetFocus" ) , US_Send_Copy(), DoEvents() ) ;
          TOOLTIP ::Lan( "Copiar el texto seleccionado" ) ;
          FONT "VPArial" SIZE US_WFont(9)
 
@@ -673,7 +673,7 @@ METHOD Init( cMemo ) CLASS US_RichEdit
          CAPTION "Pegar (Ctrl+P)" ;
          WIDTH US_Cols(14) ;
          HEIGHT US_Fils(1.5) ;
-         ACTION ( DoMethod( ::US_WinEdit , ::cRichControlName, "SetFocus" ) , US_Send_Paste() ) ;
+         ACTION ( DoMethod( ::US_WinEdit , ::cRichControlName, "SetFocus" ) , US_Send_Paste(), DoEvents() ) ;
          TOOLTIP ::Lan( "Pegar texto desde el portapapeles" ) ;
          FONT "VPArial" SIZE US_WFont(9)
 
@@ -691,7 +691,7 @@ METHOD Init( cMemo ) CLASS US_RichEdit
          CAPTION "Revertir (Ctrl+Z)" ;
          WIDTH US_Cols(14) ;
          HEIGHT US_Fils(1.5) ;
-         ACTION ( DoMethod( ::US_WinEdit , ::cRichControlName, "SetFocus" ) , US_Send_Undo() ) ;
+         ACTION ( DoMethod( ::US_WinEdit , ::cRichControlName, "SetFocus" ) , US_Send_Undo(), DoEvents() ) ;
          TOOLTIP ::Lan( "Deshacer la ultima modificación" ) ;
          FONT "VPArial" SIZE US_WFont(9)
 
@@ -708,13 +708,13 @@ METHOD Init( cMemo ) CLASS US_RichEdit
          TOOLTIP ::Lan( "NormaliceToolTip" ) ;
          FONT "VPArial" SIZE US_WFont(9)
 
-         // ACTION ( DoMethod( ::US_WinEdit , ::cRichControlName, "SetFocus" ) , US_Send_SelectAll() ) ;
+         // ACTION ( DoMethod( ::US_WinEdit , ::cRichControlName, "SetFocus" ) , US_Send_SelectAll(), DoEvents() ) ;
       @ US_TFil(22.0),US_LCol(49.8) BUTTONEX BSeleccionarTodo ;
          OF &(::US_WinEdit) ;
          CAPTION "SeleTodo" ;
          WIDTH US_Cols(14) ;
          HEIGHT US_Fils(1.5) ;
-         ACTION ( DoMethod( ::US_WinEdit , ::cRichControlName, "SetFocus" ) , US_Send_SelectAll( ::cRichControlName , ::US_WinEdit ) ) ;
+         ACTION ( DoMethod( ::US_WinEdit , ::cRichControlName, "SetFocus" ) , US_Send_SelectAll( ::cRichControlName , ::US_WinEdit ), DoEvents() ) ;
          TOOLTIP ::Lan( "SeleTodoToolTip" ) ;
          FONT "VPArial" SIZE US_WFont(9)
 
@@ -1187,6 +1187,42 @@ Return NIL
 //   SetFontRTF(::hEd, Sel, aFont[1], aFont[2], aFont[3], aFont[4], aFont[5], aFont[6], aFont[7])
 //Return NIL
 // FIN Metodo Original
+
+FUNCTION _OOHG_GetColor( uInitColor, uCustomColors )
+
+   LOCAL aRetVal, nColor, nInitColor, v
+
+   IF HB_ISARRAY( uInitColor )
+      nInitColor := RGB( uInitColor[ 1 ], uInitColor[ 2 ], uInitColor[ 3 ] )
+   ELSEIF HB_ISNUMERIC( uInitColor )
+      nInitColor := uInitColor
+   ENDIF
+   IF HB_ISNUMERIC( uCustomColors )
+      nColor := uCustomColors
+      uCustomColors := Array( 16 )
+      AFill( uCustomColors, nColor )
+   ELSEIF HB_ISARRAY( uCustomColors )
+      ASize( uCustomColors, 16 )
+      FOR EACH v IN uCustomColors
+         IF ! HB_ISNUMERIC( v )
+            v := -1   // Defaults to COLOR_BTNFACE
+         ENDIF
+      NEXT
+   ELSE
+      uCustomColors := Array( 16 )
+      AFill( uCustomColors, -1 )
+   ENDIF
+
+   nColor := _OOHG_ChooseColor( NIL, nInitColor, uCustomColors )
+
+   IF nColor == -1
+      aRetVal := { NIL, NIL, NIL }
+   ELSE
+      aRetVal := { GetRed( nColor ), GetGreen( nColor ), GetBlue( nColor ) }
+   ENDIF
+
+   RETURN aRetVal
+
 METHOD US_EditSetFontColor() CLASS US_RichEdit
    Local sel, aFont, tmp
    //
@@ -1199,7 +1235,7 @@ METHOD US_EditSetFontColor() CLASS US_RichEdit
    aFont := GetFontRTF( ::hEd, 1 )
    tmp := aFont[5]
    tmp := { GetRed(tmp) , GetGreen(tmp) , GetBlue(tmp) }
-   tmp := GetColor( tmp )
+   tmp := _OOHG_GetColor( tmp )
    If tmp[1] != NIL .and. tmp[2] != NIL .and. tmp[3] != NIL
       aFont[5] := RGB( tmp[1] , tmp[2] , tmp[3] )
    endif
@@ -1868,28 +1904,23 @@ Return nil
 #pragma BEGINDUMP
 
 #define _WIN32_IE      0x0500
-#define HB_OS_WIN_32_USED
-#define _WIN32_WINNT   0x0400
-#include <shlobj.h>
 
+#include <shlobj.h>
 #include <windows.h>
 #include <commctrl.h>
 #include <richedit.h>
 #include "hbapi.h"
-#include "hbvm.h"
-#include "hbstack.h"
-#include "hbapiitm.h"
 #include "winreg.h"
 #include "tchar.h"
-#include "Winuser.h"
+#include "winuser.h"
 #include <wingdi.h>
 #include <setupapi.h>
+#include "qpm.h"
 
 static LPBYTE cbuffer;
 static int ilefontow;
 static int aktfont;
 
-#pragma argsused
 int CALLBACK effxp(ENUMLOGFONTEX *lpelfe, NEWTEXTMETRICEX *lpntme, int FontType, LPARAM lParam)
 {
     if ((LONG)lParam==1)
@@ -1898,9 +1929,9 @@ int CALLBACK effxp(ENUMLOGFONTEX *lpelfe, NEWTEXTMETRICEX *lpntme, int FontType,
     }
     else
     {
-        strcat(cbuffer,(LPSTR) lpelfe->elfLogFont.lfFaceName);
+        strcat( (char *) cbuffer,(LPSTR) lpelfe->elfLogFont.lfFaceName);
         if (++aktfont<ilefontow)
-            strcat(cbuffer,",");
+            strcat( (char *) cbuffer,",");
     }
     return 1;
 }
@@ -1921,14 +1952,14 @@ HB_FUNC( US_GETSYSTEMFONTS )
 
         EnumFontFamiliesEx(hDC,&lf,(FONTENUMPROC)effxp,0,0);
         DeleteDC(hDC);
-        hb_retc(cbuffer);
+        hb_retc( (char *) cbuffer);
         GlobalFree(cbuffer);
 }
 
 HB_FUNC ( REBARHEIGHT )
 {
         LRESULT lResult ;
-        lResult =  SendMessage( (HWND) hb_parnl (1),(UINT) RB_GETBARHEIGHT, 0, 0 );
+        lResult =  SendMessage( (HWND) HB_PARNL( 1 ),(UINT) RB_GETBARHEIGHT, 0, 0 );
         hb_retnl( (UINT)lResult );
 }
 
@@ -1938,15 +1969,62 @@ HB_FUNC ( GETDEVCAPS ) // GetDevCaps ( hwnd )
         HDC      hdc;
         HWND     hwnd;
 
-        hwnd = (HWND) hb_parnl(1);
-
+        hwnd = (HWND) HB_PARNL( 1 );
         hdc  = GetDC( hwnd );
-
         ix   = GetDeviceCaps( hdc, LOGPIXELSX );
-
         ReleaseDC( hwnd, hdc );
-
         hb_retni( (UINT) ix );
+}
+
+HB_FUNC( _OOHG_CHOOSECOLOR )
+{
+   INT i;
+   CHOOSECOLOR cc;
+   static BOOL bFirst = TRUE;
+   static COLORREF crCustClr[ 16 ];
+
+   if( bFirst )
+   {
+      for( i = 0; i < 16; i++ )
+      {
+         crCustClr[ i ] = GetSysColor( COLOR_BTNFACE );
+      }
+      bFirst = FALSE;
+   }
+
+   if( HB_ISARRAY( 3 ) )
+   {
+      for( i = 0; i < 16; i++ )
+      {
+         if( HB_PARVNL( 3, i + 1 ) > 0 )
+         {
+            crCustClr[ i ] = ( COLORREF ) HB_PARVNL( 3, i + 1 );
+         }
+      }
+   }
+
+   ZeroMemory( &cc, sizeof( cc ) );
+   cc.lStructSize  = sizeof( cc );
+   cc.hwndOwner    = HB_ISNIL( 1 ) ? GetActiveWindow() : ( HWND ) HB_PARNL( 1 );
+   cc.rgbResult    = ( COLORREF ) ( HB_ISNIL( 2 ) ?  0 : hb_parnl( 2 ) );
+   cc.lpCustColors = crCustClr;
+   cc.Flags        = ( WORD ) ( HB_ISNIL( 4 ) ? CC_ANYCOLOR | CC_FULLOPEN | CC_RGBINIT : hb_parnl( 4 ) );
+
+   if( ChooseColorA( &cc ) )
+   {
+      if( HB_ISARRAY( 3 ) )
+      {
+         for( i = 0; i < 16; i++ )
+         {
+            HB_STORVNL( ( LONG ) crCustClr[ i ], 3, i + 1 );
+         }
+      }
+      hb_retnl( ( LONG ) cc.rgbResult );
+   }
+   else
+   {
+      hb_retnl( - 1 );
+   }
 }
 
 #pragma ENDDUMP

@@ -26,236 +26,281 @@
  *    along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+#define DBLQT    '"'
+#define SNGQT    "'"
+#define VERSION  "01.06"
+
 FUNCTION MAIN( ... )
-   Local aParams := hb_aParams(), n
-   Local Version := "01.05", bLoop := .T., cLinea, cFines := { Chr(13) + Chr(10), Chr(10) }, hFiIn, cont := 0, hFiOut
-   Local cFileOut, nBytesSalida := 0, cFileIn, cParam, cFileTMP, cmd, cmdbat, bList := .F., gccbat := "_GCCbat.bat"
-   Local estado := "_Status.tmp"
-   Private cQPMDir := ""
+   LOCAL aParams := hb_AParams(), n, i
+   LOCAL bLoop := .T., cLinea, cFines := { Chr(13) + Chr(10), Chr(10) }, hFiIn, cont := 0, hFiOut
+   LOCAL cFileOut, nBytesSalida := 0, cFileIn, cParam, cFileTMP, cmd, cmdbat, bList := .F.
+   LOCAL fgccbat := US_FileTmp( NIL, ".bat" )
+   LOCAL fstatus := US_FileTmp()
+
+   PRIVATE cQPMDir := ""
 
    cParam := ""
-   For n := 1 to Len( aParams )
+   FOR n := 1 TO Len( aParams )
       cParam += ( aParams[ n ] + " " )
-   Next n
+   NEXT n
    cParam := AllTrim( cParam )
 
-   If Upper( US_Word( cParam, 1 ) ) == "-VER" .or. Upper( US_Word( cParam, 1 ) ) == "-VERSION"
-      MemoWrit( "US_Slash.version", Version )
-      Return .T.
-   EndIf
+   IF Upper( US_Word( cParam, 1 ) ) == "-VER" .or. Upper( US_Word( cParam, 1 ) ) == "-VERSION"
+      MemoWrit( "US_Slash.version", VERSION )
+      RETURN .T.
+   ENDIF
 
-   If Upper( US_Word( cParam, 1 ) ) != "QPM"
+   IF Upper( US_Word( cParam, 1 ) ) != "QPM"
       __Run( "ECHO " + "US_Slash 999E: Running Outside System" )
-      ERRORLEVEL( 1 )
-      Return -1
-   Else
+      ErrorLevel( 1 )
+      RETURN -1
+   ELSE
       cParam := US_WordDel( cParam, 1 )
-   EndIf
+   ENDIF
 
-   If Upper(SubStr( cParam, 1, 5 ) ) == "-LIST"
+   IF Upper( SubStr( cParam, 1, 5 ) ) == "-LIST"
       bList := .T.
       cQPMDir := SubStr( US_Word( cParam, 1 ), 6 ) + "\"
       cParam := AllTrim( SubStr( cParam, US_WordInd( cParam, 2 ) ) )
-   EndIf
+   ENDIF
    cFileIn := US_Word( cParam, US_Words( cParam ) - 1 )
    cFileOut := US_Word( cParam, US_Words( cParam ) )
    cFileOut := SubStr( cFileOut, 3 )
    cFileTMP := SubStr( cFileIn, 1, RAt( ".", cFileIn ) ) + "CUS"
    cParam := AllTrim( SubStr( cParam, 1, US_WordInd( cParam, US_Words( cParam ) - 1 ) - 1 ) )
-   If bList
-      QPM_Log( "US_Slash " + Version )
+
+   IF bList
+      QPM_Log( "US_Slash " + VERSION )
       QPM_Log( "Slash 000I: by QPM_Support ( https://qpm.sourceforge.io/ )" )
       QPM_Log( "Slash 999I: Log into: " + cQPMDir + "QPM.log" )
       QPM_Log( "Slash 003I: FileIn:   " + cFileIn )
       QPM_Log( "Slash 013I: FileOut:  " + cFileOut )
       QPM_Log( "Slash 023I: FileTMP:  " + cFileTMP )
       QPM_Log( "Slash 033I: Param:    " + cParam )
-   EndIf
+   ENDIF
+
    hFiIn := FOpen( cFileIn )
-   If FError() = 0
-      If ( hFiOut := FCreate( cFileTMP ) ) == -1
-         QPM_Log( "Slash 011E: Error in creation of File Out (" + AllTrim( Str( Ferror() ) ) + ") " + cFileOut )
+   IF FError() = 0
+      IF ( hFiOut := FCreate( cFileTMP ) ) == -1
          FClose( hFiIn )
-         QPM_Log( "" + HB_OsNewLine() )
-         Return 12
-      EndIf
-      Do While bLoop
-         If HB_FReadLine( hFiIn, @cLinea, cFines ) != 0
+         QPM_Log( "Slash 011E: Error in creation of File Out (" + AllTrim( Str( FError() ) ) + ") " + cFileOut + hb_osNewLine() )
+         RETURN 12
+      ENDIF
+
+      DO WHILE bLoop
+         IF hb_FReadLine( hFiIn, @cLinea, cFines ) != 0
             bLoop := .F.
-         EndIf
+         ENDIF
          cont ++
-         If SubStr( cLinea, 1, 6 ) == "#line " .and. ;
-            US_Words( cLinea ) > 2 .and. ;
+         IF SubStr( cLinea, 1, 6 ) == "#line " .AND. ;
+            US_Words( cLinea ) > 2 .AND. ;
             IsDigit( US_Word( cLinea, 2 ) ) = .T.
-            If bList
+            IF bList
                QPM_Log( "Slash 004I: Old (" + PadL( AllTrim( Str( cont ) ), 8 ) + ") " + cLinea )
-            EndIf
+            ENDIF
             cLinea := StrTran( cLinea, '\', "\\" )
-            If bList
+            IF bList
                QPM_Log( "Slash 005I: New (" + PadL( AllTrim( Str( cont ) ), 8 ) + ") " + cLinea )
-               QPM_Log( "-----------" )
-            EndIf
-         EndIf
-         cLinea := cLinea + HB_OsNewLine()
+            ENDIF
+         ENDIF
+         cLinea := cLinea + hb_osNewLine()
          nBytesSalida := Len( cLinea )
-         If FWrite( hFiOut, cLinea, nBytesSalida ) < nBytesSalida
-            QPM_Log( "Slash 012E: Error in save into Out File (" + AllTrim( Str( FError() ) ) + ") " + cFileOut )
+         IF FWrite( hFiOut, cLinea, nBytesSalida ) < nBytesSalida
             FClose( hFiIn )
-            QPM_Log( "" + HB_OsNewLine() )
-            Return 16
-         EndIf
-      EndDo
+            QPM_Log( "Slash 012E: Error in save into Out File (" + AllTrim( Str( FError() ) ) + ") " + cFileOut + hb_osNewLine() )
+            RETURN 16
+         ENDIF
+      ENDDO
+
       FClose( hFiIn )
       FClose( hFiOut )
-   Else
-      QPM_Log( "Slash 001E: Error open Input File " + cFileIn )
-      QPM_Log( "" + HB_OsNewLine() )
-      Return 8
-   EndIf
+   ELSE
+      QPM_Log( "Slash 001E: Error open Input File " + cFileIn + hb_osNewLine() )
+      RETURN 8
+   ENDIF
+
    FErase( cFileIn + ".temporal" )
    FRename( cFileIn, cFileIn + ".temporal" )
    FRename( cFileTMP, cFileIn )
-   cmdbat := "GCC.EXE " + cParam + " " + cFileIn + " -o" + cFileOut
-   cmd := "@echo off" + HB_OsNewLine() + ;
-        cmdbat + HB_OsNewLine() + ;
-        "If errorlevel 1 goto bad" + HB_OsNewLine() + ;
-        "Echo OK > " + estado + HB_OsNewLine() + ;
-        "goto good" + HB_OsNewLine() + ;
-        ":bad" + HB_OsNewLine() + ;
-        "Echo ERROR > " + estado + HB_OsNewLine() + ;
-        ":good" + HB_OsNewLine()
-   MemoWrit( GCCbat, cmd )
-   If bList
+
+   cmdbat := "GCC.EXE " + cParam + ' "' + cFileIn + '" -o "' + cFileOut + '"'
+   cmd := "@echo off" + hb_osNewLine() + ;
+        cmdbat + hb_osNewLine() + ;
+        "If errorlevel 1 goto bad" + hb_osNewLine() + ;
+        "Echo OK > " + fstatus + hb_osNewLine() + ;
+        "goto good" + hb_osNewLine() + ;
+        ":bad" + hb_osNewLine() + ;
+        "Echo ERROR > " + fstatus + hb_osNewLine() + ;
+        ":good" + hb_osNewLine()
+   MemoWrit( fgccbat, cmd )
+   IF bList
       QPM_Log( "Slash 043I: Command: " + cmdbat )
-   EndIf
-   __Run( GCCbat )
+   ENDIF
+   __Run( fgccbat )
+
    FRename( cFileIn, cFileTMP )
    FRename( cFileIn + ".temporal", cFileIn )
-   If MemoLine( MemoRead( estado ), 254, 1 ) = "ERROR"
-      ERRORLEVEL( 1 )
-   EndIf
-   FErase( GCCbat )
-   FErase( estado )
-   If bList
+
+   IF MemoLine( MemoRead( fstatus ), 254, 1 ) = "ERROR"
+      ErrorLevel( 1 )
+   ENDIF
+   FErase( fgccbat )
+   FErase( fstatus )
+   IF bList
       QPM_Log( "" )
-   EndIf
-Return .T.
+   ENDIF
 
-Function QPM_Log( string )
-   Local LogArchi, msg
+   RETURN .T.
 
-   if empty( string )
-      msg := ""
-   else
-      msg := Dtos( Date() ) + " " + Time() + " Stack(" + AllTrim( Str( US_Stack() ) ) + ") " + ProcName( 1 ) + "(" + StrZero( ProcLine( 1 ), 3, 0 ) + ")" + " " + string
-   endif
+//========================================================================
+// RETORNA EL NOMBRE DE UN ARCHIVO INEXISTENTE
+//========================================================================
+FUNCTION US_FileTmp( prefix, suffix )
+   LOCAL cFile
+
+   IF Empty( prefix )
+      prefix := "_temp"
+   ENDIF
+   IF Empty( suffix )
+      suffix := ".tmp"
+   ENDIF
+   IF ! Left( suffix, 1 ) == "."
+      suffix := "." + suffix
+   ENDIF
+   DO WHILE .T.
+      cFile := prefix + US_NameRandom() + suffix
+      IF ! File( cFile )
+         EXIT
+      ENDIF
+   ENDDO
+
+   RETURN cFile
+
+//========================================================================
+// RETORNA UN STRING A PARTIR DEL NÚMERO DE SEGUNDOS TRANSCURRIDOS
+//========================================================================
+FUNCTION US_NameRandom()
+
+   RETURN AllTrim( StrTran( StrTran( Str( Seconds() ), ".", AllTrim( Str( US_Rand( Seconds() ) ) ) ), "-", "M" ) )
+
+//========================================================================
+// RETORNA UN STRING A PARTIR DEL NÚMERO DE SEGUNDOS TRANSCURRIDOS
+//========================================================================
+FUNCTION US_Rand( random )
+   LOCAL negative, ttx, ttj, tty, ttk, ttl, ttz, tts, ttt, rett
+
+   negative := ( random < 0 )
+   IF random == 0
+      RETURN 0
+   ENDIF
+   random := Abs( random )
+   ttx := Seconds() / 100
+   ttj := ( ttx - Int( ttx ) ) * 100
+   tty := Log( Sqrt( Seconds() / 100 ) )
+   ttk := ( tty - Int( tty ) ) * 100
+   ttl := ttj * ttk
+   ttz := ttl - Int( ttl )
+   tts :=  random * ttz
+   ttt :=  Round( tts, 2 )
+   rett := Int( ttt ) + iif( Int( ttt ) + 1 < random + 1, 1, 0 )
+
+   RETURN ( rett * iif( negative, -1, 1 ) )
+
+//========================================================================
+// EXTRAE UNA PALABRA DE UN STRING
+//========================================================================
+FUNCTION US_Word( estring, posicion )
+   LOCAL cont := 1
+
+   IF posicion == NIL
+      posicion := 1
+   ENDIF
+   estring := AllTrim( estring )
+   DO WHILE .T.
+      IF AT( " ", estring ) == 0
+         RETURN iif( posicion == cont, estring, "" )
+      ELSEIF cont == posicion
+         RETURN SubStr( estring, 1, AT( " ", estring ) - 1 )
+      ENDIF
+      estring := AllTrim( SubStr( estring, AT( " ", estring ) + 1 ) )
+      cont ++
+   ENDDO
+
+   RETURN ""
+
+//========================================================================
+// ELIMINAR UNA PALABRA DE UN STRING
+//========================================================================
+FUNCTION US_WordDel( estring, posicion )
+
+   RETURN iif( posicion > 0, ;
+               AllTrim( SubStr( estring, 1, US_WordInd( estring, posicion ) - 1 ) + ;
+                        StrTran( SubStr( estring, US_WordInd( estring, posicion ) ), US_Word( estring, posicion ), " ", 1, 1 ) ), ;
+               estring )
+
+//========================================================================
+// RETORNA LA POSICION DONDE EMPIEZA LA PALABRA numero
+//========================================================================
+FUNCTION US_WordInd( estring, numero )
+   LOCAL cont, estr, estr2
+
+   IF estring == NIL
+      estring := ""
+   ENDIF
+   IF US_Words( estring ) < numero
+      RETURN ( Len( estring ) + 1 )
+   ENDIF
+   cont := 1
+   estr := estring
+   estr2 := RTrim( estring )
+   estring := AllTrim( estring )
+   DO WHILE .T.
+      IF At( " ", estring ) == 0
+         RETURN iif( numero == cont, Len( estr ) - ( Len( estring ) + ( Len( estr ) - Len( estr2 ) ) ) + 1, 0 )
+      ELSEIF cont == numero
+         RETURN ( Len( estr ) - ( Len( estring ) + ( Len( estr ) - Len( estr2 ) ) ) + 1 )
+      ENDIF
+      estring := AllTrim( SubStr( estring, At( " ", estring ) + 1 ) )
+      cont ++
+   ENDDO
+
+   RETURN 0
+
+//========================================================================
+// CUENTA LAS PALABRAS EN UN STRING
+//========================================================================
+FUNCTION US_Words( estring )
+   LOCAL cont := 0
+
+   IF estring == NIL
+      estring := ""
+   ENDIF
+   estring := AllTrim( estring)
+   DO WHILE .T.
+      IF At( " ", estring ) == 0
+         RETURN iif( Len( estring ) > 0, cont + 1, cont )
+      ENDIF
+      estring := AllTrim( SubStr( estring, At( " ", estring ) + 1 ) )
+      cont ++
+   ENDDO
+
+   RETURN 0
+
+//========================================================================
+// ESCRIBE EN EL LOG
+//========================================================================
+STATIC FUNCTION QPM_Log( string )
+   LOCAL LogArchi := cQPMDir + "QPM.LOG"
+   LOCAL msg := DToS( Date() ) + " " + Time() + " US_SLASH " + ProcName( 1 ) + "(" + AllTrim( Str( ProcLine( 1 ) ) ) + ")" + " " + string
 
    SET CONSOLE OFF
-   SET ALTERNATE TO ( cQPMDir + "QPM.LOG" ) ADDITIVE
+   SET ALTERNATE TO ( LogArchi ) ADDITIVE
    SET ALTERNATE ON
    ? msg
    SET ALTERNATE OFF
    SET ALTERNATE TO
    SET CONSOLE ON
-Return .T.
 
-//========================================================================
-// FUNCION PARA EXTRAER UNA PALABRA DE UN ESTRING
-//========================================================================
-FUNCTION US_WORD(ESTRING, POSICION)
-   LOCAL CONT
-   CONT := 1
-   if Posicion == NIL
-      Posicion := 1
-   endif
-   ESTRING := ALLTRIM(ESTRING)
-   DO WHILE .T.
-      IF AT(" ",ESTRING) != 0
-         IF CONT == POSICION
-            RETURN SUBSTR(ESTRING,1,AT(" ",ESTRING)-1)
-         ELSE
-            ESTRING := ALLTRIM(SUBSTR(ESTRING,AT(" ",ESTRING) + 1))
-            CONT := CONT + 1
-         ENDIF
-      ELSE
-         IF POSICION == CONT
-            RETURN ESTRING
-         ELSE
-            RETURN ""
-         ENDIF
-      ENDIF
-   ENDDO
-Return ""
-
-//========================================================================
-// FUNCION PARA ELIMINAR UNA PALABRA DE UN STRING
-//========================================================================
-FUNCTION US_WORDDEL(ESTRING,POSICION)
-RETURN IIF(POSICION>0,ALLTRIM(SUBSTR(ESTRING,1,US_WORDIND(ESTRING,POSICION)-1)+STRTRAN(SUBSTR(ESTRING,US_WORDIND(ESTRING,POSICION)),US_WORD(ESTRING,POSICION)," ",1,1)),ESTRING)
-
-//========================================================================
-// FUNCION PARA SABER LA POSICION DE LA PALABRA NUMERO ....
-// ESTA FUNCION RETORNA EL BYTE DONDE EMPIEZA LA PALABRA
-//========================================================================
-FUNCTION US_WORDIND(ESTRING, POSICION)
-   LOCAL CONT , ESTR , ESTR2
-   if ESTRING == NIL
-      ESTRING := ""
-   ENDIF
-   if us_words( Estring ) < Posicion
-      Return ( len( Estring ) + 1 )
-//    Return 0
-   endif
-   CONT := 1
-   ESTR := ESTRING
-   ESTR2 := RTRIM(ESTRING)
-   ESTRING := ALLTRIM(ESTRING)
-   DO WHILE .T.
-      IF AT(" ",ESTRING) != 0
-         IF CONT == POSICION
-            RETURN (LEN(ESTR)-(LEN(ESTRING)+(LEN(ESTR)-LEN(ESTR2)))+1)
-         ELSE
-            ESTRING := ALLTRIM(SUBSTR(ESTRING,AT(" ",ESTRING) + 1))
-            CONT := CONT + 1
-         ENDIF
-      ELSE
-         IF POSICION == CONT
-            RETURN (LEN(ESTR)-(LEN(ESTRING)+(LEN(ESTR)-LEN(ESTR2)))+1)
-         ELSE
-            RETURN 0
-         ENDIF
-      ENDIF
-   ENDDO
-RETURN 0
-
-//========================================================================
-// FUNCION PARA CONTAR LAS PALABRAS EN UN ESTRING
-//========================================================================
-FUNCTION US_WORDS(ESTRING)
-   LOCAL CONT:=0
-   if Estring == NIL
-      Estring := ""
-   endif
-   ESTRING:=ALLTRIM(ESTRING)
-   DO WHILE .T.
-      IF AT(" ",ESTRING) != 0
-         ESTRING:=ALLTRIM(SUBSTR(ESTRING,AT(" ",ESTRING) + 1))
-         CONT++
-      ELSE
-         IF LEN(ESTRING) > 0
-            RETURN CONT + 1
-         ELSE
-            RETURN CONT
-         ENDIF
-      ENDIF
-   ENDDO
-RETURN 0
-
-FUNCTION US_Stack()
-   LOCAL n := 1
-   WHILE ! Empty( ProcName( n ) )
-      n++
-   ENDDO
-RETURN n - 1
+   RETURN .T.
 
 /* eof */

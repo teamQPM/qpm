@@ -145,12 +145,14 @@ Return cAux
 /*
  * Función para posicionar el reproductor de medios
  */
+/*
 Function US_SetPlayerPosition( ParentForm , ControlName , nPos )
    Local h , mVar
    mVar := '_' + ParentForm + '_' + ControlName
    h := _HMG_aControlhandles [&mVar]
    US_mcifunc ( h , 20 , nPos )
 Return Nil
+*/
 
 /*
  * Función de API para agregar fuentes en forma dinámica
@@ -3780,6 +3782,7 @@ FUNCTION US_MGIndex_IndexMeter(mTamagno, NombreIndice)
    US_MGIndexMenu.TRegistro.value:=str(registro,10)
    US_MGIndexMenu.TPorcentaje.value:=str(nCompletado, 9, 2)+'%'
 RETURN(.T.)
+*/
 
 /*
  * Type: 0 Reset
@@ -3868,7 +3871,7 @@ Function US_Execute(cFile,cParm)
          MsgInfo("Función "+Procname()+": Error desconocido al intentar ver el Reporte, RC="+US_VarToStr(Reto))
    endcase
 Return if( Reto > 32 , 0 , -1 )
-*/
+
 Function US_WinStackAdd( Vector , Ventana )
    // sexto elemento es el estado de la ventana: NORMAL MINIMIZADA MAXIMIZADA
    // es usado para cuando se restauran todas las ventanas minimizadas
@@ -3891,7 +3894,7 @@ Function US_WinStackDel( Vector , Ventana )
        Vector[len(Vector)][j] := NIL
    next
 Return nil
-*/
+
 Function US_WinStackStatus( Vector , Ventana , Estado )
    Local i
    for i=1 to len(Vector)
@@ -3900,7 +3903,7 @@ Function US_WinStackStatus( Vector , Ventana , Estado )
       endif
    next
 Return nil
-/*
+
 Function US_WinMinimizeAll( Vector )
    Local i:=0
    US_Log( , .F. )
@@ -4416,6 +4419,7 @@ FUNCTION US_MSG(M99SISTEMA,M99NUM,M99FILPOS,M99MODO)
 RETURN .T.
 //= END Funcion US_MSG                                                             =\\
 //==================================================================================\\
+*/
 
 /*
  * Funciones simples para porcentajes de pantalla
@@ -4641,6 +4645,7 @@ Function US_MiniGuiType()
    endcase
 Return "?"
 */
+
 Function US_InitialBarIsOculta()
 Return ( ( GetDesktopRealHeight() == GetDesktopHeight() ) .and. ( GetDesktopRealWidth() == GetDesktopWidth() ) )
 
@@ -4648,31 +4653,22 @@ Return ( ( GetDesktopRealHeight() == GetDesktopHeight() ) .and. ( GetDesktopReal
 #pragma BEGINDUMP
 
 #define _WIN32_IE      0x0500
-#define HB_OS_WIN_32_USED
-#define _WIN32_WINNT   0x0400
+
 #include <windows.h>
+#include <windows.h>
+#include <commctrl.h>
 #include "hbapi.h"
+#include "winreg.h"
+#include "tchar.h"
+#include "qpm.h"
 
 /*
  * Función para Obtener el contenido de un clipboard con texto RTF
  */
 HB_FUNC(US_GETRTFCLIPBOARDPASTE)
 {
-   SendMessage( (HWND) hb_parnl (1),(UINT) WM_PASTE, 0, 0);
+   SendMessage( (HWND) HB_PARNL( 1 ), (UINT) WM_PASTE, 0, 0 );
 }
-
-#pragma ENDDUMP
-
-#pragma BEGINDUMP
-
-#include <windows.h>
-#include <commctrl.h>
-#include "hbapi.h"
-#include "hbvm.h"
-#include "hbstack.h"
-#include "hbapiitm.h"
-#include "winreg.h"
-#include "tchar.h"
 
 HB_FUNC ( INTERACTIVEMOVEHANDLE )
 {
@@ -4690,26 +4686,15 @@ HB_FUNC ( INTERACTIVEMOVEHANDLE )
                 0               // additional data associated with keystroke
         );
 
-        SendMessage( (HWND) hb_parnl(1) , WM_SYSCOMMAND , SC_MOVE ,10 );
+        SendMessage( (HWND) HB_PARNL(1) , WM_SYSCOMMAND , SC_MOVE ,10 );
 
 }
-#pragma ENDDUMP
-
-#pragma BEGINDUMP
-
-#include <windows.h>
-#include <mmsystem.h>
-#include "hbapi.h"
-#include "hbapiitm.h"
-#include <commctrl.h>
-#include <vfw.h>
 
 /*
 HB_FUNC ( SETMENUDEFAULTITEM )
 {
         SetMenuDefaultItem( (HMENU) hb_parnl( 1 ), hb_parni( 2 ) - 1, TRUE );
 }
-*/
 
 HB_FUNC ( US_MCIFUNC )
 {
@@ -4741,7 +4726,6 @@ HB_FUNC ( US_MCIFUNC )
       }
 }
 
-/*
 HB_FUNC ( US_INITIMAGE )
 {
         HWND  h;
@@ -4780,18 +4764,13 @@ HB_FUNC ( US_C_SETPICTURE )
         SendMessage((HWND) hb_parnl (1),(UINT)STM_SETIMAGE,(WPARAM)IMAGE_BITMAP,(LPARAM)hBitmap);
 }
 */
-#pragma ENDDUMP
-
-#pragma BEGINDUMP
-
-// #include <shlobj.h>
 
 HB_FUNC (US_2SETWINDOWRGN)
 {
    HWND hWnd;
    HRGN hrgn;
 
-   hWnd = (HWND) hb_parnl (1);
+   hWnd = (HWND) HB_PARNL (1);
    if ( hb_parni(6)==0)
           SetWindowRgn(GetActiveWindow(),NULL,TRUE);
    else
@@ -4805,13 +4784,6 @@ HB_FUNC (US_2SETWINDOWRGN)
      // Should be hb_parnl(1) instead of GetActiveWindow()
      }
 }
-#pragma ENDDUMP
-
-#pragma BEGINDUMP
-
-#include <windows.h>
-#include <winuser.h>
-#include "hbapi.h"
 
 #define VK_C 67
 #define VK_V 86
@@ -4854,15 +4826,6 @@ HB_FUNC( US_SEND_UNDO )
     keybd_event(VK_CONTROL, MapVirtualKey(VK_CONTROL, 0), KEYEVENTF_KEYUP, 0);
 }
 
-#pragma ENDDUMP
-
-#pragma BEGINDUMP
-
-#define HB_OS_WIN_32_USED
-#define _WIN32_WINNT 0x0400
-#include <windows.h>
-#include "hbapi.h"
-
 HB_FUNC (GETDESKTOPREALTOP)
 {
    RECT rect;
@@ -4901,6 +4864,7 @@ HB_FUNC (GETEXEFILENAME)
    hb_retc( (char*) pBuf );
 }
 */
+
 #pragma ENDDUMP
 
 /* eof */

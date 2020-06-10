@@ -46,6 +46,7 @@ Function US_Log( cTexto , bDisplay , bStack )
 Return if( bReto == 0 , .T. , .F. )
 
 #pragma BEGINDUMP
+
 #include "hbapi.h"
 #include "US_Log.h"
 

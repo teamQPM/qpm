@@ -26,25 +26,25 @@
  *    along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-US_EditPrint        BITMAP     ..\FuentesComunes\Recursos\US_EditPrint.BMP
-US_EditPreview      BITMAP     ..\FuentesComunes\Recursos\US_EditPreview.BMP
-US_EditCopy         BITMAP     ..\FuentesComunes\Recursos\US_EditCopy.BMP
-US_EditPaste        BITMAP     ..\FuentesComunes\Recursos\US_EditPaste.BMP
-US_EditCut          BITMAP     ..\FuentesComunes\Recursos\US_EditCut.BMP
-US_EditDelete       BITMAP     ..\FuentesComunes\Recursos\US_EditDelete.BMP
-US_EditUndo         BITMAP     ..\FuentesComunes\Recursos\US_EditUndo.BMP
-US_EditRedo         BITMAP     ..\FuentesComunes\Recursos\US_EditRedo.BMP
-US_EditFind         BITMAP     ..\FuentesComunes\Recursos\US_EditFind.BMP
-US_EditBold         BITMAP     ..\FuentesComunes\Recursos\US_EditBold.BMP
-US_EditItalic       BITMAP     ..\FuentesComunes\Recursos\US_EditItalic.BMP
-US_EditUnderLine    BITMAP     ..\FuentesComunes\Recursos\US_EditUnderLine.BMP
-US_EditStrikeOut    BITMAP     ..\FuentesComunes\Recursos\US_EditStrikeOut.BMP
-US_EditLeft         BITMAP     ..\FuentesComunes\Recursos\US_EditLeft.BMP
-US_EditCenter       BITMAP     ..\FuentesComunes\Recursos\US_EditCenter.BMP
-US_EditRight        BITMAP     ..\FuentesComunes\Recursos\US_EditRight.BMP
-US_EditColor        BITMAP     ..\FuentesComunes\Recursos\US_EditColor.BMP
-US_EditVinetas      BITMAP     ..\FuentesComunes\Recursos\US_EditVinetas.BMP
-US_EditTabOn        BITMAP     ..\FuentesComunes\Recursos\US_EditTabOn.BMP
-US_EditTabOff       BITMAP     ..\FuentesComunes\Recursos\US_EditTabOff.BMP
+US_EditPrint        BITMAP     .\Recursos\US_EditPrint.BMP
+US_EditPreview      BITMAP     .\Recursos\US_EditPreview.BMP
+US_EditCopy         BITMAP     .\Recursos\US_EditCopy.BMP
+US_EditPaste        BITMAP     .\Recursos\US_EditPaste.BMP
+US_EditCut          BITMAP     .\Recursos\US_EditCut.BMP
+US_EditDelete       BITMAP     .\Recursos\US_EditDelete.BMP
+US_EditUndo         BITMAP     .\Recursos\US_EditUndo.BMP
+US_EditRedo         BITMAP     .\Recursos\US_EditRedo.BMP
+US_EditFind         BITMAP     .\Recursos\US_EditFind.BMP
+US_EditBold         BITMAP     .\Recursos\US_EditBold.BMP
+US_EditItalic       BITMAP     .\Recursos\US_EditItalic.BMP
+US_EditUnderLine    BITMAP     .\Recursos\US_EditUnderLine.BMP
+US_EditStrikeOut    BITMAP     .\Recursos\US_EditStrikeOut.BMP
+US_EditLeft         BITMAP     .\Recursos\US_EditLeft.BMP
+US_EditCenter       BITMAP     .\Recursos\US_EditCenter.BMP
+US_EditRight        BITMAP     .\Recursos\US_EditRight.BMP
+US_EditColor        BITMAP     .\Recursos\US_EditColor.BMP
+US_EditVinetas      BITMAP     .\Recursos\US_EditVinetas.BMP
+US_EditTabOn        BITMAP     .\Recursos\US_EditTabOn.BMP
+US_EditTabOff       BITMAP     .\Recursos\US_EditTabOff.BMP
 
 /* eof */
