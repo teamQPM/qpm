@@ -1923,6 +1923,9 @@ static int aktfont;
 
 int CALLBACK effxp(ENUMLOGFONTEX *lpelfe, NEWTEXTMETRICEX *lpntme, int FontType, LPARAM lParam)
 {
+    (void) lpntme;
+    (void) FontType;
+
     if ((LONG)lParam==1)
     {
         ilefontow++;

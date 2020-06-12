@@ -166,7 +166,9 @@ PROCEDURE MAIN( ... )
                cMemoErr += "Error: Line " + AllTrim( Str( nInx ) ) + ", #INCLUDE file not found: " + cLine + CRLF + CRLF
                QPM_Log( "US_Res 002E: File not found: " + cLine + CRLF )
             ELSE
-               IF Left( cFileInclude, 2 ) == [.\] .OR. Left( cFileInclude, 3 ) == [..\]
+               IF Left( cFileInclude, 2 ) == [.\]
+                  cFileInclude := ATail( aPaths ) + SubStr( cFileInclude, 3 )
+               ELSEIF Left( cFileInclude, 2 ) == [.\] .OR. Left( cFileInclude, 3 ) == [..\]
                   cFileInclude := ATail( aPaths ) + cFileInclude
                ENDIF
                cPathInc := US_FileNameOnlyPath( cFileInclude )

@@ -6096,7 +6096,7 @@ FUNCTION QPM_Build2()
  */
                   Out := Out + PUB_cCharTab + 'echo , , >> ' + Q_SCRIPT_FILE + CRLF
                   IF ! Prj_Check_IgnoreMainRC .OR. ! Prj_Check_IgnoreLibRCs
-                     IF ! Prj_Check_IgnoreMainRC .AND. File( US_FileNameOnlyPathAndName( PRGFILES[1] ) + '.RC' )
+                     IF ( ! Prj_Check_IgnoreMainRC .AND. File( US_FileNameOnlyPathAndName( PRGFILES[1] ) + '.RC' ) ) .OR. ! Prj_Check_IgnoreLibRCs
                         Out := Out + PUB_cCharTab + 'echo $(DIR_OBJECTS)' + DEF_SLASH + '_Temp.res + >> ' + Q_SCRIPT_FILE + CRLF
                      ENDIF
 
@@ -7475,7 +7475,7 @@ FUNCTION LiberoWindowsHotKeys()
 RETURN .T.
 
 FUNCTION TranslateLog( Log )
-   LOCAL NewLog, i, e, w, j, d, aLines
+   LOCAL NewLog, i, e, w, j, d, aLines, errorlevel
    LOCAL qpmfolder    := US_ShortName( PUB_cQPM_Folder )
    LOCAL cppfolder    := US_ShortName( GetCppFolder() ) + DEF_SLASH + 'BIN'
    LOCAL msg          := DBLQT + qpmfolder + DEF_SLASH + 'US_MSG.EXE'+ DBLQT + " " + Q_PROGRESS_LOG + ' -MSG:'
@@ -7527,12 +7527,35 @@ FUNCTION TranslateLog( Log )
                            { 'POLINK: error: ',                            1, 'LNKPELLES' }, ;    // Error en Linkeditor de Pelles C
                            { 'POLINK: fatal error: ',                      1, 'LNKPELLES' }, ;    // Error en Linkeditor de Pelles C
                            { 'Packed 0 files.',                            1, 'UPX' }, ;          // Error en UPX
-                           { 'Packed 1 file: 0 ok, 1 error.',              1, 'UPX' } ;           // Error en UPX
+                           { 'Packed 1 file: 0 ok, 1 error.',              1, 'UPX' }, ;          // Error en UPX
+                           { 'error:',                                     1, 'RC compiler' }, ;
+                           { 'No code generated.',                         1, 'compiler' }, ;
+                           { "compilation terminated.",                    1, 'compiler' }, ;
+                           { "preprocessing failed.",                      1, 'compiler' } ;
                          }
 
    VentanaMain.RichEditSysout.Value := VentanaMain.RichEditSysout.Value + CRLF + US_TimeDis( Time() ) + ' - >>>>>>> Reading Process Output ...'
    VentanaMain.RichEditSysout.SetFocus()
    VentanaMain.RichEditSysout.CaretPos := Len( VentanaMain.RichEditSysout.Value )
+
+// Set build's errorlevel
+   errorlevel := US_Word( MemoRead( END_FILE ), 1 )
+   IF errorlevel == 'OK'
+      FOR i := 1 TO Len( vWarnings )
+         IF At( vWarnings[i][1], Log ) > 0
+            QPM_MemoWrit( END_FILE, ( errorlevel := 'WARNING' ) )
+            EXIT
+         ENDIF
+      NEXT
+   ENDIF
+   IF ! errorlevel == 'ERROR'
+      FOR i := 1 TO Len( vErrors )
+         IF At( vErrors[i][1], Log ) > 0
+            QPM_MemoWrit( END_FILE, ( errorlevel := 'ERROR' ) )
+            EXIT
+         ENDIF
+      NEXT
+   ENDIF
 
 // Start of log beautification
 
@@ -7738,28 +7761,9 @@ FUNCTION TranslateLog( Log )
 // Make the log readable
    NewLog := StrTran( NewLog, Chr(10), CRLF )
 
-// End of log beautification
+// Show build status
 
-// Set build's errorlevel
-   i := "OK"
-   IF US_Word( MemoRead( END_FILE ), 1 ) == 'OK'
-      FOR w := 1 TO Len( vWarnings )
-         IF At( vWarnings[w][1], NewLog ) > 0
-            QPM_MemoWrit( END_FILE, ( i := 'WARNING' ) )
-            EXIT
-         ENDIF
-      NEXT
-   ENDIF
-   IF ! ( US_Word( MemoRead( END_FILE ), 1 ) == 'ERROR' )
-      FOR e := 1 TO Len( vErrors )
-         IF At( vErrors[e][1], NewLog ) > 0
-            QPM_MemoWrit( END_FILE, ( i := 'ERROR' ) )
-            EXIT
-         ENDIF
-      NEXT
-   ENDIF
-
-   NewLog += CRLF + "==> Build status: " + i + CRLF
+   NewLog += CRLF + "==> Build status: " + errorlevel + CRLF
 
 RETURN NewLog
 

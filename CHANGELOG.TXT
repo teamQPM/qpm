@@ -8,6 +8,18 @@
  * See "How to format your ChangeLog entries" in howtosvn.txt file.
  */
 
+2020-06-12 12:10:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * FuentesComunes\US_Edit_CharFijo.prg
+     * BCC warning was pacified.
+
+   * QPM.prg
+     ! Build log shows status OK when building fails.
+     ! MiniGui's RC file is not compiled under GCC when project has no RC.
+
+   * us_res.exe
+   * us_res.prg
+     ! Include files with names starting with ".." were being ignored.
+
 2020-06-10 15:51:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * FuentesComunes\TAxPrg.prg
      ! Casting for 64 bits.
