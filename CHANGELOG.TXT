@@ -8,6 +8,25 @@
  * See "How to format your ChangeLog entries" in howtosvn.txt file.
  */
 
+2020-06-13 15:18:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * HelpQPM\QPM_SHG.fpt
+     * Minor changes.
+
+   * QPM.chm
+   * us_msg.exe
+   * us_redir.exe
+   * us_res.exe
+   * us_run.exe
+   * us_shell.exe
+   * us_slash.exe
+     * Rebuilded.
+
+   * QPM_US_Msg.qpm
+   * QPM_US_Redir.qpm
+   * QPM_US_Run.qpm
+   * QPM_US_Shell.qpm
+     * Updated to version 05_05_16.
+
 2020-06-13 12:00:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    - us_windres.exe
 
