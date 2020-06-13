@@ -72,7 +72,7 @@ FUNCTION Main( PAR_cP01, PAR_cP02, PAR_cP03, PAR_cP04, PAR_cP05, PAR_cP06, PAR_c
                           PAR_cP11 + ' ' + PAR_cP12 + ' ' + PAR_cP13 + ' ' + PAR_cP14 + ' ' + PAR_cP15 + ' ' + ;
                           PAR_cP16 + ' ' + PAR_cP17 + ' ' + PAR_cP18 + ' ' + PAR_cP19 + ' ' + PAR_cP20 )
 
-// priority
+// PRIORITY
    PUBLIC PUB_QPM_bHigh := .F.
    QPM_SetProcessPriority( 'HIGH' )
 
@@ -1697,7 +1697,7 @@ FUNCTION Main( PAR_cP01, PAR_cP02, PAR_cP03, PAR_cP04, PAR_cP05, PAR_cP06, PAR_c
                VALUE .F.
                TOOLTIP "Show line numbers (file's loading is slower)"
                ON CHANGE ( bNumberOnPrg := GetProperty( 'VentanaMain', 'Check_NumberOnPrg', 'value' ), ;
-                           iif( bPPODisplayado, QPM_Wait( 'PPODisplay(.T.)', 'Reloading ...' ), QPM_Wait( "RichEditDisplay( 'PRG', .T. )", 'Reloading ...' ) ) )
+                           iif( bPpoDisplayado, QPM_Wait( 'PpoDisplay(.T.)', 'Reloading ...' ), QPM_Wait( "RichEditDisplay( 'PRG', .T. )", 'Reloading ...' ) ) )
             END CHECKBOX
 
             DEFINE BUTTONEX bReLoadPpo
@@ -1707,7 +1707,7 @@ FUNCTION Main( PAR_cP01, PAR_cP02, PAR_cP03, PAR_cP04, PAR_cP05, PAR_cP06, PAR_c
                HEIGHT 25
                CAPTION 'Browse PPO'
                TOOLTIP "Browse the selected file's preprocessor output"
-               ONCLICK QPM_Wait( 'PPODisplay()', 'Reloading ...' )
+               ONCLICK QPM_Wait( 'PpoDisplay()', 'Reloading ...' )
             END BUTTONEX
 
             DEFINE BUTTONEX bReLoadPrg
@@ -3858,7 +3858,7 @@ FUNCTION QPM_OpenProject2()
       bLastGlobalSearchDbf                      := .F.
       bLastGlobalSearchCas                      := .F.
       VentanaMain.LGlobal.visible     :=        .F.
-      bPPODisplayado                            := .F.
+      bPpoDisplayado                            := .F.
       SHG_Database                              := ''
       SHG_DbSize                                := 0
       SHG_LastFolderImg                         := ''
@@ -4237,7 +4237,7 @@ FUNCTION QPM_OpenProject2()
                  PUB_MI_nNewFileSuggested := Val( US_WordSubStr( LOC_cLine, 2 ) )
          ELSEIF  US_Upper( US_Word( LOC_cLine, 1 ) ) == 'MI_CNEWFILELEYEND'
                  PUB_MI_cNewFileLeyend := US_WordSubStr( LOC_cLine, 2 )
-         ELSEIF  US_Upper( US_Word( LOC_cLine, 1 ) ) == 'MI_NNEWFILEEMPTY'
+         ELSEIF  US_Upper( US_Word( LOC_cLine, 1 ) ) == 'MI_NNEWFILEEmpty'
                  PUB_MI_nNewFileEmpty := Val( US_WordSubStr( LOC_cLine, 2 ) )
          ELSEIF  US_Upper( US_Word( LOC_cLine, 1 ) ) == 'MI_CNEWFILEUSERFILE'
                  PUB_MI_cNewFileUserFile := US_WordSubStr( LOC_cLine, 2 )
@@ -5303,7 +5303,7 @@ FUNCTION QPM_Build2()
          ENDIF
          DO CASE
          CASE IsMinGW
-            cExtraFoldersC := cExtraFoldersC + ' -I' + vConcatIncludeC[i] + iif( bExtraFolderSearchRoot, DEF_SLASH, '' )
+            cExtraFoldersC := cExtraFoldersC + ' -I ' + vConcatIncludeC[i] + iif( bExtraFolderSearchRoot, DEF_SLASH, '' )
          CASE IsPelles
             cExtraFoldersC := cExtraFoldersC + ' /I' + vConcatIncludeC[i] + iif( bExtraFolderSearchRoot, DEF_SLASH, '' )
          CASE IsBorland
@@ -6094,7 +6094,7 @@ FUNCTION QPM_Build2()
 /*
  * BCC32: add resource files
  */
-                  Out := Out + PUB_cCharTab + 'echo , , >> ' + Q_SCRIPT_FILE + CRLF
+                  Out := Out + PUB_cCharTab + 'echo , , + >> ' + Q_SCRIPT_FILE + CRLF
                   IF ! Prj_Check_IgnoreMainRC .OR. ! Prj_Check_IgnoreLibRCs
                      IF ( ! Prj_Check_IgnoreMainRC .AND. File( US_FileNameOnlyPathAndName( PRGFILES[1] ) + '.RC' ) ) .OR. ! Prj_Check_IgnoreLibRCs
                         Out := Out + PUB_cCharTab + 'echo $(DIR_OBJECTS)' + DEF_SLASH + '_Temp.res + >> ' + Q_SCRIPT_FILE + CRLF
@@ -6982,7 +6982,7 @@ FUNCTION QPM_Timer_StatusRefresh()
          QPM_MemoWrit( TEMP_LOG, cLog := TranslateLog( MemoRead( TEMP_LOG ) ) )
          TopName       := US_FileNameOnlyName(GetProperty( 'VentanaMain', 'GPrgFiles', 'Cell', 1, NCOLPRGNAME ))
          OutName       := US_FileNameOnlyName( GetOutputModuleName() )
-         estado        := US_Word( MemoRead( END_FILE ), 1 )
+         estado        := US_Word( memoread( END_FILE ), 1 )
 
 /*
 La existencia del ejecutable se verifica en BUILD.BAT teniendo en cuenta el COPY/MOVE
@@ -7900,7 +7900,7 @@ RETURN .T.
 FUNCTION xRefPrgFmg( vConcatIncludeHB )
    LOCAL f, p, Fol := PUB_cProjectFolder+DEF_SLASH, MemoAux, i
    LOCAL vScanned := {}, vPRGFiles := {}, vPANFiles := {}
-   MemoAux := MemoRead( PROGRESS_LOG )
+   MemoAux := memoread( PROGRESS_LOG )
    QPM_MemoWrit( PROGRESS_LOG, MemoAux + US_TimeDis( Time() ) + ' - Checking cross references between PRG files and FMG files ...' + CRLF )
    IF bLogActivity
       QPM_MemoWrit( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log', MemoRead( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log' ) + 'xRefPrgFmg Initialize' + CRLF )
@@ -8963,12 +8963,12 @@ FUNCTION TotCaption( cType, nValor )
    ENDIF
 RETURN .T.
 
-FUNCTION PPODisplay( bOnlyRenumering )
+FUNCTION PpoDisplay( bOnlyRenumering )
    LOCAL ppoFile, nRow
    IF Empty( bOnlyRenumering )
       bOnlyRenumering := .F.
    ENDIF
-   IF bPPODisplayado .AND. !bOnlyRenumering
+   IF bPpoDisplayado .AND. !bOnlyRenumering
       QPM_EditPPO()
    ELSE
       IF nRow == 0 .OR. GetProperty( 'VentanaMain', 'GPrgFiles', 'Itemcount' ) == 0
@@ -8987,7 +8987,7 @@ FUNCTION PPODisplay( bOnlyRenumering )
                VentanaMain.RichEditPRG.Value := Enumeracion( MemoRead( ppoFile ), 'PRG' )
                VentanaMain.RichEditPRG.CaretPos := 1
                VentanaMain.bReLoadPpo.caption := 'Edit PPO'
-               bPPODisplayado := .T.
+               bPpoDisplayado := .T.
             ELSE
                MsgInfo( 'PreProcess file not found, ReBuild the project after press Non-Incremental Button or after save prg file' )
             ENDIF
@@ -9047,7 +9047,7 @@ FUNCTION RichEditDisplay( tipo, bReload, nRow, bForce )
             VentanaMain.RichEditPRG.Value := QPM_Wait( "ListModule( '" + ChgPathToReal( GetProperty( 'VentanaMain', 'GPrgFiles', 'Cell', 1, NCOLPRGFULLNAME ) ) + "' )", 'Listing ...', NIL, .T. )
             VentanaMain.RichEditPRG.CaretPos := 1
          ELSE
-            bPPODisplayado := .F.
+            bPpoDisplayado := .F.
             VentanaMain.RichEditPRG.Value := Enumeracion( MemoRead( ChgPathToReal( GetProperty( 'VentanaMain', 'GPrgFiles', 'Cell', nRow, NCOLPRGFULLNAME ) ) ), tipo )
             VentanaMain.RichEditPRG.CaretPos := Val( GetProperty( 'VentanaMain', 'GPrgFiles', 'Cell', nRow, NCOLPRGOFFSET ) )
             VentanaMain.bReLoadPpo.caption := 'Browse PPO'
@@ -10229,7 +10229,7 @@ FUNCTION LostRichEdit( tipo, nRecord )
    LOCAL cAuxMemo
    DO CASE
       CASE tipo == 'PRG'
-         IF bPPODisplayado
+         IF bPpoDisplayado
             SetProperty( 'VentanaMain', 'GPrgFiles', 'Cell', nGridPrgLastRow, NCOLPRGOFFSET, cPpoCaretPrg )
          ELSE
             SetProperty( 'VentanaMain', 'GPrgFiles', 'Cell', nGridPrgLastRow, NCOLPRGOFFSET, AllTrim( Str( VentanaMain.RichEditPRG.CaretPos ) ) )
