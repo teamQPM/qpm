@@ -8,6 +8,9 @@
  * See "How to format your ChangeLog entries" in howtosvn.txt file.
  */
 
+2020-06-13 12:00:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   - us_windres.exe
+
 2020-06-13 11:50:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    + doc\us_reimp_readme.txt
 
