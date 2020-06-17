@@ -8,12 +8,37 @@
  * See "How to format your TODO entries" in howtosvn.txt file.
  */
 
+
 /******************************************************************************/
 
 Assigned to: <nobody>
-Added by...: 2020-05-10 21:26:00 UTC-0300 Fernando Yurisich <fyurisich>
+Added by...: 2020-06-15 21:26:00 UTC-0300 Fernando Yurisich <fyurisich>
 Status.....: Open.
-Details....: Commit changes to SourceForge and GitHub.
+Details....: Build a 64 bits version and test utilities.
+
+/******************************************************************************/
+
+Assigned to: <nobody>
+Added by...: 2020-06-15 21:26:00 UTC-0300 Fernando Yurisich <fyurisich>
+Status.....: Open.
+Details....: Test us_reimpr.
+
+/******************************************************************************/
+
+Assigned to: <nobody>
+Added by...: 2020-06-15 21:26:00 UTC-0300 Fernando Yurisich <fyurisich>
+Status.....: Open.
+Details....: Update us_dbview.
+
+/******************************************************************************/
+
+Assigned to: <nobody>
+Added by...: 2020-06-15 21:26:00 UTC-0300 Fernando Yurisich <fyurisich>
+Status.....: Open.
+Details....: Display the real RC line number: To found the real number of the
+             offending line: search backwards from the line whose number (x)
+             was reported by the compiler until the line (i) were the original
+             #include is located, the real line number is (x - i)
 
 /******************************************************************************/
 
@@ -23,14 +48,6 @@ Status.....: Open.
 Details....: Copy auxiliary files to the log.
 
 /******************************************************************************/
-
-Assigned to: <nobody>
-Added by...: 2020-05-10 21:26:00 UTC-0300 Fernando Yurisich <fyurisich>
-Status.....: Open.
-Details....: Display the real RC line number.
-
-/******************************************************************************/
-
 Assigned to: <nobody>
 Added by...: 2020-05-10 21:26:00 UTC-0300 Fernando Yurisich <fyurisich>
 Status.....: Open.
@@ -94,13 +111,6 @@ Status.....: Open.
 Details....: Use a table to code libraries and other options of each minigui,
              so the user can add multiple version. Clean code so libraries
              are no longer hardwired.
-
-/******************************************************************************/
-
-Assigned to: <nobody>
-Added by...: 2011-12-02 09:32:00 UTC-0300 Fernando Yurisich <fyurisich>
-Status.....: Open.
-Details....: Remove US_dtree.im, US_dtree.js and US_dtree.css
 
 /******************************************************************************/
 
