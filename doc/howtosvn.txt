@@ -189,9 +189,6 @@ HOW TO BUILD A NEW RELEASE
          dbfview.chm
          us_dif.exe
          us_difwi.dll
-         us_dtree.css
-         us_dtree.im
-         us_dtree.js
          us_hha.dll
          us_hhc.exe
          us_impdef.exe
