@@ -8,6 +8,26 @@
  * See "How to format your TODO entries" in howtosvn.txt file.
  */
 
+/******************************************************************************/
+
+Assigned to: <nobody>
+Added by...: 2020-06-15 21:26:00 UTC-0300 Fernando Yurisich <fyurisich>
+Status.....: Open.
+Details....: Remove us_redir.*
+
+/******************************************************************************/
+
+Assigned to: <nobody>
+Added by...: 2020-06-15 21:26:00 UTC-0300 Fernando Yurisich <fyurisich>
+Status.....: Open.
+Details....: Update howtosvn.txt and the other files at doc folder
+
+/******************************************************************************/
+
+Assigned to: <nobody>
+Added by...: 2020-06-15 21:26:00 UTC-0300 Fernando Yurisich <fyurisich>
+Status.....: Open.
+Details....: Add a link to GitHub at https://qpm.sourceforge.io/
 
 /******************************************************************************/
 
