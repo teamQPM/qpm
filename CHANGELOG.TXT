@@ -8,7 +8,36 @@
  * See "How to format your ChangeLog entries" in howtosvn.txt file.
  */
 
-2020-06-13 15:18:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2020-06-17 18:12 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * TODO.TXT
+     * Updated.
+
+2020-06-17 18:11 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * QPM.iss
+     * Improved.
+
+2020-06-17 18:09 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * doc\howtosvn.txt
+   * QPM_Functions.prg
+   * QPM_SHG_SimpleHelpGenerator.prg
+     - References to deleted files.
+
+2020-06-17 18:07 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   - dtree.css
+   - dtree.im
+   - dtree.js
+
+2020-06-17 17:54 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   + PayPal Donate.url
+
+2020-06-17 16:48 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   + OldDistros\*.*
+     + Old QPM distros just to preserve them.
+
+2020-06-15 15:18 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   - us_dlltool.exe
+
+2020-06-13 15:18 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * HelpQPM\QPM_SHG.fpt
      * Minor changes.
 
@@ -27,10 +56,10 @@
    * QPM_US_Shell.qpm
      * Updated to version 05_05_16.
 
-2020-06-13 12:00:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2020-06-13 12:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    - us_windres.exe
 
-2020-06-13 11:50:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2020-06-13 11:50 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    + doc\us_reimp_readme.txt
 
    * HelpQPM\QPM_SHG.dbf
@@ -53,7 +82,7 @@
    * us_dlltool.exe
      * Updated to version 2.30
 
-2020-06-12 12:10:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2020-06-12 12:10 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * FuentesComunes\US_Edit_CharFijo.prg
      * BCC warning was pacified.
 
@@ -65,7 +94,7 @@
    * us_res.prg
      ! Include files with names starting with ".." were being ignored.
 
-2020-06-10 15:51:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2020-06-10 15:51 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * FuentesComunes\TAxPrg.prg
      ! Casting for 64 bits.
      - Some unneeded includes.
@@ -178,7 +207,7 @@
 
    * QPM_Functions.prg
      * Reverted changes made to function QPM_Execute at
-       2020-04-20 18:00:00 UTC-0300.
+       2020-04-20 18:00 UTC-0300.
      ! Extra Run Wizard shows wrong path for Run Exe or Batch option caused
        by wrong translation of PUB_cQPM_Folder, PUB_cThisFolder and
        PUB_cProjectFolder at function ChgPathToRelative.
@@ -227,19 +256,19 @@
      * Log messages.
      * Updated to version 1.06.
 
-2020-04-25 09:42:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2020-04-25 09:42 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * QPM.exe
    * QPM.prg
      + Support for .o modules when building MinGW libs.
      * Some NIL parameters replaced by "".
 
-2020-04-25 09:28:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2020-04-25 09:28 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * QPM.exe
    * QPM.prg
    * QPM_Functions.prg
      ! Compilation aborts because RC filenames for HMG flavor are wrong.
 
-2020-04-20 19:08:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2020-04-20 19:08 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * QPM.ch
    * QPM_AutoProject.qpm
      * Updated to 05_05_15.
@@ -248,7 +277,7 @@
    * doc\UpgradeReadme.txt
      * Improved.
 
-2020-04-20 18:00:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2020-04-20 18:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * QPM.ch
      + Memvars cEditControlFileRC and HR_ControlFileRC.
    * QPM.exe
@@ -294,7 +323,7 @@
    * us_upx.exe
      * Updated to version 3.96w
 
-2019-10-15 18:57:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2019-10-15 18:57 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * readme.txt
      + New entry.
    * TODO.TXT
@@ -312,23 +341,23 @@
      * Updated to 05_05_14.
      * Builded with BCC 5.8
 
-2019-10-14 21:08:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2019-10-14 21:08 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * readme.txt
      + New entry.
 
-2019-10-14 20:43:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2019-10-14 20:43 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * QPM.iss
      + us_redir.exe.
    * doc\notes.txt
    * TODO.TXT
      * Updated.
 
-2019-10-14 20:13:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2019-10-14 20:13 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * QPM.ch
    * QPM.exe
      ! Version.
 
-2019-10-14 20:07:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2019-10-14 20:07 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * .doc\OOHG_Configuration.txt
      * Updated.
    * TODO.TXT
@@ -342,7 +371,7 @@
      * Updated to 05_05_13.
      * Complied with Harbour MiniGUI Extended Edition 19.08 (Update 2)
 
-2019-08-11 10:19:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2019-08-11 10:19 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * QPM_Libraries.prg
      ! Libraries for HARUPDF.
    * QPM.prg
@@ -350,7 +379,7 @@
    * readme.txt
      ! Previous entry.
 
-2019-07-29 21:21:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2019-07-29 21:21 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * QPM.exe
    * QPM.ch
    * QPM_AutoProject.qpm
@@ -382,7 +411,7 @@
      + hbpcre2 library
    + .doc\OOHG_Configuration.txt
 
-2019-07-05 22:32:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2019-07-05 22:32 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * QPM.exe
      * Rebuilded.
    * QPM.ch
@@ -407,7 +436,7 @@
    * doc\howtosvn.txt
      * Updated.
 
-2019-03-26 22:34:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2019-03-26 22:34 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * QPM.exe
      * Rebuilded.
    * QPM.ch
@@ -419,7 +448,7 @@
      ! Some .FMG files are not opened with OOHG's IDE PLUS.
      ! Fontcolor is not restored after editing a .FMG file.
 
-2019-03-26 20:22:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2019-03-26 20:22 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * QPM.exe
      * Rebuilded.
    * QPM_Functions.prg
@@ -432,7 +461,7 @@
    * readme.txt
      + Added new entry.
 
-2019-03-24 22:22:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2019-03-24 22:22 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * QPM.exe
      * Rebuilded.
    * QPM.prg
@@ -440,11 +469,11 @@
    * readme.txt
      + Added new entry.
 
-2019-03-24 20:43:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2019-03-24 20:43 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * readme.txt
      + Added new entry.
 
-2019-03-24 20:26:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2019-03-24 20:26 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * QPM.exe
      * Rebuilded.
    * QPM.ch
@@ -452,7 +481,7 @@
    * QPM_Functions.prg
      ! Errors related to not found resources when building under BCC.
 
-2019-03-19 22:18:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2019-03-19 22:18 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * QPM.exe
      * Rebuilded.
    * QPM.prg
@@ -468,7 +497,7 @@
        "_hmg_resconfig.h" for MiniGui 3.x
        "_resconfig.h" for other flavors
 
-2019-03-17 22:33:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2019-03-17 22:33 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * ar.c
    * doc\codestyl.txt
    * FuentesComunes\TAxPrg.prg
@@ -595,11 +624,11 @@
    * index.htm
      * Added back link and look change.
 
-2019-03-16 20:15:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2019-03-16 20:15 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * readme.txt
      + Added new entry.
 
-2019-03-16 19:20:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2019-03-16 19:20 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * QPM.exe
      * Rebuilded.
    * QPM_AutoProject.qpm
@@ -623,7 +652,7 @@
    * HelpQPM\QPM_SHG.fpt
      * History of changes was updated.
 
-2018-09-29 14:26:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2018-09-29 14:26 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * QPM.exe
      * Rebuilded.
    * QPM_AutoProject.qpm
@@ -634,7 +663,7 @@
    * QPM.prg
      ! Error when trying to edit .fmg file.
 
-2018-08-22 21:40:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2018-08-22 21:40 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * QPM.exe
      * Rebuilded.
    * QPM_AutoProject.qpm
@@ -645,7 +674,7 @@
      ! "Error en Type for List Output" caused by a folder's name not been
        shortened when it has a space in it.
 
-2018-05-15 21:40:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2018-05-15 21:40 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * HelpQPM\QPM_SHG.cdx
    * HelpQPM\QPM_SHG.dbf
    * HelpQPM\QPM_SHG.fpt
@@ -656,7 +685,7 @@
    * readme.txt
      * Updated.
 
-2018-05-15 21:13:06 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2018-05-15 21:13 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * QPM.exe
      * Rebuilded.
      * Updated to 05_05_05.
@@ -670,7 +699,7 @@
      ! Resource files are being ignored when compiling in console mode.
      + Options to include/exclude resource files when compiling.
 
-2017-10-12 21:59:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2017-10-12 21:59 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * QPM.exe
      * Rebuilded.
    * TODO.TXT
@@ -681,12 +710,12 @@
      * Error log is positioned at the last added entry.
      * Error message.
 
-2016-09-06 20:04:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2016-09-06 20:04 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * QPM_AutoProject.qpm
    * QPM.exe
      * Updated to 05_05_04.
 
-2016-09-06 20:00:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2016-09-06 20:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * QPM_ProjectSettings.prg
      ! RTE at SwitchRadioOutputCopyMove().
    * readme.txt
@@ -696,15 +725,15 @@
    * QPM.iss
      * Version to 05_05_04.
 
-2016-09-03 20:27:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2016-09-03 20:27 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * readme.txt
      * Updated.
 
-2016-09-03 19:33:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2016-09-03 19:33 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * QPM.exe
      * Updated to 05_05_03.
 
-2016-09-03 19:30:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2016-09-03 19:30 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * QPM.ch
    * QPM_AutoProject.qpm
    * QPM.iss
@@ -712,7 +741,7 @@
    * readme.txt
      * Updated.
 
-2016-09-03 18:46:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2016-09-03 18:46 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * QPM_Libraries.prg
      + Missing libraries.
      - Unneeded libraries.
@@ -723,11 +752,11 @@
      ! BCC32 builds with debug option and new debugger show and
        unneeded console window.
 
-2016-08-31 21:31:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2016-08-31 21:31 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * QPM.exe
      * Updated.
 
-2016-08-31 21:29:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2016-08-31 21:29 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * QPM_AutoProject.qpm
      * Updated.
    * QPM_Libraries.prg
@@ -737,7 +766,7 @@
      ! RTE when saving project options to .qpm file.
      ! Compile error caused by wrong ppo parameter for xHarbour.
 
-2016-08-28 23:02:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2016-08-28 23:02 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * FuentesComunes\US_Classes.prg
      + Defines for colors.
    * FuentesComunes\US_HB.PRG
@@ -789,22 +818,22 @@
    * QPM_GlobalSettings.prg
      - Tab pages for invalid combinations HMG 3.x + xHarbour.
 
-2016-08-25 10:08:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2016-08-25 10:08 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * readme.txt
-     * Updated to reflect that, since 2016-08-25 12:41:05 UTC, VirusTotal
+     * Updated to reflect that, since 2016-08-25 12:41 UTC, VirusTotal
        reports that the .exe installer published at SourceForge is virus-free.
 
-2016-08-24 21:37:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2016-08-24 21:37 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * readme.txt
      * Updated.
 
-2016-08-23 21:30:31 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2016-08-23 21:30 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * QPM.exe
      * Updated.
    * QPM_Environment.prg
      ! Environment file is not copied on version change.
 
-2016-08-23 19:48:31 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2016-08-23 19:48 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    + us_reimp.c
    + reimp.h
    + ar.c
@@ -814,7 +843,7 @@
    * us_reimp.exe
      * Updated.
 
-2016-08-23 19:18:31 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2016-08-23 19:18 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * QPM.prg
      - Some messages of REIMPORT option.
      ! In some cases the script file is not being deleted.
@@ -826,7 +855,7 @@
    * us_shell.prg
      ! Some messages displayed under OFF option.
 
-2016-08-22 19:18:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2016-08-22 19:18 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * QPM.prg
      + T*O*D*O.
      ! Source tab's backcolor not restored after prg's edition is finished.
@@ -859,7 +888,7 @@
      + Needed functions to avoid linking auxiliary files. This change
        fixes false positives results from some antivirus sofware.
 
-2016-08-20 21:55:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2016-08-20 21:55 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * QPM.ch
    * QPM.exe
    * QPM_AutoProject.qpm
@@ -868,13 +897,13 @@
    * readme.txt
      * Updated.
 
-2016-08-20 21:07:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2016-08-20 21:07 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * CHANGELOG.TXT
      * Previous entry fixed.
    * QPM.iss
      * Compression type.
 
-2016-08-20 20:07:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2016-08-20 20:07 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * us_res.exe
    * us_res.prg
      ! The resources whose names start with '..\' are not properly processed.
@@ -885,7 +914,7 @@
      ! Added libs are not loaded from old version .qpm files.
      ! Info displayed at 'LIB' tab.
 
-2016-08-20 14:11:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2016-08-20 14:11 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * CHANGELOG.TXT
      * Previous entry fixed.
    * TODO.TXT
@@ -893,7 +922,7 @@
    * us_upx.exe
      * Updated to version 3.91w
 
-2016-08-19 20:50:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2016-08-19 20:50 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * CHANGELOG.TXT
      * Some previous entries fixed.
    * README.TXT
@@ -912,19 +941,19 @@
    * QPM.iss
      * Default install folder is now C:\QPM.
 
-2016-08-19 19:17:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2016-08-19 19:17 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * doc\howtosvn.txt
      * Updated.
 
-2016-08-18 22:09:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2016-08-18 22:09 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * QPM.exe
      * Updated.
 
-2016-08-18 22:05:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2016-08-18 22:05 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * CHANGELOG.TXT
      + Missing entry.
 
-2016-08-18 22:03:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2016-08-18 22:03 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * ChangeLog
      * Renamed as CHANGELOG.TXT
    * QPM.iss
@@ -933,7 +962,7 @@
    * QPM.PRG
      * Order of file's list.
 
-2016-08-18 21:45:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2016-08-18 21:45 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * ChangeLog
      * Some previous entries fixed.
    * DBFview.chm
@@ -959,7 +988,7 @@
    * us_res.EXE
      * Renamed as us_res.exe
 
-2016-08-18 21:30:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2016-08-18 21:30 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    + Some files to ignore list.
    * ChangeLog
      * Some previous entries fixed.
@@ -1039,7 +1068,7 @@
    * us_slash.EXE
      * Renamed as us_slash.exe
 
-2016-08-03 22:43:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2016-08-03 22:43 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * QPM.EXE
    * QPM_AutoProject.qpm
    * QPM_US_Slash.qpm
@@ -1056,7 +1085,7 @@
    * QPM_Libraries.prg
      * Some comments.
 
-2016-08-02 20:03:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2016-08-02 20:03 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * QPM.ch
      * Updated list of memvars.
    * QPM.EXE
@@ -1127,7 +1156,7 @@
      * Bumped to version 01.05
      * Output format.
 
-2016-08-02 19:00:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2016-08-02 19:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * FuentesComunes\TAxPrg.prg
    * FuentesComunes\US_Classes.prg
    * FuentesComunes\US_Edit_CharFijo.prg
@@ -1138,7 +1167,7 @@
      ! Harbour warnings when compiling with -w3 switch.
      * Some unused code was commented out.
 
-2016-07-24 12:35:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2016-07-24 12:35 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * All files with copyright notice.
      * Copyright updated.
    * doc\codestyl.txt
@@ -1256,10 +1285,10 @@
      * Use defines to handle single and double quotes.
      ! Wrong processing of some resource-definition statements.
      
-2016-07-17 10:52:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2016-07-17 10:52 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    + Some files to ignore list.
 
-2016-07-17 10:44:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2016-07-17 10:44 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    + users-list
    + users-list\.mboxview
    + users-list\mboxview.exe
@@ -1267,17 +1296,17 @@
    + users-list\qpm-users.txt.mboxview
    ; QPM's user list messages up to 2016-06-21.
 
-2016-06-19 19:37:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2016-06-19 19:37 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * QPM_Libraries.prg
      + Some libraries for HMG+MinGW+Harbour.
    * QPM.EXE
      * Updated.
 
-2016-06-19 18:49:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2016-06-19 18:49 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * TODO
      * Updated.
 
-2016-06-16 22:36:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2016-06-16 22:36 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * TODO
      * Updated.
    * QPM.ch
@@ -1289,7 +1318,7 @@
    * QPM.EXE
      * Updated.
 
-2016-06-16 19:57:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2016-06-16 19:57 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * QPM.PRG
      * Some controls position.
      ! Typo.
@@ -1298,13 +1327,13 @@
    * FuentesComunes\US_HB.PRG
      * Error messages.
 
-2016-03-19 22:42:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2016-03-19 22:42 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * QPM.EXE
    * QPM_AutoProject.qpm
    * TODO
      * Updated
 
-2016-03-19 22:19:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2016-03-19 22:19 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * QPM.chm
    * QPM_AutoProjectOnlyHelp.qpm
      * Updated.
@@ -1315,7 +1344,7 @@
      + "Run folder" is needed when the exe builded with "Debug" option is
        moved to another folder.
 
-2016-03-19 22:07:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2016-03-19 22:07 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * TODO
      * Updated.
    * QPM_Functions.PRG
@@ -1324,7 +1353,7 @@
      * Version to 05_04_09.
      * Do not write GCC call to log when Record Activity is on.
 
-2015-11-12 21:48:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2015-11-12 21:48 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * QPM.EXE
      * Updated.
    * QPM.PRG
@@ -1334,7 +1363,7 @@
    * QPM_Libraries.prg
      * Libraries for OOHG+MinGW synced with last release.
 
-2015-11-04 21:00:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2015-11-04 21:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * readme.txt
    * QPM_AutoProject.qpm
    * QPM.EXE
@@ -1343,24 +1372,24 @@
      * Version to 05_04_08.
      ! Error compiling with HMG 3.4.2: MinGW can't locate include files.
 
-2015-07-26 21:57:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2015-07-26 21:57 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * doc\howtosvn.txt
      * How to name upgrade and install files.
 
-2015-07-26 21:40:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2015-07-26 21:40 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * readme.txt
      * Updated.
    ; Today commits try to fix "file not found" error when trying to run newly
      created exe under Linux. Verification is pending.
 
-2015-07-26 21:28:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2015-07-26 21:28 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * HelpQPM\QPM_SHG.dbf
    * HelpQPM\QPM_SHG.fpt
    * HelpQPM\QPM_SHG.cdx
      * Updated ChangeLog info.
      * Updated Project Setup info.
 
-2015-07-26 21:24:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2015-07-26 21:24 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * readme.txt
    * QPM_AutoProject.qpm
    * QPM.chm
@@ -1381,7 +1410,7 @@
      + Support for "Add Lib" option. This options controls if QPM must add
        "Lib" prefix to the name of a library.
 
-2015-07-15 20:31:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2015-07-15 20:31 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * readme.txt
    * QPM_AutoProject.qpm
      * Updated.
@@ -1392,15 +1421,15 @@
      ! Global configuration is lost after upgrade.
      ! New configuration file has wrong version number until app's exit.
 
-2015-07-11 17:24:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2015-07-11 17:24 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * readme.txt
      * Updated.
 
-2015-07-11 17:07:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2015-07-11 17:07 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * doc\howtosvn.txt
      - T*O*D*O.
 
-2015-07-11 17:02:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2015-07-11 17:02 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * doc\howtosvn.txt
      * How to name upgrade and install files.
    * readme.txt
@@ -1411,27 +1440,27 @@
    * QPM.PRG
      ! RTE when clicking on a previous opened file that no longer exists.
 
-2015-07-03 00:28:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2015-07-03 00:28 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * readme.txt
      * Updated.
 
-2015-07-02 23:18:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2015-07-02 23:18 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * ChangeLog
      * Missed in previous commit.
 
-2015-07-02 23:16:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2015-07-02 23:16 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * QPM_AutoProject.qpm
    * QPM.EXE
      * Updated.
 
-2015-07-02 23:10:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2015-07-02 23:10 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    + Some files to ignore list.
 
-2015-07-02 23:02:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2015-07-02 23:02 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    + readme.txt
      * File display at https://sourceforge.net/projects/qpm/files
 
-2015-07-02 22:46:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2015-07-02 22:46 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * QPM_AutoProjectOnlyHelp.qpm
    * QPM_AutoProject.qpm
    * QPM.chm
@@ -1452,7 +1481,7 @@
      * Updated help on socket library.
      * Updated reference to QPM version.
 
-2015-03-24 23:10:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2015-03-24 23:10 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * ChangeLog
      * Previous entry.
    * QPM.EXE
@@ -1465,7 +1494,7 @@
      * Use short filenames in some ferase commands.
      ! "-MSG:" strings are not cleaned when translating log.
 
-2015-03-23 21:56:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2015-03-23 21:56 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * QPM.EXE
    * us_shell.exe
      * Updated.
@@ -1486,23 +1515,23 @@
    * resource\GridEquis.bmp
      * Background color changed to white for better display.
 
-2015-03-17 22:32:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2015-03-17 22:32 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * QPM.EXE
    * QPM.PRG
      * Version to 05_04_04.
 
-2015-03-17 22:29:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2015-03-17 22:29 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * QPM_Libraries.prg
      + iphlpapi.a to OOHG + MinGW + Harbour builds.
    * QPM_AutoProject.qpm
    * QPM.EXE
      * Updated.
 
-2015-03-15 16:23:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2015-03-15 16:23 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * QPM.EXE
      * Updated.
 
-2015-03-15 16:17:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2015-03-15 16:17 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * QPM_ProjectSettings.prg
    * QPM_GlobalSettings.prg
    * QPM_Libraries.prg
@@ -1517,7 +1546,7 @@
    * ChangeLog
      * Previous entry.
 
-2015-03-14 18:30:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2015-03-14 18:30 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * QPM_AutoProject.qpm
    * QPM.EXE
    * QPM.PRG
@@ -1527,7 +1556,7 @@
    * QPM_Functions.PRG
      ! Support for Harbour 3.2 and MINGW.
 
-2015-03-04 20:36:00 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2015-03-04 20:36 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * QPM_Functions.PRG
      ! Support for Harbour 3.2 and MINGW.
    * QPM.PRG
@@ -1537,11 +1566,11 @@
    * QPM.EXE
      * Updated.
 
-2014-10-30 19:35:00 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2014-10-30 19:35 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * QPM.PRG
      * Parameter changed to uppercase.
 
-2014-08-08 23:10:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2014-08-08 23:10 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * TODO
      * Updated.
    * QPM_AutoProject.qpm
@@ -1568,7 +1597,7 @@
    * Resource\Test.bmp
      * Colors changed because old ones are not visible in new style.
 
-2014-07-31 19:14:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2014-07-31 19:14 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * QPM_AutoProjectOnlyHelp.qpm
    * QPM.chm
    * HelpQPM\QPM_SHG.dbf
@@ -1587,7 +1616,7 @@
    * QPM.EXE
      * Updated.
 
-2014-07-10 16:42:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2014-07-10 16:42 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * ChangeLog
      ! Wrong dates in previous entries.
    * TODO
@@ -1600,17 +1629,17 @@
    * QPM.EXE
      * Version to 05_04_01.
 
-2014-07-02 22:58:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2014-07-02 22:58 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * QPM.iss
      * Version to 05_04_00.
 
-2014-07-02 22:49:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2014-07-02 22:49 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * QPM.PRG
    * QPM_AutoProject.qpm
    * QPM.EXE
      * Version to 05_04_00.
 
-2014-07-02 22:38:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2014-07-02 22:38 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * ChangeLog
      ! UTC in previous entries.
    + ToDo
@@ -1686,14 +1715,14 @@
    * us_slash.prg
      * Copyright.
 
-2014-05-27 21:15:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2014-05-27 21:15 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * QPM_AutoProject.qpm
    * QPM.EXE
      * Updated to version 05_03_24.
    * QPM_Libraries.prg
      + hbwin.lib for Extended 2.x with Harbour 3.2 and BCC.
 
-2014-05-27 20:35:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2014-05-27 20:35 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * QPM_AutoProject.qpm
    * QPM.EXE
      * Updated to version 05_03_23.
@@ -1720,15 +1749,15 @@
      - Unneeded comments.
      * Messages.
 
-2014-05-07 22:39:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2014-05-07 22:39 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * ChangeLog
      ! Previous entry.
 
-2014-05-07 22:38:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2014-05-07 22:38 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * doc\UpgradeReadme.txt
      + Portuguese translation.
 
-2014-05-07 22:04:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2014-05-07 22:04 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * QPM.PRG
    * QPM.EXE
    * QPM_AutoProject.qpm
@@ -1747,7 +1776,7 @@
      ! Errors when building a project which uses files from more than 14
        different folders.
 
-2013-12-05 20:28:00 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2013-12-05 20:28 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * QPM.PRG
    * QPM.EXE
    * QPM_AutoProject.qpm
@@ -1756,7 +1785,7 @@
      * ziparchive library is no more included by default.
        It generates GPF when compiling with HMG Extended, BCC and Harbour 3.2.
 
-2013-11-09 22:26:00 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2013-11-09 22:26 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * QPM.PRG
    * QPM.EXE
    * QPM_AutoProject.qpm
@@ -1765,7 +1794,7 @@
      * Added dll, mysqldll, socket and tip libraries to default libraries
        for OOHG + MinGW + Harbour.
 
-2013-10-29 22:36:00 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2013-10-29 22:36 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * QPM.PRG
      ! .LIB file wrongly erased.
    * QPM.EXE
@@ -1774,16 +1803,16 @@
    + ToDo
      * Updated.
 
-2013-10-19 19:48:00 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2013-10-19 19:48 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * ChangeLog
      * Missed in previous commit.
 
-2013-10-01 22:42:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2013-10-01 22:42 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * QPM.EXE
    * QPM.PRG
      + Value of constant __PROJECT_FOLDER__ stripped from the log.
 
-2013-09-26 23:03:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2013-09-26 23:03 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * QPM.EXE
    * QPM.PRG
    * QPM_AutoProject.qpm
@@ -1794,15 +1823,15 @@
    + ToDo
      * Updated.
 
-2013-09-16 22:20:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2013-09-16 22:20 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * doc\howtosvn.txt
      + Comment mark.
 
-2013-08-04 20:10:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2013-08-04 20:10 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * QPM.PRG
      * Some misspelled words were corrected.
 
-2013-08-04 19:20:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2013-08-04 19:20 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * QPM.EXE
    * QPM.PRG
    * QPM_AutoProject.qpm
@@ -1824,7 +1853,7 @@
      * Updated to version 05_03_17.
      * Updated to HMG Extended version 2.2.4
 
-2013-07-01 19:31:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2013-07-01 19:31 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * ChangeLog
      - Deleted note in previous entry.
      * Some filenames corrected.
@@ -1835,7 +1864,7 @@
    * QPM.EXE
      * Updated to version 05_03_16.
 
-2013-06-20 20:53:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2013-06-20 20:53 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * FuentesComunes\US_HB.prg
      * Changed comment about return values of US_FileChar26Zap() function.
    * QPM.PRG
@@ -1860,7 +1889,7 @@
    * QPM.EXE
      * Updated to version 05_03_15.
 
-2013-04-09 20:53:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2013-04-09 20:53 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * QPM.PRG
      + Added "Do not delete auxiliary files" option to "Only for support"
        menu. Prevents QPM from deleting auxiliary files used during build.
@@ -1868,7 +1897,7 @@
    * QPM.EXE
      * Updated to version 05_03_14.
 
-2013-03-26 00:12:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2013-03-26 00:12 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * TODO
      * Updated.
    * QPM.PRG
@@ -1877,7 +1906,7 @@
    * QPM.EXE
      * Updated to version 05_03_13.
 
-2013-03-25 17:45:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2013-03-25 17:45 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * QPM_ProjectSettings.prg
      ! Fixed: extra run options are lost when saving project settings.
    * QPM.PRG
@@ -1885,13 +1914,13 @@
    * QPM.EXE
      * Updated to version 05_03_12.
 
-2013-03-24 03:40:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2013-03-24 03:40 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    + doc\dirstruc.txt
      + Added a description of the folders used by QPM project.
    * TODO
      * Updated.
 
-2013-03-24 03:15:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2013-03-24 03:15 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    - RTFtoHTML\VB rtf2htm3
      - Folder deleted.
    - RTFtoHTML\VB rtf2htm3\*.*
@@ -1899,7 +1928,7 @@
        deleted.
    + RTFtoHTML\VB_rtf2htm3.zip
 
-2013-03-24 02:33:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2013-03-24 02:33 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * FuentesComunes\US_HB.prg
      * Changed DirRemove() by HB_DIRDELETE().
    * QPM_SHG_SimpleHelpGenerator.prg
@@ -1916,7 +1945,7 @@
    * QPM.EXE
      * Updated to version 05_03_11.
 
-2013-03-18 23:15:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2013-03-18 23:15 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * ChangeLog
    * doc\howtosvn.txt
      * Repository changed to:
@@ -1924,11 +1953,11 @@
        https://svn.code.sf.net/p/qpm/code/ (read access using web browser)
        svn+ssh://USERNAME@svn.code.sf.net/p/qpm/code (write access using SVN client)
 
-2013-03-16 17:55:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2013-03-16 17:55 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * us_upx.exe
      * Updated to version 3.09w.
 
-2013-03-10 20:51:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2013-03-10 20:51 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * QPM.EXE
    * QPM_AutoProject.qpm
      * Updated to version 05_03_10.
@@ -1936,23 +1965,23 @@
      ! C compiler in use is not shown correctly when Minigui Extended 1.x and
        MinGW are selected in Project Options.
 
-2013-01-21 12:35:00 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2013-01-21 12:35 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * QPM.EXE
      * Updated to version 05_03_09.
    * QPM.PRG
      ! Filepaths with backslahes are not shown in Output Error tab.
 
-2012-11-26 14:27:00 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2012-11-26 14:27 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * ChangeLog
      * Updated.
 
-2012-11-26 14:25:00 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2012-11-26 14:25 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * QPM.EXE
    * QPM.PRG
      ! Internal version number not updated.
      + Some comments.
 
-2012-11-05 23:51:00 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2012-11-05 23:51 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * doc\howtosvn.txt
      + Added how to update online help.
    * index.htm
@@ -1970,17 +1999,17 @@
        native Windows libraries, you must add "-mno-cygwin" in "Override
        Link Param" field of the "Log Build Process" tab.
 
-2012-08-15 23:10:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2012-08-15 23:10 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * doc\howtosvn.txt
      + Added how to update index.htm in online help.
    * index.htm
      * Updated last version date.
 
-2012-08-11 16:10:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2012-08-11 16:10 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * QPM.EXE
      * Updated to version 05_03_07.
 
-2012-08-11 16:05:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2012-08-11 16:05 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * QPM_SHG_AssistImage.prg
    * QPM_SHG_AssistLink.prg
    * QPM_SHG_SimpleHelpGenerator.prg
@@ -1993,7 +2022,7 @@
    * QPM_AutoProject.qpm
      * Updated to version 05_03_07.
 
-2012-08-11 13:30:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2012-08-11 13:30 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * QPM.PRG
      ! In certain cases, when compiling with BCC, the .obj file is not
        deleted when a .c file can't be compiled because it has errors,
@@ -2001,23 +2030,23 @@
    * QPM_SHG_SimpleHelpGenerator.prg
      - Validation of filename to allow accented characters.
 
-2012-03-21 15:15:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2012-03-21 15:15 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * QPM_Libraries.prg
      ! Can't compile in DEBUG mode with OOHG + MinGW + Harbour
        (GTGUI must be placed before GTWIN in list of libraries).
    * QPM.EXE
      * Updated.
 
-2012-03-21 14:07:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2012-03-21 14:07 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * QPM.EXE
    * QPM_AutoProject.qpm
      * Updated.
 
-2012-03-21 13:33:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2012-03-21 13:33 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * QPM_Libraries.prg
      * Changed default libraries for OOHG + MinGW + Harbour.
 
-2012-02-29 20:20:00 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2012-02-29 20:20 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * QPM.EXE
    * QPM_AutoProject.qpm
    * us_msg.exe
@@ -2035,7 +2064,7 @@
    * qpm_us_slash.qpm
      * Updated.
 
-2012-02-29 20:00:00 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2012-02-29 20:00 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * QPM.PRG
      * Some typos corrected.
      * Some comments added and others improved.
@@ -2044,7 +2073,7 @@
    * TODO
      * Updated.
 
-2011-12-29 21:50:00 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2011-12-29 21:50 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * QPM.PRG
    * QPM_SHG_SimpleHelpGenerator.prg
      + Added ESC key to cancel PanInputTopic window.
@@ -2060,7 +2089,7 @@
    * TODO
      * Updated.
 
-2011-12-29 20:25:00 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2011-12-29 20:25 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * QPM.PRG
      * Some messages improved.
      ! Fixed: message not shown when compiler warnings exist.
@@ -2101,7 +2130,7 @@
    * TODO
      * Updated.
 
-2011-12-27 11:40:00 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2011-12-27 11:40 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * HelpQPM\QPM_SHG.dbf
    * HelpQPM\QPM_SHG.fpt
    * QPM.chm
@@ -2111,7 +2140,7 @@
    * QPM_AutoProjectOnlyHelp.qpm
      * Updated.
 
-2011-12-26 22:03:00 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2011-12-26 22:03 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
    + helphtml\readme.txt
      + Added so the folder is mantained in the SVN.
    ! doc\readme.txt
@@ -2120,7 +2149,7 @@
    + index.htm
      + Added SVN Id.
      
-2011-12-26 21:47:00 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2011-12-26 21:47 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
    - HelpQPM\QPM_GlobalSettings_Dbf Tool.png
    + HelpQPM\QPM_GlobalSettings_DbfTool.png
      * Renamed to get rid of the space.
@@ -2147,7 +2176,7 @@
    * QPM_AutoProjectOnlyHelp.qpm
      * Updated.
 
-2011-12-25 23:45:00 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2011-12-25 23:45 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * htmlhelp\_Index_QPM.htm
    * htmlhelp\_Index_QPM_Java.htm
      + Added "Fernando Yurisich" as site keyword.
@@ -2157,7 +2186,7 @@
    * HelpQPM\QPM_SHG.fpt
      + Added comment in welcome page.
 
-2011-12-25 23:25:00 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2011-12-25 23:25 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * doc\howtosvn.txt
      + Added section "How to update Internet Help".
    * ToDo
@@ -2170,7 +2199,7 @@
      * Some typos corrected.
      * Some topic's texts changed.
 
-2011-12-24 20:30:00 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2011-12-24 20:30 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * FuentesComunes\US_Edit_CharFijo.prg
      ! Fixed: added extra lines when pasting from another topic's text.
      - Deleted RN_ONGOTFOCUS() calls.
@@ -2237,7 +2266,7 @@
    * QPM_AutoProjectOnlyHelp.qpm
      * Updated to version 05_03_06.
 
-2011-12-20 10:05:00 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2011-12-20 10:05 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * US_UPX.EXE
      * Updated to version 3.08w due to an error packing HMG Oficial 3.0.40
        executables.
@@ -2248,7 +2277,7 @@
    * QPM_AutoProject.qpm
      * Updated to version 05_03_05.
 
-2011-12-19 20:45:00 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2011-12-19 20:45 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * QPM.PRG
      ! Fixed EXTRARUNTYPE parameter lost when updating settings.
    * doc\notes.txt
@@ -2267,7 +2296,7 @@
    * HelpQPM\QPM_SHG.cdx
      * Updated to version 05_03_04.
 
-2011-12-08 23:15:00 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2011-12-08 23:15 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * QPM_Functions.PRG
    * QPM_Libraries.prg
      + Added support for libraries in harbour\lib\win\mingw
@@ -2286,14 +2315,14 @@
    * QPM_AutoProject.qpm
      * Updated to version 05_03_03.
 
-2011-12-06 23:15:00 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2011-12-06 23:15 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * QPM.EXE
    * QPM_AutoProject.qpm
      * Updated.
    * QPM.PRG
      ! Fixed: run not working when exe is not moved from project folder.
 
-2011-12-05 19:10:00 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2011-12-05 19:10 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * QPM_AutoProject.qpm
      + QPM_CompatibilityHotRecovery.ch
    * QPM_HotRecovery.prg
@@ -2301,7 +2330,7 @@
        was moved from QPM_CompatibilityHotRecovery.ch, was restored to
        QPM_CompatibilityHotRecovery.ch file, due to Carozo's advice.
 
-2011-12-05 15:00:00 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2011-12-05 15:00 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * QPM.EXE
    * QPM.iss
    * QPM_AutoProject.qpm
@@ -2309,14 +2338,14 @@
    * QPM.PRG
      ! Fixed: error output of Harbour.exe 3.1 it's not being redirected to log.
 
-2011-12-05 10:17:00 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2011-12-05 10:17 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * RTFtoHTML\VB rtf2htm3\FGS_ConsoleRtf2Html3_BR_.exe
    * RTFtoHTML\VB rtf2htm3\FGS_ConsoleRtf2Html3_P_.exe
    * RTFtoHTML\VB rtf2htm3\FGS_TestRtf2Html3.exe
    * RTFtoHTML\VB rtf2htm3\FGS_TestRtf2Html3.log
      + Added, for those who don't have VB package.
 
-2011-12-05 09:51:00 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2011-12-05 09:51 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * us_dbfview.exe
    * us_msg.exe
    * us_redir.exe
@@ -2333,7 +2362,7 @@
    * qpm_us_slash.qpm
      * Unchecked upx option because it was slowing down my machine.
 
-2011-12-04 22:00:00 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2011-12-04 22:00 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * QPM.EXE
      * Updated to version 05_03_01.
    * QPM.PRG
@@ -2395,7 +2424,7 @@
    * resource\SHG_ArrowBottom.bmp
      + Added.
 
-2011-12-02 00:50:00 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2011-12-02 00:50 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * QPM.EXE
      * Compilation with MinGW now uses command file to avoid limitations
        in the number of objects you can include in the command line.
@@ -2491,7 +2520,7 @@
      * Changed to Harbour compiler and HMG Extended 2.0.3
      * Added hbct library.
 
-2011-11-27 12:24:00 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2011-11-27 12:24 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * QPM.PRG
      + Can run builded application even if it was moved and/or renamed.
    * QPM_AutoProject.qpm
@@ -2503,7 +2532,7 @@
    * SAMPLES\MAKELIB\CHECK.PRG
      * Some typos corrected.
 
-2011-11-27 01:40:00 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2011-11-27 01:40 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * QPM.chm
      * Some typos corrected.
      * Compiler references updated.
@@ -2525,7 +2554,7 @@
    * htmlhelp\*.htm
      * Updated.
 
-2011-11-26 21:00:00 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2011-11-26 21:00 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * doc\howtosvn.txt
      * Updated HOW TO BUILD A NEW RELEASE section.
    * doc\notes.txt
@@ -2549,7 +2578,7 @@
        messes up the source's lines numbers and, when an error occurs,
        the errorsys module reports a wrong number).
 
-2011-11-16 12:00:00 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2011-11-16 12:00 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * QPM.EXE
      * Updated.
    * FuentesComunes\US_Edit_CharFijo.prg
@@ -2562,7 +2591,7 @@
        3.1.0 and Extended 2.0.3. Caused by FINDCHR function that, now,
        expects an unicode string as target to lookup.
 
-2011-11-13 16:40:00 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2011-11-13 16:40 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
    - QPM_05020000.cfg
    * doc\howtosvn.txt
      * Updated HOW TO BUILD A NEW RELEASE section.
@@ -2580,7 +2609,7 @@
    * QPM_AutoProject.qpm
      ! Fixed: grids display wrong images (NTOC function changed in Harbour).
 
-2011-11-10 17:36:00 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2011-11-10 17:36 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
    - hmi.INI
    * doc\notes.txt
      + Added list of files to include in a distribution.
@@ -2605,7 +2634,7 @@
    * QPM.PRG
      - Deleted commented out functions US_MGLog, US_Opcion and US_MGMenu.
 
-2011-10-31 21:30:00 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2011-10-31 21:30 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * QPM_HotRecovery.prg
      * Changed US_ActiveX() by TActiveX()
    * QPM_AutoProjectOnlyHelp.qpm
@@ -2665,15 +2694,15 @@
    * FuentesComunes\US_MG.prg
      * Added some casting to pacify C compiler.
 
-2011-10-29 20:27:00 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2011-10-29 20:27 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * doc\howtosvn.txt
      * Typos corrected.
 
-2011-10-29 20:20:00 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2011-10-29 20:20 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * doc\howtosvn.txt
      * Typos corrected.
 
-2011-10-29 20:15:00 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2011-10-29 20:15 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * QPM.EXE
    * QPM.PRG
      ! Changed version to 5.2.1
@@ -2685,18 +2714,18 @@
    * HelpQPM\QPM_SHG.fpt
      * Version updated.
 
-2011-10-18 09:07:00 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2011-10-18 09:07 UTC-0200 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * ToDo
      + Updated.
 
-2011-09-25 00:57:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2011-09-25 00:57 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * QPM_CompatibilityStatistics.ch
    * QPM_CompatibilityOpenProject.ch
    * QPM_CompatibilityOpenGlobal.ch
    * QPM_CompatibilityHotRecovery.ch
      + Added SVN property keywords.
 
-2011-09-25 00:55:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2011-09-25 00:55 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * QPM_CompatibilityStatistics.ch
    * QPM_CompatibilityOpenProject.ch
    * QPM_CompatibilityOpenGlobal.ch
@@ -2706,7 +2735,7 @@
    * us_redir.c
      + Added SVN property keywords.
 
-2011-09-25 00:45:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2011-09-25 00:45 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * QPM.EXE
    * ToDo
    * HelpQPM\QPM_SHG.fpt
@@ -2766,20 +2795,20 @@
      + Added SVN property keywords.
      + Added SVN ID and licence information.
 
-2011-09-24 01:45:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2011-09-24 01:45 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    + doc\UpgradeReadme.txt
      + Added SVN property keywords.
 
-2011-09-24 01:40:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2011-09-24 01:40 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * doc\howtosvn.txt
      * Updated: how to publish a patch release.
    + doc\UpgradeReadme.txt
      + Model instructions for installing/uninstalling a patch release.
      
-2011-09-24 01:10:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2011-09-24 01:10 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    + QPM_05010000.cfg
 
-2011-09-24 01:00:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2011-09-24 01:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * doc\howtosvn.txt
      + Added: how to publish a patch release.
    * QPM_AutoProject.qpm
@@ -2799,7 +2828,7 @@
    + QPM_HotRecovery_05010000.dbf
    + QPM_HotRecovery_05010000.fpt
 
-2011-09-24 00:05:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2011-09-24 00:05 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * doc\codestyl.txt
      ! Fixed typo.
    * QPM.PRG
@@ -2842,7 +2871,7 @@
      * Modified functions: CheckCombinationRadio and ActRadioCpp.
      + Added SVN ID and licence information.
 
-2011-09-23 13:05:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2011-09-23 13:05 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    + US_A1.exe
    + US_A2.exe
    + US_A3.exe
@@ -2868,15 +2897,15 @@
    + us_objdump.exe
      + Added missing files.
 
-2011-09-23 12:21:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2011-09-23 12:21 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    + ChangeLog
      + Added SVN property keywords
 
-2011-09-23 12:20:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2011-09-23 12:20 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    + QPM_SHG_SimpleHelpGenerator.prg
      + Added SVN property keywords
 
-2011-09-23 12:20:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2011-09-23 12:20 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    + doc\codestyl.txt
    + doc\howtosvn.txt
    + doc\notes.txt
@@ -2890,7 +2919,7 @@
    + BuildAll.bat
      + Added SVN property keywords
 
-2011-09-23 11:20:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2011-09-23 11:20 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    + doc
      + Added: documentation folder.
    + doc\codestyl.txt
