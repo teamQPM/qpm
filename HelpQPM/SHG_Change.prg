@@ -29,8 +29,8 @@
 
 Function main()
 
-   LOCAL old := "C:/QPM/SOURCE/HELPQPM/"
-   LOCAL new := "C:/QPM/HELPQPM/"
+   LOCAL old := "C:/QPM_SVN/HELPQPM/"
+   LOCAL new := "C:/QPMdev/HELPQPM/"
 
    DEFINE WINDOW Sample ;
      AT 0 , 0 ;
