@@ -1,79 +1,20 @@
-/*
- * $Id$
- */
-
-
-HOW TO USE THE SVN
-==================
-
-[01] Download and install a Subversion client:
-
-     https://tortoisesvn.net/downloads.html
-     http://subversion.apache.org/packages.html
-
-[02] If you don´t have one, create a sourceforge user:
-
-     https://sourceforge.net/user/registration
-
-[03] Create a folder in your local disk (e.g. DUMMY) and do a complete
-     checkout to get the whole tree.  When it's done you can move the qpm
-     folder created by the checkout to any place you like.
-
-[04] To upload changes you'll need Developer (RW) status.  Please ask one
-     of the Administrators to grant you such status. Note that the process
-     of granting this status is not an automatic process.  Be patient.
-
-[05] Do the changes needed (remember to keep track of your changes in a
-     temporary file so you can later update the ChangeLog).
-     Always do your development using your local SVN tree. Do not modify
-     files outside your local SVN tree and then copy the changes into it,
-     because that leads to overwriting changes made by others.
-
-[06] When you're done, go on line and login to https://sourceforge.net/
-     with your sourceforge user.
-
-[07] Do an update.  NEVER forget this step to avoid overwriting changes
-     made by others.
-
-[08] Resolve all conflicts.  NEVER forget this step to avoid overwriting
-     changes made by others.
-
-[09] Update de ChangeLog using your temporary log file.  Copy the relevant
-     entries to the clipboard.
-
-[10] Do a commit.  When the SVN pops up a window with the changed files,
-     check if all of them are referred in the ChangeLog.  If not, abort
-     the commit, make the corrections and start over.
-
-[11] Paste the ChangeLog's entries to the SVN window, save and exit.
-     * ALWAYS * add a ChangeLog entry when committing changes.
-
-[12] Wait until the process is finished and check that ended without errors.
-     If there are any errors, make de corrections and start over.
 
 
 HOW TO FORMAT YOUR CHANGELOG ENTRIES
 ====================================
 
-[1] Always add new entries to the top of the file.
+1. Always add new entries to the top of the file.
+2. Add an entry header using this format:
+   * YYYY-MM-DD HH:MM UTC[-|+]hhmm Your Full Name <your_email_address>
+3. Add an entry listing all the files changed, deleted or added.
+4. Mention the name of the changed function or macro.
+5. Describe the changes, the reasons, and other comments and explanations you find useful.
+6. If some related work has to be done, make a clear note about it and reference the corresponding issue.
+7. Group the related changes into logical sections and use the following marks to highlight them. Example:
 
-[2] Add an entry header using this format:
-
-    YYYY-MM-DD HH:MM UTC[-|+]hhmm Your Full Name <your_email_address>
-
-[3] Add an entry body listing all the files changed, deleted or added (all of
-    them with full path spec).  Mention the name of the changed function or
-    macro.  Describe the changes, the reasons, and other comments and
-    explanations you find useful. If the change needs some related work
-    to be done by someone else (documentation, makefile), make a clear note
-    about this.
-
-[4] Group the related changes into logical sections and use the following
-    marks to highlight them. Example:
-
-    * ./dir/file1.txt
-    + ./dir/file2.prg
-    - ./dir/file3.ch
+    * folder/file1.txt
+    + folder/file2.prg
+    - folder/file3.ch
       * Changed: ...
       ! Fixed: ....
       % Optimized: ...
@@ -81,88 +22,39 @@ HOW TO FORMAT YOUR CHANGELOG ENTRIES
       - Removed: ...
       ; Comment
 
-[5] Leave an empty line between the header and body and one after the body.
 
 
-HOW TO ADD SVN ID TO NEW TEXT FILES
-===================================
+HOW TO BUILD QPM FROM SCRATCH
+=============================
 
-[1] At the very top of the file insert the following lines:
+To configure the working environment:
 
-/*
- * _Id_
- */
+1. Install the lastest QPM distro at folder C:\QPMdev from https://github.com/fyurisich/qpm
+2. Install GitHub Desktop or another Git client and checkout the repository from
+   * https://github.com/fyurisich/qpm
+3. An alternative is to download a zip with all the files from the aforementioned site using the green button labeled  "Clone or download".
+4. Install Harbour MiniGUI Extended Edition from https://sourceforge.net/projects/hmgs-minigui/
+5. Install Borland C++ Compiler version 5.8.2 from:
+   * http://www.xharbour.org/index.asp?page=download/windows/required_win
+   * http://www.whosaway.com/
+6. Start QPM, go to Settings/Global Options menu, select the tab labeled "Extended 1.x with Borland C", and configure the fields "MiniGUI Folder", "Borland C Folder" and "Harbour Folder" so they point to the folders created in steps 4 and 5.
+7. If you didn´t installed at folder C:\QPMdev, you must modify, build and execute ./HelpQPM/SHG_Change.prg to change the path to the files used by QPM to build QPM.CHM help file. The building tools do not support relative paths so a full default path is specified (C:\QPMdev).
+8. Launch CompileAll.bat to build all the binaries.
 
-    NOTE: replace each '_' with a '$' sign.
-
-[2] When the file is commited to SVN, the second line is changed to
-    something like this:
-
-/*
- * $Id$
- */
-
-[3] In subsequent commits the line is updated.
-
-
-HOW TO UPDATE THE TODO LIST
-===========================
-
-[1] To add new entries, insert a group of lines with the following format:
-
-/******************************************************************************/
-
-Assigned to: <nobody> | Full name <email address>
-Added by...: 2011-09-19 22:30:00 UTC-0300 Full name <email address>
-Status.....: Open | In progress | ...
-Details....: <text>
-
-/******************************************************************************/
-
-[2] Once a task is completed, update ChangeLog and delete the group from TODO.
-
-
-HOW TO BUILD QPM FROM SVN
-=========================
-
-Para configurar el ambiente de trabajo por primera vez:
-
-[1] Install the latest release from https://sourceforge.net/projects/qpm/files/
-
-[2] Install Harbour MiniGUI Extended Edition and Borland C++ Compiler version 5.5
-    from http://hmgextended.com/download.html
-
-[3] Start QPM, go to Settings/Global Options menu, select the tab labeled
-    "Extended 1.x with Borland C", and configure the fields "MiniGUI Folder",
-    "Borland C Folder" and "xHarbour Folder" so they point to the folders
-    created in step [2].
-
-[4] Download the SVN from:
-    svn://svn.code.sf.net/p/qpm/code (read/write access using SVN client)
-    https://sourceforge.net/p/qpm/code/HEAD/tarball (zip file)
-    https://sourceforge.net/p/qpm/code/HEAD/tree/ (read access using web browser)
-    svn+ssh://USERNAME@svn.code.sf.net/p/qpm/code (read/write access using SVN client)
-
-[5] If you didn´t downloaded the SVN in C:\QPM folder, you must modify, build
-    and execute ./HelpQPM/SHG_Change.prg to change the path to files used in
-    the building of the QPM.CHM help file. The building tools do not support
-    relative paths so a full default path is specified (C:\QPM\)
-
-[5] Launch CompileAll.bat to build the binaries.
 
 
 HOW TO BUILD A NEW RELEASE
 ==========================
 
-[1] In QPM.ch set the values of this defines:
+1. In QPM.ch set the values of this defines:
 
          #define QPM_VERSION_NUMBER_MAYOR   '05'
          #define QPM_VERSION_NUMBER_MINOR   '05'
          #define QPM_VERSION_NUMBER_BUILD   '00'
 
-[2] Open your working version of QPM and load ./QPM_AutoProject.qpm
+2. Open your working version of QPM and load ./QPM_AutoProject.qpm
 
-[3] If AUTOINC option is set to ON then change version, release and
+3. If AUTOINC option is set to ON then change version, release and
     build to one less than the release to build.
     E.G. if you want to build 5.01.10, set QPM to 5.01.09
     if you want to build 5.01.00, set QPM to 5.00.9999
@@ -183,10 +75,12 @@ HOW TO BUILD A NEW RELEASE
 [6] To publish a new full release:
     a) install INNO Setup Compiler from http://www.jrsoftware.org/
     b) Open QPM.ISS and verify the following files are included:
+         Samples\*.*
+         dbfview.chm
+         PayPal Donate.url
          QPM.chm
          QPM.exe
          us_dbfview.exe
-         dbfview.chm
          us_dif.exe
          us_difwi.dll
          us_hha.dll
@@ -209,15 +103,11 @@ HOW TO BUILD A NEW RELEASE
          us_tdump.exe
          us_tlib.exe
          us_upx.exe
-         Samples\*.*
-    c) update the following variables to the new version number:
-         AppVerName=QPM v05.05 build 0000
-         DefaultDirName=C:\QPM
-         OutputBaseFilename=QPM_05_05_0000_Install
-    d) update AppPublisher line with your name.
+    c) set "AppVerName" and "OutputBaseFilename" variables to reflect the new version number.
+    d) set "AppPublisher" variable to your name.
+    e) update "AppCopyright" to the current year.
     e) hit "compile" button.
-    f) upload file C:\QPM Distribution\QPM_INSTALL.exe
-       to sourceforge.
+    f) upload the file to the release page at GitHub.
 
 
 HOW TO UPDATE INTERNET HELP
