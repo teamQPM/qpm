@@ -4288,14 +4288,14 @@ FUNCTION QPM_OpenProject2()
          ELSEIF  US_Upper( US_Word( LOC_cLine, 1 ) ) == 'SHGDATABASE'
                  SHG_Database := ChgPathToReal( US_WordSubStr( LOC_cLine, 2 ) )
          ELSEIF  US_Upper( US_Word( LOC_cLine, 1 ) ) == 'SHGLASTFOLDERIMG'
-                 SHG_LastFolderImg := US_WordSubStr( LOC_cLine, 2 )
+                 SHG_LastFolderImg := ChgPathToReal( US_WordSubStr( LOC_cLine, 2 ) )
          ELSEIF  US_Upper( US_Word( LOC_cLine, 1 ) ) == 'SHGOUTPUTTYPE'
                  SHG_CheckTypeOutput := iif( US_Word( LOC_cLine, 2 ) == 'YES', .T., .F. )
 #ifdef QPM_SHG
                  SetProperty( 'VentanaMain', 'CH_SHG_TypeOutput', 'value', SHG_CheckTypeOutput )
 #endif
          ELSEIF  US_Upper( US_Word( LOC_cLine, 1 ) ) == 'SHGHTMLFOLDER'
-                 SHG_HtmlFolder := US_WordSubStr( LOC_cLine, 2 )
+                 SHG_HtmlFolder := ChgPathToReal( US_WordSubStr( LOC_cLine, 2 ) )
          ELSEIF  US_Upper( US_Word( LOC_cLine, 1 ) ) == 'SHGWWW'
                  SHG_WWW := US_WordSubStr( LOC_cLine, 2 )
 #ifdef QPM_HOTRECOVERY
@@ -4646,9 +4646,9 @@ FUNCTION QPM_SaveProject( bCheck )
       cINI := cINI + 'MI_CFILE '                + MI_cFilesAux + CRLF
    NEXT
    cINI := cINI + 'SHGDATABASE '                + iif( Empty( SHG_Database ), '*NONE*', ChgPathToRelative( SHG_Database ) ) + CRLF
-   cINI := cINI + 'SHGLASTFOLDERIMG '           + SHG_LastFolderImg + CRLF
+   cINI := cINI + 'SHGLASTFOLDERIMG '           + ChgPathToRelative( SHG_LastFolderImg ) + CRLF
    cINI := cINI + 'SHGOUTPUTTYPE '              + iif( SHG_CheckTypeOutput, 'YES', 'NO' ) + CRLF
-   cINI := cINI + 'SHGHTMLFOLDER '              + SHG_HtmlFolder + CRLF
+   cINI := cINI + 'SHGHTMLFOLDER '              + ChgPathToRelative( SHG_HtmlFolder ) + CRLF
 #ifdef QPM_SHG
    cINI := cINI + 'SHGWWW '                     + VentanaMain.TWWWHlp.Value + CRLF
 #endif
