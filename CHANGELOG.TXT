@@ -8,6 +8,10 @@
  * See "How to format your ChangeLog entries" in howtosvn.txt file.
  */
 
+2020-06-17 18:30 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * QPM.exe
+     * Updated to match new distro.
+
 2020-06-17 18:12 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * TODO.TXT
      * Updated.
