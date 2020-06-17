@@ -34,8 +34,8 @@
 AppId={{97C57005-5ED6-4F8F-BF4B-6A4CBA41A342}
 AppName=QPM (QAC based Project Manager)
 AppVerName=QPM v05.05.0016
-AppPublisher=QPM Development Team
-AppCopyright==Copyright 2011-2020 Fernando Yurisich and QPM Development Team
+AppPublisher=Fernando Yurisich
+AppCopyright=Copyright 2011-2020 QPM Development Team
 AppPublisherURL=https://github.com/fyurisich/qpm
 AppSupportURL=https://github.com/fyurisich/qpm
 AppUpdatesURL=https://github.com/fyurisich/qpm
@@ -43,7 +43,7 @@ DefaultDirName=C:\QPM
 UsePreviousAppDir=no
 DefaultGroupName=QPM (QAC based Project Manager)
 AllowNoIcons=yes
-OutputDir=OldDistros
+OutputDir=OBJE1BH_32
 OutputBaseFilename=QPM_05_05_0016_Install
 SetupIconFile=.\Resource\QPM_Install.ico
 Compression=lzma2
@@ -75,7 +75,6 @@ Source: "us_pexports.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: "us_podump.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: "us_polib.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: "us_r2h.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: "us_redir.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: "us_reimp.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: "us_res.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: "us_run.exe"; DestDir: "{app}"; Flags: ignoreversion
