@@ -28,25 +28,33 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 [Setup]
+; NOTE: The value of AppId uniquely identifies this application.
+; Do not use the same AppId value in installers for other applications.
+; (To generate a new GUID, click Tools | Generate GUID inside the IDE.)
+AppId={{97C57005-5ED6-4F8F-BF4B-6A4CBA41A342}
 AppName=QPM (QAC based Project Manager)
-AppVerName=QPM v05.05 build 0016
-AppPublisher=fernando.yurisich
+AppVerName=QPM v05.05.0016
+AppPublisher=QPM Development Team
+AppCopyright==Copyright 2011-2020 Fernando Yurisich and QPM Development Team
+AppPublisherURL=https://github.com/fyurisich/qpm
+AppSupportURL=https://github.com/fyurisich/qpm
+AppUpdatesURL=https://github.com/fyurisich/qpm
 DefaultDirName=C:\QPM
 UsePreviousAppDir=no
 DefaultGroupName=QPM (QAC based Project Manager)
 AllowNoIcons=yes
-OutputDir=..\QPM Distribution
+OutputDir=OldDistros
 OutputBaseFilename=QPM_05_05_0016_Install
 SetupIconFile=.\Resource\QPM_Install.ico
 Compression=lzma2
 ChangesAssociations=yes
+UninstallDisplayIcon={uninstallexe}
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
 
 [Tasks]
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: checkablealone
-Name: "quicklaunchicon"; Description: "{cm:CreateQuickLaunchIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: checkablealone
 
 [Files]
 Source: "QPM.chm"; DestDir: "{app}"; Flags: ignoreversion
@@ -55,9 +63,6 @@ Source: "us_dbfview.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: "dbfview.chm"; DestDir: "{app}"; Flags: ignoreversion
 Source: "us_dif.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: "us_difwi.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "us_dtree.css"; DestDir: "{app}"; Flags: ignoreversion
-Source: "us_dtree.im"; DestDir: "{app}"; Flags: ignoreversion
-Source: "us_dtree.js"; DestDir: "{app}"; Flags: ignoreversion
 Source: "us_hha.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "us_hhc.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: "us_impdef.exe"; DestDir: "{app}"; Flags: ignoreversion
@@ -79,6 +84,7 @@ Source: "us_slash.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: "us_tdump.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: "us_tlib.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: "us_upx.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "PayPal Donate.url"; DestDir: "{app}"; Flags: ignoreversion
 ; Ejemplos
 ; Agenda
 Source: ".\Samples\Agenda\*.*"; DestDir: "{app}\Samples\Agenda"; Flags: ignoreversion
@@ -101,25 +107,39 @@ Source: ".\Samples\TsBrowse_(Extended_1_5_b54)\BITMAPS\*.*"; DestDir: "{app}\Sam
 
 [Icons]
 Name: "{group}\QPM (QAC based Project Manager)"; Filename: "{app}\QPM.exe"
-Name: "{group}\{cm:UninstallProgram,QPM (QAC based Project Manager)}"; Filename: "{uninstallexe}"
-Name: "{userdesktop}\QPM (QAC based Project Manager)"; Filename: "{app}\QPM.exe"; Tasks: desktopicon
-Name: "{userappdata}\Microsoft\Internet Explorer\Quick Launch\QPM (QAC based Project Manager)"; Filename: "{app}\QPM.exe"; Tasks: quicklaunchicon
+Name: "{group}\{cm:UninstallProgram,QPM (QAC based Project Manager)}"; Filename: "{uninstallexe}"; WorkingDir: "{app}"; IconFilename: "{app}\QPM.ico"
+Name: "{autodesktop}\QPM (QAC based Project Manager)"; Filename: "{app}\QPM.exe"; Tasks: desktopicon
 
 [Run]
-Filename: "{app}\QPM.exe"; Description: "{cm:LaunchProgram,QPM (QAC based Project Manager)}"; Flags: nowait postinstall skipifsilent
+Filename: "https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=fernando.yurisich@gmail.com&no_note=0&tax=0&item_name=QPM%20Donation"; Flags: shellexec runasoriginaluser postinstall; Description: Make a donation via PayPal;
 
 [Registry]
 Root: HKCR; Subkey: ".qpm"; ValueType: string; ValueName: ""; ValueData: "QPM"; Flags: uninsdeletekey
-;".myp" is the extension we're associating. "QPM" is the internal name for the file type as stored in the registry. Make sure you use a unique name for this so you don't inadvertently overwrite another application's registry key.
+;".qpm" is the extension we're associating. "QPM" is the internal name for the file type as stored in the registry. Make sure you use a unique name for this so you don't inadvertently overwrite another application's registry key.
 Root: HKCR; Subkey: ".qpm\ShellNew"; ValueType: string; ValueName: "NullFile"; ValueData: ""
 ; Esto agrega un item al menu NEW file del explorador
 Root: HKCR; Subkey: "QPM"; ValueType: string; ValueName: ""; ValueData: "QPM Project File"; Flags: uninsdeletekey
 ;"QPM" above is the name for the file type as shown in Explorer.
-Root: HKCR; Subkey: "QPM\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\us_run.exe,1"
+Root: HKCR; Subkey: "QPM\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\qpm.exe,1"
 ;Root: HKCR; Subkey: "QPM\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\QPM.exe,1"
 ;"DefaultIcon" is the registry key that specifies the filename containing the icon to associate with the file type. ",0" tells Explorer to use the first icon from QPM.exe. (",1" would mean the second icon.)
-;Root: HKCR; Subkey: "QPM\shell\open\command"; ValueType: string; ValueName: ""; ValueData: """{app}\QPM.exe"" ""%1"""
 Root: HKCR; Subkey: "QPM\shell\open\command"; ValueType: string; ValueName: ""; ValueData: """{app}\QPM.exe"" ""%1"" %*"
 ;"shell\open\command" is the registry key that specifies the program to execute when a file of the type is double-clicked in Explorer. The surrounding quotes are in the command line so it handles long filenames correctly.
 
-; eof
+[UninstallDelete]
+Type: files; Name: "{app}\filler"
+
+[Messages]
+BeveledLabel=QPM (QAC based Project Manager)
+
+[Code]
+procedure CurUninstallStepChanged(CurUninstallStep: TUninstallStep);
+begin
+  if CurUninstallStep = usDone then
+  begin
+    if DirExists(ExpandConstant('{app}')) then
+    begin
+      MsgBox(ExpandConstant('Installation folder {app} was not removed' + #13#10 + 'because it contains user created files!'), mbInformation, MB_OK);
+    end; 
+  end;
+end;
