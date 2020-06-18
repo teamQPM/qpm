@@ -397,6 +397,9 @@ FUNCTION QPM_CreatePublicVars()
                                              PUB_cQPM_Folder + DEF_SLASH + 'US_dbfview.exe', ;   // by Grigory Filatov
                                              PUB_cQPM_Folder + DEF_SLASH + 'US_dif.exe', ;       // CSDiff file-difference analysis tool
                                              PUB_cQPM_Folder + DEF_SLASH + 'US_difwi.dll', ;     // CSDiff file-difference analysis tool
+                                             PUB_cQPM_Folder + DEF_SLASH + 'US_dtree.css', ;     // Tree for HTML Help
+                                             PUB_cQPM_Folder + DEF_SLASH + 'US_dtree.im', ;      // Images for HTML Help
+                                             PUB_cQPM_Folder + DEF_SLASH + 'US_dtree.js', ;      // Java function for HTML Help
                                              PUB_cQPM_Folder + DEF_SLASH + 'US_hha.dll', ;       // HTML HELP WorkShop Compiler
                                              PUB_cQPM_Folder + DEF_SLASH + 'US_hhc.exe', ;       // HTML HELP WorkShop Compiler
                                              PUB_cQPM_Folder + DEF_SLASH + 'US_impdef.exe', ;    // Generates .DEF from DLL (BCC32)       TODO: Delete and use from compiler

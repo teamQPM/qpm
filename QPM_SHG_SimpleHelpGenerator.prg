@@ -494,6 +494,11 @@ Function SHG_Generate( cBase , bGenHtml , PUB_cSecu , cWWW )
       _SaveBitmap( LoadBitmap( "SHG_BOOK" ), cDirOutHTML + DEF_SLASH + "SHG_Book.bmp" )
       _SaveBitmap( LoadBitmap( "SHG_PAGE" ), cDirOutHTML + DEF_SLASH + "SHG_Page.bmp" )
    
+      /* Copy dtree for html help */
+      US_FileCopy( PUB_cQPM_Folder + DEF_SLASH + "US_dtree.css" , cDirOutHTML + DEF_SLASH + "SHG_dtree.css" )
+      US_FileCopy( PUB_cQPM_Folder + DEF_SLASH + "US_dtree.js" , cDirOutHTML + DEF_SLASH + "SHG_dtree.js" )
+      US_FileCopy( PUB_cQPM_Folder + DEF_SLASH + "US_dtree.im" , cDirOutHTML + DEF_SLASH + "SHG_dtree.zip" )
+
       /*    HB_UNZIPFILE( <cFile>, <bBlock>, <lWithPath>, <cPassWord>, <cPath>, <cFile> | <aFile>, <pFileProgress> ) ---> lCompress
        * $ARGUMENTS$
        *      <cFile>   Name of the zip file to extract
