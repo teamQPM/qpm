@@ -4,6 +4,10 @@
  * See "How to format your ChangeLog entries" in howtosvn.txt file.
  */
 
+2020-06-17 22:11 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * readme.md
+     ! File path.
+
 2020-06-17 22:04 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * QPM.iss
      * Updated to include restored files and to delete log on uninstall.
