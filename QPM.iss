@@ -63,6 +63,9 @@ Source: "us_dbfview.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: "dbfview.chm"; DestDir: "{app}"; Flags: ignoreversion
 Source: "us_dif.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: "us_difwi.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "us_dtree.css"; DestDir: "{app}"; Flags: ignoreversion
+Source: "us_dtree.im"; DestDir: "{app}"; Flags: ignoreversion
+Source: "us_dtree.js"; DestDir: "{app}"; Flags: ignoreversion
 Source: "us_hha.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "us_hhc.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: "us_impdef.exe"; DestDir: "{app}"; Flags: ignoreversion
@@ -127,6 +130,8 @@ Root: HKCR; Subkey: "QPM\shell\open\command"; ValueType: string; ValueName: ""; 
 
 [UninstallDelete]
 Type: files; Name: "{app}\filler"
+Type: files; Name: "{app}\hha.dll"
+Type: files; Name: "{app}\QPM.exe.LOG"
 
 [Messages]
 BeveledLabel=QPM (QAC based Project Manager)
