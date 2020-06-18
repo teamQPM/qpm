@@ -1,12 +1,75 @@
-/*
- * $Id$
- */
-
 /* QPM - QAC based Project Manager
  * Log of changes
  *
  * See "How to format your ChangeLog entries" in howtosvn.txt file.
  */
+
+2020-06-17 22:04 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * QPM.iss
+     * Updated to include restored files and to delete log on uninstall.
+
+2020-06-17 22:03 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * QPM.exe
+     * Updated to include restored files.
+
+2020-06-17 22:01 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * HelpQPM\QPM_SHG.dbf
+   * HelpQPM\QPM_SHG.fpt
+   * QPM.qpm
+     ! The path in some images name wasn't updated because they included "/".
+
+2020-06-17 21:57 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   - doc\readme.txt
+     ; Renamed and moved to parent folder so it can be display at repo's main page.
+
+2020-06-17 21:53 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * doc\howtosvn.txt
+   * QPM_Functions.prg
+   * QPM_SHG_SimpleHelpGenerator.prg
+     + References to restored files.
+
+2020-06-17 21:51 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   - htmlhelp\Use_this_folder_to_build_html_help.txt
+
+2020-06-17 21:50 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   - readme.txt
+     ; The versions history can be found in qpm.chm file.
+
+2020-06-17 21:50 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   + readme.md
+     ; doc\readme.txt was renamed and moved so it can be display at repo's main page.
+
+2020-06-17 21:49 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   + dtree.css
+   + dtree.im
+   + dtree.js
+     ; DO NOT DELETE THESE FILES. They are needed for building CHM file.
+
+2020-06-17 20:32 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * TODO.TXT
+     + Some task were added.
+
+2020-06-17 20:31 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * QPM.prg
+   * QPM_AutoProject.qpm
+   * QPM_AutoProjectOnlyHelp.qpm
+     * Hardcoded path replaced by <ProjectFolder> placeholder.
+
+2020-06-17 20:28 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * QPM.iss
+     * Updated.
+
+2020-06-17 20:27 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * HelpQPM\QPM_SHG.dbf
+   * HelpQPM\QPM_SHG.fpt
+   * HelpQPM\SHG_Change.prg
+   * HelpQPM\SHG_Change.qpm
+     * Path changed.
+
+2020-06-17 20:25 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   + doc\dirstruc.txt
+   * doc\howtosvn.txt
+      * Updated.
 
 2020-06-17 18:30 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * QPM.exe
