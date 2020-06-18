@@ -1,7 +1,0 @@
-/*
- * $Id$
- */
-
-See ./doc/howtosvn.txt and ./doc/notes.txt
-
-/* eof */
