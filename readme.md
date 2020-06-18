@@ -34,7 +34,7 @@ If you have any questions about QPM, please subscribe to the users list at
 https://sourceforge.net/projects/qpm/lists/qpm-users and ask there.
 Also, please be sure to read the QPM's help file (from QPM menu or from this
 site: https://qpm.sourceforge.io/) and the documentation that comes with QPM
-(start with ./dirstruc.txt because is the map to the QPM files).
+(start with doc\dirstruc.txt because is the map to the QPM files).
 
 
 **Bienvenido a QPM**
@@ -72,4 +72,4 @@ Si tiene alguna pregunta sobre QPM, por favor suscríbase a la lista de usuarios
 en https://sourceforge.net/projects/qpm/lists/qpm-users y hágalas allí.
 Además, por favor asegúrese de leer el archivo de ayuda de QPM (desde el menú o
 desde el sitio: https://qpm.sourceforge.io/) y la documentación distribuida con
-QPM (comience con ./dirstruc.txt ya que es el mapa de los archivos de QPM).
+QPM (comience con doc\dirstruc.txt ya que es el mapa de los archivos de QPM).
