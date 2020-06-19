@@ -3,3 +3,4 @@
 users-list export-ignore
 OldDistros export-ignore
 RTFtoHTML export-ignore
+test.bat export-ignore
