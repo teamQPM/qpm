@@ -5,8 +5,8 @@
 /*
  *    QPM - QAC based Project Manager
  *
- *    Copyright 2011-2019 Fernando Yurisich <fernando.yurisich@gmail.com>
- *    https://qpm.sourceforge.io/
+ *    Copyright 2011-2020 Fernando Yurisich <fernando.yurisich@gmail.com>
+ *    https://teamqpm.github.io/
  *
  *    Based on QAC - Project Manager for (x)Harbour
  *    Copyright 2006-2011 Carozo de Quilmes <CarozoDeQuilmes@gmail.com>
@@ -104,7 +104,7 @@ PROCEDURE MAIN( ... )
 
    IF bList
       QPM_Log( "US_Res " + VERSION )
-      QPM_Log( "US_Res 000I: by QPM_Support ( https://qpm.sourceforge.io/ )" )
+      QPM_Log( "US_Res 000I: by QPM_Support ( https://teamqpm.github.io/ )" )
       QPM_Log( "US_Res 001I: Log into: " + cQPMDir + "QPM.log" )
       QPM_Log( "US_Res 002I: FileIn  : " + cFileIn )
       QPM_Log( "US_Res 003I: FileOut : " + cFileOut )

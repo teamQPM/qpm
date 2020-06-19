@@ -5,8 +5,8 @@
 /*
  *    QPM - QAC based Project Manager
  *
- *    Copyright 2011-2019 Fernando Yurisich <fernando.yurisich@gmail.com>
- *    https://qpm.sourceforge.io/
+ *    Copyright 2011-2020 Fernando Yurisich <fernando.yurisich@gmail.com>
+ *    https://teamqpm.github.io/
  *
  *    Based on QAC - Project Manager for (x)Harbour
  *    Copyright 2006-2011 Carozo de Quilmes <CarozoDeQuilmes@gmail.com>
@@ -52,7 +52,7 @@ FUNCTION QPM_CreatePublicVars()
 
 // VARIABLES
    PUBLIC BUILD_IN_PROGRESS             := .F.
-   PUBLIC PUB_cQPM_Support_Link         := 'https://qpm.sourceforge.io/'
+   PUBLIC PUB_cQPM_Support_Link         := 'https://teamqpm.github.io/'
    PUBLIC PUB_cQPM_Support_Admin        := 'Fernando Yurisich (Uruguay)'
    PUBLIC PUB_cQPM_Support_eMail        := 'qpm-users@lists.sourceforge.net'
    PUBLIC PUB_cStatusLabel              := 'Status: Idle'

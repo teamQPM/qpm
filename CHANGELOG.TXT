@@ -4,6 +4,60 @@
  * See "How to format your ChangeLog entries" in howtosvn.txt file.
  */
 
+2020-06-19 20:32 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * FuenteComunes\TAxPrg.prg
+   * FuenteComunes\US_ActiveX.prg
+   * FuenteComunes\US_ActiveX_Eventos.c
+   * FuenteComunes\US_Clases.prg
+   * FuenteComunes\US_Edit_CharFijo.prg
+   * FuenteComunes\US_Env.h
+   * FuenteComunes\US_HB.PRG
+   * FuenteComunes\US_i_richeditbox.ch
+   * FuenteComunes\US_K.CH
+   * FuenteComunes\US_l_richeditbox.prg
+   * FuenteComunes\US_Log.h
+   * FuenteComunes\US_Log.prg
+   * FuenteComunes\US_MG.PRG
+   * FuenteComunes\US_MG_Null.prg
+   * FuenteComunes\US_ProcessWin.prg
+   * FuenteComunes\US_RichEdit.rc
+   * HelpQPM\SHG_Change.prg
+   * QPM.ch
+   * qpm.h
+   * QPM.prg
+   * QPM.rc
+   * QPM_CompatibilityHotRecovery.ch
+   * QPM_CompatibilityOpenGlobal.ch
+   * QPM_CompatibilityOpenProject.ch
+   * QPM_CompatibilityStatistics.ch
+   * QPM_Environment.prg
+   * QPM_ExtraRun.prg
+   * QPM_Functions.prg
+   * QPM_GlobalSettings.prg
+   * QPM_HotRecovery.prg
+   * QPM_Killer.prg
+   * QPM_Libraries.prg
+   * QPM_ProjectSettings.prg
+   * QPM_Resources.ch
+   * QPM_SHG_AssistImage.prg
+   * QPM_SHG_AssistLink.prg
+   * QPM_SyncRecovery.prg
+   * QPM_US_Msg.qpm
+   * QPM_Version.prg
+   * reimp.h
+   * resource.h
+   * us_msg.prg
+   * us_redir.c
+   * us_reimp.c
+   * us_res.prg
+   * us_run.prg
+   * us_run.rc
+   * us_shell.prg
+   * us_slash.prg
+   * util.c
+     * Update copyright.
+     * Update link to development site.
+
 2020-06-17 22:11 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * readme.md
      ! File path.
