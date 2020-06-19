@@ -26,8 +26,6 @@ linkedition, providing tools (interactive and batch) for:
 + Visualizing error files resulting from compilation and execution.
 + Visualizing .PPO files resulting from preprocessor.
 
-> Development site: https://github.com/fyurisich/qpm
-> Bug reports: https://github.com/fyurisich/qpm/issues
-> Feature requests: https://github.com/fyurisich/qpm/issues
-> Help requests: https://github.com/fyurisich/qpm/issues
-> Community support: https://sourceforge.net/projects/qpm/lists/qpm-users
+###### Development site: https://github.com/fyurisich/qpm
+###### Bug reports and feature or help requests: https://github.com/fyurisich/qpm/issues
+###### Community support: https://sourceforge.net/projects/qpm/lists/qpm-users
