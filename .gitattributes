@@ -1,0 +1,5 @@
+# Exclude git files and other files starting with .
+.* export-ignore
+users-list export-ignore
+OldDistros export-ignore
+RTFtoHTML export-ignore
