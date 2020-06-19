@@ -16,7 +16,7 @@ Ask the community if someone has the same problem.
 A clear and concise description of what the bug is.
 
 **Error logs and screenshots**
-If applicable, add a copy of the build log, auxiliary files , QPM.exe.LOG and/or hb_out.log file and screenshots to help explain your problem.
+If applicable, add a copy of the build log files, the auxiliary files, QPM.exe.LOG file and/or hb_out.log file and screenshots to help explain your problem.
 
 **To Reproduce**
 Add a project (.QPM file, sources, resources, etc.) that reproduces the bug.
