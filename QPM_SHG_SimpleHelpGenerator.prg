@@ -5,8 +5,8 @@
 /*
  *    QPM - QAC based Project Manager
  *
- *    Copyright 2011-2019 Fernando Yurisich <fernando.yurisich@gmail.com>
- *    https://qpm.sourceforge.io/
+ *    Copyright 2011-2020 Fernando Yurisich <fernando.yurisich@gmail.com>
+ *    https://teamqpm.github.io/
  *
  *    Based on QAC - Project Manager for (x)Harbour
  *    Copyright 2006-2011 Carozo de Quilmes <CarozoDeQuilmes@gmail.com>
@@ -375,7 +375,7 @@ Function SHG_Generate( cBase , bGenHtml , PUB_cSecu , cWWW )
    Local cDirOutCHM := PUB_cProjectFolder + DEF_SLASH + "_" + PUB_cSecu + "HlpTemp"
    Local nRegistros, cMemoHeader , cMemoFooter , cFooterHTML
    Local cBackColor := "#FFFCEA"
-   Local wwwCdQ     := "https://qpm.sourceforge.io/"
+   Local wwwCdQ     := "https://teamqpm.github.io/"
    Local cWWWDescri := "Powered by QPM"
    Local cAux
    Local nCinx
@@ -1204,7 +1204,7 @@ Function SHG_AddHlpHTML( accion )
          CopyToClipboard( '<A name="xxxxxxxx">' )
          SHG_Send_Paste()
       case upper( accion ) == "LINK"
-         CopyToClipboard( '<A href="https://qpm.sourceforge.io/" target=blank>QPM Home Page</A>' )
+         CopyToClipboard( '<A href="https://teamqpm.github.io/" target=blank>QPM Home Page</A>' )
          SHG_Send_Paste()
       case upper( accion ) == "EMAIL"
          CopyToClipboard( '<A href="mailto:qpm-users@lists.sourceforge.net">Mail to QPM_Support</A>' )
@@ -1591,9 +1591,9 @@ Function SHG_GenHtmlIndexHTML( cIndexName , cDirSalida , vTopic , cClaves , cWWW
       '<body bgcolor="#e3e6db" link="blue" vlink="blue" alink="#389e6b" >' + HB_OsNewLine() + ;
       '<table border=2 cellpadding=0 cellspacing=0 width="100%">' + HB_OsNewLine() + ;
       '   <tr valign="center" bgcolor="#003366">' + HB_OsNewLine() + ;
-      '      <td><div align=center><font face="COURRIER NEW" size="2">&nbsp;</font></div>' + HB_OsNewLine() + ;
-      '         <div align="center"><font face="COURRIER NEW" size="5" color="#ffffff">' + US_FileNameOnlyName( cIndexName ) + '</FONT></DIV>' + HB_OsNewLine() + ;
-      '         <div align=center><font face="COURRIER NEW" size="2">&nbsp;</font></div>' + HB_OsNewLine() + ;
+      '      <td><div align=center><font face="COURIER NEW" size="2">&nbsp;</font></div>' + HB_OsNewLine() + ;
+      '         <div align="center"><font face="COURIER NEW" size="5" color="#ffffff">' + US_FileNameOnlyName( cIndexName ) + '</FONT></DIV>' + HB_OsNewLine() + ;
+      '         <div align=center><font face="COURIER NEW" size="2">&nbsp;</font></div>' + HB_OsNewLine() + ;
       '      </td>' + HB_OsNewLine() + ;
       '   </tr>' + HB_OsNewLine() + ;
       '</table>' + HB_OsNewLine() + ;
@@ -1601,7 +1601,7 @@ Function SHG_GenHtmlIndexHTML( cIndexName , cDirSalida , vTopic , cClaves , cWWW
       '<table border=1 cellpadding=0 cellspacing=0 width="100%">' + HB_OsNewLine() + ;
       '   <tr valign="center" bgcolor="white">' + HB_OsNewLine() + ;
       '      <td>' + HB_OsNewLine() + ;
-      '         <div align="center"><font face="COURRIER NEW" size="2" color="#ffffff"><A href="' + cWWW + '" target=blank>' + if( at( 'HTTP://' , upper( cWWW ) ) == 1 , substr( cWWW , 8 ) , cWWW ) + '</A></FONT></DIV>' + HB_OsNewLine() + ;
+      '         <div align="center"><font face="COURIER NEW" size="2" color="#ffffff"><A href="' + cWWW + '" target=blank>' + if( at( 'HTTP://' , upper( cWWW ) ) == 1 , substr( cWWW , 8 ) , cWWW ) + '</A></FONT></DIV>' + HB_OsNewLine() + ;
       '      </td>' + HB_OsNewLine() + ;
       '   </tr>' + HB_OsNewLine() + ;
       '</table>' + HB_OsNewLine() + ;
@@ -1616,12 +1616,12 @@ Function SHG_GenHtmlIndexHTML( cIndexName , cDirSalida , vTopic , cClaves , cWWW
             cTopicos := cTopicos + HB_OsNewLine() + '   <font face="ARIAL" size="4"><A href="' + vTopic[i][3] + '" target=CONT><B>' + vTopic[i][2] + '</B></A></FONT><br>'
             cTopicos := cTopicos + HB_OsNewLine() + '    </TD></TR>'
          case vTopic[i][1] == "B"
-            cTopicos := cTopicos + HB_OsNewLine() + '   <font face="COURRIER NEW" size="2">&nbsp;&nbsp;&nbsp;&nbsp;</FONT><IMG alt="Book" src="SHG_Book.bmp">'
+            cTopicos := cTopicos + HB_OsNewLine() + '   <font face="COURIER NEW" size="2">&nbsp;&nbsp;&nbsp;&nbsp;</FONT><IMG alt="Book" src="SHG_Book.bmp">'
             cTopicos := cTopicos + HB_OsNewLine() + '    </TD><TD>'
             cTopicos := cTopicos + HB_OsNewLine() + '   <font face="ARIAL" size="3"><A href="' + vTopic[i][3] + '" target=CONT><B>' + vTopic[i][2] + '</B></A></FONT><br>'
             cTopicos := cTopicos + HB_OsNewLine() + '    </TD></TR>'
          otherwise
-            cTopicos := cTopicos + HB_OsNewLine() + '   <font face="COURRIER NEW" size="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</FONT><IMG alt="Page" src="SHG_Page.bmp">'
+            cTopicos := cTopicos + HB_OsNewLine() + '   <font face="COURIER NEW" size="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</FONT><IMG alt="Page" src="SHG_Page.bmp">'
             cTopicos := cTopicos + HB_OsNewLine() + '    </TD><TD>'
             cTopicos := cTopicos + HB_OsNewLine() + '   <font face="ARIAL" size="2"><A href="' + vTopic[i][3] + '" target=CONT>' + vTopic[i][2] + '</A></FONT><br>'
             cTopicos := cTopicos + HB_OsNewLine() + '    </TD></TR>'
@@ -1674,9 +1674,9 @@ Function SHG_GenHtmlIndexJava( cIndexName , cDirSalida , vTopic , cClaves , cWWW
              '<body bgcolor="#e3e6db" link="blue" vlink="blue" alink="#389e6b" >' + HB_OsNewLine() + ;
              '<table border=2 cellpadding=0 cellspacing=0 width="100%">' + HB_OsNewLine() + ;
              '   <tr valign="center" bgcolor="#003366">' + HB_OsNewLine() + ;
-             '      <td><div align=center><font face="COURRIER NEW" size="2">&nbsp;</font></div>' + HB_OsNewLine() + ;
-             '         <div align="center"><font face="COURRIER NEW" size="5" color="#ffffff">' + US_FileNameOnlyName( cIndexName ) + '</FONT></DIV>' + HB_OsNewLine() + ;
-             '         <div align=center><font face="COURRIER NEW" size="2">&nbsp;</font></div>' + HB_OsNewLine() + ;
+             '      <td><div align=center><font face="COURIER NEW" size="2">&nbsp;</font></div>' + HB_OsNewLine() + ;
+             '         <div align="center"><font face="COURIER NEW" size="5" color="#ffffff">' + US_FileNameOnlyName( cIndexName ) + '</FONT></DIV>' + HB_OsNewLine() + ;
+             '         <div align=center><font face="COURIER NEW" size="2">&nbsp;</font></div>' + HB_OsNewLine() + ;
              '      </td>' + HB_OsNewLine() + ;
              '   </tr>' + HB_OsNewLine() + ;
              '</table>' + HB_OsNewLine() + ;
@@ -1684,7 +1684,7 @@ Function SHG_GenHtmlIndexJava( cIndexName , cDirSalida , vTopic , cClaves , cWWW
              '<table border=1 cellpadding=0 cellspacing=0 width="100%">' + HB_OsNewLine() + ;
              '   <tr valign="center" bgcolor="white">' + HB_OsNewLine() + ;
              '      <td>' + HB_OsNewLine() + ;
-             '         <div align="center"><font face="COURRIER NEW" size="2" color="#ffffff"><A href="' + cWWW + '" target=blank>' + if( at( 'HTTP://' , upper( cWWW ) ) == 1 , substr( cWWW , 8 ) , cWWW ) + '</A></FONT></DIV>' + HB_OsNewLine() + ;
+             '         <div align="center"><font face="COURIER NEW" size="2" color="#ffffff"><A href="' + cWWW + '" target=blank>' + if( at( 'HTTP://' , upper( cWWW ) ) == 1 , substr( cWWW , 8 ) , cWWW ) + '</A></FONT></DIV>' + HB_OsNewLine() + ;
              '      </td>' + HB_OsNewLine() + ;
              '   </tr>' + HB_OsNewLine() + ;
              '</table>' + HB_OsNewLine() + ;
