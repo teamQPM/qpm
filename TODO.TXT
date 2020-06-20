@@ -1,7 +1,3 @@
-/*
- * $Id$
- */
-
 /* QPM - QAC based Project Manager
  * Things to do
  *
@@ -11,49 +7,42 @@
 /******************************************************************************/
 
 Assigned to: <nobody>
-Added by...: 2020-06-15 21:26:00 UTC-0300 Fernando Yurisich <fyurisich>
+Added by...: 2020-06-19 21:36 UTC-0300 Fernando Yurisich <fyurisich>
 Status.....: Open.
-Details....: Remove us_redir.*
+Details....: Move all TODOs to GitHub issues and delete this file.
 
 /******************************************************************************/
 
 Assigned to: <nobody>
-Added by...: 2020-06-15 21:26:00 UTC-0300 Fernando Yurisich <fyurisich>
+Added by...: 2020-06-15 21:26 UTC-0300 Fernando Yurisich <fyurisich>
+Status.....: Open.
+Details....: Check if we can remove us_redir.*
+
+/******************************************************************************/
+
+Assigned to: <nobody>
+Added by...: 2020-06-15 21:26 UTC-0300 Fernando Yurisich <fyurisich>
 Status.....: Open.
 Details....: Update howtosvn.txt and the other files at doc folder
 
 /******************************************************************************/
 
 Assigned to: <nobody>
-Added by...: 2020-06-15 21:26:00 UTC-0300 Fernando Yurisich <fyurisich>
-Status.....: Open.
-Details....: Add a link to GitHub at https://qpm.sourceforge.io/
-
-/******************************************************************************/
-
-Assigned to: <nobody>
-Added by...: 2020-06-15 21:26:00 UTC-0300 Fernando Yurisich <fyurisich>
+Added by...: 2020-06-15 21:26 UTC-0300 Fernando Yurisich <fyurisich>
 Status.....: Open.
 Details....: Build a 64 bits version and test utilities.
 
 /******************************************************************************/
 
 Assigned to: <nobody>
-Added by...: 2020-06-15 21:26:00 UTC-0300 Fernando Yurisich <fyurisich>
+Added by...: 2020-06-15 21:26 UTC-0300 Fernando Yurisich <fyurisich>
 Status.....: Open.
-Details....: Test us_reimpr.
+Details....: Test us_reimp.
 
 /******************************************************************************/
 
 Assigned to: <nobody>
-Added by...: 2020-06-15 21:26:00 UTC-0300 Fernando Yurisich <fyurisich>
-Status.....: Open.
-Details....: Update us_dbview.
-
-/******************************************************************************/
-
-Assigned to: <nobody>
-Added by...: 2020-06-15 21:26:00 UTC-0300 Fernando Yurisich <fyurisich>
+Added by...: 2020-06-15 21:26 UTC-0300 Fernando Yurisich <fyurisich>
 Status.....: Open.
 Details....: Display the real RC line number: To found the real number of the
              offending line: search backwards from the line whose number (x)
@@ -63,13 +52,13 @@ Details....: Display the real RC line number: To found the real number of the
 /******************************************************************************/
 
 Assigned to: <nobody>
-Added by...: 2020-05-10 21:26:00 UTC-0300 Fernando Yurisich <fyurisich>
+Added by...: 2020-05-10 21:26 UTC-0300 Fernando Yurisich <fyurisich>
 Status.....: Open.
 Details....: Copy auxiliary files to the log.
 
 /******************************************************************************/
 Assigned to: <nobody>
-Added by...: 2020-05-10 21:26:00 UTC-0300 Fernando Yurisich <fyurisich>
+Added by...: 2020-05-10 21:26 UTC-0300 Fernando Yurisich <fyurisich>
 Status.....: Open.
 Details....: QPM_ProjectSettings:
              Add support for BCC64.
@@ -80,7 +69,7 @@ Details....: QPM_ProjectSettings:
 /******************************************************************************/
 
 Assigned to: <nobody>
-Added by...: 2020-04-27 21:26:00 UTC-0300 Fernando Yurisich <fyurisich>
+Added by...: 2020-04-27 21:26 UTC-0300 Fernando Yurisich <fyurisich>
 Status.....: Open.
 Details....: An app builded with 64 bit Minigui under MinGW can't restore a
              zip file created with HB_Zip using HB_Unzip.
@@ -88,14 +77,14 @@ Details....: An app builded with 64 bit Minigui under MinGW can't restore a
 /******************************************************************************/
 
 Assigned to: <nobody>
-Added by...: 2020-04-27 21:26:00 UTC-0300 Fernando Yurisich <fyurisich>
+Added by...: 2020-04-27 21:26 UTC-0300 Fernando Yurisich <fyurisich>
 Status.....: Open.
 Details....: Update task killer to handle 64 bits apps.
 
 /******************************************************************************/
 
 Assigned to: <nobody>
-Added by...: 2020-04-27 21:26:00 UTC-0300 Fernando Yurisich <fyurisich>
+Added by...: 2020-04-27 21:26 UTC-0300 Fernando Yurisich <fyurisich>
 Status.....: Open.
 Details....: Publish new version and send a mail to Pierpaolo.
 Details....: Post the last changes on the users list.
@@ -104,14 +93,14 @@ Details....: Ask users if the problem with VERSIONINFO was resolved.
 /******************************************************************************/
 
 Assigned to: <nobody>
-Added by...: 2016-01-08 22:18:00 UTC-0300 Fernando Yurisich <fyurisich>
+Added by...: 2016-01-08 22:18 UTC-0300 Fernando Yurisich <fyurisich>
 Status.....: Open.
 Details....: Add an option to disable Hot Recovery.
 
 /******************************************************************************/
 
 Assigned to: <nobody>
-Added by...: 2013-06-05 09:24:00 UTC-0300 Fernando Yurisich <fyurisich>
+Added by...: 2013-06-05 09:24 UTC-0300 Fernando Yurisich <fyurisich>
 Status.....: Open.
 Details....: No se genera el ejecutable cuando algún nombre de archivo o
              carpeta contiene el caracter &.
@@ -119,14 +108,14 @@ Details....: No se genera el ejecutable cuando algún nombre de archivo o
 /******************************************************************************/
 
 Assigned to: <nobody>
-Added by...: 2011-12-27 11:35:00 UTC-0300 Fernando Yurisich <fyurisich>
+Added by...: 2011-12-27 11:35 UTC-0300 Fernando Yurisich <fyurisich>
 Status.....: Open.
 Details....: Agregar funcionalidad Sync Recovery.
 
 /******************************************************************************/
 
 Assigned to: <nobody>
-Added by...: 2011-12-19 09:32:00 UTC-0300 Fernando Yurisich <fyurisich>
+Added by...: 2011-12-19 09:32 UTC-0300 Fernando Yurisich <fyurisich>
 Status.....: Open.
 Details....: Use a table to code libraries and other options of each minigui,
              so the user can add multiple version. Clean code so libraries
@@ -135,7 +124,7 @@ Details....: Use a table to code libraries and other options of each minigui,
 /******************************************************************************/
 
 Assigned to: <nobody>
-Added by...: 2011-09-23 15:00:00 UTC-0300 Fernando Yurisich <fyurisich>
+Added by...: 2011-09-23 15:00 UTC-0300 Fernando Yurisich <fyurisich>
 Status.....: Open.
 Details....: In HELP:
              - Spell check and refresh images from topic
@@ -145,19 +134,19 @@ Details....: In HELP:
 
 /******************************************************************************/
 Assigned to: <nobody>
-Added by...: 2011-09-22 22:30:00 UTC-0300 Fernando Yurisich <fyurisich>
+Added by...: 2011-09-22 22:30 UTC-0300 Fernando Yurisich <fyurisich>
 Status.....: Open.
 Details....: Translate help files to english.
 
 /******************************************************************************/
 Assigned to: <nobody>
-Added by...: 2011-09-22 22:30:00 UTC-0300 Fernando Yurisich <fyurisich>
+Added by...: 2011-09-22 22:30 UTC-0300 Fernando Yurisich <fyurisich>
 Status.....: Open.
 Details....: Localize entire proyect.
 
 /******************************************************************************/
 Assigned to: <nobody>
-Added by...: 2011-09-22 22:30:00 UTC-0300 Fernando Yurisich <fyurisich>
+Added by...: 2011-09-22 22:30 UTC-0300 Fernando Yurisich <fyurisich>
 Status.....: Open.
 Details....: Migrate to OOHG.
              Some function must be rewritten completely because rely on certain
