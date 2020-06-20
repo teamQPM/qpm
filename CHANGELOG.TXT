@@ -4,6 +4,36 @@
  * See "How to format your ChangeLog entries" in howtosvn.txt file.
  */
 
+2020-06-17 22:04 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * doc\howtosvn.txt
+     * Updated.
+
+2020-06-17 22:03 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * TODO.TXT
+     * Updated.
+
+2020-06-17 20:37 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * TODO.TXT
+     * Updated.
+
+2020-06-19 20:39 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * doc\codestyl.txt
+     * Update copyright and link to development site.
+
+2020-06-19 20:35 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * index.html
+     ! Fix language tags.
+
+2020-06-19 20:34 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * QPM_SHG_SimpleHelpGenerator.prg
+     * Update copyright and link to development site.
+     ! Fix font name.
+
+2020-06-19 20:33 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * QPM_CompatibilityStatistics.ch
+     * Update copyright.
+     * Update link to development site.
+
 2020-06-19 20:32 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * FuenteComunes\TAxPrg.prg
    * FuenteComunes\US_ActiveX.prg
@@ -29,7 +59,6 @@
    * QPM_CompatibilityHotRecovery.ch
    * QPM_CompatibilityOpenGlobal.ch
    * QPM_CompatibilityOpenProject.ch
-   * QPM_CompatibilityStatistics.ch
    * QPM_Environment.prg
    * QPM_ExtraRun.prg
    * QPM_Functions.prg
