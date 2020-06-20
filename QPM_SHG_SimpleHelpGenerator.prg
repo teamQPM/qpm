@@ -1207,7 +1207,7 @@ Function SHG_AddHlpHTML( accion )
          CopyToClipboard( '<A href="https://teamqpm.github.io/" target=blank>QPM Home Page</A>' )
          SHG_Send_Paste()
       case upper( accion ) == "EMAIL"
-         CopyToClipboard( '<A href="mailto:qpm-users@lists.sourceforge.net">Mail to QPM_Support</A>' )
+         CopyToClipboard( '<A href="mailto:qpm-users@lists.sourceforge.net">Mail to QPM User Support Group</A>' )
          SHG_Send_Paste()
    otherwise
       MsgInfo( "Invalid accion in function SHG_AddHlpHTML: " + US_VarToStr( accion ) )
