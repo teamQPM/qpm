@@ -1,11 +1,8 @@
 ;
-; $Id$
-;
-;
 ;     QPM - QAC based Project Manager
 ;
-;     Copyright 2011-2016 Fernando Yurisich <fernando.yurisich@gmail.com>
-;     http://qpm.sourceforge.net
+;     Copyright 2011-2020 Fernando Yurisich <fernando.yurisich@gmail.com>
+;     https://teamqpm.github.io/
 ;
 ;     Based on QAC - Project Manager for (x)Harbour
 ;     Copyright 2006-2011 Carozo de Quilmes <CarozoDeQuilmes@gmail.com>
