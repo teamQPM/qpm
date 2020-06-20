@@ -4,15 +4,40 @@
  * See "How to format your ChangeLog entries" in howtosvn.txt file.
  */
 
-2020-06-17 22:04 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2020-06-20 00:48 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * index.htm
+     * Update link.
+
+2020-06-20 00:47 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * QPM.chm
+   * QPM.exe
+   * us_res.exe
+   * us_slash.exe
+     * Rebuild.
+
+2020-06-20 00:45 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * QPM.iss
+     * Update copyright and link to development site.
+
+2020-06-20 00:44 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * QPM_SHG_SimpleHelpGenerator.prg
+     * Update link.
+
+2020-06-19 22:04 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * HelpQPM\QPM_SHG.dbf
+   * HelpQPM\QPM_SHG.fpt
+   * QPM.chm
+     * Minor changes.
+
+2020-06-19 22:04 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * doc\howtosvn.txt
      * Updated.
 
-2020-06-17 22:03 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2020-06-19 22:03 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * TODO.TXT
      * Updated.
 
-2020-06-17 20:37 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2020-06-19 20:37 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * TODO.TXT
      * Updated.
 
