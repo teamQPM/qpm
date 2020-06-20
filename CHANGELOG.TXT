@@ -4,6 +4,12 @@
  * See "How to format your ChangeLog entries" in howtosvn.txt file.
  */
 
+2020-06-20 00:50 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * HelpQPM\QPM_SHG.dbf
+   * HelpQPM\QPM_SHG.fpt
+     * Update link.
+     ! Fix the path of some images name wasn't updated because they included "/".
+
 2020-06-20 00:48 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * index.htm
      * Update link.
@@ -127,8 +133,8 @@
 2020-06-17 22:01 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * HelpQPM\QPM_SHG.dbf
    * HelpQPM\QPM_SHG.fpt
-   * QPM.qpm
-     ! The path in some images name wasn't updated because they included "/".
+   * QPM.chm
+     ! The path of some images name wasn't updated because they included "/".
 
 2020-06-17 21:57 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    - doc\readme.txt
