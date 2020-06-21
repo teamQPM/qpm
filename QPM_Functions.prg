@@ -1738,7 +1738,8 @@ Return .T.
 Function QPM_ModuleType( cFile )
    Local MemoAux, u0, u1, u2
    Local cAux1 := "Bor"
-   Local cBorland := cAux1 + "land C++ - Copyright 1999 Inprise Corporation"
+   Local cBorland55 := cAux1 + "land C++ - Copyright 1999 Inprise Corporation"
+   Local cBorland58 := cAux1 + "land C++ - Copyright 2005 Borland Corporation"
    Local cAux2 := "Min"
    Local cMinGW   := cAux2 + "GW GNU C"
    Local cAux3 := "___m"
@@ -1746,6 +1747,7 @@ Function QPM_ModuleType( cFile )
    Local cAux4 := "Pel"
    Local cPelles  := cAux4 + "les ISO C Compiler"
    Local cAux5 := "UP"
+
    if !file( cFile )
       Return "NONE"
    endif
@@ -1758,21 +1760,23 @@ Function QPM_ModuleType( cFile )
       Return "COMPRESSED"
    endif
    if Upper( US_FileNameOnlyExt( cFile ) ) == "EXE" .and. ;
-      at( cBorland, MemoAux ) > 0 .and. ;
+      ( at( cBorland55, MemoAux ) > 0 .or. at( cBorland58, MemoAux ) > 0 ) .and. ;
       at( cMinGW  , MemoAux ) = 0 .and. ;
       at( cMinGW2 , MemoAux ) = 0 .and. ;
       at( cPelles , MemoAux ) = 0
       Return "BORLAND"
    endif
    if Upper( US_FileNameOnlyExt( cFile ) ) == "EXE" .and. ;
-      at( cBorland, MemoAux ) = 0 .and. ;
+      at( cBorland55, MemoAux ) = 0 .and. ;
+      at( cBorland58, MemoAux ) = 0 .and. ;
       at( cMinGW  , MemoAux ) > 0 .and. ;
       at( cMinGW2 , MemoAux ) > 0 .and. ;
       at( cPelles , MemoAux ) = 0
       Return "MINGW"
    endif
    if Upper( US_FileNameOnlyExt( cFile ) ) == "EXE" .and. ;
-      at( cBorland, MemoAux ) = 0 .and. ;
+      at( cBorland55, MemoAux ) = 0 .and. ;
+      at( cBorland58, MemoAux ) = 0 .and. ;
       at( cMinGW  , MemoAux ) = 0 .and. ;
       at( cMinGW2 , MemoAux ) = 0 .and. ;
       at( cPelles , MemoAux ) > 0
@@ -1837,6 +1841,10 @@ Function GetOutputModuleName( bForDisplay )
                cOutputNameDisplay := PUB_cProjectFolder + DEF_SLASH + US_FileNameOnlyNameAndExt( Prj_Text_OutputRenameNewName )
             endif
          endif
+      case GetProperty( 'VentanaMain', 'GPrgFiles', 'itemcount' ) == 0
+         // no sources
+         cOutputName        := '.' + lower( OutputExt() )
+         cOutputNameDisplay := '.' + lower( OutputExt() )
       otherwise
          cOutputName        := US_ShortName(PUB_cProjectFolder) + DEF_SLASH + if( OutputExt() == "A", 'lib', '' ) + if( PUB_cConvert == "A DLL", substr( US_FileNameOnlyName( GetProperty( "VentanaMain", "GPrgFiles", "Cell", 1, NCOLPRGFULLNAME ) ), 4 ), US_FileNameOnlyName( GetProperty( "VentanaMain", "GPrgFiles", "Cell", 1, NCOLPRGFULLNAME ) ) ) + '.' + lower( OutputExt() )
          cOutputNameDisplay := PUB_cProjectFolder + DEF_SLASH + if( OutputExt() == "A", 'lib', '' ) + US_FileNameOnlyName( GetProperty( "VentanaMain", "GPrgFiles", "Cell", 1, NCOLPRGFULLNAME ) ) + '.' + lower( OutputExt() )
