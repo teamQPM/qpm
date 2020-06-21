@@ -27,31 +27,51 @@
 
 #include "minigui.ch"
 
-Function main()
+#define LASTNEW "C:/QPMdev/qpm/HelpQPM/"
 
-   LOCAL old := "C:/QPM_SVN/HELPQPM/"
-   LOCAL new := "C:/QPMdev/HELPQPM/"
+FUNCTION Main()
 
    DEFINE WINDOW Sample ;
-     AT 0 , 0 ;
-     WIDTH 408 ;
-     HEIGHT 200 ;
-     TITLE "Change path to help files" ;
-     MAIN
+      AT 0, 0 ;
+      WIDTH 408 ;
+      HEIGHT 200 ;
+      TITLE "Change path to help files" ;
+      MAIN
 
-      DEFINE LABEL Label1
-        ROW 40
+      DEFINE LABEL LabelOld
+        ROW 24
         COL 20
-        WIDTH 360
-        VALUE "From " + old + " to " + new
+        WIDTH 30
+        VALUE "From:"
       END LABEL
+
+      DEFINE TEXTBOX old
+        VALUE LASTNEW
+        ROW 20
+        COL 60
+        WIDTH 320
+      END TEXTBOX
+
+      DEFINE LABEL LabelNew
+        ROW 64
+        COL 20
+        WIDTH 30
+        VALUE "To:"
+      END LABEL
+
+      DEFINE TEXTBOX new
+        VALUE ""
+        ROW 60
+        COL 60
+        WIDTH 320
+      END TEXTBOX
 
       DEFINE BUTTON Button1
         ROW 100
         COL 100
         WIDTH 200
         CAPTION "Change"
-        ONCLICK Change( old, new )
+        ONCLICK Change()
       END BUTTON
 
    END WINDOW
@@ -59,68 +79,90 @@ Function main()
    CENTER WINDOW Sample
    ACTIVATE WINDOW Sample
 
-Return .T.
+RETURN .T.
 
-Function Change( old, new )
+
+PROCEDURE Change()
+
+   old := Sample.old.value
+   new := Sample.new.value
+
+   IF Empty( old )
+      MsgInfo( 'Error: "From" is empty!' )
+      RETURN
+   ENDIF
+   IF Empty( new )
+      MsgInfo( 'Error: "To" is empty!' )
+      RETURN
+   ENDIF
+
    USE QPM_SHG.dbf ALIAS "SHG"
    PACK
-   DBGoTop()
-   DO WHILE !EOF()
-      REPLACE SHG_Topic   WITH US_StrTran( SHG_Topic  , old , new ) , ;
-              SHG_TopicT  WITH US_StrTran( SHG_TopicT , old , new ) , ;
-              SHG_Memo    WITH US_StrTran( SHG_Memo   , old , new ) , ;
-              SHG_MemoT   WITH US_StrTran( SHG_MemoT  , old , new ) , ;
-              SHG_Keys    WITH US_StrTran( SHG_Keys   , old , new ) , ;
-              SHG_KeysT   WITH US_StrTran( SHG_KeysT  , old , new ) , ;
-              SHG_Nick    WITH US_StrTran( SHG_Nick   , old , new ) , ;
-              SHG_NickT   WITH US_StrTran( SHG_NickT  , old , new )
-      DBSkip()
+   dbGoTop()
+   DO WHILE ! Eof()
+      REPLACE SHG_Topic  WITH US_StrTran( SHG_Topic,  old, new ), ;
+              SHG_TopicT WITH US_StrTran( SHG_TopicT, old, new ), ;
+              SHG_Memo   WITH US_StrTran( SHG_Memo,   old, new ), ;
+              SHG_MemoT  WITH US_StrTran( SHG_MemoT,  old, new ), ;
+              SHG_Keys   WITH US_StrTran( SHG_Keys,   old, new ), ;
+              SHG_KeysT  WITH US_StrTran( SHG_KeysT,  old, new ), ;
+              SHG_Nick   WITH US_StrTran( SHG_Nick,   old, new ), ;
+              SHG_NickT  WITH US_StrTran( SHG_NickT,  old, new )
+      dbSkip()
    ENDDO
    USE
-   MSGINFO("Path changed to " + new)
-Return
+   MsgInfo( "Path changed to " + new )
+
+   cPrg := MemoRead( "SHG_Change.prg" )
+   cPrg := US_StrTran( cPrg, '#define LASTNEW "' + old + '"', '#define LASTNEW "' + new + '"' )
+   hb_MemoWrit( "SHG_Change.prg", cPrg )
+
+   Sample.old.value := Sample.new.value
+   Sample.new.value := ""
+
+RETURN
+
 
 // US_StrTran reemplaza caracteres ignorando si es mayusculas o minusculas
-Function US_StrTran( cLinea , cOld , cNew , nDesde , nCant )
-   LOCAL nBase , nPos , cLineaSal := "" , nContador := 0 , bTope := .F.
-   LOCAL cLineaUpper , cOldUpper , cNewUpper
-//us_log( cLinea )
-//us_log( cold   )
-//us_log( cnew   )
-   if cLinea == NIL
+FUNCTION US_StrTran( cLinea, cOld, cNew, nDesde, nCant )
+   LOCAL nBase, nPos, cLineaSal := "", nContador := 0, bTope := .F.
+   LOCAL cLineaUpper, cOldUpper, cNewUpper
+
+   //us_log( cLinea )
+   //us_log( cold   )
+   //us_log( cnew   )
+   IF cLinea == NIL
       cLinea := ""
-   endif
-   cLineaUpper := upper( cLinea )
-   cOldUpper := upper( cOld )
-   cNewUpper := upper( cNew )
-   if empty( nDesde )
+   ENDIF
+   cLineaUpper := Upper( cLinea )
+   cOldUpper := Upper( cOld )
+   cNewUpper := Upper( cNew )
+   IF Empty( nDesde )
       nDesde := 1
-   endif
-   if !empty( nCant )
+   ENDIF
+   IF ! Empty( nCant )
       bTope := .T.
-   endif
+   ENDIF
    nBase := nDesde
-   cLineaSal := substr( cLinea , 1 , nBase - 1 )
-// us_log( "==============================================" )
-// INI Change
-// do while ( ( nPos := at( cOldUpper , cLineaUpper , nBase           ) ) > 0 .and. ( !bTope .or. nContador < nCant ) )
-   do while ( ( nPos := at( cOldUpper , substr( cLineaUpper , nBase ) ) ) > 0 .and. ( !bTope .or. nContador < nCant ) )
+   cLineaSal := SubStr( cLinea, 1, nBase - 1 )
+   // us_log( "==============================================" )
+   DO WHILE ( ( nPos := At( cOldUpper, SubStr( cLineaUpper, nBase ) ) ) > 0 .AND. ( ! bTope .OR. nContador < nCant ) )
       nPos := nPos + ( nBase - 1 )
-// END Change
-//us_log( "--------------------------------------------" )
-//us_log( nPos )
-      if bTope
+      //us_log( "--------------------------------------------" )
+      //us_log( nPos )
+      IF bTope
          nContador++
-      endif
-      cLineaSal := cLineaSal + substr( cLinea , nBase , nPos - nBase ) + cNew
-//us_log( clineasal )
-      nBase := nPos + len( cOldUpper )
-//us_log( nBase )
-   enddo
-   if nBase < len( cLinea )
-      cLineaSal := cLineaSal + substr( cLinea , nBase )
-   endif
-//us_log( cLineasal )
-Return cLineaSal
+      ENDIF
+      cLineaSal := cLineaSal + SubStr( cLinea, nBase, nPos - nBase ) + cNew
+      //us_log( clineasal )
+      nBase := nPos + Len( cOldUpper )
+      //us_log( nBase )
+   ENDDO
+   IF nBase < Len( cLinea )
+      cLineaSal := cLineaSal + SubStr( cLinea, nBase )
+   ENDIF
+   //us_log( cLineasal )
+
+RETURN cLineaSal
 
 /* eof */
