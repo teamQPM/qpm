@@ -386,7 +386,6 @@ FUNCTION QPM_CreatePublicVars()
    PUBLIC PUB_MI_nInstallerName         := 1
    PUBLIC PUB_MI_cInstallerName         := ''
    PUBLIC PUB_MI_cImage                 := ''
-   PUBLIC PUB_MI_vFiles                 := {}
    PUBLIC PUB_MI_bSelectAllPRG          := .F.
    PUBLIC PUB_MI_bSelectAllHEA          := .F.
    PUBLIC PUB_MI_bSelectAllPAN          := .F.

@@ -693,7 +693,6 @@ memvar PUB_MI_nLeyendSuggested
 memvar PUB_MI_nNewFileEmpty
 memvar PUB_MI_nNewFileSuggested
 memvar PUB_MI_nStartMenuShortCut
-memvar PUB_MI_vFiles
 memvar PUB_MigrateFolderFrom
 memvar PUB_MigrateVersionFrom
 memvar PUB_nGridImgEdited
