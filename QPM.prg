@@ -4531,7 +4531,7 @@ RETURN NIL
 
 FUNCTION QPM_SaveProject( bCheck )
    LOCAL i, j, bDiff, MemoAux, LineasC, LineasProject
-   LOCAL cForceRecomp, bWrite := .F., MI_cFilesAux
+   LOCAL cForceRecomp, bWrite := .F.
    LOCAL cINI := ''
    IF Empty( bCheck )
       bCheck := .F.
@@ -4552,12 +4552,12 @@ FUNCTION QPM_SaveProject( bCheck )
       cIni += 'PRJ_VERSION '                + MakePrj_Version() + CRLF
       cIni += 'PROJECTFOLDER '              + US_StrTran( PUB_cProjectFolder, PUB_cThisFolder, '<ThisFolder>' ) + CRLF
    FOR i := 1 TO Len( vSuffix )
-      cIni += 'LASTLIBFOLDER'               + vSuffix[i][1] + ' ' + &( 'cLastLibFolder'+vSuffix[i][1] ) ) + CRLF
+      cIni += 'LASTLIBFOLDER'               + vSuffix[i][1] + ' ' + &( 'cLastLibFolder'+vSuffix[i][1] ) + CRLF
    NEXT
-      cIni += 'RUNFOLDER '                  + ChgPathToRelative(VentanaMain.TRunProjectFolder.Value)) + CRLF
-      cIni += 'RUNPARAM '                   + GBL_cRunParm ) + CRLF
-      cIni += 'OVERRIDECOMPILEPARM '        + GetProperty( 'VentanaMain', 'OverrideCompile', 'value' ) ) + CRLF
-      cIni += 'OVERRIDELINKPARM '           + GetProperty( 'VentanaMain', 'OverrideLink', 'value' ) ) + CRLF
+      cIni += 'RUNFOLDER '                  + ChgPathToRelative(VentanaMain.TRunProjectFolder.Value) + CRLF
+      cIni += 'RUNPARAM '                   + GBL_cRunParm + CRLF
+      cIni += 'OVERRIDECOMPILEPARM '        + GetProperty( 'VentanaMain', 'OverrideCompile', 'value' ) + CRLF
+      cIni += 'OVERRIDELINKPARM '           + GetProperty( 'VentanaMain', 'OverrideLink', 'value' ) + CRLF
       cIni += 'CHECKHARBOUR '               + IF ( Prj_Radio_Harbour == DEF_RG_XHARBOUR, DefineXHarbour, DefineHarbour ) + CRLF
       cIni += 'CHECKHARBOURIS31 '           + IF ( Prj_Check_HarbourIs31, 'YES', 'NO' ) + CRLF
       cIni += 'CHECKPLACERCFIRST '          + IF ( Prj_Check_PlaceRCFirst, 'YES', 'NO' ) + CRLF
@@ -4674,8 +4674,8 @@ FUNCTION QPM_SaveProject( bCheck )
          cIni += 'EXCLUDE'                  + vSuffix[i][1] + ' ' + AllTrim( &( 'ExcludeLibs'+vSuffix[i][1]+'['+Str(j)+']' ) ) + CRLF
       NEXT
    NEXT
-   DO WHILE " " + CRLF $ cNI
-      cINI := StrTran( cIni, " " + CRLF, CRLF )
+   DO WHILE " " + CRLF $ cINI
+      cINI := StrTran( cINI, " " + CRLF, CRLF )
    ENDDO
 
    IF bCheck
