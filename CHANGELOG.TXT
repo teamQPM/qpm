@@ -4,6 +4,13 @@
  * See "How to format your ChangeLog entries" in howtosvn.txt file.
  */
 
+2020-06-21 20:28 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * index.htm
+     * Add Sourceforge logo.
+
+2020-06-21 20:27 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   + sourceforge.jpg
+
 2020-06-21 18:47 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * QPM.exe
      * Rebuild.
