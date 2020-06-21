@@ -9281,39 +9281,42 @@ FUNCTION RichEditDisplay( tipo, bReload, nRow, bForce )
                                              CRLF + ;
                                              "             Press 'List Library/Object' button for view function in Library or Object"
          ENDIF
-   // CASE tipo == 'EXC'
-   //    IF nRow == 0
-   //       VentanaMain.RichEditLib.Value := ''
-   //       RETURN .F.
-   //    ENDIF
       CASE tipo == 'OUT'
          ListOut := GetOutputModuleName()
-         IF ! File( ListOut )
-            IF File( ListOut + '.MOVED.TXT' )
-               ListOut := US_WordSubStr( MemoRead( ListOut + '.MOVED.TXT' ), 7 )
-            ELSE
-               VentanaMain.RichEditOut.Value := CRLF + ;
-                                                CRLF + ;
-                                                CRLF + ;
-                                                CRLF + ;
-                                                CRLF + ;
-                                                CRLF + ;
-                                                "     Output Module file not found: '" + ListOut + "'!"
-               ListOut := ''
+         IF Left( ListOut, 1 ) == "."
+            VentanaMain.RichEditOut.Value := CRLF + ;
+                                             CRLF + ;
+                                             CRLF + ;
+                                             CRLF + ;
+                                             CRLF + ;
+                                             CRLF + ;
+                                             "     Output Module file not found!"
+         ELSE
+            IF ! File( ListOut )
+               IF File( ListOut + '.MOVED.TXT' )
+                  ListOut := US_WordSubStr( MemoRead( ListOut + '.MOVED.TXT' ), 7 )
+               ELSE
+                  VentanaMain.RichEditOut.Value := CRLF + ;
+                                                   CRLF + ;
+                                                   CRLF + ;
+                                                   CRLF + ;
+                                                   CRLF + ;
+                                                   CRLF + ;
+                                                   "     Output Module file not found: '" + ListOut + "'!"
+               ENDIF
             ENDIF
-         ENDIF
-         IF ! Empty( ListOut )
+            cType := US_Upper( US_FileNameOnlyExt( ListOut ) )
             DO CASE
-               CASE US_Upper( US_FileNameOnlyExt( ListOut ) ) == 'LIB'
-                  cType := QPM_ModuleType( ListOut ) + ' Library'
-               CASE US_Upper( US_FileNameOnlyExt( ListOut ) ) == 'A'
-                  cType := QPM_ModuleType( ListOut ) + ' Library'
-               CASE US_Upper( US_FileNameOnlyExt( ListOut ) ) == 'EXE'
-                  cType := 'Executable ' + QPM_ModuleType( ListOut )
-               CASE US_Upper( US_FileNameOnlyExt( ListOut ) ) == 'DLL'
-                  cType := 'Dynamic Link Library'
-               OTHERWISE
-                  MsgInfo( 'Error en Type for List Output' )
+            CASE cType == 'LIB'
+               cType := QPM_ModuleType( ListOut ) + ' Library'
+            CASE cType == 'A'
+               cType := QPM_ModuleType( ListOut ) + ' Library'
+            CASE cType == 'EXE'
+               cType := 'Executable ' + QPM_ModuleType( ListOut )
+            CASE cType == 'DLL'
+               cType := 'Dynamic Link Library'
+            OTHERWISE
+               MsgInfo( 'Wrong Type for List Output: ' + cType )
             ENDCASE
             VentanaMain.RichEditOut.Value := CRLF + ;
                                              CRLF + ;
