@@ -4,6 +4,46 @@
  * See "How to format your ChangeLog entries" in howtosvn.txt file.
  */
 
+2020-06-21 18:47 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * QPM.exe
+     * Rebuild.
+
+2020-06-21 18:45 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * QPM.prg
+     ! Compiler errors.
+
+2020-06-21 12:40 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * QPM.chm
+     * Rebuild.
+
+2020-06-21 12:39 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * HelpQPM\SHG_Change.qpm
+     * Remove extra spaces.
+
+2020-06-21 12:37 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * HelpQPM\QPM_SHG.dbf
+   * HelpQPM\QPM_SHG.fpt
+     * Fix paths to new structure (in the dbf the are stored with
+       embedded  rtf code.
+
+2020-06-21 12:36 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * QPM.prg
+     * Get rid of the extra space at EOL in .qpm files.
+     - Unused parameter and related public var.
+
+2020-06-21 12:35 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * QPM.ch
+   * QPM_Functions.prg
+    - Unused var PUB_MI_vFiles.
+
+2020-06-21 11:38 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * QPM_Functions.prg
+    + Support for BCC 5.8.2 to compiler detection.
+
+2020-06-21 11:34 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * QPM.exe
+     ! Module information displayed at "Output Error/Module" tab.
+
 2020-06-21 01:51 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * HelpQPM\SHG_Change.prg
      * Remember last change made so next run can suggest the path to change.
