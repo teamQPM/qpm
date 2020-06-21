@@ -4,6 +4,28 @@
  * See "How to format your ChangeLog entries" in howtosvn.txt file.
  */
 
+2020-06-21 01:51 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * HelpQPM\SHG_Change.prg
+     * Remember last change made so next run can suggest the path to change.
+       Note that the path is saved in this file.
+
+2020-06-21 01:47 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * HelpQPM\SHG_Change.qpm
+     * Update to new version.
+
+2020-06-21 01:45 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * TODO.TXT
+     * Add a new task.
+
+2020-06-21 01:43 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * QPM.chm
+     * Rebuild.
+
+2020-06-21 01:42 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * HelpQPM\QPM_SHG.dbf
+   * HelpQPM\QPM_SHG.fpt
+     * Update paths to new structure.
+
 2020-06-20 00:50 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * HelpQPM\QPM_SHG.dbf
    * HelpQPM\QPM_SHG.fpt
