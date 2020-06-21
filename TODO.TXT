@@ -5,6 +5,14 @@
 /******************************************************************************/
 
 Assigned to: <nobody>
+Added by...: 2020-06-21 00:37 UTC-0300 Fernando Yurisich
+Status.....: Open.
+Details....: Detect if a file was changed outside QMP when the window that
+             displays its content gets the focus.
+
+/******************************************************************************/
+
+Assigned to: <nobody>
 Added by...: 2020-06-19 21:36 UTC-0300 Fernando Yurisich
 Status.....: Open.
 Details....: Move all TODOs to GitHub issues and delete this file.
