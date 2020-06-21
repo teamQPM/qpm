@@ -4,6 +4,9 @@
  * See "How to format your ChangeLog entries" in howtosvn.txt file.
  */
 
+2020-06-21 20:41 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   + RELEASE: TAG v05.05.0016 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
 2020-06-21 20:28 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * index.htm
      * Add Sourceforge logo.
