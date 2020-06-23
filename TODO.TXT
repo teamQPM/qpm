@@ -7,6 +7,20 @@
 Assigned to: <nobody>
 Added by...: 2020-06-21 00:37 UTC-0300 Fernando Yurisich
 Status.....: Open.
+Details....: Create issues for each entry in TODO.TXT and remove this file.
+
+/******************************************************************************/
+
+Assigned to: <nobody>
+Added by...: 2020-06-21 00:37 UTC-0300 Fernando Yurisich
+Status.....: Open.
+Details....: Create a new repository for HMG Extended used by QPM.
+
+/******************************************************************************/
+
+Assigned to: <nobody>
+Added by...: 2020-06-21 00:37 UTC-0300 Fernando Yurisich
+Status.....: Open.
 Details....: Detect if a file was changed outside QMP when the window that
              displays its content gets the focus.
 
