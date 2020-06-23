@@ -11,8 +11,8 @@ graphic support libraries for Windows: Harbour MiniGUI, Harbour MiniGUI Extend
 and Object Oriented Harbour GUI (OOHG), and Borland, Pelles and MinGW C/C++
 compilers.
 
-It assists programmers in the processes of program writing, compilation, debuging 
-and linking offering interactive and batch tools to:
+It assists programmers in the processes of program writing, compilation, debugging 
+and linking by offering interactive and batch tools to:
 
 + Access external utilities to edit fonts, forms, headers and DBF files.
 + Keep and recover previous versions of modified files (hot recovery function).
