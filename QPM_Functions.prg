@@ -437,6 +437,8 @@ FUNCTION QPM_CreatePublicVars()
    QPM_VAR2 PUBLIC Gbl_T_P_      DEF_MG_MINIGUI1  DEF_MG_BORLAND DEF_MG_XHARBOUR DEF_MG_32 := ''
    QPM_VAR2 PUBLIC Gbl_T_P_LIBS_ DEF_MG_MINIGUI1  DEF_MG_BORLAND DEF_MG_HARBOUR  DEF_MG_32 := ''           // (x)harbour compiler libs
    QPM_VAR2 PUBLIC Gbl_T_P_LIBS_ DEF_MG_MINIGUI1  DEF_MG_BORLAND DEF_MG_XHARBOUR DEF_MG_32 := ''
+   QPM_VAR2 PUBLIC Gbl_T_N_      DEF_MG_MINIGUI1  DEF_MG_BORLAND DEF_MG_HARBOUR  DEF_MG_32 := ''           // minigui
+   QPM_VAR2 PUBLIC Gbl_T_N_      DEF_MG_MINIGUI1  DEF_MG_BORLAND DEF_MG_XHARBOUR DEF_MG_32 := ''
    /* MiniGui Oficial 3 with MinGW */
    QPM_VAR2 PUBLIC Gbl_T_C_      DEF_MG_MINIGUI3  DEF_MG_MINGW   DEF_MG_HARBOUR  DEF_MG_32 := ''
    QPM_VAR2 PUBLIC Gbl_T_C_      DEF_MG_MINIGUI3  DEF_MG_MINGW   DEF_MG_HARBOUR  DEF_MG_64 := ''
@@ -450,6 +452,8 @@ FUNCTION QPM_CreatePublicVars()
    QPM_VAR2 PUBLIC Gbl_T_P_      DEF_MG_MINIGUI3  DEF_MG_MINGW   DEF_MG_HARBOUR  DEF_MG_64 := ''
    QPM_VAR2 PUBLIC Gbl_T_P_LIBS_ DEF_MG_MINIGUI3  DEF_MG_MINGW   DEF_MG_HARBOUR  DEF_MG_32 := ''
    QPM_VAR2 PUBLIC Gbl_T_P_LIBS_ DEF_MG_MINIGUI3  DEF_MG_MINGW   DEF_MG_HARBOUR  DEF_MG_64 := ''
+   QPM_VAR2 PUBLIC Gbl_T_N_      DEF_MG_MINIGUI3  DEF_MG_MINGW   DEF_MG_HARBOUR  DEF_MG_32 := ''
+   QPM_VAR2 PUBLIC Gbl_T_N_      DEF_MG_MINIGUI3  DEF_MG_MINGW   DEF_MG_HARBOUR  DEF_MG_64 := ''
    /* MiniGui Extended 1 with BCC */
    QPM_VAR2 PUBLIC Gbl_T_C_      DEF_MG_EXTENDED1 DEF_MG_BORLAND DEF_MG_HARBOUR  DEF_MG_32 := ''
    QPM_VAR2 PUBLIC Gbl_T_C_      DEF_MG_EXTENDED1 DEF_MG_BORLAND DEF_MG_XHARBOUR DEF_MG_32 := ''
@@ -463,6 +467,8 @@ FUNCTION QPM_CreatePublicVars()
    QPM_VAR2 PUBLIC Gbl_T_P_      DEF_MG_EXTENDED1 DEF_MG_BORLAND DEF_MG_XHARBOUR DEF_MG_32 := ''
    QPM_VAR2 PUBLIC Gbl_T_P_LIBS_ DEF_MG_EXTENDED1 DEF_MG_BORLAND DEF_MG_HARBOUR  DEF_MG_32 := ''
    QPM_VAR2 PUBLIC Gbl_T_P_LIBS_ DEF_MG_EXTENDED1 DEF_MG_BORLAND DEF_MG_XHARBOUR DEF_MG_32 := ''
+   QPM_VAR2 PUBLIC Gbl_T_N_      DEF_MG_EXTENDED1 DEF_MG_BORLAND DEF_MG_HARBOUR  DEF_MG_32 := ''
+   QPM_VAR2 PUBLIC Gbl_T_N_      DEF_MG_EXTENDED1 DEF_MG_BORLAND DEF_MG_XHARBOUR DEF_MG_32 := ''
    /* MiniGui Extended 1 with MinGW */
    QPM_VAR2 PUBLIC Gbl_T_C_      DEF_MG_EXTENDED1 DEF_MG_MINGW   DEF_MG_HARBOUR  DEF_MG_32 := ''
    QPM_VAR2 PUBLIC Gbl_T_C_      DEF_MG_EXTENDED1 DEF_MG_MINGW   DEF_MG_HARBOUR  DEF_MG_64 := ''
@@ -488,6 +494,10 @@ FUNCTION QPM_CreatePublicVars()
    QPM_VAR2 PUBLIC Gbl_T_P_LIBS_ DEF_MG_EXTENDED1 DEF_MG_MINGW   DEF_MG_HARBOUR  DEF_MG_64 := ''
    QPM_VAR2 PUBLIC Gbl_T_P_LIBS_ DEF_MG_EXTENDED1 DEF_MG_MINGW   DEF_MG_XHARBOUR DEF_MG_32 := ''
    QPM_VAR2 PUBLIC Gbl_T_P_LIBS_ DEF_MG_EXTENDED1 DEF_MG_MINGW   DEF_MG_XHARBOUR DEF_MG_64 := ''
+   QPM_VAR2 PUBLIC Gbl_T_N_      DEF_MG_EXTENDED1 DEF_MG_MINGW   DEF_MG_HARBOUR  DEF_MG_32 := ''
+   QPM_VAR2 PUBLIC Gbl_T_N_      DEF_MG_EXTENDED1 DEF_MG_MINGW   DEF_MG_HARBOUR  DEF_MG_64 := ''
+   QPM_VAR2 PUBLIC Gbl_T_N_      DEF_MG_EXTENDED1 DEF_MG_MINGW   DEF_MG_XHARBOUR DEF_MG_32 := ''
+   QPM_VAR2 PUBLIC Gbl_T_N_      DEF_MG_EXTENDED1 DEF_MG_MINGW   DEF_MG_XHARBOUR DEF_MG_64 := ''
    /* OOHG with BCC */
    QPM_VAR2 PUBLIC Gbl_T_C_      DEF_MG_OOHG3    DEF_MG_BORLAND DEF_MG_HARBOUR  DEF_MG_32 := ''
    QPM_VAR2 PUBLIC Gbl_T_C_      DEF_MG_OOHG3    DEF_MG_BORLAND DEF_MG_XHARBOUR DEF_MG_32 := ''
@@ -501,6 +511,8 @@ FUNCTION QPM_CreatePublicVars()
    QPM_VAR2 PUBLIC Gbl_T_P_      DEF_MG_OOHG3    DEF_MG_BORLAND DEF_MG_XHARBOUR DEF_MG_32 := ''
    QPM_VAR2 PUBLIC Gbl_T_P_LIBS_ DEF_MG_OOHG3    DEF_MG_BORLAND DEF_MG_HARBOUR  DEF_MG_32 := ''
    QPM_VAR2 PUBLIC Gbl_T_P_LIBS_ DEF_MG_OOHG3    DEF_MG_BORLAND DEF_MG_XHARBOUR DEF_MG_32 := ''
+   QPM_VAR2 PUBLIC Gbl_T_N_      DEF_MG_OOHG3    DEF_MG_BORLAND DEF_MG_HARBOUR  DEF_MG_32 := ''
+   QPM_VAR2 PUBLIC Gbl_T_N_      DEF_MG_OOHG3    DEF_MG_BORLAND DEF_MG_XHARBOUR DEF_MG_32 := ''
    /* OOHG with MinGW */
    QPM_VAR2 PUBLIC Gbl_T_C_      DEF_MG_OOHG3    DEF_MG_MINGW   DEF_MG_HARBOUR  DEF_MG_32 := ''
    QPM_VAR2 PUBLIC Gbl_T_C_      DEF_MG_OOHG3    DEF_MG_MINGW   DEF_MG_HARBOUR  DEF_MG_64 := ''
@@ -526,6 +538,10 @@ FUNCTION QPM_CreatePublicVars()
    QPM_VAR2 PUBLIC Gbl_T_P_LIBS_ DEF_MG_OOHG3    DEF_MG_MINGW   DEF_MG_HARBOUR  DEF_MG_64 := ''
    QPM_VAR2 PUBLIC Gbl_T_P_LIBS_ DEF_MG_OOHG3    DEF_MG_MINGW   DEF_MG_XHARBOUR DEF_MG_32 := ''
    QPM_VAR2 PUBLIC Gbl_T_P_LIBS_ DEF_MG_OOHG3    DEF_MG_MINGW   DEF_MG_XHARBOUR DEF_MG_64 := ''
+   QPM_VAR2 PUBLIC Gbl_T_N_      DEF_MG_OOHG3    DEF_MG_MINGW   DEF_MG_HARBOUR  DEF_MG_32 := ''
+   QPM_VAR2 PUBLIC Gbl_T_N_      DEF_MG_OOHG3    DEF_MG_MINGW   DEF_MG_HARBOUR  DEF_MG_64 := ''
+   QPM_VAR2 PUBLIC Gbl_T_N_      DEF_MG_OOHG3    DEF_MG_MINGW   DEF_MG_XHARBOUR DEF_MG_32 := ''
+   QPM_VAR2 PUBLIC Gbl_T_N_      DEF_MG_OOHG3    DEF_MG_MINGW   DEF_MG_XHARBOUR DEF_MG_64 := ''
    /* OOHG with Pelles */
    QPM_VAR2 PUBLIC Gbl_T_C_      DEF_MG_OOHG3    DEF_MG_PELLES  DEF_MG_HARBOUR  DEF_MG_32 := ''
    QPM_VAR2 PUBLIC Gbl_T_C_      DEF_MG_OOHG3    DEF_MG_PELLES  DEF_MG_HARBOUR  DEF_MG_64 := ''
@@ -551,6 +567,10 @@ FUNCTION QPM_CreatePublicVars()
    QPM_VAR2 PUBLIC Gbl_T_P_LIBS_ DEF_MG_OOHG3    DEF_MG_PELLES  DEF_MG_HARBOUR  DEF_MG_64 := ''
    QPM_VAR2 PUBLIC Gbl_T_P_LIBS_ DEF_MG_OOHG3    DEF_MG_PELLES  DEF_MG_XHARBOUR DEF_MG_32 := ''
    QPM_VAR2 PUBLIC Gbl_T_P_LIBS_ DEF_MG_OOHG3    DEF_MG_PELLES  DEF_MG_XHARBOUR DEF_MG_64 := ''
+   QPM_VAR2 PUBLIC Gbl_T_N_      DEF_MG_OOHG3    DEF_MG_PELLES  DEF_MG_HARBOUR  DEF_MG_32 := ''
+   QPM_VAR2 PUBLIC Gbl_T_N_      DEF_MG_OOHG3    DEF_MG_PELLES  DEF_MG_HARBOUR  DEF_MG_64 := ''
+   QPM_VAR2 PUBLIC Gbl_T_N_      DEF_MG_OOHG3    DEF_MG_PELLES  DEF_MG_XHARBOUR DEF_MG_32 := ''
+   QPM_VAR2 PUBLIC Gbl_T_N_      DEF_MG_OOHG3    DEF_MG_PELLES  DEF_MG_XHARBOUR DEF_MG_64 := ''
 
 // VARIABLES FOR LIB HANDLING
    /* MiniGui Oficial 1 with BCC */
@@ -1201,7 +1221,7 @@ Function QPM_MemoWrit( p1, p2, bMute )
    endif
    if ! HB_MemoWrit( p1, p2 )
       if !bMute
-         US_Log( "Error in write file to: " + p1 + HB_OsNewLine() + "Requered from: " + US_StackList() )
+         US_Log( "Error in write file to: " + p1 + HB_OsNewLine() + "Required from: " + US_StackList() )
       endif
       Return .F.
    endif
@@ -1288,6 +1308,9 @@ Return ( Prj_Radio_Harbour == DEF_RG_XHARBOUR )
 
 Function GetMiniGuiFolder()
 Return &( "Gbl_T_M_" + GetSuffix() )
+
+Function GetMiniGuiLibName()
+Return &( "Gbl_T_N_" + GetSuffix() )
 
 Function GetCppFolder()
 Return &( "Gbl_T_C_" + GetSuffix() )
@@ -2248,14 +2271,14 @@ Function QPM_Wait( cFun, cTexto, nFila, bStop )
 // edite prg 2
 // coloque el orden de las ventanas de modo que despues de cerrar PRG 1 quede el foco en PRG2
 // una vez que las tenga asi, cierre prg 1 y vera que prg 2 ya no responde
-// obiamente que para esa prueba hay que sacar la pregunta de getActiveWindow()
-*  us_log( GetFocus(), .F. )
-*  us_log( GetActiveWindow(), .F. )
-*  us_log( _HMG_aFormNames[ AScan( _HMG_aFormHandles, GetActiveWindow() ) ], .F. )
-*  AScan( US_StackListArray(), { |x| x = "QPM_TIMER_" .or. substr( x, 3 ) = "QPM_TIMER_" } ) > 0    // Notese que la comparacion es por "="
-
+// obviamente que para esa prueba hay que sacar la pregunta de getActiveWindow()
+// us_log( GetFocus(), .F. )
+// us_log( GetActiveWindow(), .F. )
+// us_log( _HMG_aFormNames[ AScan( _HMG_aFormHandles, GetActiveWindow() ) ], .F. )
+// AScan( US_StackListArray(), { |x| x = "QPM_TIMER_" .or. substr( x, 3 ) = "QPM_TIMER_" } ) > 0    // Notese que la comparacion es por "="
+//
 Return if( GetActiveWindow() == 0, &( cFun ), SM_oMGWait:Ejecutar( cFun ) )
-   
+
 Function SetMGWaitTxt( txt )
    if US_IsVarDefined( "SM_oMGWait" )
       SM_oMGWait:cTXT := txt

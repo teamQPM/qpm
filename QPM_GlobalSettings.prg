@@ -301,9 +301,33 @@ Function GlobalSettings()
                     TOOLTIP         'Select folder'
                     ONCLICK         If ( !Empty( Folder := GetFolder( "Select folder", WinGSettings.&("TM_LIBS_"+DefineMiniGui1+DefineBorland+DefineHarbour+Define32bits).Value ) ), WinGSettings.&("TM_LIBS_"+DefineMiniGui1+DefineBorland+DefineHarbour+Define32bits).Value := Folder, )
             END BUTTON
+// Minigui Lib Name
+            DEFINE LABEL &("LM_NAME_"+DefineMiniGui1+DefineBorland+DefineHarbour+Define32bits)
+                    ROW             130
+                    COL             10
+                    WIDTH           109
+                    VALUE           '       Lib Name:'
+                    TRANSPARENT     .T.
+            END LABEL
+            DEFINE TEXTBOX &("TN_"+DefineMiniGui1+DefineBorland+DefineHarbour+Define32bits)
+                    VALUE           &("Gbl_T_N_"+DefineMiniGui1+DefineBorland+DefineHarbour+Define32bits)
+                    ROW             130
+                    COL             120
+                    WIDTH           561
+                    TOOLTIP         "Name and extension of HMG's main library (usually 'minigui.lib')"
+            END TEXTBOX
+            DEFINE BUTTON &("BM_NAME_"+DefineMiniGui1+DefineBorland+DefineHarbour+Define32bits)
+                    ROW             130
+                    COL             691
+                    WIDTH           25
+                    HEIGHT          25
+                    PICTURE         'helpbmp'
+                    TOOLTIP         'Check if file exists'
+                    ONCLICK         iif( ! File( WinGSettings.&("TM_LIBS_"+DefineMiniGui1+DefineBorland+DefineHarbour+Define32bits).Value + DEF_SLASH + WinGSettings.&("TN_"+DefineMiniGui1+DefineBorland+DefineHarbour+Define32bits).Value ), MsgStop( 'File not found!' ), MsgInfo( "File found" ) )
+            END BUTTON
 // Borland Folder
             DEFINE LABEL &("LC_"+DefineMiniGui1+DefineBorland+DefineHarbour+Define32bits)
-                    ROW             130
+                    ROW             160
                     COL             10
                     WIDTH           109
                     VALUE           'BCC32 Folder:'
@@ -311,12 +335,12 @@ Function GlobalSettings()
             END LABEL
             DEFINE TEXTBOX &("TC_"+DefineMiniGui1+DefineBorland+DefineHarbour+Define32bits)
                     VALUE           &("Gbl_T_C_"+DefineMiniGui1+DefineBorland+DefineHarbour+Define32bits)
-                    ROW             130
+                    ROW             160
                     COL             120
                     WIDTH           561
             END TEXTBOX
             DEFINE BUTTON &("BC_"+DefineMiniGui1+DefineBorland+DefineHarbour+Define32bits)
-                    ROW             130
+                    ROW             160
                     COL             691
                     WIDTH           25
                     HEIGHT          25
@@ -326,7 +350,7 @@ Function GlobalSettings()
             END BUTTON
 // Borland Libs Folder
             DEFINE LABEL &("LC_LIBS_"+DefineMiniGui1+DefineBorland+DefineHarbour+Define32bits)
-                    ROW             160
+                    ROW             190
                     COL             10
                     WIDTH           109
                     VALUE           '    Libs Folder:'
@@ -334,13 +358,13 @@ Function GlobalSettings()
             END LABEL
             DEFINE TEXTBOX &("TC_LIBS_"+DefineMiniGui1+DefineBorland+DefineHarbour+Define32bits)
                     VALUE           &("Gbl_T_C_LIBS_"+DefineMiniGui1+DefineBorland+DefineHarbour+Define32bits)
-                    ROW             160
+                    ROW             190
                     COL             120
                     WIDTH           561
                     TOOLTIP         "Full path to BCC32's libraries (usually subfolder 'lib' of BCC32 Folder)"
             END TEXTBOX
             DEFINE BUTTON &("BC_LIBS_"+DefineMiniGui1+DefineBorland+DefineHarbour+Define32bits)
-                    ROW             160
+                    ROW             190
                     COL             691
                     WIDTH           25
                     HEIGHT          25
@@ -350,7 +374,7 @@ Function GlobalSettings()
             END BUTTON
 // Harbour Folder
             DEFINE LABEL &("LP_"+DefineMiniGui1+DefineBorland+DefineHarbour+Define32bits)
-                    ROW             190
+                    ROW             220
                     COL             10
                     WIDTH           109
                     VALUE           'Harbour Folder:'
@@ -358,12 +382,12 @@ Function GlobalSettings()
             END LABEL
             DEFINE TEXTBOX &("TP_"+DefineMiniGui1+DefineBorland+DefineHarbour+Define32bits)
                     VALUE           &("Gbl_T_P_"+DefineMiniGui1+DefineBorland+DefineHarbour+Define32bits)
-                    ROW             190
+                    ROW             220
                     COL             120
                     WIDTH           561
             END TEXTBOX
             DEFINE BUTTON &("BP_"+DefineMiniGui1+DefineBorland+DefineHarbour+Define32bits)
-                    ROW             190
+                    ROW             220
                     COL             691
                     WIDTH           25
                     HEIGHT          25
@@ -373,7 +397,7 @@ Function GlobalSettings()
             END BUTTON
 // Harbour Libs Folder
             DEFINE LABEL &("LP_LIBS_"+DefineMiniGui1+DefineBorland+DefineHarbour+Define32bits)
-                    ROW             220
+                    ROW             250
                     COL             10
                     WIDTH           109
                     VALUE           '    Libs Folder:'
@@ -381,13 +405,13 @@ Function GlobalSettings()
             END LABEL
             DEFINE TEXTBOX &("TP_LIBS_"+DefineMiniGui1+DefineBorland+DefineHarbour+Define32bits)
                     VALUE           &("Gbl_T_P_LIBS_"+DefineMiniGui1+DefineBorland+DefineHarbour+Define32bits)
-                    ROW             220
+                    ROW             250
                     COL             120
                     WIDTH           561
                     TOOLTIP         "Full path to Harbour's libraries (usually subfolder 'lib' of Harbour Folder)"
             END TEXTBOX
             DEFINE BUTTON &("BP_LIBS_"+DefineMiniGui1+DefineBorland+DefineHarbour+Define32bits)
-                    ROW             220
+                    ROW             250
                     COL             691
                     WIDTH           25
                     HEIGHT          25
@@ -455,9 +479,33 @@ Function GlobalSettings()
                     TOOLTIP         'Select folder'
                     ONCLICK         If ( !Empty( Folder := GetFolder( "Select folder", WinGSettings.&("TM_LIBS_"+DefineMiniGui1+DefineBorland+DefineXHarbour+Define32bits).Value ) ), WinGSettings.&("TM_LIBS_"+DefineMiniGui1+DefineBorland+DefineXHarbour+Define32bits).Value := Folder, )
             END BUTTON
+// Minigui Lib Name
+            DEFINE LABEL &("LM_NAME_"+DefineMiniGui1+DefineBorland+DefineXHarbour+Define32bits)
+                    ROW             130
+                    COL             10
+                    WIDTH           109
+                    VALUE           '       Lib Name:'
+                    TRANSPARENT     .T.
+            END LABEL
+            DEFINE TEXTBOX &("TN_"+DefineMiniGui1+DefineBorland+DefineXHarbour+Define32bits)
+                    VALUE           &("Gbl_T_N_"+DefineMiniGui1+DefineBorland+DefineXHarbour+Define32bits)
+                    ROW             130
+                    COL             120
+                    WIDTH           561
+                    TOOLTIP         "Name and extension of HMG's main library (usually 'minigui.lib')"
+            END TEXTBOX
+            DEFINE BUTTON &("BM_NAME_"+DefineMiniGui1+DefineBorland+DefineXHarbour+Define32bits)
+                    ROW             130
+                    COL             691
+                    WIDTH           25
+                    HEIGHT          25
+                    PICTURE         'helpbmp'
+                    TOOLTIP         'Check if file exists'
+                    ONCLICK         iif( ! File( WinGSettings.&("TM_LIBS_"+DefineMiniGui1+DefineBorland+DefineXHarbour+Define32bits).Value + DEF_SLASH + WinGSettings.&("TN_"+DefineMiniGui1+DefineBorland+DefineXHarbour+Define32bits).Value ), MsgStop( 'File not found!' ), MsgInfo( "File found" ) )
+            END BUTTON
 // Borland Folder
             DEFINE LABEL &("LC_"+DefineMiniGui1+DefineBorland+DefineXHarbour+Define32bits)
-                    ROW             130
+                    ROW             160
                     COL             10
                     WIDTH           109
                     VALUE           'BCC32 Folder:'
@@ -465,12 +513,12 @@ Function GlobalSettings()
             END LABEL
             DEFINE TEXTBOX &("TC_"+DefineMiniGui1+DefineBorland+DefineXHarbour+Define32bits)
                     VALUE           &("Gbl_T_C_"+DefineMiniGui1+DefineBorland+DefineXHarbour+Define32bits)
-                    ROW             130
+                    ROW             160
                     COL             120
                     WIDTH           561
             END TEXTBOX
             DEFINE BUTTON &("BC_"+DefineMiniGui1+DefineBorland+DefineXHarbour+Define32bits)
-                    ROW             130
+                    ROW             160
                     COL             691
                     WIDTH           25
                     HEIGHT          25
@@ -480,7 +528,7 @@ Function GlobalSettings()
             END BUTTON
 // Borland Libs Folder
             DEFINE LABEL &("LC_LIBS_"+DefineMiniGui1+DefineBorland+DefineXHarbour+Define32bits)
-                    ROW             160
+                    ROW             190
                     COL             10
                     WIDTH           109
                     VALUE           '    Libs Folder:'
@@ -488,13 +536,13 @@ Function GlobalSettings()
             END LABEL
             DEFINE TEXTBOX &("TC_LIBS_"+DefineMiniGui1+DefineBorland+DefineXHarbour+Define32bits)
                     VALUE           &("Gbl_T_C_LIBS_"+DefineMiniGui1+DefineBorland+DefineXHarbour+Define32bits)
-                    ROW             160
+                    ROW             190
                     COL             120
                     WIDTH           561
                     TOOLTIP         "Full path to BCC32's libraries (usually subfolder 'lib' of BCC32 Folder)"
             END TEXTBOX
             DEFINE BUTTON &("BC_LIBS_"+DefineMiniGui1+DefineBorland+DefineXHarbour+Define32bits)
-                    ROW             160
+                    ROW             190
                     COL             691
                     WIDTH           25
                     HEIGHT          25
@@ -504,7 +552,7 @@ Function GlobalSettings()
             END BUTTON
 // xHarbour Folder
             DEFINE LABEL &("LP_"+DefineMiniGui1+DefineBorland+DefineXHarbour+Define32bits)
-                    ROW             190
+                    ROW             220
                     COL             10
                     WIDTH           109
                     VALUE           'xHarbour Folder:'
@@ -512,12 +560,12 @@ Function GlobalSettings()
             END LABEL
             DEFINE TEXTBOX &("TP_"+DefineMiniGui1+DefineBorland+DefineXHarbour+Define32bits)
                     VALUE           &("Gbl_T_P_"+DefineMiniGui1+DefineBorland+DefineXHarbour+Define32bits)
-                    ROW             190
+                    ROW             220
                     COL             120
                     WIDTH           561
             END TEXTBOX
             DEFINE BUTTON &("BP_"+DefineMiniGui1+DefineBorland+DefineXHarbour+Define32bits)
-                    ROW             190
+                    ROW             220
                     COL             691
                     WIDTH           25
                     HEIGHT          25
@@ -527,7 +575,7 @@ Function GlobalSettings()
             END BUTTON
 // xHarbour Libs Folder
             DEFINE LABEL &("LP_LIBS_"+DefineMiniGui1+DefineBorland+DefineXHarbour+Define32bits)
-                    ROW             220
+                    ROW             250
                     COL             10
                     WIDTH           109
                     VALUE           '    Libs Folder:'
@@ -535,13 +583,13 @@ Function GlobalSettings()
             END LABEL
             DEFINE TEXTBOX &("TP_LIBS_"+DefineMiniGui1+DefineBorland+DefineXHarbour+Define32bits)
                     VALUE           &("Gbl_T_P_LIBS_"+DefineMiniGui1+DefineBorland+DefineXHarbour+Define32bits)
-                    ROW             220
+                    ROW             250
                     COL             120
                     WIDTH           561
                     TOOLTIP         "Full path to xHarbour's libraries (usually subfolder 'lib' of xHarbour Folder)"
             END TEXTBOX
             DEFINE BUTTON &("BP_LIBS_"+DefineMiniGui1+DefineBorland+DefineXHarbour+Define32bits)
-                    ROW             220
+                    ROW             250
                     COL             691
                     WIDTH           25
                     HEIGHT          25
@@ -609,9 +657,33 @@ Function GlobalSettings()
                     TOOLTIP         'Select folder'
                     ONCLICK         If ( !Empty( Folder := GetFolder( "Select folder", WinGSettings.&("TM_LIBS_"+DefineMiniGui3+DefineMinGW+DefineHarbour+Define32bits).Value ) ), WinGSettings.&("TM_LIBS_"+DefineMiniGui3+DefineMinGW+DefineHarbour+Define32bits).Value := Folder, )
             END BUTTON
+// Minigui Lib Name
+            DEFINE LABEL &("LM_NAME_"+DefineMiniGui3+DefineMinGW+DefineHarbour+Define32bits)
+                    ROW             130
+                    COL             10
+                    WIDTH           109
+                    VALUE           '       Lib Name:'
+                    TRANSPARENT     .T.
+            END LABEL
+            DEFINE TEXTBOX &("TN_"+DefineMiniGui3+DefineMinGW+DefineHarbour+Define32bits)
+                    VALUE           &("Gbl_T_N_"+DefineMiniGui3+DefineMinGW+DefineHarbour+Define32bits)
+                    ROW             130
+                    COL             120
+                    WIDTH           561
+                    TOOLTIP         "Name and extension of HMG's main library (usually 'minigui.lib')"
+            END TEXTBOX
+            DEFINE BUTTON &("BM_NAME_"+DefineMiniGui3+DefineMinGW+DefineHarbour+Define32bits)
+                    ROW             130
+                    COL             691
+                    WIDTH           25
+                    HEIGHT          25
+                    PICTURE         'helpbmp'
+                    TOOLTIP         'Check if file exists'
+                    ONCLICK         iif( ! File( WinGSettings.&("TM_LIBS_"+DefineMiniGui3+DefineMinGW+DefineHarbour+Define32bits).Value + DEF_SLASH + WinGSettings.&("TN_"+DefineMiniGui3+DefineMinGW+DefineHarbour+Define32bits).Value ), MsgStop( 'File not found!' ), MsgInfo( "File found" ) )
+            END BUTTON
 // MinGW Folder
             DEFINE LABEL &("LC_"+DefineMiniGui3+DefineMinGW+DefineHarbour+Define32bits)
-                    ROW             130
+                    ROW             160
                     COL             10
                     WIDTH           109
                     VALUE           'MinGW Folder:'
@@ -619,12 +691,12 @@ Function GlobalSettings()
             END LABEL
             DEFINE TEXTBOX &("TC_"+DefineMiniGui3+DefineMinGW+DefineHarbour+Define32bits)
                     VALUE           &("Gbl_T_C_"+DefineMiniGui3+DefineMinGW+DefineHarbour+Define32bits)
-                    ROW             130
+                    ROW             160
                     COL             120
                     WIDTH           561
             END TEXTBOX
             DEFINE BUTTON &("BC_"+DefineMiniGui3+DefineMinGW+DefineHarbour+Define32bits)
-                    ROW             130
+                    ROW             160
                     COL             691
                     WIDTH           25
                     HEIGHT          25
@@ -634,7 +706,7 @@ Function GlobalSettings()
             END BUTTON
 // MinGW Libs Folder
             DEFINE LABEL &("LC_LIBS_"+DefineMiniGui3+DefineMinGW+DefineHarbour+Define32bits)
-                    ROW             160
+                    ROW             190
                     COL             10
                     WIDTH           109
                     VALUE           '    Libs Folder:'
@@ -642,13 +714,13 @@ Function GlobalSettings()
             END LABEL
             DEFINE TEXTBOX &("TC_LIBS_"+DefineMiniGui3+DefineMinGW+DefineHarbour+Define32bits)
                     VALUE           &("Gbl_T_C_LIBS_"+DefineMiniGui3+DefineMinGW+DefineHarbour+Define32bits)
-                    ROW             160
+                    ROW             190
                     COL             120
                     WIDTH           561
                     TOOLTIP         "Full path to MinGW's libraries (usually subfolder 'lib' or 'i686-w64-mingw32\lib' of MinGW Folder)"
             END TEXTBOX
             DEFINE BUTTON &("BC_LIBS_"+DefineMiniGui3+DefineMinGW+DefineHarbour+Define32bits)
-                    ROW             160
+                    ROW             190
                     COL             691
                     WIDTH           25
                     HEIGHT          25
@@ -658,7 +730,7 @@ Function GlobalSettings()
             END BUTTON
 // Harbour Folder
             DEFINE LABEL &("LP_"+DefineMiniGui3+DefineMinGW+DefineHarbour+Define32bits)
-                    ROW             190
+                    ROW             220
                     COL             10
                     WIDTH           109
                     VALUE           'Harbour Folder:'
@@ -666,12 +738,12 @@ Function GlobalSettings()
             END LABEL
             DEFINE TEXTBOX &("TP_"+DefineMiniGui3+DefineMinGW+DefineHarbour+Define32bits)
                     VALUE           &("Gbl_T_P_"+DefineMiniGui3+DefineMinGW+DefineHarbour+Define32bits)
-                    ROW             190
+                    ROW             220
                     COL             120
                     WIDTH           561
             END TEXTBOX
             DEFINE BUTTON &("BP_"+DefineMiniGui3+DefineMinGW+DefineHarbour+Define32bits)
-                    ROW             190
+                    ROW             220
                     COL             691
                     WIDTH           25
                     HEIGHT          25
@@ -681,7 +753,7 @@ Function GlobalSettings()
             END BUTTON
 // Harbour Libs Folder
             DEFINE LABEL &("LP_LIBS_"+DefineMiniGui3+DefineMinGW+DefineHarbour+Define32bits)
-                    ROW             220
+                    ROW             250
                     COL             10
                     WIDTH           109
                     VALUE           '    Libs Folder:'
@@ -689,13 +761,13 @@ Function GlobalSettings()
             END LABEL
             DEFINE TEXTBOX &("TP_LIBS_"+DefineMiniGui3+DefineMinGW+DefineHarbour+Define32bits)
                     VALUE           &("Gbl_T_P_LIBS_"+DefineMiniGui3+DefineMinGW+DefineHarbour+Define32bits)
-                    ROW             220
+                    ROW             250
                     COL             120
                     WIDTH           561
                     TOOLTIP         "Full path to Harbour's libraries (usually subfolder 'lib' or 'lib\win\mingw' of Harbour Folder)"
             END TEXTBOX
             DEFINE BUTTON &("BP_LIBS_"+DefineMiniGui3+DefineMinGW+DefineHarbour+Define32bits)
-                    ROW             220
+                    ROW             250
                     COL             691
                     WIDTH           25
                     HEIGHT          25
@@ -763,9 +835,33 @@ Function GlobalSettings()
                     TOOLTIP         'Select folder'
                     ONCLICK         If ( !Empty( Folder := GetFolder( "Select folder", WinGSettings.&("TM_LIBS_"+DefineMiniGui3+DefineMinGW+DefineHarbour+Define64bits).Value ) ), WinGSettings.&("TM_LIBS_"+DefineMiniGui3+DefineMinGW+DefineHarbour+Define64bits).Value := Folder, )
             END BUTTON
+// Minigui Lib Name
+            DEFINE LABEL &("LM_NAME_"+DefineMiniGui3+DefineMinGW+DefineHarbour+Define64bits)
+                    ROW             130
+                    COL             10
+                    WIDTH           109
+                    VALUE           '       Lib Name:'
+                    TRANSPARENT     .T.
+            END LABEL
+            DEFINE TEXTBOX &("TN_"+DefineMiniGui3+DefineMinGW+DefineHarbour+Define64bits)
+                    VALUE           &("Gbl_T_N_"+DefineMiniGui3+DefineMinGW+DefineHarbour+Define64bits)
+                    ROW             130
+                    COL             120
+                    WIDTH           561
+                    TOOLTIP         "Name and extension of HMG's main library (usually 'minigui.lib')"
+            END TEXTBOX
+            DEFINE BUTTON &("BM_NAME_"+DefineMiniGui3+DefineMinGW+DefineHarbour+Define64bits)
+                    ROW             130
+                    COL             691
+                    WIDTH           25
+                    HEIGHT          25
+                    PICTURE         'helpbmp'
+                    TOOLTIP         'Check if file exists'
+                    ONCLICK         iif( ! File( WinGSettings.&("TM_LIBS_"+DefineMiniGui3+DefineMinGW+DefineHarbour+Define64bits).Value + DEF_SLASH + WinGSettings.&("TN_"+DefineMiniGui3+DefineMinGW+DefineHarbour+Define64bits).Value ), MsgStop( 'File not found!' ), MsgInfo( "File found" ) )
+            END BUTTON
 // MinGW Folder
             DEFINE LABEL &("LC_"+DefineMiniGui3+DefineMinGW+DefineHarbour+Define64bits)
-                    ROW             130
+                    ROW             160
                     COL             10
                     WIDTH           109
                     VALUE           'MinGW Folder:'
@@ -773,12 +869,12 @@ Function GlobalSettings()
             END LABEL
             DEFINE TEXTBOX &("TC_"+DefineMiniGui3+DefineMinGW+DefineHarbour+Define64bits)
                     VALUE           &("Gbl_T_C_"+DefineMiniGui3+DefineMinGW+DefineHarbour+Define64bits)
-                    ROW             130
+                    ROW             160
                     COL             120
                     WIDTH           561
             END TEXTBOX
             DEFINE BUTTON &("BC_"+DefineMiniGui3+DefineMinGW+DefineHarbour+Define64bits)
-                    ROW             130
+                    ROW             160
                     COL             691
                     WIDTH           25
                     HEIGHT          25
@@ -788,7 +884,7 @@ Function GlobalSettings()
             END BUTTON
 // MinGW Libs Folder
             DEFINE LABEL &("LC_LIBS_"+DefineMiniGui3+DefineMinGW+DefineHarbour+Define64bits)
-                    ROW             160
+                    ROW             190
                     COL             10
                     WIDTH           109
                     VALUE           '    Libs Folder:'
@@ -796,13 +892,13 @@ Function GlobalSettings()
             END LABEL
             DEFINE TEXTBOX &("TC_LIBS_"+DefineMiniGui3+DefineMinGW+DefineHarbour+Define64bits)
                     VALUE           &("Gbl_T_C_LIBS_"+DefineMiniGui3+DefineMinGW+DefineHarbour+Define64bits)
-                    ROW             160
+                    ROW             190
                     COL             120
                     WIDTH           561
                     TOOLTIP         "Full path to MinGW's libraries (usually subfolder 'lib' or 'x86_64-w64-mingw32\lib' of MinGW Folder)"
             END TEXTBOX
             DEFINE BUTTON &("BC_LIBS_"+DefineMiniGui3+DefineMinGW+DefineHarbour+Define64bits)
-                    ROW             160
+                    ROW             190
                     COL             691
                     WIDTH           25
                     HEIGHT          25
@@ -812,7 +908,7 @@ Function GlobalSettings()
             END BUTTON
 // Harbour Folder
             DEFINE LABEL &("LP_"+DefineMiniGui3+DefineMinGW+DefineHarbour+Define64bits)
-                    ROW             190
+                    ROW             220
                     COL             10
                     WIDTH           109
                     VALUE           'Harbour Folder:'
@@ -820,12 +916,12 @@ Function GlobalSettings()
             END LABEL
             DEFINE TEXTBOX &("TP_"+DefineMiniGui3+DefineMinGW+DefineHarbour+Define64bits)
                     VALUE           &("Gbl_T_P_"+DefineMiniGui3+DefineMinGW+DefineHarbour+Define64bits)
-                    ROW             190
+                    ROW             220
                     COL             120
                     WIDTH           561
             END TEXTBOX
             DEFINE BUTTON &("BP_"+DefineMiniGui3+DefineMinGW+DefineHarbour+Define64bits)
-                    ROW             190
+                    ROW             220
                     COL             691
                     WIDTH           25
                     HEIGHT          25
@@ -835,7 +931,7 @@ Function GlobalSettings()
             END BUTTON
 // Harbour Libs Folder
             DEFINE LABEL &("LP_LIBS_"+DefineMiniGui3+DefineMinGW+DefineHarbour+Define64bits)
-                    ROW             220
+                    ROW             250
                     COL             10
                     WIDTH           109
                     VALUE           '    Libs Folder:'
@@ -843,13 +939,13 @@ Function GlobalSettings()
             END LABEL
             DEFINE TEXTBOX &("TP_LIBS_"+DefineMiniGui3+DefineMinGW+DefineHarbour+Define64bits)
                     VALUE           &("Gbl_T_P_LIBS_"+DefineMiniGui3+DefineMinGW+DefineHarbour+Define64bits)
-                    ROW             220
+                    ROW             250
                     COL             120
                     WIDTH           561
                     TOOLTIP         "Full path to Harbour's libraries (usually subfolder 'lib' or 'lib\win\mingw64' of Harbour Folder)"
             END TEXTBOX
             DEFINE BUTTON &("BP_LIBS_"+DefineMiniGui3+DefineMinGW+DefineHarbour+Define64bits)
-                    ROW             220
+                    ROW             250
                     COL             691
                     WIDTH           25
                     HEIGHT          25
@@ -917,9 +1013,33 @@ Function GlobalSettings()
                     TOOLTIP         'Select folder'
                     ONCLICK         If ( !Empty( Folder := GetFolder( "Select folder", WinGSettings.&("TM_LIBS_"+DefineExtended1+DefineBorland+DefineHarbour+Define32bits).Value ) ), WinGSettings.&("TM_LIBS_"+DefineExtended1+DefineBorland+DefineHarbour+Define32bits).Value := Folder, )
             END BUTTON
+// Minigui Lib Name
+            DEFINE LABEL &("LM_NAME_"+DefineExtended1+DefineBorland+DefineHarbour+Define32bits)
+                    ROW             130
+                    COL             10
+                    WIDTH           109
+                    VALUE           '       Lib Name:'
+                    TRANSPARENT     .T.
+            END LABEL
+            DEFINE TEXTBOX &("TN_"+DefineExtended1+DefineBorland+DefineHarbour+Define32bits)
+                    VALUE           &("Gbl_T_N_"+DefineExtended1+DefineBorland+DefineHarbour+Define32bits)
+                    ROW             130
+                    COL             120
+                    WIDTH           561
+                    TOOLTIP         "Name and extension of HMG's main library (usually 'minigui.lib')"
+            END TEXTBOX
+            DEFINE BUTTON &("BM_NAME_"+DefineExtended1+DefineBorland+DefineHarbour+Define32bits)
+                    ROW             130
+                    COL             691
+                    WIDTH           25
+                    HEIGHT          25
+                    PICTURE         'helpbmp'
+                    TOOLTIP         'Check if file exists'
+                    ONCLICK         iif( ! File( WinGSettings.&("TM_LIBS_"+DefineExtended1+DefineBorland+DefineHarbour+Define32bits).Value + DEF_SLASH + WinGSettings.&("TN_"+DefineExtended1+DefineBorland+DefineHarbour+Define32bits).Value ), MsgStop( 'File not found!' ), MsgInfo( "File found" ) )
+            END BUTTON
 // Borland Folder
             DEFINE LABEL &("LC_"+DefineExtended1+DefineBorland+DefineHarbour+Define32bits)
-                    ROW             130
+                    ROW             160
                     COL             10
                     WIDTH           109
                     VALUE           'BCC32 Folder:'
@@ -927,12 +1047,12 @@ Function GlobalSettings()
             END LABEL
             DEFINE TEXTBOX &("TC_"+DefineExtended1+DefineBorland+DefineHarbour+Define32bits)
                     VALUE           &("Gbl_T_C_"+DefineExtended1+DefineBorland+DefineHarbour+Define32bits)
-                    ROW             130
+                    ROW             160
                     COL             120
                     WIDTH           561
             END TEXTBOX
             DEFINE BUTTON &("BC_"+DefineExtended1+DefineBorland+DefineHarbour+Define32bits)
-                    ROW             130
+                    ROW             160
                     COL             691
                     WIDTH           25
                     HEIGHT          25
@@ -942,7 +1062,7 @@ Function GlobalSettings()
             END BUTTON
 // Borland Libs Folder
             DEFINE LABEL &("LC_LIBS_"+DefineExtended1+DefineBorland+DefineHarbour+Define32bits)
-                    ROW             160
+                    ROW             190
                     COL             10
                     WIDTH           109
                     VALUE           '    Libs Folder:'
@@ -950,13 +1070,13 @@ Function GlobalSettings()
             END LABEL
             DEFINE TEXTBOX &("TC_LIBS_"+DefineExtended1+DefineBorland+DefineHarbour+Define32bits)
                     VALUE           &("Gbl_T_C_LIBS_"+DefineExtended1+DefineBorland+DefineHarbour+Define32bits)
-                    ROW             160
+                    ROW             190
                     COL             120
                     WIDTH           561
                     TOOLTIP         "Full path to BCC32's libraries (usually subfolder 'lib' of BCC32 Folder)"
             END TEXTBOX
             DEFINE BUTTON &("BC_LIBS_"+DefineExtended1+DefineBorland+DefineHarbour+Define32bits)
-                    ROW             160
+                    ROW             190
                     COL             691
                     WIDTH           25
                     HEIGHT          25
@@ -966,7 +1086,7 @@ Function GlobalSettings()
             END BUTTON
 // Harbour Folder
             DEFINE LABEL &("LP_"+DefineExtended1+DefineBorland+DefineHarbour+Define32bits)
-                    ROW             190
+                    ROW             220
                     COL             10
                     WIDTH           109
                     VALUE           'Harbour Folder:'
@@ -974,12 +1094,12 @@ Function GlobalSettings()
             END LABEL
             DEFINE TEXTBOX &("TP_"+DefineExtended1+DefineBorland+DefineHarbour+Define32bits)
                     VALUE           &("Gbl_T_P_"+DefineExtended1+DefineBorland+DefineHarbour+Define32bits)
-                    ROW             190
+                    ROW             220
                     COL             120
                     WIDTH           561
             END TEXTBOX
             DEFINE BUTTON &("BP_"+DefineExtended1+DefineBorland+DefineHarbour+Define32bits)
-                    ROW             190
+                    ROW             220
                     COL             691
                     WIDTH           25
                     HEIGHT          25
@@ -989,7 +1109,7 @@ Function GlobalSettings()
             END BUTTON
 // Harbour Libs Folder
             DEFINE LABEL &("LP_LIBS_"+DefineExtended1+DefineBorland+DefineHarbour+Define32bits)
-                    ROW             220
+                    ROW             250
                     COL             10
                     WIDTH           109
                     VALUE           '    Libs Folder:'
@@ -997,13 +1117,13 @@ Function GlobalSettings()
             END LABEL
             DEFINE TEXTBOX &("TP_LIBS_"+DefineExtended1+DefineBorland+DefineHarbour+Define32bits)
                     VALUE           &("Gbl_T_P_LIBS_"+DefineExtended1+DefineBorland+DefineHarbour+Define32bits)
-                    ROW             220
+                    ROW             250
                     COL             120
                     WIDTH           561
                     TOOLTIP         "Full path to Harbour's libraries (usually subfolder 'lib' of Harbour Folder)"
             END TEXTBOX
             DEFINE BUTTON &("BP_LIBS_"+DefineExtended1+DefineBorland+DefineHarbour+Define32bits)
-                    ROW             220
+                    ROW             250
                     COL             691
                     WIDTH           25
                     HEIGHT          25
@@ -1071,9 +1191,33 @@ Function GlobalSettings()
                     TOOLTIP         'Select folder'
                     ONCLICK         If ( !Empty( Folder := GetFolder( "Select folder", WinGSettings.&("TM_LIBS_"+DefineExtended1+DefineBorland+DefineXHarbour+Define32bits).Value ) ), WinGSettings.&("TM_LIBS_"+DefineExtended1+DefineBorland+DefineXHarbour+Define32bits).Value := Folder, )
             END BUTTON
+// Minigui Lib Name
+            DEFINE LABEL &("LM_NAME_"+DefineExtended1+DefineBorland+DefineXHarbour+Define32bits)
+                    ROW             130
+                    COL             10
+                    WIDTH           109
+                    VALUE           '       Lib Name:'
+                    TRANSPARENT     .T.
+            END LABEL
+            DEFINE TEXTBOX &("TN_"+DefineExtended1+DefineBorland+DefineXHarbour+Define32bits)
+                    VALUE           &("Gbl_T_N_"+DefineExtended1+DefineBorland+DefineXHarbour+Define32bits)
+                    ROW             130
+                    COL             120
+                    WIDTH           561
+                    TOOLTIP         "Name and extension of HMG's main library (usually 'minigui.lib')"
+            END TEXTBOX
+            DEFINE BUTTON &("BM_NAME_"+DefineExtended1+DefineBorland+DefineXHarbour+Define32bits)
+                    ROW             130
+                    COL             691
+                    WIDTH           25
+                    HEIGHT          25
+                    PICTURE         'helpbmp'
+                    TOOLTIP         'Check if file exists'
+                    ONCLICK         iif( ! File( WinGSettings.&("TM_LIBS_"+DefineExtended1+DefineBorland+DefineXHarbour+Define32bits).Value + DEF_SLASH + WinGSettings.&("TN_"+DefineExtended1+DefineBorland+DefineXHarbour+Define32bits).Value ), MsgStop( 'File not found!' ), MsgInfo( "File found" ) )
+            END BUTTON
 // Borland Folder
             DEFINE LABEL &("LC_"+DefineExtended1+DefineBorland+DefineXHarbour+Define32bits)
-                    ROW             130
+                    ROW             160
                     COL             10
                     WIDTH           109
                     VALUE           'BCC32 Folder:'
@@ -1081,12 +1225,12 @@ Function GlobalSettings()
             END LABEL
             DEFINE TEXTBOX &("TC_"+DefineExtended1+DefineBorland+DefineXHarbour+Define32bits)
                     VALUE           &("Gbl_T_C_"+DefineExtended1+DefineBorland+DefineXHarbour+Define32bits)
-                    ROW             130
+                    ROW             160
                     COL             120
                     WIDTH           561
             END TEXTBOX
             DEFINE BUTTON &("BC_"+DefineExtended1+DefineBorland+DefineXHarbour+Define32bits)
-                    ROW             130
+                    ROW             160
                     COL             691
                     WIDTH           25
                     HEIGHT          25
@@ -1096,7 +1240,7 @@ Function GlobalSettings()
             END BUTTON
 // Borland Libs Folder
             DEFINE LABEL &("LC_LIBS_"+DefineExtended1+DefineBorland+DefineXHarbour+Define32bits)
-                    ROW             160
+                    ROW             190
                     COL             10
                     WIDTH           109
                     VALUE           '    Libs Folder:'
@@ -1104,13 +1248,13 @@ Function GlobalSettings()
             END LABEL
             DEFINE TEXTBOX &("TC_LIBS_"+DefineExtended1+DefineBorland+DefineXHarbour+Define32bits)
                     VALUE           &("Gbl_T_C_LIBS_"+DefineExtended1+DefineBorland+DefineXHarbour+Define32bits)
-                    ROW             160
+                    ROW             190
                     COL             120
                     WIDTH           561
                     TOOLTIP         "Full path to BCC32's libraries (usually subfolder 'lib' of BCC32 Folder)"
             END TEXTBOX
             DEFINE BUTTON &("BC_LIBS_"+DefineExtended1+DefineBorland+DefineXHarbour+Define32bits)
-                    ROW             160
+                    ROW             190
                     COL             691
                     WIDTH           25
                     HEIGHT          25
@@ -1120,7 +1264,7 @@ Function GlobalSettings()
             END BUTTON
 // xHarbour Folder
             DEFINE LABEL &("LP_"+DefineExtended1+DefineBorland+DefineXHarbour+Define32bits)
-                    ROW             190
+                    ROW             220
                     COL             10
                     WIDTH           109
                     VALUE           'xHarbour Folder:'
@@ -1128,12 +1272,12 @@ Function GlobalSettings()
             END LABEL
             DEFINE TEXTBOX &("TP_"+DefineExtended1+DefineBorland+DefineXHarbour+Define32bits)
                     VALUE           &("Gbl_T_P_"+DefineExtended1+DefineBorland+DefineXHarbour+Define32bits)
-                    ROW             190
+                    ROW             220
                     COL             120
                     WIDTH           561
             END TEXTBOX
             DEFINE BUTTON &("BP_"+DefineExtended1+DefineBorland+DefineXHarbour+Define32bits)
-                    ROW             190
+                    ROW             220
                     COL             691
                     WIDTH           25
                     HEIGHT          25
@@ -1143,7 +1287,7 @@ Function GlobalSettings()
             END BUTTON
 // xHarbour Libs Folder
             DEFINE LABEL &("LP_LIBS_"+DefineExtended1+DefineBorland+DefineXHarbour+Define32bits)
-                    ROW             220
+                    ROW             250
                     COL             10
                     WIDTH           109
                     VALUE           '    Libs Folder:'
@@ -1151,13 +1295,13 @@ Function GlobalSettings()
             END LABEL
             DEFINE TEXTBOX &("TP_LIBS_"+DefineExtended1+DefineBorland+DefineXHarbour+Define32bits)
                     VALUE           &("Gbl_T_P_LIBS_"+DefineExtended1+DefineBorland+DefineXHarbour+Define32bits)
-                    ROW             220
+                    ROW             250
                     COL             120
                     WIDTH           561
                     TOOLTIP         "Full path to xHarbour's libraries (usually subfolder 'lib' of xHarbour Folder)"
             END TEXTBOX
             DEFINE BUTTON &("BP_LIBS_"+DefineExtended1+DefineBorland+DefineXHarbour+Define32bits)
-                    ROW             220
+                    ROW             250
                     COL             691
                     WIDTH           25
                     HEIGHT          25
@@ -1225,9 +1369,33 @@ Function GlobalSettings()
                     TOOLTIP         'Select folder'
                     ONCLICK         If ( !Empty( Folder := GetFolder( "Select folder", WinGSettings.&("TM_LIBS_"+DefineExtended1+DefineMinGW+DefineHarbour+Define32bits).Value ) ), WinGSettings.&("TM_LIBS_"+DefineExtended1+DefineMinGW+DefineHarbour+Define32bits).Value := Folder, )
             END BUTTON
+// Minigui Lib Name
+            DEFINE LABEL &("LM_NAME_"+DefineExtended1+DefineMinGW+DefineHarbour+Define32bits)
+                    ROW             130
+                    COL             10
+                    WIDTH           109
+                    VALUE           '       Lib Name:'
+                    TRANSPARENT     .T.
+            END LABEL
+            DEFINE TEXTBOX &("TN_"+DefineExtended1+DefineMinGW+DefineHarbour+Define32bits)
+                    VALUE           &("Gbl_T_N_"+DefineExtended1+DefineMinGW+DefineHarbour+Define32bits)
+                    ROW             130
+                    COL             120
+                    WIDTH           561
+                    TOOLTIP         "Name and extension of HMG's main library (usually 'minigui.lib')"
+            END TEXTBOX
+            DEFINE BUTTON &("BM_NAME_"+DefineExtended1+DefineMinGW+DefineHarbour+Define32bits)
+                    ROW             130
+                    COL             691
+                    WIDTH           25
+                    HEIGHT          25
+                    PICTURE         'helpbmp'
+                    TOOLTIP         'Check if file exists'
+                    ONCLICK         iif( ! File( WinGSettings.&("TM_LIBS_"+DefineExtended1+DefineMinGW+DefineHarbour+Define32bits).Value + DEF_SLASH + WinGSettings.&("TN_"+DefineExtended1+DefineMinGW+DefineHarbour+Define32bits).Value ), MsgStop( 'File not found!' ), MsgInfo( "File found" ) )
+            END BUTTON
 // MinGW Folder
             DEFINE LABEL &("LC_"+DefineExtended1+DefineMinGW+DefineHarbour+Define32bits)
-                    ROW             130
+                    ROW             160
                     COL             10
                     WIDTH           109
                     VALUE           'MinGW Folder:'
@@ -1235,12 +1403,12 @@ Function GlobalSettings()
             END LABEL
             DEFINE TEXTBOX &("TC_"+DefineExtended1+DefineMinGW+DefineHarbour+Define32bits)
                     VALUE           &("Gbl_T_C_"+DefineExtended1+DefineMinGW+DefineHarbour+Define32bits)
-                    ROW             130
+                    ROW             160
                     COL             120
                     WIDTH           561
             END TEXTBOX
             DEFINE BUTTON &("BC_"+DefineExtended1+DefineMinGW+DefineHarbour+Define32bits)
-                    ROW             130
+                    ROW             160
                     COL             691
                     WIDTH           25
                     HEIGHT          25
@@ -1250,7 +1418,7 @@ Function GlobalSettings()
             END BUTTON
 // MinGW Libs Folder
             DEFINE LABEL &("LC_LIBS_"+DefineExtended1+DefineMinGW+DefineHarbour+Define32bits)
-                    ROW             160
+                    ROW             190
                     COL             10
                     WIDTH           109
                     VALUE           '    Libs Folder:'
@@ -1258,13 +1426,13 @@ Function GlobalSettings()
             END LABEL
             DEFINE TEXTBOX &("TC_LIBS_"+DefineExtended1+DefineMinGW+DefineHarbour+Define32bits)
                     VALUE           &("Gbl_T_C_LIBS_"+DefineExtended1+DefineMinGW+DefineHarbour+Define32bits)
-                    ROW             160
+                    ROW             190
                     COL             120
                     WIDTH           561
                     TOOLTIP         "Full path to MinGW's libraries (usually subfolder 'lib' or 'i686-w64-mingw32\lib' of MinGW Folder)"
             END TEXTBOX
             DEFINE BUTTON &("BC_LIBS_"+DefineExtended1+DefineMinGW+DefineHarbour+Define32bits)
-                    ROW             160
+                    ROW             190
                     COL             691
                     WIDTH           25
                     HEIGHT          25
@@ -1274,7 +1442,7 @@ Function GlobalSettings()
             END BUTTON
 // Harbour Folder
             DEFINE LABEL &("LP_"+DefineExtended1+DefineMinGW+DefineHarbour+Define32bits)
-                    ROW             190
+                    ROW             220
                     COL             10
                     WIDTH           109
                     VALUE           'Harbour Folder:'
@@ -1282,12 +1450,12 @@ Function GlobalSettings()
             END LABEL
             DEFINE TEXTBOX &("TP_"+DefineExtended1+DefineMinGW+DefineHarbour+Define32bits)
                     VALUE           &("Gbl_T_P_"+DefineExtended1+DefineMinGW+DefineHarbour+Define32bits)
-                    ROW             190
+                    ROW             220
                     COL             120
                     WIDTH           561
             END TEXTBOX
             DEFINE BUTTON &("BP_"+DefineExtended1+DefineMinGW+DefineHarbour+Define32bits)
-                    ROW             190
+                    ROW             220
                     COL             691
                     WIDTH           25
                     HEIGHT          25
@@ -1297,7 +1465,7 @@ Function GlobalSettings()
             END BUTTON
 // Harbour Libs Folder
             DEFINE LABEL &("LP_LIBS_"+DefineExtended1+DefineMinGW+DefineHarbour+Define32bits)
-                    ROW             220
+                    ROW             250
                     COL             10
                     WIDTH           109
                     VALUE           '    Libs Folder:'
@@ -1305,13 +1473,13 @@ Function GlobalSettings()
             END LABEL
             DEFINE TEXTBOX &("TP_LIBS_"+DefineExtended1+DefineMinGW+DefineHarbour+Define32bits)
                     VALUE           &("Gbl_T_P_LIBS_"+DefineExtended1+DefineMinGW+DefineHarbour+Define32bits)
-                    ROW             220
+                    ROW             250
                     COL             120
                     WIDTH           561
                     TOOLTIP         "Full path to Harbour's libraries (usually subfolder 'lib' or 'lib\win\mingw' of Harbour Folder)"
             END TEXTBOX
             DEFINE BUTTON &("BP_LIBS_"+DefineExtended1+DefineMinGW+DefineHarbour+Define32bits)
-                    ROW             220
+                    ROW             250
                     COL             691
                     WIDTH           25
                     HEIGHT          25
@@ -1379,9 +1547,33 @@ Function GlobalSettings()
                     TOOLTIP         'Select folder'
                     ONCLICK         If ( !Empty( Folder := GetFolder( "Select folder", WinGSettings.&("TM_LIBS_"+DefineExtended1+DefineMinGW+DefineXHarbour+Define32bits).Value ) ), WinGSettings.&("TM_LIBS_"+DefineExtended1+DefineMinGW+DefineXHarbour+Define32bits).Value := Folder, )
             END BUTTON
+// Minigui Lib Name
+            DEFINE LABEL &("LM_NAME_"+DefineExtended1+DefineMinGW+DefineXHarbour+Define32bits)
+                    ROW             130
+                    COL             10
+                    WIDTH           109
+                    VALUE           '       Lib Name:'
+                    TRANSPARENT     .T.
+            END LABEL
+            DEFINE TEXTBOX &("TN_"+DefineExtended1+DefineMinGW+DefineXHarbour+Define32bits)
+                    VALUE           &("Gbl_T_N_"+DefineExtended1+DefineMinGW+DefineXHarbour+Define32bits)
+                    ROW             130
+                    COL             120
+                    WIDTH           561
+                    TOOLTIP         "Name and extension of HMG's main library (usually 'minigui.lib')"
+            END TEXTBOX
+            DEFINE BUTTON &("BM_NAME_"+DefineExtended1+DefineMinGW+DefineXHarbour+Define32bits)
+                    ROW             130
+                    COL             691
+                    WIDTH           25
+                    HEIGHT          25
+                    PICTURE         'helpbmp'
+                    TOOLTIP         'Check if file exists'
+                    ONCLICK         iif( ! File( WinGSettings.&("TM_LIBS_"+DefineExtended1+DefineMinGW+DefineXHarbour+Define32bits).Value + DEF_SLASH + WinGSettings.&("TN_"+DefineExtended1+DefineMinGW+DefineXHarbour+Define32bits).Value ), MsgStop( 'File not found!' ), MsgInfo( "File found" ) )
+            END BUTTON
 // MinGW Folder
             DEFINE LABEL &("LC_"+DefineExtended1+DefineMinGW+DefineXHarbour+Define32bits)
-                    ROW             130
+                    ROW             160
                     COL             10
                     WIDTH           109
                     VALUE           'MinGW Folder:'
@@ -1389,12 +1581,12 @@ Function GlobalSettings()
             END LABEL
             DEFINE TEXTBOX &("TC_"+DefineExtended1+DefineMinGW+DefineXHarbour+Define32bits)
                     VALUE           &("Gbl_T_C_"+DefineExtended1+DefineMinGW+DefineXHarbour+Define32bits)
-                    ROW             130
+                    ROW             160
                     COL             120
                     WIDTH           561
             END TEXTBOX
             DEFINE BUTTON &("BC_"+DefineExtended1+DefineMinGW+DefineXHarbour+Define32bits)
-                    ROW             130
+                    ROW             160
                     COL             691
                     WIDTH           25
                     HEIGHT          25
@@ -1404,7 +1596,7 @@ Function GlobalSettings()
             END BUTTON
 // MinGW Libs Folder
             DEFINE LABEL &("LC_LIBS_"+DefineExtended1+DefineMinGW+DefineXHarbour+Define32bits)
-                    ROW             160
+                    ROW             190
                     COL             10
                     WIDTH           109
                     VALUE           '    Libs Folder:'
@@ -1412,13 +1604,13 @@ Function GlobalSettings()
             END LABEL
             DEFINE TEXTBOX &("TC_LIBS_"+DefineExtended1+DefineMinGW+DefineXHarbour+Define32bits)
                     VALUE           &("Gbl_T_C_LIBS_"+DefineExtended1+DefineMinGW+DefineXHarbour+Define32bits)
-                    ROW             160
+                    ROW             190
                     COL             120
                     WIDTH           561
                     TOOLTIP         "Full path to MinGW's libraries (usually subfolder 'lib' or 'i686-w64-mingw32\lib' of MinGW Folder)"
             END TEXTBOX
             DEFINE BUTTON &("BC_LIBS_"+DefineExtended1+DefineMinGW+DefineXHarbour+Define32bits)
-                    ROW             160
+                    ROW             190
                     COL             691
                     WIDTH           25
                     HEIGHT          25
@@ -1428,7 +1620,7 @@ Function GlobalSettings()
             END BUTTON
 // xHarbour Folder
             DEFINE LABEL &("LP_"+DefineExtended1+DefineMinGW+DefineXHarbour+Define32bits)
-                    ROW             190
+                    ROW             220
                     COL             10
                     WIDTH           109
                     VALUE           'xHarbour Folder:'
@@ -1436,12 +1628,12 @@ Function GlobalSettings()
             END LABEL
             DEFINE TEXTBOX &("TP_"+DefineExtended1+DefineMinGW+DefineXHarbour+Define32bits)
                     VALUE           &("Gbl_T_P_"+DefineExtended1+DefineMinGW+DefineXHarbour+Define32bits)
-                    ROW             190
+                    ROW             220
                     COL             120
                     WIDTH           561
             END TEXTBOX
             DEFINE BUTTON &("BP_"+DefineExtended1+DefineMinGW+DefineXHarbour+Define32bits)
-                    ROW             190
+                    ROW             220
                     COL             691
                     WIDTH           25
                     HEIGHT          25
@@ -1451,7 +1643,7 @@ Function GlobalSettings()
             END BUTTON
 // xHarbour Libs Folder
             DEFINE LABEL &("LP_LIBS_"+DefineExtended1+DefineMinGW+DefineXHarbour+Define32bits)
-                    ROW             220
+                    ROW             250
                     COL             10
                     WIDTH           109
                     VALUE           '    Libs Folder:'
@@ -1459,13 +1651,13 @@ Function GlobalSettings()
             END LABEL
             DEFINE TEXTBOX &("TP_LIBS_"+DefineExtended1+DefineMinGW+DefineXHarbour+Define32bits)
                     VALUE           &("Gbl_T_P_LIBS_"+DefineExtended1+DefineMinGW+DefineXHarbour+Define32bits)
-                    ROW             220
+                    ROW             250
                     COL             120
                     WIDTH           561
                     TOOLTIP         "Full path to xHarbour's libraries (usually subfolder 'lib' or 'lib\win\mingw' of xHarbour Folder)"
             END TEXTBOX
             DEFINE BUTTON &("BP_LIBS_"+DefineExtended1+DefineMinGW+DefineXHarbour+Define32bits)
-                    ROW             220
+                    ROW             250
                     COL             691
                     WIDTH           25
                     HEIGHT          25
@@ -1533,9 +1725,33 @@ Function GlobalSettings()
                     TOOLTIP         'Select folder'
                     ONCLICK         If ( !Empty( Folder := GetFolder( "Select folder", WinGSettings.&("TM_LIBS_"+DefineExtended1+DefineMinGW+DefineHarbour+Define64bits).Value ) ), WinGSettings.&("TM_LIBS_"+DefineExtended1+DefineMinGW+DefineHarbour+Define64bits).Value := Folder, )
             END BUTTON
+// Minigui Lib Name
+            DEFINE LABEL &("LM_NAME_"+DefineExtended1+DefineMinGW+DefineHarbour+Define64bits)
+                    ROW             130
+                    COL             10
+                    WIDTH           109
+                    VALUE           '       Lib Name:'
+                    TRANSPARENT     .T.
+            END LABEL
+            DEFINE TEXTBOX &("TN_"+DefineExtended1+DefineMinGW+DefineHarbour+Define64bits)
+                    VALUE           &("Gbl_T_N_"+DefineExtended1+DefineMinGW+DefineHarbour+Define64bits)
+                    ROW             130
+                    COL             120
+                    WIDTH           561
+                    TOOLTIP         "Name and extension of HMG's main library (usually 'minigui.lib')"
+            END TEXTBOX
+            DEFINE BUTTON &("BM_NAME_"+DefineExtended1+DefineMinGW+DefineHarbour+Define64bits)
+                    ROW             130
+                    COL             691
+                    WIDTH           25
+                    HEIGHT          25
+                    PICTURE         'helpbmp'
+                    TOOLTIP         'Check if file exists'
+                    ONCLICK         iif( ! File( WinGSettings.&("TM_LIBS_"+DefineExtended1+DefineMinGW+DefineHarbour+Define64bits).Value + DEF_SLASH + WinGSettings.&("TN_"+DefineExtended1+DefineMinGW+DefineHarbour+Define64bits).Value ), MsgStop( 'File not found!' ), MsgInfo( "File found" ) )
+            END BUTTON
 // MinGW Folder
             DEFINE LABEL &("LC_"+DefineExtended1+DefineMinGW+DefineHarbour+Define64bits)
-                    ROW             130
+                    ROW             160
                     COL             10
                     WIDTH           109
                     VALUE           'MinGW Folder:'
@@ -1543,12 +1759,12 @@ Function GlobalSettings()
             END LABEL
             DEFINE TEXTBOX &("TC_"+DefineExtended1+DefineMinGW+DefineHarbour+Define64bits)
                     VALUE           &("Gbl_T_C_"+DefineExtended1+DefineMinGW+DefineHarbour+Define64bits)
-                    ROW             130
+                    ROW             160
                     COL             120
                     WIDTH           561
             END TEXTBOX
             DEFINE BUTTON &("BC_"+DefineExtended1+DefineMinGW+DefineHarbour+Define64bits)
-                    ROW             130
+                    ROW             160
                     COL             691
                     WIDTH           25
                     HEIGHT          25
@@ -1558,7 +1774,7 @@ Function GlobalSettings()
             END BUTTON
 // MinGW Libs Folder
             DEFINE LABEL &("LC_LIBS_"+DefineExtended1+DefineMinGW+DefineHarbour+Define64bits)
-                    ROW             160
+                    ROW             190
                     COL             10
                     WIDTH           109
                     VALUE           '    Libs Folder:'
@@ -1566,13 +1782,13 @@ Function GlobalSettings()
             END LABEL
             DEFINE TEXTBOX &("TC_LIBS_"+DefineExtended1+DefineMinGW+DefineHarbour+Define64bits)
                     VALUE           &("Gbl_T_C_LIBS_"+DefineExtended1+DefineMinGW+DefineHarbour+Define64bits)
-                    ROW             160
+                    ROW             190
                     COL             120
                     WIDTH           561
                     TOOLTIP         "Full path to MinGW's libraries (usually subfolder 'lib' or 'i686-w64-mingw32\lib' of MinGW Folder)"
             END TEXTBOX
             DEFINE BUTTON &("BC_LIBS_"+DefineExtended1+DefineMinGW+DefineHarbour+Define64bits)
-                    ROW             160
+                    ROW             190
                     COL             691
                     WIDTH           25
                     HEIGHT          25
@@ -1582,7 +1798,7 @@ Function GlobalSettings()
             END BUTTON
 // Harbour Folder
             DEFINE LABEL &("LP_"+DefineExtended1+DefineMinGW+DefineHarbour+Define64bits)
-                    ROW             190
+                    ROW             220
                     COL             10
                     WIDTH           109
                     VALUE           'Harbour Folder:'
@@ -1590,12 +1806,12 @@ Function GlobalSettings()
             END LABEL
             DEFINE TEXTBOX &("TP_"+DefineExtended1+DefineMinGW+DefineHarbour+Define64bits)
                     VALUE           &("Gbl_T_P_"+DefineExtended1+DefineMinGW+DefineHarbour+Define64bits)
-                    ROW             190
+                    ROW             220
                     COL             120
                     WIDTH           561
             END TEXTBOX
             DEFINE BUTTON &("BP_"+DefineExtended1+DefineMinGW+DefineHarbour+Define64bits)
-                    ROW             190
+                    ROW             220
                     COL             691
                     WIDTH           25
                     HEIGHT          25
@@ -1605,7 +1821,7 @@ Function GlobalSettings()
             END BUTTON
 // Harbour Libs Folder
             DEFINE LABEL &("LP_LIBS_"+DefineExtended1+DefineMinGW+DefineHarbour+Define64bits)
-                    ROW             220
+                    ROW             250
                     COL             10
                     WIDTH           109
                     VALUE           '    Libs Folder:'
@@ -1613,13 +1829,13 @@ Function GlobalSettings()
             END LABEL
             DEFINE TEXTBOX &("TP_LIBS_"+DefineExtended1+DefineMinGW+DefineHarbour+Define64bits)
                     VALUE           &("Gbl_T_P_LIBS_"+DefineExtended1+DefineMinGW+DefineHarbour+Define64bits)
-                    ROW             220
+                    ROW             250
                     COL             120
                     WIDTH           561
                     TOOLTIP         "Full path to Harbour's libraries (usually subfolder 'lib' or 'lib\win\mingw' of Harbour Folder)"
             END TEXTBOX
             DEFINE BUTTON &("BP_LIBS_"+DefineExtended1+DefineMinGW+DefineHarbour+Define64bits)
-                    ROW             220
+                    ROW             250
                     COL             691
                     WIDTH           25
                     HEIGHT          25
@@ -1687,9 +1903,33 @@ Function GlobalSettings()
                     TOOLTIP         'Select folder'
                     ONCLICK         If ( !Empty( Folder := GetFolder( "Select folder", WinGSettings.&("TM_LIBS_"+DefineExtended1+DefineMinGW+DefineXHarbour+Define64bits).Value ) ), WinGSettings.&("TM_LIBS_"+DefineExtended1+DefineMinGW+DefineXHarbour+Define64bits).Value := Folder, )
             END BUTTON
+// Minigui Lib Name
+            DEFINE LABEL &("LM_NAME_"+DefineExtended1+DefineMinGW+DefineXHarbour+Define64bits)
+                    ROW             130
+                    COL             10
+                    WIDTH           109
+                    VALUE           '       Lib Name:'
+                    TRANSPARENT     .T.
+            END LABEL
+            DEFINE TEXTBOX &("TN_"+DefineExtended1+DefineMinGW+DefineXHarbour+Define64bits)
+                    VALUE           &("Gbl_T_N_"+DefineExtended1+DefineMinGW+DefineXHarbour+Define64bits)
+                    ROW             130
+                    COL             120
+                    WIDTH           561
+                    TOOLTIP         "Name and extension of HMG's main library (usually 'minigui.lib')"
+            END TEXTBOX
+            DEFINE BUTTON &("BM_NAME_"+DefineExtended1+DefineMinGW+DefineXHarbour+Define64bits)
+                    ROW             130
+                    COL             691
+                    WIDTH           25
+                    HEIGHT          25
+                    PICTURE         'helpbmp'
+                    TOOLTIP         'Check if file exists'
+                    ONCLICK         iif( ! File( WinGSettings.&("TM_LIBS_"+DefineExtended1+DefineMinGW+DefineXHarbour+Define64bits).Value + DEF_SLASH + WinGSettings.&("TN_"+DefineExtended1+DefineMinGW+DefineXHarbour+Define64bits).Value ), MsgStop( 'File not found!' ), MsgInfo( "File found" ) )
+            END BUTTON
 // MinGW Folder
             DEFINE LABEL &("LC_"+DefineExtended1+DefineMinGW+DefineXHarbour+Define64bits)
-                    ROW             130
+                    ROW             160
                     COL             10
                     WIDTH           109
                     VALUE           'MinGW Folder:'
@@ -1697,12 +1937,12 @@ Function GlobalSettings()
             END LABEL
             DEFINE TEXTBOX &("TC_"+DefineExtended1+DefineMinGW+DefineXHarbour+Define64bits)
                     VALUE           &("Gbl_T_C_"+DefineExtended1+DefineMinGW+DefineXHarbour+Define64bits)
-                    ROW             130
+                    ROW             160
                     COL             120
                     WIDTH           561
             END TEXTBOX
             DEFINE BUTTON &("BC_"+DefineExtended1+DefineMinGW+DefineXHarbour+Define64bits)
-                    ROW             130
+                    ROW             160
                     COL             691
                     WIDTH           25
                     HEIGHT          25
@@ -1712,7 +1952,7 @@ Function GlobalSettings()
             END BUTTON
 // MinGW Libs Folder
             DEFINE LABEL &("LC_LIBS_"+DefineExtended1+DefineMinGW+DefineXHarbour+Define64bits)
-                    ROW             160
+                    ROW             190
                     COL             10
                     WIDTH           109
                     VALUE           '    Libs Folder:'
@@ -1720,13 +1960,13 @@ Function GlobalSettings()
             END LABEL
             DEFINE TEXTBOX &("TC_LIBS_"+DefineExtended1+DefineMinGW+DefineXHarbour+Define64bits)
                     VALUE           &("Gbl_T_C_LIBS_"+DefineExtended1+DefineMinGW+DefineXHarbour+Define64bits)
-                    ROW             160
+                    ROW             190
                     COL             120
                     WIDTH           561
                     TOOLTIP         "Full path to MinGW's libraries (usually subfolder 'lib' or 'i686-w64-mingw32\lib' of MinGW Folder)"
             END TEXTBOX
             DEFINE BUTTON &("BC_LIBS_"+DefineExtended1+DefineMinGW+DefineXHarbour+Define64bits)
-                    ROW             160
+                    ROW             190
                     COL             691
                     WIDTH           25
                     HEIGHT          25
@@ -1736,7 +1976,7 @@ Function GlobalSettings()
             END BUTTON
 // xHarbour Folder
             DEFINE LABEL &("LP_"+DefineExtended1+DefineMinGW+DefineXHarbour+Define64bits)
-                    ROW             190
+                    ROW             220
                     COL             10
                     WIDTH           109
                     VALUE           'xHarbour Folder:'
@@ -1744,12 +1984,12 @@ Function GlobalSettings()
             END LABEL
             DEFINE TEXTBOX &("TP_"+DefineExtended1+DefineMinGW+DefineXHarbour+Define64bits)
                     VALUE           &("Gbl_T_P_"+DefineExtended1+DefineMinGW+DefineXHarbour+Define64bits)
-                    ROW             190
+                    ROW             220
                     COL             120
                     WIDTH           561
             END TEXTBOX
             DEFINE BUTTON &("BP_"+DefineExtended1+DefineMinGW+DefineXHarbour+Define64bits)
-                    ROW             190
+                    ROW             220
                     COL             691
                     WIDTH           25
                     HEIGHT          25
@@ -1759,7 +1999,7 @@ Function GlobalSettings()
             END BUTTON
 // xHarbour Libs Folder
             DEFINE LABEL &("LP_LIBS_"+DefineExtended1+DefineMinGW+DefineXHarbour+Define64bits)
-                    ROW             220
+                    ROW             250
                     COL             10
                     WIDTH           109
                     VALUE           '    Libs Folder:'
@@ -1767,13 +2007,13 @@ Function GlobalSettings()
             END LABEL
             DEFINE TEXTBOX &("TP_LIBS_"+DefineExtended1+DefineMinGW+DefineXHarbour+Define64bits)
                     VALUE           &("Gbl_T_P_LIBS_"+DefineExtended1+DefineMinGW+DefineXHarbour+Define64bits)
-                    ROW             220
+                    ROW             250
                     COL             120
                     WIDTH           561
                     TOOLTIP         "Full path to xHarbour's libraries (usually subfolder 'lib' or 'lib\win\mingw' of xHarbour Folder)"
             END TEXTBOX
             DEFINE BUTTON &("BP_LIBS_"+DefineExtended1+DefineMinGW+DefineXHarbour+Define64bits)
-                    ROW             220
+                    ROW             250
                     COL             691
                     WIDTH           25
                     HEIGHT          25
@@ -1841,9 +2081,33 @@ Function GlobalSettings()
                     TOOLTIP         'Select folder'
                     ONCLICK         If ( !Empty( Folder := GetFolder( "Select folder", WinGSettings.&("TM_LIBS_"+DefineOohg3+DefineBorland+DefineHarbour+Define32bits).Value ) ), WinGSettings.&("TM_LIBS_"+DefineOohg3+DefineBorland+DefineHarbour+Define32bits).Value := Folder, )
             END BUTTON
+// Minigui Lib Name
+            DEFINE LABEL &("LM_NAME_"+DefineOohg3+DefineBorland+DefineHarbour+Define32bits)
+                    ROW             130
+                    COL             10
+                    WIDTH           109
+                    VALUE           '       Lib Name:'
+                    TRANSPARENT     .T.
+            END LABEL
+            DEFINE TEXTBOX &("TN_"+DefineOohg3+DefineBorland+DefineHarbour+Define32bits)
+                    VALUE           &("Gbl_T_N_"+DefineOohg3+DefineBorland+DefineHarbour+Define32bits)
+                    ROW             130
+                    COL             120
+                    WIDTH           561
+                    TOOLTIP         "Name and extension of HMG's main library (usually 'minigui.lib')"
+            END TEXTBOX
+            DEFINE BUTTON &("BM_NAME_"+DefineOohg3+DefineBorland+DefineHarbour+Define32bits)
+                    ROW             130
+                    COL             691
+                    WIDTH           25
+                    HEIGHT          25
+                    PICTURE         'helpbmp'
+                    TOOLTIP         'Check if file exists'
+                    ONCLICK         iif( ! File( WinGSettings.&("TM_LIBS_"+DefineOohg3+DefineBorland+DefineHarbour+Define32bits).Value + DEF_SLASH + WinGSettings.&("TN_"+DefineOohg3+DefineBorland+DefineHarbour+Define32bits).Value ), MsgStop( 'File not found!' ), MsgInfo( "File found" ) )
+            END BUTTON
 // Borland Folder
             DEFINE LABEL &("LC_"+DefineOohg3+DefineBorland+DefineHarbour+Define32bits)
-                    ROW             130
+                    ROW             160
                     COL             10
                     WIDTH           109
                     VALUE           'BCC32 Folder:'
@@ -1851,12 +2115,12 @@ Function GlobalSettings()
             END LABEL
             DEFINE TEXTBOX &("TC_"+DefineOohg3+DefineBorland+DefineHarbour+Define32bits)
                     VALUE           &("Gbl_T_C_"+DefineOohg3+DefineBorland+DefineHarbour+Define32bits)
-                    ROW             130
+                    ROW             160
                     COL             120
                     WIDTH           561
             END TEXTBOX
             DEFINE BUTTON &("BC_"+DefineOohg3+DefineBorland+DefineHarbour+Define32bits)
-                    ROW             130
+                    ROW             160
                     COL             691
                     WIDTH           25
                     HEIGHT          25
@@ -1866,7 +2130,7 @@ Function GlobalSettings()
             END BUTTON
 // Borland Libs Folder
             DEFINE LABEL &("LC_LIBS_"+DefineOohg3+DefineBorland+DefineHarbour+Define32bits)
-                    ROW             160
+                    ROW             190
                     COL             10
                     WIDTH           109
                     VALUE           '    Libs Folder:'
@@ -1874,13 +2138,13 @@ Function GlobalSettings()
             END LABEL
             DEFINE TEXTBOX &("TC_LIBS_"+DefineOohg3+DefineBorland+DefineHarbour+Define32bits)
                     VALUE           &("Gbl_T_C_LIBS_"+DefineOohg3+DefineBorland+DefineHarbour+Define32bits)
-                    ROW             160
+                    ROW             190
                     COL             120
                     WIDTH           561
                     TOOLTIP         "Full path to BCC32's libraries (usually subfolder 'lib' of BCC32 Folder)"
             END TEXTBOX
             DEFINE BUTTON &("BC_LIBS_"+DefineOohg3+DefineBorland+DefineHarbour+Define32bits)
-                    ROW             160
+                    ROW             190
                     COL             691
                     WIDTH           25
                     HEIGHT          25
@@ -1890,7 +2154,7 @@ Function GlobalSettings()
             END BUTTON
 // Harbour Folder
             DEFINE LABEL &("LP_"+DefineOohg3+DefineBorland+DefineHarbour+Define32bits)
-                    ROW             190
+                    ROW             220
                     COL             10
                     WIDTH           109
                     VALUE           'Harbour Folder:'
@@ -1898,12 +2162,12 @@ Function GlobalSettings()
             END LABEL
             DEFINE TEXTBOX &("TP_"+DefineOohg3+DefineBorland+DefineHarbour+Define32bits)
                     VALUE           &("Gbl_T_P_"+DefineOohg3+DefineBorland+DefineHarbour+Define32bits)
-                    ROW             190
+                    ROW             220
                     COL             120
                     WIDTH           561
             END TEXTBOX
             DEFINE BUTTON &("BP_"+DefineOohg3+DefineBorland+DefineHarbour+Define32bits)
-                    ROW             190
+                    ROW             220
                     COL             691
                     WIDTH           25
                     HEIGHT          25
@@ -1913,7 +2177,7 @@ Function GlobalSettings()
             END BUTTON
 // Harbour Libs Folder
             DEFINE LABEL &("LP_LIBS_"+DefineOohg3+DefineBorland+DefineHarbour+Define32bits)
-                    ROW             220
+                    ROW             250
                     COL             10
                     WIDTH           109
                     VALUE           '    Libs Folder:'
@@ -1921,13 +2185,13 @@ Function GlobalSettings()
             END LABEL
             DEFINE TEXTBOX &("TP_LIBS_"+DefineOohg3+DefineBorland+DefineHarbour+Define32bits)
                     VALUE           &("Gbl_T_P_LIBS_"+DefineOohg3+DefineBorland+DefineHarbour+Define32bits)
-                    ROW             220
+                    ROW             250
                     COL             120
                     WIDTH           561
                     TOOLTIP         "Full path to Harbour's libraries (usually subfolder 'lib' of Harbour Folder)"
             END TEXTBOX
             DEFINE BUTTON &("BP_LIBS_"+DefineOohg3+DefineBorland+DefineHarbour+Define32bits)
-                    ROW             220
+                    ROW             250
                     COL             691
                     WIDTH           25
                     HEIGHT          25
@@ -1995,9 +2259,33 @@ Function GlobalSettings()
                     TOOLTIP         'Select folder'
                     ONCLICK         If ( !Empty( Folder := GetFolder( "Select folder", WinGSettings.&("TM_LIBS_"+DefineOohg3+DefineBorland+DefineXHarbour+Define32bits).Value ) ), WinGSettings.&("TM_LIBS_"+DefineOohg3+DefineBorland+DefineXHarbour+Define32bits).Value := Folder, )
             END BUTTON
+// Minigui Lib Name
+            DEFINE LABEL &("LM_NAME_"+DefineOohg3+DefineBorland+DefineXHarbour+Define32bits)
+                    ROW             130
+                    COL             10
+                    WIDTH           109
+                    VALUE           '       Lib Name:'
+                    TRANSPARENT     .T.
+            END LABEL
+            DEFINE TEXTBOX &("TN_"+DefineOohg3+DefineBorland+DefineXHarbour+Define32bits)
+                    VALUE           &("Gbl_T_N_"+DefineOohg3+DefineBorland+DefineXHarbour+Define32bits)
+                    ROW             130
+                    COL             120
+                    WIDTH           561
+                    TOOLTIP         "Name and extension of HMG's main library (usually 'minigui.lib')"
+            END TEXTBOX
+            DEFINE BUTTON &("BM_NAME_"+DefineOohg3+DefineBorland+DefineXHarbour+Define32bits)
+                    ROW             130
+                    COL             691
+                    WIDTH           25
+                    HEIGHT          25
+                    PICTURE         'helpbmp'
+                    TOOLTIP         'Check if file exists'
+                    ONCLICK         iif( ! File( WinGSettings.&("TM_LIBS_"+DefineOohg3+DefineBorland+DefineXHarbour+Define32bits).Value + DEF_SLASH + WinGSettings.&("TN_"+DefineOohg3+DefineBorland+DefineXHarbour+Define32bits).Value ), MsgStop( 'File not found!' ), MsgInfo( "File found" ) )
+            END BUTTON
 // Borland Folder
             DEFINE LABEL &("LC_"+DefineOohg3+DefineBorland+DefineXHarbour+Define32bits)
-                    ROW             130
+                    ROW             160
                     COL             10
                     WIDTH           109
                     VALUE           'BCC32 Folder:'
@@ -2005,12 +2293,12 @@ Function GlobalSettings()
             END LABEL
             DEFINE TEXTBOX &("TC_"+DefineOohg3+DefineBorland+DefineXHarbour+Define32bits)
                     VALUE           &("Gbl_T_C_"+DefineOohg3+DefineBorland+DefineXHarbour+Define32bits)
-                    ROW             130
+                    ROW             160
                     COL             120
                     WIDTH           561
             END TEXTBOX
             DEFINE BUTTON &("BC_"+DefineOohg3+DefineBorland+DefineXHarbour+Define32bits)
-                    ROW             130
+                    ROW             160
                     COL             691
                     WIDTH           25
                     HEIGHT          25
@@ -2020,7 +2308,7 @@ Function GlobalSettings()
             END BUTTON
 // Borland Libs Folder
             DEFINE LABEL &("LC_LIBS_"+DefineOohg3+DefineBorland+DefineXHarbour+Define32bits)
-                    ROW             160
+                    ROW             190
                     COL             10
                     WIDTH           109
                     VALUE           '    Libs Folder:'
@@ -2028,13 +2316,13 @@ Function GlobalSettings()
             END LABEL
             DEFINE TEXTBOX &("TC_LIBS_"+DefineOohg3+DefineBorland+DefineXHarbour+Define32bits)
                     VALUE           &("Gbl_T_C_LIBS_"+DefineOohg3+DefineBorland+DefineXHarbour+Define32bits)
-                    ROW             160
+                    ROW             190
                     COL             120
                     WIDTH           561
                     TOOLTIP         "Full path to BCC32's libraries (usually subfolder 'lib' of BCC32 Folder)"
             END TEXTBOX
             DEFINE BUTTON &("BC_LIBS_"+DefineOohg3+DefineBorland+DefineXHarbour+Define32bits)
-                    ROW             160
+                    ROW             190
                     COL             691
                     WIDTH           25
                     HEIGHT          25
@@ -2044,7 +2332,7 @@ Function GlobalSettings()
             END BUTTON
 // xHarbour Folder
             DEFINE LABEL &("LP_"+DefineOohg3+DefineBorland+DefineXHarbour+Define32bits)
-                    ROW             190
+                    ROW             220
                     COL             10
                     WIDTH           109
                     VALUE           'xHarbour Folder:'
@@ -2052,12 +2340,12 @@ Function GlobalSettings()
             END LABEL
             DEFINE TEXTBOX &("TP_"+DefineOohg3+DefineBorland+DefineXHarbour+Define32bits)
                     VALUE           &("Gbl_T_P_"+DefineOohg3+DefineBorland+DefineXHarbour+Define32bits)
-                    ROW             190
+                    ROW             220
                     COL             120
                     WIDTH           561
             END TEXTBOX
             DEFINE BUTTON &("BP_"+DefineOohg3+DefineBorland+DefineXHarbour+Define32bits)
-                    ROW             190
+                    ROW             220
                     COL             691
                     WIDTH           25
                     HEIGHT          25
@@ -2067,7 +2355,7 @@ Function GlobalSettings()
             END BUTTON
 // xHarbour Libs Folder
             DEFINE LABEL &("LP_LIBS_"+DefineOohg3+DefineBorland+DefineXHarbour+Define32bits)
-                    ROW             220
+                    ROW             250
                     COL             10
                     WIDTH           109
                     VALUE           '    Libs Folder:'
@@ -2075,13 +2363,13 @@ Function GlobalSettings()
             END LABEL
             DEFINE TEXTBOX &("TP_LIBS_"+DefineOohg3+DefineBorland+DefineXHarbour+Define32bits)
                     VALUE           &("Gbl_T_P_LIBS_"+DefineOohg3+DefineBorland+DefineXHarbour+Define32bits)
-                    ROW             220
+                    ROW             250
                     COL             120
                     WIDTH           561
                     TOOLTIP         "Full path to xHarbour's libraries (usually subfolder 'lib' of xHarbour Folder)"
             END TEXTBOX
             DEFINE BUTTON &("BP_LIBS_"+DefineOohg3+DefineBorland+DefineXHarbour+Define32bits)
-                    ROW             220
+                    ROW             250
                     COL             691
                     WIDTH           25
                     HEIGHT          25
@@ -2149,9 +2437,33 @@ Function GlobalSettings()
                     TOOLTIP         'Select folder'
                     ONCLICK         If ( !Empty( Folder := GetFolder( "Select folder", WinGSettings.&("TM_LIBS_"+DefineOohg3+DefineMinGW+DefineHarbour+Define32bits).Value ) ), WinGSettings.&("TM_LIBS_"+DefineOohg3+DefineMinGW+DefineHarbour+Define32bits).Value := Folder, )
             END BUTTON
+// Minigui Lib Name
+            DEFINE LABEL &("LM_NAME_"+DefineOohg3+DefineMinGW+DefineHarbour+Define32bits)
+                    ROW             130
+                    COL             10
+                    WIDTH           109
+                    VALUE           '       Lib Name:'
+                    TRANSPARENT     .T.
+            END LABEL
+            DEFINE TEXTBOX &("TN_"+DefineOohg3+DefineMinGW+DefineHarbour+Define32bits)
+                    VALUE           &("Gbl_T_N_"+DefineOohg3+DefineMinGW+DefineHarbour+Define32bits)
+                    ROW             130
+                    COL             120
+                    WIDTH           561
+                    TOOLTIP         "Name and extension of HMG's main library (usually 'minigui.lib')"
+            END TEXTBOX
+            DEFINE BUTTON &("BM_NAME_"+DefineOohg3+DefineMinGW+DefineHarbour+Define32bits)
+                    ROW             130
+                    COL             691
+                    WIDTH           25
+                    HEIGHT          25
+                    PICTURE         'helpbmp'
+                    TOOLTIP         'Check if file exists'
+                    ONCLICK         iif( ! File( WinGSettings.&("TM_LIBS_"+DefineOohg3+DefineMinGW+DefineHarbour+Define32bits).Value + DEF_SLASH + WinGSettings.&("TN_"+DefineOohg3+DefineMinGW+DefineHarbour+Define32bits).Value ), MsgStop( 'File not found!' ), MsgInfo( "File found" ) )
+            END BUTTON
 // MinGW Folder
             DEFINE LABEL &("LC_"+DefineOohg3+DefineMinGW+DefineHarbour+Define32bits)
-                    ROW             130
+                    ROW             160
                     COL             10
                     WIDTH           109
                     VALUE           'MinGW Folder:'
@@ -2159,12 +2471,12 @@ Function GlobalSettings()
             END LABEL
             DEFINE TEXTBOX &("TC_"+DefineOohg3+DefineMinGW+DefineHarbour+Define32bits)
                     VALUE           &("Gbl_T_C_"+DefineOohg3+DefineMinGW+DefineHarbour+Define32bits)
-                    ROW             130
+                    ROW             160
                     COL             120
                     WIDTH           561
             END TEXTBOX
             DEFINE BUTTON &("BC_"+DefineOohg3+DefineMinGW+DefineHarbour+Define32bits)
-                    ROW             130
+                    ROW             160
                     COL             691
                     WIDTH           25
                     HEIGHT          25
@@ -2174,7 +2486,7 @@ Function GlobalSettings()
             END BUTTON
 // MinGW Libs Folder
             DEFINE LABEL &("LC_LIBS_"+DefineOohg3+DefineMinGW+DefineHarbour+Define32bits)
-                    ROW             160
+                    ROW             190
                     COL             10
                     WIDTH           109
                     VALUE           '    Libs Folder:'
@@ -2182,13 +2494,13 @@ Function GlobalSettings()
             END LABEL
             DEFINE TEXTBOX &("TC_LIBS_"+DefineOohg3+DefineMinGW+DefineHarbour+Define32bits)
                     VALUE           &("Gbl_T_C_LIBS_"+DefineOohg3+DefineMinGW+DefineHarbour+Define32bits)
-                    ROW             160
+                    ROW             190
                     COL             120
                     WIDTH           561
                     TOOLTIP         "Full path to MinGW's libraries (usually subfolder 'lib' or 'i686-w64-mingw32\lib' of MinGW Folder)"
             END TEXTBOX
             DEFINE BUTTON &("BC_LIBS_"+DefineOohg3+DefineMinGW+DefineHarbour+Define32bits)
-                    ROW             160
+                    ROW             190
                     COL             691
                     WIDTH           25
                     HEIGHT          25
@@ -2198,7 +2510,7 @@ Function GlobalSettings()
             END BUTTON
 // Harbour Folder
             DEFINE LABEL &("LP_"+DefineOohg3+DefineMinGW+DefineHarbour+Define32bits)
-                    ROW             190
+                    ROW             220
                     COL             10
                     WIDTH           109
                     VALUE           'Harbour Folder:'
@@ -2206,12 +2518,12 @@ Function GlobalSettings()
             END LABEL
             DEFINE TEXTBOX &("TP_"+DefineOohg3+DefineMinGW+DefineHarbour+Define32bits)
                     VALUE           &("Gbl_T_P_"+DefineOohg3+DefineMinGW+DefineHarbour+Define32bits)
-                    ROW             190
+                    ROW             220
                     COL             120
                     WIDTH           561
             END TEXTBOX
             DEFINE BUTTON &("BP_"+DefineOohg3+DefineMinGW+DefineHarbour+Define32bits)
-                    ROW             190
+                    ROW             220
                     COL             691
                     WIDTH           25
                     HEIGHT          25
@@ -2221,7 +2533,7 @@ Function GlobalSettings()
             END BUTTON
 // Harbour Libs Folder
             DEFINE LABEL &("LP_LIBS_"+DefineOohg3+DefineMinGW+DefineHarbour+Define32bits)
-                    ROW             220
+                    ROW             250
                     COL             10
                     WIDTH           109
                     VALUE           '    Libs Folder:'
@@ -2229,13 +2541,13 @@ Function GlobalSettings()
             END LABEL
             DEFINE TEXTBOX &("TP_LIBS_"+DefineOohg3+DefineMinGW+DefineHarbour+Define32bits)
                     VALUE           &("Gbl_T_P_LIBS_"+DefineOohg3+DefineMinGW+DefineHarbour+Define32bits)
-                    ROW             220
+                    ROW             250
                     COL             120
                     WIDTH           561
                     TOOLTIP         "Full path to Harbour's libraries (usually subfolder 'lib' or 'lib\win\mingw' of Harbour Folder)"
             END TEXTBOX
             DEFINE BUTTON &("BP_LIBS_"+DefineOohg3+DefineMinGW+DefineHarbour+Define32bits)
-                    ROW             220
+                    ROW             250
                     COL             691
                     WIDTH           25
                     HEIGHT          25
@@ -2303,9 +2615,33 @@ Function GlobalSettings()
                     TOOLTIP         'Select folder'
                     ONCLICK         If ( !Empty( Folder := GetFolder( "Select folder", WinGSettings.&("TM_LIBS_"+DefineOohg3+DefineMinGW+DefineXHarbour+Define32bits).Value ) ), WinGSettings.&("TM_LIBS_"+DefineOohg3+DefineMinGW+DefineXHarbour+Define32bits).Value := Folder, )
             END BUTTON
+// Minigui Lib Name
+            DEFINE LABEL &("LM_NAME_"+DefineOohg3+DefineMinGW+DefineXHarbour+Define32bits)
+                    ROW             130
+                    COL             10
+                    WIDTH           109
+                    VALUE           '       Lib Name:'
+                    TRANSPARENT     .T.
+            END LABEL
+            DEFINE TEXTBOX &("TN_"+DefineOohg3+DefineMinGW+DefineXHarbour+Define32bits)
+                    VALUE           &("Gbl_T_N_"+DefineOohg3+DefineMinGW+DefineXHarbour+Define32bits)
+                    ROW             130
+                    COL             120
+                    WIDTH           561
+                    TOOLTIP         "Name and extension of HMG's main library (usually 'minigui.lib')"
+            END TEXTBOX
+            DEFINE BUTTON &("BM_NAME_"+DefineOohg3+DefineMinGW+DefineXHarbour+Define32bits)
+                    ROW             130
+                    COL             691
+                    WIDTH           25
+                    HEIGHT          25
+                    PICTURE         'helpbmp'
+                    TOOLTIP         'Check if file exists'
+                    ONCLICK         iif( ! File( WinGSettings.&("TM_LIBS_"+DefineOohg3+DefineMinGW+DefineXHarbour+Define32bits).Value + DEF_SLASH + WinGSettings.&("TN_"+DefineOohg3+DefineMinGW+DefineXHarbour+Define32bits).Value ), MsgStop( 'File not found!' ), MsgInfo( "File found" ) )
+            END BUTTON
 // MinGW Folder
             DEFINE LABEL &("LC_"+DefineOohg3+DefineMinGW+DefineXHarbour+Define32bits)
-                    ROW             130
+                    ROW             160
                     COL             10
                     WIDTH           109
                     VALUE           'MinGW Folder:'
@@ -2313,12 +2649,12 @@ Function GlobalSettings()
             END LABEL
             DEFINE TEXTBOX &("TC_"+DefineOohg3+DefineMinGW+DefineXHarbour+Define32bits)
                     VALUE           &("Gbl_T_C_"+DefineOohg3+DefineMinGW+DefineXHarbour+Define32bits)
-                    ROW             130
+                    ROW             160
                     COL             120
                     WIDTH           561
             END TEXTBOX
             DEFINE BUTTON &("BC_"+DefineOohg3+DefineMinGW+DefineXHarbour+Define32bits)
-                    ROW             130
+                    ROW             160
                     COL             691
                     WIDTH           25
                     HEIGHT          25
@@ -2328,7 +2664,7 @@ Function GlobalSettings()
             END BUTTON
 // MinGW Libs Folder
             DEFINE LABEL &("LC_LIBS_"+DefineOohg3+DefineMinGW+DefineXHarbour+Define32bits)
-                    ROW             160
+                    ROW             190
                     COL             10
                     WIDTH           109
                     VALUE           '    Libs Folder:'
@@ -2336,13 +2672,13 @@ Function GlobalSettings()
             END LABEL
             DEFINE TEXTBOX &("TC_LIBS_"+DefineOohg3+DefineMinGW+DefineXHarbour+Define32bits)
                     VALUE           &("Gbl_T_C_LIBS_"+DefineOohg3+DefineMinGW+DefineXHarbour+Define32bits)
-                    ROW             160
+                    ROW             190
                     COL             120
                     WIDTH           561
                     TOOLTIP         "Full path to MinGW's libraries (usually subfolder 'lib' or 'i686-w64-mingw32\lib' of MinGW Folder)"
             END TEXTBOX
             DEFINE BUTTON &("BC_LIBS_"+DefineOohg3+DefineMinGW+DefineXHarbour+Define32bits)
-                    ROW             160
+                    ROW             190
                     COL             691
                     WIDTH           25
                     HEIGHT          25
@@ -2352,7 +2688,7 @@ Function GlobalSettings()
             END BUTTON
 // xHarbour Folder
             DEFINE LABEL &("LP_"+DefineOohg3+DefineMinGW+DefineXHarbour+Define32bits)
-                    ROW             190
+                    ROW             220
                     COL             10
                     WIDTH           109
                     VALUE           'xHarbour Folder:'
@@ -2360,12 +2696,12 @@ Function GlobalSettings()
             END LABEL
             DEFINE TEXTBOX &("TP_"+DefineOohg3+DefineMinGW+DefineXHarbour+Define32bits)
                     VALUE           &("Gbl_T_P_"+DefineOohg3+DefineMinGW+DefineXHarbour+Define32bits)
-                    ROW             190
+                    ROW             220
                     COL             120
                     WIDTH           561
             END TEXTBOX
             DEFINE BUTTON &("BP_"+DefineOohg3+DefineMinGW+DefineXHarbour+Define32bits)
-                    ROW             190
+                    ROW             220
                     COL             691
                     WIDTH           25
                     HEIGHT          25
@@ -2375,7 +2711,7 @@ Function GlobalSettings()
             END BUTTON
 // Harbour Libs Folder
             DEFINE LABEL &("LP_LIBS_"+DefineOohg3+DefineMinGW+DefineXHarbour+Define32bits)
-                    ROW             220
+                    ROW             250
                     COL             10
                     WIDTH           109
                     VALUE           '    Libs Folder:'
@@ -2383,13 +2719,13 @@ Function GlobalSettings()
             END LABEL
             DEFINE TEXTBOX &("TP_LIBS_"+DefineOohg3+DefineMinGW+DefineXHarbour+Define32bits)
                     VALUE           &("Gbl_T_P_LIBS_"+DefineOohg3+DefineMinGW+DefineXHarbour+Define32bits)
-                    ROW             220
+                    ROW             250
                     COL             120
                     WIDTH           561
                     TOOLTIP         "Full path to xHarbour's libraries (usually subfolder 'lib' or 'lib\win\mingw' of xHarbour Folder)"
             END TEXTBOX
             DEFINE BUTTON &("BP_LIBS_"+DefineOohg3+DefineMinGW+DefineXHarbour+Define32bits)
-                    ROW             220
+                    ROW             250
                     COL             691
                     WIDTH           25
                     HEIGHT          25
@@ -2457,9 +2793,33 @@ Function GlobalSettings()
                     TOOLTIP         'Select folder'
                     ONCLICK         If ( !Empty( Folder := GetFolder( "Select folder", WinGSettings.&("TM_LIBS_"+DefineOohg3+DefineMinGW+DefineHarbour+Define64bits).Value ) ), WinGSettings.&("TM_LIBS_"+DefineOohg3+DefineMinGW+DefineHarbour+Define64bits).Value := Folder, )
             END BUTTON
+// Minigui Lib Name
+            DEFINE LABEL &("LM_NAME_"+DefineOohg3+DefineMinGW+DefineHarbour+Define64bits)
+                    ROW             130
+                    COL             10
+                    WIDTH           109
+                    VALUE           '       Lib Name:'
+                    TRANSPARENT     .T.
+            END LABEL
+            DEFINE TEXTBOX &("TN_"+DefineOohg3+DefineMinGW+DefineHarbour+Define64bits)
+                    VALUE           &("Gbl_T_N_"+DefineOohg3+DefineMinGW+DefineHarbour+Define64bits)
+                    ROW             130
+                    COL             120
+                    WIDTH           561
+                    TOOLTIP         "Name and extension of HMG's main library (usually 'minigui.lib')"
+            END TEXTBOX
+            DEFINE BUTTON &("BM_NAME_"+DefineOohg3+DefineMinGW+DefineHarbour+Define64bits)
+                    ROW             130
+                    COL             691
+                    WIDTH           25
+                    HEIGHT          25
+                    PICTURE         'helpbmp'
+                    TOOLTIP         'Check if file exists'
+                    ONCLICK         iif( ! File( WinGSettings.&("TM_LIBS_"+DefineOohg3+DefineMinGW+DefineHarbour+Define64bits).Value + DEF_SLASH + WinGSettings.&("TN_"+DefineOohg3+DefineMinGW+DefineHarbour+Define64bits).Value ), MsgStop( 'File not found!' ), MsgInfo( "File found" ) )
+            END BUTTON
 // MinGW Folder
             DEFINE LABEL &("LC_"+DefineOohg3+DefineMinGW+DefineHarbour+Define64bits)
-                    ROW             130
+                    ROW             160
                     COL             10
                     WIDTH           109
                     VALUE           'MinGW Folder:'
@@ -2467,12 +2827,12 @@ Function GlobalSettings()
             END LABEL
             DEFINE TEXTBOX &("TC_"+DefineOohg3+DefineMinGW+DefineHarbour+Define64bits)
                     VALUE           &("Gbl_T_C_"+DefineOohg3+DefineMinGW+DefineHarbour+Define64bits)
-                    ROW             130
+                    ROW             160
                     COL             120
                     WIDTH           561
             END TEXTBOX
             DEFINE BUTTON &("BC_"+DefineOohg3+DefineMinGW+DefineHarbour+Define64bits)
-                    ROW             130
+                    ROW             160
                     COL             691
                     WIDTH           25
                     HEIGHT          25
@@ -2482,7 +2842,7 @@ Function GlobalSettings()
             END BUTTON
 // MinGW Libs Folder
             DEFINE LABEL &("LC_LIBS_"+DefineOohg3+DefineMinGW+DefineHarbour+Define64bits)
-                    ROW             160
+                    ROW             190
                     COL             10
                     WIDTH           109
                     VALUE           '    Libs Folder:'
@@ -2490,13 +2850,13 @@ Function GlobalSettings()
             END LABEL
             DEFINE TEXTBOX &("TC_LIBS_"+DefineOohg3+DefineMinGW+DefineHarbour+Define64bits)
                     VALUE           &("Gbl_T_C_LIBS_"+DefineOohg3+DefineMinGW+DefineHarbour+Define64bits)
-                    ROW             160
+                    ROW             190
                     COL             120
                     WIDTH           561
                     TOOLTIP         "Full path to MinGW's libraries (usually subfolder 'lib' or 'i686-w64-mingw32\lib' of MinGW Folder)"
             END TEXTBOX
             DEFINE BUTTON &("BC_LIBS_"+DefineOohg3+DefineMinGW+DefineHarbour+Define64bits)
-                    ROW             160
+                    ROW             190
                     COL             691
                     WIDTH           25
                     HEIGHT          25
@@ -2506,7 +2866,7 @@ Function GlobalSettings()
             END BUTTON
 // Harbour Folder
             DEFINE LABEL &("LP_"+DefineOohg3+DefineMinGW+DefineHarbour+Define64bits)
-                    ROW             190
+                    ROW             220
                     COL             10
                     WIDTH           109
                     VALUE           'Harbour Folder:'
@@ -2514,12 +2874,12 @@ Function GlobalSettings()
             END LABEL
             DEFINE TEXTBOX &("TP_"+DefineOohg3+DefineMinGW+DefineHarbour+Define64bits)
                     VALUE           &("Gbl_T_P_"+DefineOohg3+DefineMinGW+DefineHarbour+Define64bits)
-                    ROW             190
+                    ROW             220
                     COL             120
                     WIDTH           561
             END TEXTBOX
             DEFINE BUTTON &("BP_"+DefineOohg3+DefineMinGW+DefineHarbour+Define64bits)
-                    ROW             190
+                    ROW             220
                     COL             691
                     WIDTH           25
                     HEIGHT          25
@@ -2529,7 +2889,7 @@ Function GlobalSettings()
             END BUTTON
 // Harbour Libs Folder
             DEFINE LABEL &("LP_LIBS_"+DefineOohg3+DefineMinGW+DefineHarbour+Define64bits)
-                    ROW             220
+                    ROW             250
                     COL             10
                     WIDTH           109
                     VALUE           '    Libs Folder:'
@@ -2537,13 +2897,13 @@ Function GlobalSettings()
             END LABEL
             DEFINE TEXTBOX &("TP_LIBS_"+DefineOohg3+DefineMinGW+DefineHarbour+Define64bits)
                     VALUE           &("Gbl_T_P_LIBS_"+DefineOohg3+DefineMinGW+DefineHarbour+Define64bits)
-                    ROW             220
+                    ROW             250
                     COL             120
                     WIDTH           561
                     TOOLTIP         "Full path to Harbour's libraries (usually subfolder 'lib' or 'lib\win\mingw' of Harbour Folder)"
             END TEXTBOX
             DEFINE BUTTON &("BP_LIBS_"+DefineOohg3+DefineMinGW+DefineHarbour+Define64bits)
-                    ROW             220
+                    ROW             250
                     COL             691
                     WIDTH           25
                     HEIGHT          25
@@ -2611,9 +2971,33 @@ Function GlobalSettings()
                     TOOLTIP         'Select folder'
                     ONCLICK         If ( !Empty( Folder := GetFolder( "Select folder", WinGSettings.&("TM_LIBS_"+DefineOohg3+DefineMinGW+DefineXHarbour+Define64bits).Value ) ), WinGSettings.&("TM_LIBS_"+DefineOohg3+DefineMinGW+DefineXHarbour+Define64bits).Value := Folder, )
             END BUTTON
+// Minigui Lib Name
+            DEFINE LABEL &("LM_NAME_"+DefineOohg3+DefineMinGW+DefineXHarbour+Define64bits)
+                    ROW             130
+                    COL             10
+                    WIDTH           109
+                    VALUE           '       Lib Name:'
+                    TRANSPARENT     .T.
+            END LABEL
+            DEFINE TEXTBOX &("TN_"+DefineOohg3+DefineMinGW+DefineXHarbour+Define64bits)
+                    VALUE           &("Gbl_T_N_"+DefineOohg3+DefineMinGW+DefineXHarbour+Define64bits)
+                    ROW             130
+                    COL             120
+                    WIDTH           561
+                    TOOLTIP         "Name and extension of HMG's main library (usually 'minigui.lib')"
+            END TEXTBOX
+            DEFINE BUTTON &("BM_NAME_"+DefineOohg3+DefineMinGW+DefineXHarbour+Define64bits)
+                    ROW             130
+                    COL             691
+                    WIDTH           25
+                    HEIGHT          25
+                    PICTURE         'helpbmp'
+                    TOOLTIP         'Check if file exists'
+                    ONCLICK         iif( ! File( WinGSettings.&("TM_LIBS_"+DefineOohg3+DefineMinGW+DefineXHarbour+Define64bits).Value + DEF_SLASH + WinGSettings.&("TN_"+DefineOohg3+DefineMinGW+DefineXHarbour+Define64bits).Value ), MsgStop( 'File not found!' ), MsgInfo( "File found" ) )
+            END BUTTON
 // MinGW Folder
             DEFINE LABEL &("LC_"+DefineOohg3+DefineMinGW+DefineXHarbour+Define64bits)
-                    ROW             130
+                    ROW             160
                     COL             10
                     WIDTH           109
                     VALUE           'MinGW Folder:'
@@ -2621,12 +3005,12 @@ Function GlobalSettings()
             END LABEL
             DEFINE TEXTBOX &("TC_"+DefineOohg3+DefineMinGW+DefineXHarbour+Define64bits)
                     VALUE           &("Gbl_T_C_"+DefineOohg3+DefineMinGW+DefineXHarbour+Define64bits)
-                    ROW             130
+                    ROW             160
                     COL             120
                     WIDTH           561
             END TEXTBOX
             DEFINE BUTTON &("BC_"+DefineOohg3+DefineMinGW+DefineXHarbour+Define64bits)
-                    ROW             130
+                    ROW             160
                     COL             691
                     WIDTH           25
                     HEIGHT          25
@@ -2636,7 +3020,7 @@ Function GlobalSettings()
             END BUTTON
 // MinGW Libs Folder
             DEFINE LABEL &("LC_LIBS_"+DefineOohg3+DefineMinGW+DefineXHarbour+Define64bits)
-                    ROW             160
+                    ROW             190
                     COL             10
                     WIDTH           109
                     VALUE           '    Libs Folder:'
@@ -2644,13 +3028,13 @@ Function GlobalSettings()
             END LABEL
             DEFINE TEXTBOX &("TC_LIBS_"+DefineOohg3+DefineMinGW+DefineXHarbour+Define64bits)
                     VALUE           &("Gbl_T_C_LIBS_"+DefineOohg3+DefineMinGW+DefineXHarbour+Define64bits)
-                    ROW             160
+                    ROW             190
                     COL             120
                     WIDTH           561
                     TOOLTIP         "Full path to MinGW's libraries (usually subfolder 'lib' or 'i686-w64-mingw32\lib' of MinGW Folder)"
             END TEXTBOX
             DEFINE BUTTON &("BC_LIBS_"+DefineOohg3+DefineMinGW+DefineXHarbour+Define64bits)
-                    ROW             160
+                    ROW             190
                     COL             691
                     WIDTH           25
                     HEIGHT          25
@@ -2660,7 +3044,7 @@ Function GlobalSettings()
             END BUTTON
 // xHarbour Folder
             DEFINE LABEL &("LP_"+DefineOohg3+DefineMinGW+DefineXHarbour+Define64bits)
-                    ROW             190
+                    ROW             220
                     COL             10
                     WIDTH           109
                     VALUE           'xHarbour Folder:'
@@ -2668,12 +3052,12 @@ Function GlobalSettings()
             END LABEL
             DEFINE TEXTBOX &("TP_"+DefineOohg3+DefineMinGW+DefineXHarbour+Define64bits)
                     VALUE           &("Gbl_T_P_"+DefineOohg3+DefineMinGW+DefineXHarbour+Define64bits)
-                    ROW             190
+                    ROW             220
                     COL             120
                     WIDTH           561
             END TEXTBOX
             DEFINE BUTTON &("BP_"+DefineOohg3+DefineMinGW+DefineXHarbour+Define64bits)
-                    ROW             190
+                    ROW             220
                     COL             691
                     WIDTH           25
                     HEIGHT          25
@@ -2683,7 +3067,7 @@ Function GlobalSettings()
             END BUTTON
 // Harbour Libs Folder
             DEFINE LABEL &("LP_LIBS_"+DefineOohg3+DefineMinGW+DefineXHarbour+Define64bits)
-                    ROW             220
+                    ROW             250
                     COL             10
                     WIDTH           109
                     VALUE           '    Libs Folder:'
@@ -2691,13 +3075,13 @@ Function GlobalSettings()
             END LABEL
             DEFINE TEXTBOX &("TP_LIBS_"+DefineOohg3+DefineMinGW+DefineXHarbour+Define64bits)
                     VALUE           &("Gbl_T_P_LIBS_"+DefineOohg3+DefineMinGW+DefineXHarbour+Define64bits)
-                    ROW             220
+                    ROW             250
                     COL             120
                     WIDTH           561
                     TOOLTIP         "Full path to xHarbour's libraries (usually subfolder 'lib' or 'lib\win\mingw' of xHarbour Folder)"
             END TEXTBOX
             DEFINE BUTTON &("BP_LIBS_"+DefineOohg3+DefineMinGW+DefineXHarbour+Define64bits)
-                    ROW             220
+                    ROW             250
                     COL             691
                     WIDTH           25
                     HEIGHT          25
@@ -2765,9 +3149,33 @@ Function GlobalSettings()
                     TOOLTIP         'Select folder'
                     ONCLICK         If ( !Empty( Folder := GetFolder( "Select folder", WinGSettings.&("TM_LIBS_"+DefineOohg3+DefinePelles+DefineHarbour+Define32bits).Value ) ), WinGSettings.&("TM_LIBS_"+DefineOohg3+DefinePelles+DefineHarbour+Define32bits).Value := Folder, )
             END BUTTON
+// Minigui Lib Name
+            DEFINE LABEL &("LM_NAME_"+DefineOohg3+DefinePelles+DefineHarbour+Define32bits)
+                    ROW             130
+                    COL             10
+                    WIDTH           109
+                    VALUE           '       Lib Name:'
+                    TRANSPARENT     .T.
+            END LABEL
+            DEFINE TEXTBOX &("TN_"+DefineOohg3+DefinePelles+DefineHarbour+Define32bits)
+                    VALUE           &("Gbl_T_N_"+DefineOohg3+DefinePelles+DefineHarbour+Define32bits)
+                    ROW             130
+                    COL             120
+                    WIDTH           561
+                    TOOLTIP         "Name and extension of HMG's main library (usually 'minigui.lib')"
+            END TEXTBOX
+            DEFINE BUTTON &("BM_NAME_"+DefineOohg3+DefinePelles+DefineHarbour+Define32bits)
+                    ROW             130
+                    COL             691
+                    WIDTH           25
+                    HEIGHT          25
+                    PICTURE         'helpbmp'
+                    TOOLTIP         'Check if file exists'
+                    ONCLICK         iif( ! File( WinGSettings.&("TM_LIBS_"+DefineOohg3+DefinePelles+DefineHarbour+Define32bits).Value + DEF_SLASH + WinGSettings.&("TN_"+DefineOohg3+DefinePelles+DefineHarbour+Define32bits).Value ), MsgStop( 'File not found!' ), MsgInfo( "File found" ) )
+            END BUTTON
 // Pelles Folder
             DEFINE LABEL &("LC_"+DefineOohg3+DefinePelles+DefineHarbour+Define32bits)
-                    ROW             130
+                    ROW             160
                     COL             10
                     WIDTH           109
                     VALUE           'Pelles Folder:'
@@ -2775,12 +3183,12 @@ Function GlobalSettings()
             END LABEL
             DEFINE TEXTBOX &("TC_"+DefineOohg3+DefinePelles+DefineHarbour+Define32bits)
                     VALUE           &("Gbl_T_C_"+DefineOohg3+DefinePelles+DefineHarbour+Define32bits)
-                    ROW             130
+                    ROW             160
                     COL             120
                     WIDTH           561
             END TEXTBOX
             DEFINE BUTTON &("BC_"+DefineOohg3+DefinePelles+DefineHarbour+Define32bits)
-                    ROW             130
+                    ROW             160
                     COL             691
                     WIDTH           25
                     HEIGHT          25
@@ -2790,7 +3198,7 @@ Function GlobalSettings()
             END BUTTON
 // Pelles Libs Folder
             DEFINE LABEL &("LC_LIBS_"+DefineOohg3+DefinePelles+DefineHarbour+Define32bits)
-                    ROW             160
+                    ROW             190
                     COL             10
                     WIDTH           109
                     VALUE           '    Libs Folder:'
@@ -2798,13 +3206,13 @@ Function GlobalSettings()
             END LABEL
             DEFINE TEXTBOX &("TC_LIBS_"+DefineOohg3+DefinePelles+DefineHarbour+Define32bits)
                     VALUE           &("Gbl_T_C_LIBS_"+DefineOohg3+DefinePelles+DefineHarbour+Define32bits)
-                    ROW             160
+                    ROW             190
                     COL             120
                     WIDTH           561
                     TOOLTIP         "Full path to Pelles's libraries (usually subfolder 'lib' of Pelles Folder)"
             END TEXTBOX
             DEFINE BUTTON &("BC_LIBS_"+DefineOohg3+DefinePelles+DefineHarbour+Define32bits)
-                    ROW             160
+                    ROW             190
                     COL             691
                     WIDTH           25
                     HEIGHT          25
@@ -2814,7 +3222,7 @@ Function GlobalSettings()
             END BUTTON
 // Harbour Folder
             DEFINE LABEL &("LP_"+DefineOohg3+DefinePelles+DefineHarbour+Define32bits)
-                    ROW             190
+                    ROW             220
                     COL             10
                     WIDTH           109
                     VALUE           'Harbour Folder:'
@@ -2822,12 +3230,12 @@ Function GlobalSettings()
             END LABEL
             DEFINE TEXTBOX &("TP_"+DefineOohg3+DefinePelles+DefineHarbour+Define32bits)
                     VALUE           &("Gbl_T_P_"+DefineOohg3+DefinePelles+DefineHarbour+Define32bits)
-                    ROW             190
+                    ROW             220
                     COL             120
                     WIDTH           561
             END TEXTBOX
             DEFINE BUTTON &("BP_"+DefineOohg3+DefinePelles+DefineHarbour+Define32bits)
-                    ROW             190
+                    ROW             220
                     COL             691
                     WIDTH           25
                     HEIGHT          25
@@ -2837,7 +3245,7 @@ Function GlobalSettings()
             END BUTTON
 // Harbour Libs Folder
             DEFINE LABEL &("LP_LIBS_"+DefineOohg3+DefinePelles+DefineHarbour+Define32bits)
-                    ROW             220
+                    ROW             250
                     COL             10
                     WIDTH           109
                     VALUE           '    Libs Folder:'
@@ -2845,13 +3253,13 @@ Function GlobalSettings()
             END LABEL
             DEFINE TEXTBOX &("TP_LIBS_"+DefineOohg3+DefinePelles+DefineHarbour+Define32bits)
                     VALUE           &("Gbl_T_P_LIBS_"+DefineOohg3+DefinePelles+DefineHarbour+Define32bits)
-                    ROW             220
+                    ROW             250
                     COL             120
                     WIDTH           561
                     TOOLTIP         "Full path to Harbour's libraries (usually subfolder 'lib' of Harbour Folder)"
             END TEXTBOX
             DEFINE BUTTON &("BP_LIBS_"+DefineOohg3+DefinePelles+DefineHarbour+Define32bits)
-                    ROW             220
+                    ROW             250
                     COL             691
                     WIDTH           25
                     HEIGHT          25
@@ -2919,9 +3327,33 @@ Function GlobalSettings()
                     TOOLTIP         'Select folder'
                     ONCLICK         If ( !Empty( Folder := GetFolder( "Select folder", WinGSettings.&("TM_LIBS_"+DefineOohg3+DefinePelles+DefineXHarbour+Define32bits).Value ) ), WinGSettings.&("TM_LIBS_"+DefineOohg3+DefinePelles+DefineXHarbour+Define32bits).Value := Folder, )
             END BUTTON
+// Minigui Lib Name
+            DEFINE LABEL &("LM_NAME_"+DefineOohg3+DefinePelles+DefineXHarbour+Define32bits)
+                    ROW             130
+                    COL             10
+                    WIDTH           109
+                    VALUE           '       Lib Name:'
+                    TRANSPARENT     .T.
+            END LABEL
+            DEFINE TEXTBOX &("TN_"+DefineOohg3+DefinePelles+DefineXHarbour+Define32bits)
+                    VALUE           &("Gbl_T_N_"+DefineOohg3+DefinePelles+DefineXHarbour+Define32bits)
+                    ROW             130
+                    COL             120
+                    WIDTH           561
+                    TOOLTIP         "Name and extension of HMG's main library (usually 'minigui.lib')"
+            END TEXTBOX
+            DEFINE BUTTON &("BM_NAME_"+DefineOohg3+DefinePelles+DefineXHarbour+Define32bits)
+                    ROW             130
+                    COL             691
+                    WIDTH           25
+                    HEIGHT          25
+                    PICTURE         'helpbmp'
+                    TOOLTIP         'Check if file exists'
+                    ONCLICK         iif( ! File( WinGSettings.&("TM_LIBS_"+DefineOohg3+DefinePelles+DefineXHarbour+Define32bits).Value + DEF_SLASH + WinGSettings.&("TN_"+DefineOohg3+DefinePelles+DefineXHarbour+Define32bits).Value ), MsgStop( 'File not found!' ), MsgInfo( "File found" ) )
+            END BUTTON
 // Pelles Folder
             DEFINE LABEL &("LC_"+DefineOohg3+DefinePelles+DefineXHarbour+Define32bits)
-                    ROW             130
+                    ROW             160
                     COL             10
                     WIDTH           109
                     VALUE           'Pelles Folder:'
@@ -2929,12 +3361,12 @@ Function GlobalSettings()
             END LABEL
             DEFINE TEXTBOX &("TC_"+DefineOohg3+DefinePelles+DefineXHarbour+Define32bits)
                     VALUE           &("Gbl_T_C_"+DefineOohg3+DefinePelles+DefineXHarbour+Define32bits)
-                    ROW             130
+                    ROW             160
                     COL             120
                     WIDTH           561
             END TEXTBOX
             DEFINE BUTTON &("BC_"+DefineOohg3+DefinePelles+DefineXHarbour+Define32bits)
-                    ROW             130
+                    ROW             160
                     COL             691
                     WIDTH           25
                     HEIGHT          25
@@ -2944,7 +3376,7 @@ Function GlobalSettings()
             END BUTTON
 // Pelles Libs Folder
             DEFINE LABEL &("LC_LIBS_"+DefineOohg3+DefinePelles+DefineXHarbour+Define32bits)
-                    ROW             160
+                    ROW             190
                     COL             10
                     WIDTH           109
                     VALUE           '    Libs Folder:'
@@ -2952,13 +3384,13 @@ Function GlobalSettings()
             END LABEL
             DEFINE TEXTBOX &("TC_LIBS_"+DefineOohg3+DefinePelles+DefineXHarbour+Define32bits)
                     VALUE           &("Gbl_T_C_LIBS_"+DefineOohg3+DefinePelles+DefineXHarbour+Define32bits)
-                    ROW             160
+                    ROW             190
                     COL             120
                     WIDTH           561
                     TOOLTIP         "Full path to Pelles's libraries (usually subfolder 'lib' of Pelles Folder)"
             END TEXTBOX
             DEFINE BUTTON &("BC_LIBS_"+DefineOohg3+DefinePelles+DefineXHarbour+Define32bits)
-                    ROW             160
+                    ROW             190
                     COL             691
                     WIDTH           25
                     HEIGHT          25
@@ -2968,7 +3400,7 @@ Function GlobalSettings()
             END BUTTON
 // xHarbour Folder
             DEFINE LABEL &("LP_"+DefineOohg3+DefinePelles+DefineXHarbour+Define32bits)
-                    ROW             190
+                    ROW             220
                     COL             10
                     WIDTH           109
                     VALUE           'xHarbour Folder:'
@@ -2976,12 +3408,12 @@ Function GlobalSettings()
             END LABEL
             DEFINE TEXTBOX &("TP_"+DefineOohg3+DefinePelles+DefineXHarbour+Define32bits)
                     VALUE           &("Gbl_T_P_"+DefineOohg3+DefinePelles+DefineXHarbour+Define32bits)
-                    ROW             190
+                    ROW             220
                     COL             120
                     WIDTH           561
             END TEXTBOX
             DEFINE BUTTON &("BP_"+DefineOohg3+DefinePelles+DefineXHarbour+Define32bits)
-                    ROW             190
+                    ROW             220
                     COL             691
                     WIDTH           25
                     HEIGHT          25
@@ -2991,7 +3423,7 @@ Function GlobalSettings()
             END BUTTON
 // xHarbour Libs Folder
             DEFINE LABEL &("LP_LIBS_"+DefineOohg3+DefinePelles+DefineXHarbour+Define32bits)
-                    ROW             220
+                    ROW             250
                     COL             10
                     WIDTH           109
                     VALUE           '    Libs Folder:'
@@ -2999,13 +3431,13 @@ Function GlobalSettings()
             END LABEL
             DEFINE TEXTBOX &("TP_LIBS_"+DefineOohg3+DefinePelles+DefineXHarbour+Define32bits)
                     VALUE           &("Gbl_T_P_LIBS_"+DefineOohg3+DefinePelles+DefineXHarbour+Define32bits)
-                    ROW             220
+                    ROW             250
                     COL             120
                     WIDTH           561
                     TOOLTIP         "Full path to xHarbour's libraries (usually subfolder 'lib' of xHarbour Folder)"
             END TEXTBOX
             DEFINE BUTTON &("BP_LIBS_"+DefineOohg3+DefinePelles+DefineXHarbour+Define32bits)
-                    ROW             220
+                    ROW             250
                     COL             691
                     WIDTH           25
                     HEIGHT          25
@@ -3073,9 +3505,33 @@ Function GlobalSettings()
                     TOOLTIP         'Select folder'
                     ONCLICK         If ( !Empty( Folder := GetFolder( "Select folder", WinGSettings.&("TM_LIBS_"+DefineOohg3+DefinePelles+DefineHarbour+Define64bits).Value ) ), WinGSettings.&("TM_LIBS_"+DefineOohg3+DefinePelles+DefineHarbour+Define64bits).Value := Folder, )
             END BUTTON
+// Minigui Lib Name
+            DEFINE LABEL &("LM_NAME_"+DefineOohg3+DefinePelles+DefineHarbour+Define64bits)
+                    ROW             130
+                    COL             10
+                    WIDTH           109
+                    VALUE           '       Lib Name:'
+                    TRANSPARENT     .T.
+            END LABEL
+            DEFINE TEXTBOX &("TN_"+DefineOohg3+DefinePelles+DefineHarbour+Define64bits)
+                    VALUE           &("Gbl_T_N_"+DefineOohg3+DefinePelles+DefineHarbour+Define64bits)
+                    ROW             130
+                    COL             120
+                    WIDTH           561
+                    TOOLTIP         "Name and extension of HMG's main library (usually 'minigui.lib')"
+            END TEXTBOX
+            DEFINE BUTTON &("BM_NAME_"+DefineOohg3+DefinePelles+DefineHarbour+Define64bits)
+                    ROW             130
+                    COL             691
+                    WIDTH           25
+                    HEIGHT          25
+                    PICTURE         'helpbmp'
+                    TOOLTIP         'Check if file exists'
+                    ONCLICK         iif( ! File( WinGSettings.&("TM_LIBS_"+DefineOohg3+DefinePelles+DefineHarbour+Define64bits).Value + DEF_SLASH + WinGSettings.&("TN_"+DefineOohg3+DefinePelles+DefineHarbour+Define64bits).Value ), MsgStop( 'File not found!' ), MsgInfo( "File found" ) )
+            END BUTTON
 // Pelles Folder
             DEFINE LABEL &("LC_"+DefineOohg3+DefinePelles+DefineHarbour+Define64bits)
-                    ROW             130
+                    ROW             160
                     COL             10
                     WIDTH           109
                     VALUE           'Pelles Folder:'
@@ -3083,12 +3539,12 @@ Function GlobalSettings()
             END LABEL
             DEFINE TEXTBOX &("TC_"+DefineOohg3+DefinePelles+DefineHarbour+Define64bits)
                     VALUE           &("Gbl_T_C_"+DefineOohg3+DefinePelles+DefineHarbour+Define64bits)
-                    ROW             130
+                    ROW             160
                     COL             120
                     WIDTH           561
             END TEXTBOX
             DEFINE BUTTON &("BC_"+DefineOohg3+DefinePelles+DefineHarbour+Define64bits)
-                    ROW             130
+                    ROW             160
                     COL             691
                     WIDTH           25
                     HEIGHT          25
@@ -3098,7 +3554,7 @@ Function GlobalSettings()
             END BUTTON
 // Pelles Libs Folder
             DEFINE LABEL &("LC_LIBS_"+DefineOohg3+DefinePelles+DefineHarbour+Define64bits)
-                    ROW             160
+                    ROW             190
                     COL             10
                     WIDTH           109
                     VALUE           '    Libs Folder:'
@@ -3106,13 +3562,13 @@ Function GlobalSettings()
             END LABEL
             DEFINE TEXTBOX &("TC_LIBS_"+DefineOohg3+DefinePelles+DefineHarbour+Define64bits)
                     VALUE           &("Gbl_T_C_LIBS_"+DefineOohg3+DefinePelles+DefineHarbour+Define64bits)
-                    ROW             160
+                    ROW             190
                     COL             120
                     WIDTH           561
                     TOOLTIP         "Full path to Pelles's libraries (usually subfolder 'lib' of Pelles Folder)"
             END TEXTBOX
             DEFINE BUTTON &("BC_LIBS_"+DefineOohg3+DefinePelles+DefineHarbour+Define64bits)
-                    ROW             160
+                    ROW             190
                     COL             691
                     WIDTH           25
                     HEIGHT          25
@@ -3122,7 +3578,7 @@ Function GlobalSettings()
             END BUTTON
 // Harbour Folder
             DEFINE LABEL &("LP_"+DefineOohg3+DefinePelles+DefineHarbour+Define64bits)
-                    ROW             190
+                    ROW             220
                     COL             10
                     WIDTH           109
                     VALUE           'Harbour Folder:'
@@ -3130,12 +3586,12 @@ Function GlobalSettings()
             END LABEL
             DEFINE TEXTBOX &("TP_"+DefineOohg3+DefinePelles+DefineHarbour+Define64bits)
                     VALUE           &("Gbl_T_P_"+DefineOohg3+DefinePelles+DefineHarbour+Define64bits)
-                    ROW             190
+                    ROW             220
                     COL             120
                     WIDTH           561
             END TEXTBOX
             DEFINE BUTTON &("BP_"+DefineOohg3+DefinePelles+DefineHarbour+Define64bits)
-                    ROW             190
+                    ROW             220
                     COL             691
                     WIDTH           25
                     HEIGHT          25
@@ -3145,7 +3601,7 @@ Function GlobalSettings()
             END BUTTON
 // Harbour Libs Folder
             DEFINE LABEL &("LP_LIBS_"+DefineOohg3+DefinePelles+DefineHarbour+Define64bits)
-                    ROW             220
+                    ROW             250
                     COL             10
                     WIDTH           109
                     VALUE           '    Libs Folder:'
@@ -3153,13 +3609,13 @@ Function GlobalSettings()
             END LABEL
             DEFINE TEXTBOX &("TP_LIBS_"+DefineOohg3+DefinePelles+DefineHarbour+Define64bits)
                     VALUE           &("Gbl_T_P_LIBS_"+DefineOohg3+DefinePelles+DefineHarbour+Define64bits)
-                    ROW             220
+                    ROW             250
                     COL             120
                     WIDTH           561
                     TOOLTIP         "Full path to Harbour's libraries (usually subfolder 'lib' of Harbour Folder)"
             END TEXTBOX
             DEFINE BUTTON &("BP_LIBS_"+DefineOohg3+DefinePelles+DefineHarbour+Define64bits)
-                    ROW             220
+                    ROW             250
                     COL             691
                     WIDTH           25
                     HEIGHT          25
@@ -3227,9 +3683,33 @@ Function GlobalSettings()
                     TOOLTIP         'Select folder'
                     ONCLICK         If ( !Empty( Folder := GetFolder( "Select folder", WinGSettings.&("TM_LIBS_"+DefineOohg3+DefinePelles+DefineXHarbour+Define64bits).Value ) ), WinGSettings.&("TM_LIBS_"+DefineOohg3+DefinePelles+DefineXHarbour+Define64bits).Value := Folder, )
             END BUTTON
+// Minigui Lib Name
+            DEFINE LABEL &("LM_NAME_"+DefineOohg3+DefinePelles+DefineXHarbour+Define64bits)
+                    ROW             130
+                    COL             10
+                    WIDTH           109
+                    VALUE           '       Lib Name:'
+                    TRANSPARENT     .T.
+            END LABEL
+            DEFINE TEXTBOX &("TN_"+DefineOohg3+DefinePelles+DefineXHarbour+Define64bits)
+                    VALUE           &("Gbl_T_N_"+DefineOohg3+DefinePelles+DefineXHarbour+Define64bits)
+                    ROW             130
+                    COL             120
+                    WIDTH           561
+                    TOOLTIP         "Name and extension of HMG's main library (usually 'minigui.lib')"
+            END TEXTBOX
+            DEFINE BUTTON &("BM_NAME_"+DefineOohg3+DefinePelles+DefineXHarbour+Define64bits)
+                    ROW             130
+                    COL             691
+                    WIDTH           25
+                    HEIGHT          25
+                    PICTURE         'helpbmp'
+                    TOOLTIP         'Check if file exists'
+                    ONCLICK         iif( ! File( WinGSettings.&("TM_LIBS_"+DefineOohg3+DefinePelles+DefineXHarbour+Define64bits).Value + DEF_SLASH + WinGSettings.&("TN_"+DefineOohg3+DefinePelles+DefineXHarbour+Define64bits).Value ), MsgStop( 'File not found!' ), MsgInfo( "File found" ) )
+            END BUTTON
 // Pelles Folder
             DEFINE LABEL &("LC_"+DefineOohg3+DefinePelles+DefineXHarbour+Define64bits)
-                    ROW             130
+                    ROW             160
                     COL             10
                     WIDTH           109
                     VALUE           'Pelles Folder:'
@@ -3237,12 +3717,12 @@ Function GlobalSettings()
             END LABEL
             DEFINE TEXTBOX &("TC_"+DefineOohg3+DefinePelles+DefineXHarbour+Define64bits)
                     VALUE           &("Gbl_T_C_"+DefineOohg3+DefinePelles+DefineXHarbour+Define64bits)
-                    ROW             130
+                    ROW             160
                     COL             120
                     WIDTH           561
             END TEXTBOX
             DEFINE BUTTON &("BC_"+DefineOohg3+DefinePelles+DefineXHarbour+Define64bits)
-                    ROW             130
+                    ROW             160
                     COL             691
                     WIDTH           25
                     HEIGHT          25
@@ -3252,7 +3732,7 @@ Function GlobalSettings()
             END BUTTON
 // Pelles Libs Folder
             DEFINE LABEL &("LC_LIBS_"+DefineOohg3+DefinePelles+DefineXHarbour+Define64bits)
-                    ROW             160
+                    ROW             190
                     COL             10
                     WIDTH           109
                     VALUE           '    Libs Folder:'
@@ -3260,13 +3740,13 @@ Function GlobalSettings()
             END LABEL
             DEFINE TEXTBOX &("TC_LIBS_"+DefineOohg3+DefinePelles+DefineXHarbour+Define64bits)
                     VALUE           &("Gbl_T_C_LIBS_"+DefineOohg3+DefinePelles+DefineXHarbour+Define64bits)
-                    ROW             160
+                    ROW             190
                     COL             120
                     WIDTH           561
                     TOOLTIP         "Full path to Pelles's libraries (usually subfolder 'lib' of Pelles Folder)"
             END TEXTBOX
             DEFINE BUTTON &("BC_LIBS_"+DefineOohg3+DefinePelles+DefineXHarbour+Define64bits)
-                    ROW             160
+                    ROW             190
                     COL             691
                     WIDTH           25
                     HEIGHT          25
@@ -3276,7 +3756,7 @@ Function GlobalSettings()
             END BUTTON
 // xHarbour Folder
             DEFINE LABEL &("LP_"+DefineOohg3+DefinePelles+DefineXHarbour+Define64bits)
-                    ROW             190
+                    ROW             220
                     COL             10
                     WIDTH           109
                     VALUE           'xHarbour Folder:'
@@ -3284,12 +3764,12 @@ Function GlobalSettings()
             END LABEL
             DEFINE TEXTBOX &("TP_"+DefineOohg3+DefinePelles+DefineXHarbour+Define64bits)
                     VALUE           &("Gbl_T_P_"+DefineOohg3+DefinePelles+DefineXHarbour+Define64bits)
-                    ROW             190
+                    ROW             220
                     COL             120
                     WIDTH           561
             END TEXTBOX
             DEFINE BUTTON &("BP_"+DefineOohg3+DefinePelles+DefineXHarbour+Define64bits)
-                    ROW             190
+                    ROW             220
                     COL             691
                     WIDTH           25
                     HEIGHT          25
@@ -3299,7 +3779,7 @@ Function GlobalSettings()
             END BUTTON
 // xHarbour Libs Folder
             DEFINE LABEL &("LP_LIBS_"+DefineOohg3+DefinePelles+DefineXHarbour+Define64bits)
-                    ROW             220
+                    ROW             250
                     COL             10
                     WIDTH           109
                     VALUE           '    Libs Folder:'
@@ -3307,13 +3787,13 @@ Function GlobalSettings()
             END LABEL
             DEFINE TEXTBOX &("TP_LIBS_"+DefineOohg3+DefinePelles+DefineXHarbour+Define64bits)
                     VALUE           &("Gbl_T_P_LIBS_"+DefineOohg3+DefinePelles+DefineXHarbour+Define64bits)
-                    ROW             220
+                    ROW             250
                     COL             120
                     WIDTH           561
                     TOOLTIP         "Full path to xHarbour's libraries (usually subfolder 'lib' of xHarbour Folder)"
             END TEXTBOX
             DEFINE BUTTON &("BP_LIBS_"+DefineOohg3+DefinePelles+DefineXHarbour+Define64bits)
-                    ROW             220
+                    ROW             250
                     COL             691
                     WIDTH           25
                     HEIGHT          25
@@ -3498,6 +3978,7 @@ Function GlobalChanged()
       &("Gbl_T_M_LIBS_" + DefineMiniGui1  + DefineBorland + DefineHarbour  + Define32bits) != WinGSettings.&("TM_LIBS_" + DefineMiniGui1  + DefineBorland + DefineHarbour  + Define32bits).value .or. ;
       &("Gbl_T_C_LIBS_" + DefineMiniGui1  + DefineBorland + DefineHarbour  + Define32bits) != WinGSettings.&("TC_LIBS_" + DefineMiniGui1  + DefineBorland + DefineHarbour  + Define32bits).value .or. ;
       &("Gbl_T_P_LIBS_" + DefineMiniGui1  + DefineBorland + DefineHarbour  + Define32bits) != WinGSettings.&("TP_LIBS_" + DefineMiniGui1  + DefineBorland + DefineHarbour  + Define32bits).value .or. ;
+      &("Gbl_T_N_"      + DefineMiniGui1  + DefineBorland + DefineHarbour  + Define32bits) != WinGSettings.&("TN_"      + DefineMiniGui1  + DefineBorland + DefineHarbour  + Define32bits).value .or. ;
       ;
       &("Gbl_T_M_"      + DefineMiniGui1  + DefineBorland + DefineXHarbour + Define32bits) != WinGSettings.&("TM_"      + DefineMiniGui1  + DefineBorland + DefineXHarbour + Define32bits).value .or. ;
       &("Gbl_T_C_"      + DefineMiniGui1  + DefineBorland + DefineXHarbour + Define32bits) != WinGSettings.&("TC_"      + DefineMiniGui1  + DefineBorland + DefineXHarbour + Define32bits).value .or. ;
@@ -3505,6 +3986,7 @@ Function GlobalChanged()
       &("Gbl_T_M_LIBS_" + DefineMiniGui1  + DefineBorland + DefineXHarbour + Define32bits) != WinGSettings.&("TM_LIBS_" + DefineMiniGui1  + DefineBorland + DefineXHarbour + Define32bits).value .or. ;
       &("Gbl_T_C_LIBS_" + DefineMiniGui1  + DefineBorland + DefineXHarbour + Define32bits) != WinGSettings.&("TC_LIBS_" + DefineMiniGui1  + DefineBorland + DefineXHarbour + Define32bits).value .or. ;
       &("Gbl_T_P_LIBS_" + DefineMiniGui1  + DefineBorland + DefineXHarbour + Define32bits) != WinGSettings.&("TP_LIBS_" + DefineMiniGui1  + DefineBorland + DefineXHarbour + Define32bits).value .or. ;
+      &("Gbl_T_N_"      + DefineMiniGui1  + DefineBorland + DefineXHarbour + Define32bits) != WinGSettings.&("TN_"      + DefineMiniGui1  + DefineBorland + DefineXHarbour + Define32bits).value .or. ;
       ;
       &("Gbl_T_M_"      + DefineMiniGui3  + DefineMinGW   + DefineHarbour  + Define32bits) != WinGSettings.&("TM_"      + DefineMiniGui3  + DefineMinGW   + DefineHarbour  + Define32bits).value .or. ;
       &("Gbl_T_C_"      + DefineMiniGui3  + DefineMinGW   + DefineHarbour  + Define32bits) != WinGSettings.&("TC_"      + DefineMiniGui3  + DefineMinGW   + DefineHarbour  + Define32bits).value .or. ;
@@ -3512,6 +3994,7 @@ Function GlobalChanged()
       &("Gbl_T_M_LIBS_" + DefineMiniGui3  + DefineMinGW   + DefineHarbour  + Define32bits) != WinGSettings.&("TM_LIBS_" + DefineMiniGui3  + DefineMinGW   + DefineHarbour  + Define32bits).value .or. ;
       &("Gbl_T_C_LIBS_" + DefineMiniGui3  + DefineMinGW   + DefineHarbour  + Define32bits) != WinGSettings.&("TC_LIBS_" + DefineMiniGui3  + DefineMinGW   + DefineHarbour  + Define32bits).value .or. ;
       &("Gbl_T_P_LIBS_" + DefineMiniGui3  + DefineMinGW   + DefineHarbour  + Define32bits) != WinGSettings.&("TP_LIBS_" + DefineMiniGui3  + DefineMinGW   + DefineHarbour  + Define32bits).value .or. ;
+      &("Gbl_T_N_"      + DefineMiniGui3  + DefineMinGW   + DefineHarbour  + Define32bits) != WinGSettings.&("TN_"      + DefineMiniGui3  + DefineMinGW   + DefineHarbour  + Define32bits).value .or. ;
       ;
       &("Gbl_T_M_"      + DefineMiniGui3  + DefineMinGW   + DefineHarbour  + Define64bits) != WinGSettings.&("TM_"      + DefineMiniGui3  + DefineMinGW   + DefineHarbour  + Define64bits).value .or. ;
       &("Gbl_T_C_"      + DefineMiniGui3  + DefineMinGW   + DefineHarbour  + Define64bits) != WinGSettings.&("TC_"      + DefineMiniGui3  + DefineMinGW   + DefineHarbour  + Define64bits).value .or. ;
@@ -3519,6 +4002,7 @@ Function GlobalChanged()
       &("Gbl_T_M_LIBS_" + DefineMiniGui3  + DefineMinGW   + DefineHarbour  + Define64bits) != WinGSettings.&("TM_LIBS_" + DefineMiniGui3  + DefineMinGW   + DefineHarbour  + Define64bits).value .or. ;
       &("Gbl_T_C_LIBS_" + DefineMiniGui3  + DefineMinGW   + DefineHarbour  + Define64bits) != WinGSettings.&("TC_LIBS_" + DefineMiniGui3  + DefineMinGW   + DefineHarbour  + Define64bits).value .or. ;
       &("Gbl_T_P_LIBS_" + DefineMiniGui3  + DefineMinGW   + DefineHarbour  + Define64bits) != WinGSettings.&("TP_LIBS_" + DefineMiniGui3  + DefineMinGW   + DefineHarbour  + Define64bits).value .or. ;
+      &("Gbl_T_N_"      + DefineMiniGui3  + DefineMinGW   + DefineHarbour  + Define64bits) != WinGSettings.&("TN_"      + DefineMiniGui3  + DefineMinGW   + DefineHarbour  + Define64bits).value .or. ;
       ;
       &("Gbl_T_M_"      + DefineExtended1 + DefineBorland + DefineHarbour  + Define32bits) != WinGSettings.&("TM_"      + DefineExtended1 + DefineBorland + DefineHarbour  + Define32bits).value .or. ;
       &("Gbl_T_C_"      + DefineExtended1 + DefineBorland + DefineHarbour  + Define32bits) != WinGSettings.&("TC_"      + DefineExtended1 + DefineBorland + DefineHarbour  + Define32bits).value .or. ;
@@ -3526,6 +4010,7 @@ Function GlobalChanged()
       &("Gbl_T_M_LIBS_" + DefineExtended1 + DefineBorland + DefineHarbour  + Define32bits) != WinGSettings.&("TM_LIBS_" + DefineExtended1 + DefineBorland + DefineHarbour  + Define32bits).value .or. ;
       &("Gbl_T_C_LIBS_" + DefineExtended1 + DefineBorland + DefineHarbour  + Define32bits) != WinGSettings.&("TC_LIBS_" + DefineExtended1 + DefineBorland + DefineHarbour  + Define32bits).value .or. ;
       &("Gbl_T_P_LIBS_" + DefineExtended1 + DefineBorland + DefineHarbour  + Define32bits) != WinGSettings.&("TP_LIBS_" + DefineExtended1 + DefineBorland + DefineHarbour  + Define32bits).value .or. ;
+      &("Gbl_T_N_"      + DefineExtended1 + DefineBorland + DefineHarbour  + Define32bits) != WinGSettings.&("TN_"      + DefineExtended1 + DefineBorland + DefineHarbour  + Define32bits).value .or. ;
       ;
       &("Gbl_T_M_"      + DefineExtended1 + DefineBorland + DefineXHarbour + Define32bits) != WinGSettings.&("TM_"      + DefineExtended1 + DefineBorland + DefineXHarbour + Define32bits).value .or. ;
       &("Gbl_T_C_"      + DefineExtended1 + DefineBorland + DefineXHarbour + Define32bits) != WinGSettings.&("TC_"      + DefineExtended1 + DefineBorland + DefineXHarbour + Define32bits).value .or. ;
@@ -3533,6 +4018,7 @@ Function GlobalChanged()
       &("Gbl_T_M_LIBS_" + DefineExtended1 + DefineBorland + DefineXHarbour + Define32bits) != WinGSettings.&("TM_LIBS_" + DefineExtended1 + DefineBorland + DefineXHarbour + Define32bits).value .or. ;
       &("Gbl_T_C_LIBS_" + DefineExtended1 + DefineBorland + DefineXHarbour + Define32bits) != WinGSettings.&("TC_LIBS_" + DefineExtended1 + DefineBorland + DefineXHarbour + Define32bits).value .or. ;
       &("Gbl_T_P_LIBS_" + DefineExtended1 + DefineBorland + DefineXHarbour + Define32bits) != WinGSettings.&("TP_LIBS_" + DefineExtended1 + DefineBorland + DefineXHarbour + Define32bits).value .or. ;
+      &("Gbl_T_N_"      + DefineExtended1 + DefineBorland + DefineXHarbour + Define32bits) != WinGSettings.&("TN_"      + DefineExtended1 + DefineBorland + DefineXHarbour + Define32bits).value .or. ;
       ;
       &("Gbl_T_M_"      + DefineExtended1 + DefineMinGW   + DefineHarbour  + Define32bits) != WinGSettings.&("TM_"      + DefineExtended1 + DefineMinGW   + DefineHarbour  + Define32bits).value .or. ;
       &("Gbl_T_C_"      + DefineExtended1 + DefineMinGW   + DefineHarbour  + Define32bits) != WinGSettings.&("TC_"      + DefineExtended1 + DefineMinGW   + DefineHarbour  + Define32bits).value .or. ;
@@ -3540,6 +4026,7 @@ Function GlobalChanged()
       &("Gbl_T_M_LIBS_" + DefineExtended1 + DefineMinGW   + DefineHarbour  + Define32bits) != WinGSettings.&("TM_LIBS_" + DefineExtended1 + DefineMinGW   + DefineHarbour  + Define32bits).value .or. ;
       &("Gbl_T_C_LIBS_" + DefineExtended1 + DefineMinGW   + DefineHarbour  + Define32bits) != WinGSettings.&("TC_LIBS_" + DefineExtended1 + DefineMinGW   + DefineHarbour  + Define32bits).value .or. ;
       &("Gbl_T_P_LIBS_" + DefineExtended1 + DefineMinGW   + DefineHarbour  + Define32bits) != WinGSettings.&("TP_LIBS_" + DefineExtended1 + DefineMinGW   + DefineHarbour  + Define32bits).value .or. ;
+      &("Gbl_T_N_"      + DefineExtended1 + DefineMinGW   + DefineHarbour  + Define32bits) != WinGSettings.&("TN_"      + DefineExtended1 + DefineMinGW   + DefineHarbour  + Define32bits).value .or. ;
       ;
       &("Gbl_T_M_"      + DefineExtended1 + DefineMinGW   + DefineXHarbour + Define32bits) != WinGSettings.&("TM_"      + DefineExtended1 + DefineMinGW   + DefineXHarbour + Define32bits).value .or. ;
       &("Gbl_T_C_"      + DefineExtended1 + DefineMinGW   + DefineXHarbour + Define32bits) != WinGSettings.&("TC_"      + DefineExtended1 + DefineMinGW   + DefineXHarbour + Define32bits).value .or. ;
@@ -3547,6 +4034,7 @@ Function GlobalChanged()
       &("Gbl_T_M_LIBS_" + DefineExtended1 + DefineMinGW   + DefineXHarbour + Define32bits) != WinGSettings.&("TM_LIBS_" + DefineExtended1 + DefineMinGW   + DefineXHarbour + Define32bits).value .or. ;
       &("Gbl_T_C_LIBS_" + DefineExtended1 + DefineMinGW   + DefineXHarbour + Define32bits) != WinGSettings.&("TC_LIBS_" + DefineExtended1 + DefineMinGW   + DefineXHarbour + Define32bits).value .or. ;
       &("Gbl_T_P_LIBS_" + DefineExtended1 + DefineMinGW   + DefineXHarbour + Define32bits) != WinGSettings.&("TP_LIBS_" + DefineExtended1 + DefineMinGW   + DefineXHarbour + Define32bits).value .or. ;
+      &("Gbl_T_N_"      + DefineExtended1 + DefineMinGW   + DefineXHarbour + Define32bits) != WinGSettings.&("TN_"      + DefineExtended1 + DefineMinGW   + DefineXHarbour + Define32bits).value .or. ;
       ;
       &("Gbl_T_M_"      + DefineExtended1 + DefineMinGW   + DefineHarbour  + Define64bits) != WinGSettings.&("TM_"      + DefineExtended1 + DefineMinGW   + DefineHarbour  + Define64bits).value .or. ;
       &("Gbl_T_C_"      + DefineExtended1 + DefineMinGW   + DefineHarbour  + Define64bits) != WinGSettings.&("TC_"      + DefineExtended1 + DefineMinGW   + DefineHarbour  + Define64bits).value .or. ;
@@ -3554,6 +4042,7 @@ Function GlobalChanged()
       &("Gbl_T_M_LIBS_" + DefineExtended1 + DefineMinGW   + DefineHarbour  + Define64bits) != WinGSettings.&("TM_LIBS_" + DefineExtended1 + DefineMinGW   + DefineHarbour  + Define64bits).value .or. ;
       &("Gbl_T_C_LIBS_" + DefineExtended1 + DefineMinGW   + DefineHarbour  + Define64bits) != WinGSettings.&("TC_LIBS_" + DefineExtended1 + DefineMinGW   + DefineHarbour  + Define64bits).value .or. ;
       &("Gbl_T_P_LIBS_" + DefineExtended1 + DefineMinGW   + DefineHarbour  + Define64bits) != WinGSettings.&("TP_LIBS_" + DefineExtended1 + DefineMinGW   + DefineHarbour  + Define64bits).value .or. ;
+      &("Gbl_T_N_"      + DefineExtended1 + DefineMinGW   + DefineHarbour  + Define64bits) != WinGSettings.&("TN_"      + DefineExtended1 + DefineMinGW   + DefineHarbour  + Define64bits).value .or. ;
       ;
       &("Gbl_T_M_"      + DefineExtended1 + DefineMinGW   + DefineXHarbour + Define64bits) != WinGSettings.&("TM_"      + DefineExtended1 + DefineMinGW   + DefineXHarbour + Define64bits).value .or. ;
       &("Gbl_T_C_"      + DefineExtended1 + DefineMinGW   + DefineXHarbour + Define64bits) != WinGSettings.&("TC_"      + DefineExtended1 + DefineMinGW   + DefineXHarbour + Define64bits).value .or. ;
@@ -3561,6 +4050,7 @@ Function GlobalChanged()
       &("Gbl_T_M_LIBS_" + DefineExtended1 + DefineMinGW   + DefineXHarbour + Define64bits) != WinGSettings.&("TM_LIBS_" + DefineExtended1 + DefineMinGW   + DefineXHarbour + Define64bits).value .or. ;
       &("Gbl_T_C_LIBS_" + DefineExtended1 + DefineMinGW   + DefineXHarbour + Define64bits) != WinGSettings.&("TC_LIBS_" + DefineExtended1 + DefineMinGW   + DefineXHarbour + Define64bits).value .or. ;
       &("Gbl_T_P_LIBS_" + DefineExtended1 + DefineMinGW   + DefineXHarbour + Define64bits) != WinGSettings.&("TP_LIBS_" + DefineExtended1 + DefineMinGW   + DefineXHarbour + Define64bits).value .or. ;
+      &("Gbl_T_N_"      + DefineExtended1 + DefineMinGW   + DefineXHarbour + Define64bits) != WinGSettings.&("TN_"      + DefineExtended1 + DefineMinGW   + DefineXHarbour + Define64bits).value .or. ;
       ;
       &("Gbl_T_M_"      + DefineOohg3     + DefineBorland + DefineHarbour  + Define32bits) != WinGSettings.&("TM_"      + DefineOohg3     + DefineBorland + DefineHarbour  + Define32bits).value .or. ;
       &("Gbl_T_C_"      + DefineOohg3     + DefineBorland + DefineHarbour  + Define32bits) != WinGSettings.&("TC_"      + DefineOohg3     + DefineBorland + DefineHarbour  + Define32bits).value .or. ;
@@ -3568,6 +4058,7 @@ Function GlobalChanged()
       &("Gbl_T_M_LIBS_" + DefineOohg3     + DefineBorland + DefineHarbour  + Define32bits) != WinGSettings.&("TM_LIBS_" + DefineOohg3     + DefineBorland + DefineHarbour  + Define32bits).value .or. ;
       &("Gbl_T_C_LIBS_" + DefineOohg3     + DefineBorland + DefineHarbour  + Define32bits) != WinGSettings.&("TC_LIBS_" + DefineOohg3     + DefineBorland + DefineHarbour  + Define32bits).value .or. ;
       &("Gbl_T_P_LIBS_" + DefineOohg3     + DefineBorland + DefineHarbour  + Define32bits) != WinGSettings.&("TP_LIBS_" + DefineOohg3     + DefineBorland + DefineHarbour  + Define32bits).value .or. ;
+      &("Gbl_T_N_"      + DefineOohg3     + DefineBorland + DefineHarbour  + Define32bits) != WinGSettings.&("TN_"      + DefineOohg3     + DefineBorland + DefineHarbour  + Define32bits).value .or. ;
       ;
       &("Gbl_T_M_"      + DefineOohg3     + DefineBorland + DefineXHarbour + Define32bits) != WinGSettings.&("TM_"      + DefineOohg3     + DefineBorland + DefineXHarbour + Define32bits).value .or. ;
       &("Gbl_T_C_"      + DefineOohg3     + DefineBorland + DefineXHarbour + Define32bits) != WinGSettings.&("TC_"      + DefineOohg3     + DefineBorland + DefineXHarbour + Define32bits).value .or. ;
@@ -3575,6 +4066,7 @@ Function GlobalChanged()
       &("Gbl_T_M_LIBS_" + DefineOohg3     + DefineBorland + DefineXHarbour + Define32bits) != WinGSettings.&("TM_LIBS_" + DefineOohg3     + DefineBorland + DefineXHarbour + Define32bits).value .or. ;
       &("Gbl_T_C_LIBS_" + DefineOohg3     + DefineBorland + DefineXHarbour + Define32bits) != WinGSettings.&("TC_LIBS_" + DefineOohg3     + DefineBorland + DefineXHarbour + Define32bits).value .or. ;
       &("Gbl_T_P_LIBS_" + DefineOohg3     + DefineBorland + DefineXHarbour + Define32bits) != WinGSettings.&("TP_LIBS_" + DefineOohg3     + DefineBorland + DefineXHarbour + Define32bits).value .or. ;
+      &("Gbl_T_N_"      + DefineOohg3     + DefineBorland + DefineXHarbour + Define32bits) != WinGSettings.&("TN_"      + DefineOohg3     + DefineBorland + DefineXHarbour + Define32bits).value .or. ;
       ;
       &("Gbl_T_M_"      + DefineOohg3     + DefineMinGW   + DefineHarbour  + Define32bits) != WinGSettings.&("TM_"      + DefineOohg3     + DefineMinGW   + DefineHarbour  + Define32bits).value .or. ;
       &("Gbl_T_C_"      + DefineOohg3     + DefineMinGW   + DefineHarbour  + Define32bits) != WinGSettings.&("TC_"      + DefineOohg3     + DefineMinGW   + DefineHarbour  + Define32bits).value .or. ;
@@ -3582,6 +4074,7 @@ Function GlobalChanged()
       &("Gbl_T_M_LIBS_" + DefineOohg3     + DefineMinGW   + DefineHarbour  + Define32bits) != WinGSettings.&("TM_LIBS_" + DefineOohg3     + DefineMinGW   + DefineHarbour  + Define32bits).value .or. ;
       &("Gbl_T_C_LIBS_" + DefineOohg3     + DefineMinGW   + DefineHarbour  + Define32bits) != WinGSettings.&("TC_LIBS_" + DefineOohg3     + DefineMinGW   + DefineHarbour  + Define32bits).value .or. ;
       &("Gbl_T_P_LIBS_" + DefineOohg3     + DefineMinGW   + DefineHarbour  + Define32bits) != WinGSettings.&("TP_LIBS_" + DefineOohg3     + DefineMinGW   + DefineHarbour  + Define32bits).value .or. ;
+      &("Gbl_T_N_"      + DefineOohg3     + DefineMinGW   + DefineHarbour  + Define32bits) != WinGSettings.&("TN_"      + DefineOohg3     + DefineMinGW   + DefineHarbour  + Define32bits).value .or. ;
       ;
       &("Gbl_T_M_"      + DefineOohg3     + DefineMinGW   + DefineXHarbour + Define32bits) != WinGSettings.&("TM_"      + DefineOohg3     + DefineMinGW   + DefineXHarbour + Define32bits).value .or. ;
       &("Gbl_T_C_"      + DefineOohg3     + DefineMinGW   + DefineXHarbour + Define32bits) != WinGSettings.&("TC_"      + DefineOohg3     + DefineMinGW   + DefineXHarbour + Define32bits).value .or. ;
@@ -3589,6 +4082,7 @@ Function GlobalChanged()
       &("Gbl_T_M_LIBS_" + DefineOohg3     + DefineMinGW   + DefineXHarbour + Define32bits) != WinGSettings.&("TM_LIBS_" + DefineOohg3     + DefineMinGW   + DefineXHarbour + Define32bits).value .or. ;
       &("Gbl_T_C_LIBS_" + DefineOohg3     + DefineMinGW   + DefineXHarbour + Define32bits) != WinGSettings.&("TC_LIBS_" + DefineOohg3     + DefineMinGW   + DefineXHarbour + Define32bits).value .or. ;
       &("Gbl_T_P_LIBS_" + DefineOohg3     + DefineMinGW   + DefineXHarbour + Define32bits) != WinGSettings.&("TP_LIBS_" + DefineOohg3     + DefineMinGW   + DefineXHarbour + Define32bits).value .or. ;
+      &("Gbl_T_N_"      + DefineOohg3     + DefineMinGW   + DefineXHarbour + Define32bits) != WinGSettings.&("TN_"      + DefineOohg3     + DefineMinGW   + DefineXHarbour + Define32bits).value .or. ;
       ;
       &("Gbl_T_M_"      + DefineOohg3     + DefineMinGW   + DefineHarbour  + Define64bits) != WinGSettings.&("TM_"      + DefineOohg3     + DefineMinGW   + DefineHarbour  + Define64bits).value .or. ;
       &("Gbl_T_C_"      + DefineOohg3     + DefineMinGW   + DefineHarbour  + Define64bits) != WinGSettings.&("TC_"      + DefineOohg3     + DefineMinGW   + DefineHarbour  + Define64bits).value .or. ;
@@ -3596,6 +4090,7 @@ Function GlobalChanged()
       &("Gbl_T_M_LIBS_" + DefineOohg3     + DefineMinGW   + DefineHarbour  + Define64bits) != WinGSettings.&("TM_LIBS_" + DefineOohg3     + DefineMinGW   + DefineHarbour  + Define64bits).value .or. ;
       &("Gbl_T_C_LIBS_" + DefineOohg3     + DefineMinGW   + DefineHarbour  + Define64bits) != WinGSettings.&("TC_LIBS_" + DefineOohg3     + DefineMinGW   + DefineHarbour  + Define64bits).value .or. ;
       &("Gbl_T_P_LIBS_" + DefineOohg3     + DefineMinGW   + DefineHarbour  + Define64bits) != WinGSettings.&("TP_LIBS_" + DefineOohg3     + DefineMinGW   + DefineHarbour  + Define64bits).value .or. ;
+      &("Gbl_T_N_"      + DefineOohg3     + DefineMinGW   + DefineHarbour  + Define64bits) != WinGSettings.&("TN_"      + DefineOohg3     + DefineMinGW   + DefineHarbour  + Define64bits).value .or. ;
       ;
       &("Gbl_T_M_"      + DefineOohg3     + DefineMinGW   + DefineXHarbour + Define64bits) != WinGSettings.&("TM_"      + DefineOohg3     + DefineMinGW   + DefineXHarbour + Define64bits).value .or. ;
       &("Gbl_T_C_"      + DefineOohg3     + DefineMinGW   + DefineXHarbour + Define64bits) != WinGSettings.&("TC_"      + DefineOohg3     + DefineMinGW   + DefineXHarbour + Define64bits).value .or. ;
@@ -3603,6 +4098,7 @@ Function GlobalChanged()
       &("Gbl_T_M_LIBS_" + DefineOohg3     + DefineMinGW   + DefineXHarbour + Define64bits) != WinGSettings.&("TM_LIBS_" + DefineOohg3     + DefineMinGW   + DefineXHarbour + Define64bits).value .or. ;
       &("Gbl_T_C_LIBS_" + DefineOohg3     + DefineMinGW   + DefineXHarbour + Define64bits) != WinGSettings.&("TC_LIBS_" + DefineOohg3     + DefineMinGW   + DefineXHarbour + Define64bits).value .or. ;
       &("Gbl_T_P_LIBS_" + DefineOohg3     + DefineMinGW   + DefineXHarbour + Define64bits) != WinGSettings.&("TP_LIBS_" + DefineOohg3     + DefineMinGW   + DefineXHarbour + Define64bits).value .or. ;
+      &("Gbl_T_N_"      + DefineOohg3     + DefineMinGW   + DefineXHarbour + Define64bits) != WinGSettings.&("TN_"      + DefineOohg3     + DefineMinGW   + DefineXHarbour + Define64bits).value .or. ;
       ;
       &("Gbl_T_M_"      + DefineOohg3     + DefinePelles  + DefineHarbour  + Define32bits) != WinGSettings.&("TM_"      + DefineOohg3     + DefinePelles  + DefineHarbour  + Define32bits).value .or. ;
       &("Gbl_T_C_"      + DefineOohg3     + DefinePelles  + DefineHarbour  + Define32bits) != WinGSettings.&("TC_"      + DefineOohg3     + DefinePelles  + DefineHarbour  + Define32bits).value .or. ;
@@ -3610,6 +4106,7 @@ Function GlobalChanged()
       &("Gbl_T_M_LIBS_" + DefineOohg3     + DefinePelles  + DefineHarbour  + Define32bits) != WinGSettings.&("TM_LIBS_" + DefineOohg3     + DefinePelles  + DefineHarbour  + Define32bits).value .or. ;
       &("Gbl_T_C_LIBS_" + DefineOohg3     + DefinePelles  + DefineHarbour  + Define32bits) != WinGSettings.&("TC_LIBS_" + DefineOohg3     + DefinePelles  + DefineHarbour  + Define32bits).value .or. ;
       &("Gbl_T_P_LIBS_" + DefineOohg3     + DefinePelles  + DefineHarbour  + Define32bits) != WinGSettings.&("TP_LIBS_" + DefineOohg3     + DefinePelles  + DefineHarbour  + Define32bits).value .or. ;
+      &("Gbl_T_N_"      + DefineOohg3     + DefinePelles  + DefineHarbour  + Define32bits) != WinGSettings.&("TN_"      + DefineOohg3     + DefinePelles  + DefineHarbour  + Define32bits).value .or. ;
       ;
       &("Gbl_T_M_"      + DefineOohg3     + DefinePelles  + DefineXHarbour + Define32bits) != WinGSettings.&("TM_"      + DefineOohg3     + DefinePelles  + DefineXHarbour + Define32bits).value .or. ;
       &("Gbl_T_C_"      + DefineOohg3     + DefinePelles  + DefineXHarbour + Define32bits) != WinGSettings.&("TC_"      + DefineOohg3     + DefinePelles  + DefineXHarbour + Define32bits).value .or. ;
@@ -3617,6 +4114,7 @@ Function GlobalChanged()
       &("Gbl_T_M_LIBS_" + DefineOohg3     + DefinePelles  + DefineXHarbour + Define32bits) != WinGSettings.&("TM_LIBS_" + DefineOohg3     + DefinePelles  + DefineXHarbour + Define32bits).value .or. ;
       &("Gbl_T_C_LIBS_" + DefineOohg3     + DefinePelles  + DefineXHarbour + Define32bits) != WinGSettings.&("TC_LIBS_" + DefineOohg3     + DefinePelles  + DefineXHarbour + Define32bits).value .or. ;
       &("Gbl_T_P_LIBS_" + DefineOohg3     + DefinePelles  + DefineXHarbour + Define32bits) != WinGSettings.&("TP_LIBS_" + DefineOohg3     + DefinePelles  + DefineXHarbour + Define32bits).value .or. ;
+      &("Gbl_T_N_"      + DefineOohg3     + DefinePelles  + DefineXHarbour + Define32bits) != WinGSettings.&("TN_"      + DefineOohg3     + DefinePelles  + DefineXHarbour + Define32bits).value .or. ;
       ;
       &("Gbl_T_M_"      + DefineOohg3     + DefinePelles  + DefineHarbour  + Define64bits) != WinGSettings.&("TM_"      + DefineOohg3     + DefinePelles  + DefineHarbour  + Define64bits).value .or. ;
       &("Gbl_T_C_"      + DefineOohg3     + DefinePelles  + DefineHarbour  + Define64bits) != WinGSettings.&("TC_"      + DefineOohg3     + DefinePelles  + DefineHarbour  + Define64bits).value .or. ;
@@ -3624,13 +4122,15 @@ Function GlobalChanged()
       &("Gbl_T_M_LIBS_" + DefineOohg3     + DefinePelles  + DefineHarbour  + Define64bits) != WinGSettings.&("TM_LIBS_" + DefineOohg3     + DefinePelles  + DefineHarbour  + Define64bits).value .or. ;
       &("Gbl_T_C_LIBS_" + DefineOohg3     + DefinePelles  + DefineHarbour  + Define64bits) != WinGSettings.&("TC_LIBS_" + DefineOohg3     + DefinePelles  + DefineHarbour  + Define64bits).value .or. ;
       &("Gbl_T_P_LIBS_" + DefineOohg3     + DefinePelles  + DefineHarbour  + Define64bits) != WinGSettings.&("TP_LIBS_" + DefineOohg3     + DefinePelles  + DefineHarbour  + Define64bits).value .or. ;
+      &("Gbl_T_N_"      + DefineOohg3     + DefinePelles  + DefineHarbour  + Define64bits) != WinGSettings.&("TN_"      + DefineOohg3     + DefinePelles  + DefineHarbour  + Define64bits).value .or. ;
       ;
       &("Gbl_T_M_"      + DefineOohg3     + DefinePelles  + DefineXHarbour + Define64bits) != WinGSettings.&("TM_"      + DefineOohg3     + DefinePelles  + DefineXHarbour + Define64bits).value .or. ;
       &("Gbl_T_C_"      + DefineOohg3     + DefinePelles  + DefineXHarbour + Define64bits) != WinGSettings.&("TC_"      + DefineOohg3     + DefinePelles  + DefineXHarbour + Define64bits).value .or. ;
       &("Gbl_T_P_"      + DefineOohg3     + DefinePelles  + DefineXHarbour + Define64bits) != WinGSettings.&("TP_"      + DefineOohg3     + DefinePelles  + DefineXHarbour + Define64bits).value .or. ;
       &("Gbl_T_M_LIBS_" + DefineOohg3     + DefinePelles  + DefineXHarbour + Define64bits) != WinGSettings.&("TM_LIBS_" + DefineOohg3     + DefinePelles  + DefineXHarbour + Define64bits).value .or. ;
       &("Gbl_T_C_LIBS_" + DefineOohg3     + DefinePelles  + DefineXHarbour + Define64bits) != WinGSettings.&("TC_LIBS_" + DefineOohg3     + DefinePelles  + DefineXHarbour + Define64bits).value .or. ;
-      &("Gbl_T_P_LIBS_" + DefineOohg3     + DefinePelles  + DefineXHarbour + Define64bits) != WinGSettings.&("TP_LIBS_" + DefineOohg3     + DefinePelles  + DefineXHarbour + Define64bits).value
+      &("Gbl_T_P_LIBS_" + DefineOohg3     + DefinePelles  + DefineXHarbour + Define64bits) != WinGSettings.&("TP_LIBS_" + DefineOohg3     + DefinePelles  + DefineXHarbour + Define64bits).value .or. ;
+      &("Gbl_T_N_"      + DefineOohg3     + DefinePelles  + DefineXHarbour + Define64bits) != WinGSettings.&("TN_"      + DefineOohg3     + DefinePelles  + DefineXHarbour + Define64bits).value
 
       Return .T.
    endif
@@ -3648,6 +4148,7 @@ Function GlobalSettingsSave( lDefaultFile )
    &("Gbl_T_M_LIBS_" + DefineMiniGui1  + DefineBorland + DefineHarbour  + Define32bits) := WinGSettings.&("TM_LIBS_" + DefineMiniGui1  + DefineBorland + DefineHarbour  + Define32bits).value
    &("Gbl_T_P_"      + DefineMiniGui1  + DefineBorland + DefineHarbour  + Define32bits) := WinGSettings.&("TP_"      + DefineMiniGui1  + DefineBorland + DefineHarbour  + Define32bits).value
    &("Gbl_T_P_LIBS_" + DefineMiniGui1  + DefineBorland + DefineHarbour  + Define32bits) := WinGSettings.&("TP_LIBS_" + DefineMiniGui1  + DefineBorland + DefineHarbour  + Define32bits).value
+   &("Gbl_T_N_"      + DefineMiniGui1  + DefineBorland + DefineHarbour  + Define32bits) := WinGSettings.&("TN_"      + DefineMiniGui1  + DefineBorland + DefineHarbour  + Define32bits).value
 
    &("Gbl_T_C_"      + DefineMiniGui1  + DefineBorland + DefineXHarbour + Define32bits) := WinGSettings.&("TC_"      + DefineMiniGui1  + DefineBorland + DefineXHarbour + Define32bits).value
    &("Gbl_T_C_LIBS_" + DefineMiniGui1  + DefineBorland + DefineXHarbour + Define32bits) := WinGSettings.&("TC_LIBS_" + DefineMiniGui1  + DefineBorland + DefineXHarbour + Define32bits).value
@@ -3655,6 +4156,7 @@ Function GlobalSettingsSave( lDefaultFile )
    &("Gbl_T_M_LIBS_" + DefineMiniGui1  + DefineBorland + DefineXHarbour + Define32bits) := WinGSettings.&("TM_LIBS_" + DefineMiniGui1  + DefineBorland + DefineXHarbour + Define32bits).value
    &("Gbl_T_P_"      + DefineMiniGui1  + DefineBorland + DefineXHarbour + Define32bits) := WinGSettings.&("TP_"      + DefineMiniGui1  + DefineBorland + DefineXHarbour + Define32bits).value
    &("Gbl_T_P_LIBS_" + DefineMiniGui1  + DefineBorland + DefineXHarbour + Define32bits) := WinGSettings.&("TP_LIBS_" + DefineMiniGui1  + DefineBorland + DefineXHarbour + Define32bits).value
+   &("Gbl_T_N_"      + DefineMiniGui1  + DefineBorland + DefineXHarbour + Define32bits) := WinGSettings.&("TN_"      + DefineMiniGui1  + DefineBorland + DefineXHarbour + Define32bits).value
 
    &("Gbl_T_C_"      + DefineMiniGui3  + DefineMinGW   + DefineHarbour  + Define32bits) := WinGSettings.&("TC_"      + DefineMiniGui3  + DefineMinGW   + DefineHarbour  + Define32bits).value
    &("Gbl_T_C_LIBS_" + DefineMiniGui3  + DefineMinGW   + DefineHarbour  + Define32bits) := WinGSettings.&("TC_LIBS_" + DefineMiniGui3  + DefineMinGW   + DefineHarbour  + Define32bits).value
@@ -3662,6 +4164,7 @@ Function GlobalSettingsSave( lDefaultFile )
    &("Gbl_T_M_LIBS_" + DefineMiniGui3  + DefineMinGW   + DefineHarbour  + Define32bits) := WinGSettings.&("TM_LIBS_" + DefineMiniGui3  + DefineMinGW   + DefineHarbour  + Define32bits).value
    &("Gbl_T_P_"      + DefineMiniGui3  + DefineMinGW   + DefineHarbour  + Define32bits) := WinGSettings.&("TP_"      + DefineMiniGui3  + DefineMinGW   + DefineHarbour  + Define32bits).value
    &("Gbl_T_P_LIBS_" + DefineMiniGui3  + DefineMinGW   + DefineHarbour  + Define32bits) := WinGSettings.&("TP_LIBS_" + DefineMiniGui3  + DefineMinGW   + DefineHarbour  + Define32bits).value
+   &("Gbl_T_N_"      + DefineMiniGui3  + DefineMinGW   + DefineHarbour  + Define32bits) := WinGSettings.&("TN_"      + DefineMiniGui3  + DefineMinGW   + DefineHarbour  + Define32bits).value
 
    &("Gbl_T_C_"      + DefineMiniGui3  + DefineMinGW   + DefineHarbour  + Define64bits) := WinGSettings.&("TC_"      + DefineMiniGui3  + DefineMinGW   + DefineHarbour  + Define64bits).value
    &("Gbl_T_C_LIBS_" + DefineMiniGui3  + DefineMinGW   + DefineHarbour  + Define64bits) := WinGSettings.&("TC_LIBS_" + DefineMiniGui3  + DefineMinGW   + DefineHarbour  + Define64bits).value
@@ -3669,6 +4172,7 @@ Function GlobalSettingsSave( lDefaultFile )
    &("Gbl_T_M_LIBS_" + DefineMiniGui3  + DefineMinGW   + DefineHarbour  + Define64bits) := WinGSettings.&("TM_LIBS_" + DefineMiniGui3  + DefineMinGW   + DefineHarbour  + Define64bits).value
    &("Gbl_T_P_"      + DefineMiniGui3  + DefineMinGW   + DefineHarbour  + Define64bits) := WinGSettings.&("TP_"      + DefineMiniGui3  + DefineMinGW   + DefineHarbour  + Define64bits).value
    &("Gbl_T_P_LIBS_" + DefineMiniGui3  + DefineMinGW   + DefineHarbour  + Define64bits) := WinGSettings.&("TP_LIBS_" + DefineMiniGui3  + DefineMinGW   + DefineHarbour  + Define64bits).value
+   &("Gbl_T_N_"      + DefineMiniGui3  + DefineMinGW   + DefineHarbour  + Define64bits) := WinGSettings.&("TN_"      + DefineMiniGui3  + DefineMinGW   + DefineHarbour  + Define64bits).value
 
    &("Gbl_T_C_"      + DefineExtended1 + DefineBorland + DefineHarbour  + Define32bits) := WinGSettings.&("TC_"      + DefineExtended1 + DefineBorland + DefineHarbour  + Define32bits).value
    &("Gbl_T_C_LIBS_" + DefineExtended1 + DefineBorland + DefineHarbour  + Define32bits) := WinGSettings.&("TC_LIBS_" + DefineExtended1 + DefineBorland + DefineHarbour  + Define32bits).value
@@ -3676,6 +4180,7 @@ Function GlobalSettingsSave( lDefaultFile )
    &("Gbl_T_M_LIBS_" + DefineExtended1 + DefineBorland + DefineHarbour  + Define32bits) := WinGSettings.&("TM_LIBS_" + DefineExtended1 + DefineBorland + DefineHarbour  + Define32bits).value
    &("Gbl_T_P_"      + DefineExtended1 + DefineBorland + DefineHarbour  + Define32bits) := WinGSettings.&("TP_"      + DefineExtended1 + DefineBorland + DefineHarbour  + Define32bits).value
    &("Gbl_T_P_LIBS_" + DefineExtended1 + DefineBorland + DefineHarbour  + Define32bits) := WinGSettings.&("TP_LIBS_" + DefineExtended1 + DefineBorland + DefineHarbour  + Define32bits).value
+   &("Gbl_T_N_"      + DefineExtended1 + DefineBorland + DefineHarbour  + Define32bits) := WinGSettings.&("TN_"      + DefineExtended1 + DefineBorland + DefineHarbour  + Define32bits).value
 
    &("Gbl_T_C_"      + DefineExtended1 + DefineBorland + DefineXHarbour + Define32bits) := WinGSettings.&("TC_"      + DefineExtended1 + DefineBorland + DefineXHarbour + Define32bits).value
    &("Gbl_T_C_LIBS_" + DefineExtended1 + DefineBorland + DefineXHarbour + Define32bits) := WinGSettings.&("TC_LIBS_" + DefineExtended1 + DefineBorland + DefineXHarbour + Define32bits).value
@@ -3683,6 +4188,7 @@ Function GlobalSettingsSave( lDefaultFile )
    &("Gbl_T_M_LIBS_" + DefineExtended1 + DefineBorland + DefineXHarbour + Define32bits) := WinGSettings.&("TM_LIBS_" + DefineExtended1 + DefineBorland + DefineXHarbour + Define32bits).value
    &("Gbl_T_P_"      + DefineExtended1 + DefineBorland + DefineXHarbour + Define32bits) := WinGSettings.&("TP_"      + DefineExtended1 + DefineBorland + DefineXHarbour + Define32bits).value
    &("Gbl_T_P_LIBS_" + DefineExtended1 + DefineBorland + DefineXHarbour + Define32bits) := WinGSettings.&("TP_LIBS_" + DefineExtended1 + DefineBorland + DefineXHarbour + Define32bits).value
+   &("Gbl_T_N_"      + DefineExtended1 + DefineBorland + DefineXHarbour + Define32bits) := WinGSettings.&("TN_"      + DefineExtended1 + DefineBorland + DefineXHarbour + Define32bits).value
 
    &("Gbl_T_C_"      + DefineExtended1 + DefineMinGW   + DefineHarbour  + Define32bits) := WinGSettings.&("TC_"      + DefineExtended1 + DefineMinGW   + DefineHarbour  + Define32bits).value
    &("Gbl_T_C_LIBS_" + DefineExtended1 + DefineMinGW   + DefineHarbour  + Define32bits) := WinGSettings.&("TC_LIBS_" + DefineExtended1 + DefineMinGW   + DefineHarbour  + Define32bits).value
@@ -3690,6 +4196,7 @@ Function GlobalSettingsSave( lDefaultFile )
    &("Gbl_T_M_LIBS_" + DefineExtended1 + DefineMinGW   + DefineHarbour  + Define32bits) := WinGSettings.&("TM_LIBS_" + DefineExtended1 + DefineMinGW   + DefineHarbour  + Define32bits).value
    &("Gbl_T_P_"      + DefineExtended1 + DefineMinGW   + DefineHarbour  + Define32bits) := WinGSettings.&("TP_"      + DefineExtended1 + DefineMinGW   + DefineHarbour  + Define32bits).value
    &("Gbl_T_P_LIBS_" + DefineExtended1 + DefineMinGW   + DefineHarbour  + Define32bits) := WinGSettings.&("TP_LIBS_" + DefineExtended1 + DefineMinGW   + DefineHarbour  + Define32bits).value
+   &("Gbl_T_N_"      + DefineExtended1 + DefineMinGW   + DefineHarbour  + Define32bits) := WinGSettings.&("TN_"      + DefineExtended1 + DefineMinGW   + DefineHarbour  + Define32bits).value
 
    &("Gbl_T_C_"      + DefineExtended1 + DefineMinGW   + DefineHarbour  + Define64bits) := WinGSettings.&("TC_"      + DefineExtended1 + DefineMinGW   + DefineHarbour  + Define64bits).value
    &("Gbl_T_C_LIBS_" + DefineExtended1 + DefineMinGW   + DefineHarbour  + Define64bits) := WinGSettings.&("TC_LIBS_" + DefineExtended1 + DefineMinGW   + DefineHarbour  + Define64bits).value
@@ -3697,6 +4204,7 @@ Function GlobalSettingsSave( lDefaultFile )
    &("Gbl_T_M_LIBS_" + DefineExtended1 + DefineMinGW   + DefineHarbour  + Define64bits) := WinGSettings.&("TM_LIBS_" + DefineExtended1 + DefineMinGW   + DefineHarbour  + Define64bits).value
    &("Gbl_T_P_"      + DefineExtended1 + DefineMinGW   + DefineHarbour  + Define64bits) := WinGSettings.&("TP_"      + DefineExtended1 + DefineMinGW   + DefineHarbour  + Define64bits).value
    &("Gbl_T_P_LIBS_" + DefineExtended1 + DefineMinGW   + DefineHarbour  + Define64bits) := WinGSettings.&("TP_LIBS_" + DefineExtended1 + DefineMinGW   + DefineHarbour  + Define64bits).value
+   &("Gbl_T_N_"      + DefineExtended1 + DefineMinGW   + DefineHarbour  + Define64bits) := WinGSettings.&("TN_"      + DefineExtended1 + DefineMinGW   + DefineHarbour  + Define64bits).value
 
    &("Gbl_T_C_"      + DefineExtended1 + DefineMinGW   + DefineXHarbour + Define32bits) := WinGSettings.&("TC_"      + DefineExtended1 + DefineMinGW   + DefineXHarbour + Define32bits).value
    &("Gbl_T_C_LIBS_" + DefineExtended1 + DefineMinGW   + DefineXHarbour + Define32bits) := WinGSettings.&("TC_LIBS_" + DefineExtended1 + DefineMinGW   + DefineXHarbour + Define32bits).value
@@ -3704,6 +4212,7 @@ Function GlobalSettingsSave( lDefaultFile )
    &("Gbl_T_M_LIBS_" + DefineExtended1 + DefineMinGW   + DefineXHarbour + Define32bits) := WinGSettings.&("TM_LIBS_" + DefineExtended1 + DefineMinGW   + DefineXHarbour + Define32bits).value
    &("Gbl_T_P_"      + DefineExtended1 + DefineMinGW   + DefineXHarbour + Define32bits) := WinGSettings.&("TP_"      + DefineExtended1 + DefineMinGW   + DefineXHarbour + Define32bits).value
    &("Gbl_T_P_LIBS_" + DefineExtended1 + DefineMinGW   + DefineXHarbour + Define32bits) := WinGSettings.&("TP_LIBS_" + DefineExtended1 + DefineMinGW   + DefineXHarbour + Define32bits).value
+   &("Gbl_T_N_"      + DefineExtended1 + DefineMinGW   + DefineXHarbour + Define32bits) := WinGSettings.&("TN_"      + DefineExtended1 + DefineMinGW   + DefineXHarbour + Define32bits).value
 
    &("Gbl_T_C_"      + DefineExtended1 + DefineMinGW   + DefineXHarbour + Define64bits) := WinGSettings.&("TC_"      + DefineExtended1 + DefineMinGW   + DefineXHarbour + Define64bits).value
    &("Gbl_T_C_LIBS_" + DefineExtended1 + DefineMinGW   + DefineXHarbour + Define64bits) := WinGSettings.&("TC_LIBS_" + DefineExtended1 + DefineMinGW   + DefineXHarbour + Define64bits).value
@@ -3711,6 +4220,7 @@ Function GlobalSettingsSave( lDefaultFile )
    &("Gbl_T_M_LIBS_" + DefineExtended1 + DefineMinGW   + DefineXHarbour + Define64bits) := WinGSettings.&("TM_LIBS_" + DefineExtended1 + DefineMinGW   + DefineXHarbour + Define64bits).value
    &("Gbl_T_P_"      + DefineExtended1 + DefineMinGW   + DefineXHarbour + Define64bits) := WinGSettings.&("TP_"      + DefineExtended1 + DefineMinGW   + DefineXHarbour + Define64bits).value
    &("Gbl_T_P_LIBS_" + DefineExtended1 + DefineMinGW   + DefineXHarbour + Define64bits) := WinGSettings.&("TP_LIBS_" + DefineExtended1 + DefineMinGW   + DefineXHarbour + Define64bits).value
+   &("Gbl_T_N_"      + DefineExtended1 + DefineMinGW   + DefineXHarbour + Define64bits) := WinGSettings.&("TN_"      + DefineExtended1 + DefineMinGW   + DefineXHarbour + Define64bits).value
 
    &("Gbl_T_C_"      + DefineOohg3     + DefineBorland + DefineHarbour  + Define32bits) := WinGSettings.&("TC_"      + DefineOohg3     + DefineBorland + DefineHarbour  + Define32bits).value
    &("Gbl_T_C_LIBS_" + DefineOohg3     + DefineBorland + DefineHarbour  + Define32bits) := WinGSettings.&("TC_LIBS_" + DefineOohg3     + DefineBorland + DefineHarbour  + Define32bits).value
@@ -3718,6 +4228,7 @@ Function GlobalSettingsSave( lDefaultFile )
    &("Gbl_T_M_LIBS_" + DefineOohg3     + DefineBorland + DefineHarbour  + Define32bits) := WinGSettings.&("TM_LIBS_" + DefineOohg3     + DefineBorland + DefineHarbour  + Define32bits).value
    &("Gbl_T_P_"      + DefineOohg3     + DefineBorland + DefineHarbour  + Define32bits) := WinGSettings.&("TP_"      + DefineOohg3     + DefineBorland + DefineHarbour  + Define32bits).value
    &("Gbl_T_P_LIBS_" + DefineOohg3     + DefineBorland + DefineHarbour  + Define32bits) := WinGSettings.&("TP_LIBS_" + DefineOohg3     + DefineBorland + DefineHarbour  + Define32bits).value
+   &("Gbl_T_N_"      + DefineOohg3     + DefineBorland + DefineHarbour  + Define32bits) := WinGSettings.&("TN_"      + DefineOohg3     + DefineBorland + DefineHarbour  + Define32bits).value
 
    &("Gbl_T_C_"      + DefineOohg3     + DefineBorland + DefineXHarbour + Define32bits) := WinGSettings.&("TC_"      + DefineOohg3     + DefineBorland + DefineXHarbour + Define32bits).value
    &("Gbl_T_C_LIBS_" + DefineOohg3     + DefineBorland + DefineXHarbour + Define32bits) := WinGSettings.&("TC_LIBS_" + DefineOohg3     + DefineBorland + DefineXHarbour + Define32bits).value
@@ -3725,6 +4236,7 @@ Function GlobalSettingsSave( lDefaultFile )
    &("Gbl_T_M_LIBS_" + DefineOohg3     + DefineBorland + DefineXHarbour + Define32bits) := WinGSettings.&("TM_LIBS_" + DefineOohg3     + DefineBorland + DefineXHarbour + Define32bits).value
    &("Gbl_T_P_"      + DefineOohg3     + DefineBorland + DefineXHarbour + Define32bits) := WinGSettings.&("TP_"      + DefineOohg3     + DefineBorland + DefineXHarbour + Define32bits).value
    &("Gbl_T_P_LIBS_" + DefineOohg3     + DefineBorland + DefineXHarbour + Define32bits) := WinGSettings.&("TP_LIBS_" + DefineOohg3     + DefineBorland + DefineXHarbour + Define32bits).value
+   &("Gbl_T_N_"      + DefineOohg3     + DefineBorland + DefineXHarbour + Define32bits) := WinGSettings.&("TN_"      + DefineOohg3     + DefineBorland + DefineXHarbour + Define32bits).value
 
    &("Gbl_T_C_"      + DefineOohg3     + DefineMinGW   + DefineHarbour  + Define32bits) := WinGSettings.&("TC_"      + DefineOohg3     + DefineMinGW   + DefineHarbour  + Define32bits).value
    &("Gbl_T_C_LIBS_" + DefineOohg3     + DefineMinGW   + DefineHarbour  + Define32bits) := WinGSettings.&("TC_LIBS_" + DefineOohg3     + DefineMinGW   + DefineHarbour  + Define32bits).value
@@ -3732,6 +4244,7 @@ Function GlobalSettingsSave( lDefaultFile )
    &("Gbl_T_M_LIBS_" + DefineOohg3     + DefineMinGW   + DefineHarbour  + Define32bits) := WinGSettings.&("TM_LIBS_" + DefineOohg3     + DefineMinGW   + DefineHarbour  + Define32bits).value
    &("Gbl_T_P_"      + DefineOohg3     + DefineMinGW   + DefineHarbour  + Define32bits) := WinGSettings.&("TP_"      + DefineOohg3     + DefineMinGW   + DefineHarbour  + Define32bits).value
    &("Gbl_T_P_LIBS_" + DefineOohg3     + DefineMinGW   + DefineHarbour  + Define32bits) := WinGSettings.&("TP_LIBS_" + DefineOohg3     + DefineMinGW   + DefineHarbour  + Define32bits).value
+   &("Gbl_T_N_"      + DefineOohg3     + DefineMinGW   + DefineHarbour  + Define32bits) := WinGSettings.&("TN_"      + DefineOohg3     + DefineMinGW   + DefineHarbour  + Define32bits).value
 
    &("Gbl_T_C_"      + DefineOohg3     + DefineMinGW   + DefineHarbour  + Define64bits) := WinGSettings.&("TC_"      + DefineOohg3     + DefineMinGW   + DefineHarbour  + Define64bits).value
    &("Gbl_T_C_LIBS_" + DefineOohg3     + DefineMinGW   + DefineHarbour  + Define64bits) := WinGSettings.&("TC_LIBS_" + DefineOohg3     + DefineMinGW   + DefineHarbour  + Define64bits).value
@@ -3739,6 +4252,7 @@ Function GlobalSettingsSave( lDefaultFile )
    &("Gbl_T_M_LIBS_" + DefineOohg3     + DefineMinGW   + DefineHarbour  + Define64bits) := WinGSettings.&("TM_LIBS_" + DefineOohg3     + DefineMinGW   + DefineHarbour  + Define64bits).value
    &("Gbl_T_P_"      + DefineOohg3     + DefineMinGW   + DefineHarbour  + Define64bits) := WinGSettings.&("TP_"      + DefineOohg3     + DefineMinGW   + DefineHarbour  + Define64bits).value
    &("Gbl_T_P_LIBS_" + DefineOohg3     + DefineMinGW   + DefineHarbour  + Define64bits) := WinGSettings.&("TP_LIBS_" + DefineOohg3     + DefineMinGW   + DefineHarbour  + Define64bits).value
+   &("Gbl_T_N_"      + DefineOohg3     + DefineMinGW   + DefineHarbour  + Define64bits) := WinGSettings.&("TN_"      + DefineOohg3     + DefineMinGW   + DefineHarbour  + Define64bits).value
 
    &("Gbl_T_C_"      + DefineOohg3     + DefineMinGW   + DefineXHarbour + Define32bits) := WinGSettings.&("TC_"      + DefineOohg3     + DefineMinGW   + DefineXHarbour + Define32bits).value
    &("Gbl_T_C_LIBS_" + DefineOohg3     + DefineMinGW   + DefineXHarbour + Define32bits) := WinGSettings.&("TC_LIBS_" + DefineOohg3     + DefineMinGW   + DefineXHarbour + Define32bits).value
@@ -3746,6 +4260,7 @@ Function GlobalSettingsSave( lDefaultFile )
    &("Gbl_T_M_LIBS_" + DefineOohg3     + DefineMinGW   + DefineXHarbour + Define32bits) := WinGSettings.&("TM_LIBS_" + DefineOohg3     + DefineMinGW   + DefineXHarbour + Define32bits).value
    &("Gbl_T_P_"      + DefineOohg3     + DefineMinGW   + DefineXHarbour + Define32bits) := WinGSettings.&("TP_"      + DefineOohg3     + DefineMinGW   + DefineXHarbour + Define32bits).value
    &("Gbl_T_P_LIBS_" + DefineOohg3     + DefineMinGW   + DefineXHarbour + Define32bits) := WinGSettings.&("TP_LIBS_" + DefineOohg3     + DefineMinGW   + DefineXHarbour + Define32bits).value
+   &("Gbl_T_N_"      + DefineOohg3     + DefineMinGW   + DefineXHarbour + Define32bits) := WinGSettings.&("TN_"      + DefineOohg3     + DefineMinGW   + DefineXHarbour + Define32bits).value
 
    &("Gbl_T_C_"      + DefineOohg3     + DefineMinGW   + DefineXHarbour + Define64bits) := WinGSettings.&("TC_"      + DefineOohg3     + DefineMinGW   + DefineXHarbour + Define64bits).value
    &("Gbl_T_C_LIBS_" + DefineOohg3     + DefineMinGW   + DefineXHarbour + Define64bits) := WinGSettings.&("TC_LIBS_" + DefineOohg3     + DefineMinGW   + DefineXHarbour + Define64bits).value
@@ -3753,6 +4268,7 @@ Function GlobalSettingsSave( lDefaultFile )
    &("Gbl_T_M_LIBS_" + DefineOohg3     + DefineMinGW   + DefineXHarbour + Define64bits) := WinGSettings.&("TM_LIBS_" + DefineOohg3     + DefineMinGW   + DefineXHarbour + Define64bits).value
    &("Gbl_T_P_"      + DefineOohg3     + DefineMinGW   + DefineXHarbour + Define64bits) := WinGSettings.&("TP_"      + DefineOohg3     + DefineMinGW   + DefineXHarbour + Define64bits).value
    &("Gbl_T_P_LIBS_" + DefineOohg3     + DefineMinGW   + DefineXHarbour + Define64bits) := WinGSettings.&("TP_LIBS_" + DefineOohg3     + DefineMinGW   + DefineXHarbour + Define64bits).value
+   &("Gbl_T_N_"      + DefineOohg3     + DefineMinGW   + DefineXHarbour + Define64bits) := WinGSettings.&("TN_"      + DefineOohg3     + DefineMinGW   + DefineXHarbour + Define64bits).value
 
    &("Gbl_T_C_"      + DefineOohg3     + DefinePelles  + DefineHarbour  + Define32bits) := WinGSettings.&("TC_"      + DefineOohg3     + DefinePelles  + DefineHarbour  + Define32bits).value
    &("Gbl_T_C_LIBS_" + DefineOohg3     + DefinePelles  + DefineHarbour  + Define32bits) := WinGSettings.&("TC_LIBS_" + DefineOohg3     + DefinePelles  + DefineHarbour  + Define32bits).value
@@ -3760,6 +4276,7 @@ Function GlobalSettingsSave( lDefaultFile )
    &("Gbl_T_M_LIBS_" + DefineOohg3     + DefinePelles  + DefineHarbour  + Define32bits) := WinGSettings.&("TM_LIBS_" + DefineOohg3     + DefinePelles  + DefineHarbour  + Define32bits).value
    &("Gbl_T_P_"      + DefineOohg3     + DefinePelles  + DefineHarbour  + Define32bits) := WinGSettings.&("TP_"      + DefineOohg3     + DefinePelles  + DefineHarbour  + Define32bits).value
    &("Gbl_T_P_LIBS_" + DefineOohg3     + DefinePelles  + DefineHarbour  + Define32bits) := WinGSettings.&("TP_LIBS_" + DefineOohg3     + DefinePelles  + DefineHarbour  + Define32bits).value
+   &("Gbl_T_N_"      + DefineOohg3     + DefinePelles  + DefineHarbour  + Define32bits) := WinGSettings.&("TN_"      + DefineOohg3     + DefinePelles  + DefineHarbour  + Define32bits).value
 
    &("Gbl_T_C_"      + DefineOohg3     + DefinePelles  + DefineHarbour  + Define64bits) := WinGSettings.&("TC_"      + DefineOohg3     + DefinePelles  + DefineHarbour  + Define64bits).value
    &("Gbl_T_C_LIBS_" + DefineOohg3     + DefinePelles  + DefineHarbour  + Define64bits) := WinGSettings.&("TC_LIBS_" + DefineOohg3     + DefinePelles  + DefineHarbour  + Define64bits).value
@@ -3767,6 +4284,7 @@ Function GlobalSettingsSave( lDefaultFile )
    &("Gbl_T_M_LIBS_" + DefineOohg3     + DefinePelles  + DefineHarbour  + Define64bits) := WinGSettings.&("TM_LIBS_" + DefineOohg3     + DefinePelles  + DefineHarbour  + Define64bits).value
    &("Gbl_T_P_"      + DefineOohg3     + DefinePelles  + DefineHarbour  + Define64bits) := WinGSettings.&("TP_"      + DefineOohg3     + DefinePelles  + DefineHarbour  + Define64bits).value
    &("Gbl_T_P_LIBS_" + DefineOohg3     + DefinePelles  + DefineHarbour  + Define64bits) := WinGSettings.&("TP_LIBS_" + DefineOohg3     + DefinePelles  + DefineHarbour  + Define64bits).value
+   &("Gbl_T_N_"      + DefineOohg3     + DefinePelles  + DefineHarbour  + Define64bits) := WinGSettings.&("TN_"      + DefineOohg3     + DefinePelles  + DefineHarbour  + Define64bits).value
 
    &("Gbl_T_C_"      + DefineOohg3     + DefinePelles  + DefineXHarbour + Define32bits) := WinGSettings.&("TC_"      + DefineOohg3     + DefinePelles  + DefineXHarbour + Define32bits).value
    &("Gbl_T_C_LIBS_" + DefineOohg3     + DefinePelles  + DefineXHarbour + Define32bits) := WinGSettings.&("TC_LIBS_" + DefineOohg3     + DefinePelles  + DefineXHarbour + Define32bits).value
@@ -3774,6 +4292,7 @@ Function GlobalSettingsSave( lDefaultFile )
    &("Gbl_T_M_LIBS_" + DefineOohg3     + DefinePelles  + DefineXHarbour + Define32bits) := WinGSettings.&("TM_LIBS_" + DefineOohg3     + DefinePelles  + DefineXHarbour + Define32bits).value
    &("Gbl_T_P_"      + DefineOohg3     + DefinePelles  + DefineXHarbour + Define32bits) := WinGSettings.&("TP_"      + DefineOohg3     + DefinePelles  + DefineXHarbour + Define32bits).value
    &("Gbl_T_P_LIBS_" + DefineOohg3     + DefinePelles  + DefineXHarbour + Define32bits) := WinGSettings.&("TP_LIBS_" + DefineOohg3     + DefinePelles  + DefineXHarbour + Define32bits).value
+   &("Gbl_T_N_"      + DefineOohg3     + DefinePelles  + DefineXHarbour + Define32bits) := WinGSettings.&("TN_"      + DefineOohg3     + DefinePelles  + DefineXHarbour + Define32bits).value
 
    &("Gbl_T_C_"      + DefineOohg3     + DefinePelles  + DefineXHarbour + Define64bits) := WinGSettings.&("TC_"      + DefineOohg3     + DefinePelles  + DefineXHarbour + Define64bits).value
    &("Gbl_T_C_LIBS_" + DefineOohg3     + DefinePelles  + DefineXHarbour + Define64bits) := WinGSettings.&("TC_LIBS_" + DefineOohg3     + DefinePelles  + DefineXHarbour + Define64bits).value
@@ -3781,6 +4300,7 @@ Function GlobalSettingsSave( lDefaultFile )
    &("Gbl_T_M_LIBS_" + DefineOohg3     + DefinePelles  + DefineXHarbour + Define64bits) := WinGSettings.&("TM_LIBS_" + DefineOohg3     + DefinePelles  + DefineXHarbour + Define64bits).value
    &("Gbl_T_P_"      + DefineOohg3     + DefinePelles  + DefineXHarbour + Define64bits) := WinGSettings.&("TP_"      + DefineOohg3     + DefinePelles  + DefineXHarbour + Define64bits).value
    &("Gbl_T_P_LIBS_" + DefineOohg3     + DefinePelles  + DefineXHarbour + Define64bits) := WinGSettings.&("TP_LIBS_" + DefineOohg3     + DefinePelles  + DefineXHarbour + Define64bits).value
+   &("Gbl_T_N_"      + DefineOohg3     + DefinePelles  + DefineXHarbour + Define64bits) := WinGSettings.&("TN_"      + DefineOohg3     + DefinePelles  + DefineXHarbour + Define64bits).value
 
    SaveEnvironment( lDefaultFile )
 Return .T.
