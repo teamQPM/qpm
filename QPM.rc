@@ -1,8 +1,4 @@
 /*
- * $Id: QPM.rc 12 2011-09-24 03:21:53Z fyurisich $
- */
-
-/*
  *    QPM - QAC based Project Manager
  *
  *    Copyright 2011-2020 Fernando Yurisich <fernando.yurisich@gmail.com>
@@ -25,6 +21,36 @@
  *    You should have received a copy of the GNU General Public License
  *    along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
+
+#include "QPM_version.ch"
+
+1 VERSIONINFO
+FILEVERSION QPM_VERSION_VERSION_INFO
+PRODUCTVERSION QPM_VERSION_VERSION_INFO
+BEGIN
+   BLOCK "StringFileInfo"
+   BEGIN
+      BLOCK "040904B0"  /* LANGUAGE: US English (0x0409), ENCODING: Unicode (1200/0x04B0) */
+      BEGIN
+   		VALUE "FileDescription", "QPM - QAC based project manager\000"
+   		VALUE "FileVersion", QPM_VERSION_STRINGF_INFO
+   		VALUE "InternalName", "QPM\000"
+   		VALUE "LegalCopyright", " © 2011-2020 Fernando Yurisich\000"
+   		VALUE "LegalTrademarks", "Harbour, QAC, MiniGUI\000"
+   		VALUE "OriginalFilename", "QPM.exe\000"
+   		VALUE "CompanyName", "QPM Development Team\000"
+   		VALUE "ProductName", "QPM\000"
+   		VALUE "ProductVersion", QPM_VERSION_STRINGF_INFO
+   		VALUE "Comments", "<fernando.yurisich@gmail.com>\000"
+      END
+   END
+   BLOCK "VarFileInfo"
+   BEGIN
+      VALUE "Translation", 0x0409, 0x04B0  /* LANGUAGE: US English (0x0409), ENCODING: Unicode (1200/0x04B0) */
+   END
+END
+
+1 24 "Windows10.Manifest"
 
 #include "QPM_Resources.ch"
 
