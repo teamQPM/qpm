@@ -99,7 +99,7 @@ FUNCTION MAIN( ... )
             cPar3 := StrTran( US_Word( cParam, 3 ), "|", " " )
             Say( "         File: " + cPar3 )
             If ! File( cPar3 )
-               Say( "US_Shell 380I: File Not Found: " + cPar3, .T. )
+               Say( "US_Shell 380I: File Not Found: " + cPar3 )
                bError := .T.
             Else
                Say( "US_Shell 386I: File Found: " + cPar3 + ' (' + AllTrim( Str( US_FileSize( cPar3 ) ) ) + ' bytes)' )
