@@ -41,9 +41,7 @@
 #define DEF_LEN_VER_BUILD          4
 
 // QPM version
-#define QPM_VERSION_NUMBER_MAYOR   '05'
-#define QPM_VERSION_NUMBER_MINOR   '05'
-#define QPM_VERSION_NUMBER_BUILD   '16'
+#include "QPM_version.ch"
 #define QPM_VERSION_NUMBER_SHORT   ( QPM_VERSION_NUMBER_MAYOR + QPM_VERSION_NUMBER_MINOR + QPM_VERSION_NUMBER_BUILD )
 #define QPM_VERSION_NUMBER_LONG    ( QPM_VERSION_NUMBER_MAYOR + QPM_VERSION_NUMBER_MINOR + "00" + QPM_VERSION_NUMBER_BUILD )
 #define QPM_VERSION_DISPLAY_SHORT  ( QPM_VERSION_NUMBER_MAYOR + "." + QPM_VERSION_NUMBER_MINOR + '.' + QPM_VERSION_NUMBER_BUILD )
@@ -336,6 +334,7 @@ memvar Define64bits
 memvar DefineBorland
 memvar DefineExtended1
 memvar DefineHarbour
+memvar DefineLibName
 memvar DefineMinGW
 memvar DefineMiniGui1
 memvar DefineMiniGui3
@@ -445,6 +444,46 @@ memvar Gbl_T_M_O3PH_32
 memvar Gbl_T_M_O3PH_64
 memvar Gbl_T_M_O3PX_32
 memvar Gbl_T_M_O3PX_64
+memvar Gbl_T_N_E1BH_32
+memvar Gbl_T_N_E1BX_32
+memvar Gbl_T_N_E1GH_32
+memvar Gbl_T_N_E1GH_64
+memvar Gbl_T_N_E1GX_32
+memvar Gbl_T_N_E1GX_64
+memvar Gbl_T_N_LIBS_E1BH_32
+memvar Gbl_T_N_LIBS_E1BX_32
+memvar Gbl_T_N_LIBS_E1GH_32
+memvar Gbl_T_N_LIBS_E1GH_64
+memvar Gbl_T_N_LIBS_E1GX_32
+memvar Gbl_T_N_LIBS_E1GX_64
+memvar Gbl_T_N_LIBS_M1BH_32
+memvar Gbl_T_N_LIBS_M1BX_32
+memvar Gbl_T_N_LIBS_M3GH_32
+memvar Gbl_T_N_LIBS_M3GH_64
+memvar Gbl_T_N_LIBS_O3BH_32
+memvar Gbl_T_N_LIBS_O3BX_32
+memvar Gbl_T_N_LIBS_O3GH_32
+memvar Gbl_T_N_LIBS_O3GH_64
+memvar Gbl_T_N_LIBS_O3GX_32
+memvar Gbl_T_N_LIBS_O3GX_64
+memvar Gbl_T_N_LIBS_O3PH_32
+memvar Gbl_T_N_LIBS_O3PH_64
+memvar Gbl_T_N_LIBS_O3PX_32
+memvar Gbl_T_N_LIBS_O3PX_64
+memvar Gbl_T_N_M1BH_32
+memvar Gbl_T_N_M1BX_32
+memvar Gbl_T_N_M3GH_32
+memvar Gbl_T_N_M3GH_64
+memvar Gbl_T_N_O3BH_32
+memvar Gbl_T_N_O3BX_32
+memvar Gbl_T_N_O3GH_32
+memvar Gbl_T_N_O3GH_64
+memvar Gbl_T_N_O3GX_32
+memvar Gbl_T_N_O3GX_64
+memvar Gbl_T_N_O3PH_32
+memvar Gbl_T_N_O3PH_64
+memvar Gbl_T_N_O3PX_32
+memvar Gbl_T_N_O3PX_64
 memvar Gbl_T_P_E1BH_32
 memvar Gbl_T_P_E1BX_32
 memvar Gbl_T_P_E1GH_32
