@@ -30,7 +30,7 @@
 #include <QPM.ch>
 
 Function GlobalSettings()
-   LOCAL Filename, Folder
+   LOCAL Filename, Folder, x
 
    DEFINE WINDOW WinGSettings ;
           AT 0, 0 ;
@@ -310,11 +310,11 @@ Function GlobalSettings()
                     TRANSPARENT     .T.
             END LABEL
             DEFINE TEXTBOX &("TN_"+DefineMiniGui1+DefineBorland+DefineHarbour+Define32bits)
-                    VALUE           &("Gbl_T_N_"+DefineMiniGui1+DefineBorland+DefineHarbour+Define32bits)
+                    VALUE           iif( Empty( x := &("Gbl_T_N_"+DefineMiniGui1+DefineBorland+DefineHarbour+Define32bits) ), "minigui.lib", x )
                     ROW             130
                     COL             120
                     WIDTH           561
-                    TOOLTIP         "Name and extension of HMG's main library (usually 'minigui.lib')"
+                    TOOLTIP         "Name and extension of HMG's main library"
             END TEXTBOX
             DEFINE BUTTON &("BM_NAME_"+DefineMiniGui1+DefineBorland+DefineHarbour+Define32bits)
                     ROW             130
@@ -488,11 +488,11 @@ Function GlobalSettings()
                     TRANSPARENT     .T.
             END LABEL
             DEFINE TEXTBOX &("TN_"+DefineMiniGui1+DefineBorland+DefineXHarbour+Define32bits)
-                    VALUE           &("Gbl_T_N_"+DefineMiniGui1+DefineBorland+DefineXHarbour+Define32bits)
+                    VALUE           iif( Empty( x := &("Gbl_T_N_"+DefineMiniGui1+DefineBorland+DefineXHarbour+Define32bits) ), "minigui.lib", x )
                     ROW             130
                     COL             120
                     WIDTH           561
-                    TOOLTIP         "Name and extension of HMG's main library (usually 'minigui.lib')"
+                    TOOLTIP         "Name and extension of HMG's main library"
             END TEXTBOX
             DEFINE BUTTON &("BM_NAME_"+DefineMiniGui1+DefineBorland+DefineXHarbour+Define32bits)
                     ROW             130
@@ -666,11 +666,11 @@ Function GlobalSettings()
                     TRANSPARENT     .T.
             END LABEL
             DEFINE TEXTBOX &("TN_"+DefineMiniGui3+DefineMinGW+DefineHarbour+Define32bits)
-                    VALUE           &("Gbl_T_N_"+DefineMiniGui3+DefineMinGW+DefineHarbour+Define32bits)
+                    VALUE           iif( Empty( x := &("Gbl_T_N_"+DefineMiniGui3+DefineMinGW+DefineHarbour+Define32bits) ), "libhmg.a", x )
                     ROW             130
                     COL             120
                     WIDTH           561
-                    TOOLTIP         "Name and extension of HMG's main library (usually 'minigui.lib')"
+                    TOOLTIP         "Name and extension of HMG's main library"
             END TEXTBOX
             DEFINE BUTTON &("BM_NAME_"+DefineMiniGui3+DefineMinGW+DefineHarbour+Define32bits)
                     ROW             130
@@ -844,11 +844,11 @@ Function GlobalSettings()
                     TRANSPARENT     .T.
             END LABEL
             DEFINE TEXTBOX &("TN_"+DefineMiniGui3+DefineMinGW+DefineHarbour+Define64bits)
-                    VALUE           &("Gbl_T_N_"+DefineMiniGui3+DefineMinGW+DefineHarbour+Define64bits)
+                    VALUE           iif( Empty( x := &("Gbl_T_N_"+DefineMiniGui3+DefineMinGW+DefineHarbour+Define64bits) ), "libhmg-64.a", x )
                     ROW             130
                     COL             120
                     WIDTH           561
-                    TOOLTIP         "Name and extension of HMG's main library (usually 'minigui.lib')"
+                    TOOLTIP         "Name and extension of HMG's main library"
             END TEXTBOX
             DEFINE BUTTON &("BM_NAME_"+DefineMiniGui3+DefineMinGW+DefineHarbour+Define64bits)
                     ROW             130
@@ -1022,11 +1022,11 @@ Function GlobalSettings()
                     TRANSPARENT     .T.
             END LABEL
             DEFINE TEXTBOX &("TN_"+DefineExtended1+DefineBorland+DefineHarbour+Define32bits)
-                    VALUE           &("Gbl_T_N_"+DefineExtended1+DefineBorland+DefineHarbour+Define32bits)
+                    VALUE           iif( Empty( x := &("Gbl_T_N_"+DefineExtended1+DefineBorland+DefineHarbour+Define32bits) ), "minigui.lib", x )
                     ROW             130
                     COL             120
                     WIDTH           561
-                    TOOLTIP         "Name and extension of HMG's main library (usually 'minigui.lib')"
+                    TOOLTIP         "Name and extension of HMG's main library"
             END TEXTBOX
             DEFINE BUTTON &("BM_NAME_"+DefineExtended1+DefineBorland+DefineHarbour+Define32bits)
                     ROW             130
@@ -1200,11 +1200,11 @@ Function GlobalSettings()
                     TRANSPARENT     .T.
             END LABEL
             DEFINE TEXTBOX &("TN_"+DefineExtended1+DefineBorland+DefineXHarbour+Define32bits)
-                    VALUE           &("Gbl_T_N_"+DefineExtended1+DefineBorland+DefineXHarbour+Define32bits)
+                    VALUE           iif( Empty( x := &("Gbl_T_N_"+DefineExtended1+DefineBorland+DefineXHarbour+Define32bits) ), "minigui.lib", x )
                     ROW             130
                     COL             120
                     WIDTH           561
-                    TOOLTIP         "Name and extension of HMG's main library (usually 'minigui.lib')"
+                    TOOLTIP         "Name and extension of HMG's main library"
             END TEXTBOX
             DEFINE BUTTON &("BM_NAME_"+DefineExtended1+DefineBorland+DefineXHarbour+Define32bits)
                     ROW             130
@@ -1378,11 +1378,11 @@ Function GlobalSettings()
                     TRANSPARENT     .T.
             END LABEL
             DEFINE TEXTBOX &("TN_"+DefineExtended1+DefineMinGW+DefineHarbour+Define32bits)
-                    VALUE           &("Gbl_T_N_"+DefineExtended1+DefineMinGW+DefineHarbour+Define32bits)
+                    VALUE           iif( Empty( x := &("Gbl_T_N_"+DefineExtended1+DefineMinGW+DefineHarbour+Define32bits) ), "libminigui.a", x )
                     ROW             130
                     COL             120
                     WIDTH           561
-                    TOOLTIP         "Name and extension of HMG's main library (usually 'minigui.lib')"
+                    TOOLTIP         "Name and extension of HMG's main library"
             END TEXTBOX
             DEFINE BUTTON &("BM_NAME_"+DefineExtended1+DefineMinGW+DefineHarbour+Define32bits)
                     ROW             130
@@ -1556,11 +1556,11 @@ Function GlobalSettings()
                     TRANSPARENT     .T.
             END LABEL
             DEFINE TEXTBOX &("TN_"+DefineExtended1+DefineMinGW+DefineXHarbour+Define32bits)
-                    VALUE           &("Gbl_T_N_"+DefineExtended1+DefineMinGW+DefineXHarbour+Define32bits)
+                    VALUE           iif( Empty( x := &("Gbl_T_N_"+DefineExtended1+DefineMinGW+DefineXHarbour+Define32bits) ), "libminigui.a", x )
                     ROW             130
                     COL             120
                     WIDTH           561
-                    TOOLTIP         "Name and extension of HMG's main library (usually 'minigui.lib')"
+                    TOOLTIP         "Name and extension of HMG's main library"
             END TEXTBOX
             DEFINE BUTTON &("BM_NAME_"+DefineExtended1+DefineMinGW+DefineXHarbour+Define32bits)
                     ROW             130
@@ -1734,11 +1734,11 @@ Function GlobalSettings()
                     TRANSPARENT     .T.
             END LABEL
             DEFINE TEXTBOX &("TN_"+DefineExtended1+DefineMinGW+DefineHarbour+Define64bits)
-                    VALUE           &("Gbl_T_N_"+DefineExtended1+DefineMinGW+DefineHarbour+Define64bits)
+                    VALUE           iif( Empty( x := &("Gbl_T_N_"+DefineExtended1+DefineMinGW+DefineHarbour+Define64bits) ), "libminigui-64.a", x )
                     ROW             130
                     COL             120
                     WIDTH           561
-                    TOOLTIP         "Name and extension of HMG's main library (usually 'minigui.lib')"
+                    TOOLTIP         "Name and extension of HMG's main library"
             END TEXTBOX
             DEFINE BUTTON &("BM_NAME_"+DefineExtended1+DefineMinGW+DefineHarbour+Define64bits)
                     ROW             130
@@ -1912,11 +1912,11 @@ Function GlobalSettings()
                     TRANSPARENT     .T.
             END LABEL
             DEFINE TEXTBOX &("TN_"+DefineExtended1+DefineMinGW+DefineXHarbour+Define64bits)
-                    VALUE           &("Gbl_T_N_"+DefineExtended1+DefineMinGW+DefineXHarbour+Define64bits)
+                    VALUE           iif( Empty( x := &("Gbl_T_N_"+DefineExtended1+DefineMinGW+DefineXHarbour+Define64bits) ), "libminigui-64.a", x )
                     ROW             130
                     COL             120
                     WIDTH           561
-                    TOOLTIP         "Name and extension of HMG's main library (usually 'minigui.lib')"
+                    TOOLTIP         "Name and extension of HMG's main library"
             END TEXTBOX
             DEFINE BUTTON &("BM_NAME_"+DefineExtended1+DefineMinGW+DefineXHarbour+Define64bits)
                     ROW             130
@@ -2090,11 +2090,11 @@ Function GlobalSettings()
                     TRANSPARENT     .T.
             END LABEL
             DEFINE TEXTBOX &("TN_"+DefineOohg3+DefineBorland+DefineHarbour+Define32bits)
-                    VALUE           &("Gbl_T_N_"+DefineOohg3+DefineBorland+DefineHarbour+Define32bits)
+                    VALUE           iif( Empty( x := &("Gbl_T_N_"+DefineOohg3+DefineBorland+DefineHarbour+Define32bits) ), "oohg.lib", x )
                     ROW             130
                     COL             120
                     WIDTH           561
-                    TOOLTIP         "Name and extension of HMG's main library (usually 'minigui.lib')"
+                    TOOLTIP         "Name and extension of HMG's main library"
             END TEXTBOX
             DEFINE BUTTON &("BM_NAME_"+DefineOohg3+DefineBorland+DefineHarbour+Define32bits)
                     ROW             130
@@ -2268,11 +2268,11 @@ Function GlobalSettings()
                     TRANSPARENT     .T.
             END LABEL
             DEFINE TEXTBOX &("TN_"+DefineOohg3+DefineBorland+DefineXHarbour+Define32bits)
-                    VALUE           &("Gbl_T_N_"+DefineOohg3+DefineBorland+DefineXHarbour+Define32bits)
+                    VALUE           iif( Empty( x := &("Gbl_T_N_"+DefineOohg3+DefineBorland+DefineXHarbour+Define32bits) ), "oohg.lib", x )
                     ROW             130
                     COL             120
                     WIDTH           561
-                    TOOLTIP         "Name and extension of HMG's main library (usually 'minigui.lib')"
+                    TOOLTIP         "Name and extension of HMG's main library"
             END TEXTBOX
             DEFINE BUTTON &("BM_NAME_"+DefineOohg3+DefineBorland+DefineXHarbour+Define32bits)
                     ROW             130
@@ -2446,11 +2446,11 @@ Function GlobalSettings()
                     TRANSPARENT     .T.
             END LABEL
             DEFINE TEXTBOX &("TN_"+DefineOohg3+DefineMinGW+DefineHarbour+Define32bits)
-                    VALUE           &("Gbl_T_N_"+DefineOohg3+DefineMinGW+DefineHarbour+Define32bits)
+                    VALUE           iif( Empty( x := &("Gbl_T_N_"+DefineOohg3+DefineMinGW+DefineHarbour+Define32bits) ), "liboohg.a", x )
                     ROW             130
                     COL             120
                     WIDTH           561
-                    TOOLTIP         "Name and extension of HMG's main library (usually 'minigui.lib')"
+                    TOOLTIP         "Name and extension of HMG's main library"
             END TEXTBOX
             DEFINE BUTTON &("BM_NAME_"+DefineOohg3+DefineMinGW+DefineHarbour+Define32bits)
                     ROW             130
@@ -2624,11 +2624,11 @@ Function GlobalSettings()
                     TRANSPARENT     .T.
             END LABEL
             DEFINE TEXTBOX &("TN_"+DefineOohg3+DefineMinGW+DefineXHarbour+Define32bits)
-                    VALUE           &("Gbl_T_N_"+DefineOohg3+DefineMinGW+DefineXHarbour+Define32bits)
+                    VALUE           iif( Empty( x := &("Gbl_T_N_"+DefineOohg3+DefineMinGW+DefineXHarbour+Define32bits) ), "liboohg.a", x )
                     ROW             130
                     COL             120
                     WIDTH           561
-                    TOOLTIP         "Name and extension of HMG's main library (usually 'minigui.lib')"
+                    TOOLTIP         "Name and extension of HMG's main library"
             END TEXTBOX
             DEFINE BUTTON &("BM_NAME_"+DefineOohg3+DefineMinGW+DefineXHarbour+Define32bits)
                     ROW             130
@@ -2802,11 +2802,11 @@ Function GlobalSettings()
                     TRANSPARENT     .T.
             END LABEL
             DEFINE TEXTBOX &("TN_"+DefineOohg3+DefineMinGW+DefineHarbour+Define64bits)
-                    VALUE           &("Gbl_T_N_"+DefineOohg3+DefineMinGW+DefineHarbour+Define64bits)
+                    VALUE           iif( Empty( x := &("Gbl_T_N_"+DefineOohg3+DefineMinGW+DefineHarbour+Define64bits) ), "liboohg.a", x )
                     ROW             130
                     COL             120
                     WIDTH           561
-                    TOOLTIP         "Name and extension of HMG's main library (usually 'minigui.lib')"
+                    TOOLTIP         "Name and extension of HMG's main library"
             END TEXTBOX
             DEFINE BUTTON &("BM_NAME_"+DefineOohg3+DefineMinGW+DefineHarbour+Define64bits)
                     ROW             130
@@ -2980,11 +2980,11 @@ Function GlobalSettings()
                     TRANSPARENT     .T.
             END LABEL
             DEFINE TEXTBOX &("TN_"+DefineOohg3+DefineMinGW+DefineXHarbour+Define64bits)
-                    VALUE           &("Gbl_T_N_"+DefineOohg3+DefineMinGW+DefineXHarbour+Define64bits)
+                    VALUE           iif( Empty( x := &("Gbl_T_N_"+DefineOohg3+DefineMinGW+DefineXHarbour+Define64bits) ), "liboohg.a", x )
                     ROW             130
                     COL             120
                     WIDTH           561
-                    TOOLTIP         "Name and extension of HMG's main library (usually 'minigui.lib')"
+                    TOOLTIP         "Name and extension of HMG's main library"
             END TEXTBOX
             DEFINE BUTTON &("BM_NAME_"+DefineOohg3+DefineMinGW+DefineXHarbour+Define64bits)
                     ROW             130
@@ -3158,11 +3158,11 @@ Function GlobalSettings()
                     TRANSPARENT     .T.
             END LABEL
             DEFINE TEXTBOX &("TN_"+DefineOohg3+DefinePelles+DefineHarbour+Define32bits)
-                    VALUE           &("Gbl_T_N_"+DefineOohg3+DefinePelles+DefineHarbour+Define32bits)
+                    VALUE           iif( Empty( x := &("Gbl_T_N_"+DefineOohg3+DefinePelles+DefineHarbour+Define32bits) ), "oohg.lib", x )
                     ROW             130
                     COL             120
                     WIDTH           561
-                    TOOLTIP         "Name and extension of HMG's main library (usually 'minigui.lib')"
+                    TOOLTIP         "Name and extension of HMG's main library"
             END TEXTBOX
             DEFINE BUTTON &("BM_NAME_"+DefineOohg3+DefinePelles+DefineHarbour+Define32bits)
                     ROW             130
@@ -3336,7 +3336,7 @@ Function GlobalSettings()
                     TRANSPARENT     .T.
             END LABEL
             DEFINE TEXTBOX &("TN_"+DefineOohg3+DefinePelles+DefineXHarbour+Define32bits)
-                    VALUE           &("Gbl_T_N_"+DefineOohg3+DefinePelles+DefineXHarbour+Define32bits)
+                    VALUE           iif( Empty( x := &("Gbl_T_N_"+DefineOohg3+DefinePelles+DefineXHarbour+Define32bits) ), "oohg.a", x )
                     ROW             130
                     COL             120
                     WIDTH           561
@@ -3514,7 +3514,7 @@ Function GlobalSettings()
                     TRANSPARENT     .T.
             END LABEL
             DEFINE TEXTBOX &("TN_"+DefineOohg3+DefinePelles+DefineHarbour+Define64bits)
-                    VALUE           &("Gbl_T_N_"+DefineOohg3+DefinePelles+DefineHarbour+Define64bits)
+                    VALUE           iif( Empty( x := &("Gbl_T_N_"+DefineOohg3+DefinePelles+DefineHarbour+Define64bits) ), "oohg.lib", x )
                     ROW             130
                     COL             120
                     WIDTH           561
@@ -3692,7 +3692,7 @@ Function GlobalSettings()
                     TRANSPARENT     .T.
             END LABEL
             DEFINE TEXTBOX &("TN_"+DefineOohg3+DefinePelles+DefineXHarbour+Define64bits)
-                    VALUE           &("Gbl_T_N_"+DefineOohg3+DefinePelles+DefineXHarbour+Define64bits)
+                    VALUE           iif( Empty( x := &("Gbl_T_N_"+DefineOohg3+DefinePelles+DefineXHarbour+Define64bits) ), "oohg.lib", x )
                     ROW             130
                     COL             120
                     WIDTH           561
