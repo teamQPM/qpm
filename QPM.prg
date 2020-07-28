@@ -5104,7 +5104,7 @@ FUNCTION QPM_Build2()
          MsgStop ( 'Folder for Minigui in ' + vSuffix[ AScan( vSuffix, { |x| x[1] == GetSuffix() } ) ][2] + ' is Empty.' + CRLF + 'Look at ' + PUB_MenuGblOptions + ' of Settings menu.' )
          BUILD_IN_PROGRESS := .F.
          RETURN .F.
-      CASE Empty( GetMiniGuiLibName() )
+      CASE Empty( GetMiniGuiName() )
          MsgStop ( 'Lib Name for Minigui in ' + vSuffix[ AScan( vSuffix, { |x| x[1] == GetSuffix() } ) ][2] + ' is Empty.' + CRLF + 'Look at ' + PUB_MenuGblOptions + ' of Settings menu.' )
          BUILD_IN_PROGRESS := .F.
          RETURN .F.
@@ -5120,11 +5120,11 @@ FUNCTION QPM_Build2()
          MsgStop ( 'Folder for xHarbour in ' + vSuffix[ AScan( vSuffix, { |x| x[1] == GetSuffix() } ) ][2] + ' is Empty.' + CRLF + 'Look at ' + PUB_MenuGblOptions + ' of Settings menu.' )
          BUILD_IN_PROGRESS := .F.
          RETURN .F.
-      CASE ! Empty(  GetMiniGuiFolder() ) .AND. !QPM_DirValid( US_ShortName( GetMiniGuiFolder() ), US_ShortName( GetMiniGuiLibFolder() ), GetMiniGuiSuffix() + GetCppSuffix() )
+      CASE ! QPM_DirValid( US_ShortName( GetMiniGuiFolder() ), US_ShortName( GetMiniGuiLibFolder() ), GetMiniGuiSuffix() + GetCppSuffix() )
          MsgStop ( 'Minigui folder is not valid.' + CRLF + 'Look at ' + PUB_MenuGblOptions + ' of Settings menu.' )
          BUILD_IN_PROGRESS := .F.
          RETURN .F.
-      CASE ! Empty( GetCppFolder() ) .AND. !QPM_DirValid( US_ShortName( GetCppFolder() ), US_ShortName( GetCppLibFolder() ), 'C_'+GetMiniGuiSuffix() + GetCppSuffix() )
+      CASE ! Empty( GetCppFolder() ) .AND. ! QPM_DirValid( US_ShortName( GetCppFolder() ), US_ShortName( GetCppLibFolder() ), 'C_' + GetMiniGuiSuffix() + GetCppSuffix() )
          MsgStop ( 'C++ Compiler folder is not valid.' + CRLF + 'Look at ' + PUB_MenuGblOptions + ' of Settings menu.' )
          BUILD_IN_PROGRESS := .F.
          RETURN .F.
