@@ -1,8 +1,97 @@
 /* QPM - QAC based Project Manager
  * Log of changes
- *
  * See "How to format your ChangeLog entries" in howtosvn.txt file.
  */
+
+2020-06-21 20:41 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   + RELEASE: TAG v05.05.0017 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+2020-06-21 23:15 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * QPM.exe
+     ! RTE "hb_xrealloc can't reallocate memory" caused by a MINIGUI bug.
+   #24
+     ! The first column of the grids shows NIL at startup (caused by a
+       MINIGUI regresion bug).
+     * Updated to version 05_05_17.
+   #23
+
+2020-07-27 20:18 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * HelpQPM\QPM_SHG.dbf
+   * HelpQPM\QPM_SHG.fpt
+     * Added info about the new version.
+
+2020-07-27 20:17 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * HelpQPM\SHG_Change.qpm
+   * QPM.iss
+   * QPM_AutoProject.qpm
+   * QPM_AutoProjectOnlyHelp.qpm
+   * QPM_US_Msg.qpm
+   * QPM_US_Redir.qpm
+   + QPM_US_Reimp.qpm
+   * QPM_US_Res.qpm
+   * QPM_US_Run.qpm
+   * QPM_US_Shell.qpm
+   * QPM_US_Slash.qpm
+   * QPM_Version.ch
+     * Updated to version 05_05_17.
+
+2020-07-27 19:39 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * us_make.exe
+     * Replaced by GNU Make 4.2 built by Equation Solution
+       <http://www.Equation.com>.
+   #25
+
+2020-07-27 19:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * QPM.prg
+     * No longer check for the presence of MiniGUI's main library
+       using a hardwired name.
+   #26
+     * Borland's Make was substituted by GNU Make 4.2 built by
+       Equation Solution <http://www.Equation.com>. This change
+       overcomes the former limit of 700 files per project.
+     * The timer's codeblocks no longer allow reentry until each
+       pass is completed. This facilitates garbage collection and
+       reduces memory usage when the amount of sources is huge.
+     * Some improvements to the build log.
+
+2020-07-27 18:39 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * QPM_AutoProject.qpm
+     * Updated.
+
+2020-07-27 18:33 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * QPM_Environment.prg
+   * QPM_Functions.prg
+   * QPM_GlobalSettings.prg
+     + Support for explicit identification of the MiniGUI main library.
+
+2020-07-27 18:27 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * QPM_US_Shell.qpm
+     * Updated.
+
+2020-07-27 18:26 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * us_shell.exe
+     * Updated.
+
+2020-07-27 18:25 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * us_shell.prg
+     ! A debug message is being shown in the build log.
+   #27
+
+2020-07-27 18:23 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * QPM.rc
+     + VERSIONINFO support.
+   #28
+
+2020-07-27 18:21 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * QPM.ch
+     * Use new QPM_Version.ch
+     + Declarations for new global vars.
+
+2020-07-27 18:18 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   + QPM_Version.ch
+
+2020-07-27 18:15 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   + Windows10.Manifest
 
 2020-06-21 01:45 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    - TODO.TXT
