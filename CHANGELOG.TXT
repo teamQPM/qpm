@@ -3,10 +3,46 @@
  * See "How to format your ChangeLog entries" in howtosvn.txt file.
  */
 
-2020-06-21 20:41 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2020-06-28 18:39 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   + RELEASE: TAG v05.05.0018 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+2020-06-28 18:17 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * QPM.exe
+     * Updated to version 05_05_18.
+     ! Can't build a project with HMG 3.4.4 64 bits.
+       QPM reports error: can't find "-lhmg" library.
+   #29
+
+2020-06-28 18:15 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * QPM_AutoProject.qpm
+     * Version updated to 05.05.0018.
+
+2020-06-28 18:14 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * QPM.iss
+   * QPM_Version.ch
+     * Version updated to 05.05.0018.
+
+2020-06-28 18:06 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * QPM.prg
+     * Use function GetMiniguiName instead of GetMiniguiLibName.
+   #29
+
+2020-06-28 18:05 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * QPM_Functions.prg
+     * Some hardwired library names were changed by parameters
+       at function QPM_DirValid.
+     - Function GetMiniguiLibName.
+   #29
+
+2020-06-28 18:03 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * QPM_GlobalSettings.prg
+     + Suggest default minigui main library name.
+   #30
+
+2020-06-27 00:14 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    + RELEASE: TAG v05.05.0017 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
-2020-06-21 23:15 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2020-06-27 23:15 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * QPM.exe
      ! RTE "hb_xrealloc can't reallocate memory" caused by a MINIGUI bug.
    #24
