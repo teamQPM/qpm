@@ -1024,7 +1024,7 @@ Function QPM_DirValid( cDir, cDirLib, cTipo )
          if File( cDir + DEF_SLASH + "INCLUDE" + DEF_SLASH + "minigui.ch" ) .and. ;
             ! File( cDir + DEF_SLASH + "INCLUDE" + DEF_SLASH + "oohg.ch" ) .and. ;
             ! US_IsDirectory( cDir + DEF_SLASH + "SOURCE" + DEF_SLASH + "TsBrowse" ) .and. ;
-            File( cDirLib + DEF_SLASH + 'minigui.lib' )
+            File( cDirLib + DEF_SLASH + GetMiniGuiName() )
             bReto := .T.
          endif
       case cTipo == "C_" + DefineMiniGui1 + DefineBorland
@@ -1036,7 +1036,7 @@ Function QPM_DirValid( cDir, cDirLib, cTipo )
          if File( cDir + DEF_SLASH + "INCLUDE" + DEF_SLASH + "minigui.ch" ) .and. ;
             ! File( cDir + DEF_SLASH + "INCLUDE" + DEF_SLASH + "tsbrowse.ch" ) .and. ;
             ! File( cDir + DEF_SLASH + "INCLUDE" + DEF_SLASH + "oohg.h" )  .and. ;
-            File( cDirLib + DEF_SLASH + 'libhmg.a' )
+            File( cDirLib + DEF_SLASH + GetMiniGuiName() )
             bReto := .T.
          endif
       case cTipo == "C_" + DefineMiniGui3 + DefineMinGW
@@ -1048,7 +1048,7 @@ Function QPM_DirValid( cDir, cDirLib, cTipo )
          if File( cDir + DEF_SLASH + "INCLUDE" + DEF_SLASH + "minigui.ch" ) .and. ;
             File( cDir + DEF_SLASH + "INCLUDE" + DEF_SLASH + "tsbrowse.ch" ) .and. ;
             ! File( cDir + DEF_SLASH + "INCLUDE" + DEF_SLASH + "oohg.ch" ) .and. ;
-            File( cDirLib + DEF_SLASH + 'minigui.lib' )
+            File( cDirLib + DEF_SLASH + GetMiniGuiName() )
             bReto:=.T.
          endif
       case cTipo == "C_" + DefineExtended1 + DefineBorland
@@ -1059,7 +1059,7 @@ Function QPM_DirValid( cDir, cDirLib, cTipo )
          if File( cDir + DEF_SLASH + "INCLUDE" + DEF_SLASH + "minigui.ch" ) .and. ;
             File( cDir + DEF_SLASH + "INCLUDE" + DEF_SLASH + "tsbrowse.ch" ) .and. ;
             ! File( cDir + DEF_SLASH + "INCLUDE" + DEF_SLASH + "oohg.ch" )  .and. ;
-            File( cDirLib + DEF_SLASH + 'libminigui.a' )
+            File( cDirLib + DEF_SLASH + GetMiniGuiName() )
             bReto:=.T.
          endif
       case cTipo == "C_" + DefineExtended1 + DefineMinGW
@@ -1069,7 +1069,7 @@ Function QPM_DirValid( cDir, cDirLib, cTipo )
       // OOHG
       case cTipo == DefineOohg3 + DefineBorland
          if File( cDir + DEF_SLASH + "INCLUDE" + DEF_SLASH + "oohg.ch" ) .and. ;
-            File( cDirLib + DEF_SLASH + 'oohg.lib' )
+            File( cDirLib + DEF_SLASH + GetMiniGuiName() )
             bReto:=.T.
          endif
       case cTipo == "C_" + DefineOohg3 + DefineBorland
@@ -1078,7 +1078,7 @@ Function QPM_DirValid( cDir, cDirLib, cTipo )
          endif
       case cTipo == DefineOohg3 + DefineMinGW
          if File( cDir + DEF_SLASH + "INCLUDE" + DEF_SLASH + "oohg.ch" ) .and. ;
-            File( cDirLib + DEF_SLASH + "liboohg.a" )
+            File( cDirLib + DEF_SLASH + GetMiniGuiName() )
             bReto:=.T.
          endif
       case cTipo == "C_" + DefineOohg3 + DefineMinGW
@@ -1087,7 +1087,7 @@ Function QPM_DirValid( cDir, cDirLib, cTipo )
          endif
       case cTipo == DefineOohg3 + DefinePelles
          if File( cDir + DEF_SLASH + "INCLUDE" + DEF_SLASH + "oohg.ch" ) .and. ;
-            File( cDirLib + DEF_SLASH + 'oohg.lib' )
+            File( cDirLib + DEF_SLASH + GetMiniGuiName() )
             bReto:=.T.
          endif
       case cTipo == "C_" + DefineOohg3 + DefinePelles
@@ -1191,7 +1191,7 @@ Function QPM_DirValid( cDir, cDirLib, cTipo )
                bReto:=.T.
             endif
          otherwise
-            US_Log( "QPM1234E: Tipo de Directorio invalido: " + cTipo )
+            US_Log( "Tipo de Directorio inválido: " + cTipo )
          endcase
       endcase
    endif
@@ -1309,7 +1309,7 @@ Return ( Prj_Radio_Harbour == DEF_RG_XHARBOUR )
 Function GetMiniGuiFolder()
 Return &( "Gbl_T_M_" + GetSuffix() )
 
-Function GetMiniGuiLibName()
+Function GetMiniGuiName()
 Return &( "Gbl_T_N_" + GetSuffix() )
 
 Function GetCppFolder()
@@ -1467,108 +1467,6 @@ Function GetResConfigVarName()
       cNombre := "HMGRPATH"
    otherwise
       cNombre := "MINIGUIPATH"
-   endcase
-Return cNombre
-
-Function GetMiniGuiName( cForceCompiler )
-   Local cNombre, sufijo := GetMiniGuiSuffix() + GetCppSuffix()
-   do case
-   case sufijo == DefineOohg3 + DefineBorland
-      if empty( cForceCompiler )
-         if QPM_IsXHarbour()
-            if File( GetMiniguiLibFolder() + DEF_SLASH + "xoohg.lib" )
-               cNombre := "xoohg.lib"
-            else
-               cNombre := "oohg.lib"
-            endif
-         else
-            cNombre := "oohg.lib"
-         endif
-      elseif cForceCompiler == DefineHarbour
-         cNombre := "oohg.lib"
-      else
-         cNombre := "xoohg.lib"
-      endif
-   case sufijo == DefineOohg3 + DefineMinGW
-      if empty( cForceCompiler )
-         if QPM_IsXHarbour()
-            if File( GetMiniguiLibFolder() + DEF_SLASH + "libxoohg.a" )
-               cNombre := "libxoohg.a"
-            else
-               cNombre := "liboohg.a"
-            endif
-         else
-            cNombre := "liboohg.a"
-         endif
-      elseif cForceCompiler == DefineHarbour
-         cNombre := "liboohg.a"
-      else
-         cNombre := "libxoohg.a"
-      endif
-   case sufijo == DefineOohg3 + DefinePelles
-      if empty( cForceCompiler )
-         if QPM_IsXHarbour()
-            if file( GetMiniguiLibFolder() + DEF_SLASH + "xoohg.lib" )
-               cNombre := "xoohg.lib"
-            else
-               cNombre := "oohg.lib"
-            endif
-         else
-            cNombre := "oohg.lib"
-         endif
-      elseif cForceCompiler == DefineHarbour
-         cNombre := "oohg.lib"
-      else
-         cNombre := "xoohg.lib"
-      endif
-   case sufijo == DefineMiniGui3 + DefineMinGW
-      if empty( cForceCompiler )
-         if QPM_IsXHarbour()
-            if File( GetMiniguiLibFolder() + DEF_SLASH + "libxhmg.a" )
-               cNombre := "libxhmg.a"
-            else
-               cNombre := "libhmg.a"
-            endif
-         else
-            cNombre := "libhmg.a"
-         endif
-      elseif cForceCompiler == DefineHarbour
-         cNombre := "libhmg.a"
-      else
-         cNombre := "libxhmg.a"
-      endif
-   case sufijo == DefineExtended1 + DefineMinGW
-      if empty( cForceCompiler )
-         if QPM_IsXHarbour()
-            if File( GetMiniguiLibFolder() + DEF_SLASH + "libxminigui.a" )
-               cNombre := "libxminigui.a"
-            else
-               cNombre := "libminigui.a"
-            endif
-         else
-            cNombre := "libminigui.a"
-         endif
-      elseif cForceCompiler == DefineHarbour
-         cNombre := "libminigui.a"
-      else
-         cNombre := "libxminigui.a"
-      endif
-   otherwise            // DefineMiniGui1 + DefineBorland or DefineExtended1 + DefineBorland
-      if empty( cForceCompiler )
-         if QPM_IsXHarbour()
-            if file( GetMiniguiLibFolder() + DEF_SLASH + "xminigui.lib" )
-               cNombre := "xminigui.lib"
-            else
-               cNombre := "minigui.lib"
-            endif
-         else
-            cNombre := "minigui.lib"
-         endif
-      elseif cForceCompiler == DefineHarbour
-         cNombre := "minigui.lib"
-      else
-         cNombre := "xminigui.lib"
-      endif
    endcase
 Return cNombre
 
