@@ -3607,8 +3607,8 @@ FUNCTION QPM_GetExcludeFilesLIB()
       RETURN ( {} )
    ENDIF
    QPM_CargoLibraries()
-   vAux := Array( Len( &( 'vLibDefault'+GetSuffix() ) ) )
-   ACopy( &( 'vLibDefault'+GetSuffix() ), vAux )
+   vAux := Array( Len( vLibsDefault ) )
+   ACopy( vLibsDefault, vAux )
    IF Prj_Check_Console
       AAdd( vAux, GetMiniGuiName() )
    ENDIF
@@ -4884,11 +4884,6 @@ FUNCTION QPM_EXIT( bWait )
       DoMethod( 'VentanaMain', 'Release' )
    ENDIF
    QPM_ProjectFileUnLock()
-// ferase( PUB_cQPM_Folder + DEF_SLASH + 'hha.dll' )
-// ferase( PUB_cQPM_Folder + DEF_SLASH + 'dtoolbar.dbf' )
-// ferase( PUB_cQPM_Folder + DEF_SLASH + 'hmi.ini' )
-// ferase( PUB_cQPM_Folder + DEF_SLASH + 'dbfview.ini' )
-// ferase( PUB_cQPM_Folder + DEF_SLASH + 'dbfview.lng' )
    IF bAutoEXIT .AND. ! Empty( PUB_cAutoLog )
       PUB_cAutoLogTmp := MemoRead( PUB_cAutoLog )
       PUB_cAutoLogTmp += CRLF
@@ -5696,10 +5691,10 @@ FUNCTION QPM_Build2()
 /*
  * Grabo en script.ld los objetos listados en las Default Libraries (estos objetos deben estar en la carpeta Resources) en script.ld
  */
-            FOR i := 1 TO Len( &( 'vLibDefault'+GetSuffix() ) )
-               IF AScan( vLibExcludeFiles, US_Upper( &( 'vLibDefault'+GetSuffix()+'['+Str(i)+']' ) ) ) == 0
-                  IF File( GetMiniGuiFolder() + DEF_SLASH + 'RESOURCES' + DEF_SLASH + SubStr( US_FileNameOnlyName( &('vLibDefault'+GetSuffix()+'['+Str(i)+']') ), 4 ) + '.o' )
-                     Out := Out + PUB_cCharTab + 'echo INPUT( $(DIR_MINIGUI_RES)' + DEF_SLASH + SubStr( US_FileNameOnlyName( &('vLibDefault'+GetSuffix()+'['+Str(i)+']') ), 4 ) + '.o ) >> ' + Q_SCRIPT_FILE + CRLF
+            FOR i := 1 TO Len( vLibsDefault )
+               IF AScan( vLibExcludeFiles, US_Upper( vLibsDefault[i] ) ) == 0
+                  IF File( GetMiniGuiFolder() + DEF_SLASH + 'RESOURCES' + DEF_SLASH + SubStr( US_FileNameOnlyName( vLibsDefault[i] ), 4 ) + '.o' )
+                     Out := Out + PUB_cCharTab + 'echo INPUT( $(DIR_MINIGUI_RES)' + DEF_SLASH + SubStr( US_FileNameOnlyName( vLibsDefault[i] ), 4 ) + '.o ) >> ' + Q_SCRIPT_FILE + CRLF
                   ENDIF
                ENDIF
             NEXT i
@@ -5789,21 +5784,21 @@ FUNCTION QPM_Build2()
                      IF AScan( vLibExcludeFiles, US_Upper( GetMiniGuiName() ) ) == 0
                         w_hay := .T.
                         w_group += '-l' + SubStr( US_FileNameOnlyName( GetMiniGuiName() ), 4 ) + ' '
-                        IF AScan( &( 'vLibDefault'+GetSuffix() ), { |y| US_Upper( y ) == 'LIBGTGUI.A' } ) == 0
-                           AAdd( &( 'vLibDefault'+GetSuffix() ), 'libgtgui.a' )
+                        IF AScan( vLibsDefault, { |y| US_Upper( y ) == 'LIBGTGUI.A' } ) == 0
+                           AAdd( vLibsDefault, 'libgtgui.a' )
                         ENDIF
                      ENDIF
                   ELSE
                      w_hay := .T.
                      w_group += '-l' + SubStr( US_FileNameOnlyName( GetMiniGuiName() ), 4 ) + ' '
-                     DO WHILE ( i := AScan( &( 'vLibDefault'+GetSuffix() ), { |y| US_Upper( y ) == 'LIBGTGUI.A' } ) ) > 1
-                        ADel( &( 'vLibDefault'+GetSuffix() ), i )
-                        ASize( &( 'vLibDefault'+GetSuffix() ), Len( &( 'vLibDefault'+GetSuffix() ) ) - 1 )
+                     DO WHILE ( i := AScan( vLibsDefault, { |y| US_Upper( y ) == 'LIBGTGUI.A' } ) ) > 1
+                        ADel( vLibsDefault, i )
+                        ASize( vLibsDefault, Len( vLibsDefault ) - 1 )
                      ENDDO
-                     IF AScan( &( 'vLibDefault'+GetSuffix() ), { |y| US_Upper( y ) == 'LIBGTGUI.A' } ) == 0
-                        ASize( &( 'vLibDefault'+GetSuffix() ), Len( &( 'vLibDefault'+GetSuffix() ) ) + 1 )
-                        ains( &( 'vLibDefault'+GetSuffix() ), 1 )
-                        &( 'vLibDefault'+GetSuffix()+'['+Str(1)+']' ) := 'libgtgui.a'
+                     IF AScan( vLibsDefault, { |y| US_Upper( y ) == 'LIBGTGUI.A' } ) == 0
+                        ASize( vLibsDefault, Len( vLibsDefault ) + 1 )
+                        ains( vLibsDefault, 1 )
+                        vLibsDefault[1] := 'libgtgui.a'
                      ENDIF
                      IF AScan( vLibExcludeFiles, US_Upper( GetMiniGuiName() ) ) > 0
                         MsgInfo( 'Warning: ' + GetMiniGuiName() + ' was excluded for Windows mode.' + CRLF + 'QPM added it automatically.' + CRLF + 'Look at tab ' + DBLQT + PageLIB + DBLQT )
@@ -5825,27 +5820,27 @@ FUNCTION QPM_Build2()
                   //    Si no está la busco con o sin X en el directorio de libs de (x)harbour
                   //    Si no está y es xharbour la busco sin X en el directorio de libs de xharbour
                   //    Si no está la busco en el directorio de libs de MINGW
-                  FOR i := 1 TO Len( &( 'vLibDefault'+GetSuffix() ) )
-                     IF AScan( vLibExcludeFiles, US_Upper( &( 'vLibDefault'+GetSuffix()+'['+Str(i)+']' ) ) ) == 0
+                  FOR i := 1 TO Len( vLibsDefault )
+                     IF AScan( vLibExcludeFiles, US_Upper( vLibsDefault[i] ) ) == 0
                         DO CASE
-                        CASE QPM_IsXHarbour() .AND. File( GetMiniGuiLibFolder() + DEF_SLASH + ( 'libx' + SubStr( &('vLibDefault'+GetSuffix()+'['+Str(i)+']'), 4 ) ) )
+                        CASE QPM_IsXHarbour() .AND. File( GetMiniGuiLibFolder() + DEF_SLASH + ( 'libx' + SubStr( vLibsDefault[i], 4 ) ) )
                            w_hay := .T.
-                           w_group += '-lx' + SubStr( US_FileNameOnlyName( &( 'vLibDefault'+GetSuffix()+'['+Str(i)+']' ) ), 4 ) + ' '
-                        CASE File( GetMiniGuiLibFolder() + DEF_SLASH + &('vLibDefault'+GetSuffix()+'['+Str(i)+']') )
+                           w_group += '-lx' + SubStr( US_FileNameOnlyName( vLibsDefault[i] ), 4 ) + ' '
+                        CASE File( GetMiniGuiLibFolder() + DEF_SLASH + vLibsDefault[i] )
                            w_hay := .T.
-                           w_group += '-l' + SubStr( US_FileNameOnlyName( &( 'vLibDefault'+GetSuffix()+'['+Str(i)+']' ) ), 4 ) + ' '
-                        CASE QPM_IsXHarbour() .AND. ( GetMiniGuiSuffix() == DefineExtended1 ) .AND. File( GetMiniGuiFolder() + DEF_SLASH + 'xlib' + DEF_SLASH + &('vLibDefault'+GetSuffix()+'['+Str(i)+']') )
+                           w_group += '-l' + SubStr( US_FileNameOnlyName( vLibsDefault[i] ), 4 ) + ' '
+                        CASE QPM_IsXHarbour() .AND. ( GetMiniGuiSuffix() == DefineExtended1 ) .AND. File( GetMiniGuiFolder() + DEF_SLASH + 'xlib' + DEF_SLASH + vLibsDefault[i] )
                            w_hay := .T.
-                           w_group += '-l' + SubStr( US_FileNameOnlyName( &( 'vLibDefault'+GetSuffix()+'['+Str(i)+']' ) ), 4 ) + ' '
-                        CASE QPM_IsXHarbour() .AND. File( GetHarbourLibFolder() + DEF_SLASH + ( 'libx' + SubStr( &('vLibDefault'+GetSuffix()+'['+Str(i)+']'), 4 ) ) )
+                           w_group += '-l' + SubStr( US_FileNameOnlyName( vLibsDefault[i] ), 4 ) + ' '
+                        CASE QPM_IsXHarbour() .AND. File( GetHarbourLibFolder() + DEF_SLASH + ( 'libx' + SubStr( vLibsDefault[i], 4 ) ) )
                            w_hay := .T.
-                           w_group += '-lx' + SubStr( US_FileNameOnlyName( &( 'vLibDefault'+GetSuffix()+'['+Str(i)+']' ) ), 4 ) + ' '
-                        CASE File( GetHarbourLibFolder() + DEF_SLASH + &('vLibDefault'+GetSuffix()+'['+Str(i)+']') )
+                           w_group += '-lx' + SubStr( US_FileNameOnlyName( vLibsDefault[i] ), 4 ) + ' '
+                        CASE File( GetHarbourLibFolder() + DEF_SLASH + vLibsDefault[i] )
                            w_hay := .T.
-                           w_group += '-l' + SubStr( US_FileNameOnlyName( &( 'vLibDefault'+GetSuffix()+'['+Str(i)+']' ) ), 4 ) + ' '
-                        CASE File( GetCppLibFolder() + DEF_SLASH + &('vLibDefault'+GetSuffix()+'['+Str(i)+']') )
+                           w_group += '-l' + SubStr( US_FileNameOnlyName( vLibsDefault[i] ), 4 ) + ' '
+                        CASE File( GetCppLibFolder() + DEF_SLASH + vLibsDefault[i] )
                            w_hay := .T.
-                           w_group += '-l' + SubStr( US_FileNameOnlyName( &( 'vLibDefault'+GetSuffix()+'['+Str(i)+']' ) ), 4 ) + ' '
+                           w_group += '-l' + SubStr( US_FileNameOnlyName( vLibsDefault[i] ), 4 ) + ' '
                         ENDCASE
                      ENDIF
                   NEXT
@@ -5906,20 +5901,20 @@ FUNCTION QPM_Build2()
                   IF Prj_Check_Console
                      IF AScan( vLibExcludeFiles, US_Upper( GetMiniGuiName() ) ) == 0
                         Out := Out + PUB_cCharTab + 'echo ' + GetMiniguiLibFolder() + DEF_SLASH + GetMiniGuiName() + ' >> ' + Q_SCRIPT_FILE + CRLF
-                        IF AScan( &( 'vLibDefault'+GetSuffix() ), { |y| US_Upper( y ) == 'GTGUI.LIB' } ) == 0
-                           AAdd( &( 'vLibDefault'+GetSuffix() ), 'gtgui.lib' )
+                        IF AScan( vLibsDefault, { |y| US_Upper( y ) == 'GTGUI.LIB' } ) == 0
+                           AAdd( vLibsDefault, 'gtgui.lib' )
                         ENDIF
                      ENDIF
                   ELSE
                      Out := Out + PUB_cCharTab + 'echo ' + GetMiniguiLibFolder() + DEF_SLASH + GetMiniGuiName() + ' >> ' + Q_SCRIPT_FILE + CRLF
-                     DO WHILE ( i := AScan( &( 'vLibDefault'+GetSuffix() ), { |y| US_Upper( y ) == 'GTGUI.LIB' } ) ) > 1
-                        ADel( &( 'vLibDefault'+GetSuffix() ), i )
-                        ASize( &( 'vLibDefault'+GetSuffix() ), Len( &( 'vLibDefault'+GetSuffix() ) ) - 1 )
+                     DO WHILE ( i := AScan( vLibsDefault, { |y| US_Upper( y ) == 'GTGUI.LIB' } ) ) > 1
+                        ADel( vLibsDefault, i )
+                        ASize( vLibsDefault, Len( vLibsDefault ) - 1 )
                      ENDDO
-                     IF AScan( &( 'vLibDefault'+GetSuffix() ), { |y| US_Upper( y ) == 'GTGUI.LIB' } ) == 0
-                        ASize( &( 'vLibDefault'+GetSuffix() ), Len( &( 'vLibDefault'+GetSuffix() ) ) + 1 )
-                        ains( &( 'vLibDefault'+GetSuffix() ), 1 )
-                        &( 'vLibDefault'+GetSuffix()+'['+Str(1)+']' ) := 'gtgui.lib'
+                     IF AScan( vLibsDefault, { |y| US_Upper( y ) == 'GTGUI.LIB' } ) == 0
+                        ASize( vLibsDefault, Len( vLibsDefault ) + 1 )
+                        ains( vLibsDefault, 1 )
+                        vLibsDefault[1] := 'gtgui.lib'
                      ENDIF
                      IF AScan( vLibExcludeFiles, US_Upper( GetMiniGuiName() ) ) > 0
                         MsgInfo( 'Warning: ' + GetMiniGuiName() + ' was excluded for Windows mode.' + CRLF + 'QPM added it automatically.' + CRLF + 'Look at tab ' + DBLQT + PageLIB + DBLQT )
@@ -5941,23 +5936,23 @@ FUNCTION QPM_Build2()
                   //    Si no está la busco con o sin X en el directorio de libs de (x)harbour
                   //    Si no está y es xharbour la busco sin X en el directorio de libs de xharbour
                   //    Si no está la busco en el directorio de libs de PELLES o en el subdirectorio WIN
-                  FOR i := 1 TO Len( &( 'vLibDefault'+GetSuffix() ) )
-                     IF AScan( vLibExcludeFiles, US_Upper( &( 'vLibDefault'+GetSuffix()+'['+Str(i)+']' ) ) ) == 0
+                  FOR i := 1 TO Len( vLibsDefault )
+                     IF AScan( vLibExcludeFiles, US_Upper( vLibsDefault[i] ) ) == 0
                         DO CASE
-                        CASE QPM_IsXHarbour() .AND. File( GetMiniguiLibFolder() + DEF_SLASH + 'x' + &('vLibDefault'+GetSuffix()+'['+Str(i)+']') )
-                           Out := Out + PUB_cCharTab + 'echo $(DIR_MINIGUI_LIB)' + DEF_SLASH + 'x' + &('vLibDefault'+GetSuffix()+'['+Str(i)+']') + ' + >> ' + Q_SCRIPT_FILE + CRLF
-                        CASE File( GetMiniguiLibFolder() + DEF_SLASH + &('vLibDefault'+GetSuffix()+'['+Str(i)+']') )
-                           Out := Out + PUB_cCharTab + 'echo $(DIR_MINIGUI_LIB)' + DEF_SLASH + &('vLibDefault'+GetSuffix()+'['+Str(i)+']') + ' + >> ' + Q_SCRIPT_FILE + CRLF
-                        CASE QPM_IsXHarbour() .AND. ( GetMiniGuiSuffix() == DefineExtended1 ) .AND. File( GetMiniGuiFolder() + DEF_SLASH + 'xlib' + DEF_SLASH + &('vLibDefault'+GetSuffix()+'['+Str(i)+']') )
-                           Out := Out + PUB_cCharTab + 'echo $(DIR_MINIGUI)' + DEF_SLASH + 'xlib' + DEF_SLASH + &('vLibDefault'+GetSuffix()+'['+Str(i)+']') + ' + >> ' + Q_SCRIPT_FILE + CRLF
-                        CASE QPM_IsXHarbour() .AND. File( GetHarbourLibFolder() + DEF_SLASH + 'x' + &('vLibDefault'+GetSuffix()+'['+Str(i)+']') )
-                           Out := Out + PUB_cCharTab + 'echo $(DIR_HARBOUR_LIB)' + DEF_SLASH + 'x' + &('vLibDefault'+GetSuffix()+'['+Str(i)+']') + ' + >> ' + Q_SCRIPT_FILE + CRLF
-                        CASE File( GetHarbourLibFolder() + DEF_SLASH + &('vLibDefault'+GetSuffix()+'['+Str(i)+']') )
-                           Out := Out + PUB_cCharTab + 'echo $(DIR_HARBOUR_LIB)' + DEF_SLASH + &('vLibDefault'+GetSuffix()+'['+Str(i)+']') + ' + >> ' + Q_SCRIPT_FILE + CRLF
-                        CASE File( GetCppLibFolder() + DEF_SLASH + &('vLibDefault'+GetSuffix()+'['+Str(i)+']') )
-                           Out := Out + PUB_cCharTab + 'echo ' + &('vLibDefault'+GetSuffix()+'['+Str(i)+']') + ' >> ' + Q_SCRIPT_FILE + CRLF
-                        CASE File( GetCppLibFolder() + DEF_SLASH + 'WIN' + DEF_SLASH + &('vLibDefault'+GetSuffix()+'['+Str(i)+']') )
-                           Out := Out + PUB_cCharTab + 'echo ' + &('vLibDefault'+GetSuffix()+'['+Str(i)+']') + ' >> ' + Q_SCRIPT_FILE + CRLF
+                        CASE QPM_IsXHarbour() .AND. File( GetMiniguiLibFolder() + DEF_SLASH + 'x' + vLibsDefault[i] )
+                           Out := Out + PUB_cCharTab + 'echo $(DIR_MINIGUI_LIB)' + DEF_SLASH + 'x' + vLibsDefault[i] + ' + >> ' + Q_SCRIPT_FILE + CRLF
+                        CASE File( GetMiniguiLibFolder() + DEF_SLASH + vLibsDefault[i] )
+                           Out := Out + PUB_cCharTab + 'echo $(DIR_MINIGUI_LIB)' + DEF_SLASH + vLibsDefault[i] + ' + >> ' + Q_SCRIPT_FILE + CRLF
+                        CASE QPM_IsXHarbour() .AND. ( GetMiniGuiSuffix() == DefineExtended1 ) .AND. File( GetMiniGuiFolder() + DEF_SLASH + 'xlib' + DEF_SLASH + vLibsDefault[i] )
+                           Out := Out + PUB_cCharTab + 'echo $(DIR_MINIGUI)' + DEF_SLASH + 'xlib' + DEF_SLASH + vLibsDefault[i] + ' + >> ' + Q_SCRIPT_FILE + CRLF
+                        CASE QPM_IsXHarbour() .AND. File( GetHarbourLibFolder() + DEF_SLASH + 'x' + vLibsDefault[i] )
+                           Out := Out + PUB_cCharTab + 'echo $(DIR_HARBOUR_LIB)' + DEF_SLASH + 'x' + vLibsDefault[i] + ' + >> ' + Q_SCRIPT_FILE + CRLF
+                        CASE File( GetHarbourLibFolder() + DEF_SLASH + vLibsDefault[i] )
+                           Out := Out + PUB_cCharTab + 'echo $(DIR_HARBOUR_LIB)' + DEF_SLASH + vLibsDefault[i] + ' + >> ' + Q_SCRIPT_FILE + CRLF
+                        CASE File( GetCppLibFolder() + DEF_SLASH + vLibsDefault[i] )
+                           Out := Out + PUB_cCharTab + 'echo ' + vLibsDefault[i] + ' >> ' + Q_SCRIPT_FILE + CRLF
+                        CASE File( GetCppLibFolder() + DEF_SLASH + 'WIN' + DEF_SLASH + vLibsDefault[i] )
+                           Out := Out + PUB_cCharTab + 'echo ' + vLibsDefault[i] + ' >> ' + Q_SCRIPT_FILE + CRLF
                         ENDCASE
                      ENDIF
                   NEXT
@@ -6017,20 +6012,20 @@ FUNCTION QPM_Build2()
                   IF Prj_Check_Console
                      IF AScan( vLibExcludeFiles, US_Upper( GetMiniGuiName() ) ) == 0
                         Out := Out + PUB_cCharTab + 'echo ' + GetMiniguiLibFolder() + DEF_SLASH + GetMiniGuiName() + ' + >> ' + Q_SCRIPT_FILE + CRLF
-                        IF AScan( &( 'vLibDefault'+GetSuffix() ), { |y| US_Upper( y ) == 'GTGUI.LIB' } ) == 0
-                           AAdd( &( 'vLibDefault'+GetSuffix() ), 'gtgui.lib' )
+                        IF AScan( vLibsDefault, { |y| US_Upper( y ) == 'GTGUI.LIB' } ) == 0
+                           AAdd( vLibsDefault, 'gtgui.lib' )
                         ENDIF
                      ENDIF
                   ELSE
                      Out := Out + PUB_cCharTab + 'echo ' + GetMiniguiLibFolder() + DEF_SLASH + GetMiniGuiName() + ' + >> ' + Q_SCRIPT_FILE + CRLF
-                     DO WHILE ( i := AScan( &( 'vLibDefault'+GetSuffix() ), { |y| US_Upper( y ) == 'GTGUI.LIB' } ) ) > 1
-                        ADel( &( 'vLibDefault'+GetSuffix() ), i )
-                        ASize( &( 'vLibDefault'+GetSuffix() ), Len( &( 'vLibDefault'+GetSuffix() ) ) - 1 )
+                     DO WHILE ( i := AScan( vLibsDefault, { |y| US_Upper( y ) == 'GTGUI.LIB' } ) ) > 1
+                        ADel( vLibsDefault, i )
+                        ASize( vLibsDefault, Len( vLibsDefault ) - 1 )
                      ENDDO
-                     IF AScan( &( 'vLibDefault'+GetSuffix() ), { |y| US_Upper( y ) == 'GTGUI.LIB' } ) == 0
-                        ASize( &( 'vLibDefault'+GetSuffix() ), Len( &( 'vLibDefault'+GetSuffix() ) ) + 1 )
-                        ains( &( 'vLibDefault'+GetSuffix() ), 1 )
-                        &( 'vLibDefault'+GetSuffix()+'['+Str(1)+']' ) := 'gtgui.lib'
+                     IF AScan( vLibsDefault, { |y| US_Upper( y ) == 'GTGUI.LIB' } ) == 0
+                        ASize( vLibsDefault, Len( vLibsDefault ) + 1 )
+                        ains( vLibsDefault, 1 )
+                        vLibsDefault[1] := 'gtgui.lib'
                      ENDIF
                      IF AScan( vLibExcludeFiles, US_Upper( GetMiniGuiName() ) ) > 0
                         MsgInfo( 'Warning: ' + GetMiniGuiName() + ' was excluded for Windows mode.' + CRLF + 'QPM added it automatically.' + CRLF + 'Look at tab ' + DBLQT + PageLIB + DBLQT )
@@ -6052,23 +6047,23 @@ FUNCTION QPM_Build2()
                   //    Si no está la busco con o sin X en el directorio de libs de (x)harbour
                   //    Si no está y es xharbour la busco sin X en el directorio de libs de xharbour
                   //    Si no está la busco en el directorio de libs de BCC32 o en el subdirectorio PSDK
-                  FOR i := 1 TO Len( &( 'vLibDefault'+GetSuffix() ) )
-                     IF AScan( vLibExcludeFiles, US_Upper( &( 'vLibDefault'+GetSuffix()+'['+Str(i)+']' ) ) ) == 0
+                  FOR i := 1 TO Len( vLibsDefault )
+                     IF AScan( vLibExcludeFiles, US_Upper( vLibsDefault[i] ) ) == 0
                         DO CASE
-                        CASE QPM_IsXHarbour() .AND. File( GetMiniguiLibFolder() + DEF_SLASH + 'x' + &('vLibDefault'+GetSuffix()+'['+Str(i)+']') )
-                           Out := Out + PUB_cCharTab + 'echo $(DIR_MINIGUI_LIB)' + DEF_SLASH + 'x' + &('vLibDefault'+GetSuffix()+'['+Str(i)+']') + ' + >> ' + Q_SCRIPT_FILE + CRLF
-                        CASE File( GetMiniguiLibFolder() + DEF_SLASH + &('vLibDefault'+GetSuffix()+'['+Str(i)+']') )
-                           Out := Out + PUB_cCharTab + 'echo $(DIR_MINIGUI_LIB)' + DEF_SLASH + &('vLibDefault'+GetSuffix()+'['+Str(i)+']') + ' + >> ' + Q_SCRIPT_FILE + CRLF
-                        CASE QPM_IsXHarbour() .AND. ( GetMiniGuiSuffix() == DefineExtended1 ) .AND. File( GetMiniGuiFolder() + DEF_SLASH + 'xlib' + DEF_SLASH + &('vLibDefault'+GetSuffix()+'['+Str(i)+']') )
-                           Out := Out + PUB_cCharTab + 'echo $(DIR_MINIGUI)' + DEF_SLASH + 'xlib' + DEF_SLASH + &('vLibDefault'+GetSuffix()+'['+Str(i)+']') + ' + >> ' + Q_SCRIPT_FILE + CRLF
-                        CASE QPM_IsXHarbour() .AND. File( GetHarbourLibFolder() + DEF_SLASH + 'x' + &('vLibDefault'+GetSuffix()+'['+Str(i)+']') )
-                           Out := Out + PUB_cCharTab + 'echo $(DIR_HARBOUR_LIB)' + DEF_SLASH + 'x' + &('vLibDefault'+GetSuffix()+'['+Str(i)+']') + ' + >> ' + Q_SCRIPT_FILE + CRLF
-                        CASE File( GetHarbourLibFolder() + DEF_SLASH + &('vLibDefault'+GetSuffix()+'['+Str(i)+']') )
-                           Out := Out + PUB_cCharTab + 'echo $(DIR_HARBOUR_LIB)' + DEF_SLASH + &('vLibDefault'+GetSuffix()+'['+Str(i)+']') + ' + >> ' + Q_SCRIPT_FILE + CRLF
-                        CASE File( GetCppLibFolder() + DEF_SLASH + &('vLibDefault'+GetSuffix()+'['+Str(i)+']') )
-                           Out := Out + PUB_cCharTab + 'echo $(DIR_COMPC_LIB)' + DEF_SLASH + &('vLibDefault'+GetSuffix()+'['+Str(i)+']') + ' + >> ' + Q_SCRIPT_FILE + CRLF
-                        CASE File( GetCppLibFolder() + DEF_SLASH + 'PSDK' + DEF_SLASH + &('vLibDefault'+GetSuffix()+'['+Str(i)+']') )
-                           Out := Out + PUB_cCharTab + 'echo $(DIR_COMPC_LIB2)' + DEF_SLASH + &('vLibDefault'+GetSuffix()+'['+Str(i)+']') + ' + >> ' + Q_SCRIPT_FILE + CRLF
+                        CASE QPM_IsXHarbour() .AND. File( GetMiniguiLibFolder() + DEF_SLASH + 'x' + vLibsDefault[i] )
+                           Out := Out + PUB_cCharTab + 'echo $(DIR_MINIGUI_LIB)' + DEF_SLASH + 'x' + vLibsDefault[i] + ' + >> ' + Q_SCRIPT_FILE + CRLF
+                        CASE File( GetMiniguiLibFolder() + DEF_SLASH + vLibsDefault[i] )
+                           Out := Out + PUB_cCharTab + 'echo $(DIR_MINIGUI_LIB)' + DEF_SLASH + vLibsDefault[i] + ' + >> ' + Q_SCRIPT_FILE + CRLF
+                        CASE QPM_IsXHarbour() .AND. ( GetMiniGuiSuffix() == DefineExtended1 ) .AND. File( GetMiniGuiFolder() + DEF_SLASH + 'xlib' + DEF_SLASH + vLibsDefault[i] )
+                           Out := Out + PUB_cCharTab + 'echo $(DIR_MINIGUI)' + DEF_SLASH + 'xlib' + DEF_SLASH + vLibsDefault[i] + ' + >> ' + Q_SCRIPT_FILE + CRLF
+                        CASE QPM_IsXHarbour() .AND. File( GetHarbourLibFolder() + DEF_SLASH + 'x' + vLibsDefault[i] )
+                           Out := Out + PUB_cCharTab + 'echo $(DIR_HARBOUR_LIB)' + DEF_SLASH + 'x' + vLibsDefault[i] + ' + >> ' + Q_SCRIPT_FILE + CRLF
+                        CASE File( GetHarbourLibFolder() + DEF_SLASH + vLibsDefault[i] )
+                           Out := Out + PUB_cCharTab + 'echo $(DIR_HARBOUR_LIB)' + DEF_SLASH + vLibsDefault[i] + ' + >> ' + Q_SCRIPT_FILE + CRLF
+                        CASE File( GetCppLibFolder() + DEF_SLASH + vLibsDefault[i] )
+                           Out := Out + PUB_cCharTab + 'echo $(DIR_COMPC_LIB)' + DEF_SLASH + vLibsDefault[i] + ' + >> ' + Q_SCRIPT_FILE + CRLF
+                        CASE File( GetCppLibFolder() + DEF_SLASH + 'PSDK' + DEF_SLASH + vLibsDefault[i] )
+                           Out := Out + PUB_cCharTab + 'echo $(DIR_COMPC_LIB2)' + DEF_SLASH + vLibsDefault[i] + ' + >> ' + Q_SCRIPT_FILE + CRLF
                         ENDCASE
                      ENDIF
                   NEXT
@@ -6503,13 +6498,13 @@ FUNCTION QPM_Build2()
                   bld_cmd += 'IF NOT EXIST ' + cB_RC_MINI + ' ECHO ' + cB_RCM_ERR + ' > ' + cB_TMP_ERR                          + CRLF
                   bld_cmd += 'COPY /B ' + cB_RC_MINI + ' ' + Q_QPM_TMP_RC + ' > NUL'                                            + CRLF
                lIncludeMiniPrintRC := .F.
-               FOR i := 1 TO Len( &( 'vLibDefault'+GetSuffix() ) )
+               FOR i := 1 TO Len( vLibsDefault )
                   IF ! GetMiniGuiSuffix() == DefineOohg3
-                     IF US_Upper( &('vLibDefault'+GetSuffix()+'['+Str(i)+']') ) == 'LIBHBPRINTER.A'
+                     IF US_Upper( vLibsDefault[i] ) == 'LIBHBPRINTER.A'
                         IF AScan( vLibExcludeFiles, 'LIBHBPRINTER.A' ) == 0
                   bld_cmd += 'COPY /B ' + Q_QPM_TMP_RC + ' + ' + cB_FILLER + ' + ' + cB_RC_HBPR + ' ' + Q_QPM_TMP_RC + ' > NUL' + CRLF
                         ENDIF
-                     ELSEIF US_Upper( &('vLibDefault'+GetSuffix()+'['+Str(i)+']') ) == 'LIBMINIPRINT.A'
+                     ELSEIF US_Upper( vLibsDefault[i] ) == 'LIBMINIPRINT.A'
                         IF AScan( vLibExcludeFiles, 'LIBMINIPRINT.A' ) == 0
                            lIncludeMiniPrintRC := .T.
                         ENDIF
@@ -6546,13 +6541,13 @@ FUNCTION QPM_Build2()
                   bld_cmd += 'COPY /B ' + cB_RC_MINI + ' + ' + cB_FILLER + ' + ' + cB_RC2_SHR + ' ' + Q_QPM_TMP_RC + ' > NUL'   + CRLF
                ENDIF
                lIncludeMiniPrintRC := .F.
-               FOR i := 1 TO Len( &( 'vLibDefault'+GetSuffix() ) )
+               FOR i := 1 TO Len( vLibsDefault )
                   IF ! GetMiniGuiSuffix() == DefineOohg3
-                     IF US_Upper( &('vLibDefault'+GetSuffix()+'['+Str(i)+']') ) == 'LIBHBPRINTER.A'
+                     IF US_Upper( vLibsDefault[i] ) == 'LIBHBPRINTER.A'
                         IF AScan( vLibExcludeFiles, 'LIBHBPRINTER.A' ) == 0
                   bld_cmd += 'COPY /B ' + Q_QPM_TMP_RC + ' + ' + cB_FILLER + ' + ' + cB_RC_HBPR + ' ' + Q_QPM_TMP_RC + ' > NUL' + CRLF
                         ENDIF
-                     ELSEIF US_Upper( &('vLibDefault'+GetSuffix()+'['+Str(i)+']') ) == 'LIBMINIPRINT.A'
+                     ELSEIF US_Upper( vLibsDefault[i] ) == 'LIBMINIPRINT.A'
                         IF AScan( vLibExcludeFiles, 'LIBMINIPRINT.A' ) == 0
                            lIncludeMiniPrintRC := .T.
                         ENDIF
@@ -6575,13 +6570,13 @@ FUNCTION QPM_Build2()
                   bld_cmd += 'IF NOT EXIST ' + cB_RC_MINI + ' ECHO ' + cB_RCM_ERR + ' > ' + cB_TMP_ERR                          + CRLF
                   bld_cmd += 'COPY /B ' + cB_RC_MINI + ' ' + Q_QPM_TMP_RC + ' > NUL'                                            + CRLF
                lIncludeMiniPrintRC := .F.
-               FOR i := 1 TO Len( &( 'vLibDefault'+GetSuffix() ) )
+               FOR i := 1 TO Len( vLibsDefault )
                   IF ! GetMiniGuiSuffix() == DefineOohg3
-                     IF US_Upper( &('vLibDefault'+GetSuffix()+'['+Str(i)+']') ) == 'LIBHBPRINTER.A'
+                     IF US_Upper( vLibsDefault[i] ) == 'LIBHBPRINTER.A'
                         IF AScan( vLibExcludeFiles, 'LIBHBPRINTER.A' ) == 0
                   bld_cmd += 'COPY /B ' + Q_QPM_TMP_RC + ' + ' + cB_FILLER + ' + ' + cB_RC_HBPR + ' ' + Q_QPM_TMP_RC + ' > NUL' + CRLF
                         ENDIF
-                     ELSEIF US_Upper( &('vLibDefault'+GetSuffix()+'['+Str(i)+']') ) == 'LIBMINIPRINT.A'
+                     ELSEIF US_Upper( vLibsDefault[i] ) == 'LIBMINIPRINT.A'
                         IF AScan( vLibExcludeFiles, 'LIBMINIPRINT.A' ) == 0
                            lIncludeMiniPrintRC := .T.
                         ENDIF
@@ -6659,13 +6654,13 @@ FUNCTION QPM_Build2()
                   bld_cmd += 'IF NOT EXIST ' + cB_RC_MINI + ' ECHO ' + cB_RCM_ERR + ' > ' + cB_TMP_ERR                          + CRLF
                   bld_cmd += 'COPY /B ' + cB_RC_MINI + ' ' + Q_QPM_TMP_RC + ' > NUL'                                            + CRLF
                lIncludeMiniPrintRC := .F.
-               FOR i := 1 TO Len( &( 'vLibDefault'+GetSuffix() ) )
+               FOR i := 1 TO Len( vLibsDefault )
                   IF ! GetMiniGuiSuffix() == DefineOohg3
-                     IF US_Upper( &('vLibDefault'+GetSuffix()+'['+Str(i)+']') ) == 'HBPRINTER.LIB'
+                     IF US_Upper( vLibsDefault[i] ) == 'HBPRINTER.LIB'
                         IF AScan( vLibExcludeFiles, 'HBPRINTER.LIB' ) == 0
                   bld_cmd += 'COPY /B ' + Q_QPM_TMP_RC + ' + ' + cB_FILLER + ' + ' + cB_RC_HBPR + ' ' + Q_QPM_TMP_RC + ' > NUL' + CRLF
                         ENDIF
-                     ELSEIF US_Upper( &('vLibDefault'+GetSuffix()+'['+Str(i)+']') ) == 'MINIPRINT.LIB'
+                     ELSEIF US_Upper( vLibsDefault[i] ) == 'MINIPRINT.LIB'
                         IF AScan( vLibExcludeFiles, 'MINIPRINT.LIB' ) == 0
                            lIncludeMiniPrintRC := .T.
                         ENDIF
@@ -6702,13 +6697,13 @@ FUNCTION QPM_Build2()
                   bld_cmd += 'COPY /B ' + cB_RC_MINI + ' + ' + cB_FILLER + ' + ' + cB_RC2_SHR + ' ' + Q_QPM_TMP_RC + ' > NUL'   + CRLF
                ENDIF
                lIncludeMiniPrintRC := .F.
-               FOR i := 1 TO Len( &( 'vLibDefault'+GetSuffix() ) )
+               FOR i := 1 TO Len( vLibsDefault )
                   IF ! GetMiniGuiSuffix() == DefineOohg3
-                     IF US_Upper( &('vLibDefault'+GetSuffix()+'['+Str(i)+']') ) == 'HBPRINTER.LIB'
+                     IF US_Upper( vLibsDefault[i] ) == 'HBPRINTER.LIB'
                         IF AScan( vLibExcludeFiles, 'HBPRINTER.LIB' ) == 0
                   bld_cmd += 'COPY /B ' + Q_QPM_TMP_RC + ' + ' + cB_FILLER + ' + ' + cB_RC_HBPR + ' ' + Q_QPM_TMP_RC + ' > NUL' + CRLF
                         ENDIF
-                     ELSEIF US_Upper( &('vLibDefault'+GetSuffix()+'['+Str(i)+']') ) == 'MINIPRINT.LIB'
+                     ELSEIF US_Upper( vLibsDefault[i] ) == 'MINIPRINT.LIB'
                         IF AScan( vLibExcludeFiles, 'MINIPRINT.LIB' ) == 0
                            lIncludeMiniPrintRC := .T.
                         ENDIF
@@ -6731,13 +6726,13 @@ FUNCTION QPM_Build2()
                   bld_cmd += 'IF NOT EXIST ' + cB_RC_MINI + ' ECHO ' + cB_RCM_ERR + ' > ' + cB_TMP_ERR                          + CRLF
                   bld_cmd += 'COPY /B ' + cB_RC_MINI + ' ' + Q_QPM_TMP_RC + ' > NUL'                                            + CRLF
                lIncludeMiniPrintRC := .F.
-               FOR i := 1 TO Len( &( 'vLibDefault'+GetSuffix() ) )
+               FOR i := 1 TO Len( vLibsDefault )
                   IF ! GetMiniGuiSuffix() == DefineOohg3
-                     IF US_Upper( &('vLibDefault'+GetSuffix()+'['+Str(i)+']') ) == 'HBPRINTER.LIB'
+                     IF US_Upper( vLibsDefault[i] ) == 'HBPRINTER.LIB'
                         IF AScan( vLibExcludeFiles, 'HBPRINTER.LIB' ) == 0
                   bld_cmd += 'COPY /B ' + Q_QPM_TMP_RC + ' + ' + cB_FILLER + ' + ' + cB_RC_HBPR + ' ' + Q_QPM_TMP_RC + ' > NUL' + CRLF
                         ENDIF
-                     ELSEIF US_Upper( &('vLibDefault'+GetSuffix()+'['+Str(i)+']') ) == 'MINIPRINT.LIB'
+                     ELSEIF US_Upper( vLibsDefault[i] ) == 'MINIPRINT.LIB'
                         IF AScan( vLibExcludeFiles, 'MINIPRINT.LIB' ) == 0
                            lIncludeMiniPrintRC := .T.
                         ENDIF
