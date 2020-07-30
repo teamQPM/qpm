@@ -32,12 +32,12 @@
 #define DBLQT    '"'
 #define SNGQT    "'"
 #define CRLF     hb_osNewLine()
-#define VERSION  "01.10"
+#define VERSION  "01.11"
 
 PROCEDURE MAIN( ... )
    LOCAL aParams := hb_AParams()
    LOCAL cParam, n, i, bList, cPathTMP, cFileIn, cPathSHR, cFileOut, bForceChg, bInclude, cMemoIn, aLines, cMemoOut
-   LOCAL c, nInx, cLine, cFileInclude, cMemoErr, aPaths, aIncLines, nCount, bChg, cRule, cWord3, cPathInc
+   LOCAL c, nInx, cLine, cFileInclude, lWarning, aPaths, aIncLines, nCount, bChg, cRule, cWord3, cPathInc
 
    PRIVATE cQPMDir := ""
 
@@ -151,7 +151,7 @@ PROCEDURE MAIN( ... )
       cMemoOut := "// Project's resource file built by QPM" + CRLF + CRLF
 
       // Process each line
-      cMemoErr := ""
+      lWarning := .F.
       nInx := 0
       DO WHILE nInx < Len( aLines )
          nInx ++
@@ -162,9 +162,9 @@ PROCEDURE MAIN( ... )
             cFileInclude := AllTrim( StrTran( StrTran( cFileInclude, DBLQT, "" ), SNGQT, "" ) )
 
             IF ! File( cFileInclude )
-               cMemoOut += '// --- File not found: ' + cLine + CRLF + CRLF
-               cMemoErr += "Error: Line " + AllTrim( Str( nInx ) ) + ", #INCLUDE file not found: " + cLine + CRLF + CRLF
-               QPM_Log( "US_Res 002E: File not found: " + cLine + CRLF )
+               cMemoOut += cLine + CRLF
+               QPM_Log( "US_Res 002W: File not found: " + cLine + CRLF )
+               lWarning := .T.
             ELSE
                IF Left( cFileInclude, 2 ) == [.\]
                   cFileInclude := ATail( aPaths ) + SubStr( cFileInclude, 3 )
@@ -211,22 +211,18 @@ PROCEDURE MAIN( ... )
          ENDIF
       ENDDO
 
-      // Check for errors
-      IF Empty( cMemoErr )
-         // Save new text to output file, exit loop and return
-         MemoWrit( cFileOut, cMemoOut )
-         ErrorLevel( 0 )
+      // Save new text to output file
+      MemoWrit( cFileOut, cMemoOut )
+      ErrorLevel( 0 )
 
+      IF lWarning
          IF bList
-            QPM_Log( "US_Res 009I: Process ended without error" )
+            QPM_Log( "US_Res 003E: Process ended with a warning" )
             QPM_Log( "------------" )
          ENDIF
       ELSE
-         MemoWrit( cFileOut + ".Error", "Processing #INCLUDE of RC file: " + cFileIn + CRLF + cMemoErr )
-         ErrorLevel( 1 )
-
          IF bList
-            QPM_Log( "US_Res 003E: Process ended with an error" )
+            QPM_Log( "US_Res 009I: Process ended without error" )
             QPM_Log( "------------" )
          ENDIF
       ENDIF
