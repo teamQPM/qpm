@@ -3,6 +3,18 @@
  * See "How to format your ChangeLog entries" in howtosvn.txt file.
  */
 
+2020-06-30 20:43 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * QPM_Libraries.prg
+   * QPM_Functions.prg
+   * QPM.ch
+   * QPM.prg
+     % Library arrays were unified in a single one.
+
+2020-06-30 19:04 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * us_res.exe
+   * us_res.prg
+     ! Missing include file was generating a build error.
+
 2020-06-28 18:39 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    + RELEASE: TAG v05.05.0018 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
