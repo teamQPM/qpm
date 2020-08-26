@@ -1,11 +1,8 @@
-/*
- * $Id$
- */
 
 QPM configuration for OOHG based projects
 -----------------------------------------
 
-HM30 = Harbour 30 + MinGW 4.5.2 - 32 bits
+HM30 = Harbour 3.0 + MinGW 4.5.2 - 32 bits
 
    Project Configuration
       Compilers  = Harbour + MinGW
@@ -15,12 +12,13 @@ HM30 = Harbour 30 + MinGW 4.5.2 - 32 bits
    Global Configuration
       OOHG Folder          = C:\OOHG_HM30
       OOHG Libs Folder     = C:\OOHG_HM30\lib
+      Lib name             = liboohg.a
       MinGW Folder         = C:\OOHG_HM30\hb30\comp\mingw
       MinGW Libs Folder    = C:\OOHG_HM30\hb30\comp\mingw\lib
       Harbour Folder       = C:\OOHG_HM30\hb30
       Harbour Libs Folder  = C:\OOHG_HM30\hb30\lib\win\mingw
 
-HM32 = Harbour 32 + MinGW 8.1.0 - 32 bits
+HM32 = Harbour 3.2 + MinGW 8.1.0 - 32 bits
 
    Project Configuration
       Compilers  = Harbour + Harbour 3.1 or later + MinGW
@@ -30,12 +28,29 @@ HM32 = Harbour 32 + MinGW 8.1.0 - 32 bits
    Global Configuration
       OOHG Folder          = C:\OOHG_HM32
       OOHG Libs Folder     = C:\OOHG_HM32\lib\hb\mingw
+      Lib name             = liboohg.a
       MinGW Folder         = C:\OOHG_HM32\hb32\comp\mingw
       MinGW Libs Folder    = C:\OOHG_HM32\hb32\comp\mingw\i686-w64-mingw32\lib
       Harbour Folder       = C:\OOHG_HM32\hb32
       Harbour Libs Folder  = C:\OOHG_HM32\hb32\lib\win\mingw
 
-HM34 = Harbour 34 + cLang/LLVM 5.0.0 - 32 bits
+HM3264 = Harbour 3.2 + MinGW 9.3.0 - 64 bits
+
+   Project Configuration
+      Compilers  = Harbour + Harbour 3.1 or later + MinGW + 64 bits
+      GUI        = OOHG + MT Mode
+      FMG Editor = OOHG IDE+
+
+   Global Configuration
+      OOHG Folder          = C:\OOHG_HM3264
+      OOHG Libs Folder     = C:\OOHG_HM3264\lib\hb\mingw64
+      Lib name             = liboohg.a
+      MinGW Folder         = C:\OOHG_HM3264\hb3264\comp\mingw
+      MinGW Libs Folder    = C:\OOHG_HM3264\hb3264\comp\mingw\x86_64-w64-mingw32\lib
+      Harbour Folder       = C:\OOHG_HM3264\hb3264
+      Harbour Libs Folder  = C:\OOHG_HM3264\hb3264\lib\win\mingw64
+
+HM34 = Harbour 3.4 + cLang/LLVM 5.0.0 - 32 bits
 
    Project Configuration
       Compilers  = Harbour + Harbour 3.1 or later + MinGW
@@ -45,6 +60,7 @@ HM34 = Harbour 34 + cLang/LLVM 5.0.0 - 32 bits
    Global Configuration
       OOHG Folder          = C:\OOHG_HM34
       OOHG Libs Folder     = C:\OOHG_HM34\lib\hb34\mingw
+      Lib name             = liboohg.a
       MinGW Folder         = C:\OOHG_HM34\hb34\comp\mingw
       MinGW Libs Folder    = C:\OOHG_HM34\hb34\comp\mingw\i686-w64-mingw32\lib
       Harbour Folder       = C:\OOHG_HM34\hb34
@@ -62,6 +78,7 @@ XM = XHarbour 1.2.3 build 20181212 + MinGW 7.3.0 - 32 bits
    Global Configuration
       OOHG Folder          = C:\OOHG_XM
       OOHG Libs Folder     = C:\OOHG_XM\lib\xhb\mingw
+      Lib name             = liboohg.a
       MinGW Folder         = C:\OOHG_XM\xhmingw\comp\mingw
       MinGW Libs Folder    = C:\OOHG_XM\xhmingw\comp\mingw\i686-w64-mingw32\lib
       xHarbour Folder      = C:\OOHG_XM\xhmingw
@@ -79,6 +96,7 @@ XB = XHarbour 1.2.3 build 20181212 + BCC 5.5.1 - 32 bits
    Global Configuration
       OOHG Folder          = C:\OOHG_XB
       OOHG Libs Folder     = C:\OOHG_XB\lib\xhb\bcc
+      Lib name             = oohg.lib
       BCC Folder           = C:\Borland\BCC55
       BCC Libs Folder      = C:\Borland\BCC55\lib
       xHarbour Folder      = C:\OOHG_XB\xhbcc
@@ -87,7 +105,7 @@ XB = XHarbour 1.2.3 build 20181212 + BCC 5.5.1 - 32 bits
 
 
 QPM configuration for HMG Extended based projects
------------------------------------------
+-------------------------------------------------
 
 Harbour 3.2 + MinGW 8.1 - 32-bit
 
@@ -99,6 +117,7 @@ Harbour 3.2 + MinGW 8.1 - 32-bit
    Global Configuration
       Extended Folder       = C:\minigui
       Extended  Libs Folder = C:\minigui\lib
+      Lib name              = liboohg.a
       MinGW Folder          = C:\hmg\mingw32
       MinGW Libs Folder     = C:\hmg\mingw32\i686-w64-mingw32\lib
       Harbour Folder        = C:\hmg\harbour
@@ -114,6 +133,7 @@ Harbour 3.2 + BCC 5.5.1 - 32 bits
    Global Configuration
       Extended Folder       = C:\MINIGUI
       Extended  Libs Folder = C:\MINIGUI\Lib
+      Lib name              = oohg.lib
       BCC32 Folder          = C:\Herramientas\Borland\BCC55
       BCC32 Libs Folder     = C:\Herramientas\Borland\BCC55\Lib
       Harbour Folder        = C:\MINIGUI\Harbour
