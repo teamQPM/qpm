@@ -1,8 +1,6 @@
-/*
- * $Id$
- */
 
-                                     redir
+   redir
+   -----
                                        
    DOS, in its many flavors and versions, lacks a decent I/O redirection
    mechanism. Sure, it's got < and > and >>, but what about error
