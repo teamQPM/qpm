@@ -1,6 +1,6 @@
-/*
- * $Id$
- */
+
+Notas varias
+------------
 
 Al regenerar el help, va a decir que no encuentra la ruta de las imágenes y
 archivos zip de ejemplo, eso es porque no le había podido encontrar la vuelta a
