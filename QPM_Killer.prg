@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  *    QPM - QAC based Project Manager
  *
  *    Copyright 2011-2020 Fernando Yurisich <fernando.yurisich@gmail.com>
@@ -229,7 +225,7 @@ Function KillIt( nValue )
             ASize( QPM_KillerProcessLast, Len(QPM_KillerProcessLast) - 1 )
             RefreshGrid( "0" , nPID )
          else
-            msgstop( "Kill task failed with code: " + alltrim( str( reto ) ) )
+            MsgStop( "Kill task failed with code: " + alltrim( str( reto ) ) )
          endif
       ENDIF
    else
