@@ -1,13 +1,6 @@
-/*
- * $Id$
- */
 
 QPM directory structure
-===========================
-
-Follow are the various directories that exist under the QPM tree.
-Under each directory in this list there is also a special directory
-named .svn, which is used by the SVN to keep track of all files.
+-----------------------
 
 <QPM>                   - Main QPM directory. Contain all the various
 |                         make files, the Changelog (= history of changes),
