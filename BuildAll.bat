@@ -1,8 +1,5 @@
 @echo off
 
-rem
-rem $Id$
-rem
 rem This batch file builds all the executables needed to run QPM.
 rem See ./doc/howtosvn.txt
 rem
