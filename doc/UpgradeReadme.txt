@@ -1,8 +1,3 @@
-/*
- * $Id$
- */
-
-
 
 HOW TO INSTALL THIS UPGRADE
 ===========================
