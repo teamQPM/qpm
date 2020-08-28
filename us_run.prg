@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  *    QPM - QAC based Project Manager
  *
  *    Copyright 2011-2020 Fernando Yurisich <fernando.yurisich@gmail.com>
@@ -32,10 +28,10 @@
 // For error codes see: http://msdn2.microsoft.com/en-us/library/ms681382(VS.85).aspx
 
 FUNCTION MAIN( ... )
-   Local aParams := hb_aParams(), n
-   Local Version := "01.02", bOk := .T., nLineSize := 1024
+   Local aParams := hb_aParams(), n, bList
+   Local Version := "01.03", bOk := .T., nLineSize := 1024
    Local cParam, MemoAux := "", i, cLineaAux := ""
-   Private cCMD, cControlFile, cDefaultPath, cCurrentPath, cMode := "NORMAL"
+   Private cCMD := "", cControlFile := "", cDefaultPath := "", cCurrentPath, cMode := "NORMAL"
 
    cParam := ""
    For n := 1 To Len( aParams )
@@ -49,7 +45,7 @@ FUNCTION MAIN( ... )
    EndIf
 
    If Upper( US_Word( cParam, 1 ) ) != "QPM"
-      MsgInfo( "US_Run 999E: Running Outside System" )
+      MsgInfo( "US_Run 120E: Running Outside System" )
       ERRORLEVEL( 1 )
       bOk := .F.
       Return bOk
@@ -57,15 +53,32 @@ FUNCTION MAIN( ... )
       cParam := US_WordDel( cParam, 1 )
    EndIf
 
+   IF Upper( SubStr( cParam, 1, 5 ) ) == "-LIST"
+      bList := .T.
+      cQPMDir := SubStr( US_Word( cParam, 1), 6 )
+      IF ! Right( cQPMDir, 1 ) == "\"
+         cQPMDir += "\"
+      ENDIF
+      cParam := AllTrim( SubStr( cParam, US_WordInd( cParam, 2 ) ) )
+   ELSE
+      bList := .F.
+   ENDIF
+
    If Empty( cParam )
-      MsgInfo( "US_Run 123: Missing Parameters" )
+      IF bList
+         QPM_Log( "US_Run 121E: Missing Parameters" )
+      ENDIF
+      MsgInfo( "US_Run 121E: Missing Parameters" )
       ERRORLEVEL( 1 )
       bOk := .F.
       Return bOk
    EndIf
 
    If ! File( cParam )
-      MsgInfo( "US_Run 124: Parameters File Not Found: " + cParam )
+      IF bList
+         QPM_Log( "US_Run 122E: Parameters File Not Found: " + cParam )
+      ENDIF
+      MsgInfo( "US_Run 122E: Parameters File Not Found: " + cParam )
       ERRORLEVEL( 1 )
       bOk := .F.
       Return bOk
@@ -87,6 +100,13 @@ FUNCTION MAIN( ... )
          EndIf
       Next i
       FErase( cParam )
+      IF bList
+         QPM_Log( "US_Run 123I:" )
+         QPM_Log( "COMMAND = " + cCMD )
+         QPM_Log( "CONTROL = " + cControlFile )
+         QPM_Log( "DEFPATH = " + cDefaultPath )
+         QPM_Log( "RUNMODE = " + cMode )
+      ENDIF
    EndIf
 
    DEFINE WINDOW VentanaMain ;
@@ -97,45 +117,69 @@ FUNCTION MAIN( ... )
       MAIN ;
       ICON "DOS" ;
       NOSHOW ;
-      ON INIT US_RunInit()
+      ON INIT US_RunInit( bList )
    END WINDOW
 
    ACTIVATE WINDOW VentanaMain
 
-   If ! bOk
+   IF bOk
+      IF bList
+         QPM_Log( "US_Run 124I: Ended OK" )
+      ENDIF
+   ELSE
+      IF bList
+         QPM_Log( "US_Run 124E: Ended with ERROR" )
+      ENDIF
       ERRORLEVEL( 1 )
-   EndIf
-Return bOk
+   ENDIF
+RETURN bOk
 
-Function US_RunInit()
+Function US_RunInit( bList )
    Local Reto, nHandle
 
    DO EVENTS
    nHandle := FOpen( cControlFile, FO_WRITE + FO_EXCLUSIVE )
-   If ! Empty( cDefaultPath )
-      cCurrentPath := GetCurrentFolder()
-      SetCurrentFolder( cDefaultPath )
-   EndIf
-   DO EVENTS
-   Do Case
-   Case cMode == "HIDE"
-      Reto := WaitRun( cCMD, 0 )            // EXECUTE FILE ( cCMD ) WAIT HIDE
-   Case cMode == "MINIMIZE"
-      Reto := WaitRun( cCMD, 6 )            // EXECUTE FILE ( cCMD ) WAIT MINIMIZE
-   Case cMode == "MAXIMIZE"
-      Reto := WaitRun( cCMD, 3 )            // EXECUTE FILE ( cCMD ) WAIT MAXIMIZE
-   Otherwise
-      Reto := WaitRun( cCMD, 5 )            // EXECUTE FILE ( cCMD ) WAIT
-   EndCase
-   If ! Empty( cDefaultPath )
-      SetCurrentFolder( cCurrentPath )
-   EndIf
-   DO EVENTS
-   If Reto > 8
-      MsgInfo( "US_Run 333: Error Running: " + cCMD + HB_OsNewLine() + "Code: " + US_VarToStr( Reto ) )
+   IF FError() == 0
+      If ! Empty( cDefaultPath )
+         cCurrentPath := GetCurrentFolder()
+         SetCurrentFolder( cDefaultPath )
+      EndIf
+      IF bList
+         QPM_Log( "US_Run 125I: current folder is " + GetCurrentFolder() )
+      ENDIF
+      DO EVENTS
+      Do Case
+      Case cMode == "HIDE"
+         Reto := WaitRun( cCMD, 0 )            // EXECUTE FILE ( cCMD ) WAIT HIDE
+      Case cMode == "MINIMIZE"
+         Reto := WaitRun( cCMD, 6 )            // EXECUTE FILE ( cCMD ) WAIT MINIMIZE
+      Case cMode == "MAXIMIZE"
+         Reto := WaitRun( cCMD, 3 )            // EXECUTE FILE ( cCMD ) WAIT MAXIMIZE
+      Otherwise
+         Reto := WaitRun( cCMD, 5 )            // EXECUTE FILE ( cCMD ) WAIT
+      EndCase
+      IF bList
+         QPM_Log( "US_Run 126I: WaitRun returned " + US_VarToStr( Reto ) )
+      ENDIF
+      If ! Empty( cDefaultPath )
+         SetCurrentFolder( cCurrentPath )
+      EndIf
+      DO EVENTS
+      If Reto > 8
+         IF bList
+            QPM_Log( "US_Run 127E: Error Running: " + cCMD + HB_OsNewLine() + "Code: " + US_VarToStr( Reto ) )
+         ENDIF
+         MsgInfo( "US_Run 127E: Error Running: " + cCMD + HB_OsNewLine() + "Code: " + US_VarToStr( Reto ) )
+         bOk := .F.
+      EndIf
+      FClose( nHandle )
+   ELSE
+      IF bList
+         QPM_Log( "US_Run 128E: error opening control file." )
+      ENDIF
+      MsgInfo( "US_Run 128E: Error opening control file." )
       bOk := .F.
-   EndIf
-   FClose( nHandle )
+   ENDIF
    FErase( cControlFile )
    DO EVENTS
    VentanaMain.Release()
@@ -295,5 +339,22 @@ FUNCTION US_StrCero(NUM,LONG,DEC)
       ENDIF
    NEXT
 RETURN NUM
+
+//========================================================================
+// ESCRIBE EN EL LOG
+//========================================================================
+STATIC FUNCTION QPM_Log( string )
+   LOCAL LogArchi := cQPMDir + "QPM.LOG"
+   LOCAL msg := DToS( Date() ) + " " + Time() + " US_SLASH " + ProcName( 1 ) + "(" + AllTrim( Str( ProcLine( 1 ) ) ) + ")" + " " + string
+
+   SET CONSOLE OFF
+   SET ALTERNATE TO ( LogArchi ) ADDITIVE
+   SET ALTERNATE ON
+   ? msg
+   SET ALTERNATE OFF
+   SET ALTERNATE TO
+   SET CONSOLE ON
+
+   RETURN .T.
 
 /* eof */
