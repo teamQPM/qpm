@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  *    QPM - QAC based Project Manager
  *
  *    Copyright 2011-2020 Fernando Yurisich <fernando.yurisich@gmail.com>
@@ -289,7 +285,7 @@ main(int argc, char **argv)
   if (argc <= 1)
   {
     errno = EINVAL;
-    fatal("Missing program name; aborting", "");
+    fatal("Missing program name", "");
   }
 
   rv = run_program(argc, argv);
