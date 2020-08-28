@@ -3,3 +3,12 @@ OBJE1BH_32/*
 htmlhelp/*
 NewToProd.bat
 OldToProd.bat
+OBJO3GH_32/ar.c
+OBJO3GH_32/ar.CUS
+OBJO3GH_32/ar.o
+OBJO3GH_32/us_reimp.c
+OBJO3GH_32/us_reimp.CUS
+OBJO3GH_32/us_reimp.o
+OBJO3GH_32/util.c
+OBJO3GH_32/util.CUS
+OBJO3GH_32/util.o
