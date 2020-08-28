@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  *    QPM - QAC based Project Manager
  *
  *    Copyright 2011-2020 Fernando Yurisich <fernando.yurisich@gmail.com>
@@ -196,7 +192,7 @@ Function SHG_GetDatabase()
       if upper( right( US_FileNameOnlyName( cFile ) , 4 ) ) != "_SHG"
          cFile := US_FileNameOnlyPath( cFile ) + DEF_SLASH + US_FileNameOnlyName( cFile ) + "_SHG.dbf"
       endif
-      if US_FileNameOnlyExt( cFile ) != "dbf"
+      if Upper( US_FileNameOnlyExt( cFile ) ) != "DBF"
          cFile := US_FileNameOnlyPathAndName( cFile ) + ".dbf"
       endif
       if !file( cFile )
@@ -208,11 +204,11 @@ Function SHG_GetDatabase()
          endif
       else
          if US_IsDbf( cFile ) = 21
-            msgStop( "Help database '" + cFile + "' if open by another process..." + HB_OsNewline() + "Free the database an retry" )
+            MsgStop( "Help database '" + cFile + "' if open by another process..." + HB_OsNewline() + "Free the database an retry" )
             Return .F.
          endif
          if US_IsDbf( cFile ) != 0
-            msgStop( "Invalid or corrupted Help database '" + cFile + "'" )
+            MsgStop( "Invalid or corrupted Help database '" + cFile + "'" )
             Return .F.
          endif
          SHG_Database := cFile
@@ -237,12 +233,6 @@ Function SHG_AddRecord( cType , nSecu , cTopic , cNick , cMemo , cKeys )
             "\par }"
        //   "\par \cf0\f1\fs17 " + HB_OsNewline() + ;
    cMemo := US_RTF2RTF( cMemo )
- //cMemo := US_TXT2RTF( cMemo )
- //Local cAuxMemo := US_GetRichEditValue( "VentanaMain" , "RichEditHlp" , "RTF" )
- //SetProperty( "VentanaMain" , "RichEditHlp" , "Value" , cMemo )
- //cMemo := US_GetRichEditValue( "VentanaMain" , "RichEditHlp" , "RTF" )
- //SetProperty( "VentanaMain" , "RichEditHlp" , "Value" , cAuxMemo )
- //oHlpRichEdit:lChanged := .F.
    US_Use( .T. , , SHG_Database , "SHG" , DEF_DBF_EXCLUSIVE , DEF_DBF_WRITE )
    DBSetIndex( US_FileNameOnlyPathAndName( SHG_Database ) )
    APPEND BLANK
@@ -392,7 +382,7 @@ Function SHG_Generate( cBase , bGenHtml , PUB_cSecu , cWWW )
       Return .F.
    endif
    if !file( cBase )
-      msgStop( "Help database not found: " + cBase + HB_OsNewLine() + "Use open button to open or create help database." )
+      MsgStop( "Help database not found: " + cBase + HB_OsNewLine() + "Use open button to open or create help database." )
       return .F.
    endif
 
@@ -410,7 +400,7 @@ Function SHG_Generate( cBase , bGenHtml , PUB_cSecu , cWWW )
       cAux != "W" .or. ;
       field->SHG_ORDER != 1 .or. ;
       field->SHG_TOPIC != "Global Foot"
-      msgStop( "Help Database is corrupted, records UNKNOWN" )
+      MsgStop( "Help Database is corrupted, records UNKNOWN" )
       DBCloseArea( "SHG" )
       Return .F.
    endif
@@ -637,10 +627,15 @@ Function SHG_CopyImageToHtmlFolder( vImage , cDirOut )
    next
 Return .T.
 
-Function SHG_GetOutputName()
-   Local cOutputName := US_FileNameOnlyName( SHG_Database )
-   cOutputName := substr( cOutputName , 1 , len( cOutputName ) - 4 )
-Return US_FileNameOnlyPath( GetOutputModuleName() ) + DEF_SLASH + cOutputName + '.chm'
+FUNCTION SHG_GetOutputName()
+   LOCAL cOutputName, cOutputFolder
+   cOutputName := US_FileNameOnlyName( SHG_Database )
+   cOutputName := SubStr( cOutputName , 1 , Len( cOutputName ) - 4 )
+   cOutputFolder := US_FileNameOnlyPath( GetOutputModuleName() )
+   IF Empty( cOutputFolder )
+      cOutputFolder := PUB_cProjectFolder
+   ENDIF
+RETURN cOutputFolder + DEF_SLASH + cOutputName + '.chm'
 
 Function SHG_HTML_ArmoHeader( cHeader , vVector , nIndx , cBackColor , cTitle )
    cHeader := '<html><head>                                            ' + HB_OsNewLine() + ;
@@ -841,7 +836,7 @@ Function SHG_CompileToCHM( Proyecto , cDirOutCHM )
       MsgOk( 'QPM (QAC based Project Manager)' , 'Build Finished' + HB_OsNewLine()+'OK' , 'I' , .T. )
       SHG_DisplayHelp( SHG_GetOutputName() )
    else
-      msgStop( strtran( MemoResu , chr(13) + HB_OsNewLine() + chr(13) + HB_OsNewLine() , HB_OsNewLine() ) )
+      MsgStop( strtran( MemoResu , chr(13) + HB_OsNewLine() + chr(13) + HB_OsNewLine() , HB_OsNewLine() ) )
    endif
    ferase( cOutPut )
 Return .T.
@@ -967,7 +962,7 @@ Function SHG_LoadDatabase( cDataBase )
       MsgInfo( "Error open QPM Help Generator Database: " + cDataBase + HB_OsNewLine() + "Look at " + PageHlp )
       SHG_BaseOK := .F.
    else
-      if upper( US_FileNameOnlyExt( cDatabase ) ) != "DBF"
+      if Upper( US_FileNameOnlyExt( cDatabase ) ) != "DBF"
          MsgInfo( "Error open QPM Help Generator Database: " + cDataBase + HB_OsNewLine() + "Bad extension." )
          SHG_BaseOK := .F.
       endif
@@ -1041,7 +1036,7 @@ Function SHG_LoadDatabase( cDataBase )
          cAux     != "W" .or. ;
          field->SHG_ORDER != 1 .or. ;
          field->SHG_TOPIC != "Global Foot"
-         msgStop( "Help Database is corrupted, records UNKNOWN" )
+         MsgStop( "Help Database is corrupted, records UNKNOWN" )
          DBCloseArea( "SHG" )
          Return .F.
       endif
