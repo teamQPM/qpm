@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  *    QPM - QAC based Project Manager
  *
  *    Copyright 2011-2020 Fernando Yurisich <fernando.yurisich@gmail.com>
@@ -122,14 +118,18 @@ PROCEDURE MAIN( ... )
       CASE Upper( US_Word( cParam, i ) ) = "-ONLYINCLUDE"
          bInclude := .T.
       OTHERWISE
-         QPM_Log( "US_Res 000E: Parameter error: " + US_Word( cParam, i) + CRLF )
+         IF bList
+            QPM_Log( "US_Res 000E: Parameter error: " + US_Word( cParam, i) + CRLF )
+         ENDIF
          ErrorLevel( 1 )
          RETURN
       ENDCASE
    NEXT i
 
    IF ! File( cFileIn )
-      QPM_Log( "US_Res 001E: File not found: " + cFileIn + CRLF )
+      IF bList
+         QPM_Log( "US_Res 001E: File not found: " + cFileIn + CRLF )
+      ENDIF
       ErrorLevel( 1 )
       RETURN
    ENDIF
@@ -163,7 +163,9 @@ PROCEDURE MAIN( ... )
 
             IF ! File( cFileInclude )
                cMemoOut += cLine + CRLF
-               QPM_Log( "US_Res 002W: File not found: " + cLine + CRLF )
+               IF bList
+                  QPM_Log( "US_Res 002W: File not found: " + cLine + CRLF )
+               ENDIF
                lWarning := .T.
             ELSE
                IF Left( cFileInclude, 2 ) == [.\]
