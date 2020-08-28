@@ -1,8 +1,4 @@
 /*
- * $Id: ar.c 134 2016-07-24 15:37:13Z fyurisich $
- */
-
-/*
  *    QPM - QAC based Project Manager
  *
  *    Copyright 2011-2020 Fernando Yurisich <fernando.yurisich@gmail.com>
