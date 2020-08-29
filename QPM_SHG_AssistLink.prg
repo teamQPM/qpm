@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  *    QPM - QAC based Project Manager
  *
  *    Copyright 2011-2020 Fernando Yurisich <fernando.yurisich@gmail.com>
@@ -41,7 +37,6 @@ Function SHG_LinkGenerateList( cIn , cTopic )
    Local bLoop := .T. , vKeys , nPos , nLastPos := 1 , nCaretHtm , i , vDesdeLen , bCambio := .F.
    Local cMemoHtm := memoread( cIn ) , cStringCmd
    Local cMemoHtmUpper := upper( cMemoHtm ) , nLenGuia := len( "<A" )
-// Local vIncludeExt := { "ZIP" , "RAR" , "MP3" , "WAV" , "EXE" }
    Local vExcludeExt := { "HTM" , "HTML" }
    do while bLoop
 #IFDEF __XHARBOUR__
@@ -53,14 +48,13 @@ Function SHG_LinkGenerateList( cIn , cTopic )
          nLastPos := nPos + nLenGuia
          vKeys := SHG_LinkParser( SHG_LinkGetString( cMemoHtm , nCaretHtm + 2 ) )
          for i:=1 to len( vKeys )
-            // aScan( vIncludeExt , { |x| x == US_FileNameOnlyExt( Upper( US_WSlash( vKeys[i][2] ) ) ) } ) > 0 .and. ;
-            if upper( vKeys[i][1] ) == "HREF" .and. vKeys[i][2] != NIL .and. ;
-               aScan( vExcludeExt , { |x| x == US_FileNameOnlyExt( Upper( US_WSlash( vKeys[i][2] ) ) ) } ) == 0 .and. ;
+            if Upper( vKeys[i][1] ) == "HREF" .and. vKeys[i][2] != NIL .and. ;
+               aScan( vExcludeExt , { |x| x == Upper( US_FileNameOnlyExt( Upper( US_WSlash( vKeys[i][2] ) ) ) ) } ) == 0 .and. ;
                US_IsLocalFile( US_WSlash( vKeys[i][2] ) )
                bCambio := .T.
                if aScan( vFilesToCompile , Upper( US_WSlash( vKeys[i][2] ) ) ) == 0
                   if !file( US_WSlash( vKeys[i][2] ) )
-                     msgexclamation( "Warning: file not found" + HB_OsNewLine() + ;
+                     MsgExclamation( "Warning: file not found" + HB_OsNewLine() + ;
                               "   File: " + US_WSlash( vKeys[i][2] ) + HB_OsNewLine() + ;
                               "  Topic: " + cTopic )
                   endif
@@ -74,25 +68,6 @@ Function SHG_LinkGenerateList( cIn , cTopic )
                cMemoHtmUpper := upper( cMemoHtm )
                nLastPos := vDesdeLen[1][1] + len( cStringCmd )
                exit
-////        else
-////           if upper( vKeys[i][1] ) == "HREF" .and. vKeys[i][2] != NIL .and. ;
-////              US_FileNameOnlyExt( Upper( US_WSlash( US_MayorTopic( vKeys[i][2] ) ) ) ) == "HTM" .and. ;
-////              US_IsLocalFile( US_WSlash( US_MayorTopic( vKeys[i][2] ) ) )
-////              bCambio := .T.
-////              if !file( US_WSlash( vKeys[i][2] ) )
-////                 msgexclamation( "Warning: file not found" + HB_OsNewLine() + ;
-////                          "   File: " + US_WSlash( vKeys[i][2] ) + HB_OsNewLine() + ;
-////                          "  Topic: " + cTopic )
-////              endif
-////              vDesdeLen := SHG_LinkGetPos( cMemoHtm , nCaretHtm + 1 )
-////              cStringCmd := SHG_LinkVector2String( vKeys , .T. )
-////              cMemoHtm := substr( cMemoHtm , 1 , vDesdeLen[1][1] - 1 ) + ;
-////                          cStringCmd + ;
-////                          substr( cMemoHtm , vDesdeLen[1][1] + vDesdeLen[1][2] )
-////              cMemoHtmUpper := upper( cMemoHtm )
-////              nLastPos := vDesdeLen[1][1] + len( cStringCmd )
-////              exit
-////           endif
             endif
          next
       else
@@ -350,7 +325,6 @@ Function SHG_LinkAssistant( cMemo , nCaretPos )
              TOOLTIP         'Confirm selection'
              ONCLICK         SHG_LinkAssistantOK()
       END BUTTON
-          // ONCLICK         ( cAuxName := PanInputLink.TextSrc.Value , cAuxNick := PanInputLink.TextNick.Value , if( !empty( cAuxNick ) .and. !FILEVALID( cAuxNick , 255 , 50 ) , MsgInfo( "NickName is not a valid file name of Windows" + HB_OsNewLine() + 'Remember: only numbers (0-9), letters (a-z or A-Z) and not use the followed simbols: \ / : * ? " < > |') , PanInputLink.Release() ) )
 
       @ 235 , 195 LABEL LabelReq ;
          VALUE 'RED fields are required' ;
@@ -489,9 +463,9 @@ Return .T.
 
 Function SHG_LinkAssistantDisplay()
    if file( US_WSlash( PanInputLink.TextSrc.Value ) )
-      if upper( US_FileNameOnlyExt( US_WSlash( PanInputLink.TextSrc.Value ) ) ) == "JPG" .or. ;
-         upper( US_FileNameOnlyExt( US_WSlash( PanInputLink.TextSrc.Value ) ) ) == "JPEG" .or. ;
-         upper( US_FileNameOnlyExt( US_WSlash( PanInputLink.TextSrc.Value ) ) ) == "BMP"
+      if Upper( US_FileNameOnlyExt( US_WSlash( PanInputLink.TextSrc.Value ) ) ) == "JPG" .or. ;
+         Upper( US_FileNameOnlyExt( US_WSlash( PanInputLink.TextSrc.Value ) ) ) == "JPEG" .or. ;
+         Upper( US_FileNameOnlyExt( US_WSlash( PanInputLink.TextSrc.Value ) ) ) == "BMP"
          PanInputLink.ImageView.picture := US_WSlash( PanInputLink.TextSrc.Value )
       else
          PanInputLink.ImageView.picture := "SHG_FileNotSupported"
