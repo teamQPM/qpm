@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  *    QPM - QAC based Project Manager
  *
  *    Copyright 2011-2020 Fernando Yurisich <fernando.yurisich@gmail.com>
@@ -55,7 +51,7 @@ Function SHG_ImageGenerateList( cIn , cTopic )
                bCambio := .T.
                if ascan( vFilesToCompile , Upper( US_WSlash( vKeys[i][2] ) ) ) == 0
                   if !file( US_WSlash( vKeys[i][2] ) )
-                     msgexclamation( "Warning: Image file not found" + HB_OsNewLine() + ;
+                     MsgExclamation( "Warning: Image file not found" + HB_OsNewLine() + ;
                               "   File: " + US_WSlash( vKeys[i][2] ) + HB_OsNewLine() + ;
                               "  Topic: " + cTopic )
                   endif
@@ -345,7 +341,6 @@ Function SHG_ImageAssistant( cMemo , nCaretPos )
              TOOLTIP         'Confirm selection'
              ONCLICK         SHG_ImageAssistantOK()
       END BUTTON
-          // ONCLICK         ( cAuxName := PanInputImage.TextSrc.Value , cAuxNick := PanInputImage.TextNick.Value , if( !empty( cAuxNick ) .and. !FILEVALID( cAuxNick , 255 , 50 ) , MsgInfo( "NickName is not a valid file name of Windows" + HB_OsNewLine() + 'Remember: only numbers (0-9), letters (a-z or A-Z) and not use the followed simbols: \ / : * ? " < > |') , PanInputImage.Release() ) )
 
       @ 235 , 195 LABEL LabelReq ;
          VALUE 'RED fields are required' ;
@@ -484,9 +479,9 @@ Return .T.
 
 Function SHG_ImageAssistantDisplay()
    if file( US_WSlash( PanInputImage.TextSrc.Value ) )
-      if upper( US_FileNameOnlyExt( US_WSlash( PanInputImage.TextSrc.Value ) ) ) == "JPG" .or. ;
-         upper( US_FileNameOnlyExt( US_WSlash( PanInputImage.TextSrc.Value ) ) ) == "JPEG" .or. ;
-         upper( US_FileNameOnlyExt( US_WSlash( PanInputImage.TextSrc.Value ) ) ) == "BMP"
+      if Upper( US_FileNameOnlyExt( US_WSlash( PanInputImage.TextSrc.Value ) ) ) == "JPG" .or. ;
+         Upper( US_FileNameOnlyExt( US_WSlash( PanInputImage.TextSrc.Value ) ) ) == "JPEG" .or. ;
+         Upper( US_FileNameOnlyExt( US_WSlash( PanInputImage.TextSrc.Value ) ) ) == "BMP"
          PanInputImage.ImageView.picture := US_WSlash( PanInputImage.TextSrc.Value )
       else
          PanInputImage.ImageView.picture := "SHG_FileNotSupported"
