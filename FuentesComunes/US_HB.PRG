@@ -902,15 +902,6 @@ Return cMemoOut
 *//------------------------------------------------------------------------\\*
 Function US_ShortName( nombre )
 Local Reto
-   /* INI parche para parentesis por make GCC */
-// if at( "(" , Reto ) > 0 .or. ;
-//    at( ")" , Reto ) > 0 .or. ;
-//    at( "&" , Reto ) > 0 .or. ;
-//    at( "'" , Reto ) > 0
-//    MsgStop( "This name: "+nombre+HB_OsNewLine()+"don't work correctly with make utility. Please, use a name without parenthesis characters.", NIL, NIL, .F. )  // this is not translated
-//    Reto := ""
-// endif
-   /* FIN parche para parentesis por make GCC */
    if US_IsDirectory( nombre )
       Reto := US_GetShortPathName( nombre )
    else
@@ -929,14 +920,14 @@ Local Reto
       endif
    else
       if US_IsDirectory( nombre ) .and. ! US_IsDirectory( Reto )
-         MsgStop( "The name: " + nombre + HB_OsNewLine() + ;
+         MsgStop( 'The name: "' + nombre + '"' + hb_osNewLine() + ;
                   "was translated by the OS to a name that's not valid for a folder:" + HB_OsNewLine() + ;
                   Reto + HB_OsNewLine() + ;
                   "Please, use a name that follows the 8.3 convention.", NIL, NIL, .F. )  // this is not translated
          Reto := ""
       elseif file( nombre ) .and. ! file( Reto )
-         MsgStop( "The name: " + nombre + HB_OsNewLine() + ;
-                  "was translated by the OS to a name that's not valid for a file:" + HB_OsNewLine() + ;
+         MsgStop( 'The name: "' + nombre + '"' + hb_osNewLine() + ;
+                  "was translated by the OS to a name that's not valid for a file:" + hb_osNewLine() + ;
                   Reto + HB_OsNewLine() + ;
                   "Please, use a name that follows the 8.3 convention.", NIL, NIL, .F. )  // this is not translated
          Reto := ""
@@ -945,7 +936,7 @@ Local Reto
    /* fin parche para Novell */
    /* INI parche para parentesis */
    if at( "(" , Reto ) > 0
-      MsgStop( "This name doesn't work correctly: " +nombre + HB_OsNewLine() + ;
+      MsgStop( "This name doesn't work correctly: " + '"' + nombre + '"' + hb_osNewLine() + ;
                "Please, use a name without parenthesis characters.", NIL, NIL, .F. )  // this is not translated
       Reto := ""
    endif
