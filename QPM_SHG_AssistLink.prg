@@ -54,9 +54,9 @@ Function SHG_LinkGenerateList( cIn , cTopic )
                bCambio := .T.
                if aScan( vFilesToCompile , Upper( US_WSlash( vKeys[i][2] ) ) ) == 0
                   if !file( US_WSlash( vKeys[i][2] ) )
-                     MsgExclamation( "Warning: file not found" + HB_OsNewLine() + ;
-                              "   File: " + US_WSlash( vKeys[i][2] ) + HB_OsNewLine() + ;
-                              "  Topic: " + cTopic )
+                     MyMsgWarn( "Warning: file not found" + HB_OsNewLine() + ;
+                                "   File: " + US_WSlash( vKeys[i][2] ) + HB_OsNewLine() + ;
+                                "  Topic: " + cTopic )
                   endif
                   aadd( vFilesToCompile , upper( US_WSlash( vKeys[i][2] ) ) )
                endif
@@ -359,12 +359,12 @@ Return cReto
 
 Function SHG_LinkAssistantOK()
    if empty( PanInputLink.TextSrc.Value )
-      MsgInfo( "Link file is required." )
+      MyMsgInfo( "Link file is required." )
       return .F.
    endif
    if !file( US_WSlash( PanInputLink.TextSrc.Value ) )
       SHG_LinkAssistantDisplay()
-      MsgInfo( "Link file not found: " + PanInputLink.TextSrc.Value )
+      MyMsgInfo( "Link file not found: " + PanInputLink.TextSrc.Value )
       return .F.
    endif
    cReto := "<IMG"
@@ -442,10 +442,10 @@ Function SHG_LinkAssistantGetVector( cMemo , nCaretPos )
                   case upper( vKeys[i][2] ) == "RIGHT"
                      PanInputLink.CAlign.Value := 6
                   otherwise
-                     MsgInfo( "Invalid CAlign: " + US_VarToStr( vKeys[i][2] ) )
+                     MyMsgInfo( "Invalid CAlign: " + US_VarToStr( vKeys[i][2] ) )
                endcase
             otherwise
-               MsgInfo( "Invalid key in function " + procname() + " :" + vKeys[i][1] )
+               MyMsgInfo( "Invalid key in function " + procname() + " :" + vKeys[i][1] )
          endcase
       next
    endif
@@ -453,7 +453,7 @@ return .T.
 
 Function SHG_LinkAssistantGetFile()
 Local cAux
-   cAux := US_USlash( BugGetFile( { {'BMP Image file','*.bmp'} , {'JPEG Image file','*.jpg'} , {'PNG Image file','*.png'} , {'GIF Image file','*.gif'} } , "Select Link File" , if( empty(PanInputLink.TextSrc.Value) , SHG_LastFolderImg , US_FileNameOnlyPath( US_WSlash( PanInputLink.TextSrc.Value ) ) ) , .F. , .T. ) )
+   cAux := US_USlash( GetFile( { {'BMP Image file','*.bmp'} , {'JPEG Image file','*.jpg'} , {'PNG Image file','*.png'} , {'GIF Image file','*.gif'} } , "Select Link File" , if( empty(PanInputLink.TextSrc.Value) , SHG_LastFolderImg , US_FileNameOnlyPath( US_WSlash( PanInputLink.TextSrc.Value ) ) ) , .F. , .T. ) )
    if !empty( cAux )
       PanInputLink.TextSrc.Value := cAux
       SHG_LastFolderImg := US_FileNameOnlyPath( US_WSlash( cAux ) )

@@ -50,10 +50,10 @@ Function SHG_ImageGenerateList( cIn , cTopic )
             if upper( vKeys[i][1] ) == "SRC" .and. vKeys[i][2] != NIL
                bCambio := .T.
                if ascan( vFilesToCompile , Upper( US_WSlash( vKeys[i][2] ) ) ) == 0
-                  if !file( US_WSlash( vKeys[i][2] ) )
-                     MsgExclamation( "Warning: Image file not found" + HB_OsNewLine() + ;
-                              "   File: " + US_WSlash( vKeys[i][2] ) + HB_OsNewLine() + ;
-                              "  Topic: " + cTopic )
+                  if ! file( US_WSlash( vKeys[i][2] ) )
+                     MyMsgWarn( "Image file not found" + HB_OsNewLine() + ;
+                                "   File: " + US_WSlash( vKeys[i][2] ) + HB_OsNewLine() + ;
+                                "  Topic: " + cTopic )
                   endif
                   aadd( vFilesToCompile , upper( US_WSlash( vKeys[i][2] ) ) )
                endif
@@ -375,12 +375,12 @@ Return cReto
 
 Function SHG_ImageAssistantOK()
    if empty( PanInputImage.TextSrc.Value )
-      MsgInfo( "Image file is required." )
+      MyMsgInfo( "Image file is required." )
       return .F.
    endif
    if !file( US_WSlash( PanInputImage.TextSrc.Value ) )
       SHG_ImageAssistantDisplay()
-      MsgInfo( "Image file not found: " + PanInputImage.TextSrc.Value )
+      MyMsgInfo( "Image file not found: " + PanInputImage.TextSrc.Value )
       return .F.
    endif
    cReto := "<IMG"
@@ -458,10 +458,10 @@ Function SHG_ImageAssistantGetVector( cMemo , nCaretPos )
                   case upper( vKeys[i][2] ) == "RIGHT"
                      PanInputImage.CAlign.Value := 6
                   otherwise
-                     MsgInfo( "Invalid CAlign: " + US_VarToStr( vKeys[i][2] ) )
+                     MyMsgInfo( "Invalid CAlign: " + US_VarToStr( vKeys[i][2] ) )
                endcase
             otherwise
-               MsgInfo( "Invalid key in function " + procname() + " :" + vKeys[i][1] )
+               MyMsgInfo( "Invalid key in function " + procname() + " :" + vKeys[i][1] )
          endcase
       next
    endif
@@ -469,7 +469,7 @@ return .T.
 
 Function SHG_ImageAssistantGetFile()
 Local cAux
-   cAux := US_USlash( BugGetFile( { {'Images (bmp, jpg, png, gif)','*.bmp;*.jpg;*.png;*.gif'} } , "Select Image File" , if( empty(PanInputImage.TextSrc.Value) , SHG_LastFolderImg , US_FileNameOnlyPath( US_WSlash( PanInputImage.TextSrc.Value ) ) ) , .F. , .T. ) )
+   cAux := US_USlash( GetFile( { {'Images (bmp, jpg, png, gif)','*.bmp;*.jpg;*.png;*.gif'} } , "Select Image File" , if( empty(PanInputImage.TextSrc.Value) , SHG_LastFolderImg , US_FileNameOnlyPath( US_WSlash( PanInputImage.TextSrc.Value ) ) ) , .F. , .T. ) )
    if !empty( cAux )
       PanInputImage.TextSrc.Value := cAux
       SHG_LastFolderImg := US_FileNameOnlyPath( US_WSlash( cAux ) )
