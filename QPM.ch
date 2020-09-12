@@ -768,8 +768,10 @@ MEMVAR Prj_Warn_GT_Order
 MEMVAR Prj_Warn_GT_Order_Cont
 MEMVAR Prj_Warn_InfoSaved
 MEMVAR Prj_Warn_NullRDD
+MEMVAR Prj_Warn_PPO_Browse
 MEMVAR Prj_Warn_SlowSearch
 MEMVAR Prj_Warn_SlowSearch_Cont
+MEMVAR Prj_Warn_TopFile
 MEMVAR ProgLength
 MEMVAR PUB_bAutoInc
 MEMVAR PUB_bDebugActive
