@@ -125,7 +125,7 @@ FUNCTION SHG_CreateDatabase( cFile )
    DbGoTop()
    SHG_IndexON( SHG_Database )
    DBCloseArea( "SHG" )
-   SHG_AddRecord( "F" , 1 , "Global Foot" , "" , "This text will be include into Foot of all pages of Help" + HB_OsNewLine() )
+   SHG_AddRecord( "F" , 1 , "Global Footer" , "" , "This text will be included at the footer of all Help pages" + HB_OsNewLine() )
    SHG_AddRecord( "W" , 2 , "Welcome Page" , "" , "Text of Welcome Page" , "Welcome" + HB_OsNewline() + "Bienvenido" )
    SHG_AddRecord( "B" , 3 , "Example Book Number 1" , "" , "Text of Book 1" )
    SHG_AddRecord( "P" , 4 , "Example Page Number 1 of Book 1" , "" , "Text of Page 1 of Book 1" )
@@ -204,11 +204,11 @@ Function SHG_GetDatabase()
          endif
       else
          if US_IsDbf( cFile ) = 21
-            MsgStop( "Help database '" + cFile + "' if open by another process..." + HB_OsNewline() + "Free the database an retry" )
+            MyMsgStop( "Help database '" + cFile + "' if open by another process..." + HB_OsNewline() + "Free the database an retry" )
             Return .F.
          endif
          if US_IsDbf( cFile ) != 0
-            MsgStop( "Invalid or corrupted Help database '" + cFile + "'" )
+            MyMsgStop( "Invalid or corrupted Help database '" + cFile + "'" )
             Return .F.
          endif
          SHG_Database := cFile
@@ -249,7 +249,7 @@ Function SHG_DeleteRecord( nRec )
    DBSetIndex( US_FileNameOnlyPathAndName( SHG_Database ) )
    DBGoTop()
    if !DbSeek( nRec )
-      MsgInfo( "Error locating record number " + US_VarToStr( nRec ) + " in function SHG_DeleteRecord. Please, contact support." )
+      MyMsgInfo( "Error locating record number " + US_VarToStr( nRec ) + " in function SHG_DeleteRecord. Please, contact support." )
    else
       DELETE
    endif
@@ -264,7 +264,7 @@ Function SHG_GetField( cField , nRow )
    DBSetIndex( US_FileNameOnlyPathAndName( SHG_Database ) )
    DBGoTop()
    if !DbSeek( nRow )
-      MsgInfo( "Error locating record number " + US_VarToStr( nRow ) + " in function SHG_GetField. Please, contact support." )
+      MyMsgInfo( "Error locating record number " + US_VarToStr( nRow ) + " in function SHG_GetField. Please, contact support." )
    else
       cAux := &( cField )
    endif
@@ -277,7 +277,7 @@ Function SHG_SetField( cField , nRow , xValue )
    DBSetIndex( US_FileNameOnlyPathAndName( SHG_Database ) )
    DBGoTop()
    if !DbSeek( nRow )
-      MsgInfo( "Error locating record number " + US_VarToStr( nRow ) + " in function SHG_SetField. Please, contact support." )
+      MyMsgInfo( "Error locating record number " + US_VarToStr( nRow ) + " in function SHG_SetField. Please, contact support." )
    else
       if &cField == xValue
       else
@@ -374,15 +374,15 @@ Function SHG_Generate( cBase , bGenHtml , PUB_cSecu , cWWW )
    Local vFiles := {}
    PRIVATE vFilesToCompile := {}
    if Empty( PUB_cProjectFolder ) .or. ! US_IsDirectory( PUB_cProjectFolder )
-      MsgStop( DBLQT + "Project Folder" + DBLQT + " is not a valid folder:" + Hb_OsNewLine() + PUB_cProjectFolder + Hb_OsNewLine() + 'Look at tab ' + DBLQT + PagePRG + DBLQT )
+      MyMsgStop( DBLQT + "Project Folder" + DBLQT + " is not a valid folder:" + Hb_OsNewLine() + PUB_cProjectFolder + Hb_OsNewLine() + 'Look at tab ' + DBLQT + PagePRG + DBLQT )
       Return .F.
    endif
    if US_FileInUse( SHG_GetOutputName() )
-      MsgInfo( "Output name '" + SHG_GetOutputName() + "' is in use." + HB_OsNewLine() + "Close the help process an retry." )
+      MyMsgInfo( "Output name '" + SHG_GetOutputName() + "' is in use." + HB_OsNewLine() + "Close the help process an retry." )
       Return .F.
    endif
    if !file( cBase )
-      MsgStop( "Help database not found: " + cBase + HB_OsNewLine() + "Use open button to open or create help database." )
+      MyMsgStop( "Help database not found: " + cBase + HB_OsNewLine() + "Use open button to open or create help database." )
       return .F.
    endif
 
@@ -400,7 +400,7 @@ Function SHG_Generate( cBase , bGenHtml , PUB_cSecu , cWWW )
       cAux != "W" .or. ;
       field->SHG_ORDER != 1 .or. ;
       field->SHG_TOPIC != "Global Foot"
-      MsgStop( "Help Database is corrupted, records UNKNOWN" )
+      MyMsgStop( "Help Database is corrupted, records UNKNOWN" )
       DBCloseArea( "SHG" )
       Return .F.
    endif
@@ -425,9 +425,9 @@ Function SHG_Generate( cBase , bGenHtml , PUB_cSecu , cWWW )
    endif
    if !SHG_BaseOK
       if empty( SHG_Database )
-         MsgInfo( "QPM Help Generator Database not selected. Use open button for open or create help database" )
+         MyMsgInfo( "QPM Help Generator Database not selected. Use open button for open or create help database" )
       else
-         MsgInfo( "Error open QPM Help Generator Database: " + SHG_Database + HB_OsNewLine() + "Look at " + PageHlp )
+         MyMsgInfo( "Error opening QPM Help Generator Database: " + SHG_Database + HB_OsNewLine() + "Look at " + PageHlp )
       endif
       Return .F.
    endif
@@ -439,7 +439,7 @@ Function SHG_Generate( cBase , bGenHtml , PUB_cSecu , cWWW )
          SHG_HtmlFolder := cDirOutHTML
       Endif
       If Empty( Folder := GetFolder( "Select Folder for HTML Output", SHG_HtmlFolder ) )
-         MsgInfo( "Folder required for HTML output." )
+         MyMsgInfo( "Folder required for HTML output." )
          Return .F.
       Else
          SHG_HtmlFolder := Folder
@@ -500,7 +500,7 @@ Function SHG_Generate( cBase , bGenHtml , PUB_cSecu , cWWW )
        *      <pFileProgress> Code block for File Progress
        */
       if !HB_UNZIPFILE(cDirOutHTML + DEF_SLASH + "SHG_dtree.zip", nil, .T., nil, cDirOutHTML + DEF_SLASH + "SHG_IMG" + DEF_SLASH, "*.*", nil )
-         MsgInfo( "Error decompresing images for index tree of HTML Help (Java Mode)." )
+         MyMsgInfo( "Error decompresing images for index tree of HTML Help (Java Mode)." )
       else
          ferase( cDirOutHTML + DEF_SLASH + "SHG_dtree.zip" )
       endif
@@ -510,7 +510,7 @@ Function SHG_Generate( cBase , bGenHtml , PUB_cSecu , cWWW )
    DBSetIndex( US_FileNameOnlyPathAndName( cBase ) )
    nRegistros := Reccount()
    DbSeek( 1 )
-   SetMGWaitTxt( "Generating foot for pages..." )
+   SetMGWaitTxt( "Generating footer..." )
    QPM_MemoWrit( cDirOutCHM + DEF_SLASH + "Footer.rtf" , field->SHG_MEMO )
 //   US_FileChar26Zap( cDirOutCHM + DEF_SLASH + "Footer.rtf" )
    SHG_RtfToHtml( cDirOutCHM + DEF_SLASH + "Footer.rtf" , cDirOutCHM + DEF_SLASH + "Footer.htm" , "Global Foot" )
@@ -616,7 +616,7 @@ Function SHG_CopyImageToHtmlFolder( vImage , cDirOut )
       DO EVENTS
       if file( vImage[i] )
          if US_FileCopy( vImage[i] , cDirOut + DEF_SLASH + US_FileNameOnlyNameAndExt( vImage[i] ) ) != US_FileSize( vImage[i] )
-            MsgInfo( "Error copying file '" + vImage[i] + "' to folder: " + cDirOut )
+            MyMsgInfo( "Error copying file '" + vImage[i] + "' to folder: " + cDirOut )
          else
             if US_FileNameOnlyNameAndExt( US_FileNameCase( vImage[i] ) ) !=  US_FileNameOnlyNameAndExt( US_FileNameCase( cDirOut + DEF_SLASH + US_FileNameOnlyNameAndExt( vImage[i] ) ) )
                frename( cDirOut + DEF_SLASH + US_FileNameOnlyNameAndExt( vImage[i] ) , cDirOut + DEF_SLASH + US_FileNameOnlyNameAndExt( vImage[i] ) + "." + PUB_cSecu )
@@ -833,10 +833,10 @@ Function SHG_CompileToCHM( Proyecto , cDirOutCHM )
    MemoResu := memoread( cOutPut )
    if at( "ERROR:" , upper( MemoResu ) ) == 0 .and. ;
       at( "WARNING:" , upper( MemoResu ) ) == 0
-      MsgOk( 'QPM (QAC based Project Manager)' , 'Build Finished' + HB_OsNewLine()+'OK' , 'I' , .T. )
+      MyMsgOk( NIL, 'Build Finished' + HB_OsNewLine() + 'OK', 'I', .T. )
       SHG_DisplayHelp( SHG_GetOutputName() )
    else
-      MsgStop( strtran( MemoResu , chr(13) + HB_OsNewLine() + chr(13) + HB_OsNewLine() , HB_OsNewLine() ) )
+      MyMsgStop( strtran( MemoResu , chr(13) + HB_OsNewLine() + chr(13) + HB_OsNewLine() , HB_OsNewLine() ) )
    endif
    ferase( cOutPut )
 Return .T.
@@ -844,11 +844,11 @@ Return .T.
 Function SHG_DisplayHelp( cName )
    Local cOldHelp := GetActiveHelpFile()
    if !file( cName )
-      MsgInfo( "Help file '" + cName + "' not found !!!" + HB_OsNewLine() + "Run 'Generate Help' process and try again." )
+      MyMsgInfo( "Help file '" + cName + "' not found !!!" + HB_OsNewLine() + "Run 'Generate Help' process and try again." )
       Return .F.
    endif
    if US_FileInUse( cName )
-      MsgInfo( "Help file '" + cName + "' is in use." + HB_OsNewLine() + "Close the help process an re-open with TEST button." )
+      MyMsgInfo( "Help file '" + cName + "' is in use." + HB_OsNewLine() + "Close the help process an re-open with TEST button." )
       Return .F.
    endif
    SET HELPFILE TO cName
@@ -901,15 +901,15 @@ Function SHG_Toggle()
       Return .F.
    endif
    if GetProperty( "VentanaMain" , "GHlpFiles" , "Value" ) < 1
-      MsgInfo( "Topic not selected." )
+      MyMsgInfo( "Topic not selected." )
       Return .F.
    endif
    if GetProperty( "VentanaMain" , "GHlpFiles" , "Value" ) == 1
-      MsgInfo( "Global foot can't be toggled, it's a system Topic !!!" )
+      MyMsgInfo( "Global footer can't be toggled!" )
       Return .F.
    endif
    if GetProperty( "VentanaMain" , "GHlpFiles" , "Value" ) == 2
-      MsgInfo( "Welcome page can't be toggled, it's a system Topic !!!" )
+      MyMsgInfo( "Welcome page can't be toggled!" )
       Return .F.
    endif
    if GridImage( "VentanaMain" , "GHlpFiles" , GetProperty( "VentanaMain" , "GHlpFiles" , "Value" ) , NCOLHLPSTATUS , "?" , PUB_nGridImgHlpBook )
@@ -959,15 +959,15 @@ Function SHG_LoadDatabase( cDataBase )
    
    SetMGWaitTxt( "Loading Help Database ..." )
    if US_IsDBF( cDataBase ) != 0
-      MsgInfo( "Error open QPM Help Generator Database: " + cDataBase + HB_OsNewLine() + "Look at " + PageHlp )
+      MyMsgInfo( "Error open QPM Help Generator Database: " + cDataBase + HB_OsNewLine() + "Look at " + PageHlp )
       SHG_BaseOK := .F.
    else
       if Upper( US_FileNameOnlyExt( cDatabase ) ) != "DBF"
-         MsgInfo( "Error open QPM Help Generator Database: " + cDataBase + HB_OsNewLine() + "Bad extension." )
+         MyMsgInfo( "Error open QPM Help Generator Database: " + cDataBase + HB_OsNewLine() + "Bad extension." )
          SHG_BaseOK := .F.
       endif
       if upper( right( US_FileNameOnlyName( cDatabase ) , 4 ) ) != "_SHG"
-         MsgInfo( "Error open QPM Help Generator Database: " + cDataBase + HB_OsNewLine() + "Bad Name, not _SHG suffix into database name." )
+         MyMsgInfo( "Error open QPM Help Generator Database: " + cDataBase + HB_OsNewLine() + "Bad Name, not _SHG suffix into database name." )
          SHG_BaseOK := .F.
       endif
       if file( US_FileNameOnlyPathAndName( cDatabase ) + ".dbt" )
@@ -1036,7 +1036,7 @@ Function SHG_LoadDatabase( cDataBase )
          cAux     != "W" .or. ;
          field->SHG_ORDER != 1 .or. ;
          field->SHG_TOPIC != "Global Foot"
-         MsgStop( "Help Database is corrupted, records UNKNOWN" )
+         MyMsgStop( "Help Database is corrupted, records UNKNOWN" )
          DBCloseArea( "SHG" )
          Return .F.
       endif
@@ -1112,7 +1112,7 @@ Function SHG_AddHlpKey()
          SHG_SetField( "SHG_KEYST" , GetProperty( "VentanaMain" , "GHlpFiles" , "Value" ) , cOldMemo + if( !empty( cOldMemo ) , HB_OsNewLine() , "" ) + cAux )
       endif
    else
-      MsgInfo( "Help Database not selected.  Use open button for open or create help database." )
+      MyMsgInfo( "Help Database not selected.  Use open button for open or create help database." )
    endif
 Return .T.
 
@@ -1205,7 +1205,7 @@ Function SHG_AddHlpHTML( accion )
          CopyToClipboard( '<A href="mailto:qpm-users@lists.sourceforge.net">Mail to QPM User Support Group</A>' )
          SHG_Send_Paste()
    otherwise
-      MsgInfo( "Invalid accion in function SHG_AddHlpHTML: " + US_VarToStr( accion ) )
+      MyMsgInfo( "Invalid accion in function SHG_AddHlpHTML: " + US_VarToStr( accion ) )
    endcase
    CopyRtfToClipboard( cClip )
 Return .T.
@@ -1224,10 +1224,10 @@ Function SHG_Move_Item()
    if nCurrent < 1
       Return .F.
    elseif nCurrent == 1
-      MsgInfo( "Global foot can't be moved, it's a system topic !!!" )
+      MyMsgInfo( "Global footer can't be moved!" )
       Return .F.
    elseif nCurrent == 2
-      MsgInfo( "Welcome page can't be moved, it's a system topic !!!" )
+      MyMsgInfo( "Welcome page can't be moved!" )
       Return .F.
    endif
 
@@ -1235,13 +1235,13 @@ Function SHG_Move_Item()
    if nNew < 1
       Return .F.
    elseif nNew == 1
-      MsgInfo( "Global foot can't be moved, it's a system topic !!!" )
+      MyMsgInfo( "Global footer can't be moved!" )
       Return .F.
    elseif nNew == 2
-      MsgInfo( "Welcome page can't be moved, it's a system topic !!!" )
+      MyMsgInfo( "Welcome page can't be moved!" )
       Return .F.
    elseif nNew == nCurrent
-      MsgInfo( "Nothing to do, origin and destination are the same !!!" )
+      MyMsgInfo( "Nothing to do, origin and destination are the same!" )
       Return .F.
    endif
    nNew := Min( nNew, GetProperty( "VentanaMain", "GHlpFiles", "ItemCount" ) )
@@ -1437,7 +1437,7 @@ Function SHG_InputTopicOK()
    cAuxTopic := PanInputTopic.TextTopic.Value
    cAuxNick  := PanInputTopic.TextNick.Value
    if !empty( cAuxNick ) .and. !FILEVALID( cAuxNick , 255 , 50 )
-      MsgInfo( "NickName is not a valid file name of Windows." + HB_OsNewLine() + ;
+      MyMsgInfo( "NickName is not a valid file name of Windows." + HB_OsNewLine() + ;
                'Remember: only numbers (0-9), letters (a-z or A-Z) and not use the followed simbols: \ / : * ? " < > |')
       Return .F.
    else
@@ -1445,7 +1445,7 @@ Function SHG_InputTopicOK()
          for i := 1 to GetProperty( "VentanaMain" , "GHlpFiles" , "Itemcount" )
             if i != GetProperty( "VentanaMain" , "GHlpFiles" , "Value" )
                if upper( cAuxNick + ".htm" ) == upper( GetProperty( "VentanaMain" , "GHlpFiles" , "cell" , i , NCOLHLPNICK ) )
-                  MsgInfo( "Nick Name already assigned to topic: " + GetProperty( "VentanaMain" , "GHlpFiles" , "cell" , i , NCOLHLPTOPIC ) )
+                  MyMsgInfo( "Nick Name already assigned to topic: " + GetProperty( "VentanaMain" , "GHlpFiles" , "cell" , i , NCOLHLPTOPIC ) )
                   return .F.
                endif
             endif
@@ -1536,7 +1536,7 @@ Function SHG_Parser( mycType , mycString , mycKey , mycVar , myvNextKeys )
          mycVar := US_Word( mycString , 1 )
          mycString := alltrim( US_StrTran( mycString , mycVar , " " , 1 , 1 ) )
       otherwise
-         MsgInfo( "Invalid type in function " + procname() )
+         MyMsgInfo( "Invalid type in function " + procname() )
    endcase
 Return mycString
 
@@ -1544,7 +1544,7 @@ Function SHG_CancelChangesTopic()
    Local nRecord , cAuxMemo
    if SHG_BaseOK
       if GetProperty( "VentanaMain" , "GHlpFiles" , "Value" ) < 1
-         MsgInfo( "Topic not selected." )
+         MyMsgInfo( "Topic not selected." )
          Return .F.
       else
          nRecord  := GetProperty( "VentanaMain" , "GHlpFiles" , "Value" )
@@ -1569,11 +1569,11 @@ Function SHG_CancelChangesTopic()
                SetProperty( "VentanaMain" , "GHlpFiles" , "Cell" , nRecord , NCOLHLPEDIT , "E" )
             endif
          else
-            MsgInfo( "Topic '" + GetProperty( "VentanaMain" , "GHlpFiles" , "Cell" , GetProperty( "VentanaMain" , "GHlpFiles" , "Value" ) , NCOLHLPTOPIC ) + "' not changed from last save !!!" )
+            MyMsgInfo( "Topic '" + GetProperty( "VentanaMain" , "GHlpFiles" , "Cell" , GetProperty( "VentanaMain" , "GHlpFiles" , "Value" ) , NCOLHLPTOPIC ) + "' not changed from last save !!!" )
          endif
       endif
    else
-      MsgInfo( "Help Database not selected.  Use open button for open or create help database." )
+      MyMsgInfo( "Help Database not selected.  Use open button for open or create help database." )
    endif
 Return .T.
 
