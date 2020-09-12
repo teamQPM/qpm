@@ -25,13 +25,17 @@
 #define DBLQT    '"'
 #define SNGQT    "'"
 #define VERSION  "01.06"
+MEMVAR CQPMDIR
+
+// Parameters: 1 -> cParam (multiple words), 2 -> cFileIn (one word), 3 -> cFileOut (one word)
 
 FUNCTION MAIN( ... )
-   LOCAL aParams := hb_AParams(), n, i
-   LOCAL bLoop := .T., cLinea, cFines := { Chr(13) + Chr(10), Chr(10) }, hFiIn, cont := 0, hFiOut
-   LOCAL cFileOut, nBytesSalida := 0, cFileIn, cParam, cFileTMP, cmd, cmdbat, bList := .F.
+   LOCAL aParams := hb_AParams(), n, cLib, cSearch := "", cGroup := ""
+   LOCAL bLoop := .T., cLine, cFines := { Chr(13) + Chr(10), Chr(10) }, hParam, cKey
+   LOCAL cFileOut, cFileIn, cParam, gcc_call, cmdbatch, bList := .F., cPath := ""
    LOCAL fgccbat := US_FileTmp( NIL, ".bat" )
    LOCAL fstatus := US_FileTmp()
+   LOCAL fparams := US_FileTmp()
 
    PRIVATE cQPMDir := ""
 
@@ -42,12 +46,12 @@ FUNCTION MAIN( ... )
    cParam := AllTrim( cParam )
 
    IF Upper( US_Word( cParam, 1 ) ) == "-VER" .or. Upper( US_Word( cParam, 1 ) ) == "-VERSION"
-      MemoWrit( "US_Slash.version", VERSION )
+      hb_MemoWrit( "US_Slash.version", VERSION )
       RETURN .T.
    ENDIF
 
    IF Upper( US_Word( cParam, 1 ) ) != "QPM"
-      __Run( "ECHO " + "US_Slash 999E: Running Outside System" )
+      __Run( "ECHO " + "US_Slash 001E: Running Outside System" )
       ErrorLevel( 1 )
       RETURN -1
    ELSE
@@ -62,89 +66,113 @@ FUNCTION MAIN( ... )
    cFileIn := US_Word( cParam, US_Words( cParam ) - 1 )
    cFileOut := US_Word( cParam, US_Words( cParam ) )
    cFileOut := SubStr( cFileOut, 3 )
-   cFileTMP := SubStr( cFileIn, 1, RAt( ".", cFileIn ) ) + "CUS"
    cParam := AllTrim( SubStr( cParam, 1, US_WordInd( cParam, US_Words( cParam ) - 1 ) - 1 ) )
 
    IF bList
-      QPM_Log( "US_Slash " + VERSION )
-      QPM_Log( "Slash 000I: by QPM_Support ( https://teamqpm.github.io/ )" )
-      QPM_Log( "Slash 999I: Log into: " + cQPMDir + "QPM.log" )
-      QPM_Log( "Slash 003I: FileIn:   " + cFileIn )
-      QPM_Log( "Slash 013I: FileOut:  " + cFileOut )
-      QPM_Log( "Slash 023I: FileTMP:  " + cFileTMP )
-      QPM_Log( "Slash 033I: Param:    " + cParam )
+      QPM_Log( "------------" )
+      QPM_Log( "US_Slash 002I: Version:    " + VERSION )
+      QPM_Log( "US_Slash 003I: Log into:   " + cQPMDir + "QPM.log" )
+      QPM_Log( "US_Slash 004I: FileIn:     " + cFileIn )
+      QPM_Log( "US_Slash 005I: FileOut:    " + cFileOut )
+      QPM_Log( "US_Slash 006I: Param:      " + cParam )
    ENDIF
 
-   hFiIn := FOpen( cFileIn )
-   IF FError() = 0
-      IF ( hFiOut := FCreate( cFileTMP ) ) == -1
-         FClose( hFiIn )
-         QPM_Log( "Slash 011E: Error in creation of File Out (" + AllTrim( Str( FError() ) ) + ") " + cFileOut + hb_osNewLine() )
-         RETURN 12
+   IF Upper( Right( cFileIn, 9 ) ) == 'SCRIPT.LD'
+      hParam := FOpen( cFileIn )
+      IF FError() = 0
+         cFileIn  := ""
+         cSearch  := ""
+         cGroup   := "-Wl,--start-group "
+         DO WHILE bLoop
+            IF hb_FReadLine( hParam, @cLine, cFines ) != 0
+               bLoop := .F.
+            ENDIF
+            IF bList
+               QPM_Log( "US_Slash 007I: Script      " + cLine )
+            ENDIF
+            cKey := US_Word( cLine, 1 )
+            IF cKey == "INPUT("
+               cFileIn += US_Word( cLine, 2 ) + " "
+            ELSEIF cKey == "SEARCH_DIR("
+               cSearch += "-L" + US_Word( cLine, 2 ) + " "
+            ELSEIF cKey == "GROUP("
+               n := 2
+               DO WHILE .T.
+                  cLib := US_Word( cLine, n )
+                  IF Left( cLib, 2 ) # "-l"
+                     EXIT
+                  ENDIF
+                  cGroup += cLib + " "
+                  n ++
+               ENDDO
+            ELSEIF cKey == "PATH("
+               cPath := US_Word( cLine, 2 )
+            ELSEIF ! Empty( cKey ) .AND. bList
+               QPM_Log( "US_Slash 008E: Bad key:    " + cKey )
+            ENDIF
+         ENDDO
+         FClose( hParam )
+         cGroup += "-Wl,--end-group -static -static-libgcc "
+      ELSE
+         IF bList
+            QPM_Log( "US_Slash 009E: Open error: " + cFileIn + hb_osNewLine() )
+         ENDIF
+         RETURN 8
       ENDIF
-
-      DO WHILE bLoop
-         IF hb_FReadLine( hFiIn, @cLinea, cFines ) != 0
-            bLoop := .F.
-         ENDIF
-         cont ++
-         IF SubStr( cLinea, 1, 6 ) == "#line " .AND. ;
-            US_Words( cLinea ) > 2 .AND. ;
-            IsDigit( US_Word( cLinea, 2 ) ) = .T.
-            IF bList
-               QPM_Log( "Slash 004I: Old (" + PadL( AllTrim( Str( cont ) ), 8 ) + ") " + cLinea )
-            ENDIF
-            cLinea := StrTran( cLinea, '\', "\\" )
-            IF bList
-               QPM_Log( "Slash 005I: New (" + PadL( AllTrim( Str( cont ) ), 8 ) + ") " + cLinea )
-            ENDIF
-         ENDIF
-         cLinea := cLinea + hb_osNewLine()
-         nBytesSalida := Len( cLinea )
-         IF FWrite( hFiOut, cLinea, nBytesSalida ) < nBytesSalida
-            FClose( hFiIn )
-            QPM_Log( "Slash 012E: Error in save into Out File (" + AllTrim( Str( FError() ) ) + ") " + cFileOut + hb_osNewLine() )
-            RETURN 16
-         ENDIF
-      ENDDO
-
-      FClose( hFiIn )
-      FClose( hFiOut )
-   ELSE
-      QPM_Log( "Slash 001E: Error open Input File " + cFileIn + hb_osNewLine() )
-      RETURN 8
    ENDIF
 
-   FErase( cFileIn + ".temporal" )
-   FRename( cFileIn, cFileIn + ".temporal" )
-   FRename( cFileTMP, cFileIn )
+   cLine := cFileIn + ' -o ' + cFileOut + ' ' + cSearch + cGroup + cParam + hb_osNewLine()
+   cLine := StrTran( cLine, "\", "\\" )
+   hb_MemoWrit( fparams, cLine )
+   gcc_call := 'GCC.EXE @' + fparams
 
-   cmdbat := "GCC.EXE " + cParam + ' "' + cFileIn + '" -o "' + cFileOut + '"'
-   cmd := "@echo off" + hb_osNewLine() + ;
-        cmdbat + hb_osNewLine() + ;
-        "If errorlevel 1 goto bad" + hb_osNewLine() + ;
-        "Echo OK > " + fstatus + hb_osNewLine() + ;
-        "goto good" + hb_osNewLine() + ;
-        ":bad" + hb_osNewLine() + ;
-        "Echo ERROR > " + fstatus + hb_osNewLine() + ;
-        ":good" + hb_osNewLine()
-   MemoWrit( fgccbat, cmd )
    IF bList
-      QPM_Log( "Slash 043I: Command: " + cmdbat )
+      QPM_Log( "US_Slash 010I: cFileIn:    " + cFileIn )
+      QPM_Log( "US_Slash 011I: cFileOut:   " + cFileOut )
+      QPM_Log( "US_Slash 012I: cSearch:    " + cSearch )
+      QPM_Log( "US_Slash 013I: cGroup:     " + cGroup )
+      QPM_Log( "US_Slash 014I: cParam:     " + cParam )
+      QPM_Log( "US_Slash 015I: cPath:      " + cPath )
+      QPM_Log( "US_Slash 016I: gcc_call:   " + gcc_call )
    ENDIF
-   __Run( fgccbat )
 
-   FRename( cFileIn, cFileTMP )
-   FRename( cFileIn + ".temporal", cFileIn )
+   cmdbatch := hb_osNewLine() + ;
+               "@echo off" + hb_osNewLine() + ;
+               iif( empty( cPath ), "", "set PATH=" + cPath + hb_osNewLine() ) + ;
+               gcc_call + hb_osNewLine() + ;
+               "if errorlevel 1 goto bad" + hb_osNewLine() + ;
+               "echo OK > " + fstatus + hb_osNewLine() + ;
+               "goto exit" + hb_osNewLine() + ;
+               ":bad" + hb_osNewLine() + ;
+               "echo ERROR > " + fstatus + hb_osNewLine() + ;
+               ":exit" + hb_osNewLine()
+   hb_MemoWrit( fgccbat, cmdbatch )
+
+   IF bList
+      QPM_Log( "US_Slash 017I: INI Batch" )
+      QPM_LOG( Left( cmdbatch, Len( cmdbatch ) - 2 ) )
+      QPM_Log( "US_Slash 018I: END Batch" )
+      QPM_Log( "US_Slash 019I: INI Param" )
+      QPM_LOG( Left( fparams, Len( fparams ) - 2 ) )
+      QPM_Log( "US_Slash 020I: END Param" )
+   ENDIF
+
+   __Run( fgccbat )
 
    IF MemoLine( MemoRead( fstatus ), 254, 1 ) = "ERROR"
       ErrorLevel( 1 )
+      IF bList
+         QPM_Log( "US_Slash 021I: Status:     ERROR" )
+         QPM_Log( "------------" )
+      ENDIF
+   ELSE
+      IF bList
+         QPM_Log( "US_Slash 022I: Status:     OK" )
+         QPM_Log( "------------" )
+      ENDIF
    ENDIF
    FErase( fgccbat )
    FErase( fstatus )
-   IF bList
-      QPM_Log( "" )
-   ENDIF
 
    RETURN .T.
 
@@ -287,7 +315,7 @@ FUNCTION US_Words( estring )
 //========================================================================
 STATIC FUNCTION QPM_Log( string )
    LOCAL LogArchi := cQPMDir + "QPM.LOG"
-   LOCAL msg := DToS( Date() ) + " " + Time() + " US_SLASH " + ProcName( 1 ) + "(" + AllTrim( Str( ProcLine( 1 ) ) ) + ")" + " " + string
+   LOCAL msg := DToS( Date() ) + " " + Time() + " US_SLASH " + ProcName( 1 ) + "(" + Str( ProcLine( 1 ), 3, 0 ) + ")" + " " + string
 
    SET CONSOLE OFF
    SET ALTERNATE TO ( LogArchi ) ADDITIVE
