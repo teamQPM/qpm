@@ -24,7 +24,7 @@
 
 #define DBLQT    '"'
 #define SNGQT    "'"
-#define VERSION  "01.06"
+#define VERSION  "01.07"
 MEMVAR CQPMDIR
 
 // Parameters: 1 -> cParam (multiple words), 2 -> cFileIn (one word), 3 -> cFileOut (one word)
@@ -87,32 +87,34 @@ FUNCTION MAIN( ... )
             IF hb_FReadLine( hParam, @cLine, cFines ) != 0
                bLoop := .F.
             ENDIF
-            IF bList
-               QPM_Log( "US_Slash 007I: Script      " + cLine )
-            ENDIF
             cKey := US_Word( cLine, 1 )
-            IF cKey == "INPUT("
-               cFileIn += US_Word( cLine, 2 ) + " "
-            ELSEIF cKey == "SEARCH_DIR("
-               cSearch += "-L" + US_Word( cLine, 2 ) + " "
-            ELSEIF cKey == "GROUP("
-               n := 2
-               DO WHILE .T.
-                  cLib := US_Word( cLine, n )
-                  IF Left( cLib, 2 ) # "-l"
-                     EXIT
-                  ENDIF
-                  cGroup += cLib + " "
-                  n ++
-               ENDDO
-            ELSEIF cKey == "PATH("
-               cPath := US_Word( cLine, 2 )
-            ELSEIF ! Empty( cKey ) .AND. bList
-               QPM_Log( "US_Slash 008E: Bad key:    " + cKey )
+            IF ! Empty( cKey )
+               IF bList
+                  QPM_Log( "US_Slash 007I: Script      " + cLine )
+               ENDIF
+               IF cKey == "INPUT("
+                  cFileIn += US_Word( cLine, 2 ) + " "
+               ELSEIF cKey == "SEARCH_DIR("
+                  cSearch += "-L" + US_Word( cLine, 2 ) + " "
+               ELSEIF cKey == "GROUP("
+                  n := 2
+                  DO WHILE .T.
+                     cLib := US_Word( cLine, n )
+                     IF Left( cLib, 2 ) # "-l"
+                        EXIT
+                     ENDIF
+                     cGroup += cLib + " "
+                     n ++
+                  ENDDO
+               ELSEIF cKey == "PATH("
+                  cPath := US_Word( cLine, 2 )
+               ELSEIF bList
+                  QPM_Log( "US_Slash 008E: Bad key:    " + cKey )
+               ENDIF
             ENDIF
          ENDDO
          FClose( hParam )
-         cGroup += "-Wl,--end-group -static -static-libgcc "
+         cGroup += "-Wl,--end-group -static-libgcc "
       ELSE
          IF bList
             QPM_Log( "US_Slash 009E: Open error: " + cFileIn + hb_osNewLine() )
@@ -153,7 +155,7 @@ FUNCTION MAIN( ... )
       QPM_LOG( Left( cmdbatch, Len( cmdbatch ) - 2 ) )
       QPM_Log( "US_Slash 018I: END Batch" )
       QPM_Log( "US_Slash 019I: INI Param" )
-      QPM_LOG( Left( fparams, Len( fparams ) - 2 ) )
+      QPM_LOG( Left( cLine, Len( cLine ) - 2 ) )
       QPM_Log( "US_Slash 020I: END Param" )
    ENDIF
 
