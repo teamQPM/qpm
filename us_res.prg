@@ -33,7 +33,7 @@
 PROCEDURE MAIN( ... )
    LOCAL aParams := hb_AParams()
    LOCAL cParam, n, i, bList, cPathTMP, cFileIn, cPathSHR, cFileOut, bForceChg, bInclude, cMemoIn, aLines, cMemoOut
-   LOCAL c, nInx, cLine, cFileInclude, lWarning, aPaths, aIncLines, nCount, bChg, cRule, cWord3, cPathInc
+   LOCAL c, nInx, cLine, cFileInclude, lWarning, aPaths, aIncLines, nCount, bChg, cRule, cWord3, cPathInc, aIncStk
 
    PRIVATE cQPMDir := ""
 
@@ -67,7 +67,7 @@ PROCEDURE MAIN( ... )
    cParam := AllTrim( cParam )
 
    IF Upper( US_Word( cParam, 1 ) ) == "-VER" .OR. Upper( US_Word( cParam, 1 ) ) == "-VERSION"
-      MemoWrit( "US_Res.version", VERSION )
+      hb_MemoWrit( "US_Res.version", VERSION )
       RETURN
    ENDIF
 
@@ -146,9 +146,17 @@ PROCEDURE MAIN( ... )
       cMemoIn := StrTran( cMemoIn, CRLF, Chr(10) )
       cMemoIn := StrTran( cMemoIn, Chr(13), Chr(10) )
       aLines  := hb_ATokens( cMemoIn, Chr(10) )
+      IF Right( cMemoIn, 1 ) == Chr(10)
+         ASize( aLines, Len( aLines ) - 1 )
+      ENDIF
+      aIncStk := { { cFileIn, 0 } }
 
       // Add a cute header
       cMemoOut := "// Project's resource file built by QPM" + CRLF + CRLF
+      cMemoOut += "// " + Replicate( "=", 80 ) + CRLF
+      cMemoOut += "// QPM - INI #INCLUDE file: " + cFileIn + CRLF
+      cMemoOut += "// " + Replicate( "-", 80 ) + CRLF
+      cMemoOut += "// line 1 " + cFileIn + CRLF
 
       // Process each line
       lWarning := .F.
@@ -156,6 +164,7 @@ PROCEDURE MAIN( ... )
       DO WHILE nInx < Len( aLines )
          nInx ++
          cLine := AllTrim( aLines[ nInx ] )
+         ATail( aIncStk )[ 2 ] ++
 
          IF Upper( US_Word( cLine, 1 ) ) == "#INCLUDE"
             cFileInclude := US_WordSubStr( cLine, 2 )
@@ -185,15 +194,21 @@ PROCEDURE MAIN( ... )
                cMemoOut += "// " + Replicate( "=", 80 ) + CRLF
                cMemoOut += "// QPM - INI #INCLUDE file: " + cFileInclude + CRLF
                cMemoOut += "// " + Replicate( "-", 80 ) + CRLF
+               cMemoOut += "// line 1 " + cFileInclude + CRLF
 
                cMemoIn := MemoRead( cFileInclude )
                cMemoIn := StrTran( cMemoIn, CRLF, Chr(10) )
                cMemoIn := StrTran( cMemoIn, Chr(13), Chr(10) )
                cMemoIn := StrTran( cMemoIn, Chr(10), CRLF )
                aIncLines := hb_ATokens( cMemoIn, CRLF )
+               IF Right( cMemoIn, 1 ) == Chr(10)
+                  ASize( aIncLines, Len( aIncLines ) - 1 )
+               ENDIF
                AAdd( aIncLines, "// " + Replicate( "-", 80 ) )
                AAdd( aIncLines, "// QPM - END #INCLUDE file: " + cFileInclude )
                AAdd( aIncLines, "// " + Replicate( "=", 80 ) )
+               AAdd( aIncLines, "// line " + LTrim( Str( ATail( aIncStk )[ 2 ] + 1 ) ) + " " + ATail( aIncStk )[ 1 ] )
+               AAdd( aIncStk, { cFileInclude, 0 } )
 
                nCount := Len( aIncLines )
                FOR i := 1 TO nCount
@@ -209,12 +224,17 @@ PROCEDURE MAIN( ... )
 
             IF Left( cLine, 28 ) == "// QPM - END #INCLUDE file: "
                ASize( aPaths, Len( aPaths ) - 1 )
+               ASize( aIncStk, Len( aIncStk ) - 1 )
             ENDIF
          ENDIF
       ENDDO
 
+      cMemoOut += "// " + Replicate( "-", 80 ) + CRLF
+      cMemoOut += "// QPM - END #INCLUDE file: " + cFileIn + CRLF
+      cMemoOut += "// " + Replicate( "=", 80 ) + CRLF
+
       // Save new text to output file
-      MemoWrit( cFileOut, cMemoOut )
+      hb_MemoWrit( cFileOut, cMemoOut )
       ErrorLevel( 0 )
 
       IF lWarning
@@ -235,9 +255,9 @@ PROCEDURE MAIN( ... )
       cMemoIn := StrTran( cMemoIn, Chr(13), Chr(10) )
       cMemoIn := StrTran( cMemoIn, Chr(09), " " )
       aLines := hb_ATokens( cMemoIn, Chr(10) )
-
-      // Set base path
-      cPathInc := cPathTMP
+      IF Right( cMemoIn, 1 ) == Chr(10)
+         ASize( aLines, Len( aLines ) - 1 )
+      ENDIF
 
       // Process each line
       cMemoOut := ""
@@ -249,9 +269,16 @@ PROCEDURE MAIN( ... )
 
          IF Left( cLine, 28 ) == "// QPM - INI #INCLUDE file: "
             cFileInclude := SubStr( cLine, 29 )
-            cPathInc := US_FileNameOnlyPath( cFileInclude ) + "\"
+            cPathInc := US_FileNameOnlyPath( cFileInclude )
+            IF Empty( cPathInc )
+               cFileInclude := cPathTMP + cFileInclude
+               cPathInc := cPathTMP
+            ELSE
+               cPathInc += "\"
+            ENDIF
+            AAdd( aPaths, cPathInc )
          ELSEIF Left( cLine, 28 ) == "// QPM - END #INCLUDE file: "
-            cPathInc := cPathTMP
+            ASize( aPaths, Len( aPaths ) - 1 )
          ENDIF
 
          // Get rid of inline comments at the start of the line
@@ -385,7 +412,7 @@ XXX ICON ZZZ /* ...............
       ENDDO
 
       // Save new text to output file, exit loop and return
-      MemoWrit( cFileOut, cMemoOut )
+      hb_MemoWrit( cFileOut, cMemoOut )
       ErrorLevel( 0 )
 
       IF bList
@@ -577,7 +604,7 @@ FUNCTION US_ShortName( nombre )
 FUNCTION US_GetShortPathName( cPath )
    LOCAL tmp, cFileTMP := US_FileTMP( cPath + iif( Right( cPath, 1 ) != DEF_SLASH, DEF_SLASH, '' ) + "_Path" )
 
-   MemoWrit( cFileTMP, "Temp from " + ProcName() )
+   hb_MemoWrit( cFileTMP, "Temp from " + ProcName() )
    tmp := US_GetShortFileName( cFileTMP )
    tmp := US_FileNameOnlyPath( tmp )
    FErase( cFileTMP )
