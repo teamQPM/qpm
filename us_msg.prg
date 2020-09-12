@@ -50,7 +50,7 @@ FUNCTION MAIN(cP1,cP2,cP3,cP4,cP5,cP6,cP7,cP8,cP9,cP10,cP11,cP12,cP13,cP14,cP15,
    cParam:=ALLTRIM(cP1+" "+cP2+" "+cP3+" "+cP4+" "+cP5+" "+cP6+" "+cP7+" "+cP8+" "+cP9+" "+cP10+" "+cP11+" "+cP12+" "+cP13+" "+cP14+" "+cP15+" "+cP16+" "+cP17+" "+cP18+" "+cP19+" "+cP20)
 
    if Upper( US_Word( cParam , 1 ) ) == "-VER" .or. Upper( US_Word( cParam , 1 ) ) == "-VERSION"
-      MemoWrit( "US_Msg.version" , Version )
+      hb_MemoWrit( "US_Msg.version" , Version )
       Return .T.
    endif
 
@@ -70,10 +70,10 @@ FUNCTION MAIN(cP1,cP2,cP3,cP4,cP5,cP6,cP7,cP8,cP9,cP10,cP11,cP12,cP13,cP14,cP15,
    endif
 
    if file( cFileOut )
-      cFileMemo := memoread( cFileOut )
+      cFileMemo := MemoRead( cFileOut )
    endif
    cFileMemo := cFileMemo + US_TimeDis( Time() ) + " - " + cMSG + HB_OsNewLine()
-   memowrit( cFileOut , cFileMemo )
+   hb_MemoWrit( cFileOut , cFileMemo )
 // ? cmsg
 // __run( "pause" )
 return .T.
