@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  *    QPM - QAC based Project Manager
  *
  *    Copyright 2011-2020 Fernando Yurisich <fernando.yurisich@gmail.com>
@@ -93,7 +89,7 @@
                        case US_WordSubStr( PRI_COMPATIBILITY_LINE , 2 ) == '1'
                           PRI_COMPATIBILITY_LINE := 'CHECKFORMTOOL ' + 'EDITOR'
                        case US_WordSubStr( PRI_COMPATIBILITY_LINE , 2 ) == '2'
-                          PRI_COMPATIBILITY_LINE := 'CHECKFORMTOOL ' + 'HMI'
+                          PRI_COMPATIBILITY_LINE := 'CHECKFORMTOOL ' + 'OOHGIDE'
                        case US_WordSubStr( PRI_COMPATIBILITY_LINE , 2 ) == '3'
                           PRI_COMPATIBILITY_LINE := 'CHECKFORMTOOL ' + 'HMGSIDE'
                     endcase
