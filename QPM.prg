@@ -80,18 +80,18 @@ FUNCTION Main( PAR_cP01, PAR_cP02, PAR_cP03, PAR_cP04, PAR_cP05, PAR_cP06, PAR_c
    SET DELETED ON
    SET NAVIGATION EXTENDED
    SET MENUSTYLE EXTENDED
-   SET EXACT ON
+//   SET EXACT ON           **** DO NO ENABLE THIS, SEE FUNCTION xRefPrgFmg ****
    SET TOOLTIPSTYLE BALLOON
 
 // check screen size
    IF GetDesktopRealWidth() < 800
-      MsgStop( 'Sorry, QPM needs a minimun screen configuration of 800x600.' + CRLF + 'QPM is optimized for 1024x768 resolution.' )
+      MyMsgStop( 'Sorry, QPM needs a minimun screen configuration of 800x600.' + CRLF + 'QPM is optimized for 1024x768 resolution.' )
       RETURN .F.
    ENDIF
 
    IF Empty( LOC_cParam )
       IF PUB_bW800
-         MsgInfo( 'QPM has been optimized for 1024x768 screen size' + CRLF + 'but your configuration is also supported with reduced workplace.' )
+         MyMsgInfo( 'QPM has been optimized for 1024x768 screen size' + CRLF + 'but your configuration is also supported with reduced workplace.' )
       ENDIF
    ENDIF
 
@@ -104,13 +104,13 @@ FUNCTION Main( PAR_cP01, PAR_cP02, PAR_cP03, PAR_cP04, PAR_cP05, PAR_cP06, PAR_c
    IF Len( vExeNotFound ) > 0
       cExeNotFoundMsg := 'This product is incomplete:' + CRLF + CRLF
       FOR i := 1 TO Len( vExeNotFound )
-         cExeNotFoundMsg := cExeNotFoundMsg + vExeNotFound[i] + ' not found.' + CRLF
+         cExeNotFoundMsg := cExeNotFoundMsg + vExeNotFound[i] + ' was not found.' + CRLF
       NEXT
       cExeNotFoundMsg := cExeNotFoundMsg + CRLF + 'Full package is: ' + CRLF + CRLF
       FOR i := 1 TO Len( vExeList )
          cExeNotFoundMsg := cExeNotFoundMsg + vExeList[i] + CRLF
       NEXT
-      MsgStop( cExeNotFoundMsg )
+      MyMsgStop( cExeNotFoundMsg )
       RETURN .F.
    ENDIF
    IF ! File( PUB_cQPM_Folder + DEF_SLASH + 'filler' )
@@ -200,7 +200,7 @@ FUNCTION Main( PAR_cP01, PAR_cP02, PAR_cP03, PAR_cP04, PAR_cP05, PAR_cP06, PAR_c
                PUB_cAutoLog := US_WordSubStr( LOC_cParam, nPos )
                PUB_cAutoLog := SubStr( PUB_cAutoLog, 6, at( ')', PUB_cAutoLog ) - 6 )
                IF Empty( PUB_cAutoLog )
-                  MsgInfo( 'Error detecting Log Archive: ' + LOC_cParam )
+                  MyMsgInfo( 'Error detecting log: ' + DBLQT + LOC_cParam + DBLQT )
                ELSE
                   LOC_cParam := SubStr( LOC_cParam, 1, LogIni - 1 ) + SubStr( LOC_cParam, LogIni + Len( PUB_cAutoLog ) + 6 )
                   IF ( nPos := US_WordPos( '-LOGONLYERROR', US_Upper( LOC_cParam ) ) ) > 0
@@ -242,7 +242,7 @@ FUNCTION Main( PAR_cP01, PAR_cP02, PAR_cP03, PAR_cP04, PAR_cP05, PAR_cP06, PAR_c
                PUB_cAutoLog := US_WordSubStr( LOC_cParam, nPos )
                PUB_cAutoLog := SubStr( PUB_cAutoLog, 6, At( ')', PUB_cAutoLog ) - 6 )
                IF Empty( PUB_cAutoLog )
-                  MsgInfo( 'Error detecting Log Archive: ' + LOC_cParam )
+                  MyMsgInfo( 'Error detecting log: ' + DBLQT + LOC_cParam + DBLQT )
                ELSE
                   LOC_cParam := SubStr( LOC_cParam, 1, LogIni - 1 ) + SubStr( LOC_cParam, LogIni + Len( PUB_cAutoLog ) + 6 )
                   IF ( nPos := US_WordPos( '-LOGONLYERROR', US_Upper( LOC_cParam ) ) ) > 0
@@ -282,7 +282,7 @@ FUNCTION Main( PAR_cP01, PAR_cP02, PAR_cP03, PAR_cP04, PAR_cP05, PAR_cP06, PAR_c
                PUB_cAutoLog := US_WordSubStr( LOC_cParam, nPos )
                PUB_cAutoLog := SubStr( PUB_cAutoLog, 6, At( ')', PUB_cAutoLog ) - 6 )
                IF Empty( PUB_cAutoLog )
-                  MsgInfo( 'Error detecting Log Archive: ' + LOC_cParam )
+                  MyMsgInfo( 'Error detecting log: ' + DBLQT + LOC_cParam + DBLQT )
                ELSE
                   LOC_cParam := SubStr( LOC_cParam, 1, LogIni - 1 ) + SubStr( LOC_cParam, LogIni + Len( PUB_cAutoLog ) + 6 )
                   IF ( nPos := US_WordPos( '-LOGONLYERROR', US_Upper( LOC_cParam ) ) ) > 0
@@ -310,8 +310,8 @@ FUNCTION Main( PAR_cP01, PAR_cP02, PAR_cP03, PAR_cP04, PAR_cP05, PAR_cP06, PAR_c
          ENDIF
          PUB_cProjectFile := AllTrim( LOC_cParam )
       OTHERWISE
-         PUB_cProjectFile := LOC_cParam
          AAdd( PUB_vAutoRun, 'QPM_OpenProject(PUB_cProjectFile)' )
+         PUB_cProjectFile := AllTrim( LOC_cParam )
       ENDCASE
       IF ! Empty( PUB_cProjectFile )
          PUB_bOpenProjectFromParm := .T.
@@ -351,7 +351,7 @@ FUNCTION Main( PAR_cP01, PAR_cP02, PAR_cP03, PAR_cP04, PAR_cP05, PAR_cP06, PAR_c
       ICON 'QPM' ;
       MAIN ;
       ON INIT MainInitAutoRun() ;
-      ON RELEASE iif( PUB_bLite, NIL, SaveEnvironment( .T. ) ) ;
+      ON RELEASE iif( PUB_bLite, NIL, ( SaveEnvironment( .T. ), CleanAuxFiles() ) );
       ON INTERACTIVECLOSE QPM_Exit( .T. )
 
       DEFINE TOOLBAR ToolBar_1 OF VentanaMain
@@ -419,7 +419,7 @@ FUNCTION Main( PAR_cP01, PAR_cP02, PAR_cP03, PAR_cP04, PAR_cP05, PAR_cP06, PAR_c
          WIDTH 135
          HEIGHT 25
          PICTURE 'clearall'
-         TOOLTIP 'Delete ALL existing object folders'
+         TOOLTIP 'Delete ALL existing object folders.'
          ONCLICK EraseALL()
       END BUTTONEX
 #else
@@ -429,7 +429,7 @@ FUNCTION Main( PAR_cP01, PAR_cP02, PAR_cP03, PAR_cP04, PAR_cP05, PAR_cP06, PAR_c
          WIDTH 65
          HEIGHT 25
          PICTURE 'SyncRec'
-         TOOLTIP 'Force the taking of a Sync Recovery Point for this project'
+         TOOLTIP 'Force the taking of a Sync Recovery Point for this project.'
          ONCLICK QPM_ForceSyncRecovery()
       END BUTTONEX
 
@@ -439,7 +439,7 @@ FUNCTION Main( PAR_cP01, PAR_cP02, PAR_cP03, PAR_cP04, PAR_cP05, PAR_cP06, PAR_c
          WIDTH 65
          HEIGHT 25
          PICTURE 'clearall'
-         TOOLTIP 'Delete ALL existing object folders'
+         TOOLTIP 'Delete ALL existing object folders.'
          ONCLICK EraseALL()
       END BUTTONEX
 #endif
@@ -450,7 +450,7 @@ FUNCTION Main( PAR_cP01, PAR_cP02, PAR_cP03, PAR_cP04, PAR_cP05, PAR_cP06, PAR_c
          WIDTH 170
          HEIGHT 25
          PICTURE 'force'
-         TOOLTIP 'Force recompilation of all programs in the project'
+         TOOLTIP 'Force recompilation of all programs in the project.'
          ONCLICK EraseOBJ()
       END BUTTONEX
 
@@ -485,7 +485,7 @@ FUNCTION Main( PAR_cP01, PAR_cP02, PAR_cP03, PAR_cP04, PAR_cP05, PAR_cP06, PAR_c
                WIDTH 25
                HEIGHT 25
                PICTURE 'folderselect'
-               TOOLTIP "Select project's folder"
+               TOOLTIP "Select project's folder."
                ONCLICK ( iif( ! Empty( Folder := GetFolder( 'Select Folder', VentanaMain.TProjectFolder.Value ) ), ;
                               VentanaMain.TProjectFolder.Value := Folder, ;
                               NIL), ;
@@ -512,7 +512,7 @@ FUNCTION Main( PAR_cP01, PAR_cP02, PAR_cP03, PAR_cP04, PAR_cP05, PAR_cP06, PAR_c
                WIDTH 25
                HEIGHT 25
                PICTURE 'folderselect'
-               TOOLTIP "Select project's run folder"
+               TOOLTIP "Select project's run folder."
                ONCLICK iif( ! Empty( Folder := GetFolder( 'Select Folder', VentanaMain.TRunProjectFolder.Value ) ), ;
                             VentanaMain.TRunProjectFolder.Value := Folder, ;
                             NIL )
@@ -524,7 +524,7 @@ FUNCTION Main( PAR_cP01, PAR_cP02, PAR_cP03, PAR_cP04, PAR_cP05, PAR_cP06, PAR_c
                WIDTH 65
                HEIGHT 25
                PICTURE 'add'
-               TOOLTIP 'Add file to project'
+               TOOLTIP 'Add file to project.'
                ONCLICK QPM_AddFilesPRG()
             END BUTTONEX
 
@@ -535,7 +535,7 @@ FUNCTION Main( PAR_cP01, PAR_cP02, PAR_cP03, PAR_cP04, PAR_cP05, PAR_cP06, PAR_c
                WIDTH 65
                HEIGHT 25
                PICTURE 'remove'
-               TOOLTIP 'Remove file from project'
+               TOOLTIP 'Remove file from project.'
                ONCLICK QPM_RemoveFilePRG()
             END BUTTONEX
 #else
@@ -545,7 +545,7 @@ FUNCTION Main( PAR_cP01, PAR_cP02, PAR_cP03, PAR_cP04, PAR_cP05, PAR_cP06, PAR_c
                WIDTH 30
                HEIGHT 25
                PICTURE 'remove'
-               TOOLTIP 'Remove file from project'
+               TOOLTIP 'Remove file from project.'
                ONCLICK QPM_RemoveFilePRG()
             END BUTTONEX
 
@@ -566,7 +566,7 @@ FUNCTION Main( PAR_cP01, PAR_cP02, PAR_cP03, PAR_cP04, PAR_cP05, PAR_cP06, PAR_c
                WIDTH 65
                HEIGHT 25
                PICTURE 'Edit'
-               TOOLTIP 'Edit selected file'
+               TOOLTIP 'Edit selected file.'
                ONCLICK QPM_EditPRG()
             END BUTTONEX
 
@@ -576,7 +576,7 @@ FUNCTION Main( PAR_cP01, PAR_cP02, PAR_cP03, PAR_cP04, PAR_cP05, PAR_cP06, PAR_c
                WIDTH 30
                HEIGHT 25
                PICTURE 'SetTop'
-               TOOLTIP "Set the selected file as project's " + DBLQT + "Top File" + DBLQT
+               TOOLTIP "Set the selected file as Project's " + DBLQT + "Top File" + DBLQT + "."
                ONCLICK QPM_SetTopPRG()
             END BUTTONEX
 
@@ -586,7 +586,7 @@ FUNCTION Main( PAR_cP01, PAR_cP02, PAR_cP03, PAR_cP04, PAR_cP05, PAR_cP06, PAR_c
                WIDTH 30
                HEIGHT 25
                PICTURE 'ForceRecomp'
-               TOOLTIP 'Toggle the "Forced Recompilation" switch of the selected file'
+               TOOLTIP 'Toggle the "Forced Recompilation" switch of the selected file.'
                ONCLICK QPM_ForceRecompPRG()
             END BUTTONEX
 
@@ -596,7 +596,7 @@ FUNCTION Main( PAR_cP01, PAR_cP02, PAR_cP03, PAR_cP04, PAR_cP05, PAR_cP06, PAR_c
                WIDTH 65
                HEIGHT 25
                PICTURE 'Sort'
-               TOOLTIP "Sort sources in alphabetical order (except " + DBLQT + "Top File" + DBLQT + ")"
+               TOOLTIP "Sort files in alphabetical order. Note that the " + DBLQT + "Top File" + DBLQT + "will remain unchanged."
                ONCLICK SortPRG( 'VentanaMain', 'GPrgFiles', NCOLPRGNAME )
             END BUTTONEX
 
@@ -606,7 +606,7 @@ FUNCTION Main( PAR_cP01, PAR_cP02, PAR_cP03, PAR_cP04, PAR_cP05, PAR_cP06, PAR_c
                WIDTH 55
                HEIGHT 25
                PICTURE 'ChangeVersion'
-               TOOLTIP "Change project's version, release and/or build numbers"
+               TOOLTIP "Change project's version, release and/or build numbers."
                ONCLICK QPM_ChangePrj_Version()
             END BUTTONEX
 
@@ -679,7 +679,7 @@ FUNCTION Main( PAR_cP01, PAR_cP02, PAR_cP03, PAR_cP04, PAR_cP05, PAR_cP06, PAR_c
                WIDTH 11
                HEIGHT 21
                PICTURE 'SYNC'
-               TOOLTIP 'Syncronize tabs'
+               TOOLTIP 'Syncronize tabs.'
                ONCLICK TabSync()
             END BUTTONEX
 
@@ -689,7 +689,7 @@ FUNCTION Main( PAR_cP01, PAR_cP02, PAR_cP03, PAR_cP04, PAR_cP05, PAR_cP06, PAR_c
                WIDTH 11
                HEIGHT 21
                PICTURE 'UP'
-               TOOLTIP 'Move the selected file up in the list'
+               TOOLTIP 'Move the selected file up in the list.'
                ONCLICK UpPrg()
             END BUTTONEX
 
@@ -699,7 +699,7 @@ FUNCTION Main( PAR_cP01, PAR_cP02, PAR_cP03, PAR_cP04, PAR_cP05, PAR_cP06, PAR_c
                WIDTH 11
                HEIGHT 21
                PICTURE 'DOWN'
-               TOOLTIP 'Move the selected file down in the list'
+               TOOLTIP 'Move the selected file down in the list.'
                ONCLICK DownPrg()
             END BUTTONEX
 
@@ -709,7 +709,7 @@ FUNCTION Main( PAR_cP01, PAR_cP02, PAR_cP03, PAR_cP04, PAR_cP05, PAR_cP06, PAR_c
                WIDTH 11
                HEIGHT 21
                PICTURE 'UP'
-               TOOLTIP 'Move the selected file up in the list'
+               TOOLTIP 'Move the selected file up in the list.'
                ONCLICK UpPrg()
             END BUTTONEX
 
@@ -719,7 +719,7 @@ FUNCTION Main( PAR_cP01, PAR_cP02, PAR_cP03, PAR_cP04, PAR_cP05, PAR_cP06, PAR_c
                WIDTH 11
                HEIGHT 21
                PICTURE 'DOWN'
-               TOOLTIP 'Move the selected file down in the list'
+               TOOLTIP 'Move the selected file down in the list.'
                ONCLICK DownPrg()
             END BUTTONEX
 
@@ -752,7 +752,7 @@ FUNCTION Main( PAR_cP01, PAR_cP02, PAR_cP03, PAR_cP04, PAR_cP05, PAR_cP06, PAR_c
                WIDTH 250
                HEIGHT 20
                VALUE .F.
-               TOOLTIP 'Make ".a" interface library from ".lib" interface library'
+               TOOLTIP 'Make ".a" interface library from ".lib" interface library.'
                TRANSPARENT iif( IsXPThemeActive(), .T., .F. )
                ON CHANGE ( SetProperty( 'VentanaMain', 'LReImportLib', 'enabled', GetProperty( 'VentanaMain', 'Check_Reimp', 'Value' ) ), ;
                            SetProperty( 'VentanaMain', 'TReImportLib', 'enabled', GetProperty( 'VentanaMain', 'Check_Reimp', 'Value' ) ), ;
@@ -778,8 +778,8 @@ FUNCTION Main( PAR_cP01, PAR_cP02, PAR_cP03, PAR_cP04, PAR_cP05, PAR_cP06, PAR_c
                WIDTH 25
                HEIGHT 25
                PICTURE 'folderselect'
-               TOOLTIP 'Select library'
-               ONCLICK iif( Empty( FileName := BugGetFile( { {'Library (*.lib)','*.lib'} }, ;
+               TOOLTIP 'Select library.'
+               ONCLICK iif( Empty( FileName := GetFile( { {'Library (*.lib)','*.lib'} }, ;
                                                            'Select Library for ReImport', ;
                                                            US_FileNameOnlyPath( ChgPathToReal( VentanaMain.TReImportLib.Value ) ), ;
                                                            .T., .F. ) ), ;
@@ -794,7 +794,7 @@ FUNCTION Main( PAR_cP01, PAR_cP02, PAR_cP03, PAR_cP04, PAR_cP05, PAR_cP06, PAR_c
                WIDTH 250
                HEIGHT 20
                VALUE .F.
-               TOOLTIP 'Add "_" alias for MS flavor cdecl functions (BCC32 or Pelles)'
+               TOOLTIP 'Add "_" alias for MS flavor cdecl functions (BCC32 or Pelles).'
                TRANSPARENT IsXPThemeActive()
             END CHECKBOX
 
@@ -808,7 +808,7 @@ FUNCTION Main( PAR_cP01, PAR_cP02, PAR_cP03, PAR_cP04, PAR_cP05, PAR_cP06, PAR_c
                WIDTH 65
                HEIGHT 25
                PICTURE 'add'
-               TOOLTIP 'Add header'
+               TOOLTIP 'Add header.'
                ONCLICK QPM_AddFilesHEA()
             END BUTTONEX
 
@@ -819,7 +819,7 @@ FUNCTION Main( PAR_cP01, PAR_cP02, PAR_cP03, PAR_cP04, PAR_cP05, PAR_cP06, PAR_c
                WIDTH 65
                HEIGHT 25
                PICTURE 'remove'
-               TOOLTIP 'Remove header'
+               TOOLTIP 'Remove header.'
                ONCLICK QPM_RemoveFileHEA()
             END BUTTONEX
 #else
@@ -829,7 +829,7 @@ FUNCTION Main( PAR_cP01, PAR_cP02, PAR_cP03, PAR_cP04, PAR_cP05, PAR_cP06, PAR_c
                WIDTH 30
                HEIGHT 25
                PICTURE 'remove'
-               TOOLTIP 'Remove header'
+               TOOLTIP 'Remove header.'
                ONCLICK QPM_RemoveFileHEA()
             END BUTTONEX
 
@@ -839,7 +839,7 @@ FUNCTION Main( PAR_cP01, PAR_cP02, PAR_cP03, PAR_cP04, PAR_cP05, PAR_cP06, PAR_c
                WIDTH 30
                HEIGHT 25
                PICTURE 'hotrec'
-               TOOLTIP 'Force the saving of a Hot Recovery Version for the selected header'
+               TOOLTIP 'Force the saving of a Hot Recovery Version for the selected header.'
                ONCLICK QPM_ForceHotRecovery( 'HEA' )
             END BUTTONEX
 #endif
@@ -850,7 +850,7 @@ FUNCTION Main( PAR_cP01, PAR_cP02, PAR_cP03, PAR_cP04, PAR_cP05, PAR_cP06, PAR_c
                WIDTH 65
                HEIGHT 25
                PICTURE 'Edit'
-               TOOLTIP 'Modify header'
+               TOOLTIP 'Modify header.'
                ONCLICK QPM_EditHEA ()
             END BUTTONEX
 
@@ -860,7 +860,7 @@ FUNCTION Main( PAR_cP01, PAR_cP02, PAR_cP03, PAR_cP04, PAR_cP05, PAR_cP06, PAR_c
                WIDTH 65
                HEIGHT 25
                PICTURE 'Sort'
-               TOOLTIP 'Sort headers in alphabetical order'
+               TOOLTIP 'Sort headers in alphabetical order.'
                ONCLICK SortHEA( 'VentanaMain', 'GHeaFiles', NCOLHEANAME )
             END BUTTONEX
 
@@ -870,7 +870,7 @@ FUNCTION Main( PAR_cP01, PAR_cP02, PAR_cP03, PAR_cP04, PAR_cP05, PAR_cP06, PAR_c
                WIDTH 11
                HEIGHT 21
                PICTURE 'SYNC'
-               TOOLTIP 'Syncronize tabs'
+               TOOLTIP 'Syncronize tabs.'
                ONCLICK TabSync()
             END BUTTONEX
 
@@ -880,7 +880,7 @@ FUNCTION Main( PAR_cP01, PAR_cP02, PAR_cP03, PAR_cP04, PAR_cP05, PAR_cP06, PAR_c
                WIDTH 11
                HEIGHT 21
                PICTURE 'UP'
-               TOOLTIP 'Move the selected header up in the list'
+               TOOLTIP 'Move the selected header up in the list.'
                ONCLICK UpHea()
             END BUTTONEX
 
@@ -890,7 +890,7 @@ FUNCTION Main( PAR_cP01, PAR_cP02, PAR_cP03, PAR_cP04, PAR_cP05, PAR_cP06, PAR_c
                WIDTH 11
                HEIGHT 21
                PICTURE 'DOWN'
-               TOOLTIP 'Move the selected header down in the list'
+               TOOLTIP 'Move the selected header down in the list.'
                ONCLICK DownHea()
             END BUTTONEX
 
@@ -900,7 +900,7 @@ FUNCTION Main( PAR_cP01, PAR_cP02, PAR_cP03, PAR_cP04, PAR_cP05, PAR_cP06, PAR_c
                WIDTH 11
                HEIGHT 21
                PICTURE 'UP'
-               TOOLTIP 'Move the selected header up in the list'
+               TOOLTIP 'Move the selected header up in the list.'
                ONCLICK UpHea()
             END BUTTONEX
 
@@ -910,7 +910,7 @@ FUNCTION Main( PAR_cP01, PAR_cP02, PAR_cP03, PAR_cP04, PAR_cP05, PAR_cP06, PAR_c
                WIDTH 11
                HEIGHT 21
                PICTURE 'DOWN'
-               TOOLTIP 'Move the selected header down in the list'
+               TOOLTIP 'Move the selected header down in the list.'
                ONCLICK DownHea()
             END BUTTONEX
 
@@ -941,7 +941,7 @@ FUNCTION Main( PAR_cP01, PAR_cP02, PAR_cP03, PAR_cP04, PAR_cP05, PAR_cP06, PAR_c
                WIDTH 65
                HEIGHT 25
                PICTURE 'add'
-               TOOLTIP 'Add form'
+               TOOLTIP 'Add form.'
                ONCLICK QPM_AddFilesPAN()
             END BUTTONEX
 
@@ -952,7 +952,7 @@ FUNCTION Main( PAR_cP01, PAR_cP02, PAR_cP03, PAR_cP04, PAR_cP05, PAR_cP06, PAR_c
                WIDTH 65
                HEIGHT 25
                PICTURE 'remove'
-               TOOLTIP 'Remove form'
+               TOOLTIP 'Remove form.'
                ONCLICK QPM_RemoveFilePAN()
             END BUTTONEX
 #else
@@ -962,7 +962,7 @@ FUNCTION Main( PAR_cP01, PAR_cP02, PAR_cP03, PAR_cP04, PAR_cP05, PAR_cP06, PAR_c
                WIDTH 30
                HEIGHT 25
                PICTURE 'remove'
-               TOOLTIP 'Remove form'
+               TOOLTIP 'Remove form.'
                ONCLICK QPM_RemoveFilePAN()
             END BUTTONEX
 
@@ -972,7 +972,7 @@ FUNCTION Main( PAR_cP01, PAR_cP02, PAR_cP03, PAR_cP04, PAR_cP05, PAR_cP06, PAR_c
                WIDTH 30
                HEIGHT 25
                PICTURE 'hotrec'
-               TOOLTIP 'Force the saving of a Hot Recovery Version for the selected form'
+               TOOLTIP 'Force the saving of a Hot Recovery Version for the selected form.'
                ONCLICK QPM_ForceHotRecovery( 'PAN' )
             END BUTTONEX
 #endif
@@ -983,7 +983,7 @@ FUNCTION Main( PAR_cP01, PAR_cP02, PAR_cP03, PAR_cP04, PAR_cP05, PAR_cP06, PAR_c
                WIDTH 65
                HEIGHT 25
                CAPTION 'With Tool'
-               TOOLTIP 'Modify form with associated tool'
+               TOOLTIP 'Modify form with associated tool.'
                ONCLICK QPM_EditPAN()
             END BUTTONEX
 
@@ -993,7 +993,7 @@ FUNCTION Main( PAR_cP01, PAR_cP02, PAR_cP03, PAR_cP04, PAR_cP05, PAR_cP06, PAR_c
                WIDTH 65
                HEIGHT 25
                CAPTION 'With Edit'
-               TOOLTIP 'Open form with associated editor'
+               TOOLTIP 'Open form with associated editor.'
                ONCLICK QPM_EditPAN( .T. )
             END BUTTONEX
 
@@ -1003,7 +1003,7 @@ FUNCTION Main( PAR_cP01, PAR_cP02, PAR_cP03, PAR_cP04, PAR_cP05, PAR_cP06, PAR_c
                WIDTH 65
                HEIGHT 25
                PICTURE 'Sort'
-               TOOLTIP 'Sort forms in alphabetical order'
+               TOOLTIP 'Sort forms in alphabetical order.'
                ONCLICK SortPAN( 'VentanaMain', 'GPanFiles', NCOLPANNAME )
             END BUTTONEX
 
@@ -1013,7 +1013,7 @@ FUNCTION Main( PAR_cP01, PAR_cP02, PAR_cP03, PAR_cP04, PAR_cP05, PAR_cP06, PAR_c
                WIDTH 209
                HEIGHT 25
                CAPTION 'Edit Main .RC'
-               TOOLTIP "Edit the project's main resource file"
+               TOOLTIP "Edit the project's main resource file."
                ONCLICK QPM_EditRES()
             END BUTTONEX
 
@@ -1059,7 +1059,7 @@ FUNCTION Main( PAR_cP01, PAR_cP02, PAR_cP03, PAR_cP04, PAR_cP05, PAR_cP06, PAR_c
                WIDTH 11
                HEIGHT 21
                PICTURE 'SYNC'
-               TOOLTIP 'Syncronize tabs'
+               TOOLTIP 'Syncronize tabs.'
                ONCLICK TabSync()
             END BUTTONEX
 
@@ -1069,7 +1069,7 @@ FUNCTION Main( PAR_cP01, PAR_cP02, PAR_cP03, PAR_cP04, PAR_cP05, PAR_cP06, PAR_c
                WIDTH 11
                HEIGHT 21
                PICTURE 'UP'
-               TOOLTIP 'Move the selected form up in the list'
+               TOOLTIP 'Move the selected form up the list.'
                ONCLICK UpPan()
             END BUTTONEX
 
@@ -1079,7 +1079,7 @@ FUNCTION Main( PAR_cP01, PAR_cP02, PAR_cP03, PAR_cP04, PAR_cP05, PAR_cP06, PAR_c
                WIDTH 11
                HEIGHT 21
                PICTURE 'DOWN'
-               TOOLTIP 'Move the selected form down in the list'
+               TOOLTIP 'Move the selected form down the list.'
                ONCLICK DownPan()
             END BUTTONEX
 
@@ -1089,7 +1089,7 @@ FUNCTION Main( PAR_cP01, PAR_cP02, PAR_cP03, PAR_cP04, PAR_cP05, PAR_cP06, PAR_c
                WIDTH 11
                HEIGHT 21
                PICTURE 'UP'
-               TOOLTIP 'Move the selected form up in the list'
+               TOOLTIP 'Move the selected form up the list.'
                ONCLICK UpPan()
             END BUTTONEX
 
@@ -1099,7 +1099,7 @@ FUNCTION Main( PAR_cP01, PAR_cP02, PAR_cP03, PAR_cP04, PAR_cP05, PAR_cP06, PAR_c
                WIDTH 11
                HEIGHT 21
                PICTURE 'DOWN'
-               TOOLTIP 'Move the selected form down in the list'
+               TOOLTIP 'Move the selected form down the list.'
                ONCLICK DownPan()
             END BUTTONEX
 
@@ -1130,7 +1130,7 @@ FUNCTION Main( PAR_cP01, PAR_cP02, PAR_cP03, PAR_cP04, PAR_cP05, PAR_cP06, PAR_c
                WIDTH 65
                HEIGHT 25
                PICTURE 'add'
-               TOOLTIP 'Add DBF file'
+               TOOLTIP 'Add DBF file.'
                ONCLICK QPM_AddFilesDBF()
             END BUTTONEX
 
@@ -1140,7 +1140,7 @@ FUNCTION Main( PAR_cP01, PAR_cP02, PAR_cP03, PAR_cP04, PAR_cP05, PAR_cP06, PAR_c
                WIDTH 65
                HEIGHT 25
                PICTURE 'remove'
-               TOOLTIP 'Remove DBF file'
+               TOOLTIP 'Remove DBF file.'
                ONCLICK QPM_RemoveFileDBF()
             END BUTTONEX
 
@@ -1150,7 +1150,7 @@ FUNCTION Main( PAR_cP01, PAR_cP02, PAR_cP03, PAR_cP04, PAR_cP05, PAR_cP06, PAR_c
                WIDTH 65
                HEIGHT 25
                PICTURE 'Edit'
-               TOOLTIP 'Modify DBF file with associated tool'
+               TOOLTIP 'Modify DBF file with associated tool.'
                ONCLICK QPM_EditDBF()
             END BUTTONEX
 
@@ -1160,7 +1160,7 @@ FUNCTION Main( PAR_cP01, PAR_cP02, PAR_cP03, PAR_cP04, PAR_cP05, PAR_cP06, PAR_c
                WIDTH 65
                HEIGHT 25
                PICTURE 'Sort'
-               TOOLTIP 'Sort DBF files in alphabetical order'
+               TOOLTIP 'Sort DBF files in alphabetical order.'
                ONCLICK SortDBF( 'VentanaMain', 'GDbfFiles', NCOLDBFNAME )
             END BUTTONEX
 
@@ -1170,7 +1170,7 @@ FUNCTION Main( PAR_cP01, PAR_cP02, PAR_cP03, PAR_cP04, PAR_cP05, PAR_cP06, PAR_c
                WIDTH 11
                HEIGHT 21
                PICTURE 'SYNC'
-               TOOLTIP 'Syncronize tabs'
+               TOOLTIP 'Syncronize tabs.'
                ONCLICK TabSync()
             END BUTTONEX
 
@@ -1180,7 +1180,7 @@ FUNCTION Main( PAR_cP01, PAR_cP02, PAR_cP03, PAR_cP04, PAR_cP05, PAR_cP06, PAR_c
                WIDTH 11
                HEIGHT 21
                PICTURE 'UP'
-               TOOLTIP 'Move the selected DBF file up in the list'
+               TOOLTIP 'Move the selected DBF file up in the list.'
                ONCLICK UpDbf()
             END BUTTONEX
 
@@ -1190,7 +1190,7 @@ FUNCTION Main( PAR_cP01, PAR_cP02, PAR_cP03, PAR_cP04, PAR_cP05, PAR_cP06, PAR_c
                WIDTH 11
                HEIGHT 21
                PICTURE 'DOWN'
-               TOOLTIP 'Move the selected DBF file down in the list'
+               TOOLTIP 'Move the selected DBF file down in the list.'
                ONCLICK DownDbf()
             END BUTTONEX
 
@@ -1200,7 +1200,7 @@ FUNCTION Main( PAR_cP01, PAR_cP02, PAR_cP03, PAR_cP04, PAR_cP05, PAR_cP06, PAR_c
                WIDTH 11
                HEIGHT 21
                PICTURE 'UP'
-               TOOLTIP 'Move the selected DBF file up in the list'
+               TOOLTIP 'Move the selected DBF file up in the list.'
                ONCLICK UpDbf()
             END BUTTONEX
 
@@ -1210,7 +1210,7 @@ FUNCTION Main( PAR_cP01, PAR_cP02, PAR_cP03, PAR_cP04, PAR_cP05, PAR_cP06, PAR_c
                WIDTH 11
                HEIGHT 21
                PICTURE 'DOWN'
-               TOOLTIP 'Move the selected DBF file down in the list'
+               TOOLTIP 'Move the selected DBF file down in the list.'
                ONCLICK DownDbf()
             END BUTTONEX
 
@@ -1233,7 +1233,97 @@ FUNCTION Main( PAR_cP01, PAR_cP02, PAR_cP03, PAR_cP04, PAR_cP05, PAR_cP06, PAR_c
          END PAGE
 
          DEFINE PAGE PageLIB
-            @ 43, 12 LABEL LLibLabel ;
+            @ 25, 6 LABEL LDefLabel ;
+               VALUE 'Default:' ;
+               WIDTH 155 ;
+               HEIGHT 20 ;
+               FONT 'arial' SIZE 10 BOLD ;
+               TRANSPARENT ;
+               FONTCOLOR DEF_COLORBLUE
+
+            DEFINE BUTTONEX BDefAdd
+               ROW 45
+               COL 6
+               WIDTH 53
+               HEIGHT 25
+               PICTURE 'add'
+               TOOLTIP 'Add file.'
+               ONCLICK QPM_AddDefaultLibs()
+            END BUTTONEX
+
+            DEFINE BUTTONEX BDefRemove
+               ROW 45
+               COL 65
+               WIDTH 53
+               HEIGHT 25
+               PICTURE 'remove'
+               TOOLTIP 'Remove file.'
+               ONCLICK QPM_RemoveDefaultLIB()
+            END BUTTONEX
+
+            DEFINE BUTTONEX BDefMode
+               ROW 45
+               COL 124
+               WIDTH 53
+               HEIGHT 25
+               CAPTION 'Mode'
+               TOOLTIP 'Select between Console, GUI or both modes.'
+               ONCLICK ToggleDefMode()
+            END BUTTONEX
+
+            DEFINE BUTTONEX BDefThreads
+               ROW 45
+               COL 183
+               WIDTH 53
+               HEIGHT 25
+               CAPTION 'Thread'
+               TOOLTIP 'Select between for ST, MT or both modes.'
+               ONCLICK ToggleDefThreads()
+            END BUTTONEX
+
+            DEFINE BUTTONEX BDefDebug
+               ROW 45
+               COL 242
+               WIDTH 53
+               HEIGHT 25
+               CAPTION 'Debug'
+               TOOLTIP 'Select between Debug, Non-debug or both modes.'
+               ONCLICK ToggleDefDebug()
+            END BUTTONEX
+
+            DEFINE BUTTONEX BUpDefOrder
+               ROW 75
+               COL 6
+               WIDTH 11
+               HEIGHT 21
+               PICTURE 'UP'
+               TOOLTIP 'Move the selected item up in the list.'
+               ONCLICK UpLibDefault()
+            END BUTTONEX
+
+            DEFINE BUTTONEX BDownDefOrder
+               ROW 105
+               COL 6
+               WIDTH 11
+               HEIGHT 21
+               PICTURE 'DOWN'
+               TOOLTIP 'Move the selected item down in the list.'
+               ONCLICK DownLibDefault()
+            END BUTTONEX
+
+            @ 75, 19 GRID GDefFiles ;
+               WIDTH 276 ;
+               HEIGHT 170 ;
+               HEADERS { 'S', 'Name', 'Mode', 'Threads', 'Debug'} ;
+               WIDTHS { 25, 100, 40, 40, 40 };
+               ITEMS aGridDef ;
+               VALUE 1 ;
+               IMAGE vImagesGrid ;
+               BACKCOLOR DEF_COLORBACKDEF ;
+               ON CHANGE { || iif( ! PUB_bLite, RichEditDisplay('DEF'), NIL ) } ;
+               JUSTIFY { BROWSE_JTFY_LEFT }
+
+            @ 250, 6 LABEL LLibLabel ;
                VALUE 'Include:' ;
                WIDTH 155 ;
                FONT 'arial' SIZE 10 BOLD ;
@@ -1241,102 +1331,89 @@ FUNCTION Main( PAR_cP01, PAR_cP02, PAR_cP03, PAR_cP04, PAR_cP05, PAR_cP06, PAR_c
                FONTCOLOR DEF_COLORBLUE
 
             DEFINE BUTTONEX BLibAdd
-               ROW 70
-               COL 12
-               WIDTH 65
+               ROW 270
+               COL 6
+               WIDTH 53
                HEIGHT 25
                PICTURE 'add'
-               TOOLTIP 'Add file'
-               ONCLICK QPM_AddFilesLIB()
+               TOOLTIP 'Add file.'
+               ONCLICK QPM_AddIncludeLibs()
             END BUTTONEX
 
             DEFINE BUTTONEX BLibRemove
-               ROW 70
-               COL 85
-               WIDTH 65
+               ROW 270
+               COL 65
+               WIDTH 53
                HEIGHT 25
                PICTURE 'remove'
-               TOOLTIP 'Remove file'
+               TOOLTIP 'Remove file.'
                ONCLICK QPM_RemoveFileLIB()
             END BUTTONEX
 
             DEFINE BUTTONEX BFirst
-               ROW 70
-               COL 158
-               WIDTH 65
+               ROW 270
+               COL 124
+               WIDTH 53
                HEIGHT 25
                CAPTION 'First'
-               TOOLTIP 'Move selected item to first position of concatenation order'
-               ONCLICK LibPos( VentanaMain.GIncFiles.Value, '*First*' )
+               TOOLTIP 'Move the selected item to the first position of the concatenation order.'
+               ONCLICK LibPos( VentanaMain.GIncFiles.Value, '*FIRST*' )
             END BUTTONEX
 
             DEFINE BUTTONEX BLast
-               ROW 70
-               COL 231
-               WIDTH 65
+               ROW 270
+               COL 183
+               WIDTH 53
                HEIGHT 25
                CAPTION 'Last'
-               TOOLTIP 'Move selected item to last position on concatenation order (default)'
-               ONCLICK LibPos( VentanaMain.GIncFiles.Value, '*Last*' )
-            END BUTTONEX
-
-            DEFINE BUTTONEX BSortInc
-               ROW 100
-               COL 12
-               WIDTH 65
-               HEIGHT 25
-               PICTURE 'Sort'
-               TOOLTIP 'Sorts included items in alphabetical order'
-               ONCLICK SortINC( 'VentanaMain', 'GIncFiles', NCOLINCNAME )
-            END BUTTONEX
-
-            DEFINE BUTTONEX BSyncLib
-               ROW 312
-               COL 296
-               WIDTH 11
-               HEIGHT 21
-               PICTURE 'SYNC'
-               TOOLTIP 'Syncronize tabs'
-               ONCLICK TabSync()
+               TOOLTIP 'Move the selected item to last position of the concatenation order (default).'
+               ONCLICK LibPos( VentanaMain.GIncFiles.Value, '*LAST*' )
             END BUTTONEX
 
             DEFINE BUTTONEX BUpLibInclude
-               ROW 130
-               COL 12
+               ROW 300
+               COL 6
                WIDTH 11
                HEIGHT 21
                PICTURE 'UP'
-               TOOLTIP 'Move the selected item up in the list'
+               TOOLTIP 'Move the selected item up in the list.'
                ONCLICK UpLibInclude()
             END BUTTONEX
 
             DEFINE BUTTONEX BDownLibInclude
-               ROW 160
-               COL 12
+               ROW 330
+               COL 6
                WIDTH 11
                HEIGHT 21
                PICTURE 'DOWN'
-               TOOLTIP 'Move the selected item down in the list'
+               TOOLTIP 'Move the selected item down in the list.'
                ONCLICK DownLibInclude()
             END BUTTONEX
 
-            @ 130, 25 GRID GIncFiles ;
-               WIDTH 270 ;
-               HEIGHT 170 ;
-               HEADERS { 'S', 'Include Name', 'Include Full Name'} ;
+            @ 300, 19 GRID GIncFiles ;
+               WIDTH 276 ;
+               HEIGHT 150 ;
+               HEADERS { 'S', 'Name', 'Full Name'} ;
                WIDTHS { 25, 100, 1000 };
                ITEMS aGridInc ;
                VALUE 1 ;
                IMAGE vImagesGrid ;
                BACKCOLOR DEF_COLORBACKINC ;
-               ON HEADCLICK { { || SortINC( 'VentanaMain', 'GIncFiles', 1 ) }, ;
-                              { || SortINC( 'VentanaMain', 'GIncFiles', 2 ) }, ;
-                              { || SortINC( 'VentanaMain', 'GIncFiles', 3 ) } } ;
                ON DBLCLICK { LibInfo() } ;
-               ON CHANGE { || iif( ! bIncSorting .AND. ! PUB_bLite, RichEditDisplay('INC'), NIL ) } ;
+               ON CHANGE { || iif( ! PUB_bLite, RichEditDisplay('INC'), NIL ) } ;
                JUSTIFY { BROWSE_JTFY_LEFT }
 
-            @ 313, 12 LABEL LLibLabel_e ;
+            DEFINE BUTTONEX BSyncLib
+               ROW 332
+               COL 296
+               WIDTH 11
+               HEIGHT 21
+               PICTURE 'SYNC'
+               TOOLTIP 'Syncronize tabs.'
+               ONCLICK TabSync()
+            END BUTTONEX
+
+            @ 455, 6 LABEL LLibLabel_e ;
                VALUE 'Exclude:' ;
                WIDTH 155 ;
                FONT 'arial' SIZE 10 BOLD ;
@@ -1344,59 +1421,68 @@ FUNCTION Main( PAR_cP01, PAR_cP02, PAR_cP03, PAR_cP04, PAR_cP05, PAR_cP06, PAR_c
                FONTCOLOR DEF_COLORBLUE
 
             DEFINE BUTTONEX BLibAdd_E
-               ROW 340
-               COL 12
-               WIDTH 65
+               ROW 475
+               COL 6
+               WIDTH 55
                HEIGHT 25
                PICTURE 'add'
-               TOOLTIP 'Add file'
-               ONCLICK QPM_AddExcludeFilesLIB()
+               TOOLTIP 'Add file.'
+               ONCLICK QPM_AddExcludeLibs()
             END BUTTONEX
 
             DEFINE BUTTONEX BLibRemove_E
-               ROW 340
-               COL 85
-               WIDTH 65
+               ROW 475
+               COL 67
+               WIDTH 55
                HEIGHT 25
                PICTURE 'remove'
-               TOOLTIP 'Remove file'
+               TOOLTIP 'Remove file.'
                ONCLICK QPM_RemoveExcludeFileLIB()
             END BUTTONEX
 
             DEFINE BUTTONEX BSortExc
-               ROW 370
-               COL 12
-               WIDTH 65
+               ROW 475
+               COL 128
+               WIDTH 55
                HEIGHT 25
                PICTURE 'Sort'
-               TOOLTIP 'Sort excluded libs in alphabetical order'
+               TOOLTIP 'Sort excluded libs in alphabetical order.'
                ONCLICK SortEXC( 'VentanaMain', 'GExcFiles', NCOLEXCNAME )
             END BUTTONEX
 
+            DEFINE BUTTONEX BHelpExc
+               ROW 475
+               COL 242
+               WIDTH 53
+               HEIGHT 25
+               PICTURE 'HELPBMP'
+               ONCLICK US_DisplayHelpTopic( GetActiveHelpFile(), 'libsconfig' )
+            END BUTTONEX
+
             DEFINE BUTTONEX BUpLibExclude
-               ROW 400
-               COL 12
+               ROW 505
+               COL 6
                WIDTH 11
                HEIGHT 21
                PICTURE 'UP'
-               TOOLTIP 'Move the selected lib up in the list'
+               TOOLTIP 'Move the selected lib up in the list.'
                ONCLICK UpLibExclude()
             END BUTTONEX
 
             DEFINE BUTTONEX BDownLibExclude
-               ROW 430
-               COL 12
+               ROW 535
+               COL 6
                WIDTH 11
                HEIGHT 21
                PICTURE 'DOWN'
-               TOOLTIP 'Move the selected lib down in the list'
+               TOOLTIP 'Move the selected lib down in the list.'
                ONCLICK DownLibExclude()
             END BUTTONEX
 
-            @ 400, 25 GRID GExcFiles ;
-               WIDTH 270 ;
-               HEIGHT GetDesktopRealHeight() - 585 ;
-               HEADERS { 'S', 'Library Name' } ;
+            @ 505, 19 GRID GExcFiles ;
+               WIDTH 276 ;
+               HEIGHT 150 ;
+               HEADERS { 'S', 'Name' } ;
                WIDTHS { 25, 200 };
                ITEMS aGridExc ;
                VALUE 1 ;
@@ -1428,14 +1514,14 @@ FUNCTION Main( PAR_cP01, PAR_cP02, PAR_cP03, PAR_cP04, PAR_cP05, PAR_cP06, PAR_c
                WIDTH 25
                HEIGHT 25
                PICTURE 'folderselect'
-               TOOLTIP 'Select SHG database'
+               TOOLTIP 'Select SHG database.'
                ONCLICK ( SHG_GetDatabase(), iif( SHG_BaseOK, SetProperty( 'VentanaMain', 'RichEditHlp', 'readonly', .F. ), NIL ) )
             END BUTTONEX
 
             DEFINE LABEL LWWWHlp
                ROW 70
                COL 12
-               VALUE 'Your Link for Foot:'
+               VALUE 'Footer Link:'
                TRANSPARENT IsXPThemeActive()
             END LABEL
 
@@ -1443,6 +1529,7 @@ FUNCTION Main( PAR_cP01, PAR_cP02, PAR_cP03, PAR_cP04, PAR_cP05, PAR_cP06, PAR_c
                ROW 70
                COL 132
                WIDTH 163
+               TOOLTIP 'Defaults to "Powered by QPM (https://teamqpm.github.io/)".'
             END TEXTBOX
 
             DEFINE BUTTONEX BHlpAdd
@@ -1451,7 +1538,7 @@ FUNCTION Main( PAR_cP01, PAR_cP02, PAR_cP03, PAR_cP04, PAR_cP05, PAR_cP06, PAR_c
                WIDTH 65
                HEIGHT 25
                PICTURE 'add'
-               TOOLTIP 'Add topic'
+               TOOLTIP 'Add topic.'
                ONCLICK QPM_AddFilesHLP()
             END BUTTONEX
 
@@ -1461,7 +1548,7 @@ FUNCTION Main( PAR_cP01, PAR_cP02, PAR_cP03, PAR_cP04, PAR_cP05, PAR_cP06, PAR_c
                WIDTH 65
                HEIGHT 25
                PICTURE 'remove'
-               TOOLTIP 'Remove topic'
+               TOOLTIP 'Remove topic.'
                ONCLICK QPM_RemoveFileHLP()
             END BUTTONEX
 
@@ -1471,7 +1558,7 @@ FUNCTION Main( PAR_cP01, PAR_cP02, PAR_cP03, PAR_cP04, PAR_cP05, PAR_cP06, PAR_c
                WIDTH 65
                HEIGHT 25
                PICTURE 'Edit'
-               TOOLTIP "Edit topic's name"
+               TOOLTIP "Edit topic's name."
                ONCLICK QPM_EditHLP ()
             END BUTTONEX
 
@@ -1481,7 +1568,7 @@ FUNCTION Main( PAR_cP01, PAR_cP02, PAR_cP03, PAR_cP04, PAR_cP05, PAR_cP06, PAR_c
                WIDTH 65
                HEIGHT 25
                PICTURE 'TEST'
-               TOOLTIP 'Test CHM file'
+               TOOLTIP 'Test CHM file.'
                ONCLICK SHG_DisplayHelp( SHG_GetOutputName() )
                BACKCOLOR WHITE
             END BUTTONEX
@@ -1492,7 +1579,7 @@ FUNCTION Main( PAR_cP01, PAR_cP02, PAR_cP03, PAR_cP04, PAR_cP05, PAR_cP06, PAR_c
                WIDTH 65
                HEIGHT 25
                CAPTION 'Toggle'
-               TOOLTIP "Toggle topic's type (Book or Page)"
+               TOOLTIP "Toggle topic's type (Book or Page)."
                ONCLICK SHG_Toggle()
             END BUTTONEX
 
@@ -1502,7 +1589,7 @@ FUNCTION Main( PAR_cP01, PAR_cP02, PAR_cP03, PAR_cP04, PAR_cP05, PAR_cP06, PAR_c
                WIDTH 65
                HEIGHT 25
                CAPTION 'Save all?'
-               TOOLTIP 'Save all unsaved topics'
+               TOOLTIP 'Save all unsaved topics.'
                ONCLICK QPM_WAIT( 'SHG_CheckSave()', 'Checking for save ...' )
             END BUTTONEX
 
@@ -1512,7 +1599,7 @@ FUNCTION Main( PAR_cP01, PAR_cP02, PAR_cP03, PAR_cP04, PAR_cP05, PAR_cP06, PAR_c
                WIDTH 65
                HEIGHT 25
                CAPTION 'Close'
-               TOOLTIP 'Close SHG database'
+               TOOLTIP 'Close SHG database.'
                ONCLICK SHG_Close()
             END BUTTONEX
 
@@ -1522,7 +1609,7 @@ FUNCTION Main( PAR_cP01, PAR_cP02, PAR_cP03, PAR_cP04, PAR_cP05, PAR_cP06, PAR_c
                WIDTH 65
                HEIGHT 25
                CAPTION 'Generate'
-               TOOLTIP 'Generate help file in CHM format'
+               TOOLTIP 'Generate help file in CHM format.'
                ONCLICK QPM_Wait( "SHG_Generate( SHG_Database, SHG_CheckTypeOutput, PUB_cSecu, GetProperty( 'VentanaMain', 'TWWWHlp', 'Value' ) )", 'Generating Help ...' )
             END BUTTONEX
 
@@ -1532,7 +1619,7 @@ FUNCTION Main( PAR_cP01, PAR_cP02, PAR_cP03, PAR_cP04, PAR_cP05, PAR_cP06, PAR_c
                WIDTH 11
                HEIGHT 21
                PICTURE 'SYNC'
-               TOOLTIP 'Syncronize tabs'
+               TOOLTIP 'Syncronize tabs.'
                ONCLICK TabSync()
             END BUTTONEX
 
@@ -1542,7 +1629,7 @@ FUNCTION Main( PAR_cP01, PAR_cP02, PAR_cP03, PAR_cP04, PAR_cP05, PAR_cP06, PAR_c
                WIDTH 11
                HEIGHT 21
                PICTURE 'UP'
-               TOOLTIP 'Move the selected topic up in the list'
+               TOOLTIP 'Move the selected topic up in the list.'
                ONCLICK UpHlp()
             END BUTTONEX
 
@@ -1552,7 +1639,7 @@ FUNCTION Main( PAR_cP01, PAR_cP02, PAR_cP03, PAR_cP04, PAR_cP05, PAR_cP06, PAR_c
                WIDTH 11
                HEIGHT 21
                PICTURE 'DOWN'
-               TOOLTIP 'Move the selected topic down in the list'
+               TOOLTIP 'Move the selected topic down in the list.'
                ONCLICK DownHlp()
             END BUTTONEX
 
@@ -1562,7 +1649,7 @@ FUNCTION Main( PAR_cP01, PAR_cP02, PAR_cP03, PAR_cP04, PAR_cP05, PAR_cP06, PAR_c
                WIDTH 11
                HEIGHT 21
                PICTURE 'UP'
-               TOOLTIP 'Move the selected topic up in the list'
+               TOOLTIP 'Move the selected topic up in the list.'
                ONCLICK UpHlp()
             END BUTTONEX
 
@@ -1572,7 +1659,7 @@ FUNCTION Main( PAR_cP01, PAR_cP02, PAR_cP03, PAR_cP04, PAR_cP05, PAR_cP06, PAR_c
                WIDTH 11
                HEIGHT 21
                PICTURE 'DOWN'
-               TOOLTIP 'Move the selected topic down in the list'
+               TOOLTIP 'Move the selected topic down in the list.'
                ONCLICK DownHlp()
             END BUTTONEX
 
@@ -1666,7 +1753,7 @@ FUNCTION Main( PAR_cP01, PAR_cP02, PAR_cP03, PAR_cP04, PAR_cP05, PAR_cP06, PAR_c
                WIDTH 70
                HEIGHT 20
                VALUE .T.
-               TOOLTIP 'Toggle automatic tab syncronization'
+               TOOLTIP 'Toggle automatic tab syncronization.'
                ON CHANGE       TabAutoSync('PRG')
             END CHECKBOX
 
@@ -1691,7 +1778,7 @@ FUNCTION Main( PAR_cP01, PAR_cP02, PAR_cP03, PAR_cP04, PAR_cP05, PAR_cP06, PAR_c
                WIDTH 95
                HEIGHT 20
                VALUE .F.
-               TOOLTIP "Show line numbers (file's loading is slower)"
+               TOOLTIP "Check to display line numbers. Please note that loading time will increase."
                ON CHANGE ( bNumberOnPrg := GetProperty( 'VentanaMain', 'Check_NumberOnPrg', 'value' ), ;
                            iif( bPpoDisplayado, QPM_Wait( 'PpoDisplay(.T.)', 'Reloading ...' ), QPM_Wait( "RichEditDisplay( 'PRG', .T. )", 'Reloading ...' ) ) )
             END CHECKBOX
@@ -1702,7 +1789,7 @@ FUNCTION Main( PAR_cP01, PAR_cP02, PAR_cP03, PAR_cP04, PAR_cP05, PAR_cP06, PAR_c
                WIDTH 95
                HEIGHT 25
                CAPTION 'Browse PPO'
-               TOOLTIP "Browse the selected file's preprocessor output"
+               TOOLTIP "Browse the selected file's preprocessor output."
                ONCLICK QPM_Wait( 'PpoDisplay()', 'Reloading ...' )
             END BUTTONEX
 
@@ -1712,18 +1799,18 @@ FUNCTION Main( PAR_cP01, PAR_cP02, PAR_cP03, PAR_cP04, PAR_cP05, PAR_cP06, PAR_c
                WIDTH GetDesktopRealWidth() - 630
                HEIGHT 25
                CAPTION 'Reload Source'
-               TOOLTIP 'Reload source from disk'
+               TOOLTIP 'Reload source from disk.'
                ONCLICK QPM_Wait( "RichEditDisplay( 'PRG', .T. )", 'Reloading ...' )
             END BUTTONEX
 
-            DEFINE BUTTONEX BLOCALSearchPrg
+            DEFINE BUTTONEX BLocalSearchPrg
                ROW GetDesktopRealHeight() - 227
                COL GetDesktopRealWidth() - 415
                WIDTH 60
                HEIGHT 25
                CAPTION 'Search'
-               TOOLTIP 'Search in displayed text'
-               ONCLICK LOCALSearch( GetProperty( 'VentanaMain', 'CSearch', 'DisplayValue' ) )
+               TOOLTIP 'Search current data for some text.'
+               ONCLICK LocalSearch( GetProperty( 'VentanaMain', 'CSearch', 'DisplayValue' ) )
             END BUTTONEX
          END PAGE
 
@@ -1735,7 +1822,7 @@ FUNCTION Main( PAR_cP01, PAR_cP02, PAR_cP03, PAR_cP04, PAR_cP05, PAR_cP06, PAR_c
                WIDTH 70
                HEIGHT 20
                VALUE .T.
-               TOOLTIP 'Toggle automatic tab syncronization'
+               TOOLTIP 'Toggle automatic tab syncronization.'
                ON CHANGE TabAutoSync('HEA')
             END CHECKBOX
 
@@ -1760,7 +1847,7 @@ FUNCTION Main( PAR_cP01, PAR_cP02, PAR_cP03, PAR_cP04, PAR_cP05, PAR_cP06, PAR_c
                WIDTH 95
                HEIGHT 20
                VALUE .F.
-               TOOLTIP "Show line numbers (file's loading is slower)"
+               TOOLTIP "Check to display line numbers. Please note that loading time will increase."
                ON CHANGE ( bNumberOnHea := GetProperty( 'VentanaMain', 'Check_NumberOnHea', 'value' ), QPM_Wait( "RichEditDisplay( 'HEA', .T. )", 'Reloading ...' ) )
               END CHECKBOX
 
@@ -1770,18 +1857,18 @@ FUNCTION Main( PAR_cP01, PAR_cP02, PAR_cP03, PAR_cP04, PAR_cP05, PAR_cP06, PAR_c
                WIDTH GetDesktopRealWidth() - 530
                HEIGHT 25
                CAPTION 'Reload Header'
-               TOOLTIP 'Reload header file from disk'
+               TOOLTIP 'Reload header file from disk,'
                ONCLICK { || QPM_Wait( "RichEditDisplay( 'HEA', .T. )", 'Reloading ...' ) }
             END BUTTONEX
 
-            DEFINE BUTTONEX BLOCALSearchHea
+            DEFINE BUTTONEX BLocalSearchHea
                ROW GetDesktopRealHeight() - 227
                COL GetDesktopRealWidth() - 415
                WIDTH 60
                HEIGHT 25
                CAPTION 'Search'
-               TOOLTIP 'Search in displayed text'
-               ONCLICK LOCALSearch( GetProperty( 'VentanaMain', 'CSearch', 'DisplayValue' ) )
+               TOOLTIP 'Search current data for some text.'
+               ONCLICK LocalSearch( GetProperty( 'VentanaMain', 'CSearch', 'DisplayValue' ) )
             END BUTTONEX
          END PAGE
 
@@ -1793,7 +1880,7 @@ FUNCTION Main( PAR_cP01, PAR_cP02, PAR_cP03, PAR_cP04, PAR_cP05, PAR_cP06, PAR_c
                WIDTH 70
                HEIGHT 20
                VALUE .T.
-               TOOLTIP 'Toggle automatic tab syncronization'
+               TOOLTIP 'Toggle automatic tab syncronization.'
                ON CHANGE TabAutoSync('PAN')
             END CHECKBOX
 
@@ -1818,7 +1905,7 @@ FUNCTION Main( PAR_cP01, PAR_cP02, PAR_cP03, PAR_cP04, PAR_cP05, PAR_cP06, PAR_c
                WIDTH 95
                HEIGHT 20
                VALUE .F.
-               TOOLTIP "Show line numbers (file's loading is slower)"
+               TOOLTIP "Check to display line numbers. Please note that loading time will increase."
                ON CHANGE ( bNumberOnPan := GetProperty( 'VentanaMain', 'Check_NumberOnPan', 'value' ), QPM_Wait( "RichEditDisplay( 'PAN', .T. )", 'Reloading ...' ) )
             END CHECKBOX
 
@@ -1828,18 +1915,18 @@ FUNCTION Main( PAR_cP01, PAR_cP02, PAR_cP03, PAR_cP04, PAR_cP05, PAR_cP06, PAR_c
                WIDTH GetDesktopRealWidth() - 530
                HEIGHT 25
                CAPTION 'Reload Form'
-               TOOLTIP 'Reload form file from disk'
+               TOOLTIP 'Reload form file from disk.'
                ONCLICK { || QPM_Wait( "RichEditDisplay( 'PAN', .T. )", 'Reloading ...' ) }
             END BUTTONEX
 
-            DEFINE BUTTONEX BLOCALSearchPan
+            DEFINE BUTTONEX BLocalSearchPan
                ROW GetDesktopRealHeight() - 227
                COL GetDesktopRealWidth() - 415
                WIDTH 60
                HEIGHT 25
                CAPTION 'Search'
-               TOOLTIP 'Search in displayed text'
-               ONCLICK LOCALSearch( GetProperty( 'VentanaMain', 'CSearch', 'DisplayValue' ) )
+               TOOLTIP 'Search current data for some text.'
+               ONCLICK LocalSearch( GetProperty( 'VentanaMain', 'CSearch', 'DisplayValue' ) )
             END BUTTONEX
          END PAGE
 
@@ -1851,7 +1938,7 @@ FUNCTION Main( PAR_cP01, PAR_cP02, PAR_cP03, PAR_cP04, PAR_cP05, PAR_cP06, PAR_c
                WIDTH 70
                HEIGHT 20
                VALUE .T.
-               TOOLTIP 'Toggle automatic tab syncronization'
+               TOOLTIP 'Toggle automatic tab syncronization.'
                ON CHANGE  TabAutoSync('DBF')
             END CHECKBOX
 
@@ -1888,7 +1975,7 @@ FUNCTION Main( PAR_cP01, PAR_cP02, PAR_cP03, PAR_cP04, PAR_cP05, PAR_cP06, PAR_c
                WIDTH 80
                HEIGHT 20
                VALUE bDbfAutoView
-               TOOLTIP 'Toggle automatic browsing of DBF file in Quick View'
+               TOOLTIP 'Toggle automatic browsing of DBF file in Quick View.'
                ON CHANGE ( bDbfAutoView := GetProperty( 'VentanaMain', 'Check_DbfAutoView', 'Value' ), QPM_Wait( "RichEditDisplay( 'DBF', .T.,, .F. )", 'Reloading ...' ) )
             END CHECKBOX
 
@@ -1897,28 +1984,28 @@ FUNCTION Main( PAR_cP01, PAR_cP02, PAR_cP03, PAR_cP04, PAR_cP05, PAR_cP06, PAR_c
                COL 90
                WIDTH GetDesktopRealWidth() - 675
                HEIGHT 25
-               CAPTION iif( PUB_bW800, '(Re)Display DBF', 'Force (re)display of DBF information or data' )
-               TOOLTIP 'Display DBF information from disk'
+               CAPTION iif( PUB_bW800, '(Re)Display DBF', '(Re)Display DBF information or data' )
+               TOOLTIP 'Display DBF information from disk.'
                ONCLICK { || QPM_Wait( "RichEditDisplay( 'DBF', .T., NIL, .T. )", 'Reloading ...' ) }
             END BUTTONEX
 
-            DEFINE BUTTONEX BLOCALSearchStructure
+            DEFINE BUTTONEX BLocalSearchStructure
                ROW GetDesktopRealHeight() - 227
                COL GetDesktopRealWidth() - 580
                WIDTH 110
                HEIGHT 25
                CAPTION 'Search Struc.'
-               TOOLTIP "Search text in DBF's structure"
-               ONCLICK LOCALSearch( GetProperty( 'VentanaMain', 'CSearch', 'DisplayValue' ) )
+               TOOLTIP "Search DBF's structure for some text."
+               ONCLICK LocalSearch( GetProperty( 'VentanaMain', 'CSearch', 'DisplayValue' ) )
             END BUTTONEX
 
-            DEFINE BUTTONEX BLOCALSearchDbf
+            DEFINE BUTTONEX BLocalSearchDbf
                ROW GetDesktopRealHeight() - 227
                COL GetDesktopRealWidth() - 465
                WIDTH 110
                HEIGHT 25
-               CAPTION 'Dbf Search'
-               TOOLTIP "Search text in DBF's data"
+               CAPTION 'DBF Search'
+               TOOLTIP "Search DBF's data for some text."
                ONCLICK QPM_Wait( "DbfDataSearch( GetProperty( 'VentanaMain', 'CSearch', 'DisplayValue' ) )", 'Searching ...' )
             END BUTTONEX
          END PAGE
@@ -1931,7 +2018,7 @@ FUNCTION Main( PAR_cP01, PAR_cP02, PAR_cP03, PAR_cP04, PAR_cP05, PAR_cP06, PAR_c
                WIDTH 70
                HEIGHT 20
                VALUE .T.
-               TOOLTIP 'Toggle automatic tab syncronization'
+               TOOLTIP 'Toggle automatic tab syncronization.'
                ON CHANGE TabAutoSync('LIB')
             END CHECKBOX
 
@@ -1955,18 +2042,18 @@ FUNCTION Main( PAR_cP01, PAR_cP02, PAR_cP03, PAR_cP04, PAR_cP05, PAR_cP06, PAR_c
                WIDTH GetDesktopRealWidth() - 430
                HEIGHT 25
                CAPTION 'List Library/Object (or Re-List)'
-               TOOLTIP 'List Library/Object content'
+               TOOLTIP 'List Library/Object content.'
                ONCLICK SetProperty( 'VentanaMain', 'RichEditLib', 'Value', QPM_Wait( "ListModule( '" + ChgPathToReal( US_WordSubStr( GetProperty( "VentanaMain", "GIncFiles", "Cell", VentanaMain.GIncFiles.Value, NCOLINCFULLNAME ), 3 ) ) + "' )", 'Listing ...', NIL, .T. ) )
             END BUTTONEX
 
-            DEFINE BUTTONEX BLOCALSearchLib
+            DEFINE BUTTONEX BLocalSearchLib
                ROW GetDesktopRealHeight() - 227
                COL GetDesktopRealWidth() - 415
                WIDTH 60
                HEIGHT 25
                CAPTION 'Search'
-               TOOLTIP 'Search in displayed text'
-               ONCLICK LOCALSearch( GetProperty( 'VentanaMain', 'CSearch', 'DisplayValue' ) )
+               TOOLTIP 'Search current data for some text.'
+               ONCLICK LocalSearch( GetProperty( 'VentanaMain', 'CSearch', 'DisplayValue' ) )
             END BUTTONEX
          END PAGE
 
@@ -1979,7 +2066,7 @@ FUNCTION Main( PAR_cP01, PAR_cP02, PAR_cP03, PAR_cP04, PAR_cP05, PAR_cP06, PAR_c
                WIDTH 70
                HEIGHT 20
                VALUE .T.
-               TOOLTIP 'Toggle automatic tab syncronization'
+               TOOLTIP 'Toggle automatic tab syncronization.'
                ON CHANGE TabAutoSync('HLP')
             END CHECKBOX
 
@@ -2017,7 +2104,7 @@ FUNCTION Main( PAR_cP01, PAR_cP02, PAR_cP03, PAR_cP04, PAR_cP05, PAR_cP06, PAR_c
                WIDTH 28
                HEIGHT 25
                PICTURE 'add'
-               TOOLTIP 'Add key to index'
+               TOOLTIP 'Add key to index.'
                ONCLICK SHG_AddHlpKey()
             END BUTTONEX
 
@@ -2027,7 +2114,7 @@ FUNCTION Main( PAR_cP01, PAR_cP02, PAR_cP03, PAR_cP04, PAR_cP05, PAR_cP06, PAR_c
                WIDTH 28
                HEIGHT 25
                PICTURE 'remove'
-               TOOLTIP 'Remove key from index'
+               TOOLTIP 'Remove key from index.'
                ONCLICK QPM_RemoveKeyHLP()
             END BUTTONEX
 
@@ -2043,7 +2130,7 @@ FUNCTION Main( PAR_cP01, PAR_cP02, PAR_cP03, PAR_cP04, PAR_cP05, PAR_cP06, PAR_c
                WIDTHS { 100 };
                ITEMS {} ;
                VALUE 0 ;
-               TOOLTIP "Index keys associated with this topic" ;
+               TOOLTIP "Index keys associated with this topic." ;
                BACKCOLOR DEF_COLORBACKHLP ;
                ON DBLCLICK { QPM_EditKeyHLP() } ;
                PAINTDOUBLEBUFFER ;
@@ -2055,8 +2142,8 @@ FUNCTION Main( PAR_cP01, PAR_cP02, PAR_cP03, PAR_cP04, PAR_cP05, PAR_cP06, PAR_c
                WIDTH 124
                HEIGHT 25
                CAPTION 'Cancel changes?'
-               TOOLTIP 'Select "Yes" to discard changes'
-               ONCLICK         { || QPM_Wait( 'SHG_CancelChangesTopic()', 'Checking for restore ...' ) }
+               TOOLTIP 'Select [Yes] to discard changes.'
+               ONCLICK { || QPM_Wait( 'SHG_CancelChangesTopic()', 'Checking for restore ...' ) }
             END BUTTONEX
 
             DEFINE CHECKBOX CH_SHG_TypeOutput
@@ -2066,18 +2153,18 @@ FUNCTION Main( PAR_cP01, PAR_cP02, PAR_cP03, PAR_cP04, PAR_cP05, PAR_cP06, PAR_c
                WIDTH iif( PUB_bW800, 120, 120 )
                HEIGHT 20
                VALUE SHG_CheckTypeOutput
-               TOOLTIP 'Toggles generation of HTML files'
+               TOOLTIP 'Toggles generation of HTML files.'
                ON CHANGE       ( SHG_CheckTypeOutput := GetProperty( 'VentanaMain', 'CH_SHG_TypeOutput', 'value' ) )
             END CHECKBOX
 
-            DEFINE BUTTONEX BLOCALSearchHlp
+            DEFINE BUTTONEX BLocalSearchHlp
                ROW GetDesktopRealHeight() - 227
                COL GetDesktopRealWidth() - 480
                WIDTH 124
                HEIGHT 25
                CAPTION 'Search'
-               TOOLTIP 'Search in displayed text'
-               ONCLICK LOCALSearch( GetProperty( 'VentanaMain', 'CSearch', 'DisplayValue' ) )
+               TOOLTIP 'Search current data for some text.'
+               ONCLICK LocalSearch( GetProperty( 'VentanaMain', 'CSearch', 'DisplayValue' ) )
             END BUTTONEX
          END PAGE
 #endif
@@ -2120,14 +2207,14 @@ FUNCTION Main( PAR_cP01, PAR_cP02, PAR_cP03, PAR_cP04, PAR_cP05, PAR_cP06, PAR_c
                FONT 'Courier New' ;
                SIZE 9
 
-            DEFINE BUTTONEX BLOCALSearchSysOut
+            DEFINE BUTTONEX BLocalSearchSysOut
                ROW GetDesktopRealHeight() - 227
                COL 10
                WIDTH GetDesktopRealWidth() - 364
                HEIGHT 25
                CAPTION 'Search'
-               TOOLTIP 'Search in displayed text'
-               ONCLICK LOCALSearch( GetProperty( 'VentanaMain', 'CSearch', 'DisplayValue' ) )
+               TOOLTIP 'Search current data for some text.'
+               ONCLICK LocalSearch( GetProperty( 'VentanaMain', 'CSearch', 'DisplayValue' ) )
             END BUTTONEX
          END PAGE
 
@@ -2146,7 +2233,7 @@ FUNCTION Main( PAR_cP01, PAR_cP02, PAR_cP03, PAR_cP04, PAR_cP05, PAR_cP06, PAR_c
                WIDTH 120
                HEIGHT 25
                CAPTION 'Delete Error Log'
-               TOOLTIP "Delete content of MiniGui's error log"
+               TOOLTIP "Delete content of MiniGui's error log."
                ONCLICK QPM_DeleteErrorLog()
             END BUTTONEX
 
@@ -2156,7 +2243,7 @@ FUNCTION Main( PAR_cP01, PAR_cP02, PAR_cP03, PAR_cP04, PAR_cP05, PAR_cP06, PAR_c
                WIDTH GetDesktopRealWidth() - 780
                HEIGHT 25
                CAPTION 'Reload Error Log'
-               TOOLTIP "Reload content of MiniGui's error log"
+               TOOLTIP "Reload content of MiniGui's error log."
                ONCLICK MuestroErrorLog()
             END BUTTONEX
 
@@ -2166,18 +2253,18 @@ FUNCTION Main( PAR_cP01, PAR_cP02, PAR_cP03, PAR_cP04, PAR_cP05, PAR_cP06, PAR_c
                WIDTH 184
                HEIGHT 25
                CAPTION '(Re)List Output File'
-               TOOLTIP "List content of project's output file"
+               TOOLTIP "List content of project's output file."
                ONCLICK ( SetProperty( 'VentanaMain', 'RichEditOut', 'Value', QPM_Wait( "ListModuleMoved( '" + GetOutputModuleName() + "' )", 'Listing ...' ) ), SetProperty( 'VentanaMain', 'RichEditOut', 'caretpos', 1 ) )
             END BUTTONEX
 
-            DEFINE BUTTONEX BLOCALSearchOut
+            DEFINE BUTTONEX BLocalSearchOut
                ROW GetDesktopRealHeight() - 227
                COL GetDesktopRealWidth() - 415
                WIDTH 60
                HEIGHT 25
                CAPTION 'Search'
-               TOOLTIP 'Search in displayed text'
-               ONCLICK LOCALSearch( GetProperty( 'VentanaMain', 'CSearch', 'DisplayValue' ) )
+               TOOLTIP 'Search current data for some text.'
+               ONCLICK LocalSearch( GetProperty( 'VentanaMain', 'CSearch', 'DisplayValue' ) )
             END BUTTONEX
          END PAGE
       END TAB
@@ -2188,7 +2275,7 @@ FUNCTION Main( PAR_cP01, PAR_cP02, PAR_cP03, PAR_cP04, PAR_cP05, PAR_cP06, PAR_c
          WIDTH 85
          HEIGHT 25
          PICTURE 'STOP'
-         TOOLTIP 'Stop BUILD process'
+         TOOLTIP 'Stop BUILD process.'
          ONCLICK QPM_Wait( 'BuildStop()', 'Stopping, please wait ...' )
       END BUTTONEX
 
@@ -2199,7 +2286,7 @@ FUNCTION Main( PAR_cP01, PAR_cP02, PAR_cP03, PAR_cP04, PAR_cP05, PAR_cP06, PAR_c
          WIDTH 85
          HEIGHT 25
          PICTURE 'KILL'
-         TOOLTIP 'Use "Process Manager" to kill a process'
+         TOOLTIP 'Use "Process Manager" to kill a process.'
          ONCLICK ( SetProperty( 'VentanaMain', 'bKill', 'Enabled', .F. ), DoMethod( 'WinKiller', 'restore' ), QPM_bKiller := .T., iif( PUB_QPM_bHigh, NIL, QPM_SetProcessPriority( 'HIGH' ) ), SetProperty( 'WinKiller', 'TimerRefresh', 'Enabled', GetProperty( 'WinKiller', 'Check_AutoRefresh', 'value' ) ), DoMethod( 'VentanaMain', 'minimize' ) )
       END BUTTONEX
 #endif
@@ -2209,7 +2296,7 @@ FUNCTION Main( PAR_cP01, PAR_cP02, PAR_cP03, PAR_cP04, PAR_cP05, PAR_cP06, PAR_c
          VALUE 1 ;
          DISPLAYEDIT ;
          WIDTH GetDesktopRealWidth() - iif( PUB_bW800, 735, 810 ) ;
-         TOOLTIP 'Text to search for' ;
+         TOOLTIP 'Text to search for.' ;
          ON ENTER ( AddSearchTxt(), QPM_Wait( "GlobalSearch( GetProperty( 'VentanaMain', 'CSearch', 'DisplayValue' ) )", 'Searching ...' ) )
          ON LOSTFOCUS AddSearchTxt()
 
@@ -2219,7 +2306,7 @@ FUNCTION Main( PAR_cP01, PAR_cP02, PAR_cP03, PAR_cP04, PAR_cP05, PAR_cP06, PAR_c
          WIDTH 90
          HEIGHT 25
          CAPTION 'Global Search'
-         TOOLTIP "Search in all project's files"
+         TOOLTIP "Search into all project's files."
          ONCLICK ( AddSearchTxt(), QPM_Wait( "GlobalSearch( GetProperty( 'VentanaMain', 'CSearch', 'DisplayValue' ) )", 'Searching ...' ) )
       END BUTTONEX
 
@@ -2229,7 +2316,7 @@ FUNCTION Main( PAR_cP01, PAR_cP02, PAR_cP03, PAR_cP04, PAR_cP05, PAR_cP06, PAR_c
          WIDTH iif( PUB_bW800, 15, 50 )
          HEIGHT 25
          CAPTION iif( PUB_bW800, 'R', 'Reset' )
-         TOOLTIP 'Reset Global Search indicators and counts'
+         TOOLTIP 'Reset Global Search indicators and counters.'
          ONCLICK QPM_Wait( "ResetImgGrid( '*' )", 'Reseting Search Indicators ...' )
       END BUTTONEX
       VentanaMain.BGlobalReset.Enabled := .F.
@@ -2241,7 +2328,7 @@ FUNCTION Main( PAR_cP01, PAR_cP02, PAR_cP03, PAR_cP04, PAR_cP05, PAR_cP06, PAR_c
          WIDTH iif( PUB_bW800, 80, 120 )
          HEIGHT 20
          VALUE .F.
-         TOOLTIP 'Global Search: only find Function, Procedure and/or Method name'
+         TOOLTIP 'Global Search for Function, Procedure and/or Method name.'
          TRANSPARENT IsXPThemeActive()
       END CHECKBOX
 
@@ -2252,7 +2339,7 @@ FUNCTION Main( PAR_cP01, PAR_cP02, PAR_cP03, PAR_cP04, PAR_cP05, PAR_cP06, PAR_c
          WIDTH iif( PUB_bW800, 80, 120 )
          HEIGHT 20
          VALUE .F.
-         TOOLTIP "Global Search: include DBF's data in search process"
+         TOOLTIP "Check to include DBF's data when performing a Global Search."
          TRANSPARENT IsXPThemeActive()
       END CHECKBOX
 
@@ -2263,7 +2350,7 @@ FUNCTION Main( PAR_cP01, PAR_cP02, PAR_cP03, PAR_cP04, PAR_cP05, PAR_cP06, PAR_c
          WIDTH iif( PUB_bW800, 80, 120 )
          HEIGHT 20
          VALUE .F.
-         TOOLTIP "Global Search: include DBF's data in search process"
+         TOOLTIP "Check to enable case sensitive processing when performing a Global Search."
          TRANSPARENT IsXPThemeActive()
       END CHECKBOX
 
@@ -2286,7 +2373,7 @@ FUNCTION Main( PAR_cP01, PAR_cP02, PAR_cP03, PAR_cP04, PAR_cP05, PAR_cP06, PAR_c
          FONTSIZE 10
          FONTBOLD .T.
          FONTCOLOR DEF_COLORRED
-         TOOLTIP 'Global Search is active, use "Reset" button to disable'
+         TOOLTIP 'Global Search is active, use "Reset" button to disable.'
          TRANSPARENT IsXPThemeActive()
       END LABEL
       VentanaMain.LGlobal.visible := .F.
@@ -2319,6 +2406,8 @@ FUNCTION Main( PAR_cP01, PAR_cP02, PAR_cP03, PAR_cP04, PAR_cP05, PAR_cP06, PAR_c
    ENDIF
 
    CargoSearch()
+
+   CargoDefaultLibs( GetSuffix() )
 
    IF PUB_bLite
       DEFINE WINDOW VentanaLite ;
@@ -2386,7 +2475,7 @@ FUNCTION Main( PAR_cP01, PAR_cP02, PAR_cP03, PAR_cP04, PAR_cP05, PAR_cP06, PAR_c
                WIDTH 75
                HEIGHT 25
                PICTURE 'STOP'
-               TOOLTIP 'Stop BUILD process'
+               TOOLTIP 'Stop BUILD process.'
                ONCLICK QPM_Wait( 'BuildStop()', 'Stopping, please wait ...' )
             END BUTTONEX
 
@@ -2396,7 +2485,7 @@ FUNCTION Main( PAR_cP01, PAR_cP02, PAR_cP03, PAR_cP04, PAR_cP05, PAR_cP06, PAR_c
                WIDTH 75
                HEIGHT 25
                CAPTION 'About'
-               TOOLTIP "QPM's info and credits"
+               TOOLTIP "QPM's info and credits."
                ONCLICK QPM_About()
             END BUTTONEX
 
@@ -2406,7 +2495,7 @@ FUNCTION Main( PAR_cP01, PAR_cP02, PAR_cP03, PAR_cP04, PAR_cP05, PAR_cP06, PAR_c
                WIDTH 75
                HEIGHT 25
                CAPTION 'Run Parm'
-               TOOLTIP 'Run program using command line parameters'
+               TOOLTIP 'Run program using command line parameters.'
                ONCLICK ( bRunParm := .T., QPM_Run( bRunParm ) )
             END BUTTONEX
             VentanaLite.BRunP.enabled := .F.
@@ -2417,7 +2506,7 @@ FUNCTION Main( PAR_cP01, PAR_cP02, PAR_cP03, PAR_cP04, PAR_cP05, PAR_cP06, PAR_c
                WIDTH 75
                HEIGHT 25
                CAPTION 'Run'
-               TOOLTIP 'Run program without command line parameters'
+               TOOLTIP 'Run program without command line parameters.'
                ONCLICK ( bRunParm := .F., QPM_Run( bRunParm ) )
             END BUTTONEX
             VentanaLite.BRun.enabled := .F.
@@ -2428,7 +2517,7 @@ FUNCTION Main( PAR_cP01, PAR_cP02, PAR_cP03, PAR_cP04, PAR_cP05, PAR_cP06, PAR_c
                WIDTH 75
                HEIGHT 25
                CAPTION 'Exit'
-               TOOLTIP 'Exit QPM and return to caller'
+               TOOLTIP 'Exit QPM and return to caller process.'
                ONCLICK iif( PUB_bIsProcessing, NIL, DoMethod( 'VentanaLite', 'release' ) )
             END BUTTONEX
       END WINDOW
@@ -2458,33 +2547,33 @@ FUNCTION QPM_AddFilesPRG2()
    LOCAL Files, x, i, Exists
    LOCAL bTop := iif( GetProperty( 'VentanaMain', 'GPrgFiles', 'itemcount' ) == 0, .T., .F. )
    IF Empty( PUB_cProjectFolder ) .OR. ! US_IsDirectory( PUB_cProjectFolder )
-      MsgStop( DBLQT + "Project Folder" + DBLQT + " is not a valid folder:" + CRLF + PUB_cProjectFolder + CRLF + 'Look at tab ' + DBLQT + PagePRG + DBLQT )
+      MyMsgStop( DBLQT + "Project Folder" + DBLQT + " is not a valid folder:" + CRLF + PUB_cProjectFolder + CRLF + 'Look at tab ' + DBLQT + PagePRG + DBLQT )
       RETURN .F.
    ENDIF
-// SetMGWaitHide()
+   SetMGWaitHide()
    Files := QPM_GetFilesPRG()
    x := 1
    DO WHILE x <= Len( Files )
       IF " " $ US_FileNameOnlyNameAndExt( Files[ x ] )
-         MsgStop( "QPM can't handle filenames with spaces." + CRLF + DBLQT + Files[ x ] + DBLQT + ' will be deleted.' )
+         MyMsgStop( "QPM can't handle filenames with spaces." + CRLF + DBLQT + Files[ x ] + DBLQT + ' will be deleted.' )
          ADel( Files, x )
          ASize( Files, Len( Files ) - 1 )
       ELSE
          x ++
       ENDIF
    ENDDO
-// SetMGWaitShow()
+   SetMGWaitShow()
    IF Len( Files ) == 1
-      IF ! ( US_Upper( US_FileNameOnlyExt( Files[1] ) ) == 'PRG' ) .AND. ;
-         ! ( US_Upper( US_FileNameOnlyExt( Files[1] ) ) == 'C' ) .AND. ;
-         ! ( US_Upper( US_FileNameOnlyExt( Files[1] ) ) == 'CPP' )
-         Files[1] := Files[1] + '.PRG'
+      IF ! ( Upper( US_FileNameOnlyExt( Files[1] ) ) == 'PRG' ) .AND. ;
+         ! ( Upper( US_FileNameOnlyExt( Files[1] ) ) == 'C' ) .AND. ;
+         ! ( Upper( US_FileNameOnlyExt( Files[1] ) ) == 'CPP' )
+         Files[1] := US_FileNameOnlyPathAndName( Files[1] ) + '.PRG'
       ENDIF
       IF ! File( Files[1] )
-         IF ! MyMsgYesNo( 'File not found: ' + DBLQT + Files[1] + DBLQT + CRLF + 'Do you want to create an empty file?' )
+         IF ! MyMsgYesNo( 'File ' + DBLQT + Files[1] + DBLQT + 'was not found.' + CRLF + 'Do you want to create an empty file?' )
             RETURN .F.
          ENDIF
-         IF US_Upper( US_FileNameOnlyExt( Files[1] ) ) == 'PRG'
+         IF Upper( US_FileNameOnlyExt( Files[1] ) ) == 'PRG'
             QPM_CreateNewFile( 'PRG', Files[1] )
          ELSE
             QPM_MemoWrit( Files[1], ' ' )
@@ -2494,7 +2583,7 @@ FUNCTION QPM_AddFilesPRG2()
    FOR x := 1 TO Len( Files )
       Exists := .F.
       IF SubStr( US_FileNameOnlyPath( Files[x] ), 2, 2 ) == ':' + DEF_SLASH .AND. Len( US_FileNameOnlyPath( Files[x] ) ) == 3
-         MsgStop( 'Components located in a root folder will not work correctly in QPM: ' + Files[ x ] )
+         MyMsgStop( 'Components located in a root folder will not work correctly in QPM: ' + Files[ x ] )
          EXIT
       ENDIF
       Files[x] := ChgPathToRelative( Files[x] )
@@ -2511,12 +2600,12 @@ FUNCTION QPM_AddFilesPRG2()
                TotCaption( 'PRG', +1 )
             ENDIF
          ENDIF
-         IF US_Upper( US_FileNameOnlyExt( Files[1] ) ) == 'PRG'
-            IF AScan( vExtraFoldersForSearchHB, { |y| US_Upper( US_VarToStr( y ) ) == US_Upper( US_FileNameOnlyPath( ChgPathToReal( Files[x] ) ) ) } ) == 0
+         IF Upper( US_FileNameOnlyExt( Files[1] ) ) == 'PRG'
+            IF AScan( vExtraFoldersForSearchHB, { |y| US_Upper( y ) == US_Upper( US_FileNameOnlyPath( ChgPathToReal( Files[x] ) ) ) } ) == 0
                AAdd( vExtraFoldersForSearchHB, US_FileNameOnlyPath( ChgPathToReal( Files[x] ) ) )
             ENDIF
-         ELSEIF US_Upper( US_FileNameOnlyExt( Files[1] ) ) == 'CPP' .OR. US_Upper( US_FileNameOnlyExt( Files[1] ) ) == 'C'
-            IF AScan( vExtraFoldersForSearchC, { |y| US_Upper( US_VarToStr( y ) ) == US_Upper( US_FileNameOnlyPath( ChgPathToReal( Files[x] ) ) ) } ) == 0
+         ELSEIF Upper( US_FileNameOnlyExt( Files[1] ) ) == 'CPP' .OR. Upper( US_FileNameOnlyExt( Files[1] ) ) == 'C'
+            IF AScan( vExtraFoldersForSearchC, { |y| US_Upper( y ) == US_Upper( US_FileNameOnlyPath( ChgPathToReal( Files[x] ) ) ) } ) == 0
                AAdd( vExtraFoldersForSearchC, US_FileNameOnlyPath( ChgPathToReal( Files[x] ) ) )
             ENDIF
          ENDIF
@@ -2527,10 +2616,15 @@ FUNCTION QPM_AddFilesPRG2()
    ENDIF
    DoMethod( 'VentanaMain', 'GPrgFiles', 'ColumnsAutoFitH' )
    QPM_CheckFiles()
-// QPM_ForceRecompCheck( ChgPathToReal( GetProperty( 'VentanaMain', 'GPrgFiles', 'Cell', GetProperty( 'VentanaMain', 'GPrgFiles', 'ItemCount' ), NCOLPRGFULLNAME ) ), GetProperty( 'VentanaMain', 'GPrgFiles', 'ItemCount' ) )
    IF bTop .AND. VentanaMain.GPrgFiles.ItemCount > 0
       CambioTitulo()
-      MsgInfo( DBLQT + ChgPathToReal( GetProperty( 'VentanaMain', 'GPrgFiles', 'Cell', 1, NCOLPRGFULLNAME ) ) + DBLQT + CRLF + 'is the new project´s "Top File".' )
+      IF Prj_Warn_TopFile
+         IF MyMsgYesNo( DBLQT + ChgPathToReal( GetProperty( 'VentanaMain', 'GPrgFiles', 'Cell', 1, NCOLPRGFULLNAME ) ) + DBLQT + CRLF + "is the new " + DBLQT + "Top File" + DBLQT + "." + CRLF + ;
+                        'Omit this message from now on?' )
+            Prj_Warn_TopFile := .F.
+            MyMsgInfo( 'Use ' + DBLQT + PUB_MenuResetWarnings + DBLQT + ' option of Settings menu to enable the previous message.' )
+         ENDIF
+      ENDIF
    ENDIF
 RETURN .T.
 
@@ -2540,19 +2634,19 @@ RETURN QPM_Wait( 'QPM_AddFilesHEA2()', 'Loading ...' )
 FUNCTION QPM_AddFilesHEA2()
    LOCAL Files, x, i, Exists
    IF Empty( PUB_cProjectFolder ) .OR. ! US_IsDirectory( PUB_cProjectFolder )
-      MsgStop( DBLQT + "Project Folder" + DBLQT + " is not a valid folder:" + CRLF + PUB_cProjectFolder + CRLF + 'Look at tab ' + DBLQT + PagePRG + DBLQT )
+      MyMsgStop( DBLQT + "Project Folder" + DBLQT + " is not a valid folder:" + CRLF + PUB_cProjectFolder + CRLF + 'Look at tab ' + DBLQT + PagePRG + DBLQT )
       RETURN .F.
    ENDIF
    SetMGWaitHide()
    Files := QPM_GetFilesHEA()
    SetMGWaitShow()
    IF Len( Files ) == 1
-      IF ! ( US_Upper( US_FileNameOnlyExt( Files[1] ) ) == 'H' ) .AND. ;
-         ! ( US_Upper( US_FileNameOnlyExt( Files[1] ) ) == 'CH' )
+      IF ! ( Upper( US_FileNameOnlyExt( Files[1] ) ) == 'H' ) .AND. ;
+         ! ( Upper( US_FileNameOnlyExt( Files[1] ) ) == 'CH' )
          Files[1] := Files[1] + '.H'
       ENDIF
       IF ! File( Files[1] )
-         IF MyMsgYesNo( 'File not found: ' + DBLQT + Files[1] + DBLQT + CRLF + 'Do you want to create an empty file?' )
+         IF MyMsgYesNo( 'File ' + DBLQT + Files[1] + DBLQT + 'was not found.' + CRLF + 'Do you want to create an empty file?' )
             QPM_CreateNewFile( 'HEA', Files[1] )
          ELSE
             RETURN .F.
@@ -2575,10 +2669,10 @@ FUNCTION QPM_AddFilesHEA2()
                TotCaption( 'HEA', +1 )
             ENDIF
          ENDIF
-         IF AScan( vExtraFoldersForSearchHB, { |y| US_Upper( US_VarToStr( y ) ) == US_Upper( US_FileNameOnlyPath( ChgPathToReal( Files[x] ) ) ) } ) == 0
+         IF AScan( vExtraFoldersForSearchHB, { |y| US_Upper( y ) == US_Upper( US_FileNameOnlyPath( ChgPathToReal( Files[x] ) ) ) } ) == 0
             AAdd( vExtraFoldersForSearchHB, US_FileNameOnlyPath( ChgPathToReal( Files[x] ) ) )
          ENDIF
-         IF AScan( vExtraFoldersForSearchC, { |y| US_Upper( US_VarToStr( y ) ) == US_Upper( US_FileNameOnlyPath( ChgPathToReal( Files[x] ) ) ) } ) == 0
+         IF AScan( vExtraFoldersForSearchC, { |y| US_Upper( y ) == US_Upper( US_FileNameOnlyPath( ChgPathToReal( Files[x] ) ) ) } ) == 0
             AAdd( vExtraFoldersForSearchC, US_FileNameOnlyPath( ChgPathToReal( Files[x] ) ) )
          ENDIF
       ENDIF
@@ -2596,14 +2690,14 @@ RETURN QPM_Wait( 'QPM_AddFilesPAN2()', 'Loading ...' )
 FUNCTION QPM_AddFilesPAN2()
    LOCAL Files, x, i, Exists
    IF Empty( PUB_cProjectFolder ) .OR. ! US_IsDirectory( PUB_cProjectFolder )
-      MsgStop( DBLQT + "Project Folder" + DBLQT + " is not a valid folder:" + CRLF + PUB_cProjectFolder + CRLF + 'Look at tab ' + DBLQT + PagePRG + DBLQT )
+      MyMsgStop( DBLQT + "Project Folder" + DBLQT + " is not a valid folder:" + CRLF + PUB_cProjectFolder + CRLF + 'Look at tab ' + DBLQT + PagePRG + DBLQT )
       RETURN .F.
    ENDIF
-   // SetMGWaitHide()
+   SetMGWaitHide()
    Files := QPM_GetFilesPAN()
    IF Len( Files ) == 1
-      IF ! ( US_Upper( US_FileNameOnlyExt( Files[1] ) ) == 'FMG' )
-         Files[1] := Files[1] + '.FMG'
+      IF ! ( Upper( US_FileNameOnlyExt( Files[1] ) ) == 'FMG' )
+         Files[1] := US_FileNameOnlyPathAndName( Files[1] ) + '.fmg'
       ENDIF
       IF ! File( Files[1] )
          IF MyMsgYesNo( 'File not found: ' + DBLQT + Files[1] + DBLQT + CRLF + 'Do you want to create an empty file?' )
@@ -2615,11 +2709,11 @@ FUNCTION QPM_AddFilesPAN2()
          ENDIF
       ENDIF
    ENDIF
-// SetMGWaitShow()
+   SetMGWaitShow()
    FOR x := 1 TO Len ( Files )
       Exists := .F.
       IF SubStr( US_FileNameOnlyPath( Files[x] ), 2, 2 ) == ':' + DEF_SLASH .AND. Len( US_FileNameOnlyPath( Files[x] ) ) == 3
-         MsgStop( 'Components located in a root folder will not work correctly in QPM: ' + Files[ x ] )
+         MyMsgStop( 'Components located in a root folder will not work correctly in QPM: ' + Files[ x ] )
          EXIT
       ENDIF
       Files[x] := ChgPathToRelative( Files[x] )
@@ -2636,7 +2730,7 @@ FUNCTION QPM_AddFilesPAN2()
                TotCaption( 'PAN', +1 )
             ENDIF
          ENDIF
-         IF AScan( vExtraFoldersForSearchHB, { |y| US_Upper( US_VarToStr( y ) ) == US_Upper( US_FileNameOnlyPath( ChgPathToReal( Files[x] ) ) ) } ) == 0
+         IF AScan( vExtraFoldersForSearchHB, { |y| US_Upper( y ) == US_Upper( US_FileNameOnlyPath( ChgPathToReal( Files[x] ) ) ) } ) == 0
             AAdd( vExtraFoldersForSearchHB, US_FileNameOnlyPath( ChgPathToReal( Files[x] ) ) )
          ENDIF
       ENDIF
@@ -2654,15 +2748,15 @@ RETURN QPM_Wait( 'QPM_AddFilesDBF2()', 'Loading ...' )
 FUNCTION QPM_AddFilesDBF2()
    LOCAL Files, x, i, Exists
    IF Empty( PUB_cProjectFolder ) .OR. ! US_IsDirectory( PUB_cProjectFolder )
-      MsgStop( DBLQT + "Project Folder" + DBLQT + " is not a valid folder:" + CRLF + PUB_cProjectFolder + CRLF + 'Look at tab ' + DBLQT + PagePRG + DBLQT )
+      MyMsgStop( DBLQT + "Project Folder" + DBLQT + " is not a valid folder:" + CRLF + PUB_cProjectFolder + CRLF + 'Look at tab ' + DBLQT + PagePRG + DBLQT )
       RETURN .F.
    ENDIF
-// SetMGWaitHide()
+   SetMGWaitHide()
    Files := QPM_GetFilesDBF()
-// SetMGWaitShow()
+   SetMGWaitShow()
    IF Len( Files ) == 1
-      IF ! ( US_Upper( US_FileNameOnlyExt( Files[1] ) ) == 'DBF' )
-         Files[1] := Files[1] + '.dbf'
+      IF ! ( Upper( US_FileNameOnlyExt( Files[1] ) ) == 'DBF' )
+         Files[1] := US_FileNameOnlyPathAndName( Files[1] ) + '.dbf'
       ENDIF
       IF ! File( Files[1] )
          IF MyMsgYesNo( 'File not found: ' + DBLQT + Files[1] + DBLQT + CRLF + 'Do you want to create an empty file?' )
@@ -2699,13 +2793,161 @@ FUNCTION QPM_AddFilesDBF2()
    QPM_CheckFiles()
 RETURN .T.
 
-FUNCTION QPM_AddFilesLIB
-RETURN QPM_Wait( 'QPM_AddFilesLIB2()', 'Loading ...' )
+FUNCTION QPM_AddDefaultLibs
+RETURN QPM_Wait( 'QPM_AddDefaultLibs2()', 'Loading ...' )
 
-FUNCTION QPM_AddFilesLIB2()
+FUNCTION QPM_AddDefaultLibs2()
+   LOCAL aFiles, x, i, cFile, cMode, cMode1, cMode2, cFileUpper, cThreads, cDebug
+   SetMGWaitHide()
+   aFiles := QPM_GetLibs()
+   SetMGWaitShow()
+   FOR x := 1 TO Len( aFiles )
+      cFile := US_FileNameOnlyNameAndExt( AllTrim( aFiles[x] ) )
+      cFileUpper := US_Upper( cFile )
+      cMode1 := ""
+      cMode2 := ""
+      FOR i := 1 TO VentanaMain.GDefFiles.ItemCount
+         IF cFileUpper == US_Upper( GetProperty( 'VentanaMain', 'GDefFiles', 'Cell', i, NCOLDEFNAME ) )
+            IF Empty( cMode1 )
+               cMode1 := GetProperty( 'VentanaMain', 'GDefFiles', 'Cell', i, NCOLDEFMODE )
+            ELSE
+               cMode2 := GetProperty( 'VentanaMain', 'GDefFiles', 'Cell', i, NCOLDEFMODE )
+               EXIT
+            ENDIF
+         ENDIF
+      NEXT i
+      IF Empty( cMode1 ) .OR. ( cMode1 $ "CG" .AND. Empty( cMode2 ) )
+         IF cMode1 == "C"
+            cMode := "G"
+         ELSEIF cMode1 == "G"
+            cMode := "C"
+         ELSEIF cFileUpper == GetGTGUIName() .OR. cFileUpper == GetGTWINName()
+            cMode := iif( Prj_Check_Console, "C", "G" )
+         ELSE
+            cMode := "B"
+         ENDIF
+         IF AScan( { 'VM.LIB', 'LIBVM.A', 'HBVM.LIB', 'LIBHBVM.A', 'VM64.LIB' }, cFileUpper ) # 0
+            cThreads := "S"
+         ELSEIF AScan( { 'VMMT.LIB', 'LIBVMMT.A', 'HBVMMT.LIB', 'LIBHBVMMT.A', 'VMMT64.LIB' }, cFileUpper ) # 0
+            cThreads := "M"
+         ELSE
+            cThreads := "B"
+         ENDIF
+         IF AScan( { 'DEBUG.LIB', 'LIBDEBUG.A', 'HBDEBUG.LIB', 'LIBHBDEBUG.A', 'DEBUGGER.LIB', 'LIBDEBUGGER.A', 'HBDEBUGGER.LIB', 'LIBHBDEBUGGER.A' }, cFileUpper ) # 0
+            cDebug := "Y"
+         ELSE
+            cDebug := "B"
+         ENDIF
+         VentanaMain.GDefFiles.AddItem( { PUB_nGridImgNone, cFile, cMode, cThreads, cDebug } )
+         VentanaMain.GDefFiles.Value := VentanaMain.GDefFiles.ItemCount
+         IF ! Empty( cLastGlobalSearch )
+            IF GlobalSearch2( 'LIB', cLastGlobalSearch, VentanaMain.GDefFiles.ItemCount, bLastGlobalSearchFun, bLastGlobalSearchDbf )
+               TotCaption( 'LIB', +1 )
+            ENDIF
+         ENDIF
+      ELSE
+         MyMsgStop( "Library " + DBLQT + cFile + DBLQT + " is already in the defaultlLibraries list!" )
+      ENDIF
+   NEXT x
+   CheckRelativeOrderOfLibsGT()
+   IF VentanaMain.GDefFiles.Value == 0
+      VentanaMain.GDefFiles.Value := 1
+   ENDIF
+   DoMethod( 'VentanaMain', 'GDefFiles', 'ColumnsAutoFitH' )
+   QPM_CheckFiles()
+RETURN .T.
+
+FUNCTION CheckRelativeOrderOfLibsGT()
+   LOCAL i, cLib, iGuiC := 0, iWinC := 0, iGuiG := 0, iWinG := 0, n, m, t, d, lCont
+   FOR i := 1 TO VentanaMain.GDefFiles.ItemCount
+      cLib := US_Upper( GetProperty( 'VentanaMain', 'GDefFiles', 'Cell', i, NCOLDEFNAME ) )
+      IF cLib == GetGTGUIName()
+         IF GetProperty( 'VentanaMain', 'GDefFiles', 'Cell', i, NCOLDEFMODE ) == "C"
+            iGuiC := i
+         ELSE
+            iGuiG := i
+         ENDIF
+      ELSEIF cLib == GetGTWINName()
+         IF GetProperty( 'VentanaMain', 'GDefFiles', 'Cell', i, NCOLDEFMODE ) == "C"
+            iWinC := i
+         ELSE
+            iWinG := i
+         ENDIF
+      ENDIF
+   NEXT i
+   IF iGuiC > 0 .AND. iWinC > 0
+      IF iGuiC < iWinC
+         IF Prj_Warn_GT_Order
+            lCont := MyMsgYesNo( 'For a CONSOLE project the usual lib order is GTWIN first followed by GTGUI.' + CRLF + ;
+                                 'Changing this order could end in a non-functional application.' + CRLF + ;
+                                 'Select [Yes] to continue or [No] to change the order.' )
+            IF MyMsgYesNo( 'Omit the previous validation from now on?' + CRLF + iif( lCont, "[Yes] will be assumed!", "[No] will be assumed!" ) )
+               Prj_Warn_GT_Order := .F.
+               Prj_Warn_GT_Order_Cont := lCont
+               MyMsgInfo( 'Use ' + DBLQT + PUB_MenuResetWarnings + DBLQT + ' option of Settings menu to enable the previous check.' )
+            ELSE
+               Prj_Warn_GT_Order := .T.
+            ENDIF
+         ELSE
+            lCont := Prj_Warn_GT_Order_Cont
+         ENDIF
+         IF lCont
+            n := GetProperty( 'VentanaMain', 'GDefFiles', 'Cell', iGuiC, NCOLDEFNAME )
+            m := GetProperty( 'VentanaMain', 'GDefFiles', 'Cell', iGuiC, NCOLDEFMODE )
+            t := GetProperty( 'VentanaMain', 'GDefFiles', 'Cell', iGuiC, NCOLDEFTHREADS )
+            d := GetProperty( 'VentanaMain', 'GDefFiles', 'Cell', iGuiC, NCOLDEFDEBUG )
+            SetProperty( 'VentanaMain', 'GDefFiles', 'Cell', iGuiC, NCOLDEFNAME,    GetProperty( 'VentanaMain', 'GDefFiles', 'Cell', iWinC, NCOLDEFNAME ) )
+            SetProperty( 'VentanaMain', 'GDefFiles', 'Cell', iGuiC, NCOLDEFMODE,    GetProperty( 'VentanaMain', 'GDefFiles', 'Cell', iWinC, NCOLDEFMODE ) )
+            SetProperty( 'VentanaMain', 'GDefFiles', 'Cell', iGuiC, NCOLDEFTHREADS, GetProperty( 'VentanaMain', 'GDefFiles', 'Cell', iWinC, NCOLDEFTHREADS ) )
+            SetProperty( 'VentanaMain', 'GDefFiles', 'Cell', iGuiC, NCOLDEFDEBUG,   GetProperty( 'VentanaMain', 'GDefFiles', 'Cell', iWinC, NCOLDEFDEBUG ) )
+            SetProperty( 'VentanaMain', 'GDefFiles', 'Cell', iWinC, NCOLDEFNAME,    n )
+            SetProperty( 'VentanaMain', 'GDefFiles', 'Cell', iWinC, NCOLDEFMODE,    m )
+            SetProperty( 'VentanaMain', 'GDefFiles', 'Cell', iWinC, NCOLDEFTHREADS, t )
+            SetProperty( 'VentanaMain', 'GDefFiles', 'Cell', iWinC, NCOLDEFDEBUG,   d )
+         ENDIF
+      ENDIF
+   ENDIF
+   IF iGuiG > 0 .AND. iWinG > 0
+      IF iWinG < iGuiG
+         IF Prj_Warn_GT_Order
+            lCont := MyMsgYesNo( 'For a GUI project the usual lib order is GTGUI first followed by GTWIN.' + CRLF + ;
+                                 'Changing this order could end in a non-functional application.' + CRLF + ;
+                                 'Select [Yes] to continue or [No] to change the order.' )
+            IF MyMsgYesNo( 'Omit the previous validation from now on?' + CRLF + iif( lCont, "[Yes] will be assumed!", "[No] will be assumed!" ) )
+               Prj_Warn_GT_Order := .F.
+               Prj_Warn_GT_Order_Cont := lCont
+               MyMsgInfo( 'Use ' + DBLQT + PUB_MenuResetWarnings + DBLQT + ' option of Settings menu to enable the previous check.' )
+            ELSE
+               Prj_Warn_GT_Order := .T.
+            ENDIF
+         ELSE
+            lCont := Prj_Warn_GT_Order_Cont
+         ENDIF
+         IF lCont
+            n := GetProperty( 'VentanaMain', 'GDefFiles', 'Cell', iGuiG, NCOLDEFNAME )
+            m := GetProperty( 'VentanaMain', 'GDefFiles', 'Cell', iGuiG, NCOLDEFMODE )
+            t := GetProperty( 'VentanaMain', 'GDefFiles', 'Cell', iGuiG, NCOLDEFTHREADS )
+            d := GetProperty( 'VentanaMain', 'GDefFiles', 'Cell', iGuiG, NCOLDEFDEBUG )
+            SetProperty( 'VentanaMain', 'GDefFiles', 'Cell', iGuiG, NCOLDEFNAME,    GetProperty( 'VentanaMain', 'GDefFiles', 'Cell', iWinG, NCOLDEFNAME ) )
+            SetProperty( 'VentanaMain', 'GDefFiles', 'Cell', iGuiG, NCOLDEFMODE,    GetProperty( 'VentanaMain', 'GDefFiles', 'Cell', iWinG, NCOLDEFMODE ) )
+            SetProperty( 'VentanaMain', 'GDefFiles', 'Cell', iGuiG, NCOLDEFTHREADS, GetProperty( 'VentanaMain', 'GDefFiles', 'Cell', iWinG, NCOLDEFTHREADS ) )
+            SetProperty( 'VentanaMain', 'GDefFiles', 'Cell', iGuiG, NCOLDEFDEBUG,   GetProperty( 'VentanaMain', 'GDefFiles', 'Cell', iWinG, NCOLDEFDEBUG ) )
+            SetProperty( 'VentanaMain', 'GDefFiles', 'Cell', iWinG, NCOLDEFNAME,    n )
+            SetProperty( 'VentanaMain', 'GDefFiles', 'Cell', iWinG, NCOLDEFMODE,    m )
+            SetProperty( 'VentanaMain', 'GDefFiles', 'Cell', iWinG, NCOLDEFTHREADS, t )
+            SetProperty( 'VentanaMain', 'GDefFiles', 'Cell', iWinG, NCOLDEFDEBUG,   d )
+         ENDIF
+      ENDIF
+   ENDIF
+RETURN NIL
+
+FUNCTION QPM_AddIncludeLibs
+RETURN QPM_Wait( 'QPM_AddIncludeLibs2()', 'Loading ...' )
+
+FUNCTION QPM_AddIncludeLibs2()
    LOCAL Files, x, i, Exists
    SetMGWaitHide()
-   Files := QPM_GetFilesLIB()
+   Files := QPM_GetLibs()
    SetMGWaitShow()
    FOR x := 1 TO Len( Files )
       Exists := .F.
@@ -2718,25 +2960,25 @@ FUNCTION QPM_AddFilesLIB2()
       NEXT i
       IF ! Exists
          VentanaMain.GIncFiles.AddItem( { PUB_nGridImgNone, US_FileNameOnlyNameAndExt( Files[x] ), '* * ' + Files[x] } )
-         LibPos( VentanaMain.GIncFiles.ItemCount, '*Last*' )
+         LibPos( VentanaMain.GIncFiles.ItemCount, '*LAST*' )
          IF ! Empty( cLastGlobalSearch )
             IF GlobalSearch2( 'LIB', cLastGlobalSearch, VentanaMain.GIncFiles.ItemCount, bLastGlobalSearchFun, bLastGlobalSearchDbf )
                TotCaption( 'LIB', +1 )
             ENDIF
          ENDIF
-         IF AScan( &('vExtraFoldersForLibs' + GetSuffix() ), { |y| US_Upper( US_VarToStr( y ) ) == US_Upper( US_FileNameOnlyPath( ChgPathToReal( Files[x] ) ) ) } ) == 0
-            AAdd( &('vExtraFoldersForLibs' + GetSuffix() ), US_Upper( US_FileNameOnlyPath( ChgPathToReal( Files[x] ) ) ) )
+         IF AScan( &('vExtraFoldersForLibs'+GetSuffix()), US_Upper( US_FileNameOnlyPath( ChgPathToReal( Files[x] ) ) ) ) == 0
+            AAdd( &('vExtraFoldersForLibs'+GetSuffix()), US_Upper( US_FileNameOnlyPath( ChgPathToReal( Files[x] ) ) ) )
          ENDIF
       ENDIF
    NEXT x
-   IF VentanaMain.GIncFiles.ItemCount == 1
+   IF VentanaMain.GIncFiles.Value == 0
       VentanaMain.GIncFiles.Value := 1
    ENDIF
    DoMethod( 'VentanaMain', 'GIncFiles', 'ColumnsAutoFitH' )
    QPM_CheckFiles()
 RETURN .T.
 
-FUNCTION QPM_AddExcludeFilesLIB
+FUNCTION QPM_AddExcludeLibs
    LOCAL Files, x, i, Exists
    Files := QPM_GetExcludeFilesLIB( )
    FOR x := 1 TO Len ( Files )
@@ -2752,25 +2994,26 @@ FUNCTION QPM_AddExcludeFilesLIB
        ENDIF
    NEXT
    DoMethod( 'VentanaMain', 'GExcFiles', 'ColumnsAutoFitH' )
+   QPM_CheckFiles()
 RETURN .T.
 
 #ifdef QPM_SHG
 FUNCTION QPM_AddFilesHLP()
    LOCAL cAuxTopic := '', cAuxNick := ''
    IF SHG_BaseOK
-   // SetMGWaitHide()
+      SetMGWaitHide()
       IF SHG_InputTopic( @cAuxTopic, @cAuxNick )
-   //    SetMGWaitShow()
+         SetMGWaitShow()
          VentanaMain.GHlpFiles.AddItem( { 0, cAuxTopic, cAuxNick, '0', 'E' } )
          GridImage( 'VentanaMain', 'GHlpFiles', VentanaMain.GHlpFiles.ItemCount, NCOLHLPSTATUS, '+', PUB_nGridImgHlpPage )
          SHG_AddRecord( 'P', VentanaMain.GHlpFiles.ItemCount, cAuxTopic, cAuxNick, 'New Topic!' )
          VentanaMain.GHlpFiles.Value := VentanaMain.GHlpFiles.ItemCount
          DoMethod( 'VentanaMain', 'GHlpFiles', 'ColumnsAutoFitH' )
-   // ELSE
-   //    SetMGWaitShow()
+      ELSE
+         SetMGWaitShow()
       ENDIF
    ELSE
-      MsgInfo( "Help Database hasn't been selected." + CRLF + "Use Open button to open or create a Help Database." )
+      MyMsgInfo( "Help Database has not been selected." + CRLF + "Use Open button to open or create a Help Database." )
    ENDIF
 RETURN .T.
 #endif
@@ -2782,23 +3025,23 @@ FUNCTION QPM_EditPRG
    LOCAL HotRecoveryControlFile
 #endif
    IF Empty( PUB_cProjectFolder ) .OR. ! US_IsDirectory( PUB_cProjectFolder )
-      MsgStop( DBLQT + "Project Folder" + DBLQT + " is not a valid folder:" + CRLF + PUB_cProjectFolder + CRLF + 'Look at tab ' + DBLQT + PagePRG + DBLQT )
+      MyMsgStop( DBLQT + "Project Folder" + DBLQT + " is not a valid folder:" + CRLF + PUB_cProjectFolder + CRLF + 'Look at tab ' + DBLQT + PagePRG + DBLQT )
       RETURN .F.
    ENDIF
    IF VentanaMain.GPrgFiles.Value < 1
-      MsgStop( 'No file has been selected.' )
+      MyMsgStop( 'No file has been selected!' )
       RETURN .F.
    ENDIF
    IF ! File( i := ChgPathToReal( GetProperty( 'VentanaMain', 'GPrgFiles', 'Cell', VentanaMain.GPrgFiles.Value, NCOLPRGFULLNAME ) ) )
-      MsgStop( 'File not found: ' + i )
+      MyMsgStop( 'File not found: ' + DBLQT + i + DBLQT )
       RETURN .F.
    ENDIF
    IF Empty( Gbl_Text_Editor )
-      MyMsg( 'Operation Aborted', 'Editor is not defined.' + CRLF + ' Look at ' + PUB_MenuGblOptions + ' of Settings menu.', 'E', bAutoEXIT )
+      MyMsgStop( 'Editor is not defined.' + CRLF + ' Look at ' + PUB_MenuGblOptions + ' of Settings menu.' )
       RETURN .F.
    ENDIF
    IF ! File( Editor := ChgPathToReal( AllTrim( Gbl_Text_Editor ) ) )
-      MsgStop( 'Editor not found: ' + AllTrim( Gbl_Text_Editor ) + CRLF + 'Look at ' + PUB_MenuGblOptions + ' of Settings menu.' )
+      MyMsgStop( 'Editor ' + DBLQT + AllTrim( Gbl_Text_Editor ) + DBLQT + ' not found!' + CRLF + 'Look at ' + PUB_MenuGblOptions + ' of Settings menu.' )
       RETURN .F.
    ENDIF
    IF bLogActivity
@@ -2818,7 +3061,7 @@ FUNCTION QPM_EditPRG
       ENDIF
    ELSE
       IF GridImage( 'VentanaMain', 'GPrgFiles', VentanaMain.GPrgFiles.Value, NCOLPRGSTATUS, '?', PUB_nGridImgEdited )
-         MsgInfo( 'The file is already open.' )
+         MyMsgStop( 'The file is already open!' )
          RETURN .F.
       ENDIF
       GridImage( 'VentanaMain', 'GPrgFiles', VentanaMain.GPrgFiles.Value, NCOLPRGSTATUS, '+', PUB_nGridImgEdited )
@@ -2847,19 +3090,21 @@ FUNCTION QPM_EditPRG
                               "COMMAND " + cLineCmd + " " + cLineFile + CRLF + ;
                               'CONTROL ' + EditControlFile + CRLF )
       QPM_MemoWrit( EditControlFile, 'Edit Control File For ' + i )
-      QPM_Execute( US_ShortName( PUB_cQPM_Folder ) + DEF_SLASH + 'US_Run.exe', 'QPM ' + RunParms )
+      QPM_Execute( US_ShortName( PUB_cQPM_Folder ) + DEF_SLASH + 'US_Run.exe', 'QPM ' + iif( bLogActivity, '-LIST' + US_ShortName(PUB_cQPM_Folder) + ' ', ' ' ) + RunParms )
       IF bLogActivity
          QPM_MemoWrit( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log', MemoRead( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log' ) + MemoRead( RunParms ) + CRLF )
       ENDIF
    ENDIF
    IF ( Rs := AScan( vSinLoadWindow, { |y| US_Upper( US_VarToStr( y ) ) == US_Upper( ChgPathToReal( GetProperty( 'VentanaMain', 'GPrgFiles', 'Cell', VentanaMain.GPrgFiles.Value, NCOLPRGFULLNAME ) ) ) } ) ) > 0 // Para Forzar Scan de PRG en busca de xREF con FMG
       ADel( vSinLoadWindow, Rs ) // Para Forzar Scan de PRG en busca de xREF con FMG
+      ASize( vSinLoadWindow, Len( vSinLoadWindow ) - 1 )
       IF bLogActivity
          QPM_MemoWrit( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log', MemoRead( PUB_cQPM_Folder+DEF_SLASH + 'QPM.log' ) + 'xRefPrgFmg Delete ' + GetProperty( 'VentanaMain', 'GPrgFiles', 'Cell', VentanaMain.GPrgFiles.Value, NCOLPRGFULLNAME ) + ' from vSinLoadWindow by Edit' + CRLF )
       ENDIF
    ENDIF
    IF ( Rs := AScan( vSinInclude, { |y| US_Upper( US_VarToStr( y ) ) == US_Upper( ChgPathToReal( GetProperty( 'VentanaMain', 'GPrgFiles', 'Cell', VentanaMain.GPrgFiles.Value, NCOLPRGFULLNAME ) ) ) } ) ) > 0 // Para Forzar Scan de PRG en busca de xREF con Header
       ADel( vSinInclude, Rs ) // Para Forzar Scan de PRG en busca de xREF con HEA
+      ASize( vSinInclude, Len( vSinInclude ) - 1 )
       IF bLogActivity
          QPM_MemoWrit( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log', MemoRead( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log' ) + 'xRefPrgHea Delete ' + GetProperty( 'VentanaMain', 'GPrgFiles', 'Cell', VentanaMain.GPrgFiles.Value, NCOLPRGFULLNAME ) + ' from vSinInclude by Edit' + CRLF )
       ENDIF
@@ -2892,23 +3137,23 @@ RETURN .T.
 FUNCTION QPM_EditPPO
    LOCAL Editor, i, cLineCmd, cLineFile
    IF Empty( PUB_cProjectFolder ) .OR. ! US_IsDirectory( PUB_cProjectFolder )
-      MsgStop( DBLQT + "Project Folder" + DBLQT + " is not a valid folder:" + CRLF + PUB_cProjectFolder + CRLF + 'Look at tab ' + DBLQT + PagePRG + DBLQT )
+      MyMsgStop( DBLQT + "Project Folder" + DBLQT + " is not a valid folder:" + CRLF + PUB_cProjectFolder + CRLF + 'Look at tab ' + DBLQT + PagePRG + DBLQT )
       RETURN .F.
    ENDIF
    IF VentanaMain.GPrgFiles.Value < 1
-      MsgStop( 'No file has been selected.' )
+      MyMsgStop( 'No file has been selected!' )
       RETURN .F.
    ENDIF
    IF ! File( i := ChgPathToReal( GetObjFolder() + DEF_SLASH + US_FileNameOnlyName( GetProperty( 'VentanaMain', 'GPrgFiles', 'Cell', VentanaMain.GPrgFiles.Value, NCOLPRGNAME ) ) + '.ppo' ) )
-      MsgStop( 'File not found: ' + i )
+      MyMsgStop( 'File not found: ' + DBLQT + i + DBLQT )
       RETURN .F.
    ENDIF
    IF Empty( Gbl_Text_Editor )
-      MyMsg( 'Operation Aborted', 'Editor is not defined.' + CRLF + ' Look at ' + PUB_MenuGblOptions + ' of Settings menu.', 'E', bAutoEXIT )
+      MyMsgStop( 'Editor is not defined.' + CRLF + ' Look at ' + PUB_MenuGblOptions + ' of Settings menu.' )
       RETURN .F.
    ENDIF
    IF ! File( Editor := ChgPathToReal( AllTrim( Gbl_Text_Editor ) ) )
-      MsgStop( 'Editor not found: ' + AllTrim( Gbl_Text_Editor ) + CRLF + 'Look at ' + PUB_MenuGblOptions + ' of Settings menu.' )
+      MyMsgStop( 'Editor not found: ' + AllTrim( Gbl_Text_Editor ) + CRLF + 'Look at ' + PUB_MenuGblOptions + ' of Settings menu.' )
       RETURN .F.
    ENDIF
    IF bLogActivity
@@ -2934,23 +3179,23 @@ FUNCTION QPM_EditHEA
    LOCAL HotRecoveryControlFile
 #endif
    IF Empty( PUB_cProjectFolder ) .OR. ! US_IsDirectory( PUB_cProjectFolder )
-      MsgStop( DBLQT + "Project Folder" + DBLQT + " is not a valid folder:" + CRLF + PUB_cProjectFolder + CRLF + 'Look at tab ' + DBLQT + PagePRG + DBLQT )
+      MyMsgStop( DBLQT + "Project Folder" + DBLQT + " is not a valid folder:" + CRLF + PUB_cProjectFolder + CRLF + 'Look at tab ' + DBLQT + PagePRG + DBLQT )
       RETURN .F.
    ENDIF
    IF VentanaMain.GHeaFiles.Value < 1
-      MsgStop( 'No file has been selected.' )
+      MyMsgStop( 'No file has been selected!' )
       RETURN .F.
    ENDIF
    IF ! File( i := ChgPathToReal( GetProperty( 'VentanaMain', 'GHeaFiles', 'Cell', VentanaMain.GHeaFiles.Value, NCOLHEAFULLNAME ) ) )
-      MsgStop( 'File not found: ' + i )
+      MyMsgStop( 'File not found: ' + DBLQT + i + DBLQT )
       RETURN .F.
    ENDIF
    IF Empty( Gbl_Text_Editor )
-      MyMsg( 'Operation Aborted', 'Editor is not defined.' + CRLF + ' Look at ' + PUB_MenuGblOptions + ' of Settings menu.', 'E', bAutoEXIT )
+      MyMsgStop( 'Editor is not defined.' + CRLF + ' Look at ' + PUB_MenuGblOptions + ' of Settings menu.' )
       RETURN .F.
    ENDIF
    IF ! File( Editor := ChgPathToReal( AllTrim( Gbl_Text_Editor ) ) )
-      MsgStop( 'Editor not found: ' + AllTrim( Gbl_Text_Editor ) + CRLF + 'Look at ' + PUB_MenuGblOptions + ' of Settings menu.' )
+      MyMsgStop( 'Editor not found: ' + AllTrim( Gbl_Text_Editor ) + CRLF + 'Look at ' + PUB_MenuGblOptions + ' of Settings menu.' )
       RETURN .F.
    ENDIF
    IF bLogActivity
@@ -2970,7 +3215,7 @@ FUNCTION QPM_EditHEA
       ENDIF
    ELSE
       IF GridImage( 'VentanaMain', 'GHeaFiles', VentanaMain.GHeaFiles.Value, NCOLHEASTATUS, '?', PUB_nGridImgEdited )
-         MsgInfo( 'The file is already open.' )
+         MyMsgStop( 'The file is already open!' )
          RETURN .F.
       ENDIF
       GridImage( 'VentanaMain', 'GHeaFiles', VentanaMain.GHeaFiles.Value, NCOLHEASTATUS, '+', PUB_nGridImgEdited )
@@ -2999,7 +3244,7 @@ FUNCTION QPM_EditHEA
                               "COMMAND " + cLineCmd + " " + cLineFile + CRLF + ;
                               'CONTROL ' + EditControlFile )
       QPM_MemoWrit( EditControlFile, 'Edit Control File For ' + i )
-      QPM_Execute( US_ShortName( PUB_cQPM_Folder ) + DEF_SLASH + 'US_Run.exe', 'QPM ' + RunParms )
+      QPM_Execute( US_ShortName( PUB_cQPM_Folder ) + DEF_SLASH + 'US_Run.exe', 'QPM ' + iif( bLogActivity, '-LIST' + US_ShortName(PUB_cQPM_Folder) + ' ', ' ' ) + RunParms )
       IF bLogActivity
          QPM_MemoWrit( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log', MemoRead( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log' ) + MemoRead( RunParms ) + CRLF )
       ENDIF
@@ -3016,268 +3261,197 @@ FUNCTION QPM_EditPAN( bForceEditor )
       bForceEditor := .F.
    ENDIF
    IF Empty( PUB_cProjectFolder ) .OR. ! US_IsDirectory( PUB_cProjectFolder )
-      MsgStop( DBLQT + "Project Folder" + DBLQT + " is not a valid folder:" + CRLF + PUB_cProjectFolder + CRLF + 'Look at tab ' + DBLQT + PagePRG + DBLQT )
+      MyMsgStop( DBLQT + "Project Folder" + DBLQT + " is not a valid folder:" + CRLF + PUB_cProjectFolder + CRLF + 'Look at tab ' + DBLQT + PagePRG + DBLQT )
       RETURN .F.
    ENDIF
    IF VentanaMain.GPanFiles.Value < 1
-      MsgStop( 'No file has been selected.' )
+      MyMsgStop( 'No file has been selected!' )
       RETURN .F.
    ENDIF
    IF ! File( i := ChgPathToReal( GetProperty( 'VentanaMain', 'GPanFiles', 'Cell', VentanaMain.GPanFiles.Value, NCOLPANFULLNAME ) ) )
-      MsgStop( 'File not found: ' + i )
+      MyMsgStop( 'File not found: ' + DBLQT + i + DBLQT )
       RETURN .F.
    ENDIF
    IF bForceEditor
       ToolAux := 'EDITOR'
    ELSE
-      IF Prj_Radio_FormTool == DEF_RG_EDITOR
-         IF US_Word( toolMake := CheckMakeForm( US_ShortName( i ) ), 1 ) == 'UNKNOWN'
-            ToolAux := 'EDITOR'
-         ELSE
-            ToolAux := US_Word( toolMake, 1 )
-            IF ToolAux == 'IDE'    /* Todavia no soportada */
-               ToolAux := 'HMGSIDE'    /* Todavia no soportada */
-            ENDIF
-         ENDIF
-      ELSE
-         ToolAux := cFormTool()
-      ENDIF
+      ToolAux := GetFormTool()   // EDITOR, OOHGIDE, HMGSIDE, HMG_IDE
    ENDIF
    DO CASE
-      CASE ToolAux == 'EDITOR'
-         IF Empty( Gbl_Text_Editor )
-            MyMsg( 'Operation Aborted', 'Editor is not defined.' + CRLF + 'Look at ' + PUB_MenuGblOptions + ' of Settings menu.', 'E', bAutoEXIT )
-            RETURN .F.
+   CASE ToolAux == 'EDITOR'
+      IF Empty( Gbl_Text_Editor )
+         MyMsgStop( 'Editor is not defined.' + CRLF + 'Look at ' + PUB_MenuGblOptions + ' of Settings menu.' )
+         RETURN .F.
+      ENDIF
+      IF ! File( Editor := ChgPathToReal( AllTrim( Gbl_Text_Editor ) ) )
+         MyMsgStop( 'Editor not found: ' + AllTrim( Gbl_Text_Editor ) + CRLF + 'Look at ' + PUB_MenuGblOptions + ' of Settings menu.' )
+         RETURN .F.
+      ENDIF
+      IF bLogActivity
+         QPM_MemoWrit( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log', MemoRead( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log' ) + 'Edit PAN ' + i + CRLF )
+      ENDIF
+      IF bSuspendControlEdit
+         IF bEditorLongName
+            cLineCmd := Editor
+            cLineFile := i
+         ELSE
+            cLineCmd := US_ShortName( Editor )
+            cLineFile := US_ShortName( i )
          ENDIF
-         IF ! File( Editor := ChgPathToReal( AllTrim( Gbl_Text_Editor ) ) )
-            MsgStop( 'Editor not found: ' + AllTrim( Gbl_Text_Editor ) + CRLF + 'Look at ' + PUB_MenuGblOptions + ' of Settings menu.' )
-            RETURN .F.
-         ENDIF
+         QPM_Execute( cLineCmd, iif( bNoFMGextension, US_FileNameOnlyPathAndName( cLineFile ), cLineFile ) )
          IF bLogActivity
-            QPM_MemoWrit( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log', MemoRead( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log' ) + 'Edit PAN ' + i + CRLF )
+            QPM_MemoWrit( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log', MemoRead( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log' ) + "COMMAND " + cLineCmd + CRLF + "FILE " + cLineFile + CRLF )
          ENDIF
-         IF bSuspendControlEdit
-            IF bEditorLongName
-               cLineCmd := Editor
-               cLineFile := i
-            ELSE
-               cLineCmd := US_ShortName( Editor )
-               cLineFile := US_ShortName( i )
-            ENDIF
-            QPM_Execute( cLineCmd, cLineFile )
-            IF bLogActivity
-               QPM_MemoWrit( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log', MemoRead( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log' ) + "COMMAND " + cLineCmd + CRLF + "FILE " + cLineFile + CRLF )
-            ENDIF
-         ELSE
-            IF GridImage( 'VentanaMain', 'GPanFiles', VentanaMain.GPanFiles.Value, NCOLPANSTATUS, '?', PUB_nGridImgEdited )
-               MsgInfo( 'The file is already open.' )
-               RETURN .F.
-            ENDIF
-            GridImage( 'VentanaMain', 'GPanFiles', VentanaMain.GPanFiles.Value, NCOLPANSTATUS, '+', PUB_nGridImgEdited )
-            VentanaMain.RichEditPan.BackColor := DEF_COLORBACKEXTERNALEDIT
-            VentanaMain.RichEditPan.FontColor := DEF_COLORFONTEXTERNALEDIT
-            EditControlFile := US_ShortName( PUB_cProjectFolder ) + DEF_SLASH + '_' + PUB_cSecu + 'ECF' + US_DateTimeCen() + '.cnt'
-#ifdef QPM_HOTRECOVERY
-            HotRecoveryControlFile := US_ShortName( PUB_cProjectFolder ) + DEF_SLASH + '_' + PUB_cSecu + 'PanHOTRecovery' + US_DateTimeCen() + '.hot'
-            US_FileCopy( i, HotRecoveryControlFile )
-            SetFDaTi( HotRecoveryControlFile, US_FileDate( i ), US_FileTime( i ) )
-
-            SetProperty( 'VentanaMain', 'GPanFiles', 'Cell', VentanaMain.GPanFiles.Value, NCOLPANRECOVERY, HotRecoveryControlFile )
-            IF _IsControlDefined( 'HR_GridItemTargetPan', 'WinHotRecovery' )
-               GridImage( 'WinHotRecovery', 'HR_GridItemTargetPan', GetProperty( 'VentanaMain', 'GPanFiles', 'Value' ), DEF_N_ITEM_COLIMAGE, '+', PUB_nGridImgEdited )
-            ENDIF
-#endif
-            SetProperty( 'VentanaMain', 'GPanFiles', 'Cell', VentanaMain.GPanFiles.Value, NCOLPANEDIT, EditControlFile )
-            RunParms := US_ShortName( PUB_cProjectFolder ) + DEF_SLASH + '_' + PUB_cSecu + 'RP' + US_DateTimeCen() + '.cng'
-            IF bEditorLongName
-               cLineCmd := Editor
-               cLineFile := i
-            ELSE
-               cLineCmd := US_ShortName( Editor )
-               cLineFile := US_ShortName( i )
-            ENDIF
-            QPM_MemoWrit( RunParms, 'Run Parms For ' + i + CRLF + ;
-                                    "COMMAND " + cLineCmd + " " + cLineFile + CRLF + ;
-                                    'CONTROL ' + EditControlFile )
-            QPM_MemoWrit( EditControlFile, 'Edit Control File For ' + i )
-            QPM_Execute( US_ShortName( PUB_cQPM_Folder ) + DEF_SLASH + 'US_Run.exe', 'QPM ' + RunParms )
-            IF bLogActivity
-               QPM_MemoWrit( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log', MemoRead( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log' ) + MemoRead( RunParms ) + CRLF )
-            ENDIF
-         ENDIF
-      CASE ToolAux == 'HMI' .OR. ToolAux == "OOHG"
-         IF Empty( Gbl_Text_HMI )
-            MyMsg( 'Operation Aborted', 'Form tool is not defined.' + CRLF + 'Look at ' + PUB_MenuGblOptions + ' of Settings menu.', 'E', bAutoEXIT )
-            RETURN .F.
-         ENDIF
-         IF ! File( Editor := ChgPathToReal( AllTrim( Gbl_Text_HMI ) ) )
-            MsgStop( 'Form tool not found: ' + AllTrim( Gbl_Text_HMI ) + CRLF + 'Look at ' + PUB_MenuGblOptions + ' of Settings menu.' )
-            RETURN .F.
-         ENDIF
-         IF bSuspendControlEdit
-            IF bEditorLongName
-               cLineCmd := Editor
-               cLineFile := i
-            ELSE
-               cLineCmd := US_ShortName( Editor )
-               cLineFile := US_ShortName( i )
-            ENDIF
-            QPM_Execute( cLineCmd, cLineFile )
-            IF bLogActivity
-               QPM_MemoWrit( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log', MemoRead( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log' ) + "COMMAND " + cLineCmd + CRLF + "FILE " + cLineFile + CRLF )
-            ENDIF
-         ELSE
-            IF GridImage( 'VentanaMain', 'GPanFiles', VentanaMain.GPanFiles.Value, NCOLPANSTATUS, '?', PUB_nGridImgEdited )
-               MsgInfo( 'The file is already open.' )
-               RETURN .F.
-            ENDIF
-            IF ! ( US_Word( toolMake := CheckMakeForm( US_ShortName( i ) ), 1 ) == 'HMI'  .OR. US_Word( toolMake, 1 ) == "OOHG" )
-               IF US_Upper( US_Word( toolMake, 1 ) ) == 'UNKNOWN'
-                  IF ! MyMsgYesNo( 'Form was built with tool: ' + DBLQT + toolMake + DBLQT + '.' + CRLF + 'Do you want to edit with ' + DBLQT + 'OOHG IDE+' + DBLQT + '?' )
-                     RETURN .F.
-                  ENDIF
-               ELSE
-                  MsgStop( 'Form was built with tool ' + DBLQT + toolMake + DBLQT + '.' + CRLF + 'The selected tool, ' + DBLQT + 'OOHG IDE+' + DBLQT + ', is not compatible.' )
-                  RETURN .F.
-               ENDIF
-            ENDIF
-            IF bSuspendControlEdit
-               IF bEditorLongName
-                  cLineCmd := Editor
-                  cLineFile := i
-               ELSE
-                  cLineCmd := US_ShortName( Editor )
-                  cLineFile := US_ShortName( i )
-               ENDIF
-               QPM_Execute( cLineCmd, cLineFile )
-               IF bLogActivity
-                  QPM_MemoWrit( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log', MemoRead( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log' ) + "COMMAND " + cLineCmd + CRLF + "FILE " + cLineFile + CRLF )
-               ENDIF
-            ELSE
-               GridImage( 'VentanaMain', 'GPanFiles', VentanaMain.GPanFiles.Value, NCOLPANSTATUS, '+', PUB_nGridImgEdited )
-               VentanaMain.RichEditPan.BackColor := DEF_COLORBACKEXTERNALEDIT
-               VentanaMain.RichEditPan.FontColor := DEF_COLORFONTEXTERNALEDIT
-               EditControlFile := US_ShortName( PUB_cProjectFolder ) + DEF_SLASH + '_' + PUB_cSecu + 'ECF' + US_DateTimeCen() + '.cnt'
-#ifdef QPM_HOTRECOVERY
-               HotRecoveryControlFile := US_ShortName( PUB_cProjectFolder ) + DEF_SLASH + '_' + PUB_cSecu + 'PanHOTRecovery' + US_DateTimeCen() + '.hot'
-               US_FileCopy( i, HotRecoveryControlFile )
-               SetFDaTi( HotRecoveryControlFile, US_FileDate( i ), US_FileTime( i ) )
-               SetProperty( 'VentanaMain', 'GPanFiles', 'Cell', VentanaMain.GPanFiles.Value, NCOLPANRECOVERY, HotRecoveryControlFile )
-               IF _IsControlDefined( 'HR_GridItemTargetPan', 'WinHotRecovery' )
-                  GridImage( 'WinHotRecovery', 'HR_GridItemTargetPan', GetProperty( 'VentanaMain', 'GPanFiles', 'Value' ), DEF_N_ITEM_COLIMAGE, '+', PUB_nGridImgEdited )
-               ENDIF
-#endif
-               SetProperty( 'VentanaMain', 'GPanFiles', 'Cell', VentanaMain.GPanFiles.Value, NCOLPANEDIT, EditControlFile )
-               RunParms := US_ShortName( PUB_cProjectFolder ) + DEF_SLASH + '_' + PUB_cSecu + 'RP' + US_DateTimeCen() + '.cng'
-               IF bEditorLongName
-                  cLineCmd := Editor
-                  cLineFile := i
-               ELSE
-                  cLineCmd := US_ShortName( Editor )
-                  cLineFile := US_ShortName( i )
-               ENDIF
-               QPM_MemoWrit( RunParms, 'Run Parms For ' + i + CRLF + ;
-                                       "COMMAND " + cLineCmd + " " + cLineFile + CRLF + ;
-                                       'CONTROL ' + EditControlFile )
-               QPM_MemoWrit( EditControlFile, 'Edit Control File For ' + i )
-               QPM_Execute( US_ShortName( PUB_cQPM_Folder ) + DEF_SLASH + 'US_Run.exe', 'QPM ' + RunParms )
-               IF bLogActivity
-                  QPM_MemoWrit( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log', MemoRead( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log' ) + MemoRead( RunParms ) + CRLF )
-               ENDIF
-            ENDIF
-         ENDIF
-      CASE ToolAux == 'HMGSIDE'
-         IF Empty( Gbl_Text_HMGSIDE )
-            MyMsg( 'Operation Aborted', 'Form tool is not defined.' + CRLF + 'Look at ' + PUB_MenuGblOptions + ' of Settings menu.', 'E', bAutoEXIT )
-            RETURN .F.
-         ENDIF
-         IF ! File( Editor := ChgPathToReal( AllTrim( Gbl_Text_HMGSIDE ) ) )
-            MsgStop( 'Form tool not found: ' + AllTrim( Gbl_Text_HMGSIDE ) + CRLF + 'Look at ' + PUB_MenuGblOptions + ' of Settings menu.' )
-            RETURN .F.
-         ENDIF
+      ELSE
          IF GridImage( 'VentanaMain', 'GPanFiles', VentanaMain.GPanFiles.Value, NCOLPANSTATUS, '?', PUB_nGridImgEdited )
-            MsgInfo( 'The file is already open.' )
+            MyMsgStop( 'The file is already open!' )
             RETURN .F.
          ENDIF
-         IF ! ( US_Word( toolMake := CheckMakeForm( US_ShortName( i ) ), 1 ) == 'HMGSIDE' )
-            IF ! ( US_Upper( US_Word( toolMake, 1 ) ) == 'HMI' .OR. US_Upper( US_Word( toolMake, 1 ) ) == 'OOHG' )
+         GridImage( 'VentanaMain', 'GPanFiles', VentanaMain.GPanFiles.Value, NCOLPANSTATUS, '+', PUB_nGridImgEdited )
+         VentanaMain.RichEditPan.BackColor := DEF_COLORBACKEXTERNALEDIT
+         VentanaMain.RichEditPan.FontColor := DEF_COLORFONTEXTERNALEDIT
+         EditControlFile := US_ShortName( PUB_cProjectFolder ) + DEF_SLASH + '_' + PUB_cSecu + 'ECF' + US_DateTimeCen() + '.cnt'
+#ifdef QPM_HOTRECOVERY
+         HotRecoveryControlFile := US_ShortName( PUB_cProjectFolder ) + DEF_SLASH + '_' + PUB_cSecu + 'PanHOTRecovery' + US_DateTimeCen() + '.hot'
+         US_FileCopy( i, HotRecoveryControlFile )
+         SetFDaTi( HotRecoveryControlFile, US_FileDate( i ), US_FileTime( i ) )
 
-               IF ! MyMsgYesNo( 'Form was built with tool: ' + DBLQT + toolMake + DBLQT + '.' + CRLF + 'Do you want to edit with ' + DBLQT + 'HMGSIDE' + DBLQT + '?' )
-                  RETURN .F.
-               ENDIF
-            ELSE
-               MsgStop( 'Form was built with tool: ' + DBLQT + toolMake + DBLQT + '.' + CRLF + 'The selected tool, ' + DBLQT + 'HMGSIDE' + DBLQT + ', is not compatible.' )
+         SetProperty( 'VentanaMain', 'GPanFiles', 'Cell', VentanaMain.GPanFiles.Value, NCOLPANRECOVERY, HotRecoveryControlFile )
+         IF _IsControlDefined( 'HR_GridItemTargetPan', 'WinHotRecovery' )
+            GridImage( 'WinHotRecovery', 'HR_GridItemTargetPan', GetProperty( 'VentanaMain', 'GPanFiles', 'Value' ), DEF_N_ITEM_COLIMAGE, '+', PUB_nGridImgEdited )
+         ENDIF
+#endif
+         SetProperty( 'VentanaMain', 'GPanFiles', 'Cell', VentanaMain.GPanFiles.Value, NCOLPANEDIT, EditControlFile )
+         RunParms := US_ShortName( PUB_cProjectFolder ) + DEF_SLASH + '_' + PUB_cSecu + 'RP' + US_DateTimeCen() + '.cng'
+         IF bEditorLongName
+            cLineCmd := Editor
+            cLineFile := i
+         ELSE
+            cLineCmd := US_ShortName( Editor )
+            cLineFile := US_ShortName( i )
+         ENDIF
+         QPM_MemoWrit( RunParms, 'Run Parms For ' + i + CRLF + ;
+                                 "COMMAND " + cLineCmd + " " + iif( bNoFMGextension, US_FileNameOnlyPathAndName( cLineFile ), cLineFile ) + CRLF + ;
+                                 'CONTROL ' + EditControlFile )
+         QPM_MemoWrit( EditControlFile, 'Edit Control File For ' + i )
+         QPM_Execute( US_ShortName( PUB_cQPM_Folder ) + DEF_SLASH + 'US_Run.exe', 'QPM ' + iif( bLogActivity, '-LIST' + US_ShortName(PUB_cQPM_Folder) + ' ', ' ' ) + RunParms )
+         IF bLogActivity
+            QPM_MemoWrit( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log', MemoRead( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log' ) + MemoRead( RunParms ) + CRLF )
+         ENDIF
+      ENDIF
+   CASE ToolAux == "OOHGIDE" .OR. ToolAux == 'HMGSIDE' .OR. ToolAux == 'HMG_IDE'
+      IF ToolAux == 'OOHG'
+         IF Empty( Gbl_Text_OOHGIDE )
+            MyMsgStop( 'Form tool is not defined.' + CRLF + 'Look at ' + PUB_MenuGblOptions + ' of Settings menu.' )
+            RETURN .F.
+         ELSEIF ! File( Editor := ChgPathToReal( AllTrim( Gbl_Text_OOHGIDE ) ) )
+            MyMsgStop( 'Form tool not found: ' + AllTrim( Gbl_Text_OOHGIDE ) + CRLF + 'Look at ' + PUB_MenuGblOptions + ' of Settings menu.' )
+            RETURN .F.
+         ENDIF
+      ELSEIF ToolAux == 'HMGSIDE'
+         IF Empty( Gbl_Text_HMGSIDE )
+            MyMsgStop( 'Form tool is not defined.' + CRLF + 'Look at ' + PUB_MenuGblOptions + ' of Settings menu.' )
+            RETURN .F.
+         ELSEIF ! File( Editor := ChgPathToReal( AllTrim( Gbl_Text_HMGSIDE ) ) )
+            MyMsgStop( 'Form tool not found: ' + AllTrim( Gbl_Text_HMGSIDE ) + CRLF + 'Look at ' + PUB_MenuGblOptions + ' of Settings menu.' )
+            RETURN .F.
+         ENDIF
+      ELSE
+         IF Empty( Gbl_Text_HMG_IDE )
+            MyMsgStop( 'Form tool is not defined.' + CRLF + 'Look at ' + PUB_MenuGblOptions + ' of Settings menu.' )
+            RETURN .F.
+         ELSEIF ! File( Editor := ChgPathToReal( AllTrim( Gbl_Text_HMG_IDE ) ) )
+            MyMsgStop( 'Form tool not found: ' + AllTrim( Gbl_Text_HMG_IDE ) + CRLF + 'Look at ' + PUB_MenuGblOptions + ' of Settings menu.' )
+            RETURN .F.
+         ENDIF
+      ENDIF
+      IF bSuspendControlEdit
+         IF bEditorLongName
+            cLineCmd := Editor
+            cLineFile := i
+         ELSE
+            cLineCmd := US_ShortName( Editor )
+            cLineFile := US_ShortName( i )
+         ENDIF
+         QPM_Execute( cLineCmd, iif( bNoFMGextension, US_FileNameOnlyPathAndName( cLineFile ), cLineFile ) )
+         IF bLogActivity
+            QPM_MemoWrit( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log', MemoRead( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log' ) + "COMMAND " + cLineCmd + CRLF + "FILE " + cLineFile + CRLF )
+         ENDIF
+      ELSE
+         IF GridImage( 'VentanaMain', 'GPanFiles', VentanaMain.GPanFiles.Value, NCOLPANSTATUS, '?', PUB_nGridImgEdited )
+            MyMsgStop( 'The file is already open!' )
+            RETURN .F.
+         ENDIF
+         toolMake := US_Word( CheckMakeForm( US_ShortName( i ) ), 1 )
+         IF toolMake == 'UNKNOWN'
+            IF ! MyMsgYesNo( 'The form was built with an unknown tool.' + CRLF + ;
+                             'Do you want to edit it with ' + DBLQT + iif( ToolAux == "OOHGIDE", 'OOHG IDE+', iif( ToolAux == 'HMGS-IDE', 'HMGS-IDE', 'HMG-IDE' ) ) + DBLQT + '?' + CRLF + ;
+                             'Note that some form features may not be supported by this tool.' )
+               RETURN .F.
+            ENDIF
+         ELSEIF ! toolMake == ToolAux
+            IF ! MyMsgYesNo( 'The form was built with tool: ' + DBLQT + toolMake + DBLQT + CRLF + ;
+                             'Do you want to edit it with ' + DBLQT + iif( ToolAux == "OOHGIDE", 'OOHG IDE+', iif( ToolAux == 'HMGS-IDE', 'HMGS-IDE', 'HMG-IDE' ) ) + DBLQT + '?' + CRLF + ;
+                             'Note that some form features may not be supported by this tool.' )
                RETURN .F.
             ENDIF
          ENDIF
-         IF bSuspendControlEdit
-            IF bEditorLongName
-               cLineCmd := Editor
-               cLineFile := i
-            ELSE
-               cLineCmd := US_ShortName( Editor )
-               cLineFile := US_ShortName( i )
-            ENDIF
-            QPM_Execute( cLineCmd, cLineFile )
-            IF bLogActivity
-               QPM_MemoWrit( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log', MemoRead( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log' ) + "COMMAND " + cLineCmd + CRLF + "FILE " + cLineFile + CRLF )
-            ENDIF
-         ELSE
-            GridImage( 'VentanaMain', 'GPanFiles', VentanaMain.GPanFiles.Value, NCOLPANSTATUS, '+', PUB_nGridImgEdited )
-            VentanaMain.RichEditPan.BackColor := DEF_COLORBACKEXTERNALEDIT
-            VentanaMain.RichEditPan.FontColor := DEF_COLORFONTEXTERNALEDIT
-            EditControlFile := US_ShortName( PUB_cProjectFolder ) + DEF_SLASH + '_' + PUB_cSecu + 'ECF' + US_DateTimeCen() + '.cnt'
+         GridImage( 'VentanaMain', 'GPanFiles', VentanaMain.GPanFiles.Value, NCOLPANSTATUS, '+', PUB_nGridImgEdited )
+         VentanaMain.RichEditPan.BackColor := DEF_COLORBACKEXTERNALEDIT
+         VentanaMain.RichEditPan.FontColor := DEF_COLORFONTEXTERNALEDIT
+         EditControlFile := US_ShortName( PUB_cProjectFolder ) + DEF_SLASH + '_' + PUB_cSecu + 'ECF' + US_DateTimeCen() + '.cnt'
 #ifdef QPM_HOTRECOVERY
-            HotRecoveryControlFile := US_ShortName( PUB_cProjectFolder ) + DEF_SLASH + '_' + PUB_cSecu + 'PanHOTRecovery' + US_DateTimeCen() + '.hot'
-            US_FileCopy( i, HotRecoveryControlFile )
-            SetFDaTi( HotRecoveryControlFile, US_FileDate( i ), US_FileTime( i ) )
-            SetProperty( 'VentanaMain', 'GPanFiles', 'Cell', VentanaMain.GPanFiles.Value, NCOLPANRECOVERY, HotRecoveryControlFile )
-            IF _IsControlDefined( 'HR_GridItemTargetPan', 'WinHotRecovery' )
-               GridImage( 'WinHotRecovery', 'HR_GridItemTargetPan', GetProperty( 'VentanaMain', 'GPanFiles', 'Value' ), DEF_N_ITEM_COLIMAGE, '+', PUB_nGridImgEdited )
-            ENDIF
+         HotRecoveryControlFile := US_ShortName( PUB_cProjectFolder ) + DEF_SLASH + '_' + PUB_cSecu + 'PanHOTRecovery' + US_DateTimeCen() + '.hot'
+         US_FileCopy( i, HotRecoveryControlFile )
+         SetFDaTi( HotRecoveryControlFile, US_FileDate( i ), US_FileTime( i ) )
+         SetProperty( 'VentanaMain', 'GPanFiles', 'Cell', VentanaMain.GPanFiles.Value, NCOLPANRECOVERY, HotRecoveryControlFile )
+         IF _IsControlDefined( 'HR_GridItemTargetPan', 'WinHotRecovery' )
+            GridImage( 'WinHotRecovery', 'HR_GridItemTargetPan', GetProperty( 'VentanaMain', 'GPanFiles', 'Value' ), DEF_N_ITEM_COLIMAGE, '+', PUB_nGridImgEdited )
+         ENDIF
 #endif
-            SetProperty( 'VentanaMain', 'GPanFiles', 'Cell', VentanaMain.GPanFiles.Value, NCOLPANEDIT, EditControlFile )
-            RunParms := US_ShortName( PUB_cProjectFolder ) + DEF_SLASH + '_' + PUB_cSecu + 'RP' + US_DateTimeCen() + '.cng'
-            IF bEditorLongName
-               cLineCmd := Editor
-               cLineFile := i
-            ELSE
-               cLineCmd := US_ShortName( Editor )
-               cLineFile := US_ShortName( i )
-            ENDIF
-            QPM_MemoWrit( RunParms, 'Run Parms For ' + i + CRLF + ;
-                                    "COMMAND " + cLineCmd + " " + cLineFile + CRLF + ;
-                                    'CONTROL ' + EditControlFile )
-            QPM_MemoWrit( EditControlFile, 'Edit Control File For ' + i )
-            QPM_Execute( US_ShortName( PUB_cQPM_Folder ) + DEF_SLASH + 'US_Run.exe', 'QPM ' + RunParms )
-            IF bLogActivity
-               QPM_MemoWrit( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log', MemoRead( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log' ) + MemoRead( RunParms ) + CRLF )
-            ENDIF
+         SetProperty( 'VentanaMain', 'GPanFiles', 'Cell', VentanaMain.GPanFiles.Value, NCOLPANEDIT, EditControlFile )
+         RunParms := US_ShortName( PUB_cProjectFolder ) + DEF_SLASH + '_' + PUB_cSecu + 'RP' + US_DateTimeCen() + '.cng'
+         IF bEditorLongName
+            cLineCmd := Editor
+            cLineFile := i
+         ELSE
+            cLineCmd := US_ShortName( Editor )
+            cLineFile := US_ShortName( i )
          ENDIF
-      OTHERWISE
+         QPM_MemoWrit( RunParms, 'Run Parms For ' + i + CRLF + ;
+                                 "COMMAND " + cLineCmd + " " + iif( bNoFMGextension, US_FileNameOnlyPathAndName( cLineFile ), cLineFile ) + CRLF + ;
+                                 'CONTROL ' + EditControlFile )
+         QPM_MemoWrit( EditControlFile, 'Edit Control File For ' + i )
+         QPM_Execute( US_ShortName( PUB_cQPM_Folder ) + DEF_SLASH + 'US_Run.exe', 'QPM ' + iif( bLogActivity, '-LIST' + US_ShortName(PUB_cQPM_Folder) + ' ', ' ' ) + RunParms )
          IF bLogActivity
-            QPM_MemoWrit( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log', MemoRead( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log' ) + 'Edit PAN ' + i + CRLF + 'Form tool is not supported: ' + ToolAux + CRLF )
+            QPM_MemoWrit( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log', MemoRead( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log' ) + MemoRead( RunParms ) + CRLF )
          ENDIF
-         MsgInfo( 'Form tool is not supported: ' + ToolAux )
+      ENDIF
+   OTHERWISE
+      IF bLogActivity
+         QPM_MemoWrit( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log', MemoRead( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log' ) + 'Edit PAN ' + i + CRLF + 'Form tool is not supported: ' + ToolAux + CRLF )
+      ENDIF
+      MyMsgStop( 'Form tool error!' + CRLF + 'Look at ' + PUB_MenuPrjOptions + ' of Settings menu.' )
+      RETURN .F.
    ENDCASE
 RETURN .T.
 
 FUNCTION QPM_EditDBF()
    LOCAL EditControlFile, RunParms, cLineCmd, Editor, i, cLineFile
    IF GridImage( 'VentanaMain', 'GDbfFiles', VentanaMain.GDbfFiles.Value, NCOLDBFSTATUS, '?', PUB_nGridImgEdited )
-      MsgInfo( 'The file is already open.' )
+      MyMsgStop( 'The file is already open!' )
       RETURN .F.
    ENDIF
    IF Empty( PUB_cProjectFolder ) .OR. ! US_IsDirectory( PUB_cProjectFolder )
-      MsgStop( DBLQT + "Project Folder" + DBLQT + " is not a valid folder:" + CRLF + PUB_cProjectFolder + CRLF + 'Look at tab ' + DBLQT + PagePRG + DBLQT )
+      MyMsgStop( DBLQT + "Project Folder" + DBLQT + " is not a valid folder:" + CRLF + PUB_cProjectFolder + CRLF + 'Look at tab ' + DBLQT + PagePRG + DBLQT )
       RETURN .F.
    ENDIF
    IF VentanaMain.GDbfFiles.Value < 1
-      MsgStop( 'No file has been selected.' )
+      MyMsgStop( 'No file has been selected!' )
       RETURN .F.
    ENDIF
    IF ! File( i := ChgPathToReal( GetProperty( 'VentanaMain', 'GDbfFiles', 'Cell', VentanaMain.GDbfFiles.Value, NCOLDBFFULLNAME ) ) )
-      MsgStop( 'File not found: ' + i )
+      MyMsgStop( 'File not found: ' + DBLQT + i + DBLQT )
       RETURN .F.
    ENDIF
    IF bLogActivity
@@ -3285,7 +3459,7 @@ FUNCTION QPM_EditDBF()
    ENDIF
    IF Prj_Radio_DbfTool == DEF_RG_DBFTOOL
       IF ! File( Editor := ChgPathToReal( AllTrim( PUB_cQPM_Folder ) + DEF_SLASH + 'US_DBFVIEW.exe' ) )
-         MsgStop( 'Editor not found: ' + Editor + CRLF + 'Reinstall QPM.' )
+         MyMsgStop( "QPM's DBF editor (US_DBFVIEW.exe) not found!" + CRLF + 'Reinstall QPM.' )
          RETURN .F.
       ENDIF
       IF bSuspendControlEdit
@@ -3320,18 +3494,18 @@ FUNCTION QPM_EditDBF()
                                  "COMMAND " + cLineCmd + " " + cLineFile + CRLF + ;
                                  'CONTROL ' + EditControlFile )
          QPM_MemoWrit( EditControlFile, 'Edit Control File For ' + i )
-         QPM_Execute( US_ShortName( PUB_cQPM_Folder ) + DEF_SLASH + 'US_Run.exe', 'QPM ' + RunParms )
+         QPM_Execute( US_ShortName( PUB_cQPM_Folder ) + DEF_SLASH + 'US_Run.exe', 'QPM ' + iif( bLogActivity, '-LIST' + US_ShortName(PUB_cQPM_Folder) + ' ', ' ' ) + RunParms )
          IF bLogActivity
             QPM_MemoWrit( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log', MemoRead( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log' ) + MemoRead( RunParms ) + CRLF )
          ENDIF
       ENDIF
    ELSE // 'OTHER'
       IF Empty( Gbl_Text_DBF )
-         MyMsg( 'Operation Aborted', 'DBF tool is not defined.' + CRLF + 'Look at ' + PUB_MenuGblOptions + ' of Settings menu.', 'E', bAutoEXIT )
+         MyMsgStop( 'DBF tool is not defined!' + CRLF + 'Look at ' + PUB_MenuGblOptions + ' of Settings menu.' )
          RETURN .F.
       ENDIF
       IF ! File( Editor := ChgPathToReal( AllTrim( Gbl_Text_DBF ) ) )
-         MsgStop( 'DBF tool not found: ' + AllTrim( Gbl_Text_DBF ) + CRLF + 'Look at ' + PUB_MenuGblOptions + ' of Settings menu.' )
+         MyMsgStop( 'DBF tool ' + DBLQT + AllTrim( Gbl_Text_DBF ) + DBLQT + ' was not found!' + CRLF + 'Look at ' + PUB_MenuGblOptions + ' of Settings menu.' )
          RETURN .F.
       ENDIF
       IF bSuspendControlEdit
@@ -3366,7 +3540,7 @@ FUNCTION QPM_EditDBF()
                                  "COMMAND " + cLineCmd + " " + cLineFile + CRLF + ;
                                  'CONTROL ' + EditControlFile )
          QPM_MemoWrit( EditControlFile, 'Edit Control File For ' + i )
-         QPM_Execute( US_ShortName( PUB_cQPM_Folder ) + DEF_SLASH + 'US_Run.exe', 'QPM ' + RunParms )
+         QPM_Execute( US_ShortName( PUB_cQPM_Folder ) + DEF_SLASH + 'US_Run.exe', 'QPM ' + iif( bLogActivity, '-LIST' + US_ShortName(PUB_cQPM_Folder) + ' ', ' ' ) + RunParms )
          IF bLogActivity
             QPM_MemoWrit( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log', MemoRead( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log' ) + MemoRead( RunParms ) + CRLF )
          ENDIF
@@ -3378,7 +3552,7 @@ RETURN .T.
 FUNCTION QPM_EditHLP()
    LOCAL cAuxTopic := '', cAuxNick
    IF VentanaMain.GHlpFiles.Value == 1
-      MsgInfo( "Global foot can't be edited, it's a System's topic!" )
+      MyMsgStop( "Global footer can't be edited!" )
       RETURN .T.
    ENDIF
    IF VentanaMain.GHlpFiles.Value > 1
@@ -3423,19 +3597,19 @@ FUNCTION QPM_EditRES
    LOCAL HotRecoveryControlFile
 #endif
    IF Empty( PUB_cProjectFolder ) .OR. ! US_IsDirectory( PUB_cProjectFolder )
-      MsgStop( DBLQT + "Project Folder" + DBLQT + " is not a valid folder:" + CRLF + PUB_cProjectFolder + CRLF + 'Look at tab ' + DBLQT + PagePRG + DBLQT )
+      MyMsgStop( DBLQT + "Project Folder" + DBLQT + " is not a valid folder:" + CRLF + PUB_cProjectFolder + CRLF + 'Look at tab ' + DBLQT + PagePRG + DBLQT )
       RETURN .F.
    ENDIF
    IF VentanaMain.GPrgFiles.ItemCount < 1
-      MsgStop( DBLQT + 'Top File' + DBLQT + ' is not defined.' + CRLF + 'Look at tab ' + DBLQT + PagePRG + DBLQT )
+      MyMsgStop( DBLQT + 'Top File' + DBLQT + ' is not defined!' + CRLF + 'Look at tab ' + DBLQT + PagePRG + DBLQT )
       RETURN .F.
    ENDIF
    IF Empty( Gbl_Text_Editor )
-      MyMsg( 'Operation Aborted', 'Editor is not defined.' + CRLF + ' Look at ' + PUB_MenuGblOptions + ' of Settings menu.', 'E', bAutoEXIT )
+      MyMsgStop( 'Editor is not defined!' + CRLF + ' Look at ' + PUB_MenuGblOptions + ' of Settings menu.' )
       RETURN .F.
    ENDIF
    IF ! File( Editor := ChgPathToReal( AllTrim( Gbl_Text_Editor ) ) )
-      MsgStop( 'Editor not found: ' + AllTrim( Gbl_Text_Editor ) + CRLF + 'Look at ' + PUB_MenuGblOptions + ' of Settings menu.' )
+      MyMsgStop( 'Editor not found: ' + AllTrim( Gbl_Text_Editor ) + CRLF + 'Look at ' + PUB_MenuGblOptions + ' of Settings menu.' )
       RETURN .F.
    ENDIF
    FileRC := US_FileNameOnlyPathAndName( ChgPathToReal( GetProperty( 'VentanaMain', 'GPrgFiles', 'Cell', 1, NCOLPRGFULLNAME ) ) ) + '.RC'
@@ -3444,7 +3618,7 @@ FUNCTION QPM_EditRES
       IF File( Alt_RC )
          FileRC := Alt_RC
       ELSE
-         IF ! MyMsgYesNo( 'Main resources file not found' + CRLF + ;
+         IF ! MyMsgYesNo( 'Main resource file not found' + CRLF + ;
                           'at: ' + DBLQT + FileRC + DBLQT + CRLF + ;
                           'nor at: ' + DBLQT + Alt_RC + DBLQT + CRLF + ;
                           'Do you want to create an empty file?' )
@@ -3454,7 +3628,7 @@ FUNCTION QPM_EditRES
             QPM_MemoWrit( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log', MemoRead( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log' ) + 'New RC ' + FileRC + CRLF )
          ENDIF
          QPM_MemoWrit( FileRC, 'MAIN ICON     .' + DEF_SLASH + 'RESOURCES' + DEF_SLASH + 'MAIN.ICO' )
-         MsgInfo( "Main resource file was created:" + CRLF + DBLQT + FileRC + DBLQT )
+         MyMsgInfo( "Main resource file " + DBLQT + FileRC + DBLQT + "was created." )
       ENDIF
    ENDIF
    IF bLogActivity
@@ -3476,7 +3650,7 @@ FUNCTION QPM_EditRES
       ENDIF
    ELSE
       IF ! Empty( cEditControlFileRC )
-         MsgInfo( 'The file is already open.' )
+         MyMsgStop( 'The file is already open!' )
          RETURN .F.
       ENDIF
       VentanaMain.RichEditPAN.BackColor := DEF_COLORBACKEXTERNALEDIT
@@ -3501,7 +3675,7 @@ FUNCTION QPM_EditRES
                               "COMMAND " + cLineCmd + " " + cLineFile + CRLF + ;
                               'CONTROL ' + EditControlFile )
       QPM_MemoWrit( EditControlFile, 'Edit Control File For ' + FileRC )
-      QPM_Execute( US_ShortName( PUB_cQPM_Folder ) + DEF_SLASH + 'US_Run.exe', 'QPM ' + RunParms )
+      QPM_Execute( US_ShortName( PUB_cQPM_Folder ) + DEF_SLASH + 'US_Run.exe', 'QPM ' + iif( bLogActivity, '-LIST' + US_ShortName(PUB_cQPM_Folder) + ' ', ' ' ) + RunParms )
       IF bLogActivity
          QPM_MemoWrit( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log', MemoRead( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log' ) + MemoRead( RunParms ) + CRLF )
       ENDIF
@@ -3520,18 +3694,25 @@ FUNCTION QPM_SetTopPRG
    VentanaMain.GPrgFiles.item( 1 ) := vLine
    VentanaMain.GPrgFiles.Value := 1
    VentanaMain.GPrgFiles.SetFocus
-   MsgInfo( DBLQT + ChgPathToReal( vLine[NCOLPRGFULLNAME] ) + DBLQT + CRLF + "is the new project's " + DBLQT + "Top File" + DBLQT + "." )
+   IF Prj_Warn_TopFile
+      IF MyMsgYesNo( DBLQT + ChgPathToReal( vLine[NCOLPRGFULLNAME] ) + DBLQT + CRLF + "is the new " + DBLQT + "Top File" + DBLQT + "." + CRLF + ;
+                     'Omit this message from now on?' )
+         Prj_Warn_TopFile := .F.
+         MyMsgInfo( 'Use ' + DBLQT + PUB_MenuResetWarnings + DBLQT + ' option of Settings menu to enable the previous message.' )
+      ENDIF
+   ENDIF
+
    CambioTitulo()
 RETURN .T.
 
 FUNCTION QPM_GetFilesPRG()
    LOCAL RetVal := {}, BaseFolder, cAux
    IF Empty( PUB_cProjectFolder ) .OR. ! US_IsDirectory( PUB_cProjectFolder )
-      MsgStop( DBLQT + "Project Folder" + DBLQT + " is not a valid folder:" + CRLF + PUB_cProjectFolder + CRLF + 'Look at tab ' + DBLQT + PagePRG + DBLQT )
+      MyMsgStop( DBLQT + "Project Folder" + DBLQT + " is not a valid folder:" + CRLF + PUB_cProjectFolder + CRLF + 'Look at tab ' + DBLQT + PagePRG + DBLQT )
       RETURN ( {} )
    ENDIF
    IF Prj_Radio_OutputType == DEF_RG_IMPORT .AND. GetProperty( 'VentanaMain', 'GPrgFiles', 'itemcount' ) > 0
-      MsgStop( 'The process to make an Interface Library allows only one source.' )
+      MyMsgStop( 'The process to make an Interface Library allows only one source.' )
       RETURN ( {} )
    ENDIF
    IF GetProperty( 'VentanaMain', 'GPrgFiles', 'Value' ) == 0
@@ -3543,7 +3724,7 @@ FUNCTION QPM_GetFilesPRG()
       BaseFolder := BaseFolder + DEF_SLASH
    ENDIF
    IF Prj_Radio_OutputType == DEF_RG_IMPORT
-      cAux := BugGetFile( { {'DLL file','*.DLL'} }, 'Select Input Files', BaseFolder, .F., .T. )
+      cAux := GetFile( { {'DLL file','*.DLL'} }, 'Select Input Files', BaseFolder, .F., .T. )
       IF ! Empty( cAux )
          AAdd( RetVal, cAux )
       ENDIF
@@ -3555,7 +3736,7 @@ RETURN RetVal
 FUNCTION QPM_GetFilesHEA()
    LOCAL BaseFolder
    IF Empty( PUB_cProjectFolder ) .OR. ! US_IsDirectory( PUB_cProjectFolder )
-      MsgStop( DBLQT + "Project Folder" + DBLQT + " is not a valid folder:" + CRLF + PUB_cProjectFolder + CRLF + 'Look at tab ' + DBLQT + PagePRG + DBLQT )
+      MyMsgStop( DBLQT + "Project Folder" + DBLQT + " is not a valid folder:" + CRLF + PUB_cProjectFolder + CRLF + 'Look at tab ' + DBLQT + PagePRG + DBLQT )
       RETURN ( {} )
    ENDIF
    IF GetProperty( 'VentanaMain', 'GHeaFiles', 'Value' ) == 0
@@ -3571,7 +3752,7 @@ RETURN US_GetFile( { {'Headers files (*.h and *.ch)','*.h;*.ch'} }, 'Select Head
 FUNCTION QPM_GetFilesPAN()
    LOCAL BaseFolder
    IF Empty( PUB_cProjectFolder ) .OR. ! US_IsDirectory( PUB_cProjectFolder )
-      MsgStop( DBLQT + "Project Folder" + DBLQT + " is not a valid folder:" + CRLF + PUB_cProjectFolder + CRLF + 'Look at tab ' + DBLQT + PagePRG + DBLQT )
+      MyMsgStop( DBLQT + "Project Folder" + DBLQT + " is not a valid folder:" + CRLF + PUB_cProjectFolder + CRLF + 'Look at tab ' + DBLQT + PagePRG + DBLQT )
       RETURN ( {} )
    ENDIF
    IF GetProperty( 'VentanaMain', 'GPanFiles', 'Value' ) == 0
@@ -3587,7 +3768,7 @@ RETURN US_GetFile( { {'Forms files (*.FMG)','*.fmg'} }, 'Select Forms Files', Ba
 FUNCTION QPM_GetFilesDBF()
    LOCAL BaseFolder
    IF Empty( PUB_cProjectFolder ) .OR. ! US_IsDirectory( PUB_cProjectFolder )
-      MsgStop( DBLQT + "Project Folder" + DBLQT + " is not a valid folder:" + CRLF + PUB_cProjectFolder + CRLF + 'Look at tab ' + DBLQT + PagePRG + DBLQT )
+      MyMsgStop( DBLQT + "Project Folder" + DBLQT + " is not a valid folder:" + CRLF + PUB_cProjectFolder + CRLF + 'Look at tab ' + DBLQT + PagePRG + DBLQT )
       RETURN ( {} )
    ENDIF
    IF GetProperty( 'VentanaMain', 'GDbfFiles', 'Value' ) == 0
@@ -3601,29 +3782,32 @@ FUNCTION QPM_GetFilesDBF()
 RETURN US_GetFile( { {'DBF files (*.DBF)', '*.dbf'} }, 'Select DBF files', BaseFolder, .T., .T. )
 
 FUNCTION QPM_GetExcludeFilesLIB()
-   LOCAL RetVal := {}, i, vAux
+   LOCAL RetVal := {}, aLibsE, aLibsI, i, vAux := {}, cFlavor := GetSuffix()
    IF Empty( PUB_cProjectFolder ) .OR. ! US_IsDirectory( PUB_cProjectFolder )
-      MsgStop( DBLQT + "Project Folder" + DBLQT + " is not a valid folder:" + CRLF + PUB_cProjectFolder + CRLF + 'Look at tab ' + DBLQT + PagePRG + DBLQT )
-      RETURN ( {} )
+      MyMsgStop( DBLQT + "Project Folder" + DBLQT + " is not a valid folder:" + CRLF + PUB_cProjectFolder + CRLF + 'Look at tab ' + DBLQT + PagePRG + DBLQT )
+      RETURN ( RetVal )
    ENDIF
-   QPM_CargoLibraries()
-   vAux := Array( Len( vLibsDefault ) )
-   ACopy( vLibsDefault, vAux )
-   IF Prj_Check_Console
-      AAdd( vAux, GetMiniGuiName() )
-   ENDIF
-   ASort( vAux, NIL, NIL, { |x, y| US_Upper(x) < US_Upper( y ) } )
-   FOR i := Len( vAux ) TO 1 STEP -1
-      IF ! File( GetCppLibFolder() + DEF_SLASH + vAux[i] ) .AND. ! File( GetHarbourLibFolder() + DEF_SLASH + vAux[i] )
-         ADel( vAux, i )
-         ASize( vAux, Len( vAux ) - 1 )
+   DescargoIncludeLibs( cFlavor )   // vLibIncludeFiles, with path
+   aLibsI := &('IncludeLibs'+cFlavor)
+   DescargoExcludeLibs( cFlavor )   // vLibExcludeFiles, no path
+   aLibsE := &('ExcludeLibs'+cFlavor)
+   DescargoDefaultLibs( cFlavor )   // vLibsToLink, no path
+   FOR i := 1 TO Len( vLibsToLink )
+      IF AScan( aLibsE, { |x| US_Upper( x ) == US_Upper( vLibsToLink[i] ) } ) == 0
+         AAdd( vAux, vLibsToLink[i] )
       ENDIF
    NEXT i
+   FOR i := 1 TO Len( aLibsI )
+      IF AScan( aLibsE, { |x| US_Upper( x ) == US_Upper( aLibsI[i] ) } ) == 0
+         AAdd( vAux, US_FileNameOnlyNameAndExt( US_Word( aLibsI[i], 2 ) ) )
+      ENDIF
+   NEXT i
+   ASort( vAux, NIL, NIL, { |x, y| US_Upper(x) < US_Upper( y ) } )
 
    DEFINE WINDOW GetExcludeLibFiles ;
       AT 0,0 ;
       WIDTH 310 HEIGHT 390 ;
-      TITLE 'Select library for exclude' ;
+      TITLE 'Select library for Exclude' ;
       MODAL FONT 'Arial' SIZE 9
 
       DEFINE LISTBOX List_1
@@ -3638,7 +3822,7 @@ FUNCTION QPM_GetExcludeFilesLIB()
       DEFINE BUTTONEX OK
          ROW 320
          COL 45
-         CAPTION 'Ok'
+         CAPTION 'OK'
          ONCLICK ( RetVal := QPM_GetExcludeFilesOkLIB( vAux, GetExcludeLibFiles.List_1.Value ), DoMethod( 'GetExcludeLibFiles', 'Release' ) )
       END BUTTONEX
 
@@ -3661,23 +3845,23 @@ FUNCTION QPM_GetExcludeFilesOkLIB( aFiles, aSelected )
    NEXT i
 RETURN aNew
 
-FUNCTION QPM_GetFilesLIB()
+FUNCTION QPM_GetLibs()
    LOCAL RetVal := {}, cFolderAux
    IF ! Empty( &( 'cLastLibFolder'+GetSuffix() ) ) .AND. US_IsDirectory( &( 'cLastLibFolder'+GetSuffix() ) )
       cFolderAux := &( 'cLastLibFolder'+GetSuffix() )
    ELSEIF Empty( PUB_cProjectFolder ) .OR. ! US_IsDirectory( PUB_cProjectFolder )
-      MsgStop( DBLQT + "Project Folder" + DBLQT + " is not a valid folder:" + CRLF + PUB_cProjectFolder + CRLF + 'Look at tab ' + DBLQT + PagePRG + DBLQT )
+      MyMsgStop( DBLQT + "Project Folder" + DBLQT + " is not a valid folder:" + CRLF + PUB_cProjectFolder + CRLF + 'Look at tab ' + DBLQT + PagePRG + DBLQT )
       RETURN ""
    ELSE
       cFolderAux := PUB_cProjectFolder
    ENDIF
    IF Prj_Radio_Cpp == DEF_RG_BORLAND .OR. Prj_Radio_Cpp == DEF_RG_PELLES
-      RetVal := BugGetFile( { {'Libs, objects and resources to include on concatenation (*.lib,*.obj,*.res)','*.lib;*obj;*res'}, {'Libs to include on concatenation (*.lib)','*.lib'}, {'Objects to include on concatenation (*.obj)','*.obj'}, {'Resources to include on concatenation (*.res)','*.res'} }, 'Libs, objects and resources to include on concatenation', cFolderAux, .T., .T. )
+      RetVal := GetFile( { {'Libs, objects and resources to include on concatenation (*.lib,*.obj,*.res)','*.lib;*obj;*res'}, {'Libs to include on concatenation (*.lib)','*.lib'}, {'Objects to include on concatenation (*.obj)','*.obj'}, {'Resources to include on concatenation (*.res)','*.res'} }, 'Libs, objects and resources to include on concatenation', cFolderAux, .T., .T. )
       IF Len( RetVal ) > 0
          &( 'cLastLibFolder'+GetSuffix() ) := US_FileNameOnlyPath( RetVal[ Len( RetVal ) ] )
       ENDIF
    ELSEIF Prj_Radio_Cpp == DEF_RG_MINGW
-      RetVal := BugGetFile( { {'Libs and objects to include on concatenation (lib*.a,*.o)','lib*.a;*.o'}, {'Libs to include on concatenation (lib*.a)','lib*.a'}, {'Objects to include on concatenation (*.o)','*.o'} }, 'Libs and objects to include on concatenation', cFolderAux, .T., .T. )
+      RetVal := GetFile( { {'Libs and objects to include on concatenation (lib*.a,*.o)','lib*.a;*.o'}, {'Libs to include on concatenation (lib*.a)','lib*.a'}, {'Objects to include on concatenation (*.o)','*.o'} }, 'Libs and objects to include on concatenation', cFolderAux, .T., .T. )
       IF Len( RetVal ) > 0
          &( 'cLastLibFolder'+GetSuffix() ) := US_FileNameOnlyPath( RetVal[ Len( RetVal ) ] )
       ENDIF
@@ -3720,11 +3904,16 @@ FUNCTION QPM_OpenProject( cParmProjectFileName )
       ENDIF
       // Avoid projects with spaces in their names
       IF " " $ ( cFile := US_FileNameOnlyNameAndExt( cProjectFileName ) )
-         MsgStop( "QPM can't handle filenames with spaces." + CRLF + DBLQT + cFile + DBLQT + ' will be renamed as: ' + DBLQT + ( cFile := StrTran( cFile, " ", "_" ) ) + DBLQT )
+         MyMsgStop( "QPM can't handle filenames with spaces." + CRLF + DBLQT + cFile + DBLQT + ' will be renamed as: ' + DBLQT + ( cFile := StrTran( cFile, " ", "_" ) ) + DBLQT )
+         cProjectFileName := US_FileNameOnlyPath( cProjectFileName ) + DEF_SLASH + cFile
+      ENDIF
+      // Avoid projects with & in their names
+      IF "&" $ ( cFile := US_FileNameOnlyNameAndExt( cProjectFileName ) )
+         MyMsgStop( "QPM can't handle filenames with ampersands (&)." + CRLF + DBLQT + cFile + DBLQT + ' will be renamed as: ' + DBLQT + ( cFile := StrTran( cFile, "&", "_" ) ) + DBLQT )
          cProjectFileName := US_FileNameOnlyPath( cProjectFileName ) + DEF_SLASH + cFile
       ENDIF
       // Rename .qac to .qpm
-      IF US_Upper( US_FileNameOnlyExt( cProjectFileName ) ) == 'QAC'
+      IF Upper( US_FileNameOnlyExt( cProjectFileName ) ) == 'QAC'
          frename( cProjectFileName, US_FileNameOnlyPathAndName( cProjectFileName ) + '.qpm' )
          cProjectFileName := US_FileNameOnlyPathAndName( cProjectFileName ) + '.qpm'
       ENDIF
@@ -3732,24 +3921,24 @@ FUNCTION QPM_OpenProject( cParmProjectFileName )
       IF Empty( US_FileNameOnlyExt( cProjectFileName ) )
          Open_FromFileType := 'QPM'
       ELSE
-         Open_FromFileType := US_Upper( US_FileNameOnlyExt( cProjectFileName ) )
+         Open_FromFileType := Upper( US_FileNameOnlyExt( cProjectFileName ) )
       ENDIF
       // Force .qpm extension
       cProjectFileName := US_FileNameOnlyPathAndName( cProjectFileName ) + '.qpm'
-      // Use current folder IF none is already set
+      // Use current folder if none is already set
       IF Empty( US_FileNameOnlyPath( cProjectFileName ) )
          cProjectFileName := GetCurrentFolder() + DEF_SLASH + cProjectFileName
       ENDIF
       // Create new project
       IF ! File( cProjectFileName )
-         IF ! MyMsgYesNo( 'Create new project ' + DBLQT + cProjectFileName + DBLQT + '?', 'Create Project' )
+         IF ! MyMsgYesNo( 'Create new project ' + DBLQT + cProjectFileName + DBLQT + '?' )
             QPM_Wait( "RichEditDisplay( 'DBF', .T., NIL, .F. )", 'DBF reloading ...' )
             RETURN .F.
          ENDIF
          Prj_IsNew := .T.
 #ifdef QPM_SHG
          Temp_SHG_Database := SHG_StrTran( SHG_GetDatabaseName( US_FileNameOnlyPathAndName( cProjectFileName ) ) + '_SHG.dbf' )
-         IF MyMsgYesNo( 'Create Simple Help Generator (SHG) database ' + DBLQT + Temp_SHG_Database + DBLQT + "?", 'Create Project' )
+         IF MyMsgYesNo( 'Create Simple Help Generator (SHG) database ' + DBLQT + Temp_SHG_Database + DBLQT + "?" )
             SHG_CreateDatabase( Temp_SHG_Database )
          ELSE
             Temp_SHG_Database := '*NONE*'
@@ -3769,9 +3958,9 @@ FUNCTION QPM_OpenProject( cParmProjectFileName )
             ENDIF
          ENDIF
          IF QPM_MemoWrit( cProjectFileName, Open_TmpCreateFile )
-            MsgInfo( 'Project successfully created: ' + DBLQT + cProjectFileName + DBLQT )
+            MyMsgInfo( 'Project successfully created: ' + DBLQT + cProjectFileName + DBLQT )
          ELSE
-            MsgInfo( 'Error creating project: ' + DBLQT + cProjectFileName + DBLQT )
+            MyMsgStop( 'The project file ' + DBLQT + cProjectFileName + DBLQT + "could not be created!" )
          ENDIF
       ENDIF
    ELSE
@@ -3779,12 +3968,12 @@ FUNCTION QPM_OpenProject( cParmProjectFileName )
       IF Empty( US_FileNameOnlyExt( cProjectFileName ) )
          cProjectFileName += ".qpm"
       ENDIF
-      IF ! File( cProjectFileName )
-         MsgStop( 'File not found: ' + AllTrim( cProjectFileName ) )
-         RETURN .F.
-      ENDIF
       IF Empty( US_FileNameOnlyPath( cProjectFileName ) )
          cProjectFileName := GetCurrentFolder() + DEF_SLASH + cProjectFileName
+      ENDIF
+      IF ! File( cProjectFileName )
+         MyMsgStop( 'File not found: ' + DBLQT + AllTrim( cProjectFileName ) + DBLQT )
+         RETURN .F.
       ENDIF
    ENDIF
 RETURN QPM_Wait( 'QPM_OpenProject2()', 'Opening ...' )
@@ -3826,7 +4015,19 @@ FUNCTION QPM_OpenProject2()
       ENDIF
       VentanaMain.TProjectFolder.Value          := cLastProjectFolder
       VentanaMain.TRunProjectFolder.Value       := ''
-      bWarningCpp                               := .T.
+      Prj_Warn_BccObject                        := .T.
+      Prj_Warn_BccObject_Cont                   := .T.
+      Prj_Warn_Cpp                              := .T.
+      Prj_Warn_DBF_Search                       := .T.
+      Prj_Warn_DBF_Search_Cont                  := .T.
+      Prj_Warn_GT_Order                         := .T.
+      Prj_Warn_GT_Order_Cont                    := .T.
+      Prj_Warn_InfoSaved                        := .T.
+      Prj_Warn_NullRDD                          := .T.
+      Prj_Warn_PPO_Browse                       := .T.
+      Prj_Warn_SlowSearch                       := .T.
+      Prj_Warn_SlowSearch_Cont                  := .T.
+      Prj_Warn_TopFile                          := .T.
       Prj_Check_PlaceRCFirst                    := .F.
       Prj_Check_IgnoreMainRC                    := .F.
       Prj_Check_IgnoreLibRCs                    := .F.
@@ -3845,6 +4046,7 @@ FUNCTION QPM_OpenProject2()
       Prj_Text_OutputRenameNewName              := ''
       Prj_Check_OutputSuffix                    := .F.
       Prj_Check_OutputPrefix                    := .T.
+      Prj_Check_StaticBuild                     := .T.
       Prj_Check_Upx                             := .F.
       Prj_Radio_FormTool                        := DEF_RG_EDITOR
       Prj_Radio_DbfTool                         := DEF_RG_DBFTOOL
@@ -3853,7 +4055,7 @@ FUNCTION QPM_OpenProject2()
       bLastGlobalSearchFun                      := .F.
       bLastGlobalSearchDbf                      := .F.
       bLastGlobalSearchCas                      := .F.
-      VentanaMain.LGlobal.visible     :=        .F.
+      VentanaMain.LGlobal.visible               := .F.
       bPpoDisplayado                            := .F.
       SHG_Database                              := ''
       SHG_DbSize                                := 0
@@ -3941,10 +4143,10 @@ FUNCTION QPM_OpenProject2()
       VentanaMain.Debug.Checked                 := .T.
       PUB_cConvert                              := ''
       bRunParm                                  := .F.
-      GBL_cRunParm                              := ''
+      Gbl_cRunParm                              := ''
       bBuildRun                                 := .F.
       bBuildRunBack                             := .F.
-      GBL_HR_cLastExternalFileName              := ''
+      Gbl_HR_cLastExternalFileName              := ''
 
       PUB_MI_bExeAssociation                    := .F.
       PUB_MI_cExeAssociation                    := ''
@@ -3987,9 +4189,10 @@ FUNCTION QPM_OpenProject2()
       QPM_ProjectFileUnLock()
       IF ! ( ( LOC_nOpenError := QPM_ProjectFileLock( cProjectFileName ) ) == 0 )
          IF LOC_nOpenError == 5 .OR. LOC_nOpenError == 32
-            MsgInfo( "Project already in use: " + DBLQT + cProjectFileName + DBLQT )
+            MyMsgStop( "Project " + DBLQT + cProjectFileName + DBLQT + " is already open!" )
          ELSE
-            MsgInfo( "Error #" + US_VarToStr( LOC_nOpenError ) + " opening project: " + DBLQT + cProjectFileName + DBLQT )
+            MyMsgStop( "Project " + DBLQT + cProjectFileName + DBLQT + "can't be opened!" + CRLF + ;
+                       "Error code was #" + US_VarToStr( LOC_nOpenError ) + "." )
          ENDIF
          PUB_cProjectFile := ''
          PUB_cProjectFolder := ''
@@ -4009,7 +4212,8 @@ FUNCTION QPM_OpenProject2()
       ENDIF
       configversion := Val( cCfgVrsn )
       IF configVersion > Val( QPM_VERSION_NUMBER_SHORT ) .AND. ! PUB_bIgnoreVersionProject
-         IF ! MyMsgYesNo( "The project's version (" + cCfgVrsnEdtd + ") is newer than QPM's version (" + QPM_VERSION_DISPLAY_SHORT + ').' + CRLF + 'If you go on some information might be discarded.' + CRLF + 'Continue?' )
+         IF ! MyMsgYesNo( "The project's version (" + cCfgVrsnEdtd + ") is newer than QPM's version (" + QPM_VERSION_DISPLAY_SHORT + ').' + CRLF + ;
+                          'If you go on some information may be discarded.' + CRLF + 'Continue?' )
             PUB_cProjectFile := ''
             PUB_cProjectFolder := ''
             RETURN .F.
@@ -4042,23 +4246,23 @@ FUNCTION QPM_OpenProject2()
       // Process project's file
       FOR i := 1 TO MLCount ( cMemoProjectFile, 254 )
          LOC_cLine := AllTrim ( MEMOLINE( cMemoProjectFile, 254, i ) )
-         IF      US_Upper( US_Word( LOC_cLine, 1 ) ) == 'PROJECTFOLDER'
-                 VentanaMain.TProjectFolder.Value := US_StrTran( US_WordSubStr( LOC_cLine, 2 ), '<ThisFolder>', PUB_cThisFolder )
+         IF US_Upper( US_Word( LOC_cLine, 1 ) ) == 'PROJECTFOLDER'
+            VentanaMain.TProjectFolder.Value := US_StrTran( US_WordSubStr( LOC_cLine, 2 ), '<ThisFolder>', PUB_cThisFolder )
          ELSEIF  US_Upper( US_Word( LOC_cLine, 1 ) ) == 'PRJ_VERSION'
-                 SetProperty( 'VentanaMain', 'LVerVerNum', 'value', PadL( US_Word( LOC_cLine, 2 ), DEF_LEN_VER_VERSION, '0' ) )
-                 SetProperty( 'VentanaMain', 'LVerRelNum', 'value', PadL( US_Word( LOC_cLine, 3 ), DEF_LEN_VER_RELEASE, '0' ) )
-                 SetProperty( 'VentanaMain', 'LVerBuiNum', 'value', PadL( US_Word( LOC_cLine, 4 ), DEF_LEN_VER_BUILD, '0' ) )
-                 cPrj_VersionAnt := GetPrj_Version()
+            SetProperty( 'VentanaMain', 'LVerVerNum', 'value', PadL( US_Word( LOC_cLine, 2 ), DEF_LEN_VER_VERSION, '0' ) )
+            SetProperty( 'VentanaMain', 'LVerRelNum', 'value', PadL( US_Word( LOC_cLine, 3 ), DEF_LEN_VER_RELEASE, '0' ) )
+            SetProperty( 'VentanaMain', 'LVerBuiNum', 'value', PadL( US_Word( LOC_cLine, 4 ), DEF_LEN_VER_BUILD, '0' ) )
+            cPrj_VersionAnt := GetPrj_Version()
          ELSEIF  At( 'LASTLIBFOLDER', US_Upper( LOC_cLine ) ) == 1
-                 IF US_IsVar( 'cLastLibFolder'+SubStr( US_Upper( US_Word( LOC_cLine, 1 ) ), 14 ) )
-                    &( 'cLastLibFolder'+SubStr( US_Upper( US_Word( LOC_cLine, 1 ) ), 14 ) ) := US_WordSubStr( LOC_cLine, 2 )
-                 ELSEIF US_IsVar( 'cLastLibFolder'+SubStr( US_Upper( US_Word( LOC_cLine, 1 ) ), 14 )+Define32bits )
-                    &( 'cLastLibFolder'+SubStr( US_Upper( US_Word( LOC_cLine, 1 ) ), 14 )+Define32bits ) := US_WordSubStr( LOC_cLine, 2 )
-                 ENDIF
+            IF US_IsVar( 'cLastLibFolder'+SubStr( US_Upper( US_Word( LOC_cLine, 1 ) ), 14 ) )
+              &( 'cLastLibFolder'+SubStr( US_Upper( US_Word( LOC_cLine, 1 ) ), 14 ) ) := US_WordSubStr( LOC_cLine, 2 )
+            ELSEIF US_IsVar( 'cLastLibFolder'+SubStr( US_Upper( US_Word( LOC_cLine, 1 ) ), 14 )+Define32bits )
+              &( 'cLastLibFolder'+SubStr( US_Upper( US_Word( LOC_cLine, 1 ) ), 14 )+Define32bits ) := US_WordSubStr( LOC_cLine, 2 )
+            ENDIF
          ELSEIF  US_Upper( US_Word( LOC_cLine, 1 ) ) == 'RUNFOLDER'
                  VentanaMain.TRunProjectFolder.Value := ChgPathToReal( US_WordSubStr( LOC_cLine, 2 ) )
          ELSEIF  US_Upper( US_Word( LOC_cLine, 1 ) ) == 'RUNPARAM'
-                 GBL_cRunParm := US_WordSubStr( LOC_cLine, 2 )
+                 Gbl_cRunParm := US_WordSubStr( LOC_cLine, 2 )
          ELSEIF  US_Upper( US_Word( LOC_cLine, 1 ) ) == 'OVERRIDECOMPILEPARM'
                  SetProperty( 'VentanaMain', 'OverrideCompile', 'Value', US_WordSubStr( LOC_cLine, 2 ) )
          ELSEIF  US_Upper( US_Word( LOC_cLine, 1 ) ) == 'OVERRIDELINKPARM'
@@ -4198,6 +4402,34 @@ FUNCTION QPM_OpenProject2()
                  Prj_Check_OutputSuffix := iif( US_Word( LOC_cLine, 2 ) == 'YES', .T., .F. )
          ELSEIF  US_Upper( US_Word( LOC_cLine, 1 ) ) == 'CHECKOUTPUTPREFIX'
                  Prj_Check_OutputPrefix := iif( US_Word( LOC_cLine, 2 ) == 'YES', .T., .F. )
+         ELSEIF  US_Upper( US_Word( LOC_cLine, 1 ) ) == 'CHECKSTATICBUILD'
+                 Prj_Check_StaticBuild := iif( US_Word( LOC_cLine, 2 ) == 'YES', .T., .F. )
+         ELSEIF  US_Upper( US_Word( LOC_cLine, 1 ) ) == 'WARNBCCOBJECT'
+                 Prj_Warn_BccObject := iif( US_Word( LOC_cLine, 2 ) == 'YES', .T., .F. )
+         ELSEIF  US_Upper( US_Word( LOC_cLine, 1 ) ) == 'WARNBCCOBJECTCONT'
+                 Prj_Warn_BccObject_Cont := iif( US_Word( LOC_cLine, 2 ) == 'YES', .T., .F. )
+         ELSEIF  US_Upper( US_Word( LOC_cLine, 1 ) ) == 'WARNCPP'
+                 Prj_Warn_Cpp := iif( US_Word( LOC_cLine, 2 ) == 'YES', .T., .F. )
+         ELSEIF  US_Upper( US_Word( LOC_cLine, 1 ) ) == 'WARNGTORDER'
+                 Prj_Warn_GT_Order := iif( US_Word( LOC_cLine, 2 ) == 'YES', .T., .F. )
+         ELSEIF  US_Upper( US_Word( LOC_cLine, 1 ) ) == 'WARNGTORDERCONT'
+                 Prj_Warn_GT_Order_Cont := iif( US_Word( LOC_cLine, 2 ) == 'YES', .T., .F. )
+         ELSEIF  US_Upper( US_Word( LOC_cLine, 1 ) ) == 'WARNDBFSEARCH'
+                 Prj_Warn_DBF_Search := iif( US_Word( LOC_cLine, 2 ) == 'YES', .T., .F. )
+         ELSEIF  US_Upper( US_Word( LOC_cLine, 1 ) ) == 'WARNDBFSEARCHCONT'
+                 Prj_Warn_DBF_Search_Cont := iif( US_Word( LOC_cLine, 2 ) == 'YES', .T., .F. )
+         ELSEIF  US_Upper( US_Word( LOC_cLine, 1 ) ) == 'WARNINFOSAVEDMSG'
+                 Prj_Warn_InfoSaved := iif( US_Word( LOC_cLine, 2 ) == 'YES', .T., .F. )
+         ELSEIF  US_Upper( US_Word( LOC_cLine, 1 ) ) == 'WARNNULRDD'
+                 Prj_Warn_NullRDD := iif( US_Word( LOC_cLine, 2 ) == 'YES', .T., .F. )
+         ELSEIF  US_Upper( US_Word( LOC_cLine, 1 ) ) == 'WARNPPOBROWSE'
+                 Prj_Warn_PPO_Browse := iif( US_Word( LOC_cLine, 2 ) == 'YES', .T., .F. )
+         ELSEIF  US_Upper( US_Word( LOC_cLine, 1 ) ) == 'WARNSLOWSEARCH'
+                 Prj_Warn_SlowSearch := iif( US_Word( LOC_cLine, 2 ) == 'YES', .T., .F. )
+         ELSEIF  US_Upper( US_Word( LOC_cLine, 1 ) ) == 'WARNSLOWSEARCHCONT'
+                 Prj_Warn_SlowSearch_Cont := iif( US_Word( LOC_cLine, 2 ) == 'YES', .T., .F. )
+         ELSEIF  US_Upper( US_Word( LOC_cLine, 1 ) ) == 'WARNTOPFILE'
+                 Prj_Warn_TopFile := iif( US_Word( LOC_cLine, 2 ) == 'YES', .T., .F. )
          ELSEIF  US_Upper( US_Word( LOC_cLine, 1 ) ) == 'CHECKUPX'
                  Prj_Check_Upx := iif( US_Word( LOC_cLine, 2 ) == 'YES', .T., .F. )
          ELSEIF  US_Upper( US_Word( LOC_cLine, 1 ) ) == 'CHECKFORMTOOL'
@@ -4205,9 +4437,13 @@ FUNCTION QPM_OpenProject2()
                  CASE US_Word( LOC_cLine, 2 ) == 'EDITOR'
                     Prj_Radio_FormTool := DEF_RG_EDITOR
                  CASE US_Word( LOC_cLine, 2 ) == 'HMI'
-                    Prj_Radio_FormTool := DEF_RG_HMI
+                    Prj_Radio_FormTool := DEF_RG_OOHGIDE
+                 CASE US_Word( LOC_cLine, 2 ) == 'OOHGIDE'
+                    Prj_Radio_FormTool := DEF_RG_OOHGIDE
                  CASE US_Word( LOC_cLine, 2 ) == 'HMGSIDE'
-                    Prj_Radio_FormTool := DEF_RG_HMGS
+                    Prj_Radio_FormTool := DEF_RG_HMGSIDE
+                 CASE US_Word( LOC_cLine, 2 ) == 'HMG_IDE'
+                    Prj_Radio_FormTool := DEF_RG_HMG_IDE
                  ENDCASE
          ELSEIF  US_Upper( US_Word( LOC_cLine, 1 ) ) == 'CHECKDBFTOOL'
                  DO CASE
@@ -4293,7 +4529,7 @@ FUNCTION QPM_OpenProject2()
                  SHG_WWW := US_WordSubStr( LOC_cLine, 2 )
 #ifdef QPM_HOTRECOVERY
          ELSEIF  US_Upper( US_Word( LOC_cLine, 1 ) ) == 'HOTLASTEXTERNALFILE'
-                 GBL_HR_cLastExternalFileName := US_WordSubStr( LOC_cLine, 2 )
+                 Gbl_HR_cLastExternalFileName := US_WordSubStr( LOC_cLine, 2 )
 #endif
          ELSEIF  US_Upper ( US_Word( LOC_cLine, 1 ) ) == 'SOURCE'
                  cForceRecomp := ' '
@@ -4303,26 +4539,26 @@ FUNCTION QPM_OpenProject2()
                  ENDIF
                  cFile := US_WordSubStr( LOC_cLine, 2 )
                  VentanaMain.GPrgFiles.AddItem( { PUB_nGridImgNone, cForceRecomp, US_FileNameOnlyNameAndExt( US_WordSubStr( LOC_cLine, 2 ) ), ChgPathToRelative( cFile ), '0', '', '' } )
-                 IF US_Upper( US_FileNameOnlyExt( cFile ) ) == 'PRG'
-                    IF AScan( vExtraFoldersForSearchHB, { |y| US_Upper( US_VarToStr( y ) ) == US_Upper( US_FileNameOnlyPath( cFile ) ) } ) == 0
+                 IF Upper( US_FileNameOnlyExt( cFile ) ) == 'PRG'
+                    IF AScan( vExtraFoldersForSearchHB, { |y| US_Upper( y ) == US_Upper( US_FileNameOnlyPath( cFile ) ) } ) == 0
                        AAdd( vExtraFoldersForSearchHB, US_FileNameOnlyPath( cFile ) )
                     ENDIF
                  ELSE
-                    IF AScan( vExtraFoldersForSearchC, { |y| US_Upper( US_VarToStr( y ) ) == US_Upper( US_FileNameOnlyPath( cFile ) ) } ) == 0
+                    IF AScan( vExtraFoldersForSearchC, { |y| US_Upper( y ) == US_Upper( US_FileNameOnlyPath( cFile ) ) } ) == 0
                        AAdd( vExtraFoldersForSearchC, US_FileNameOnlyPath( cFile ) )
                     ENDIF
                  ENDIF
          ELSEIF  US_Upper ( US_Word( LOC_cLine, 1 ) ) == 'HEAD'
                  VentanaMain.GHeaFiles.AddItem( { PUB_nGridImgNone, US_FileNameOnlyNameAndExt( US_WordSubStr( LOC_cLine, 2 ) ), ChgPathToRelative( US_WordSubStr( LOC_cLine, 2 ) ), '0', '', '' } )
-                 IF AScan( vExtraFoldersForSearchHB, { |y| US_Upper( US_VarToStr( y ) ) == US_Upper( US_FileNameOnlyPath( ChgPathToReal( GetProperty( 'VentanaMain', 'GHeaFiles', 'Cell', VentanaMain.GHeaFiles.ItemCount, NCOLHEAFULLNAME ) ) ) ) } ) == 0
+                 IF AScan( vExtraFoldersForSearchHB, { |y| US_Upper( y ) == US_Upper( US_FileNameOnlyPath( ChgPathToReal( GetProperty( 'VentanaMain', 'GHeaFiles', 'Cell', VentanaMain.GHeaFiles.ItemCount, NCOLHEAFULLNAME ) ) ) ) } ) == 0
                     AAdd( vExtraFoldersForSearchHB, US_FileNameOnlyPath( ChgPathToReal( GetProperty( 'VentanaMain', 'GHeaFiles', 'Cell', VentanaMain.GHeaFiles.ItemCount, NCOLHEAFULLNAME ) ) ) )
                  ENDIF
-                 IF AScan( vExtraFoldersForSearchC, { |y| US_Upper( US_VarToStr( y ) ) == US_Upper( US_FileNameOnlyPath( ChgPathToReal( GetProperty( 'VentanaMain', 'GHeaFiles', 'Cell', VentanaMain.GHeaFiles.ItemCount, NCOLHEAFULLNAME ) ) ) ) } ) == 0
+                 IF AScan( vExtraFoldersForSearchC, { |y| US_Upper( y ) == US_Upper( US_FileNameOnlyPath( ChgPathToReal( GetProperty( 'VentanaMain', 'GHeaFiles', 'Cell', VentanaMain.GHeaFiles.ItemCount, NCOLHEAFULLNAME ) ) ) ) } ) == 0
                     AAdd( vExtraFoldersForSearchC, US_FileNameOnlyPath( ChgPathToReal( GetProperty( 'VentanaMain', 'GHeaFiles', 'Cell', VentanaMain.GHeaFiles.ItemCount, NCOLHEAFULLNAME ) ) ) )
                  ENDIF
          ELSEIF  US_Upper ( US_Word( LOC_cLine, 1 ) ) == 'FORM'
                  VentanaMain.GPanFiles.AddItem( { PUB_nGridImgNone, US_FileNameOnlyNameAndExt( US_WordSubStr( LOC_cLine, 2 ) ), ChgPathToRelative( US_WordSubStr( LOC_cLine, 2 ) ), '0', '', '' } )
-                 IF AScan( vExtraFoldersForSearchHB, { |y| US_Upper( US_VarToStr( y ) ) == US_Upper( US_FileNameOnlyPath( ChgPathToReal( GetProperty( 'VentanaMain', 'GPanFiles', 'Cell', VentanaMain.GPanFiles.ItemCount, NCOLPANFULLNAME ) ) ) ) } ) == 0
+                 IF AScan( vExtraFoldersForSearchHB, { |y| US_Upper( y ) == US_Upper( US_FileNameOnlyPath( ChgPathToReal( GetProperty( 'VentanaMain', 'GPanFiles', 'Cell', VentanaMain.GPanFiles.ItemCount, NCOLPANFULLNAME ) ) ) ) } ) == 0
                     AAdd( vExtraFoldersForSearchHB, US_FileNameOnlyPath( ChgPathToReal( GetProperty( 'VentanaMain', 'GPanFiles', 'Cell', VentanaMain.GPanFiles.ItemCount, NCOLPANFULLNAME ) ) ) )
                  ENDIF
          ELSEIF  US_Upper ( US_Word( LOC_cLine, 1 ) ) == 'DBF'
@@ -4370,7 +4606,7 @@ FUNCTION QPM_OpenProject2()
             SetProperty( 'VentanaMain', 'RichEditHlp', 'readonly', .F. )
          ELSE
             IF MyMsgYesNo( 'Simple Help Generator (SHG) database not found: ' + SHG_Database + CRLF + ;
-                           'Erase setting?' + CRLF + ;
+                           'Erase setting?' + CRLF + CRLF + ;
                            'Use tab ' + DBLQT + PageHlp + DBLQT + ' to select or create a new one.' )
                SHG_Database := ""
             ENDIF
@@ -4385,8 +4621,10 @@ FUNCTION QPM_OpenProject2()
       VentanaLite.LFull.FontColor := DEF_COLORGREEN
       VentanaLite.LFull.Value     := 'Incremental'
    ENDIF
-   CargoIncludeLibs( GetSuffix() )
-   CargoExcludeLibs( GetSuffix() )
+   QPM_InitLibrariesForFlavor( GetSuffix() )
+   CargoDefaultLibs( GetSuffix() )                   // This loads the default libraries grid
+   CargoIncludeLibs( GetSuffix() )                   // This loads the include libraries grid
+   CargoExcludeLibs( GetSuffix() )                   // This loads the exclude libraries grid
    QPM_SetColor()
    SetMGWaitTxt( 'Columns Autofit ...' )
    DoMethod( 'VentanaMain', 'GPrgFiles', 'ColumnsAutoFitH' )
@@ -4447,10 +4685,8 @@ FUNCTION QPM_CheckFiles()
    DoMethod( 'VentanaMain', 'GPrgFiles', 'DisableUpdate' )
    FOR i := 1 TO VentanaMain.GPrgFiles.ItemCount
       IF ! File( ChgPathToReal( GetProperty( 'VentanaMain', 'GPrgFiles', 'Cell', i, NCOLPRGFULLNAME ) ) )
-       //GetProperty( 'VentanaMain', 'GPrgFiles', 'Cell', i, NCOLPRGSTATUS ) := PUB_nGridImgEquis
          GridImage( 'VentanaMain', 'GPrgFiles', i, NCOLPRGSTATUS, '+', PUB_nGridImgEquis )
       ELSE
-       //GetProperty( 'VentanaMain', 'GPrgFiles', 'Cell', i, NCOLPRGSTATUS ) := PUB_nGridImgNone
          GridImage( 'VentanaMain', 'GPrgFiles', i, NCOLPRGSTATUS, '-', PUB_nGridImgEquis )
       ENDIF
    NEXT i
@@ -4458,10 +4694,8 @@ FUNCTION QPM_CheckFiles()
    DoMethod( 'VentanaMain', 'GPanFiles', 'DisableUpdate' )
    FOR i := 1 TO VentanaMain.GPanFiles.ItemCount
       IF ! File( ChgPathToReal( GetProperty( 'VentanaMain', 'GPanFiles', 'Cell', i, NCOLPANFULLNAME ) ) )
-       //GetProperty( 'VentanaMain', 'GPanFiles', 'Cell', i, NCOLPANSTATUS ) := PUB_nGridImgEquis
          GridImage( 'VentanaMain', 'GPanFiles', i, NCOLPANSTATUS, '+', PUB_nGridImgEquis )
       ELSE
-       //GetProperty( 'VentanaMain', 'GPanFiles', 'Cell', i, NCOLPANSTATUS ) := PUB_nGridImgNone
          GridImage( 'VentanaMain', 'GPanFiles', i, NCOLPANSTATUS, '-', PUB_nGridImgEquis )
       ENDIF
    NEXT i
@@ -4469,10 +4703,8 @@ FUNCTION QPM_CheckFiles()
    DoMethod( 'VentanaMain', 'GDbfFiles', 'DisableUpdate' )
    FOR i := 1 TO VentanaMain.GDbfFiles.ItemCount
       IF ! File( ChgPathToReal( GetProperty( 'VentanaMain', 'GDbfFiles', 'Cell', i, NCOLDBFFULLNAME ) ) )
-      // GetProperty( 'VentanaMain', 'GDbfFiles', 'Cell', i, NCOLDBFSTATUS ) := PUB_nGridImgEquis
          GridImage( 'VentanaMain', 'GDbfFiles', i, NCOLDBFSTATUS, '+', PUB_nGridImgEquis )
       ELSE
-      // GetProperty( 'VentanaMain', 'GDbfFiles', 'Cell', i, NCOLDBFSTATUS ) := PUB_nGridImgNone
          GridImage( 'VentanaMain', 'GDbfFiles', i, NCOLDBFSTATUS, '-', PUB_nGridImgEquis )
       ENDIF
    NEXT i
@@ -4480,10 +4712,8 @@ FUNCTION QPM_CheckFiles()
    DoMethod( 'VentanaMain', 'GHeaFiles', 'DisableUpdate' )
    FOR i := 1 TO VentanaMain.GHeaFiles.ItemCount
       IF ! File( ChgPathToReal( GetProperty( 'VentanaMain', 'GHeaFiles', 'Cell', i, NCOLHEAFULLNAME ) ) )
-       //GetProperty( 'VentanaMain', 'GHeaFiles', 'Cell', i, NCOLHEASTATUS ) := PUB_nGridImgEquis
          GridImage( 'VentanaMain', 'GHeaFiles', i, NCOLHEASTATUS, '+', PUB_nGridImgEquis )
       ELSE
-      // GetProperty( 'VentanaMain', 'GHeaFiles', 'Cell', i, NCOLHEASTATUS ) := PUB_nGridImgNone
          GridImage( 'VentanaMain', 'GHeaFiles', i, NCOLHEASTATUS, '-', PUB_nGridImgEquis )
       ENDIF
    NEXT i
@@ -4491,10 +4721,8 @@ FUNCTION QPM_CheckFiles()
    DoMethod( 'VentanaMain', 'GIncFiles', 'DisableUpdate' )
    FOR i := 1 TO VentanaMain.GIncFiles.ItemCount
       IF ! File( ChgPathToReal( US_WordSubStr( GetProperty( 'VentanaMain', 'GIncFiles', 'Cell', i, NCOLINCFULLNAME ), 3 ) ) )
-      // GetProperty( 'VentanaMain', 'GIncFiles', 'Cell', i, NCOLINCSTATUS ) := PUB_nGridImgEquis
          GridImage( 'VentanaMain', 'GIncFiles', i, NCOLINCSTATUS, '+', PUB_nGridImgEquis )
       ELSE
-       //GetProperty( 'VentanaMain', 'GIncFiles', 'Cell', i, NCOLINCSTATUS ) := PUB_nGridImgNone
          GridImage( 'VentanaMain', 'GIncFiles', i, NCOLINCSTATUS, '-', PUB_nGridImgEquis )
       ENDIF
    NEXT i
@@ -4512,7 +4740,7 @@ FUNCTION QPM_SetResumen()
          CASE GetCppSuffix() == DefinePelles
             cAux := 'Pelles'
          OTHERWISE
-            MsgStop( 'Invalid CPP type: ' + GetCppSuffix() )
+            MyMsgStop( 'Invalid CPP type: ' + GetCppSuffix() )
       ENDCASE
       SetProperty( Venta, 'LResumen', 'Value', 'Build Interface Library From DLL For ' + cAux )
       SetProperty( Venta, 'LFull', 'visible', .F. )
@@ -4538,8 +4766,7 @@ FUNCTION QPM_SaveProject( bCheck )
    ENDIF
    IF Empty( PUB_cProjectFile ) .AND. Empty( PUB_cProjectFolder )
       IF ! bCheck
-         MsgStop( DBLQT + "Project Folder" + DBLQT + " is not a valid folder:" + CRLF + PUB_cProjectFolder + CRLF + 'Look at tab ' + DBLQT + PagePRG + DBLQT )
-         MsgStop( 'No project is open.' )
+         MyMsgStop( 'No project is open!' )
       ENDIF
       RETURN .F.
    ENDIF
@@ -4547,101 +4774,136 @@ FUNCTION QPM_SaveProject( bCheck )
       cINI += 'VERSION '                    + QPM_VERSION_NUMBER + CRLF
       cINI += 'PRJ_VERSION '                + MakePrj_Version() + CRLF
       cINI += 'PROJECTFOLDER '              + US_StrTran( PUB_cProjectFolder, PUB_cThisFolder, '<ThisFolder>' ) + CRLF
+      cINI += 'AUTOINC '                    + iif( GetProperty( 'VentanaMain', 'AutoInc', 'checked' ), 'YES', 'NO' ) + CRLF
+      cINI += 'CHECK64BITS '                + iif( Prj_Check_64bits, 'YES', 'NO' ) + CRLF
+      cINI += 'CHECKCONSOLE '               + iif( Prj_Check_Console, 'YES', 'NO' ) + CRLF
+      cINI += 'CHECKCPP '                   + GetCppSuffix() + CRLF
+      cINI += 'CHECKDBFTOOL '               + cDbfTool() + CRLF
+      cINI += 'CHECKFORMTOOL '              + GetFormTool() + CRLF
+      cINI += 'CHECKHARBOUR '               + iif( Prj_Radio_Harbour == DEF_RG_XHARBOUR, DefineXHarbour, DefineHarbour ) + CRLF
+      cINI += 'CHECKHARBOURIS31 '           + iif( Prj_Check_HarbourIs31, 'YES', 'NO' ) + CRLF
+      cINI += 'CHECKMINIGUI '               + GetMiniGuiSuffix() + CRLF
+      cINI += 'CHECKMT '                    + iif( Prj_Check_MT, 'YES', 'NO' ) + CRLF
+      cINI += 'CHECKNOLIBRCS '              + iif( Prj_Check_IgnoreLibRCs, 'YES', 'NO' ) + CRLF
+      cINI += 'CHECKNOMAINRC '              + iif( Prj_Check_IgnoreMainRC, 'YES', 'NO' ) + CRLF
+      cINI += 'CHECKOUTPUTPREFIX '          + iif( Prj_Check_OutputPrefix, 'YES', 'NO' ) + CRLF
+      cINI += 'CHECKOUTPUTSUFFIX '          + iif( Prj_Check_OutputSuffix, 'YES', 'NO' ) + CRLF
+      cINI += 'CHECKPLACERCFIRST '          + iif( Prj_Check_PlaceRCFirst, 'YES', 'NO' ) + CRLF
+      cINI += 'CHECKREIMPORT '              + iif( GetProperty( 'VentanaMain', 'Check_Reimp', 'Value' ), 'YES', 'NO' ) + CRLF
+      cINI += 'CHECKSTATICBUILD '           + iif( Prj_Check_StaticBuild, 'YES', 'NO' ) + CRLF
+      cINI += 'CHECKUPX '                   + iif( Prj_Check_Upx, 'YES', 'NO' ) + CRLF
+   FOR i := 1 TO VentanaMain.GDbfFiles.ItemCount
+      cINI += 'DBF '                        + ChgPathToRelative( GetProperty( 'VentanaMain', 'GDbfFiles', 'Cell', i, NCOLDBFFULLNAME ) ) + CRLF
+   NEXT i
+      cINI += 'DBFAUTOVIEW '                + US_VarToStr( bDbfAutoView ) + CRLF
+      cINI += 'DEBUGACTIVE '                + iif( PUB_bDebugActive, 'YES', 'NO' ) + CRLF
+   DescargoExcludeLibs( GetSuffix() )
+   FOR i := 1 TO Len( vSuffix )
+      FOR j := 1 TO Len( &( 'ExcludeLibs'+vSuffix[i][1] ) )
+         cINI += 'EXCLUDE'                  + vSuffix[i][1] + ' ' + AllTrim( &( 'ExcludeLibs'+vSuffix[i][1]+'['+Str(j)+']' ) ) + CRLF
+      NEXT
+   NEXT
+      cINI += 'EXTRARUNCMDEXE '             + Prj_ExtraRunCmdEXE + CRLF
+      cINI += 'EXTRARUNCMDFINAL '           + Prj_ExtraRunCmdFINAL + CRLF
+      cINI += 'EXTRARUNCMDFREE '            + Prj_ExtraRunCmdFREE + CRLF
+      cINI += 'EXTRARUNEXEPARM '            + Prj_ExtraRunCmdEXEParm + CRLF
+      cINI += 'EXTRARUNEXEPAUSE '           + US_VarToStr( Prj_ExtraRunExePause ) + CRLF
+      cINI += 'EXTRARUNEXEWAIT '            + US_VarToStr( Prj_ExtraRunExeWait ) + CRLF
+      cINI += 'EXTRARUNFREEPARM '           + Prj_ExtraRunCmdFREEParm + CRLF
+      cINI += 'EXTRARUNFREEPAUSE '          + US_VarToStr( Prj_ExtraRunFreePause ) + CRLF
+      cINI += 'EXTRARUNFREEWAIT '           + US_VarToStr( Prj_ExtraRunFreeWait ) + CRLF
+      cINI += 'EXTRARUNPROJQPM '            + Prj_ExtraRunProjQPM + CRLF
+      cINI += 'EXTRARUNQPMAUTOEXIT '        + US_VarToStr( Prj_ExtraRunQPMAutoEXIT ) + CRLF
+      cINI += 'EXTRARUNQPMBUTTONRUN '       + US_VarToStr( Prj_ExtraRunQPMButtonRun ) + CRLF
+      cINI += 'EXTRARUNQPMCLEAR '           + US_VarToStr( Prj_ExtraRunQPMClear ) + CRLF
+      cINI += 'EXTRARUNQPMFORCEFULL '       + US_VarToStr( Prj_ExtraRunQPMForceFull ) + CRLF
+      cINI += 'EXTRARUNQPMLITE '            + US_VarToStr( Prj_ExtraRunQPMLite ) + CRLF
+      cINI += 'EXTRARUNQPMLOG '             + US_VarToStr( Prj_ExtraRunQPMLog ) + CRLF
+      cINI += 'EXTRARUNQPMLOGONLYERROR '    + US_VarToStr( Prj_ExtraRunQPMLogOnlyError ) + CRLF
+      cINI += 'EXTRARUNQPMPARM '            + Prj_ExtraRunCmdQPMParm + CRLF
+      cINI += 'EXTRARUNQPMRADIO '           + US_VarToStr( Prj_ExtraRunQPMRadio ) + CRLF
+      cINI += 'EXTRARUNQPMRUN '             + US_VarToStr( Prj_ExtraRunQPMRun ) + CRLF
+      cINI += 'EXTRARUNTYPE '               + Prj_ExtraRunType + CRLF
+   FOR i := 1 TO VentanaMain.GPanFiles.ItemCount
+      cINI += 'FORM '                       + ChgPathToRelative( GetProperty( 'VentanaMain', 'GPanFiles', 'Cell', i, NCOLPANFULLNAME ) ) + CRLF
+   NEXT i
+   FOR i := 1 TO VentanaMain.GHeaFiles.ItemCount
+      cINI += 'HEAD '                       + ChgPathToRelative( GetProperty( 'VentanaMain', 'GHeaFiles', 'Cell', i, NCOLHEAFULLNAME ) ) + CRLF
+   NEXT i
+      cINI += 'HOTKEYS '                    + iif( GetProperty( 'VentanaMain', 'HotKeys', 'checked' ), 'YES', 'NO' ) + CRLF
+   #ifdef QPM_HOTRECOVERY
+      cINI += 'HOTLASTEXTERNALFILE '        + Gbl_HR_cLastExternalFileName + CRLF
+   #endif
+      cINI += 'IMPORTGUIONA '               + iif( GetProperty( 'VentanaMain', 'Check_GuionA', 'Value' ), 'YES', 'NO' ) + CRLF
+   DescargoIncludeLibs( GetSuffix() )
+FOR i := 1 TO Len( vSuffix )
+   FOR j := 1 TO Len( &( 'IncludeLibs'+vSuffix[i][1] ) )
+      cINI += 'INCLUDE'                     + vSuffix[i][1] + ' ' + US_Word( &( 'IncludeLibs'+vSuffix[i][1]+'['+Str(j)+']' ), 1 ) + ' ' + US_Word( &( 'IncludeLibs'+vSuffix[i][1]+'['+Str(j)+']' ), 2 ) + CRLF
+   NEXT
+NEXT
    FOR i := 1 TO Len( vSuffix )
       cINI += 'LASTLIBFOLDER'               + vSuffix[i][1] + ' ' + &( 'cLastLibFolder'+vSuffix[i][1] ) + CRLF
    NEXT
-      cINI += 'RUNFOLDER '                  + ChgPathToRelative(VentanaMain.TRunProjectFolder.Value) + CRLF
-      cINI += 'RUNPARAM '                   + GBL_cRunParm + CRLF
-      cINI += 'OVERRIDECOMPILEPARM '        + GetProperty( 'VentanaMain', 'OverrideCompile', 'value' ) + CRLF
-      cINI += 'OVERRIDELINKPARM '           + GetProperty( 'VentanaMain', 'OverrideLink', 'value' ) + CRLF
-      cINI += 'CHECKHARBOUR '               + IF ( Prj_Radio_Harbour == DEF_RG_XHARBOUR, DefineXHarbour, DefineHarbour ) + CRLF
-      cINI += 'CHECKHARBOURIS31 '           + IF ( Prj_Check_HarbourIs31, 'YES', 'NO' ) + CRLF
-      cINI += 'CHECKPLACERCFIRST '          + IF ( Prj_Check_PlaceRCFirst, 'YES', 'NO' ) + CRLF
-      cINI += 'CHECKNOMAINRC '              + IF ( Prj_Check_IgnoreMainRC, 'YES', 'NO' ) + CRLF
-      cINI += 'CHECKNOLIBRCS '              + IF ( Prj_Check_IgnoreLibRCs, 'YES', 'NO' ) + CRLF
-      cINI += 'CHECK64BITS '                + IF ( Prj_Check_64bits, 'YES', 'NO' ) + CRLF
-      cINI += 'AUTOINC '                    + IF ( GetProperty( 'VentanaMain', 'AutoInc', 'checked' ), 'YES', 'NO' ) + CRLF
-      cINI += 'HOTKEYS '                    + IF ( GetProperty( 'VentanaMain', 'HotKeys', 'checked' ), 'YES', 'NO' ) + CRLF
-      cINI += 'CHECKCPP '                   + GetCppSuffix() + CRLF
-      cINI += 'CHECKMINIGUI '               + GetMiniGuiSuffix() + CRLF
-      cINI += 'CHECKCONSOLE '               + iif( Prj_Check_Console, 'YES', 'NO' ) + CRLF
-      cINI += 'CHECKMT '                    + iif( Prj_Check_MT, 'YES', 'NO' ) + CRLF
-      cINI += 'CHECKUPX '                   + iif( Prj_Check_Upx, 'YES', 'NO' ) + CRLF
-      cINI += 'CHECKFORMTOOL '              + cFormTool() + CRLF
-      cINI += 'CHECKDBFTOOL '               + cDbfTool() + CRLF
+      cINI += 'LIBREIMPORT '                + GetProperty( 'VentanaMain', 'TReimportLib', 'Value' ) + CRLF
+      cINI += 'MI_BDESKTOPSHORTCUT '        + US_VarToStr( PUB_MI_bDesktopShortCut ) + CRLF
+      cINI += 'MI_BEXEASSOCIATION '         + US_VarToStr( PUB_MI_bExeAssociation ) + CRLF
+      cINI += 'MI_BEXEBACKUPOPTION '        + US_VarToStr( PUB_MI_bExeBackupOption ) + CRLF
+      cINI += 'MI_BLAUNCHAPPLICATION '      + US_VarToStr( PUB_MI_bLaunchApplication ) + CRLF
+      cINI += 'MI_BLAUNCHBACKUPOPTION '     + US_VarToStr( PUB_MI_bLaunchBackupOption ) + CRLF
+      cINI += 'MI_BNEWFILE '                + US_VarToStr( PUB_MI_bNewFile ) + CRLF
+      cINI += 'MI_BREBOOT '                 + US_VarToStr( PUB_MI_bReboot ) + CRLF
+      cINI += 'MI_BSELECTALLDBF '           + US_VarToStr( PUB_MI_bSelectAllDBF ) + CRLF
+      cINI += 'MI_BSELECTALLHEA '           + US_VarToStr( PUB_MI_bSelectAllHEA ) + CRLF
+      cINI += 'MI_BSELECTALLLIB '           + US_VarToStr( PUB_MI_bSelectAllLIB ) + CRLF
+      cINI += 'MI_BSELECTALLPAN '           + US_VarToStr( PUB_MI_bSelectAllPAN ) + CRLF
+      cINI += 'MI_BSELECTALLPRG '           + US_VarToStr( PUB_MI_bSelectAllPRG ) + CRLF
+      cINI += 'MI_BSTARTMENUSHORTCUT '      + US_VarToStr( PUB_MI_bStartMenuShortCut ) + CRLF
+      cINI += 'MI_CDEFAULTLANGUAGE '        + US_VarToStr( PUB_MI_cDefaultLanguage ) + CRLF
+      cINI += 'MI_CDESTINATIONPATH '        + US_VarToStr( PUB_MI_cDestinationPath ) + CRLF
+      cINI += 'MI_CEXEASSOCIATION '         + US_VarToStr( PUB_MI_cExeAssociation ) + CRLF
+      cINI += 'MI_CIMAGE '                  + US_VarToStr( PUB_MI_cImage ) + CRLF
+      cINI += 'MI_CINSTALLERNAME '          + US_VarToStr( PUB_MI_cInstallerName ) + CRLF
+      cINI += 'MI_CLEYENDUSERTEXT '         + US_VarToStr( PUB_MI_cLeyendUserText ) + CRLF
+      cINI += 'MI_CNEWFILELEYEND '          + US_VarToStr( PUB_MI_cNewFileLeyend ) + CRLF
+      cINI += 'MI_CNEWFILEUSERFILE '        + US_VarToStr( PUB_MI_cNewFileUserFile ) + CRLF
+      cINI += 'MI_NDESKTOPSHORTCUT '        + US_VarToStr( PUB_MI_nDesktopShortCut ) + CRLF
+      cINI += 'MI_NDESTINATIONPATH '        + US_VarToStr( PUB_MI_nDestinationPath ) + CRLF
+      cINI += 'MI_NEXEASSOCIATIONICON '     + US_VarToStr( PUB_MI_nExeAssociationIcon ) + CRLF
+      cINI += 'MI_NINSTALLERNAME '          + US_VarToStr( PUB_MI_nInstallerName ) + CRLF
+      cINI += 'MI_NLAUNCHAPPLICATION '      + US_VarToStr( PUB_MI_nLaunchApplication ) + CRLF
+      cINI += 'MI_NLEYENDSUGGESTED '        + US_VarToStr( PUB_MI_nLeyendSuggested ) + CRLF
+      cINI += 'MI_NNEWFILEEMPTY '           + US_VarToStr( PUB_MI_nNewFileEmpty ) + CRLF
+      cINI += 'MI_NNEWFILESUGGESTED '       + US_VarToStr( PUB_MI_nNewFileSuggested ) + CRLF
+      cINI += 'MI_NSTARTMENUSHORTCUT '      + US_VarToStr( PUB_MI_nStartMenuShortCut ) + CRLF
       cINI += 'OUTPUTCOPYMOVE '             + cOutputCopyMove() + CRLF
       cINI += 'OUTPUTCOPYMOVEFOLDER '       + ChgPathToRelative( Prj_Text_OutputCopyMoveFolder ) + CRLF
       cINI += 'OUTPUTRENAME '               + cOutputRename() + CRLF
       cINI += 'OUTPUTRENAMENEWNAME '        + Prj_Text_OutputRenameNewName + CRLF
-      cINI += 'CHECKOUTPUTSUFFIX '          + iif( Prj_Check_OutputSuffix, 'YES', 'NO' ) + CRLF
-      cINI += 'CHECKOUTPUTPREFIX '          + iif( Prj_Check_OutputPrefix, 'YES', 'NO' ) + CRLF
       cINI += 'OUTPUTTYPE '                 + cOutputType() + CRLF
-      cINI += 'CHECKREIMPORT '              + iif( GetProperty( 'VentanaMain', 'Check_Reimp', 'Value' ), 'YES', 'NO' ) + CRLF
-      cINI += 'LIBREIMPORT '                + GetProperty( 'VentanaMain', 'TReimportLib', 'Value' ) + CRLF
-      cINI += 'IMPORTGUIONA '               + iif( GetProperty( 'VentanaMain', 'Check_GuionA', 'Value' ), 'YES', 'NO' ) + CRLF
-      cINI += 'DBFAUTOVIEW '                + US_VarToStr( bDbfAutoView ) + CRLF
-      cINI += 'EXTRARUNCMDFINAL '           + Prj_ExtraRunCmdFINAL + CRLF
-      cINI += 'EXTRARUNPROJQPM '            + Prj_ExtraRunProjQPM + CRLF
-      cINI += 'EXTRARUNCMDEXE '             + Prj_ExtraRunCmdEXE + CRLF
-      cINI += 'EXTRARUNCMDFREE '            + Prj_ExtraRunCmdFREE + CRLF
-      cINI += 'EXTRARUNQPMPARM '            + Prj_ExtraRunCmdQPMParm + CRLF
-      cINI += 'EXTRARUNEXEPARM '            + Prj_ExtraRunCmdEXEParm + CRLF
-      cINI += 'EXTRARUNFREEPARM '           + Prj_ExtraRunCmdFREEParm + CRLF
-      cINI += 'EXTRARUNTYPE '               + Prj_ExtraRunType + CRLF
-      cINI += 'EXTRARUNQPMRADIO '           + US_VarToStr( Prj_ExtraRunQPMRadio ) + CRLF
-      cINI += 'EXTRARUNQPMLITE '            + US_VarToStr( Prj_ExtraRunQPMLite ) + CRLF
-      cINI += 'EXTRARUNQPMFORCEFULL '       + US_VarToStr( Prj_ExtraRunQPMForceFull ) + CRLF
-      cINI += 'EXTRARUNQPMRUN '             + US_VarToStr( Prj_ExtraRunQPMRun ) + CRLF
-      cINI += 'EXTRARUNQPMBUTTONRUN '       + US_VarToStr( Prj_ExtraRunQPMButtonRun ) + CRLF
-      cINI += 'EXTRARUNQPMCLEAR '           + US_VarToStr( Prj_ExtraRunQPMClear ) + CRLF
-      cINI += 'EXTRARUNQPMLOG '             + US_VarToStr( Prj_ExtraRunQPMLog ) + CRLF
-      cINI += 'EXTRARUNQPMLOGONLYERROR '    + US_VarToStr( Prj_ExtraRunQPMLogOnlyError ) + CRLF
-      cINI += 'EXTRARUNQPMAUTOEXIT '        + US_VarToStr( Prj_ExtraRunQPMAutoEXIT ) + CRLF
-      cINI += 'EXTRARUNEXEWAIT '            + US_VarToStr( Prj_ExtraRunExeWait ) + CRLF
-      cINI += 'EXTRARUNEXEPAUSE '           + US_VarToStr( Prj_ExtraRunExePause ) + CRLF
-      cINI += 'EXTRARUNFREEWAIT '           + US_VarToStr( Prj_ExtraRunFreeWait ) + CRLF
-      cINI += 'EXTRARUNFREEPAUSE '          + US_VarToStr( Prj_ExtraRunFreePause ) + CRLF
-      cINI += 'DEBUGACTIVE '                + iif( PUB_bDebugActive, 'YES', 'NO' ) + CRLF
-      cINI += 'MI_BEXEASSOCIATION '         + US_VarToStr( PUB_MI_bExeAssociation ) + CRLF
-      cINI += 'MI_CEXEASSOCIATION '         + US_VarToStr( PUB_MI_cExeAssociation ) + CRLF
-      cINI += 'MI_NEXEASSOCIATIONICON '     + US_VarToStr( PUB_MI_nExeAssociationIcon ) + CRLF
-      cINI += 'MI_BEXEBACKUPOPTION '        + US_VarToStr( PUB_MI_bExeBackupOption ) + CRLF
-      cINI += 'MI_BNEWFILE '                + US_VarToStr( PUB_MI_bNewFile ) + CRLF
-      cINI += 'MI_NNEWFILESUGGESTED '       + US_VarToStr( PUB_MI_nNewFileSuggested ) + CRLF
-      cINI += 'MI_CNEWFILELEYEND '          + US_VarToStr( PUB_MI_cNewFileLeyend ) + CRLF
-      cINI += 'MI_NNEWFILEEMPTY '           + US_VarToStr( PUB_MI_nNewFileEmpty ) + CRLF
-      cINI += 'MI_CNEWFILEUSERFILE '        + US_VarToStr( PUB_MI_cNewFileUserFile ) + CRLF
-      cINI += 'MI_NDESTINATIONPATH '        + US_VarToStr( PUB_MI_nDestinationPath ) + CRLF
-      cINI += 'MI_CDESTINATIONPATH '        + US_VarToStr( PUB_MI_cDestinationPath ) + CRLF
-      cINI += 'MI_NLEYENDSUGGESTED '        + US_VarToStr( PUB_MI_nLeyendSuggested ) + CRLF
-      cINI += 'MI_CLEYENDUSERTEXT '         + US_VarToStr( PUB_MI_cLeyendUserText ) + CRLF
-      cINI += 'MI_BDESKTOPSHORTCUT '        + US_VarToStr( PUB_MI_bDesktopShortCut ) + CRLF
-      cINI += 'MI_NDESKTOPSHORTCUT '        + US_VarToStr( PUB_MI_nDesktopShortCut ) + CRLF
-      cINI += 'MI_BSTARTMENUSHORTCUT '      + US_VarToStr( PUB_MI_bStartMenuShortCut ) + CRLF
-      cINI += 'MI_NSTARTMENUSHORTCUT '      + US_VarToStr( PUB_MI_nStartMenuShortCut ) + CRLF
-      cINI += 'MI_BLAUNCHAPPLICATION '      + US_VarToStr( PUB_MI_bLaunchApplication ) + CRLF
-      cINI += 'MI_NLAUNCHAPPLICATION '      + US_VarToStr( PUB_MI_nLaunchApplication ) + CRLF
-      cINI += 'MI_BLAUNCHBACKUPOPTION '     + US_VarToStr( PUB_MI_bLaunchBackupOption ) + CRLF
-      cINI += 'MI_BREBOOT '                 + US_VarToStr( PUB_MI_bReboot ) + CRLF
-      cINI += 'MI_CDEFAULTLANGUAGE '        + US_VarToStr( PUB_MI_cDefaultLanguage ) + CRLF
-      cINI += 'MI_NINSTALLERNAME '          + US_VarToStr( PUB_MI_nInstallerName ) + CRLF
-      cINI += 'MI_CINSTALLERNAME '          + US_VarToStr( PUB_MI_cInstallerName ) + CRLF
-      cINI += 'MI_CIMAGE '                  + US_VarToStr( PUB_MI_cImage ) + CRLF
-      cINI += 'MI_BSELECTALLPRG '           + US_VarToStr( PUB_MI_bSelectAllPRG ) + CRLF
-      cINI += 'MI_BSELECTALLHEA '           + US_VarToStr( PUB_MI_bSelectAllHEA ) + CRLF
-      cINI += 'MI_BSELECTALLPAN '           + US_VarToStr( PUB_MI_bSelectAllPAN ) + CRLF
-      cINI += 'MI_BSELECTALLDBF '           + US_VarToStr( PUB_MI_bSelectAllDBF ) + CRLF
-      cINI += 'MI_BSELECTALLLIB '           + US_VarToStr( PUB_MI_bSelectAllLIB ) + CRLF
+      cINI += 'OVERRIDECOMPILEPARM '        + GetProperty( 'VentanaMain', 'OverrideCompile', 'value' ) + CRLF
+      cINI += 'OVERRIDELINKPARM '           + GetProperty( 'VentanaMain', 'OverrideLink', 'value' ) + CRLF
+      cINI += 'RUNFOLDER '                  + ChgPathToRelative(VentanaMain.TRunProjectFolder.Value) + CRLF
+      cINI += 'RUNPARAM '                   + Gbl_cRunParm + CRLF
       cINI += 'SHGDATABASE '                + iif( Empty( SHG_Database ), '*NONE*', ChgPathToRelative( SHG_Database ) ) + CRLF
+      cINI += 'SHGHTMLFOLDER '              + ChgPathToRelative( SHG_HtmlFolder ) + CRLF
       cINI += 'SHGLASTFOLDERIMG '           + ChgPathToRelative( SHG_LastFolderImg ) + CRLF
       cINI += 'SHGOUTPUTTYPE '              + iif( SHG_CheckTypeOutput, 'YES', 'NO' ) + CRLF
-      cINI += 'SHGHTMLFOLDER '              + ChgPathToRelative( SHG_HtmlFolder ) + CRLF
    #ifdef QPM_SHG
       cINI += 'SHGWWW '                     + VentanaMain.TWWWHlp.Value + CRLF
    #endif
-   #ifdef QPM_HOTRECOVERY
-      cINI += 'HOTLASTEXTERNALFILE '        + GBL_HR_cLastExternalFileName + CRLF
-   #endif
+      cINI += 'WARNBCCOBJECT '              + iif( Prj_Warn_BccObject, 'YES', 'NO' ) + CRLF
+      cINI += 'WARNBCCOBJECTCONT '          + iif( Prj_Warn_BccObject_Cont, 'YES', 'NO' ) + CRLF
+      cINI += 'WARNCPP '                    + iif( Prj_Warn_Cpp, 'YES', 'NO' ) + CRLF
+      cINI += 'WARNDBFSEARCH '              + iif( Prj_Warn_DBF_Search, 'YES', 'NO' ) + CRLF
+      cINI += 'WARNDBFSEARCHCONT '          + iif( Prj_Warn_DBF_Search_Cont, 'YES', 'NO' ) + CRLF
+      cINI += 'WARNGTORDER '                + iif( Prj_Warn_GT_Order, 'YES', 'NO' ) + CRLF
+      cINI += 'WARNGTORDERCONT '            + iif( Prj_Warn_GT_Order_Cont, 'YES', 'NO' ) + CRLF
+      cINI += 'WARNINFOSAVEDMSG '           + iif( Prj_Warn_InfoSaved, 'YES', 'NO' ) + CRLF
+      cINI += 'WARNNULLRDD '                + iif( Prj_Warn_NullRDD, 'YES', 'NO' ) + CRLF
+      cINI += 'WARNPPOBROWSE '              + iif( Prj_Warn_PPO_Browse, 'YES', 'NO' ) + CRLF
+      cINI += 'WARNSLOWSEARCH '             + iif( Prj_Warn_SlowSearch, 'YES', 'NO' ) + CRLF
+      cINI += 'WARNSLOWSEARCHCONT '         + iif( Prj_Warn_SlowSearch_Cont, 'YES', 'NO' ) + CRLF
+      cINI += 'WARNTOPFILE '                + iif( Prj_Warn_TopFile, 'YES', 'NO' ) + CRLF
    FOR i := 1 TO VentanaMain.GPrgFiles.ItemCount
       cForceRecomp := ''
       IF GetProperty( 'VentanaMain', 'GPRGFiles', 'Cell', i, NCOLPRGRECOMP ) == 'R'
@@ -4649,27 +4911,6 @@ FUNCTION QPM_SaveProject( bCheck )
       ENDIF
       cINI += 'SOURCE '                     + cForceRecomp + ChgPathToRelative( GetProperty( 'VentanaMain', 'GPrgFiles', 'Cell', i, NCOLPRGFULLNAME ) ) + CRLF
    NEXT i
-   FOR i := 1 TO VentanaMain.GHeaFiles.ItemCount
-      cINI += 'HEAD '                       + ChgPathToRelative( GetProperty( 'VentanaMain', 'GHeaFiles', 'Cell', i, NCOLHEAFULLNAME ) ) + CRLF
-   NEXT i
-   FOR i := 1 TO VentanaMain.GPanFiles.ItemCount
-      cINI += 'FORM '                       + ChgPathToRelative( GetProperty( 'VentanaMain', 'GPanFiles', 'Cell', i, NCOLPANFULLNAME ) ) + CRLF
-   NEXT i
-   FOR i := 1 TO VentanaMain.GDbfFiles.ItemCount
-      cINI += 'DBF '                        + ChgPathToRelative( GetProperty( 'VentanaMain', 'GDbfFiles', 'Cell', i, NCOLDBFFULLNAME ) ) + CRLF
-   NEXT i
-   DesCargoIncludeLibs( GetSuffix() )
-   FOR i := 1 TO Len( vSuffix )
-      FOR j := 1 TO Len( &( 'IncludeLibs'+vSuffix[i][1] ) )
-         cINI += 'INCLUDE'                  + vSuffix[i][1] + ' ' + US_Word( &( 'IncludeLibs'+vSuffix[i][1]+'['+Str(j)+']' ), 1 ) + ' ' + US_Word( &( 'IncludeLibs'+vSuffix[i][1]+'['+Str(j)+']' ), 2 ) + ' ' + ChgPathToRelative( US_WordSubStr( &( 'IncludeLibs'+vSuffix[i][1]+'['+Str(j)+']' ), 3 ) ) + CRLF
-      NEXT
-   NEXT
-   DescargoExcludeLibs( GetSuffix() )
-   FOR i := 1 TO Len( vSuffix )
-      FOR j := 1 TO Len( &( 'ExcludeLibs'+vSuffix[i][1] ) )
-         cINI += 'EXCLUDE'                  + vSuffix[i][1] + ' ' + AllTrim( &( 'ExcludeLibs'+vSuffix[i][1]+'['+Str(j)+']' ) ) + CRLF
-      NEXT
-   NEXT
    DO WHILE " " + CRLF $ cINI
       cINI := StrTran( cINI, " " + CRLF, CRLF )
    ENDDO
@@ -4693,7 +4934,7 @@ FUNCTION QPM_SaveProject( bCheck )
       ENDIF
       IF bDiff
          IF ! bAutoEXIT
-            IF MyMsgYesNo( 'Save changes made to project ' + DBLQT + US_FileNameOnlyNameAndExt( PUB_cProjectFile) + DBLQT + "?" )
+            IF MyMsgYesNo( 'Save changes made to project: ' + DBLQT + US_FileNameOnlyNameAndExt( PUB_cProjectFile) + DBLQT + "?" )
                IF Empty( PUB_cProjectFile )
                   QPM_SaveAsProject( .T. )
                ELSE
@@ -4717,7 +4958,7 @@ FUNCTION QPM_SaveProject( bCheck )
          ENDIF
          IF ! ( PUB_bDebugActiveAnt == PUB_bDebugActive )
             QPM_ProjectFileUnLock()
-            ReplaceDebugActive( PUB_cProjectFile, PUB_bDebugActive )
+            ReplaceMemoData( PUB_cProjectFile, 'DEBUGACTIVE', iif( PUB_bDebugActive, "YES", "NO" ) )
             QPM_ProjectFileLock( PUB_cProjectFile )
             PUB_bDebugActiveAnt := PUB_bDebugActive
             bWrite := .T.
@@ -4732,19 +4973,25 @@ FUNCTION QPM_SaveProject( bCheck )
       bWrite := .T.
    ENDIF
 
-   IF bWrite
-      MsgInfo( "Project info saved!" )
+   IF bWrite .AND. Prj_Warn_InfoSaved
+      IF MyMsgYesNo( "Project's information was saved." + CRLF + 'Omit this message from now on?' )
+         Prj_Warn_InfoSaved := .F.
+         QPM_ProjectFileUnLock()
+         ReplaceMemoData( PUB_cProjectFile, 'WARNINFOSAVEDMSG', "NO" )
+         QPM_ProjectFileLock( PUB_cProjectFile )
+         MyMsgInfo( 'Use ' + DBLQT + PUB_MenuResetWarnings + DBLQT + ' option of Settings menu to enable the previous message.' )
+      ENDIF
    ENDIF
 RETURN .T.
 
 FUNCTION MakePrj_Version()
 RETURN SubStr( GetPrj_Version(), 1, 2 ) + ' ' + SubStr( GetPrj_Version(), 3, 2 ) + ' ' + SubStr( GetPrj_Version(), 5, 4 )
 
-FUNCTION CargoIncludeLibs( tipo )
-   LOCAL i, Exists, cFile, k
+FUNCTION CargoIncludeLibs()
+   LOCAL i, Exists, cFile, k, cFlavor := GetSuffix()
    VentanaMain.GIncFiles.DeleteAllItems
-   FOR i := 1 TO Len( &('IncludeLibs'+tipo) )
-       cFile := US_FileNameOnlyNameAndExt( &('IncludeLibs'+tipo+'['+Str(i)+']') )
+   FOR i := 1 TO Len( &('IncludeLibs'+cFlavor) )
+       cFile := US_FileNameOnlyNameAndExt( &('IncludeLibs'+cFlavor+'['+Str(i)+']') )
        Exists := .F.
        FOR k := 1 TO VentanaMain.GIncFiles.ItemCount
           IF US_Upper( cFile ) == US_Upper( GetProperty( 'VentanaMain', 'GIncFiles', 'Cell', k, NCOLEXCNAME ) )
@@ -4753,17 +5000,59 @@ FUNCTION CargoIncludeLibs( tipo )
           ENDIF
        NEXT
        IF ! Exists
-          VentanaMain.GIncFiles.AddItem( { PUB_nGridImgNone, cFile, '* ' + &('IncludeLibs'+tipo+'['+Str(i)+']') } )
+          VentanaMain.GIncFiles.AddItem( { PUB_nGridImgNone, cFile, '* ' + &('IncludeLibs'+cFlavor+'['+Str(i)+']') } )
           LibPos( VentanaMain.GIncFiles.ItemCount )
-          IF AScan( &('vExtraFoldersForLibs'+GetSuffix()), US_Upper( US_FileNameOnlyPath( ChgPathToReal( US_WordSubStr( &('IncludeLibs'+tipo+'['+Str(i)+']'), 2 ) ) ) ) ) == 0
-             AAdd( &('vExtraFoldersForLibs'+GetSuffix()), US_Upper( US_FileNameOnlyPath( ChgPathToReal( US_WordSubStr( &('IncludeLibs'+tipo+'['+Str(i)+']'), 2 ) ) ) ) )
+          IF AScan( &('vExtraFoldersForLibs'+GetSuffix()), US_Upper( US_FileNameOnlyPath( ChgPathToReal( US_WordSubStr( &('IncludeLibs'+cFlavor+'['+Str(i)+']'), 2 ) ) ) ) ) == 0
+             AAdd( &('vExtraFoldersForLibs'+GetSuffix()), US_Upper( US_FileNameOnlyPath( ChgPathToReal( US_WordSubStr( &('IncludeLibs'+cFlavor+'['+Str(i)+']'), 2 ) ) ) ) )
           ENDIF
        ENDIF
    NEXT
-   LibsActiva := tipo
-   IF VentanaMain.GDbfFiles.Value == 0
-      VentanaMain.GDbfFiles.Value := 1
+   LibsActiva := cFlavor
+   IF VentanaMain.GIncFiles.Value == 0
+      VentanaMain.GIncFiles.Value := 1
    ENDIF
+RETURN .T.
+
+FUNCTION CargoExcludeLibs()
+   LOCAL i, Exists, cFile, k, cFlavor := GetSuffix()
+   VentanaMain.GExcFiles.DeleteAllItems
+   FOR i := 1 TO Len( &('ExcludeLibs'+cFlavor) )
+       cFile := &('ExcludeLibs'+cFlavor+'['+Str(i)+']')
+       Exists := .F.
+       FOR k := 1 TO VentanaMain.GExcFiles.ItemCount
+          IF US_Upper( cFile ) == US_Upper( GetProperty( 'VentanaMain', 'GExcFiles', 'Cell', k, NCOLEXCNAME ) )
+             Exists := .T.
+             EXIT
+          ENDIF
+       NEXT
+       IF ! Exists
+          VentanaMain.GExcFiles.AddItem( { PUB_nGridImgNone, cFile } )
+       ENDIF
+   NEXT
+   LibsActiva := cFlavor
+   IF VentanaMain.GExcFiles.Value == 0
+      VentanaMain.GExcFiles.Value := 1
+   ENDIF
+RETURN .T.
+
+FUNCTION CargoDefaultLibs( cFlavor )
+   LOCAL nCant, i
+   IF ! Empty( GetMiniGuiName() )
+      IF AScan( vLibsDefault, { |x| US_Upper( x[1] ) == US_Upper( GetMiniGuiName() ) } ) == 0
+         AAdd( vLibsDefault, NIL )
+         AIns( vLibsDefault, 1 )
+         vLibsDefault[1] := { GetMiniGuiName(), "B", "B", "B" }
+      ENDIF
+   ENDIF
+   nCant := Len( vLibsDefault )
+   VentanaMain.GDefFiles.DeleteAllItems
+   FOR i := 1 TO nCant
+      VentanaMain.GDefFiles.AddItem( { PUB_nGridImgNone, vLibsDefault[i,1], vLibsDefault[i,2], vLibsDefault[i,3], vLibsDefault[i,4] } )
+   NEXT i
+   IF VentanaMain.GDefFiles.Value == 0
+      VentanaMain.GDefFiles.Value := 1
+   ENDIF
+   LibsActiva := cFlavor
 RETURN .T.
 
 FUNCTION LibCheck( item )
@@ -4788,52 +5077,59 @@ FUNCTION LibPos( item, pos )
    VentanaMain.GIncFiles.setfocus
 RETURN .T.
 
-FUNCTION DesCargoIncludeLibs( tipo )
-   LOCAL i
-   &('IncludeLibs'+tipo) := {}
+FUNCTION DescargoIncludeLibs( cFlavor )
+   LOCAL aLibs, i
+   aLibs := {}
    FOR i := 1 TO VentanaMain.GIncFiles.ItemCount
-      AAdd( &('IncludeLibs'+tipo), US_Word( GetProperty( 'VentanaMain', 'GIncFiles', 'Cell', i, NCOLINCFULLNAME ), 2 ) + ' ' + US_WordSubStr( GetProperty( 'VentanaMain', 'GIncFiles', 'Cell', i, NCOLINCFULLNAME ), 3 ) )
+      AAdd( aLibs, US_Word( GetProperty( 'VentanaMain', 'GIncFiles', 'Cell', i, NCOLINCFULLNAME ), 2 ) + ' ' + US_WordSubStr( GetProperty( 'VentanaMain', 'GIncFiles', 'Cell', i, NCOLINCFULLNAME ), 3 ) )
    NEXT
+   &('IncludeLibs'+cFlavor) := aLibs
    VentanaMain.RichEditLib.Value := ''
-   VentanaMain.GDbfFiles.Value := 0
+   VentanaMain.GIncFiles.Value := 0
 RETURN .T.
 
-FUNCTION CargoExcludeLibs( tipo )
-   LOCAL i, Exists, cFile, k
-   VentanaMain.GExcFiles.DeleteAllItems
-   FOR i := 1 TO Len( &('ExcludeLibs'+tipo) )
-       cFile := &('ExcludeLibs'+tipo+'['+Str(i)+']')
-       Exists := .F.
-       FOR k := 1 TO VentanaMain.GExcFiles.ItemCount
-          IF US_Upper( cFile ) == US_Upper( GetProperty( 'VentanaMain', 'GExcFiles', 'Cell', k, NCOLEXCNAME ) )
-             Exists := .T.
-             EXIT
-          ENDIF
-       NEXT
-       IF ! Exists
-          VentanaMain.GExcFiles.AddItem( { PUB_nGridImgNone, cFile } )
-       ENDIF
-   NEXT
-   LibsActiva := tipo
-RETURN .T.
-
-FUNCTION DescargoExcludeLibs( tipo )
-   LOCAL i
-   &('ExcludeLibs'+tipo) := {}
+FUNCTION DescargoExcludeLibs( cFlavor )
+   LOCAL aLibs, i
+   aLibs := {}
    FOR i := 1 TO VentanaMain.GExcFiles.ItemCount
-      AAdd( &('ExcludeLibs'+tipo), GetProperty( 'VentanaMain', 'GExcFiles', 'Cell', i, NCOLEXCNAME ) )
+      AAdd( aLibs, GetProperty( 'VentanaMain', 'GExcFiles', 'Cell', i, NCOLEXCNAME ) )
    NEXT
+   &('ExcludeLibs'+cFlavor) := aLibs
+RETURN .T.
+
+FUNCTION DescargoDefaultLibs( cFlavor )
+   LOCAL aLibs, n, m, t, d, i
+   aLibs        := {}
+   vLibsDefault := {}
+   vLibsToLink  := {}
+   FOR i := 1 TO VentanaMain.GDefFiles.ItemCount
+      n := GetProperty( 'VentanaMain', 'GDefFiles', 'Cell', i, NCOLDEFNAME )
+      m := GetProperty( 'VentanaMain', 'GDefFiles', 'Cell', i, NCOLDEFMODE )
+      t := GetProperty( 'VentanaMain', 'GDefFiles', 'Cell', i, NCOLDEFTHREADS )
+      d := GetProperty( 'VentanaMain', 'GDefFiles', 'Cell', i, NCOLDEFDEBUG )
+      AAdd( aLibs, { n, m, t, d } )
+      AAdd( vLibsDefault, { n, m, t, d } )
+      IF ( Prj_Check_Console .AND. m $ "CB" ) .OR. ( ! Prj_Check_Console .AND. m $ "GB" )
+         IF ( Prj_Check_MT .AND. t $ "MB" ) .OR. ( ! Prj_Check_MT .AND. t $ "SB" )
+            IF ( PUB_bDebugActive .AND. d $ "YB" ) .OR. ( ! PUB_bDebugActive .AND. d $ "NB" )
+               AAdd( vLibsToLink, n )
+            ENDIF
+         ENDIF
+      ENDIF
+   NEXT
+   &('Gbl_DEF_LIBS_'+cFlavor) := aLibs
+   VentanaMain.RichEditLib.Value := ''
 RETURN .T.
 
 FUNCTION QPM_SaveAsProject( isNew )
    LOCAL TmpName
    IF Empty( PUB_cProjectFile ) .AND. Empty( isNew )
-      MsgStop( 'No project is open.' )
+      MyMsgStop( 'No project is open!' )
       RETURN ''
    ENDIF
    TmpName := AllTrim ( PutFile( { {'QPM Project Files (*.qpm)','*.qpm'} }, iif( ! Empty( isNew ) .AND. isNew, 'Create New Project', 'Save Project' ), cLastProjectFolder, .T. ) )
    IF ! Empty( TmpName )
-      IF ! ( US_Upper( US_FileNameOnlyExt(Tmpname) ) == US_Upper( 'QPM' ) )
+      IF ! ( Upper( US_FileNameOnlyExt(Tmpname) ) == 'QPM' )
          TmpName := TmpName + '.qpm'
       ENDIF
       PUB_cProjectFile := TmpName
@@ -4894,9 +5190,10 @@ FUNCTION QPM_EXIT( bWait )
 RETURN .F.
 
 FUNCTION QPM_Build()
-RETURN QPM_Wait( 'QPM_Build2()', 'Prepare for build ...' )
+RETURN QPM_Wait( 'QPM_Build2()', 'Preparing for build ...' )
 
 FUNCTION QPM_Build2()
+   LOCAL aNulRDD
    LOCAL bExtraFolderSearchRoot
    LOCAL bIsCpp := .F.
    LOCAL bld_cmd
@@ -4942,19 +5239,20 @@ FUNCTION QPM_Build2()
    LOCAL HeaFILES := {}
    LOCAL i
    LOCAL lIncludeMiniPrintRC
+   LOCAL lCont
    LOCAL MemoAux
    LOCAL MemoObj
    LOCAL nCant
    LOCAL nLastExtraFolderSearchAdded := 0
    LOCAL OBJFOLDER
-   LOCAL Out := ''
+   LOCAL Out
    LOCAL PanFILES := {}
    LOCAL PRGFILES := {}
    LOCAL vConcatIncludeC := {}
    LOCAL vConcatIncludeHB := {}
    LOCAL vDebugPath := {}
    LOCAL vLibExcludeFiles := {}
-   LOCAL vLibIncludeFiles := {}
+   LOCAL vLibIncludeFiles
    LOCAL vTemp
    LOCAL vTemp2
    LOCAL vTemp3
@@ -4965,18 +5263,16 @@ FUNCTION QPM_Build2()
    BUILD_IN_PROGRESS := .T.
 
    IF Empty( PUB_cProjectFile )
-      MsgStop( 'You must save the project before building it.' )
+      MyMsgStop( 'You must save the project before building it!' )
       BUILD_IN_PROGRESS := .F.
       RETURN .T.
    ENDIF
-
-   QPM_CargoLibraries()
 
    PUB_cConvert := ''
    PUB_bForceRunFromMsgOk := .F.
 
    IF bRunApp
-      MsgStop( 'Program running, you need to stop or kill the process before building it.' )
+      MyMsgStop( 'Program is running!' + CRLF + 'You need to stop or kill the process before building it.' )
       BUILD_IN_PROGRESS := .F.
       RETURN .F.
    ENDIF
@@ -4994,9 +5290,9 @@ FUNCTION QPM_Build2()
    vTemp := Array( ADIR( PUB_cProjectFolder + DEF_SLASH + '_'+replicate('?',13)+PUB_cCharFileNameTemp+'*.*' ) )
    vTemp2 := Array( ADIR( GetCppFolder() + DEF_SLASH + 'BIN' + DEF_SLASH + '_'+replicate('?',13)+PUB_cCharFileNameTemp+'*.*' ) )
    vTemp3 := Array( ADIR( SubStr( GetCppFolder(), 1, 2 ) + DEF_SLASH + '_'+replicate('?',13)+PUB_cCharFileNameTemp+'*.*' ) )
-   ADIR( PUB_cProjectFolder + DEF_SLASH + '_'+replicate('?',13)+PUB_cCharFileNameTemp+'*.*', vTemp )
-   ADIR( GetCppFolder() + DEF_SLASH + 'BIN' + DEF_SLASH + '_'+replicate('?',13)+PUB_cCharFileNameTemp+'*.*', vTemp2 )
-   ADIR( SubStr( GetCppFolder(), 1, 2 ) + DEF_SLASH + '_'+replicate('?',13)+PUB_cCharFileNameTemp+'*.*', vTemp3 )
+   ADir( PUB_cProjectFolder + DEF_SLASH + '_'+replicate('?',13)+PUB_cCharFileNameTemp+'*.*', vTemp )
+   ADir( GetCppFolder() + DEF_SLASH + 'BIN' + DEF_SLASH + '_'+replicate('?',13)+PUB_cCharFileNameTemp+'*.*', vTemp2 )
+   ADir( SubStr( GetCppFolder(), 1, 2 ) + DEF_SLASH + '_'+replicate('?',13)+PUB_cCharFileNameTemp+'*.*', vTemp3 )
    FOR i := 1 TO Len( vTemp )
       vTemp[i] := PUB_cProjectFolder + DEF_SLASH + vTemp[i]
    NEXT
@@ -5008,18 +5304,18 @@ FUNCTION QPM_Build2()
    NEXT
    FOR i := 1 TO Len( vTemp )
       IF Val( SubStr( US_FileNameOnlyName( vTemp[i] ), 2, 13 ) ) < ( Val( SubStr( PUB_cSecu, 1, 13 ) ) - 100000 )
-         ferase( vTemp[i] )
+         FErase( vTemp[i] )
       ENDIF
    NEXT
 
    IF Prj_Radio_OutputType == DEF_RG_IMPORT
-      PUB_cConvert := US_Upper( US_FileNameOnlyExt( ChgPathToReal( GetProperty( 'VentanaMain', 'GPrgFiles', 'Cell', 1, NCOLPRGFULLNAME ) ) ) ) + ' ' + OutputExt()
+      PUB_cConvert := Upper( US_FileNameOnlyExt( ChgPathToReal( GetProperty( 'VentanaMain', 'GPrgFiles', 'Cell', 1, NCOLPRGFULLNAME ) ) ) ) + ' ' + OutputExt()
       cInputName := US_ShortName( ChgPathToReal( GetProperty( 'VentanaMain', 'GPrgFiles', 'Cell', 1, NCOLPRGFULLNAME ) ) )
       cInputNameDisplay := ChgPathToReal( GetProperty( 'VentanaMain', 'GPrgFiles', 'Cell', 1, NCOLPRGFULLNAME ) )
       cInputNameLong := US_FileNameOnlyPath( cInputName ) + DEF_SLASH + US_FileNameOnlyNameAndExt( cInputNameDisplay )
       IF GetProperty( 'VentanaMain', 'Check_Reimp', 'Value' )
          IF ! File( ChgPathToReal( GetProperty( 'VentanaMain', 'TReimportLib', 'Value' ) ) )
-            MsgStop( 'Library For ReImport Not Found: ' + ChgPathToReal( GetProperty( 'VentanaMain', 'TReimportLib', 'Value' ) ) )
+            MyMsgStop( 'Library for ReImport was not found!' + CRLF + ChgPathToReal( GetProperty( 'VentanaMain', 'TReimportLib', 'Value' ) ) )
             BUILD_IN_PROGRESS := .F.
             RETURN .F.
          ENDIF
@@ -5030,22 +5326,18 @@ FUNCTION QPM_Build2()
    ENDIF
 
    IF OutputExt() == 'LIB' .AND. At( '-', US_ShortName( PUB_cProjectFolder ) ) > 0
-      MsgStop( "Utility TLIB.EXE doesn't work properly when a file's path contains hyphens [-]." + CRLF + "Please, change the name of the project's folder." )
+      MyMsgStop( "Utility TLIB.EXE doesn't work properly when a file's path contains hyphens [-]." + CRLF + "Please, change the name of the project's folder." )
       BUILD_IN_PROGRESS := .F.
       RETURN .F.
    ENDIF
 
    IF At( '(', US_ShortName( PUB_cProjectFolder ) ) > 0 .OR. At( ')', US_ShortName( PUB_cProjectFolder ) ) > 0
-      MsgStop( "Utility US_MAKE.EXE doesn't work properly when a file's path contains parentheses [()] characters." + CRLF + "Please, change the name of the project's folder." )
+      MyMsgStop( "Utility US_MAKE.EXE doesn't work properly when a file's path contains parentheses [()] characters." + CRLF + "Please, change the name of the project's folder." )
       BUILD_IN_PROGRESS := .F.
       RETURN .F.
    ENDIF
 
    DO EVENTS
-
-   FOR i := 1 TO VentanaMain.GIncFiles.itemcount
-      LibCheck( i )
-   NEXT
 
    IF bLogActivity
       QPM_MemoWrit( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log', MemoRead( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log' ) + '****** BUILD START' + CRLF )
@@ -5076,78 +5368,78 @@ FUNCTION QPM_Build2()
 
    DO CASE
       CASE Prj_Radio_OutputRename == DEF_RG_NEWNAME .AND. Empty( Prj_Text_OutputRenameNewName )
-         MsgStop( 'Filename For Output Rename Operation is Empty.' + CRLF + 'Look at ' + PUB_MenuPrjOptions + ' of Settings menu.' )
+         MyMsgStop( 'Filename for Output Rename operation is empty!' + CRLF + 'Look at ' + PUB_MenuPrjOptions + ' of Settings menu.' )
          BUILD_IN_PROGRESS := .F.
          RETURN .F.
       CASE Prj_Radio_OutputCopyMove # DEF_RG_NONE .AND. Empty( Prj_Text_OutputCopyMoveFolder )
-         MsgStop ( 'Folder for Output Copy/Move operation is empty.' + CRLF + 'Look at ' + PUB_MenuPrjOptions + ' of Settings menu.' )
+         MyMsgStop( 'Folder for Output Copy/Move operation is empty!' + CRLF + 'Look at ' + PUB_MenuPrjOptions + ' of Settings menu.' )
          BUILD_IN_PROGRESS := .F.
          RETURN .F.
       CASE Prj_Radio_OutputCopyMove # DEF_RG_NONE .AND. ! US_IsDirectory( Prj_Text_OutputCopyMoveFolder )
-         MsgStop ( 'Folder for Output Copy/Move operation is not valid.' + CRLF + 'Look at ' + PUB_MenuPrjOptions + ' of Settings menu.' )
+         MyMsgStop( 'Folder for Output Copy/Move operation is not valid!' + CRLF + 'Look at ' + PUB_MenuPrjOptions + ' of Settings menu.' )
          BUILD_IN_PROGRESS := .F.
          RETURN .F.
       CASE Empty( PUB_cProjectFolder ) .OR. ! US_IsDirectory( PUB_cProjectFolder )
-         MsgStop( DBLQT + "Project Folder" + DBLQT + " is not a valid folder:" + CRLF + PUB_cProjectFolder + CRLF + 'Look at tab ' + DBLQT + PagePRG + DBLQT )
+         MyMsgStop( "Project folder " + DBLQT + PUB_cProjectFolder + DBLQT + " is not a valid!" + CRLF + 'Look at tab ' + DBLQT + PagePRG + DBLQT + "." )
          BUILD_IN_PROGRESS := .F.
          RETURN .F.
       CASE Empty( GetProperty( 'VentanaMain', 'GPrgFiles', 'Cell', 1, NCOLPRGFULLNAME ) )
-         MsgStop ( 'PRG list is Empty.' + CRLF + 'Look at tab ' + DBLQT + PagePRG + DBLQT )
+         MyMsgStop( 'PRG list is empty!' + CRLF + 'Look at tab ' + DBLQT + PagePRG + DBLQT + "." )
          BUILD_IN_PROGRESS := .F.
          RETURN .F.
       CASE Empty( GetMiniGuiFolder() )
-         MsgStop ( 'Folder for Minigui in ' + vSuffix[ AScan( vSuffix, { |x| x[1] == GetSuffix() } ) ][2] + ' is Empty.' + CRLF + 'Look at ' + PUB_MenuGblOptions + ' of Settings menu.' )
+         MyMsgStop( 'Folder for Minigui in ' + vSuffix[ AScan( vSuffix, { |x| x[1] == GetSuffix() } ) ][2] + ' is empty!' + CRLF + 'Look at ' + PUB_MenuGblOptions + ' of Settings menu.' )
          BUILD_IN_PROGRESS := .F.
          RETURN .F.
       CASE Empty( GetMiniGuiName() )
-         MsgStop ( 'Lib Name for Minigui in ' + vSuffix[ AScan( vSuffix, { |x| x[1] == GetSuffix() } ) ][2] + ' is Empty.' + CRLF + 'Look at ' + PUB_MenuGblOptions + ' of Settings menu.' )
+         MyMsgStop( 'Lib Name for Minigui in ' + vSuffix[ AScan( vSuffix, { |x| x[1] == GetSuffix() } ) ][2] + ' is empty!' + CRLF + 'Look at ' + PUB_MenuGblOptions + ' of Settings menu.' )
          BUILD_IN_PROGRESS := .F.
          RETURN .F.
       CASE Empty( GetCppFolder() )
-         MsgStop ( 'Folder for C++ Compiler in ' + vSuffix[ AScan( vSuffix, { |x| x[1] == GetSuffix() } ) ][2] + ' is Empty.' + CRLF + 'Look at ' + PUB_MenuGblOptions + ' of Settings menu.' )
+         MyMsgStop( 'Folder for C++ Compiler in ' + vSuffix[ AScan( vSuffix, { |x| x[1] == GetSuffix() } ) ][2] + ' is empty!' + CRLF + 'Look at ' + PUB_MenuGblOptions + ' of Settings menu.' )
          BUILD_IN_PROGRESS := .F.
          RETURN .F.
       CASE ! QPM_IsXHarbour() .AND. Empty( GetHarbourFolder() )
-         MsgStop ( 'Folder for Harbour in ' + vSuffix[ AScan( vSuffix, { |x| x[1] == GetSuffix() } ) ][2] + ' is Empty.' + CRLF + 'Look at ' + PUB_MenuGblOptions + ' of Settings menu.' )
+         MyMsgStop( 'Folder for Harbour in ' + vSuffix[ AScan( vSuffix, { |x| x[1] == GetSuffix() } ) ][2] + ' is empty!' + CRLF + 'Look at ' + PUB_MenuGblOptions + ' of Settings menu.' )
          BUILD_IN_PROGRESS := .F.
          RETURN .F.
       CASE QPM_IsXHarbour() .AND. Empty( GetHarbourFolder() )
-         MsgStop ( 'Folder for xHarbour in ' + vSuffix[ AScan( vSuffix, { |x| x[1] == GetSuffix() } ) ][2] + ' is Empty.' + CRLF + 'Look at ' + PUB_MenuGblOptions + ' of Settings menu.' )
+         MyMsgStop( 'Folder for xHarbour in ' + vSuffix[ AScan( vSuffix, { |x| x[1] == GetSuffix() } ) ][2] + ' is empty!' + CRLF + 'Look at ' + PUB_MenuGblOptions + ' of Settings menu.' )
          BUILD_IN_PROGRESS := .F.
          RETURN .F.
       CASE ! QPM_DirValid( US_ShortName( GetMiniGuiFolder() ), US_ShortName( GetMiniGuiLibFolder() ), GetMiniGuiSuffix() + GetCppSuffix() )
-         MsgStop ( 'Minigui folder is not valid.' + CRLF + 'Look at ' + PUB_MenuGblOptions + ' of Settings menu.' )
+         MyMsgStop( 'Minigui folder is not valid!' + CRLF + 'Look at ' + PUB_MenuGblOptions + ' of Settings menu.' )
          BUILD_IN_PROGRESS := .F.
          RETURN .F.
       CASE ! Empty( GetCppFolder() ) .AND. ! QPM_DirValid( US_ShortName( GetCppFolder() ), US_ShortName( GetCppLibFolder() ), 'C_' + GetMiniGuiSuffix() + GetCppSuffix() )
-         MsgStop ( 'C++ Compiler folder is not valid.' + CRLF + 'Look at ' + PUB_MenuGblOptions + ' of Settings menu.' )
+         MyMsgStop( 'C++ Compiler folder is not valid!' + CRLF + 'Look at ' + PUB_MenuGblOptions + ' of Settings menu.' )
          BUILD_IN_PROGRESS := .F.
          RETURN .F.
       CASE ! Empty(  GetHarbourFolder() ) .AND. !QPM_IsXHarbour() .AND. !QPM_DirValid( US_ShortName( GetHarbourFolder() ), US_ShortName( GetHarbourLibFolder() ), GetSuffix() )
-         MsgStop ( 'Harbour folder is not valid.' + CRLF + 'Look at ' + PUB_MenuGblOptions + ' of Settings menu.' )
+         MyMsgStop( 'Harbour folder is not valid!' + CRLF + 'Look at ' + PUB_MenuGblOptions + ' of Settings menu.' )
          BUILD_IN_PROGRESS := .F.
          RETURN .F.
       CASE ! Empty(  GetHarbourFolder() ) .AND. QPM_IsXHarbour() .AND. !QPM_DirValid( US_ShortName( GetHarbourFolder() ), US_ShortName( GetHarbourLibFolder() ), GetSuffix() )
-         MsgStop ( 'xHarbour folder is not valid.' + CRLF + 'Look at ' + PUB_MenuGblOptions + ' of Settings menu.' )
+         MyMsgStop( 'xHarbour folder is not valid!' + CRLF + 'Look at ' + PUB_MenuGblOptions + ' of Settings menu.' )
          BUILD_IN_PROGRESS := .F.
          RETURN .F.
    ENDCASE
 
-   DO EVENTS
-
    FOR i := 1 TO VentanaMain.GPrgFiles.ItemCount
-      IF US_Upper( US_FileNameOnlyExt( ChgPathToReal( GetProperty( 'VentanaMain', 'GPrgFiles', 'Cell', i, NCOLPRGFULLNAME ) ) ) ) == 'CPP'
+      IF Upper( US_FileNameOnlyExt( ChgPathToReal( GetProperty( 'VentanaMain', 'GPrgFiles', 'Cell', i, NCOLPRGFULLNAME ) ) ) ) == 'CPP'
          bIsCpp := .T.
       ENDIF
-      IF AScan( PRGFILES, { |x| US_Upper( US_FileNameOnlyName( x ) ) == US_Upper( US_FileNameOnlyName( AllTrim(GetProperty( 'VentanaMain', 'GPrgFiles', 'Cell', i, NCOLPRGFULLNAME )) ) ) } ) > 0
-         MsgStop( "Duplicate file name '"+US_FileNameOnlyName( AllTrim(GetProperty( 'VentanaMain', 'GPrgFiles', 'Cell', i, NCOLPRGFULLNAME )) )+"' in diferent directories or with diferent extensions (.PRG and .C)."+CRLF+'The object generated for the second file will override the object of the previous file.' )
+      IF AScan( PRGFILES, { |x| US_Upper( US_FileNameOnlyName( x ) ) == US_Upper( US_FileNameOnlyName( AllTrim( GetProperty( 'VentanaMain', 'GPrgFiles', 'Cell', i, NCOLPRGFULLNAME )) ) ) } ) > 0
+         MyMsgStop( "Two project's files, in diferent folders o with diferent extensions (.PRG and .C), have the same name: " + ;
+                    DBLQT + US_FileNameOnlyName( AllTrim( GetProperty( 'VentanaMain', 'GPrgFiles', 'Cell', i, NCOLPRGFULLNAME ) ) ) + DBLQT + "." + CRLF + ;
+                    'The object generated from the second file in the list will override the object of the first one!' )
          BUILD_IN_PROGRESS := .F.
          RETURN .F.
       ENDIF
       AAdd( PRGFILES, ChgPathToReal( GetProperty( 'VentanaMain', 'GPrgFiles', 'Cell', i, NCOLPRGFULLNAME ) ) )
 
       IF ! File( PRGFILES[ i ] )
-         MsgStop( "File '" + PRGFILES[ i ] + "' not found!" )
+         MyMsgStop( "File " + DBLQT + PRGFILES[ i ] + DBLQT + " was not found!" )
          BUILD_IN_PROGRESS := .F.
          RETURN .F.
       ENDIF
@@ -5159,6 +5451,8 @@ FUNCTION QPM_Build2()
       ENDIF
    NEXT i
 
+   DO EVENTS
+
    // This handles the lack of a default GT in HMG 3.x
    IF IsMinGW .AND. GetMiniGuiSuffix() == DefineMiniGui3 .AND. Prj_Radio_OutputType != DEF_RG_IMPORT
       IF Prj_Check_Console
@@ -5166,37 +5460,40 @@ FUNCTION QPM_Build2()
          IF File( QPM_GET_DEF )
             AAdd( PRGFILES, QPM_GET_DEF )
          ELSE
-            MsgInfo( "Warning, QPM can't add QPM_GT.PRG auxiliary file to your project." + CRLF + ;
-                     "In order for your app to work properly, you may need to add " + CRLF + ;
-                     DBLQT + "REQUEST HB_GT_WIN_DEFAULT" + DBLQT + " before Main()." )
+            MyMsgWarn( "QPM can't add QPM_GT.PRG auxiliary file to your project." + CRLF + ;
+                       "In order for your app to work properly, you may need to add " + CRLF + ;
+                       DBLQT + "REQUEST HB_GT_WIN_DEFAULT" + DBLQT + " before Main()." )
          ENDIF
       ELSE
          QPM_Memowrit( QPM_GET_DEF, 'ANNOUNCE GT_SYS' + CRLF + 'REQUEST HB_GT_GUI_DEFAULT' + CRLF )
          IF File( QPM_GET_DEF )
             AAdd( PRGFILES, QPM_GET_DEF )
          ELSE
-            MsgInfo( "Warning, QPM can't add QPM_GT.PRG auxiliary file to your project." + CRLF + ;
-                     "In order for your app to work properly, you may need to add " + CRLF + ;
-                     DBLQT + "REQUEST HB_GT_GUI_DEFAULT" + DBLQT + " before Main()." )
+            MyMsgWarn( "QPM can't add QPM_GT.PRG auxiliary file to your project." + CRLF + ;
+                       "In order for your app to work properly, you may need to add " + CRLF + ;
+                       DBLQT + "REQUEST HB_GT_GUI_DEFAULT" + DBLQT + " before Main()." )
          ENDIF
       ENDIF
    ENDIF
-
-   DO EVENTS
 
    IF PUB_bDebugActive
       AEval( vDebugPath, { |x| cDebugPath := cDebugPath + x + ';' } )
       cDebugPath := cDebugPath + DEF_SLASH
    ENDIF
-   IF !bAutoEXIT
+
+   IF ! bAutoEXIT
       IF bIsCpp .AND. GetCppSuffix() == DefinePelles
-         MsgStop( 'Error, your project includes C++ files and Pelles C does not support them.' )
+         MyMsgStop( 'Your project includes C++ files and Pelles C does not support them.' )
          BUILD_IN_PROGRESS := .F.
          RETURN .F.
       ENDIF
-      IF bIsCpp .AND. bWarningCpp .AND. GetCppSuffix() == DefineMinGW
-         MsgInfo( 'Warning, your project includes C++ files. You need to download a full version of MinGW.' )
-         bWarningCpp := .F.
+      IF bIsCpp .AND. Prj_Warn_Cpp .AND. GetCppSuffix() == DefineMinGW
+         IF MyMsgYesNo( 'The project includes C++ files.' + CRLF + ;
+                        'You must use a full version of MinGW in order to successfully build it.' + CRLF + ;
+                        'Omit this message from now on?' )
+            Prj_Warn_Cpp := .F.
+            MyMsgInfo( 'Use ' + DBLQT + PUB_MenuResetWarnings + DBLQT + ' option of Settings menu to enable the previous message.' )
+         ENDIF
       ENDIF
    ENDIF
 
@@ -5204,13 +5501,13 @@ FUNCTION QPM_Build2()
 
    FOR i := 1 TO VentanaMain.GPanFiles.ItemCount
       IF AScan( PanFILES, { |x| US_Upper( US_FileNameOnlyNameAndExt( x ) ) == US_Upper( US_FileNameOnlyNameAndExt( AllTrim(GetProperty( 'VentanaMain', 'GPanFiles', 'Cell', i, NCOLPANFULLNAME )) ) ) } ) > 0
-         MsgStop( "Duplicate form name '"+US_FileNameOnlyNameAndExt( AllTrim(GetProperty( 'VentanaMain', 'GPanFiles', 'Cell', i, NCOLPANFULLNAME )) )+"' in diferents directories"+CRLF+'Process canceled.' )
+         MyMsgStop( "Duplicate form name '"+US_FileNameOnlyNameAndExt( AllTrim( GetProperty( 'VentanaMain', 'GPanFiles', 'Cell', i, NCOLPANFULLNAME ) ) ) + "' in diferents directories" + CRLF + 'Process canceled.' )
          BUILD_IN_PROGRESS := .F.
          RETURN .F.
       ENDIF
       AAdd( PANFILES, ChgPathToReal( GetProperty( 'VentanaMain', 'GPanFiles', 'Cell', i, NCOLPANFULLNAME ) ) )
       IF ! File( PanFILES[ i ] )
-         MsgStop( "Form '"+PanFILES[ i ]+"' not found" )
+         MyMsgStop( 'Form "' + PanFILES[ i ] + '" was not found!' )
          BUILD_IN_PROGRESS := .F.
          RETURN .F.
       ENDIF
@@ -5220,13 +5517,13 @@ FUNCTION QPM_Build2()
 
    FOR i := 1 TO VentanaMain.GHeaFiles.ItemCount
       IF AScan( HeaFILES, { |x| US_Upper( US_FileNameOnlyNameAndExt( x ) ) == US_Upper( US_FileNameOnlyNameAndExt( AllTrim(GetProperty( 'VentanaMain', 'GHeaFiles', 'Cell', i, NCOLHEAFULLNAME )) ) ) } ) > 0
-         MsgStop( "Duplicate header name '"+US_FileNameOnlyNameAndExt( AllTrim(GetProperty( 'VentanaMain', 'GHeaFiles', 'Cell', i, NCOLHEAFULLNAME )) )+"' in diferents directories"+CRLF+'Process canceled.' )
+         MyMsgStop( 'Duplicate header name "' + US_FileNameOnlyNameAndExt( AllTrim( GetProperty( 'VentanaMain', 'GHeaFiles', 'Cell', i, NCOLHEAFULLNAME ) ) ) + '" in diferents directories.' + CRLF + 'Process canceled!' )
          BUILD_IN_PROGRESS := .F.
          RETURN .F.
       ENDIF
       AAdd( HeaFILES, ChgPathToReal( GetProperty( 'VentanaMain', 'GHeaFiles', 'Cell', i, NCOLHEAFULLNAME ) ) )
       IF ! File( HeaFILES[ i ] )
-         MsgStop( "Header (include) '"+HeaFILES[ i ]+"' not found!" )
+         MyMsgStop( 'File "' + HeaFILES[ i ] + '" was not found!' )
          BUILD_IN_PROGRESS := .F.
          RETURN .F.
       ENDIF
@@ -5234,31 +5531,145 @@ FUNCTION QPM_Build2()
 
    DO EVENTS
 
+   CheckRelativeOrderOfLibsGT()
+
+   // Load vLibsToLink with default libs, objs and res (no path)
+   DescargoDefaultLibs( GetSuffix() )
+   // Load and check include libs (with path)
+   vLibIncludeFiles := {}
    FOR i := 1 TO VentanaMain.GIncFiles.ItemCount
+      LibCheck( i )
       vTemp := US_Upper( ChgPathToReal( US_WordSubStr( GetProperty( 'VentanaMain', 'GIncFiles', 'Cell', i, NCOLINCFULLNAME ), 3 ) ) )
-      IF AScan( vLibIncludeFiles, vTemp ) == 0
-         AAdd( vLibIncludeFiles, vTemp )
-         IF ! File( vTemp )
-            MsgStop( "File '" + vTemp + "' not found!" )
+      AAdd( vLibIncludeFiles, vTemp )
+      IF ! File( vTemp )
+         MyMsgStop( "File " + DBLQT + vTemp + DBLQT + " not found!" )
+         BUILD_IN_PROGRESS := .F.
+         RETURN .F.
+      ENDIF
+   NEXT i
+   // Load exclude libs (no path)
+   FOR i := 1 TO VentanaMain.GExcFiles.ItemCount
+      AAdd( vLibExcludeFiles, US_Upper( AllTrim( GetProperty( 'VentanaMain', 'GExcFiles', 'Cell', i, NCOLEXCNAME ) ) ) )
+   NEXT i
+
+   DO EVENTS
+
+   IF IsBorland .AND. Prj_Radio_OutputType == DEF_RG_EXE
+      IF Prj_Check_Console
+         IF ( AScan( vLibsToLink, { |x| US_Upper( x ) == "C0X32.OBJ" } ) == 0 .AND. ;
+              AScan( vLibIncludeFiles, { |x| US_Upper( US_FileNameOnlyNameAndExt( x ) ) == "C0X32.OBJ" } ) == 0 )
+            IF Prj_Warn_BccObject
+               lCont := MyMsgYesNo( 'File [C0X32.OBJ] is not in the list of libraries to link.' + CRLF + ;
+                                    'This file is usually present in CONSOLE projects.' + CRLF + ;
+                                    'Select [Yes] to continue without it or [No] to cancel the build.' )
+               IF MyMsgYesNo( 'Omit the previous validation from now on?' + CRLF + iif( lCont, "[Yes] will be assumed!", "[No] will be assumed!" ) )
+                  Prj_Warn_BccObject := .F.
+                  Prj_Warn_BccObject_Cont := lCont
+                  MyMsgInfo( 'Use ' + DBLQT + PUB_MenuResetWarnings + DBLQT + ' option of Settings menu to enable the previous check.' )
+               ELSE
+                  Prj_Warn_BccObject := .T.
+               ENDIF
+            ELSE
+               lCont := Prj_Warn_BccObject_Cont
+            ENDIF
+            IF ! lCont
+               BUILD_IN_PROGRESS := .F.
+               RETURN .F.
+            ENDIF
+         ELSEIF AScan( vLibExcludeFiles, { |x| US_Upper( x ) == "C0X32.OBJ" } ) # 0
+            IF Prj_Warn_BccObject
+               lCont := MyMsgYesNo( 'File [C0X32.OBJ] is not in the list of libraries to link.' + CRLF + ;
+                                    'This file is usually present in CONSOLE projects.' + CRLF + ;
+                                    'Select [Yes] to continue without it or [No] to cancel the build.' )
+               IF MyMsgYesNo( 'Omit the previous validation from now on?' + CRLF + iif( lCont, "[Yes] will be assumed!", "[No] will be assumed!" ) )
+                  Prj_Warn_BccObject := .F.
+                  Prj_Warn_BccObject_Cont := lCont
+                  MyMsgInfo( 'Use ' + DBLQT + PUB_MenuResetWarnings + DBLQT + ' option of Settings menu to enable the previous check.' )
+               ELSE
+                  Prj_Warn_BccObject := .T.
+               ENDIF
+            ELSE
+               lCont := Prj_Warn_BccObject_Cont
+            ENDIF
+            IF ! lCont
+               BUILD_IN_PROGRESS := .F.
+               RETURN .F.
+            ENDIF
+         ENDIF
+      ELSE
+         IF ( AScan( vLibsToLink, { |x| US_Upper( x ) == "C0W32.OBJ" } ) == 0 .AND. ;
+              AScan( vLibIncludeFiles, { |x| US_Upper( US_FileNameOnlyNameAndExt( x ) ) == "C0W32.OBJ" } ) == 0 )
+            IF Prj_Warn_BccObject
+               lCont := MyMsgYesNo( 'File [C0W32.OBJ] is not in the list of libraries to link.' + CRLF + ;
+                                    'This file is usually present in GUI projects.' + CRLF + ;
+                                    'Select [Yes] to continue without it or [No] to cancel the build.' )
+               IF MyMsgYesNo( 'Omit the previous validation from now on?' + CRLF + iif( lCont, "[Yes] will be assumed!", "[No] will be assumed!" ) )
+                  Prj_Warn_BccObject := .F.
+                  Prj_Warn_BccObject_Cont := lCont
+                  MyMsgInfo( 'Use ' + DBLQT + PUB_MenuResetWarnings + DBLQT + ' option of Settings menu to enable the previous check.' )
+               ELSE
+                  Prj_Warn_BccObject := .T.
+               ENDIF
+            ELSE
+               lCont := Prj_Warn_BccObject_Cont
+            ENDIF
+            IF ! lCont
+               BUILD_IN_PROGRESS := .F.
+               RETURN .F.
+            ENDIF
+         ELSEIF AScan( vLibExcludeFiles, { |x| US_Upper( x ) == "C0W32.OBJ" } ) # 0
+            IF Prj_Warn_BccObject
+               lCont := MyMsgYesNo( 'File [C0W32.OBJ] is not in the list of libraries to link.' + CRLF + ;
+                                    'This file is usually present in GUI projects.' + CRLF + ;
+                                    'Select [Yes] to continue without it or [No] to cancel the build.' )
+               IF MyMsgYesNo( 'Omit the previous validation from now on?' + CRLF + iif( lCont, "[Yes] will be assumed!", "[No] will be assumed!" ) )
+                  Prj_Warn_BccObject := .F.
+                  Prj_Warn_BccObject_Cont := lCont
+                  MyMsgInfo( 'Use ' + DBLQT + PUB_MenuResetWarnings + DBLQT + ' option of Settings menu to enable the previous check.' )
+               ELSE
+                  Prj_Warn_BccObject := .T.
+               ENDIF
+            ELSE
+               lCont := Prj_Warn_BccObject_Cont
+            ENDIF
+            IF ! lCont
+               BUILD_IN_PROGRESS := .F.
+               RETURN .F.
+            ENDIF
+         ENDIF
+      ENDIF
+   ENDIF
+
+   aNulRDD := { 'NULSYS.LIB', 'LIBNULSYS.A', 'HBNULRDD.LIB', 'LIBHBNULRDD.A' }
+   i := AScan( vLibsToLink, { |x| AScan( aNulRDD, US_Upper( x ) ) # 0 } )
+   IF i == 0
+      i := AScan( vLibIncludeFiles, { |x| AScan( aNulRDD, US_Upper( US_FileNameOnlyNameAndExt( x ) ) ) # 0 } )
+   ENDIF
+   IF i # 0 .AND. Prj_Warn_NullRDD
+      IF AScan( vLibExcludeFiles, { |x| US_Upper( x ) == US_Upper( vLibsToLink[ i ] ) } ) == 0
+         IF ! MyMsgYesNo( 'File ' + DBLQT + aNulRDD[i] + DBLQT + ' is in the list of libraries to link.' + CRLF + ;
+                          'This file will prevent your project to access any file via RDD system.' + CRLF + ;
+                          'Select [Yes] to continue or [No] to cancel the build.' )
             BUILD_IN_PROGRESS := .F.
             RETURN .F.
          ENDIF
+         IF MyMsgYesNo( 'Omit the previous validation from now on?' )
+            Prj_Warn_NullRDD := .F.
+            MyMsgInfo( 'Use ' + DBLQT + PUB_MenuResetWarnings + DBLQT + ' option of Settings menu to enable the previous message.' )
+         ENDIF
       ENDIF
-   NEXT i
-   FOR i := 1 TO VentanaMain.GExcFiles.ItemCount
-      vTemp := US_Upper( AllTrim( GetProperty( 'VentanaMain', 'GExcFiles', 'Cell', i, NCOLEXCNAME ) ) )
-      IF AScan( vLibExcludeFiles, vTemp ) == 0
-         AAdd( vLibExcludeFiles, vTemp )
-      ENDIF
-   NEXT i
+   ENDIF
 
    AAdd( vConcatIncludeHB, US_ShortName( GetHarbourFolder() ) + DEF_SLASH + 'INCLUDE' )
    AAdd( vConcatIncludeHB, US_ShortName( GetMiniGuiFolder() ) + DEF_SLASH + 'INCLUDE' )
    AAdd( vConcatIncludeHB, US_ShortName( PUB_cProjectFolder ) )
 
    AAdd( vConcatIncludeC, US_ShortName( GetCppFolder() ) + DEF_SLASH + 'INCLUDE' )
+   IF IsMinGW
+      AAdd( vConcatIncludeC, GetCppLibFolder() + DEF_SLASH + ".." + DEF_SLASH + 'INCLUDE' )
+   ENDIF
    IF IsPelles
-      AAdd( vConcatIncludeC, US_ShortName( GetCppFolder() ) + DEF_SLASH + 'INCLUDE'+DEF_SLASH+'WIN' )
+      AAdd( vConcatIncludeC, US_ShortName( GetCppFolder() ) + DEF_SLASH + 'INCLUDE' + DEF_SLASH +'WIN' )
    ENDIF
    AAdd( vConcatIncludeC, US_ShortName( GetHarbourFolder() ) + DEF_SLASH + 'INCLUDE' )
    AAdd( vConcatIncludeC, US_ShortName( GetMiniGuiFolder() ) + DEF_SLASH + 'INCLUDE' )
@@ -5340,6 +5751,8 @@ FUNCTION QPM_Build2()
       ENDIF
    NEXT i
 
+   DO EVENTS
+
    // INI - El siguiente es un parche para cuando el ultimo folder a agregar en Search es del formato 'C:',
    //       ya que hay que agregarle algun folder del formato 'C:\something' para que no cancele
    IF nLastExtraFolderSearchAdded > 0 .AND. nLastExtraFolderSearchAdded <= Len( vExtraFoldersForSearchHB ) .AND. ;
@@ -5375,7 +5788,7 @@ FUNCTION QPM_Build2()
             IF ! cAux $ cExtraFoldersC
                DO CASE
                CASE IsMinGW
-                  cExtraFoldersC := cExtraFoldersC + ' -I' + cAux
+                  cExtraFoldersC := cExtraFoldersC + ' -I ' + cAux
                CASE IsPelles
                   cExtraFoldersC := cExtraFoldersC + ' /I' + cAux
                CASE IsBorland
@@ -5388,13 +5801,15 @@ FUNCTION QPM_Build2()
       ENDIF
    NEXT i
 
+   DO EVENTS
+
    // INI - El siguiente es un parche para cuando el ultimo folder a agregar en Search es del formato 'C:',
    //       ya que hay que agregarle algun folder del formato 'C:\something' para que no cancele
    IF nLastExtraFolderSearchAdded > 0 .AND. nLastExtraFolderSearchAdded <= Len( vExtraFoldersForSearchC ) .AND. ;
       US_IsRootFolder( vExtraFoldersForSearchC[ nLastExtraFolderSearchAdded ] )
       DO CASE
       CASE IsMinGW
-         cExtraFoldersC  := cExtraFoldersC  + ' -I' + US_ShortName( DiskName() + ':' + DEF_SLASH + '_' + PUB_cSecu + 'SearchBug' )
+         cExtraFoldersC  := cExtraFoldersC  + ' -I ' + US_ShortName( DiskName() + ':' + DEF_SLASH + '_' + PUB_cSecu + 'SearchBug' )
       CASE IsPelles
          cExtraFoldersC  := cExtraFoldersC  + ' /I' + US_ShortName( DiskName() + ':' + DEF_SLASH + '_' + PUB_cSecu + 'SearchBug' )
       CASE IsBorland
@@ -5418,12 +5833,10 @@ FUNCTION QPM_Build2()
       US_Log( 'Error 5449')
    ENDCASE
 
-   DO EVENTS
-
-   ferase( SCRIPT_FILE )
-   ferase( END_FILE )
-   ferase( TEMP_LOG )
-   ferase( PROGRESS_LOG )
+   FErase( SCRIPT_FILE )
+   FErase( END_FILE )
+   FErase( TEMP_LOG )
+   FErase( PROGRESS_LOG )
    ProgLength := 0
 
    SetProperty( 'VentanaMain', 'EraseOBJ', 'enabled', .F. )
@@ -5440,11 +5853,9 @@ FUNCTION QPM_Build2()
    PUB_bIsProcessing := .T.
    VentanaMain.RichEditSysout.Value := ''
 
-   SetMGWaitHide()
-
    DO EVENTS
 
-   ferase( PUB_cProjectFolder + DEF_SLASH + '_' + PUB_cSecu + 'MSG.SYSIN' )
+   FErase( PUB_cProjectFolder + DEF_SLASH + '_' + PUB_cSecu + 'MSG.SYSIN' )
 
    SetCurrentFolder( PUB_cProjectFolder )
    IF ! US_CreateFolder( GetObjFolder() )
@@ -5462,7 +5873,7 @@ FUNCTION QPM_Build2()
  * Out contiene los comandos que luego se grabarán en
  * Temp.Bc para ser ejecutados por MAKE.EXE desde Build.bat
  */
-   Out := Out + 'APP_NAME = ' + cOutputName + CRLF
+   Out := 'APP_NAME = ' + cOutputName + CRLF
 
    IF Prj_Radio_OutputType == DEF_RG_EXE .OR. Prj_Radio_OutputType == DEF_RG_LIB
       IF VentanaMain.GHeaFiles.itemcount > 0
@@ -5487,12 +5898,23 @@ FUNCTION QPM_Build2()
       Out := Out + 'IMPLIB_MGW_EXE = '  + DBLQT + US_ShortName( GetCppFolder() )  + DEF_SLASH + 'BIN' + DEF_SLASH + 'DLLTOOL.EXE'     + DBLQT + CRLF
       Out := Out + 'LSTA_EXE = '        + DBLQT + US_ShortName( PUB_cQPM_Folder ) + DEF_SLASH                     + 'US_OBJDUMP.EXE'  + DBLQT + CRLF
       Out := Out + 'COMPILATOR_C = '    + DBLQT + US_ShortName( PUB_cQPM_Folder ) + DEF_SLASH                     + 'US_SLASH.EXE'    + DBLQT + CRLF
-      Out := Out + 'ILINK_EXE = '       + DBLQT + US_ShortName( GetCppFolder() )  + DEF_SLASH + 'BIN' + DEF_SLASH + 'GCC.EXE'         + DBLQT + CRLF
+      Out := Out + 'ILINK_EXE = '       + DBLQT + US_ShortName( PUB_cQPM_Folder ) + DEF_SLASH                     + 'US_SLASH.EXE'    + DBLQT + CRLF
       Out := Out + 'TLIB_EXE = '        + DBLQT + US_ShortName( GetCppFolder() )  + DEF_SLASH + 'BIN' + DEF_SLASH + 'AR.EXE'          + DBLQT + CRLF
       Out := Out + 'RESOURCE_COMP = '   + DBLQT + US_ShortName( GetCppFolder() )  + DEF_SLASH + 'BIN' + DEF_SLASH + 'WINDRES.EXE'     + DBLQT + CRLF
       Out := Out + 'REIMPORT_EXE = '    + DBLQT + US_ShortName( PUB_cQPM_Folder ) + DEF_SLASH                     + 'US_REIMP.EXE'    + DBLQT + CRLF
       Out := Out + 'DIR_COMPC = '       + DBLQT + US_ShortName( GetCppFolder() )                                                      + DBLQT + CRLF
       Out := Out + 'DIR_HARBOUR = '     + DBLQT + US_ShortName( GetHarbourFolder() )                                                  + DBLQT + CRLF
+      i := " " + AllTrim( GetProperty( 'VentanaMain', 'OverrideLink', 'value' ) ) + " "
+      IF Prj_Check_StaticBuild
+         IF ! " -static " $ i
+            SetProperty( 'VentanaMain', 'OverrideLink', 'value', "-static" + i )
+         ENDIF
+      ELSE
+         IF " -static " $ i
+            SetProperty( 'VentanaMain', 'OverrideLink', 'value', AllTrim( StrTran( i, " -static ", " " ) ) )
+         ENDIF
+      ENDIF
+      Out := Out + 'USER_FLAGS_LINK = ' + GetProperty( 'VentanaMain', 'OverrideLink', 'value' )                                               + CRLF
    CASE IsPelles
       Out := Out + 'IMPDEF_PC_EXE = '   + DBLQT + US_ShortName( PUB_cQPM_Folder ) + DEF_SLASH                     + 'US_IMPDEF.EXE'   + DBLQT + CRLF
       Out := Out + 'IMPLIB_PC_EXE = '   + DBLQT + US_ShortName( PUB_cQPM_Folder ) + DEF_SLASH                     + 'US_POLIB.EXE'    + DBLQT + CRLF
@@ -5501,6 +5923,11 @@ FUNCTION QPM_Build2()
       Out := Out + 'ILINK_EXE = '       + DBLQT + US_ShortName( GetCppFolder() )  + DEF_SLASH + 'BIN' + DEF_SLASH + 'POLINK.EXE'      + DBLQT + CRLF
       Out := Out + 'TLIB_EXE = '        + DBLQT + US_ShortName( PUB_cQPM_Folder ) + DEF_SLASH                     + 'US_POLIB.EXE'    + DBLQT + CRLF
       Out := Out + 'RESOURCE_COMP = '   + DBLQT + US_ShortName( GetCppFolder() )  + DEF_SLASH + 'BIN' + DEF_SLASH + 'PORC.EXE'        + DBLQT + CRLF
+      i := " " + AllTrim( GetProperty( 'VentanaMain', 'OverrideLink', 'value' ) ) + " "
+      IF " -static " $ i
+         SetProperty( 'VentanaMain', 'OverrideLink', 'value', AllTrim( StrTran( i, " -static ", " " ) ) )
+      ENDIF
+      Out := Out + 'USER_FLAGS_LINK = ' + GetProperty( 'VentanaMain', 'OverrideLink', 'value' )                                               + CRLF
    CASE IsBorland
       Out := Out + 'IMPDEF_BCC_EXE = '  + DBLQT + US_ShortName( PUB_cQPM_Folder ) + DEF_SLASH                     + 'US_IMPDEF.EXE'   + DBLQT + CRLF
       Out := Out + 'IMPLIB_BCC_EXE = '  + DBLQT + US_ShortName( PUB_cQPM_Folder ) + DEF_SLASH                     + 'US_IMPLIB.EXE'   + DBLQT + CRLF
@@ -5509,6 +5936,11 @@ FUNCTION QPM_Build2()
       Out := Out + 'ILINK_EXE = '       + DBLQT + US_ShortName( GetCppFolder() )  + DEF_SLASH + 'BIN' + DEF_SLASH + 'ILINK32.EXE'     + DBLQT + CRLF
       Out := Out + 'TLIB_EXE = '        + DBLQT + US_ShortName( PUB_cQPM_Folder ) + DEF_SLASH                     + 'US_TLIB.EXE'     + DBLQT + CRLF
       Out := Out + 'RESOURCE_COMP = '   + DBLQT + US_ShortName( GetCppFolder() )  + DEF_SLASH + 'BIN' + DEF_SLASH + 'BRCC32.EXE'      + DBLQT + CRLF
+      Out := Out + 'USER_FLAGS_LINK = ' + GetProperty( 'VentanaMain', 'OverrideLink', 'value' )                                               + CRLF
+      i := " " + AllTrim( GetProperty( 'VentanaMain', 'OverrideLink', 'value' ) ) + " "
+      IF " -static " $ i
+         SetProperty( 'VentanaMain', 'OverrideLink', 'value', AllTrim( StrTran( i, " -static ", " " ) ) )
+      ENDIF
    OTHERWISE
       US_Log( 'Error 5549' )
    ENDCASE
@@ -5523,6 +5955,7 @@ FUNCTION QPM_Build2()
       Out := Out + 'DIR_MINIGUI_RES = ' + US_ShortName( GetMiniGuiFolder() + DEF_SLASH + 'RESOURCES' )                                        + CRLF
       Out := Out + 'DIR_COMPC_LIB = '   + GetCppLibFolder()                                                                                   + CRLF
       Out := Out + 'DIR_HARBOUR_LIB = ' + GetHarbourLibFolder()                                                                               + CRLF
+      Out := Out + 'DIR_PROJECT = '     + VentanaMain.TProjectFolder.Value                                                                    + CRLF
    IF IsBorland
       Out := Out + 'DIR_COMPC_LIB2 = '  + GetCppLibFolder() + DEF_SLASH + 'PSDK'                                                              + CRLF
    ENDIF
@@ -5530,7 +5963,6 @@ FUNCTION QPM_Build2()
       Out := Out + 'DIR_OBJECTS = '     + OBJFOLDER                                                                                           + CRLF
       Out := Out + 'C_DIR = '           + OBJFOLDER                                                                                           + CRLF
       Out := Out + 'USER_FLAGS_HARB = ' + GetProperty( 'VentanaMain', 'OverrideCompile', 'value' )                                            + CRLF
-      Out := Out + 'USER_FLAGS_LINK = ' + GetProperty( 'VentanaMain', 'OverrideLink', 'value' )                                               + CRLF
 
    IF Prj_Radio_OutputType != DEF_RG_IMPORT
       cPrj_Version := GetPrj_Version()
@@ -5564,6 +5996,8 @@ FUNCTION QPM_Build2()
          ENDCASE
       ENDIF
       Out := Out + CRLF
+
+      DO EVENTS
 
 /*
  * Objetos de los que depende el ejecutable
@@ -5605,13 +6039,22 @@ FUNCTION QPM_Build2()
          CASE IsMinGW
             IF Prj_Radio_OutputType != DEF_RG_IMPORT
                Out := Out + PUB_cCharTab + '$(US_MSG_EXE) ' + Q_PROGRESS_LOG + ' -MSG:Compiling Resource File ' + US_FileNameOnlyPathAndName( PRGFILES[1] ) + '.rc' + ' ...' + CRLF
-               Out := Out + PUB_cCharTab + '$(RESOURCE_COMP) -I$(DIR_MINIGUI_RES) $(DIR_C_INCLUDE) -i ' + QPM_TMP_RC + ' -o $(DIR_OBJECTS)' + DEF_SLASH + '_Temp.o' + CRLF
+               IF ! PUB_DeleteAux
+                  Out := Out + PUB_cCharTab + '$(US_MSG_EXE) ' + Q_PROGRESS_LOG + ' -MSG:QPM_TMP_RC is ' + US_FileNameOnlyNameAndExt( QPM_TMP_RC ) + CRLF
+               ENDIF
+               Out := Out + PUB_cCharTab + '$(RESOURCE_COMP) -I $(DIR_MINIGUI_RES) $(DIR_C_INCLUDE) -i ' + QPM_TMP_RC + ' -o $(DIR_OBJECTS)' + DEF_SLASH + '_Temp.o' + CRLF
             ENDIF
          CASE IsPelles
             Out := Out + PUB_cCharTab + '$(US_MSG_EXE) ' + Q_PROGRESS_LOG + ' -MSG:Compiling Resource File ' + US_FileNameOnlyPathAndName( PRGFILES[1] ) + '.rc' + ' ...' + CRLF
+            IF ! PUB_DeleteAux
+               Out := Out + PUB_cCharTab + '$(US_MSG_EXE) ' + Q_PROGRESS_LOG + ' -MSG:QPM_TMP_RC is ' + US_FileNameOnlyNameAndExt( QPM_TMP_RC ) + CRLF
+            ENDIF
             Out := Out + PUB_cCharTab + '$(RESOURCE_COMP) /I$(DIR_MINIGUI_RES) $(DIR_C_INCLUDE) /Fo$(DIR_OBJECTS)' + DEF_SLASH + '_Temp.res ' + QPM_TMP_RC + CRLF
          CASE IsBorland
             Out := Out + PUB_cCharTab + '$(US_MSG_EXE) ' + Q_PROGRESS_LOG + ' -MSG:Compiling Resource File ...' + CRLF
+            IF ! PUB_DeleteAux
+               Out := Out + PUB_cCharTab + '$(US_MSG_EXE) ' + Q_PROGRESS_LOG + ' -MSG:QPM_TMP_RC is ' + US_FileNameOnlyNameAndExt( QPM_TMP_RC ) + CRLF
+            ENDIF
             Out := Out + PUB_cCharTab + '$(RESOURCE_COMP) -i$(DIR_MINIGUI_RES);$(DIR_C_INCLUDE) -r -fo$(DIR_OBJECTS)' + DEF_SLASH + '_Temp.res ' + QPM_TMP_RC + CRLF
          OTHERWISE
             US_Log( 'Error 5649' )
@@ -5635,25 +6078,32 @@ FUNCTION QPM_Build2()
                Out := Out + PUB_cCharTab + 'echo INPUT( ' + GetHarbourLibFolder() + DEF_SLASH + 'mainwin.o ) >> ' + Q_SCRIPT_FILE + CRLF
             ENDIF
          ENDIF
+
 /*
- * Grabo en script.ld los objetos listados en las Include Libraries que estén marcados *FIRST*
+ * Grabo en script.ld los objetos listados en las Include Libraries que estén marcados *FIRST* y que no estén excluidos
  */
          FOR i := 1 TO Len ( vLibIncludeFiles )
             IF US_Upper( US_Word( GetProperty( 'VentanaMain', 'GIncFiles', 'Cell', i, NCOLINCFULLNAME ), 2 ) ) == '*FIRST*'
                DO CASE
                CASE IsMinGW
-                  IF US_FileNameOnlyExt( vLibIncludeFiles[i] ) == 'O'
-                    IF ! QPM_IsXHarbour() .OR. ! ( US_Upper( US_FileNameOnlyName( vLibIncludeFiles[i] ) ) $ ( 'MAINSTD' + CRLF + 'MAINWIN' ) )
-                       Out := Out + PUB_cCharTab + 'echo INPUT( ' + US_ShortName( vLibIncludeFiles[i] ) + ' ) >> ' + Q_SCRIPT_FILE + CRLF
-                    ENDIF
+                  IF Upper( US_FileNameOnlyExt( vLibIncludeFiles[i] ) ) == 'O'
+                     IF ! QPM_IsXHarbour() .OR. ! ( US_Upper( US_FileNameOnlyName( vLibIncludeFiles[i] ) ) $ ( 'MAINSTD' + CRLF + 'MAINWIN' ) )
+                        IF AScan( vLibExcludeFiles, { |x| US_Upper( x ) == US_Upper( vLibsToLink[ i ] ) } ) == 0
+                           Out := Out + PUB_cCharTab + 'echo INPUT( ' + US_ShortName( vLibIncludeFiles[i] ) + ' ) >> ' + Q_SCRIPT_FILE + CRLF
+                        ENDIF
+                     ENDIF
                   ENDIF
                CASE IsPelles
-                  IF US_FileNameOnlyExt( vLibIncludeFiles[i] ) == 'OBJ'
-                     Out := Out + PUB_cCharTab + 'echo ' + US_ShortName( vLibIncludeFiles[i] ) + ' >> ' + Q_SCRIPT_FILE + CRLF
+                  IF Upper( US_FileNameOnlyExt( vLibIncludeFiles[i] ) ) == 'OBJ'
+                     IF AScan( vLibExcludeFiles, { |x| US_Upper( x ) == US_Upper( vLibsToLink[ i ] ) } ) == 0
+                        Out := Out + PUB_cCharTab + 'echo ' + US_ShortName( vLibIncludeFiles[i] ) + ' >> ' + Q_SCRIPT_FILE + CRLF
+                     ENDIF
                   ENDIF
                CASE IsBorland
-                  IF US_FileNameOnlyExt( vLibIncludeFiles[i] ) == 'OBJ'
-                     Out := Out + PUB_cCharTab + 'echo ' + US_ShortName( vLibIncludeFiles[i] ) + ' + >> ' + Q_SCRIPT_FILE + CRLF
+                  IF Upper( US_FileNameOnlyExt( vLibIncludeFiles[i] ) ) == 'OBJ'
+                     IF AScan( vLibExcludeFiles, { |x| US_Upper( x ) == US_Upper( vLibsToLink[ i ] ) } ) == 0
+                        Out := Out + PUB_cCharTab + 'echo ' + US_ShortName( vLibIncludeFiles[i] ) + ' + >> ' + Q_SCRIPT_FILE + CRLF
+                     ENDIF
                   ENDIF
                OTHERWISE
                   US_Log( 'Error 5671' )
@@ -5661,6 +6111,7 @@ FUNCTION QPM_Build2()
             ENDIF
          NEXT i
 
+         DO EVENTS
 /*
  * Grabo lista de objetos derivados de los .prg en script.ld
  */
@@ -5681,6 +6132,7 @@ FUNCTION QPM_Build2()
 
          DO CASE
          CASE IsMinGW
+
 /*
  * Grabo objeto generado a partir del archivo de recursos en script.ld
  */
@@ -5689,12 +6141,18 @@ FUNCTION QPM_Build2()
             ENDIF
 
 /*
- * Grabo en script.ld los objetos listados en las Default Libraries (estos objetos deben estar en la carpeta Resources) en script.ld
+ * Grabo en script.ld los objetos listados en las Default Libraries (deben estar en RESOURCES o Project o CPP )
  */
-            FOR i := 1 TO Len( vLibsDefault )
-               IF AScan( vLibExcludeFiles, US_Upper( vLibsDefault[i] ) ) == 0
-                  IF File( GetMiniGuiFolder() + DEF_SLASH + 'RESOURCES' + DEF_SLASH + SubStr( US_FileNameOnlyName( vLibsDefault[i] ), 4 ) + '.o' )
-                     Out := Out + PUB_cCharTab + 'echo INPUT( $(DIR_MINIGUI_RES)' + DEF_SLASH + SubStr( US_FileNameOnlyName( vLibsDefault[i] ), 4 ) + '.o ) >> ' + Q_SCRIPT_FILE + CRLF
+            FOR i := 1 TO Len( vLibsToLink )
+               IF Upper( US_FileNameOnlyExt( vLibsToLink[i] ) ) == 'O'
+                  IF AScan( vLibExcludeFiles, { |x| US_Upper( x ) == US_Upper( vLibsToLink[i] ) } ) == 0
+                     IF File( GetMiniGuiFolder() + DEF_SLASH + 'RESOURCES' + DEF_SLASH + vLibsToLink[i] )
+                        Out := Out + PUB_cCharTab + 'echo INPUT( $(DIR_MINIGUI_RES)' + DEF_SLASH + vLibsToLink[i] + ' ) >> ' + Q_SCRIPT_FILE + CRLF
+                     ELSEIF File( PUB_cProjectFolder + DEF_SLASH + vLibsToLink[i] )
+                        Out := Out + PUB_cCharTab + 'echo INPUT( ' + US_ShortName( PUB_cProjectFolder ) + DEF_SLASH + vLibsToLink[i] + ' ) >> ' + Q_SCRIPT_FILE + CRLF
+                     ELSEIF File( GetCppLibFolder() + DEF_SLASH + vLibsToLink[i] )
+                        Out := Out + PUB_cCharTab + 'echo INPUT( ' + US_ShortName( GetCppLibFolder() ) + DEF_SLASH + vLibsToLink[i] + ' ) >> ' + Q_SCRIPT_FILE + CRLF
+                     ENDIF
                   ENDIF
                ENDIF
             NEXT i
@@ -5705,8 +6163,8 @@ FUNCTION QPM_Build2()
  * Grabo en script.ld los objetos listados en las Include Libraries que estén marcados *LAST*
  */
             FOR i := 1 TO Len ( vLibIncludeFiles )
-               IF US_Upper( US_Word( GetProperty( 'VentanaMain', 'GIncFiles', 'Cell', i, NCOLINCFULLNAME ), 2 ) ) == '*LAST*'
-                  IF US_FileNameOnlyExt( vLibIncludeFiles[i] ) == 'O'
+               IF US_Word( GetProperty( 'VentanaMain', 'GIncFiles', 'Cell', i, NCOLINCFULLNAME ), 2 ) == '*LAST*'
+                  IF Upper( US_FileNameOnlyExt( vLibIncludeFiles[i] ) ) == 'O'
                      IF ! QPM_IsXHarbour() .OR. ! ( US_Upper( US_FileNameOnlyName( vLibIncludeFiles[i] ) ) $ ( 'MAINSTD' + CRLF + 'MAINWIN' ) )
                         Out := Out + PUB_cCharTab + 'echo INPUT( ' + US_ShortName( vLibIncludeFiles[i] ) + ' ) >> ' + Q_SCRIPT_FILE + CRLF
                      ENDIF
@@ -5715,426 +6173,365 @@ FUNCTION QPM_Build2()
             NEXT i
 
          CASE IsPelles
+
+/*
+ * Grabo en script.ld los objetos listados en las Default Libraries (deben estar en RESOURCES o Project o CPP )
+ */
+            FOR i := 1 TO Len( vLibsToLink )
+               IF Upper( US_FileNameOnlyExt( vLibsToLink[i] ) ) == 'OBJ'
+                  IF AScan( vLibExcludeFiles, { |x| US_Upper( x ) == US_Upper( vLibsToLink[i] ) } ) == 0
+                     IF File( GetMiniGuiFolder() + DEF_SLASH + 'RESOURCES' + DEF_SLASH + vLibsToLink[i] )
+                        Out := Out + PUB_cCharTab + 'echo INPUT( $(DIR_MINIGUI_RES)' + DEF_SLASH + vLibsToLink[i] + ' ) >> ' + Q_SCRIPT_FILE + CRLF
+                     ELSEIF File( PUB_cProjectFolder + DEF_SLASH + vLibsToLink[i] )
+                        Out := Out + PUB_cCharTab + 'echo INPUT( ' + US_ShortName( PUB_cProjectFolder ) + DEF_SLASH + vLibsToLink[i] + ' ) >> ' + Q_SCRIPT_FILE + CRLF
+                     ELSEIF File( GetCppLibFolder() + DEF_SLASH + vLibsToLink[i] )
+                        Out := Out + PUB_cCharTab + 'echo INPUT( ' + US_ShortName( GetCppLibFolder() ) + DEF_SLASH + vLibsToLink[i] + ' ) >> ' + Q_SCRIPT_FILE + CRLF
+                     ENDIF
+                  ENDIF
+               ENDIF
+            NEXT i
+
+            DO EVENTS
 /*
  * Grabo en script.ld los objetos listados en las Include Libraries que estén marcados *LAST*
  */
             FOR i := 1 TO Len ( vLibIncludeFiles )
-               IF US_FileNameOnlyExt( vLibIncludeFiles[i] ) == 'OBJ'
-                  Out := Out + PUB_cCharTab + 'echo ' + US_ShortName( vLibIncludeFiles[i] ) + ' + >> ' + Q_SCRIPT_FILE + CRLF
+               IF US_Word( GetProperty( 'VentanaMain', 'GIncFiles', 'Cell', i, NCOLINCFULLNAME ), 2 ) == '*LAST*'
+                  IF Upper( US_FileNameOnlyExt( vLibIncludeFiles[i] ) ) == 'OBJ'
+                     Out := Out + PUB_cCharTab + 'echo ' + US_ShortName( vLibIncludeFiles[i] ) + ' + >> ' + Q_SCRIPT_FILE + CRLF
+                  ENDIF
                ENDIF
             NEXT i
+
             Out := Out + PUB_cCharTab + 'echo /OUT:$(APP_NAME) >> ' + Q_SCRIPT_FILE + CRLF
             Out := Out + PUB_cCharTab + 'echo /FORCE:MULTIPLE >> ' + Q_SCRIPT_FILE + CRLF
             Out := Out + PUB_cCharTab + 'echo /LIBPATH:' + GetCppLibFolder() + ' >> ' + Q_SCRIPT_FILE + CRLF
             Out := Out + PUB_cCharTab + 'echo /LIBPATH:' + GetCppLibFolder() + DEF_SLASH + 'WIN' + ' >> ' + Q_SCRIPT_FILE + CRLF
 
          CASE IsBorland
+
+/*
+ * Grabo en script.ld los objetos listados en las Default Libraries (deben estar en RESOURCES o Project o CPP )
+ */
+            FOR i := 1 TO Len( vLibsToLink )
+               IF Upper( US_FileNameOnlyExt( vLibsToLink[i] ) ) == 'OBJ'
+                  IF AScan( vLibExcludeFiles, { |x| US_Upper( x ) == US_Upper( vLibsToLink[i] ) } ) == 0
+                     IF File( GetMiniGuiFolder() + DEF_SLASH + 'RESOURCES' + DEF_SLASH + vLibsToLink[i] )
+                        Out := Out + PUB_cCharTab + 'echo $(DIR_MINIGUI_RES)' + DEF_SLASH + vLibsToLink[i] + ' + >> ' + Q_SCRIPT_FILE + CRLF
+                     ELSEIF File( PUB_cProjectFolder + DEF_SLASH + vLibsToLink[i] )
+                        Out := Out + PUB_cCharTab + 'echo $(DIR_PROJECT)' + DEF_SLASH + vLibsToLink[i] + ' + >> ' + Q_SCRIPT_FILE + CRLF
+                     ELSEIF File( GetCppLibFolder() + DEF_SLASH + vLibsToLink[i] )
+                        Out := Out + PUB_cCharTab + 'echo $(DIR_COMPC_LIB)' + DEF_SLASH + vLibsToLink[i] + ' + >> ' + Q_SCRIPT_FILE + CRLF
+                     ENDIF
+                  ENDIF
+               ENDIF
+            NEXT i
+
+            DO EVENTS
 /*
  * Grabo en script.ld los objetos listados en las Include Libraries que estén marcados *LAST*
  */
             FOR i := 1 TO Len ( vLibIncludeFiles )
-               IF US_FileNameOnlyExt( vLibIncludeFiles[i] ) == 'OBJ'
-                  Out := Out + PUB_cCharTab + 'echo ' + US_ShortName( vLibIncludeFiles[i] ) + ' + >> ' + Q_SCRIPT_FILE + CRLF
+               IF US_Word( GetProperty( 'VentanaMain', 'GIncFiles', 'Cell', i, NCOLINCFULLNAME ), 2 ) == '*LAST*'
+                  IF Upper( US_FileNameOnlyExt( vLibIncludeFiles[i] ) ) == 'OBJ'
+                     Out := Out + PUB_cCharTab + 'echo ' + US_ShortName( vLibIncludeFiles[i] ) + ' + >> ' + Q_SCRIPT_FILE + CRLF
+                  ENDIF
                ENDIF
             NEXT i
-            DO CASE
-            CASE Prj_Check_Console
-               Out := Out + PUB_cCharTab + 'echo ' + GetCppLibFolder() + DEF_SLASH + 'c0x32.obj, + >> ' + Q_SCRIPT_FILE + CRLF
-            CASE Prj_Radio_OutputType == DEF_RG_EXE
-               Out := Out + PUB_cCharTab + 'echo ' + GetCppLibFolder() + DEF_SLASH + 'c0w32.obj, + >> ' + Q_SCRIPT_FILE + CRLF
-            ENDCASE
+
+            i := RAt( " + >> ", Out )
+            Out := SubStr( Out, 1, i - 1 ) + "," + SubStr( Out, i )
+
             Out := Out + PUB_cCharTab + 'echo $(APP_NAME), ' + US_ShortName(PUB_cProjectFolder) + DEF_SLASH + US_FileNameOnlyName( GetOutputModuleName() ) + '.MAP' + ', + >> ' + Q_SCRIPT_FILE + CRLF
 
          OTHERWISE
             US_Log( 'Error 5746' )
          ENDCASE
 
+         DO EVENTS
+
 /*
- * Grabo libraries en script.ld
+ * Add libraries to script.ld
  */
-            IF QPM_IsXHarbour() .AND. ! IsMinGW .AND. File( GetHarbourLibFolder() + DEF_SLASH + 'bcc640' + PUB_xHarbourMT + '.lib' )
-               Out := Out + PUB_cCharTab + 'echo $(DIR_HARBOUR_LIB)' + DEF_SLASH + 'bcc640' + PUB_xHarbourMT + '.lib + >> ' + Q_SCRIPT_FILE + CRLF
-            ENDIF
+         DO CASE
+         CASE IsMinGW
+            w_hay := .F.
+            w_group := 'GROUP( '
+
+/*
+ * MINGW: add libraries marked *FIRST* that are not excluded
+ */
+            FOR i := 1 TO Len ( vLibIncludeFiles )
+               IF US_Upper( US_Word( GetProperty( 'VentanaMain', 'GIncFiles', 'Cell', i, NCOLINCFULLNAME ), 2 ) ) == '*FIRST*'
+                  IF Upper( US_FileNameOnlyExt( vLibIncludeFiles[i] ) ) == 'A'
+                     IF AScan( vLibExcludeFiles, { |x| US_Upper( x ) == US_Upper( US_FileNameOnlyNameAndExt( vLibIncludeFiles[i] ) ) } ) == 0
+                        w_hay := .T.
+                        w_group += '-l' + SubStr( US_FileNameOnlyName( vLibIncludeFiles[i] ), 4 ) + ' '
+                     ENDIF
+                  ENDIF
+               ENDIF
+            NEXT
 
             DO EVENTS
 
-            DO CASE
-               CASE IsMinGW
-                  w_hay := .F.
-                  w_group := 'GROUP( '
-
 /*
- * MINGW: add libraries marked *FIRST*
+ * MINGW: add default libraries that are not excluded
  */
-                  FOR i := 1 TO Len ( vLibIncludeFiles )
-                     IF US_Upper( US_Word( GetProperty( 'VentanaMain', 'GIncFiles', 'Cell', i, NCOLINCFULLNAME ), 2 ) ) == '*FIRST*'
-                        IF US_FileNameOnlyExt( vLibIncludeFiles[i] ) == 'A'
-                           w_hay := .T.
-                           w_group += '-l' + SubStr( US_FileNameOnlyName( vLibIncludeFiles[i] ), 4 ) + ' '
-                        ENDIF
-                     ENDIF
-                  NEXT
-
-                  DO EVENTS
-
-/*
- * MINGW: add MiniGui main library
- */
-                  IF Prj_Check_Console
-                     IF AScan( vLibExcludeFiles, US_Upper( GetMiniGuiName() ) ) == 0
-                        w_hay := .T.
-                        w_group += '-l' + SubStr( US_FileNameOnlyName( GetMiniGuiName() ), 4 ) + ' '
-                        IF AScan( vLibsDefault, { |y| US_Upper( y ) == 'LIBGTGUI.A' } ) == 0
-                           AAdd( vLibsDefault, 'libgtgui.a' )
-                        ENDIF
-                     ENDIF
-                  ELSE
+            FOR i := 1 TO Len( vLibsToLink )
+               IF AScan( vLibExcludeFiles, { |x| US_Upper( x ) == US_Upper( vLibsToLink[i] ) } ) == 0
+                  DO CASE
+                  CASE File( GetMiniGuiLibFolder() + DEF_SLASH + vLibsToLink[i] )
                      w_hay := .T.
-                     w_group += '-l' + SubStr( US_FileNameOnlyName( GetMiniGuiName() ), 4 ) + ' '
-                     DO WHILE ( i := AScan( vLibsDefault, { |y| US_Upper( y ) == 'LIBGTGUI.A' } ) ) > 1
-                        ADel( vLibsDefault, i )
-                        ASize( vLibsDefault, Len( vLibsDefault ) - 1 )
-                     ENDDO
-                     IF AScan( vLibsDefault, { |y| US_Upper( y ) == 'LIBGTGUI.A' } ) == 0
-                        ASize( vLibsDefault, Len( vLibsDefault ) + 1 )
-                        ains( vLibsDefault, 1 )
-                        vLibsDefault[1] := 'libgtgui.a'
-                     ENDIF
-                     IF AScan( vLibExcludeFiles, US_Upper( GetMiniGuiName() ) ) > 0
-                        MsgInfo( 'Warning: ' + GetMiniGuiName() + ' was excluded for Windows mode.' + CRLF + 'QPM added it automatically.' + CRLF + 'Look at tab ' + DBLQT + PageLIB + DBLQT )
-                     ENDIF
-                     IF AScan( vLibExcludeFiles, 'LIBGTGUI.A' ) > 0
-                        MsgInfo( 'Warning: LIBGTGUI.A was excluded for Windows mode.' + CRLF + 'QPM added it automatically.' + CRLF + 'Look at tab ' + DBLQT + PageLIB + DBLQT )
-                     ENDIF
-                  ENDIF
+                     w_group += '-l' + SubStr( US_FileNameOnlyName( vLibsToLink[i] ), 4 ) + ' '
+                  CASE File( GetHarbourLibFolder() + DEF_SLASH + vLibsToLink[i] )
+                     w_hay := .T.
+                     w_group += '-l' + SubStr( US_FileNameOnlyName( vLibsToLink[i] ), 4 ) + ' '
+                  CASE File( GetCppLibFolder() + DEF_SLASH + vLibsToLink[i] )
+                     w_hay := .T.
+                     w_group += '-l' + SubStr( US_FileNameOnlyName( vLibsToLink[i] ), 4 ) + ' '
+                  CASE File( GetCppFolder() + DEF_SLASH + "lib" + DEF_SLASH + vLibsToLink[i] )
+                     w_hay := .T.
+                     w_group += '-l' + SubStr( US_FileNameOnlyName( vLibsToLink[i] ), 4 ) + ' '
+                  CASE Prj_Check_64bits .AND. File( GetCppFolder() + DEF_SLASH + "x86_64-w64-mingw32" + DEF_SLASH + "lib" + DEF_SLASH + vLibsToLink[i] )
+                     w_hay := .T.
+                     w_group += '-l' + SubStr( US_FileNameOnlyName( vLibsToLink[i] ), 4 ) + ' '
+                  CASE ! Prj_Check_64bits .AND. File( GetCppFolder() + DEF_SLASH + "i686-w64-mingw32" + DEF_SLASH + "lib" + DEF_SLASH + vLibsToLink[i] )
+                     w_hay := .T.
+                     w_group += '-l' + SubStr( US_FileNameOnlyName( vLibsToLink[i] ), 4 ) + ' '
+                  ENDCASE
+               ENDIF
+            NEXT
 
-                  DO EVENTS
-
-/*
- * MINGW: add other libraries
- */
-                  // Algoritmo de búsqueda:
-                  //    Que no esté excluida
-                  //    La busco con o sin X (según sea xharbour o harbour) en el directorio lib de minigui
-                  //    Si no está y es xharbour y es Extended la busco sin X en el directorio xlib de minigui
-                  //    Si no está la busco con o sin X en el directorio de libs de (x)harbour
-                  //    Si no está y es xharbour la busco sin X en el directorio de libs de xharbour
-                  //    Si no está la busco en el directorio de libs de MINGW
-                  FOR i := 1 TO Len( vLibsDefault )
-                     IF AScan( vLibExcludeFiles, US_Upper( vLibsDefault[i] ) ) == 0
-                        DO CASE
-                        CASE QPM_IsXHarbour() .AND. File( GetMiniGuiLibFolder() + DEF_SLASH + ( 'libx' + SubStr( vLibsDefault[i], 4 ) ) )
-                           w_hay := .T.
-                           w_group += '-lx' + SubStr( US_FileNameOnlyName( vLibsDefault[i] ), 4 ) + ' '
-                        CASE File( GetMiniGuiLibFolder() + DEF_SLASH + vLibsDefault[i] )
-                           w_hay := .T.
-                           w_group += '-l' + SubStr( US_FileNameOnlyName( vLibsDefault[i] ), 4 ) + ' '
-                        CASE QPM_IsXHarbour() .AND. ( GetMiniGuiSuffix() == DefineExtended1 ) .AND. File( GetMiniGuiFolder() + DEF_SLASH + 'xlib' + DEF_SLASH + vLibsDefault[i] )
-                           w_hay := .T.
-                           w_group += '-l' + SubStr( US_FileNameOnlyName( vLibsDefault[i] ), 4 ) + ' '
-                        CASE QPM_IsXHarbour() .AND. File( GetHarbourLibFolder() + DEF_SLASH + ( 'libx' + SubStr( vLibsDefault[i], 4 ) ) )
-                           w_hay := .T.
-                           w_group += '-lx' + SubStr( US_FileNameOnlyName( vLibsDefault[i] ), 4 ) + ' '
-                        CASE File( GetHarbourLibFolder() + DEF_SLASH + vLibsDefault[i] )
-                           w_hay := .T.
-                           w_group += '-l' + SubStr( US_FileNameOnlyName( vLibsDefault[i] ), 4 ) + ' '
-                        CASE File( GetCppLibFolder() + DEF_SLASH + vLibsDefault[i] )
-                           w_hay := .T.
-                           w_group += '-l' + SubStr( US_FileNameOnlyName( vLibsDefault[i] ), 4 ) + ' '
-                        ENDCASE
-                     ENDIF
-                  NEXT
-
-                  DO EVENTS
+            DO EVENTS
 
 /*
- * MINGW: add libraries marked *LAST*
+ * MINGW: add libraries marked *LAST* that are not excluded
  */
-                  FOR i := 1 TO Len ( vLibIncludeFiles )
-                     IF US_Upper( US_Word( GetProperty( 'VentanaMain', 'GIncFiles', 'Cell', i, NCOLINCFULLNAME ), 2 ) ) == '*LAST*'
-                        IF US_FileNameOnlyExt( vLibIncludeFiles[i] ) == 'A'
-                           w_hay := .T.
-                           w_group += '-l' + SubStr( US_FileNameOnlyName( vLibIncludeFiles[i] ), 4 ) + ' '
-                        ENDIF
+            FOR i := 1 TO Len ( vLibIncludeFiles )
+               IF US_Word( GetProperty( 'VentanaMain', 'GIncFiles', 'Cell', i, NCOLINCFULLNAME ), 2 ) == '*LAST*'
+                  IF Upper( US_FileNameOnlyExt( vLibIncludeFiles[i] ) ) == 'A'
+                     IF AScan( vLibExcludeFiles, { |x| US_Upper( x ) == US_Upper( US_FileNameOnlyNameAndExt( vLibIncludeFiles[i] ) ) } ) == 0
+                        w_hay := .T.
+                        w_group += '-l' + SubStr( US_FileNameOnlyName( vLibIncludeFiles[i] ), 4 ) + ' '
                      ENDIF
-                  NEXT
-
-                  DO EVENTS
-
-                  IF w_hay
-                     w_group += ')'
-                     Out := Out + PUB_cCharTab + 'echo ' + w_group + ' >> ' + Q_SCRIPT_FILE + CRLF
                   ENDIF
+               ENDIF
+            NEXT
+
+            DO EVENTS
+
+            IF w_hay
+               w_group += ')'
+               Out := Out + PUB_cCharTab + 'echo ' + w_group + ' >> ' + Q_SCRIPT_FILE + CRLF
+            ENDIF
 
 /*
  * Add search folders to script.ld
  */
-                  Out := Out + PUB_cCharTab + 'echo SEARCH_DIR( $(DIR_MINIGUI_LIB) ) >> ' + Q_SCRIPT_FILE + CRLF
-                  IF QPM_IsXHarbour() .AND. ( GetMiniGuiSuffix() == DefineExtended1 )
-                     Out := Out + PUB_cCharTab + 'echo SEARCH_DIR( $(DIR_MINIGUI)' + DEF_SLASH + 'xlib ) >> ' + Q_SCRIPT_FILE + CRLF
-                  ENDIF
-                  Out := Out + PUB_cCharTab + 'echo SEARCH_DIR( $(DIR_HARBOUR_LIB) ) >> ' + Q_SCRIPT_FILE + CRLF
-                  Out := Out + PUB_cCharTab + 'echo SEARCH_DIR( $(DIR_COMPC_LIB) ) >> ' + Q_SCRIPT_FILE + CRLF
-                  FOR i := 1 TO Len( &('vExtraFoldersForLibs'+GetSuffix()) )
-                     IF ! Empty( &('vExtraFoldersForLibs'+GetSuffix()+'['+Str(i)+']') ) .AND. ;
-                         &('vExtraFoldersForLibs'+GetSuffix()+'['+Str(i)+']') != US_Upper( GetCppLibFolder() ) .AND. ;
-                         &('vExtraFoldersForLibs'+GetSuffix()+'['+Str(i)+']') != US_Upper( GetMiniguiLibFolder() ) .AND. ;
-                         &('vExtraFoldersForLibs'+GetSuffix()+'['+Str(i)+']') != US_Upper( GetHarbourLibFolder() )
-                        Out := Out + PUB_cCharTab + 'echo SEARCH_DIR( ' + US_ShortName( &('vExtraFoldersForLibs'+GetSuffix()+'['+Str(i)+']') ) + ' ) >> ' + Q_SCRIPT_FILE + CRLF
-                     ENDIF
-                  NEXT
-               CASE IsPelles
+            Out := Out + PUB_cCharTab + 'echo SEARCH_DIR( $(DIR_PROJECT) ) >> ' + Q_SCRIPT_FILE + CRLF
+            Out := Out + PUB_cCharTab + 'echo SEARCH_DIR( $(DIR_MINIGUI_LIB) ) >> ' + Q_SCRIPT_FILE + CRLF
+            IF QPM_IsXHarbour() .AND. ( GetMiniGuiSuffix() == DefineExtended1 )
+               Out := Out + PUB_cCharTab + 'echo SEARCH_DIR( $(DIR_MINIGUI)' + DEF_SLASH + 'xlib ) >> ' + Q_SCRIPT_FILE + CRLF
+            ENDIF
+            Out := Out + PUB_cCharTab + 'echo SEARCH_DIR( $(DIR_HARBOUR_LIB) ) >> ' + Q_SCRIPT_FILE + CRLF
+            Out := Out + PUB_cCharTab + 'echo SEARCH_DIR( $(DIR_COMPC_LIB) ) >> ' + Q_SCRIPT_FILE + CRLF
+            FOR i := 1 TO Len( &('vExtraFoldersForLibs'+GetSuffix()) )
+               IF ! Empty( &('vExtraFoldersForLibs'+GetSuffix()+'['+Str(i)+']') ) .AND. ;
+                   &('vExtraFoldersForLibs'+GetSuffix()+'['+Str(i)+']') != US_Upper( GetCppLibFolder() ) .AND. ;
+                   &('vExtraFoldersForLibs'+GetSuffix()+'['+Str(i)+']') != US_Upper( GetMiniguiLibFolder() ) .AND. ;
+                   &('vExtraFoldersForLibs'+GetSuffix()+'['+Str(i)+']') != US_Upper( GetHarbourLibFolder() )
+                  Out := Out + PUB_cCharTab + 'echo SEARCH_DIR( ' + US_ShortName( &('vExtraFoldersForLibs'+GetSuffix()+'['+Str(i)+']') ) + ' ) >> ' + Q_SCRIPT_FILE + CRLF
+               ENDIF
+            NEXT
+
+         CASE IsPelles
+
 /*
  * PELLES: add libraries marked *FIRST*
  */
-                  FOR i := 1 TO Len ( vLibIncludeFiles )
-                     IF US_Upper( US_Word( GetProperty( 'VentanaMain', 'GIncFiles', 'Cell', i, NCOLINCFULLNAME ), 2 ) ) == '*FIRST*'
-                        IF US_Upper( US_FileNameOnlyExt( vLibIncludeFiles[i] ) ) == 'LIB'
-                           Out := Out + PUB_cCharTab + 'echo ' + US_ShortName( vLibIncludeFiles[i] ) + ' + >> ' + Q_SCRIPT_FILE + CRLF
-                        ENDIF
-                     ENDIF
-                  NEXT i
-
-/*
- * PELLES: add MiniGui main library
- */
-                  IF Prj_Check_Console
-                     IF AScan( vLibExcludeFiles, US_Upper( GetMiniGuiName() ) ) == 0
-                        Out := Out + PUB_cCharTab + 'echo ' + GetMiniguiLibFolder() + DEF_SLASH + GetMiniGuiName() + ' >> ' + Q_SCRIPT_FILE + CRLF
-                        IF AScan( vLibsDefault, { |y| US_Upper( y ) == 'GTGUI.LIB' } ) == 0
-                           AAdd( vLibsDefault, 'gtgui.lib' )
-                        ENDIF
-                     ENDIF
-                  ELSE
-                     Out := Out + PUB_cCharTab + 'echo ' + GetMiniguiLibFolder() + DEF_SLASH + GetMiniGuiName() + ' >> ' + Q_SCRIPT_FILE + CRLF
-                     DO WHILE ( i := AScan( vLibsDefault, { |y| US_Upper( y ) == 'GTGUI.LIB' } ) ) > 1
-                        ADel( vLibsDefault, i )
-                        ASize( vLibsDefault, Len( vLibsDefault ) - 1 )
-                     ENDDO
-                     IF AScan( vLibsDefault, { |y| US_Upper( y ) == 'GTGUI.LIB' } ) == 0
-                        ASize( vLibsDefault, Len( vLibsDefault ) + 1 )
-                        ains( vLibsDefault, 1 )
-                        vLibsDefault[1] := 'gtgui.lib'
-                     ENDIF
-                     IF AScan( vLibExcludeFiles, US_Upper( GetMiniGuiName() ) ) > 0
-                        MsgInfo( 'Warning: ' + GetMiniGuiName() + ' was excluded for Windows mode.' + CRLF + 'QPM added it automatically.' + CRLF + 'Look at tab ' + DBLQT + PageLIB + DBLQT )
-                     ENDIF
-                     IF AScan( vLibExcludeFiles, 'GTGUI.LIB' ) > 0
-                        MsgInfo( 'Warning: LIBGTGUI.A was excluded for Windows mode.' + CRLF + 'QPM added it automatically.' + CRLF + 'Look at tab ' + DBLQT + PageLIB + DBLQT )
+            FOR i := 1 TO Len ( vLibIncludeFiles )
+               IF US_Upper( US_Word( GetProperty( 'VentanaMain', 'GIncFiles', 'Cell', i, NCOLINCFULLNAME ), 2 ) ) == '*FIRST*'
+                  IF Upper( US_FileNameOnlyExt( vLibIncludeFiles[i] ) ) == 'LIB'
+                     IF AScan( vLibExcludeFiles, { |x| US_Upper( x ) == US_Upper( US_FileNameOnlyNameAndExt( vLibIncludeFiles[i] ) ) } ) == 0
+                        Out := Out + PUB_cCharTab + 'echo ' + US_ShortName( vLibIncludeFiles[i] ) + ' + >> ' + Q_SCRIPT_FILE + CRLF
                      ENDIF
                   ENDIF
+               ENDIF
+            NEXT i
 
-               DO EVENTS
+            DO EVENTS
 
 /*
- * PELLES: add other libraries
+ * PELLES: add default libraries that are not excluded
  */
-                  // Algoritmo de búsqueda:
-                  //    Que no esté excluida
-                  //    La busco con o sin X (según sea xharbour o harbour) en el directorio lib de minigui
-                  //    Si no está y es xharbour y es Extended la busco sin X en el directorio xlib de minigui
-                  //    Si no está la busco con o sin X en el directorio de libs de (x)harbour
-                  //    Si no está y es xharbour la busco sin X en el directorio de libs de xharbour
-                  //    Si no está la busco en el directorio de libs de PELLES o en el subdirectorio WIN
-                  FOR i := 1 TO Len( vLibsDefault )
-                     IF AScan( vLibExcludeFiles, US_Upper( vLibsDefault[i] ) ) == 0
-                        DO CASE
-                        CASE QPM_IsXHarbour() .AND. File( GetMiniguiLibFolder() + DEF_SLASH + 'x' + vLibsDefault[i] )
-                           Out := Out + PUB_cCharTab + 'echo $(DIR_MINIGUI_LIB)' + DEF_SLASH + 'x' + vLibsDefault[i] + ' + >> ' + Q_SCRIPT_FILE + CRLF
-                        CASE File( GetMiniguiLibFolder() + DEF_SLASH + vLibsDefault[i] )
-                           Out := Out + PUB_cCharTab + 'echo $(DIR_MINIGUI_LIB)' + DEF_SLASH + vLibsDefault[i] + ' + >> ' + Q_SCRIPT_FILE + CRLF
-                        CASE QPM_IsXHarbour() .AND. ( GetMiniGuiSuffix() == DefineExtended1 ) .AND. File( GetMiniGuiFolder() + DEF_SLASH + 'xlib' + DEF_SLASH + vLibsDefault[i] )
-                           Out := Out + PUB_cCharTab + 'echo $(DIR_MINIGUI)' + DEF_SLASH + 'xlib' + DEF_SLASH + vLibsDefault[i] + ' + >> ' + Q_SCRIPT_FILE + CRLF
-                        CASE QPM_IsXHarbour() .AND. File( GetHarbourLibFolder() + DEF_SLASH + 'x' + vLibsDefault[i] )
-                           Out := Out + PUB_cCharTab + 'echo $(DIR_HARBOUR_LIB)' + DEF_SLASH + 'x' + vLibsDefault[i] + ' + >> ' + Q_SCRIPT_FILE + CRLF
-                        CASE File( GetHarbourLibFolder() + DEF_SLASH + vLibsDefault[i] )
-                           Out := Out + PUB_cCharTab + 'echo $(DIR_HARBOUR_LIB)' + DEF_SLASH + vLibsDefault[i] + ' + >> ' + Q_SCRIPT_FILE + CRLF
-                        CASE File( GetCppLibFolder() + DEF_SLASH + vLibsDefault[i] )
-                           Out := Out + PUB_cCharTab + 'echo ' + vLibsDefault[i] + ' >> ' + Q_SCRIPT_FILE + CRLF
-                        CASE File( GetCppLibFolder() + DEF_SLASH + 'WIN' + DEF_SLASH + vLibsDefault[i] )
-                           Out := Out + PUB_cCharTab + 'echo ' + vLibsDefault[i] + ' >> ' + Q_SCRIPT_FILE + CRLF
-                        ENDCASE
-                     ENDIF
-                  NEXT
+            FOR i := 1 TO Len( vLibsToLink )
+               IF AScan( vLibExcludeFiles, { |x| US_Upper( x ) == US_Upper( vLibsToLink[i] ) } ) == 0
+                  DO CASE
+                  CASE File( GetMiniguiLibFolder() + DEF_SLASH + vLibsToLink[i] )
+                     Out := Out + PUB_cCharTab + 'echo $(DIR_MINIGUI_LIB)' + DEF_SLASH + vLibsToLink[i] + ' + >> ' + Q_SCRIPT_FILE + CRLF
+                  CASE File( GetHarbourLibFolder() + DEF_SLASH + vLibsToLink[i] )
+                     Out := Out + PUB_cCharTab + 'echo $(DIR_HARBOUR_LIB)' + DEF_SLASH + vLibsToLink[i] + ' + >> ' + Q_SCRIPT_FILE + CRLF
+                  CASE File( GetCppLibFolder() + DEF_SLASH + vLibsToLink[i] )
+                     Out := Out + PUB_cCharTab + 'echo ' + vLibsToLink[i] + ' >> ' + Q_SCRIPT_FILE + CRLF
+                  CASE File( GetCppLibFolder() + DEF_SLASH + 'WIN' + DEF_SLASH + vLibsToLink[i] )
+                     Out := Out + PUB_cCharTab + 'echo ' + vLibsToLink[i] + ' >> ' + Q_SCRIPT_FILE + CRLF
+                  ENDCASE
+               ENDIF
+            NEXT
+
+            DO EVENTS
 
 /*
  * PELLES: add libraries marked *LAST*
  */
-                  FOR i := 1 TO Len ( vLibIncludeFiles )
-                     IF US_Upper( US_Word( GetProperty( 'VentanaMain', 'GIncFiles', 'Cell', i, NCOLINCFULLNAME ), 2 ) ) == '*LAST*'
-                        IF US_Upper( US_FileNameOnlyExt( vLibIncludeFiles[i] ) ) == 'LIB'
-                           Out := Out + PUB_cCharTab + 'echo ' + US_ShortName( vLibIncludeFiles[i] ) + ' >> ' + Q_SCRIPT_FILE + CRLF
-                        ENDIF
+            FOR i := 1 TO Len ( vLibIncludeFiles )
+               IF US_Word( GetProperty( 'VentanaMain', 'GIncFiles', 'Cell', i, NCOLINCFULLNAME ), 2 ) == '*LAST*'
+                  IF Upper( US_FileNameOnlyExt( vLibIncludeFiles[i] ) ) == 'LIB'
+                     IF AScan( vLibExcludeFiles, { |x| US_Upper( x ) == US_Upper( US_FileNameOnlyNameAndExt( vLibIncludeFiles[i] ) ) } ) == 0
+                        Out := Out + PUB_cCharTab + 'echo ' + US_ShortName( vLibIncludeFiles[i] ) + ' >> ' + Q_SCRIPT_FILE + CRLF
                      ENDIF
-                  NEXT i
+                  ENDIF
+               ENDIF
+            NEXT i
 
-                  DO EVENTS
+            DO EVENTS
 
 /*
  * PELLES: add resource files
  */
-                  IF ! Prj_Check_IgnoreMainRC .OR. ! Prj_Check_IgnoreLibRCs
-                     FOR i := 1 TO Len ( vLibIncludeFiles )
-                        IF US_Upper( US_Word( GetProperty( 'VentanaMain' , 'GIncFiles' , 'Cell' , i , NCOLINCFULLNAME ) , 2 ) ) == '*FIRST*' // for .res
-                           IF US_Upper( US_FileNameOnlyExt( vLibIncludeFiles[i] ) ) == 'RES'
-                              Out := Out + PUB_cCharTab + 'echo ' + US_ShortName( vLibIncludeFiles[i] ) + ' >> ' + Q_SCRIPT_FILE + CRLF
-                           ENDIF
-                        ENDIF
-                     NEXT i
-
-                     IF File( US_FileNameOnlyPathAndName( PRGFILES[1] ) + '.RC' )
-                        Out := Out + PUB_cCharTab + 'echo $(DIR_OBJECTS)' + DEF_SLASH + '_Temp.res' + ' >> ' + Q_SCRIPT_FILE + CRLF
+            IF ! Prj_Check_IgnoreMainRC .OR. ! Prj_Check_IgnoreLibRCs
+               FOR i := 1 TO Len ( vLibIncludeFiles )
+                  IF US_Upper( US_Word( GetProperty( 'VentanaMain' , 'GIncFiles' , 'Cell' , i , NCOLINCFULLNAME ) , 2 ) ) == '*FIRST*' // for .res
+                     IF Upper( US_FileNameOnlyExt( vLibIncludeFiles[i] ) ) == 'RES'
+                        Out := Out + PUB_cCharTab + 'echo ' + US_ShortName( vLibIncludeFiles[i] ) + ' >> ' + Q_SCRIPT_FILE + CRLF
                      ENDIF
-
-                     FOR i := 1 TO Len ( vLibIncludeFiles )
-                        IF US_Upper( US_Word( GetProperty( 'VentanaMain' , 'GIncFiles' , 'Cell' , i , NCOLINCFULLNAME ) , 2 ) ) == '*LAST*' // for .res
-                           IF US_Upper( US_FileNameOnlyExt( vLibIncludeFiles[i] ) ) == 'RES'
-                              Out := Out + PUB_cCharTab + 'echo ' + US_ShortName( vLibIncludeFiles[i] ) + ' >> ' + Q_SCRIPT_FILE + CRLF
-                           ENDIF
-                        ENDIF
-                     NEXT i
                   ENDIF
-               CASE IsBorland
+               NEXT i
+               IF File( US_FileNameOnlyPathAndName( PRGFILES[1] ) + '.RC' )
+                  Out := Out + PUB_cCharTab + 'echo $(DIR_OBJECTS)' + DEF_SLASH + '_Temp.res' + ' >> ' + Q_SCRIPT_FILE + CRLF
+               ENDIF
+               FOR i := 1 TO Len ( vLibIncludeFiles )
+                  IF US_Word( GetProperty( 'VentanaMain' , 'GIncFiles' , 'Cell' , i , NCOLINCFULLNAME ) , 2 ) == '*LAST*' // for .res
+                     IF Upper( US_FileNameOnlyExt( vLibIncludeFiles[i] ) ) == 'RES'
+                        Out := Out + PUB_cCharTab + 'echo ' + US_ShortName( vLibIncludeFiles[i] ) + ' >> ' + Q_SCRIPT_FILE + CRLF
+                     ENDIF
+                  ENDIF
+               NEXT i
+            ENDIF
+
+         CASE IsBorland
+
 /*
  * BCC32: add libraries marked *FIRST*
  */
-                  FOR i := 1 TO Len ( vLibIncludeFiles )
-                     IF US_Upper( US_Word( GetProperty( 'VentanaMain', 'GIncFiles', 'Cell', i, NCOLINCFULLNAME ), 2 ) ) == '*FIRST*'
-                        IF US_Upper( US_FileNameOnlyExt( vLibIncludeFiles[i] ) ) == 'LIB'
-                           Out := Out + PUB_cCharTab + 'echo ' + US_ShortName( vLibIncludeFiles[i] ) + ' + >> ' + Q_SCRIPT_FILE + CRLF
-                        ENDIF
-                     ENDIF
-                  NEXT i
-
-/*
- * BCC32: add MiniGui main library
- */
-                  IF Prj_Check_Console
-                     IF AScan( vLibExcludeFiles, US_Upper( GetMiniGuiName() ) ) == 0
-                        Out := Out + PUB_cCharTab + 'echo ' + GetMiniguiLibFolder() + DEF_SLASH + GetMiniGuiName() + ' + >> ' + Q_SCRIPT_FILE + CRLF
-                        IF AScan( vLibsDefault, { |y| US_Upper( y ) == 'GTGUI.LIB' } ) == 0
-                           AAdd( vLibsDefault, 'gtgui.lib' )
-                        ENDIF
-                     ENDIF
-                  ELSE
-                     Out := Out + PUB_cCharTab + 'echo ' + GetMiniguiLibFolder() + DEF_SLASH + GetMiniGuiName() + ' + >> ' + Q_SCRIPT_FILE + CRLF
-                     DO WHILE ( i := AScan( vLibsDefault, { |y| US_Upper( y ) == 'GTGUI.LIB' } ) ) > 1
-                        ADel( vLibsDefault, i )
-                        ASize( vLibsDefault, Len( vLibsDefault ) - 1 )
-                     ENDDO
-                     IF AScan( vLibsDefault, { |y| US_Upper( y ) == 'GTGUI.LIB' } ) == 0
-                        ASize( vLibsDefault, Len( vLibsDefault ) + 1 )
-                        ains( vLibsDefault, 1 )
-                        vLibsDefault[1] := 'gtgui.lib'
-                     ENDIF
-                     IF AScan( vLibExcludeFiles, US_Upper( GetMiniGuiName() ) ) > 0
-                        MsgInfo( 'Warning: ' + GetMiniGuiName() + ' was excluded for Windows mode.' + CRLF + 'QPM added it automatically.' + CRLF + 'Look at tab ' + DBLQT + PageLIB + DBLQT )
-                     ENDIF
-                     IF AScan( vLibExcludeFiles, 'GTGUI.LIB' ) > 0
-                        MsgInfo( 'Warning: LIBGTGUI.A was excluded for Windows mode.' + CRLF + 'QPM added it automatically.' + CRLF + 'Look at tab ' + DBLQT + PageLIB + DBLQT )
+            FOR i := 1 TO Len ( vLibIncludeFiles )
+               IF US_Upper( US_Word( GetProperty( 'VentanaMain', 'GIncFiles', 'Cell', i, NCOLINCFULLNAME ), 2 ) ) == '*FIRST*'
+                  IF Upper( US_FileNameOnlyExt( vLibIncludeFiles[i] ) ) == 'LIB'
+                     IF AScan( vLibExcludeFiles, { |x| US_Upper( x ) == US_Upper( US_FileNameOnlyNameAndExt( vLibIncludeFiles[i] ) ) } ) == 0
+                        Out := Out + PUB_cCharTab + 'echo ' + US_ShortName( vLibIncludeFiles[i] ) + ' + >> ' + Q_SCRIPT_FILE + CRLF
                      ENDIF
                   ENDIF
+               ENDIF
+            NEXT i
 
-                  DO EVENTS
+            DO EVENTS
 
 /*
- * BCC32: add other libraries
+ * BCC32: add default libraries that are not excluded
  */
-                  // Algoritmo de búsqueda:
-                  //    Que no esté excluida
-                  //    La busco con o sin X (según sea xharbour o harbour) en el directorio lib de minigui
-                  //    Si no está y es xharbour y es Extended la busco sin X en el directorio xlib de minigui
-                  //    Si no está la busco con o sin X en el directorio de libs de (x)harbour
-                  //    Si no está y es xharbour la busco sin X en el directorio de libs de xharbour
-                  //    Si no está la busco en el directorio de libs de BCC32 o en el subdirectorio PSDK
-                  FOR i := 1 TO Len( vLibsDefault )
-                     IF AScan( vLibExcludeFiles, US_Upper( vLibsDefault[i] ) ) == 0
-                        DO CASE
-                        CASE QPM_IsXHarbour() .AND. File( GetMiniguiLibFolder() + DEF_SLASH + 'x' + vLibsDefault[i] )
-                           Out := Out + PUB_cCharTab + 'echo $(DIR_MINIGUI_LIB)' + DEF_SLASH + 'x' + vLibsDefault[i] + ' + >> ' + Q_SCRIPT_FILE + CRLF
-                        CASE File( GetMiniguiLibFolder() + DEF_SLASH + vLibsDefault[i] )
-                           Out := Out + PUB_cCharTab + 'echo $(DIR_MINIGUI_LIB)' + DEF_SLASH + vLibsDefault[i] + ' + >> ' + Q_SCRIPT_FILE + CRLF
-                        CASE QPM_IsXHarbour() .AND. ( GetMiniGuiSuffix() == DefineExtended1 ) .AND. File( GetMiniGuiFolder() + DEF_SLASH + 'xlib' + DEF_SLASH + vLibsDefault[i] )
-                           Out := Out + PUB_cCharTab + 'echo $(DIR_MINIGUI)' + DEF_SLASH + 'xlib' + DEF_SLASH + vLibsDefault[i] + ' + >> ' + Q_SCRIPT_FILE + CRLF
-                        CASE QPM_IsXHarbour() .AND. File( GetHarbourLibFolder() + DEF_SLASH + 'x' + vLibsDefault[i] )
-                           Out := Out + PUB_cCharTab + 'echo $(DIR_HARBOUR_LIB)' + DEF_SLASH + 'x' + vLibsDefault[i] + ' + >> ' + Q_SCRIPT_FILE + CRLF
-                        CASE File( GetHarbourLibFolder() + DEF_SLASH + vLibsDefault[i] )
-                           Out := Out + PUB_cCharTab + 'echo $(DIR_HARBOUR_LIB)' + DEF_SLASH + vLibsDefault[i] + ' + >> ' + Q_SCRIPT_FILE + CRLF
-                        CASE File( GetCppLibFolder() + DEF_SLASH + vLibsDefault[i] )
-                           Out := Out + PUB_cCharTab + 'echo $(DIR_COMPC_LIB)' + DEF_SLASH + vLibsDefault[i] + ' + >> ' + Q_SCRIPT_FILE + CRLF
-                        CASE File( GetCppLibFolder() + DEF_SLASH + 'PSDK' + DEF_SLASH + vLibsDefault[i] )
-                           Out := Out + PUB_cCharTab + 'echo $(DIR_COMPC_LIB2)' + DEF_SLASH + vLibsDefault[i] + ' + >> ' + Q_SCRIPT_FILE + CRLF
-                        ENDCASE
-                     ENDIF
-                  NEXT
+            FOR i := 1 TO Len( vLibsToLink )
+               IF ! Upper( US_FileNameOnlyExt( vLibsToLink[i] ) ) == 'OBJ'
+                  IF AScan( vLibExcludeFiles, { |x| US_Upper( x ) == US_Upper( vLibsToLink[i] ) } ) == 0
+                     DO CASE
+                     CASE File( GetMiniguiLibFolder() + DEF_SLASH + vLibsToLink[i] )
+                        Out := Out + PUB_cCharTab + 'echo $(DIR_MINIGUI_LIB)' + DEF_SLASH + vLibsToLink[i] + ' + >> ' + Q_SCRIPT_FILE + CRLF
+                     CASE File( GetHarbourLibFolder() + DEF_SLASH + vLibsToLink[i] )
+                        Out := Out + PUB_cCharTab + 'echo $(DIR_HARBOUR_LIB)' + DEF_SLASH + vLibsToLink[i] + ' + >> ' + Q_SCRIPT_FILE + CRLF
+                     CASE File( GetCppLibFolder() + DEF_SLASH + vLibsToLink[i] )
+                        Out := Out + PUB_cCharTab + 'echo $(DIR_COMPC_LIB)' + DEF_SLASH + vLibsToLink[i] + ' + >> ' + Q_SCRIPT_FILE + CRLF
+                     CASE File( GetCppLibFolder() + DEF_SLASH + 'PSDK' + DEF_SLASH + vLibsToLink[i] )
+                        Out := Out + PUB_cCharTab + 'echo $(DIR_COMPC_LIB2)' + DEF_SLASH + vLibsToLink[i] + ' + >> ' + Q_SCRIPT_FILE + CRLF
+                     ENDCASE
+                  ENDIF
+               ENDIF
+            NEXT
 
-                  DO EVENTS
+            DO EVENTS
 
 /*
  * BCC32: add libraries marked *LAST*
  */
-                  FOR i := 1 TO Len ( vLibIncludeFiles )
-                     IF US_Upper( US_Word( GetProperty( 'VentanaMain', 'GIncFiles', 'Cell', i, NCOLINCFULLNAME ), 2 ) ) == '*LAST*'
-                        IF US_Upper( US_FileNameOnlyExt( vLibIncludeFiles[i] ) ) == 'LIB'
-                           Out := Out + PUB_cCharTab + 'echo ' + US_ShortName( vLibIncludeFiles[i] ) + ' + >> ' + Q_SCRIPT_FILE + CRLF
-                        ENDIF
+            FOR i := 1 TO Len ( vLibIncludeFiles )
+               IF US_Word( GetProperty( 'VentanaMain', 'GIncFiles', 'Cell', i, NCOLINCFULLNAME ), 2 ) == '*LAST*'
+                  IF Upper( US_FileNameOnlyExt( vLibIncludeFiles[i] ) ) == 'LIB'
+                     IF AScan( vLibExcludeFiles, { |x| US_Upper( x ) == US_Upper( US_FileNameOnlyNameAndExt( vLibIncludeFiles[i] ) ) } ) == 0
+                        Out := Out + PUB_cCharTab + 'echo ' + US_ShortName( vLibIncludeFiles[i] ) + ' + >> ' + Q_SCRIPT_FILE + CRLF
                      ENDIF
-                  NEXT i
+                  ENDIF
+               ENDIF
+            NEXT i
 
-                  DO EVENTS
+            DO EVENTS
 
 /*
  * BCC32: add resource files
  */
-                  Out := Out + PUB_cCharTab + 'echo , , + >> ' + Q_SCRIPT_FILE + CRLF
-                  IF ! Prj_Check_IgnoreMainRC .OR. ! Prj_Check_IgnoreLibRCs
-                     IF ( ! Prj_Check_IgnoreMainRC .AND. File( US_FileNameOnlyPathAndName( PRGFILES[1] ) + '.RC' ) ) .OR. ! Prj_Check_IgnoreLibRCs
-                        Out := Out + PUB_cCharTab + 'echo $(DIR_OBJECTS)' + DEF_SLASH + '_Temp.res + >> ' + Q_SCRIPT_FILE + CRLF
+            Out := Out + PUB_cCharTab + 'echo , , + >> ' + Q_SCRIPT_FILE + CRLF
+            FOR i := 1 TO Len ( vLibIncludeFiles )
+               IF US_Upper( US_Word( GetProperty( 'VentanaMain' , 'GIncFiles' , 'Cell' , i , NCOLINCFULLNAME ) , 2 ) ) == '*FIRST*' // for .res
+                  IF Upper( US_FileNameOnlyExt( vLibIncludeFiles[i] ) ) == 'RES'
+                     IF AScan( vLibExcludeFiles, { |x| US_Upper( x ) == US_Upper( US_FileNameOnlyNameAndExt( vLibIncludeFiles[i] ) ) } ) == 0
+                        Out := Out + PUB_cCharTab + 'echo ' + US_ShortName( vLibIncludeFiles[i] ) + ' + >> ' + Q_SCRIPT_FILE + CRLF
                      ENDIF
-
-                     FOR i := 1 TO Len ( vLibIncludeFiles )
-                        IF US_Upper( US_Word( GetProperty( 'VentanaMain' , 'GIncFiles' , 'Cell' , i , NCOLINCFULLNAME ) , 2 ) ) == '*FIRST*' // for .res
-                           IF US_Upper( US_FileNameOnlyExt( vLibIncludeFiles[i] ) ) == 'RES'
-                              Out := Out + PUB_cCharTab + 'echo ' + US_ShortName( vLibIncludeFiles[i] ) + ' + >> ' + Q_SCRIPT_FILE + CRLF
-                           ENDIF
-                        ENDIF
-                     NEXT i
-
-                     DO EVENTS
-
-                     FOR i := 1 TO Len ( vLibIncludeFiles )
-                        IF US_Upper( US_Word( GetProperty( 'VentanaMain' , 'GIncFiles' , 'Cell' , i , NCOLINCFULLNAME ) , 2 ) ) == '*LAST*' // for .res
-                           IF US_Upper( US_FileNameOnlyExt( vLibIncludeFiles[i] ) ) == 'RES'
-                              Out := Out + PUB_cCharTab + 'echo ' + US_ShortName( vLibIncludeFiles[i] ) + ' + >> ' + Q_SCRIPT_FILE + CRLF
-                           ENDIF
-                        ENDIF
-                     NEXT i
                   ENDIF
-
-                  DO EVENTS
-               OTHERWISE
-                  US_Log( 'Error 6127' )
-            ENDCASE
-         CASE Prj_Radio_OutputType == DEF_RG_LIB
-            FOR i := 1 TO Len ( PRGFILES )
-               DO CASE
-                  CASE IsMinGW
-                  CASE IsPelles
-                     IF i==1
-                        Out := Out + PUB_cCharTab + 'echo /out:$@ ' + '> ' + Q_SCRIPT_FILE + CRLF
-                     ENDIF
-                     Out := Out + PUB_cCharTab + 'echo $(DIR_OBJECTS)' + DEF_SLASH + US_FileNameOnlyName( PRGFILES[i] ) + '.obj ' + '>> ' + Q_SCRIPT_FILE + CRLF
-                  CASE IsBorland
-                     // La siguiente linea tiene el string *AMPERSAND* porque en el sistema operativo Windows 2003 Server Enterprise Edition si codifico el & no funciona el PIPE (>)
-                     Out := Out + PUB_cCharTab + 'echo +$(DIR_OBJECTS)' + DEF_SLASH + US_FileNameOnlyName( PRGFILES[i] ) + '.obj ' + iif(i<Len( PRGFILES ),'*AMPERSAND* ',' ') + iif(i>1,'>','') + '> ' + Q_SCRIPT_FILE + CRLF
-                  OTHERWISE
-                     US_Log( 'Error 6143' )
-               ENDCASE
+               ENDIF
             NEXT i
+            IF ! Prj_Check_IgnoreMainRC .OR. ! Prj_Check_IgnoreLibRCs
+               IF ( ! Prj_Check_IgnoreMainRC .AND. File( US_FileNameOnlyPathAndName( PRGFILES[1] ) + '.RC' ) ) .OR. ! Prj_Check_IgnoreLibRCs
+                  Out := Out + PUB_cCharTab + 'echo $(DIR_OBJECTS)' + DEF_SLASH + '_Temp.res + >> ' + Q_SCRIPT_FILE + CRLF
+               ENDIF
+            ENDIF
+            FOR i := 1 TO Len ( vLibIncludeFiles )
+               IF US_Word( GetProperty( 'VentanaMain' , 'GIncFiles' , 'Cell' , i , NCOLINCFULLNAME ) , 2 ) == '*LAST*' // for .res
+                  IF Upper( US_FileNameOnlyExt( vLibIncludeFiles[i] ) ) == 'RES'
+                     IF AScan( vLibExcludeFiles, { |x| US_Upper( x ) == US_Upper( US_FileNameOnlyNameAndExt( vLibIncludeFiles[i] ) ) } ) == 0
+                        Out := Out + PUB_cCharTab + 'echo ' + US_ShortName( vLibIncludeFiles[i] ) + ' + >> ' + Q_SCRIPT_FILE + CRLF
+                     ENDIF
+                  ENDIF
+               ENDIF
+            NEXT i
+
          OTHERWISE
-            MsgInfo( 'Invalid Output Type: ' + cOutputType() )
-            BUILD_IN_PROGRESS := .F.
-            RETURN .F.
+            US_Log( 'Error 6127' )
+         ENDCASE
+
+         IF IsMinGW
+            Out := Out + PUB_cCharTab + 'echo PATH( ' + ;
+                         US_ShortName( GetCppFolder() ) + DEF_SLASH + 'BIN;' + ;
+                         US_ShortName( GetHarbourFolder() ) + DEF_SLASH + 'BIN' + ;
+                         ' ) >> ' + Q_SCRIPT_FILE + CRLF
+         ENDIF
+
+      CASE Prj_Radio_OutputType == DEF_RG_LIB
+         FOR i := 1 TO Len ( PRGFILES )
+            DO CASE
+               CASE IsMinGW
+               CASE IsPelles
+                  IF i == 1
+                     Out := Out + PUB_cCharTab + 'echo /out:$@ ' + '> ' + Q_SCRIPT_FILE + CRLF
+                  ENDIF
+                  Out := Out + PUB_cCharTab + 'echo $(DIR_OBJECTS)' + DEF_SLASH + US_FileNameOnlyName( PRGFILES[i] ) + '.obj ' + '>> ' + Q_SCRIPT_FILE + CRLF
+               CASE IsBorland
+                  // La siguiente linea tiene el string *AMPERSAND* porque en el sistema operativo Windows 2003 Server Enterprise Edition si codifico el & no funciona el PIPE (>)
+                  Out := Out + PUB_cCharTab + 'echo +$(DIR_OBJECTS)' + DEF_SLASH + US_FileNameOnlyName( PRGFILES[i] ) + '.obj ' + iif(i<Len( PRGFILES ),'*AMPERSAND* ',' ') + iif(i>1,'>','') + '> ' + Q_SCRIPT_FILE + CRLF
+               OTHERWISE
+                  US_Log( 'Error 6143' )
+            ENDCASE
+         NEXT i
+      OTHERWISE
+         MyMsgStop( 'Invalid Output Type: ' + cOutputType() )
+         BUILD_IN_PROGRESS := .F.
+         RETURN .F.
       ENDCASE
 
       DO EVENTS
@@ -6147,32 +6544,67 @@ FUNCTION QPM_Build2()
          DO CASE
          CASE Prj_Radio_OutputType == DEF_RG_EXE
             Out := Out + PUB_cCharTab + '$(US_MSG_EXE) ' + Q_PROGRESS_LOG + ' -MSG:Linking ' + cOutputNameDisplay + ' ...' + CRLF
-            IF Empty( GetProperty( 'VentanaMain', 'OverrideLink', 'value' ) )
-               Out := Out + PUB_cCharTab + '$(ILINK_EXE) -Wall -o $(APP_NAME) ' + SCRIPT_FILE + ;
-                            iif( Prj_Check_64bits, ' -m64', ' -m32' ) + ;
-                            iif( Prj_Check_Console, ' -mconsole', ' -mwindows' ) + CRLF
-            ELSE
-               Out := Out + PUB_cCharTab + '$(ILINK_EXE) -Wall $(USER_FLAGS_LINK) -o $(APP_NAME) ' + SCRIPT_FILE + ;
-                            iif( Prj_Check_64bits, ' -m64', ' -m32' ) + ;
-                            iif( Prj_Check_Console, ' -mconsole', ' -mwindows' ) + CRLF
-            ENDIF
+            Out := Out + PUB_cCharTab + '$(ILINK_EXE) QPM' + iif( bLogActivity, ' -LIST' + US_ShortName(PUB_cQPM_Folder), '' ) + ;
+                        ' -Wall ' + iif( Prj_Check_Console, '-mconsole ', '-mwindows ' ) + iif( Prj_Check_64bits, '-m64 ', '' ) + ;
+                         iif( ! Empty( GetProperty( 'VentanaMain', 'OverrideLink', 'value' ) ), '$(USER_FLAGS_LINK) ', "" ) + ;
+                        Q_SCRIPT_FILE + ;
+                        ' -o$(APP_NAME)' + CRLF
             IF Prj_Check_Upx
                Out := Out + PUB_cCharTab + '$(US_MSG_EXE) ' + Q_PROGRESS_LOG + ' -MSG:Compressing ' + cOutputNameDisplay + ' with UPX ...' + CRLF
                Out := Out + PUB_cCharTab + '$(US_UPX_EXE) ' + cUpxOpt + ' ' + cOutputName + ' ' + CRLF
             ENDIF
          CASE Prj_Radio_OutputType == DEF_RG_LIB
             Out := Out + PUB_cCharTab + '$(US_MSG_EXE) ' + Q_PROGRESS_LOG + ' -MSG:Making Library ' + cOutputNameDisplay + ' ...' + CRLF
+/*
+ * Grabo lista de objetos derivados de los .prg 
+ */
             FOR i := 1 TO Len ( PRGFILES )
                Out := Out + PUB_cCharTab + '$(TLIB_EXE) rc ' + cOutputName + ' $(DIR_OBJECTS)' + DEF_SLASH + US_FileNameOnlyName( PRGFILES[i] ) + '.o' + CRLF
             NEXT i
 /*
- * Grabo los objetos listados en las Default Libraries
+ * Grabo los objetos listados en las Include Libraries marcados *FIRST* que no estén excluidos
  */
             FOR i := 1 TO Len ( vLibIncludeFiles )
-               IF US_FileNameOnlyExt( vLibIncludeFiles[i] ) == 'O'
-                  IF ! ( US_Upper( US_FileNameOnlyName( vLibIncludeFiles[i] ) ) $ ( 'MAINSTD' + CRLF + 'MAINWIN' ) )
-                     IF File( vLibIncludeFiles[i] )
-                        Out := Out + PUB_cCharTab + '$(TLIB_EXE) rc ' + cOutputName + ' ' + vLibIncludeFiles[i] + CRLF
+               IF Upper( US_FileNameOnlyExt( vLibIncludeFiles[i] ) ) == 'O'
+                  IF US_Upper( US_Word( GetProperty( 'VentanaMain', 'GIncFiles', 'Cell', i, NCOLINCFULLNAME ), 2 ) ) == '*FIRST*'
+                     IF ! ( US_Upper( US_FileNameOnlyName( vLibIncludeFiles[i] ) ) $ ( 'MAINSTD' + CRLF + 'MAINWIN' ) )
+                        IF AScan( vLibExcludeFiles, { |x| US_Upper( x ) == US_Upper( US_FileNameOnlyPathAndName( vLibsToLink[i] ) ) } ) == 0
+                           IF File( vLibIncludeFiles[i] )
+                              Out := Out + PUB_cCharTab + '$(TLIB_EXE) rc ' + cOutputName + ' ' + vLibIncludeFiles[i] + CRLF
+                           ENDIF
+                        ENDIF
+                     ENDIF
+                  ENDIF
+               ENDIF
+            NEXT i
+/*
+ * Grabo los objetos listados en las Default Libraries que no estén excluidos
+ */
+            FOR i := 1 TO Len( vLibsToLink )
+               IF Upper( US_FileNameOnlyExt( vLibsToLink[i] ) ) == 'O'
+                  IF AScan( vLibExcludeFiles, { |x| US_Upper( x ) == US_Upper( vLibsToLink[i] ) } ) == 0
+                     IF File( GetMiniGuiFolder() + DEF_SLASH + 'RESOURCES' + DEF_SLASH + vLibsToLink[i] )
+                        Out := Out + PUB_cCharTab + '$(TLIB_EXE) rc ' + cOutputName + ' ' + GetMiniGuiFolder() + DEF_SLASH + 'RESOURCES' + DEF_SLASH + vLibsToLink[i] + CRLF
+                     ELSEIF File( PUB_cProjectFolder + DEF_SLASH + vLibsToLink[i] )
+                        Out := Out + PUB_cCharTab + '$(TLIB_EXE) rc ' + cOutputName + ' ' + PUB_cProjectFolder + DEF_SLASH + vLibsToLink[i] + CRLF
+                     ELSEIF File( GetCppLibFolder() + DEF_SLASH + vLibsToLink[i] )
+                        Out := Out + PUB_cCharTab + '$(TLIB_EXE) rc ' + cOutputName + ' ' + GetCppLibFolder() + DEF_SLASH + vLibsToLink[i] + CRLF
+                     ENDIF
+                  ENDIF
+               ENDIF
+            NEXT i
+/*
+ * Grabo los objetos listados en las Include Libraries marcados *LAST* que no estén excluidos
+ */
+            FOR i := 1 TO Len ( vLibIncludeFiles )
+               IF Upper( US_FileNameOnlyExt( vLibIncludeFiles[i] ) ) == 'O'
+                  IF US_Upper( US_Word( GetProperty( 'VentanaMain', 'GIncFiles', 'Cell', i, NCOLINCFULLNAME ), 2 ) ) == '*LAST*'
+                     IF ! ( US_Upper( US_FileNameOnlyName( vLibIncludeFiles[i] ) ) $ ( 'MAINSTD' + CRLF + 'MAINWIN' ) )
+                        IF AScan( vLibExcludeFiles, { |x| US_Upper( x ) == US_Upper( US_FileNameOnlyPathAndName( vLibsToLink[i] ) ) } ) == 0
+                           IF File( vLibIncludeFiles[i] )
+                              Out := Out + PUB_cCharTab + '$(TLIB_EXE) rc ' + cOutputName + ' ' + vLibIncludeFiles[i] + CRLF
+                           ENDIF
+                        ENDIF
                      ENDIF
                   ENDIF
                ENDIF
@@ -6185,9 +6617,9 @@ FUNCTION QPM_Build2()
          CASE Prj_Radio_OutputType == DEF_RG_EXE
             Out := Out + PUB_cCharTab + '$(US_MSG_EXE) ' + Q_PROGRESS_LOG + ' -MSG:Linking ' + cOutputNameDisplay + ' ...' + CRLF
             IF Empty( GetProperty( 'VentanaMain', 'OverrideLink', 'value' ) )
-               Out := Out + PUB_cCharTab + '$(ILINK_EXE) ' + iif( Prj_Check_Console, '/SUBSYSTEM:CONSOLE ', '/SUBSYSTEM:WINDOWS ' ) + '@' + SCRIPT_FILE + CRLF
+               Out := Out + PUB_cCharTab + '$(ILINK_EXE) ' + iif( Prj_Check_Console, '/SUBSYSTEM:CONSOLE ', '/SUBSYSTEM:WINDOWS ' ) + '@' + Q_SCRIPT_FILE + CRLF
             ELSE
-               Out := Out + PUB_cCharTab + '$(ILINK_EXE) ' + iif( Prj_Check_Console, '/SUBSYSTEM:CONSOLE ', '/SUBSYSTEM:WINDOWS ' ) + '$(USER_FLAGS_LINK) ' + '@' + SCRIPT_FILE + CRLF
+               Out := Out + PUB_cCharTab + '$(ILINK_EXE) ' + iif( Prj_Check_Console, '/SUBSYSTEM:CONSOLE ', '/SUBSYSTEM:WINDOWS ' ) + '$(USER_FLAGS_LINK) ' + '@' + Q_SCRIPT_FILE + CRLF
             ENDIF
             IF Prj_Check_Upx
                Out := Out + PUB_cCharTab + '$(US_MSG_EXE) ' + Q_PROGRESS_LOG + ' -MSG:Compressing ' + cOutputNameDisplay + ' with UPX ...' + CRLF
@@ -6195,7 +6627,7 @@ FUNCTION QPM_Build2()
             ENDIF
          CASE Prj_Radio_OutputType == DEF_RG_LIB
             Out := Out + PUB_cCharTab + '$(US_MSG_EXE) ' + Q_PROGRESS_LOG + ' -MSG:Making Library ' + cOutputNameDisplay + ' ...' + CRLF
-            Out := Out + PUB_cCharTab + '$(TLIB_EXE) @' + SCRIPT_FILE + CRLF
+            Out := Out + PUB_cCharTab + '$(TLIB_EXE) @' + Q_SCRIPT_FILE + CRLF
          OTHERWISE
             Out := Out + PUB_cCharTab + '$(US_MSG_EXE) ' + Q_PROGRESS_LOG + ' -MSG:Output Type Invalid: '+ US_VarToStr( Prj_Radio_OutputType ) + CRLF
          ENDCASE
@@ -6206,9 +6638,9 @@ FUNCTION QPM_Build2()
             w_LibFolders := GetCppLibFolder()
             w_LibFolders += ";" + w_LibFolders + "\PSDK;"
             IF Empty( GetProperty( 'VentanaMain', 'OverrideLink', 'value' ) )
-               Out := Out + PUB_cCharTab + '$(ILINK_EXE) -x -Gn -Tpe ' + iif( Prj_Check_Console, '-ap ', '-aa ' ) + '-L' + w_LibFolders + ' @' + SCRIPT_FILE + CRLF
+               Out := Out + PUB_cCharTab + '$(ILINK_EXE) -x -Gn -Tpe ' + iif( Prj_Check_Console, '-ap ', '-aa ' ) + '-L' + w_LibFolders + ' @' + Q_SCRIPT_FILE + CRLF
             ELSE
-               Out := Out + PUB_cCharTab + '$(ILINK_EXE) -x -Gn -Tpe ' + iif( Prj_Check_Console, '-ap ', '-aa ') + '$(USER_FLAGS_LINK) -L' + w_LibFolders + ' @' + SCRIPT_FILE + CRLF
+               Out := Out + PUB_cCharTab + '$(ILINK_EXE) -x -Gn -Tpe ' + iif( Prj_Check_Console, '-ap ', '-aa ') + '$(USER_FLAGS_LINK) -L' + w_LibFolders + ' @' + Q_SCRIPT_FILE + CRLF
             ENDIF
             IF Prj_Check_Upx
                Out := Out + PUB_cCharTab + '$(US_MSG_EXE) ' + Q_PROGRESS_LOG + ' -MSG:Compressing ' + cOutputNameDisplay + ' with UPX ...' + CRLF
@@ -6217,8 +6649,8 @@ FUNCTION QPM_Build2()
          CASE Prj_Radio_OutputType == DEF_RG_LIB
             Out := Out + PUB_cCharTab + '$(US_MSG_EXE) ' + Q_PROGRESS_LOG + ' -MSG:Making Library ' + cOutputNameDisplay + ' ...' + CRLF
             // La siguiente linea tiene el string *AMPERSAND* porque en el sistema operativo Windows 2003 Server Enterprise Edition si codifico el & no funciona el PIPE (>)
-            Out := Out + PUB_cCharTab + '$(US_SHELL_EXE) QPM CHANGE ' + SCRIPT_FILE + ' *AMPERSAND* & ' + CRLF
-            Out := Out + PUB_cCharTab + '$(TLIB_EXE) /P32 $@ @' + SCRIPT_FILE + CRLF
+            Out := Out + PUB_cCharTab + '$(US_SHELL_EXE) QPM CHANGE ' + Q_SCRIPT_FILE + ' *AMPERSAND* & ' + CRLF
+            Out := Out + PUB_cCharTab + '$(TLIB_EXE) /P32 $@ @' + Q_SCRIPT_FILE + CRLF
          OTHERWISE
             Out := Out + PUB_cCharTab + '$(US_MSG_EXE) ' + Q_PROGRESS_LOG + ' -MSG:Output Type Invalid: '+ US_VarToStr( Prj_Radio_OutputType ) + CRLF
          ENDCASE
@@ -6253,10 +6685,10 @@ FUNCTION QPM_Build2()
  */
       FOR i := 1 TO Len ( PRGFILES )
          Out := Out + CRLF
-         Out := Out + '$(C_DIR)' + DEF_SLASH + US_FileNameOnlyName( PRGFILES[i] ) + '.' + iif( US_Upper( US_FileNameOnlyExt( PRGFILES[i] ) ) == 'CPP', 'cpp', 'c' ) + ' : ' + US_ShortName( US_FileNameOnlyPath( PRGFILES[i] ) ) + DEF_SLASH + US_FileNameOnlyNameAndExt( PRGFILES[i] ) + CRLF
+         Out := Out + '$(C_DIR)' + DEF_SLASH + US_FileNameOnlyName( PRGFILES[i] ) + '.' + iif( Upper( US_FileNameOnlyExt( PRGFILES[i] ) ) == 'CPP', 'cpp', 'c' ) + ' : ' + US_ShortName( US_FileNameOnlyPath( PRGFILES[i] ) ) + DEF_SLASH + US_FileNameOnlyNameAndExt( PRGFILES[i] ) + CRLF
          Out := Out + PUB_cCharTab + '$(US_MSG_EXE) ' + Q_PROGRESS_LOG + ' -MSG:Processing ' + PRGFILES[i] + ' ...' + CRLF
-         IF US_Upper( US_FileNameOnlyExt( PRGFILES[i] ) ) == US_Upper( 'C' ) .OR. ;
-            US_Upper( US_FileNameOnlyExt( PRGFILES[i] ) ) == US_Upper( 'CPP' )
+         IF Upper( US_FileNameOnlyExt( PRGFILES[i] ) ) == US_Upper( 'C' ) .OR. ;
+            Upper( US_FileNameOnlyExt( PRGFILES[i] ) ) == US_Upper( 'CPP' )
             Out := Out + PUB_cCharTab + iif(! bLogActivity, '@', '') + '$(US_SHELL_EXE) QPM ' + iif(! bLogActivity, '-OFF ','') + 'COPYZAP $< $@' + CRLF
          ELSE
             Out := Out + PUB_cCharTab + iif(! bLogActivity, '@', '') + '$(US_SHELL_EXE) QPM ' + iif(! bLogActivity, '-OFF ', '') + 'DELETE $@' + CRLF
@@ -6271,11 +6703,11 @@ FUNCTION QPM_Build2()
          ENDIF
          Out := Out + CRLF
          IF IsMinGW
-            Out := Out + '$(DIR_OBJECTS)' + DEF_SLASH + US_FileNameOnlyName( PRGFILES[i] ) + '.o : $(C_DIR)' + DEF_SLASH + US_FileNameOnlyName( PRGFILES[i] ) + '.' + iif( US_Upper( US_FileNameOnlyExt( PRGFILES[i] ) ) == 'CPP', 'cpp', 'c' ) + CRLF
+            Out := Out + '$(DIR_OBJECTS)' + DEF_SLASH + US_FileNameOnlyName( PRGFILES[i] ) + '.o : $(C_DIR)' + DEF_SLASH + US_FileNameOnlyName( PRGFILES[i] ) + '.' + iif( Upper( US_FileNameOnlyExt( PRGFILES[i] ) ) == 'CPP', 'cpp', 'c' ) + CRLF
          ELSE
-            Out := Out + '$(DIR_OBJECTS)' + DEF_SLASH + US_FileNameOnlyName( PRGFILES[i] ) + '.obj : $(C_DIR)' + DEF_SLASH + US_FileNameOnlyName( PRGFILES[i] ) + '.' + iif( US_Upper( US_FileNameOnlyExt( PRGFILES[i] ) ) == 'CPP', 'cpp', 'c' ) + CRLF
+            Out := Out + '$(DIR_OBJECTS)' + DEF_SLASH + US_FileNameOnlyName( PRGFILES[i] ) + '.obj : $(C_DIR)' + DEF_SLASH + US_FileNameOnlyName( PRGFILES[i] ) + '.' + iif( Upper( US_FileNameOnlyExt( PRGFILES[i] ) ) == 'CPP', 'cpp', 'c' ) + CRLF
          ENDIF
-         Out := Out + PUB_cCharTab + '$(US_MSG_EXE) ' + Q_PROGRESS_LOG + ' -MSG:Processing ' + US_FileNameOnlyName( PRGFILES[i] ) + '.' + iif( US_Upper( US_FileNameOnlyExt( PRGFILES[i] ) ) == 'CPP', 'cpp', 'c' ) + ' ...' + CRLF
+         Out := Out + PUB_cCharTab + '$(US_MSG_EXE) ' + Q_PROGRESS_LOG + ' -MSG:Processing ' + US_FileNameOnlyName( PRGFILES[i] ) + '.' + iif( Upper( US_FileNameOnlyExt( PRGFILES[i] ) ) == 'CPP', 'cpp', 'c' ) + ' ...' + CRLF
          Out := Out + PUB_cCharTab + iif(! bLogActivity, '@', '') + '$(US_SHELL_EXE) QPM ' + iif(! bLogActivity, '-OFF ', '' ) + 'DELETE $@' + CRLF
          DO CASE
          CASE IsMinGW
@@ -6420,16 +6852,15 @@ FUNCTION QPM_Build2()
             Out := Out + PUB_cCharTab + '$(US_SHELL_EXE) QPM DELETE ' + OBJFOLDER + DEF_SLASH + US_FileNameOnlyNameAndExt( cInputName ) + '.lst.ExpLst -OFF' + CRLF
       ENDCASE
    ENDIF
-// Out := Out + CRLF
 
    DO EVENTS
 
    QPM_MemoWrit( MAKE_FILE, Out )
 
-   ferase( cOutputName )
-   ferase( cOutputName + '.MOVED' )
-   ferase( cOutputName + '.MOVED.TXT' )
-   ferase( US_ShortName( Prj_Text_OutputCopyMoveFolder ) + DEF_SLASH + US_FileNameOnlyNameAndExt( cOutputName ) )
+   FErase( cOutputName )
+   FErase( cOutputName + '.MOVED' )
+   FErase( cOutputName + '.MOVED.TXT' )
+   FErase( US_ShortName( Prj_Text_OutputCopyMoveFolder ) + DEF_SLASH + US_FileNameOnlyNameAndExt( cOutputName ) )
 
    DO EVENTS
 
@@ -6498,22 +6929,24 @@ FUNCTION QPM_Build2()
                   bld_cmd += 'IF NOT EXIST ' + cB_RC_MINI + ' ECHO ' + cB_RCM_ERR + ' > ' + cB_TMP_ERR                          + CRLF
                   bld_cmd += 'COPY /B ' + cB_RC_MINI + ' ' + Q_QPM_TMP_RC + ' > NUL'                                            + CRLF
                lIncludeMiniPrintRC := .F.
-               FOR i := 1 TO Len( vLibsDefault )
+               FOR i := 1 TO Len( vLibsToLink )
                   IF ! GetMiniGuiSuffix() == DefineOohg3
-                     IF US_Upper( vLibsDefault[i] ) == 'LIBHBPRINTER.A'
-                        IF AScan( vLibExcludeFiles, 'LIBHBPRINTER.A' ) == 0
+                     IF US_Upper( vLibsToLink[i] ) == 'LIBHBPRINTER.A'
+                        IF AScan( vLibExcludeFiles, { |x| US_Upper( x ) == 'LIBHBPRINTER.A' } ) == 0
                   bld_cmd += 'COPY /B ' + Q_QPM_TMP_RC + ' + ' + cB_FILLER + ' + ' + cB_RC_HBPR + ' ' + Q_QPM_TMP_RC + ' > NUL' + CRLF
                         ENDIF
-                     ELSEIF US_Upper( vLibsDefault[i] ) == 'LIBMINIPRINT.A'
-                        IF AScan( vLibExcludeFiles, 'LIBMINIPRINT.A' ) == 0
+                     ELSEIF US_Upper( vLibsToLink[i] ) == 'LIBMINIPRINT.A'
+                        IF AScan( vLibExcludeFiles, { |x| US_Upper( x ) == 'LIBMINIPRINT.A' } ) == 0
                            lIncludeMiniPrintRC := .T.
                         ENDIF
                      ENDIF
                   ENDIF
                NEXT i
                IF ! lIncludeMiniPrintRC
-                  IF AScan( vLibIncludeFiles, { |y| US_FileNameOnlyNameAndExt( y ) == 'LIBMINIPRINT2.A' } ) # 0
-                     lIncludeMiniPrintRC := .T.
+                  IF AScan( vLibIncludeFiles, { |x| US_Upper( US_FileNameOnlyNameAndExt( x ) ) == 'LIBMINIPRINT2.A' } ) # 0
+                     IF AScan( vLibExcludeFiles, { |x| US_Upper( x ) == 'LIBMINIPRINT2.A' } ) == 0
+                        lIncludeMiniPrintRC := .T.
+                     ENDIF
                   ENDIF
                ENDIF
                IF lIncludeMiniPrintRC
@@ -6527,9 +6960,9 @@ FUNCTION QPM_Build2()
                   bld_cmd += 'IF NOT EXIST ' + cB_RC_MAIN + ' GOTO NORC'                                                        + CRLF
             // in project's RC file change .\ and ..\ to full path ("S" means use 8.3 path, "N" means use long path)
                   bld_cmd += cB_US_RES + ' -ONLYINCLUDE ' + cB_RC_MA_S + ' ' + cB_RC1_SHR + ' ' + cB_RC1_PTH + ' ' + "N"        + CRLF
-                  bld_cmd += 'IF ERRORLEVEL = 1 GOTO ERROR'                                                                     + CRLF
+                  bld_cmd += 'IF ERRORLEVEL 1 GOTO ERROR'                                                                     + CRLF
                   bld_cmd += cB_US_RES  + ' ' + cB_RC1_SHR + ' ' + cB_RC2_SHR + ' ' + cB_RC1_PTH + ' ' + "N"                    + CRLF
-                  bld_cmd += 'IF ERRORLEVEL = 1 GOTO ERROR'                                                                     + CRLF
+                  bld_cmd += 'IF ERRORLEVEL 1 GOTO ERROR'                                                                     + CRLF
             // concatenate project's and MINIGUI's RC files into a temporary RC file
             IF Prj_Check_IgnoreLibRCs
                   bld_cmd += 'COPY /B ' + cB_RC2_SHR + ' ' + Q_QPM_TMP_RC + ' > NUL'                                            + CRLF
@@ -6541,22 +6974,24 @@ FUNCTION QPM_Build2()
                   bld_cmd += 'COPY /B ' + cB_RC_MINI + ' + ' + cB_FILLER + ' + ' + cB_RC2_SHR + ' ' + Q_QPM_TMP_RC + ' > NUL'   + CRLF
                ENDIF
                lIncludeMiniPrintRC := .F.
-               FOR i := 1 TO Len( vLibsDefault )
+               FOR i := 1 TO Len( vLibsToLink )
                   IF ! GetMiniGuiSuffix() == DefineOohg3
-                     IF US_Upper( vLibsDefault[i] ) == 'LIBHBPRINTER.A'
-                        IF AScan( vLibExcludeFiles, 'LIBHBPRINTER.A' ) == 0
+                     IF US_Upper( vLibsToLink[i] ) == 'LIBHBPRINTER.A'
+                        IF AScan( vLibExcludeFiles, { |x| US_Upper( x ) == 'LIBHBPRINTER.A' } ) == 0
                   bld_cmd += 'COPY /B ' + Q_QPM_TMP_RC + ' + ' + cB_FILLER + ' + ' + cB_RC_HBPR + ' ' + Q_QPM_TMP_RC + ' > NUL' + CRLF
                         ENDIF
-                     ELSEIF US_Upper( vLibsDefault[i] ) == 'LIBMINIPRINT.A'
-                        IF AScan( vLibExcludeFiles, 'LIBMINIPRINT.A' ) == 0
+                     ELSEIF US_Upper( vLibsToLink[i] ) == 'LIBMINIPRINT.A'
+                        IF AScan( vLibExcludeFiles, { |x| US_Upper( x ) == 'LIBMINIPRINT.A' } ) == 0
                            lIncludeMiniPrintRC := .T.
                         ENDIF
                      ENDIF
                   ENDIF
                NEXT i
                IF ! lIncludeMiniPrintRC
-                  IF AScan( vLibIncludeFiles, { |y| US_FileNameOnlyNameAndExt( y ) == 'LIBMINIPRINT2.A' } ) # 0
-                     lIncludeMiniPrintRC := .T.
+                  IF AScan( vLibIncludeFiles, { |x| US_Upper( US_FileNameOnlyNameAndExt( x ) ) == 'LIBMINIPRINT2.A' } ) # 0
+                     IF AScan( vLibExcludeFiles, { |x| US_Upper( x ) == 'LIBMINIPRINT2.A' } ) == 0
+                        lIncludeMiniPrintRC := .T.
+                     ENDIF
                   ENDIF
                ENDIF
                IF lIncludeMiniPrintRC
@@ -6570,22 +7005,24 @@ FUNCTION QPM_Build2()
                   bld_cmd += 'IF NOT EXIST ' + cB_RC_MINI + ' ECHO ' + cB_RCM_ERR + ' > ' + cB_TMP_ERR                          + CRLF
                   bld_cmd += 'COPY /B ' + cB_RC_MINI + ' ' + Q_QPM_TMP_RC + ' > NUL'                                            + CRLF
                lIncludeMiniPrintRC := .F.
-               FOR i := 1 TO Len( vLibsDefault )
+               FOR i := 1 TO Len( vLibsToLink )
                   IF ! GetMiniGuiSuffix() == DefineOohg3
-                     IF US_Upper( vLibsDefault[i] ) == 'LIBHBPRINTER.A'
-                        IF AScan( vLibExcludeFiles, 'LIBHBPRINTER.A' ) == 0
+                     IF US_Upper( vLibsToLink[i] ) == 'LIBHBPRINTER.A'
+                        IF AScan( vLibExcludeFiles, { |x| US_Upper( x ) == 'LIBHBPRINTER.A' } ) == 0
                   bld_cmd += 'COPY /B ' + Q_QPM_TMP_RC + ' + ' + cB_FILLER + ' + ' + cB_RC_HBPR + ' ' + Q_QPM_TMP_RC + ' > NUL' + CRLF
                         ENDIF
-                     ELSEIF US_Upper( vLibsDefault[i] ) == 'LIBMINIPRINT.A'
-                        IF AScan( vLibExcludeFiles, 'LIBMINIPRINT.A' ) == 0
+                     ELSEIF US_Upper( vLibsToLink[i] ) == 'LIBMINIPRINT.A'
+                        IF AScan( vLibExcludeFiles, { |x| US_Upper( x ) == 'LIBMINIPRINT.A' } ) == 0
                            lIncludeMiniPrintRC := .T.
                         ENDIF
                      ENDIF
                   ENDIF
                NEXT i
                IF ! lIncludeMiniPrintRC
-                  IF AScan( vLibIncludeFiles, { |y| US_FileNameOnlyNameAndExt( y ) == 'LIBMINIPRINT2.A' } ) # 0
-                     lIncludeMiniPrintRC := .T.
+                  IF AScan( vLibIncludeFiles, { |x| US_Upper( US_FileNameOnlyNameAndExt( x ) ) == 'LIBMINIPRINT2.A' } ) # 0
+                     IF AScan( vLibExcludeFiles, { |x| US_Upper( x ) == 'LIBMINIPRINT2.A' } ) == 0
+                        lIncludeMiniPrintRC := .T.
+                     ENDIF
                   ENDIF
                ENDIF
                IF lIncludeMiniPrintRC
@@ -6654,22 +7091,24 @@ FUNCTION QPM_Build2()
                   bld_cmd += 'IF NOT EXIST ' + cB_RC_MINI + ' ECHO ' + cB_RCM_ERR + ' > ' + cB_TMP_ERR                          + CRLF
                   bld_cmd += 'COPY /B ' + cB_RC_MINI + ' ' + Q_QPM_TMP_RC + ' > NUL'                                            + CRLF
                lIncludeMiniPrintRC := .F.
-               FOR i := 1 TO Len( vLibsDefault )
+               FOR i := 1 TO Len( vLibsToLink )
                   IF ! GetMiniGuiSuffix() == DefineOohg3
-                     IF US_Upper( vLibsDefault[i] ) == 'HBPRINTER.LIB'
-                        IF AScan( vLibExcludeFiles, 'HBPRINTER.LIB' ) == 0
+                     IF US_Upper( vLibsToLink[i] ) == 'HBPRINTER.LIB'
+                        IF AScan( vLibExcludeFiles, { |x| US_Upper( x ) == 'HBPRINTER.LIB' } ) == 0
                   bld_cmd += 'COPY /B ' + Q_QPM_TMP_RC + ' + ' + cB_FILLER + ' + ' + cB_RC_HBPR + ' ' + Q_QPM_TMP_RC + ' > NUL' + CRLF
                         ENDIF
-                     ELSEIF US_Upper( vLibsDefault[i] ) == 'MINIPRINT.LIB'
-                        IF AScan( vLibExcludeFiles, 'MINIPRINT.LIB' ) == 0
+                     ELSEIF US_Upper( vLibsToLink[i] ) == 'MINIPRINT.LIB'
+                        IF AScan( vLibExcludeFiles, { |x| US_Upper( x ) == 'MINIPRINT.LIB' } ) == 0
                            lIncludeMiniPrintRC := .T.
                         ENDIF
                      ENDIF
                   ENDIF
                NEXT i
                IF ! lIncludeMiniPrintRC
-                  IF AScan( vLibIncludeFiles, { |y| US_FileNameOnlyNameAndExt( y ) == 'MINIPRINT2.LIB' } ) # 0
-                     lIncludeMiniPrintRC := .T.
+                  IF AScan( vLibIncludeFiles, { |x| US_Upper( US_FileNameOnlyNameAndExt( x ) ) == 'MINIPRINT2.LIB' } ) # 0
+                     IF AScan( vLibExcludeFiles, { |x| US_Upper( x ) == 'MINIPRINT2.LIB' } ) == 0
+                        lIncludeMiniPrintRC := .T.
+                     ENDIF
                   ENDIF
                ENDIF
                IF lIncludeMiniPrintRC
@@ -6683,9 +7122,9 @@ FUNCTION QPM_Build2()
                   bld_cmd += 'IF NOT EXIST ' + cB_RC_MAIN + ' GOTO NORC'                                                        + CRLF
             // in project's RC file change .\ and ..\ to full path ("S" means use 8.3 path, "N" means use long path)
                   bld_cmd += cB_US_RES + ' -ONLYINCLUDE ' + cB_RC_MA_S + ' ' + cB_RC1_SHR + ' ' + cB_RC1_PTH + ' ' + "N"        + CRLF
-                  bld_cmd += 'IF ERRORLEVEL = 1 GOTO ERROR'                                                                     + CRLF
+                  bld_cmd += 'IF ERRORLEVEL 1 GOTO ERROR'                                                                       + CRLF
                   bld_cmd += cB_US_RES  + ' ' + cB_RC1_SHR + ' ' + cB_RC2_SHR + ' ' + cB_RC1_PTH + ' ' + "N"                    + CRLF
-                  bld_cmd += 'IF ERRORLEVEL = 1 GOTO ERROR'                                                                     + CRLF
+                  bld_cmd += 'IF ERRORLEVEL 1 GOTO ERROR'                                                                       + CRLF
             // concatenate project's and MINIGUI's RC files into a temporary RC file
             IF Prj_Check_IgnoreLibRCs
                   bld_cmd += 'COPY /B ' + cB_RC2_SHR + ' ' + Q_QPM_TMP_RC + ' > NUL'                                            + CRLF
@@ -6697,22 +7136,24 @@ FUNCTION QPM_Build2()
                   bld_cmd += 'COPY /B ' + cB_RC_MINI + ' + ' + cB_FILLER + ' + ' + cB_RC2_SHR + ' ' + Q_QPM_TMP_RC + ' > NUL'   + CRLF
                ENDIF
                lIncludeMiniPrintRC := .F.
-               FOR i := 1 TO Len( vLibsDefault )
+               FOR i := 1 TO Len( vLibsToLink )
                   IF ! GetMiniGuiSuffix() == DefineOohg3
-                     IF US_Upper( vLibsDefault[i] ) == 'HBPRINTER.LIB'
-                        IF AScan( vLibExcludeFiles, 'HBPRINTER.LIB' ) == 0
+                     IF US_Upper( vLibsToLink[i] ) == 'HBPRINTER.LIB'
+                        IF AScan( vLibExcludeFiles, { |x| US_Upper( x ) == 'HBPRINTER.LIB' } ) == 0
                   bld_cmd += 'COPY /B ' + Q_QPM_TMP_RC + ' + ' + cB_FILLER + ' + ' + cB_RC_HBPR + ' ' + Q_QPM_TMP_RC + ' > NUL' + CRLF
                         ENDIF
-                     ELSEIF US_Upper( vLibsDefault[i] ) == 'MINIPRINT.LIB'
-                        IF AScan( vLibExcludeFiles, 'MINIPRINT.LIB' ) == 0
+                     ELSEIF US_Upper( vLibsToLink[i] ) == 'MINIPRINT.LIB'
+                        IF AScan( vLibExcludeFiles, { |x| US_Upper( x ) == 'MINIPRINT.LIB' } ) == 0
                            lIncludeMiniPrintRC := .T.
                         ENDIF
                      ENDIF
                   ENDIF
                NEXT i
                IF ! lIncludeMiniPrintRC
-                  IF AScan( vLibIncludeFiles, { |y| US_FileNameOnlyNameAndExt( y ) == 'MINIPRINT2.LIB' } ) # 0
-                     lIncludeMiniPrintRC := .T.
+                  IF AScan( vLibIncludeFiles, { |x| US_Upper( US_FileNameOnlyNameAndExt( x ) ) == 'MINIPRINT2.LIB' } ) # 0
+                     IF AScan( vLibExcludeFiles, { |x| US_Upper( x ) == 'MINIPRINT2.LIB' } ) == 0
+                        lIncludeMiniPrintRC := .T.
+                     ENDIF
                   ENDIF
                ENDIF
                IF lIncludeMiniPrintRC
@@ -6726,22 +7167,24 @@ FUNCTION QPM_Build2()
                   bld_cmd += 'IF NOT EXIST ' + cB_RC_MINI + ' ECHO ' + cB_RCM_ERR + ' > ' + cB_TMP_ERR                          + CRLF
                   bld_cmd += 'COPY /B ' + cB_RC_MINI + ' ' + Q_QPM_TMP_RC + ' > NUL'                                            + CRLF
                lIncludeMiniPrintRC := .F.
-               FOR i := 1 TO Len( vLibsDefault )
+               FOR i := 1 TO Len( vLibsToLink )
                   IF ! GetMiniGuiSuffix() == DefineOohg3
-                     IF US_Upper( vLibsDefault[i] ) == 'HBPRINTER.LIB'
-                        IF AScan( vLibExcludeFiles, 'HBPRINTER.LIB' ) == 0
+                     IF US_Upper( vLibsToLink[i] ) == 'HBPRINTER.LIB'
+                        IF AScan( vLibExcludeFiles, { |x| US_Upper( x ) == 'HBPRINTER.LIB' } ) == 0
                   bld_cmd += 'COPY /B ' + Q_QPM_TMP_RC + ' + ' + cB_FILLER + ' + ' + cB_RC_HBPR + ' ' + Q_QPM_TMP_RC + ' > NUL' + CRLF
                         ENDIF
-                     ELSEIF US_Upper( vLibsDefault[i] ) == 'MINIPRINT.LIB'
-                        IF AScan( vLibExcludeFiles, 'MINIPRINT.LIB' ) == 0
+                     ELSEIF US_Upper( vLibsToLink[i] ) == 'MINIPRINT.LIB'
+                        IF AScan( vLibExcludeFiles, { |x| US_Upper( x ) == 'MINIPRINT.LIB' } ) == 0
                            lIncludeMiniPrintRC := .T.
                         ENDIF
                      ENDIF
                   ENDIF
                NEXT i
                IF ! lIncludeMiniPrintRC
-                  IF AScan( vLibIncludeFiles, { |y| US_FileNameOnlyNameAndExt( y ) == 'MINIPRINT2.LIB' } ) # 0
-                     lIncludeMiniPrintRC := .T.
+                  IF AScan( vLibIncludeFiles, { |x| US_Upper( US_FileNameOnlyNameAndExt( x ) ) == 'MINIPRINT2.LIB' } ) # 0
+                     IF AScan( vLibExcludeFiles, { |x| US_Upper( x ) == 'MINIPRINT2.LIB' } ) == 0
+                        lIncludeMiniPrintRC := .T.
+                     ENDIF
                   ENDIF
                ENDIF
                IF lIncludeMiniPrintRC
@@ -6803,11 +7246,13 @@ FUNCTION QPM_Build2()
       IF GetProperty( 'VentanaMain', 'GPRGFiles', 'cell', i, NCOLPRGRECOMP ) == 'R'
          MemoAux := MemoRead( PROGRESS_LOG )
          QPM_MemoWrit( PROGRESS_LOG, MemoAux + US_TimeDis( Time() ) + ' - Force Recomp by User for ' + ChgPathToReal( GetProperty( 'VentanaMain', 'GPRGFiles', 'cell', i, NCOLPRGFULLNAME ) ) + CRLF )
-         ferase( GetObjFolder() + DEF_SLASH + US_FileNameOnlyName( GetProperty( 'VentanaMain', 'GPRGFiles', 'cell', i, NCOLPRGNAME ) ) + iif( US_Upper( US_FileNameOnlyExt( GetProperty( 'VentanaMain', 'GPRGFiles', 'cell', i, NCOLPRGNAME ) ) ) == 'CPP', '.CPP', '.C' ) )
+         FErase( GetObjFolder() + DEF_SLASH + US_FileNameOnlyName( GetProperty( 'VentanaMain', 'GPRGFiles', 'cell', i, NCOLPRGNAME ) ) + iif( Upper( US_FileNameOnlyExt( GetProperty( 'VentanaMain', 'GPRGFiles', 'cell', i, NCOLPRGNAME ) ) ) == 'CPP', '.CPP', '.C' ) )
       ENDIF
    NEXT i
 
    DO EVENTS
+
+   SetMGWaitHide()
 
    QPM_Execute( BUILD_BAT, "", DEF_QPM_EXEC_NOWAIT, DEF_QPM_EXEC_HIDE )
 
@@ -6818,7 +7263,7 @@ FUNCTION QPM_Run( bWithParm )
    LOCAL RUNFOLDER     := AllTrim(US_FileNameOnlyPath(VentanaMain.TRunProjectFolder.Value))
    LOCAL App
    LOCAL cParm         := ''
-   LOCAL cRunParms
+   LOCAL RunParms
    LOCAL cOldFolder    := GetCurrentFolder()
    LOCAL oInput        := US_InputBox():New()
 
@@ -6828,11 +7273,11 @@ FUNCTION QPM_Run( bWithParm )
       ENDDO
    ENDIF
    IF Empty( PUB_cProjectFile )
-      MsgStop( 'You must save the project before running it.' )
+      MyMsgStop( 'You must save the project before running it.' )
       RETURN .F.
    ENDIF
    IF Empty( PUB_cProjectFolder ) .OR. ! US_IsDirectory( PUB_cProjectFolder )
-      MsgStop( DBLQT + "Project Folder" + DBLQT + " is not a valid folder:" + CRLF + PUB_cProjectFolder + CRLF + 'Look at tab ' + DBLQT + PagePRG + DBLQT )
+      MyMsgStop( DBLQT + "Project Folder" + DBLQT + " is not a valid folder:" + CRLF + PUB_cProjectFolder + CRLF + 'Look at tab ' + DBLQT + PagePRG + DBLQT )
       RETURN .F.
    ENDIF
 
@@ -6843,12 +7288,11 @@ FUNCTION QPM_Run( bWithParm )
    ENDIF
 
    IF ! File( App )
-      MsgStop ( 'Application ' + DBLQT + App + DBLQT + ' not found.' + CRLF + 'You must build the project before running it.' )
+      MyMsgStop( 'Application ' + DBLQT + App + DBLQT + ' was not found!' + CRLF + 'You must build the project before running it.' )
    ELSE
       IF bWithParm
-//US_log( 'previo' )
          oInput:cTitulo := 'Parameters for Run Program'
-         oInput:ValorInicial := GBL_cRunParm
+         oInput:ValorInicial := Gbl_cRunParm
          oInput:cLeyenda :=  'Parm:'
          oInput:nPorAlto := iif( PUB_bW800, 30, 20 )
          oInput:nPorAncho := 60
@@ -6857,15 +7301,8 @@ FUNCTION QPM_Run( bWithParm )
          oInput:bEscape := .T.
          oInput:DefineWindow()
          cParm := oInput:Show()
-//US_log( cParm )
-//US_log( ValType( cParm  ))
-//       cParm := InputBox( 'Parm:', 'Parameters for Run Program', GBL_cRunParm )
-//US_log( 'post' )
-//US_log( Empty( cParm ) )
-// US_log( ValType(cParm ) )
          IF ! Empty( cParm )
-// US_LOG( 'entro en no Empty' )
-            GBL_cRunParm := cParm
+            Gbl_cRunParm := cParm
          ELSE
             cParm := ''
          ENDIF
@@ -6875,7 +7312,7 @@ FUNCTION QPM_Run( bWithParm )
          RUNFOLDER := PUB_cProjectFolder
          IF PUB_bDebugActive
             IF ! File( PUB_cProjectFolder + DEF_SLASH + 'Init.Cld' )
-               MsgInfo( 'Configuration file for debug is missing, rebuild the project with Debug option and try again.' )
+               MyMsgStop( 'Configuration file for debug is missing, rebuild the project with Debug option and try again.' )
                RETURN .F.
             ENDIF
          ENDIF
@@ -6885,7 +7322,7 @@ FUNCTION QPM_Run( bWithParm )
                IF File( PUB_cProjectFolder + DEF_SLASH + 'Init.Cld' )
                   US_FileCopy( PUB_cProjectFolder + DEF_SLASH + 'Init.Cld', RUNFOLDER + DEF_SLASH + 'Init.Cld' )
                ELSE
-                  MsgInfo( 'Configuration file for debug is missing, rebuild the project with Debug option and try again.' )
+                  MyMsgStop( 'Configuration file for debug is missing, rebuild the project with Debug option and try again.' )
                   RETURN .F.
                ENDIF
             ENDIF
@@ -6909,13 +7346,13 @@ FUNCTION QPM_Run( bWithParm )
       IF VentanaMain.GDbfFiles.Value > 0
          DefineRichEditForNotDbfView( 'DBF view is disable while running application!' )
       ENDIF
-      cRunParms := US_ShortName( PUB_cProjectFolder ) + DEF_SLASH + '_' + PUB_cSecu + 'RUN' + US_DateTimeCen() + '.cng'
+      RunParms := US_ShortName( PUB_cProjectFolder ) + DEF_SLASH + '_' + PUB_cSecu + 'RUN' + US_DateTimeCen() + '.cng'
       AAdd( RunControlFile, US_ShortName( PUB_cProjectFolder ) + DEF_SLASH + '_' + PUB_cSecu + 'RCF' + US_DateTimeCen() + '.cnt' )
-      QPM_MemoWrit( cRunParms, 'Run Parms For ' + App + CRLF + ;
-                               'COMMAND ' + App + ' ' + cParm + CRLF + ;
-                               'CONTROL ' + RunControlFile[ Len( RunControlFile ) ] )
+      QPM_MemoWrit( RunParms, 'Run Parms For ' + App + CRLF + ;
+                              'COMMAND ' + App + ' ' + cParm + CRLF + ;
+                              'CONTROL ' + RunControlFile[ Len( RunControlFile ) ] )
       QPM_MemoWrit( RunControlFile[ Len( RunControlFile ) ], 'Run Control File for ' + App )
-      QPM_Execute( US_ShortName( PUB_cQPM_Folder ) + DEF_SLASH + 'US_Run.exe', 'QPM ' + cRunParms )
+      QPM_Execute( US_ShortName( PUB_cQPM_Folder ) + DEF_SLASH + 'US_Run.exe', 'QPM ' + iif( bLogActivity, '-LIST' + US_ShortName(PUB_cQPM_Folder) + ' ', ' ' ) + RunParms )
       bRunApp := .T.
       VentanaMain.Check_DbfAutoView.Enabled := .F.
 
@@ -6943,7 +7380,6 @@ FUNCTION QPM_Timer_Run()
          QPM_Wait( "RichEditDisplay( 'DBF', .T. )", 'Loading ...' )
          IF File( ErrorLogName() )
             IF PUB_ErrorLogTime < Val( DToS( US_FileDate( ErrorLogName() ) ) + US_StrCero( US_TimeSec( US_FileTime( ErrorLogName() ) ), 5 ) )
-            // US_log( 'displayar errorlog' )
                VentanaMain.TabFiles.Value := nPageOut
                TabChange( 'FILES' )
                MuestroErrorLog()
@@ -7000,9 +7436,9 @@ La existencia del ejecutable se verifica en BUILD.BAT teniendo en cuenta el COPY
 */
 
          /* ini Parche para cuando el EXE esta corriendo y queremos hacer build sin modificar ningun prg */
-         IF mlcount( GetProperty( Venta, 'RichEditSysout', 'value' ) ) < 3 .AND. ;
+         IF MLCount( GetProperty( Venta, 'RichEditSysout', 'value' ) ) < 3 .AND. ;
             US_Word( GetProperty( Venta, 'RichEditSysout', 'value' ), 1 ) == 'MAKE'
-            SetProperty( Venta, 'RichEditSysout', 'value', GetProperty( Venta, 'RichEditSysout', 'value' ) + CRLF + 'Fatal: Could not open ' + GetOutputModuleName() + ', (is program still running?)' )
+            SetProperty( Venta, 'RichEditSysout', 'value', GetProperty( Venta, 'RichEditSysout', 'value' ) + CRLF + 'Fatal error opening "' + GetOutputModuleName() + '".' + CRLF + 'May be the program is still running?' )
             estado := 'ERROR'
          ENDIF
          /* Fin Parche para cuando el EXE esta corriendo y queremos hacer build sin modificar ningun prg */
@@ -7051,13 +7487,13 @@ La existencia del ejecutable se verifica en BUILD.BAT teniendo en cuenta el COPY
          SetProperty( Venta, 'LStatusLabel', 'value', 'Status: Idle' )
          DO CASE
             CASE estado == 'OK'
-               MsgOk( 'QPM (QAC based Project Manager)', 'Build Finished'+CRLF+'OK', 'I', iif( bBuildRun .OR. ! Empty( Prj_ExtraRunCmdFINAL ), .T., bAutoEXIT ), iif( bBuildRun, 2, ), iif( !bBuildRun .AND. Empty( Prj_ExtraRunCmdFINAL ) .AND. US_Upper( OutputExt() ) == 'EXE', .T., .F. ) )
+               MyMsgOk( NIL, 'Build Finished'+CRLF+'OK', 'I', iif( bBuildRun .OR. ! Empty( Prj_ExtraRunCmdFINAL ), .T., bAutoEXIT ), iif( bBuildRun, 2, ), iif( !bBuildRun .AND. Empty( Prj_ExtraRunCmdFINAL ) .AND. US_Upper( OutputExt() ) == 'EXE', .T., .F. ) )
             CASE estado == 'WARNING'
-               MsgOk( 'QPM (QAC based Project Manager)', 'Build Finished'+CRLF+'with Warnings', 'W', iif( bBuildRun .OR. ! Empty( Prj_ExtraRunCmdFINAL ), .T., bAutoEXIT ), iif( bBuildRun, 4, ), iif( !bBuildRun .AND. Empty( Prj_ExtraRunCmdFINAL ) .AND. US_Upper( OutputExt() ) == 'EXE', .T., .F. ) )
+               MyMsgOk( NIL, 'Build Finished'+CRLF+'with Warnings', 'W', iif( bBuildRun .OR. ! Empty( Prj_ExtraRunCmdFINAL ), .T., bAutoEXIT ), iif( bBuildRun, 4, ), iif( !bBuildRun .AND. Empty( Prj_ExtraRunCmdFINAL ) .AND. US_Upper( OutputExt() ) == 'EXE', .T., .F. ) )
             CASE estado == 'ERROR'
-               MsgOk( 'QPM (QAC based Project Manager)', 'Build Finished'+CRLF+'WITH ERRORS', 'E', bAutoEXIT )
+               MyMsgOk( NIL, 'Build Finished'+CRLF+'WITH ERRORS', 'E', bAutoEXIT )
             OTHERWISE
-               MsgOK( 'QPM (QAC based Project Manager)', 'Invalid RETURN Code'+CRLF+'form Build Process: '+estado, 'E' )
+               MyMsgOk( NIL, 'Invalid RETURN Code'+CRLF+'form Build Process: '+estado, 'E' )
          ENDCASE
          RichEditDisplay( 'OUT' )
 
@@ -7090,10 +7526,6 @@ La existencia del ejecutable se verifica en BUILD.BAT teniendo en cuenta el COPY
 
          IF PUB_DeleteAux
             FErase( QPM_GET_DEF )
-            FErase( GetObjFolder() + DEF_SLASH + '_' + PUB_cSecu + 'QPM_gt.c' )
-            FErase( GetObjFolder() + DEF_SLASH + '_' + PUB_cSecu + 'QPM_gt.cus' )
-            FErase( GetObjFolder() + DEF_SLASH + '_' + PUB_cSecu + 'QPM_gt.o' )
-            FErase( GetObjFolder() + DEF_SLASH + '_' + PUB_cSecu + 'QPM_gt.ppo' )
             FErase( BUILD_BAT )
             FErase( END_FILE )
             FErase( MAKE_FILE )
@@ -7116,14 +7548,14 @@ La existencia del ejecutable se verifica en BUILD.BAT teniendo en cuenta el COPY
                      SetProperty( 'VentanaMain', 'LVerRelNum', 'value', cBaseVerRel )
                      IF Val( GetProperty( 'VentanaMain', 'LVerVerNum', 'value' ) ) == Val( cTopVerVer )
                         SetProperty( 'VentanaMain', 'LVerVerNum', 'value', cBaseVerVer )
-                        MsgWarn( 'Warning, Version counter limit reached ('+cTopVerVer+'.'+cTopVerRel+' build '+cTopVerBui+').  Counter reseted to '+cBaseVerVer+'.'+cBaseVerRel+' build '+cBaseVerBui )
+                        MyMsgWarn( 'Version counter limit reached ('+cTopVerVer+'.'+cTopVerRel+' build '+cTopVerBui+').' + CRLF + 'Counter reseted to '+cBaseVerVer+'.'+cBaseVerRel+' build '+cBaseVerBui )
                      ELSE
                         SetProperty( 'VentanaMain', 'LVerVerNum', 'value', US_StrCero( Val( GetProperty( 'VentanaMain', 'LVerVerNum', 'value' ) ) + 1, DEF_LEN_VER_VERSION ) )
-                        MsgWarn( 'Warning, Release counter limit reached ('+cTopVerRel+').  Release counter reseted to '+cBaseVerRel+' and Version counter  incremented by one digit.' )
+                        MyMsgWarn( 'Release counter limit reached ('+cTopVerRel+').' + CRLF + 'Release counter reseted to '+cBaseVerRel+' and Version counter incremented by one.' )
                      ENDIF
                   ELSE
                      SetProperty( 'VentanaMain', 'LVerRelNum', 'value', US_StrCero( Val( GetProperty( 'VentanaMain', 'LVerRelNum', 'value' ) ) + 1, DEF_LEN_VER_RELEASE ) )
-                     MsgWarn( 'Warning, Build counter limit reached ('+cTopVerBui+').  Build counter reseted to '+cBaseVerBui+' and Release counter incremented by one digit.' )
+                     MyMsgWarn( 'Build counter limit reached ('+cTopVerBui+').' + CRLF + 'Build counter reseted to '+cBaseVerBui+' and Release counter incremented by one.' )
                   ENDIF
                ELSE
                   SetProperty( 'VentanaMain', 'LVerBuiNum', 'value', US_StrCero( Val( GetProperty( 'VentanaMain', 'LVerBuiNum', 'value' ) ) + 1, DEF_LEN_VER_BUILD ) )
@@ -7157,14 +7589,13 @@ FUNCTION QPM_RemoveFilePRG()
       IF MyMsgYesNo( 'Remove file' + CRLF + DBLQT + ChgPathToReal( GetProperty( 'VentanaMain', 'GPrgFiles', 'Cell', VentanaMain.GPrgFiles.Value, NCOLPRGFULLNAME ) ) + DBLQT + CRLF + 'from project?', 'Confirm' )
       // QPM_ForceRecompExclude( ChgPathToReal( GetProperty( 'VentanaMain', 'GPrgFiles', 'Cell', VentanaMain.GPrgFiles.Value, NCOLPRGFULLNAME ) ), VentanaMain.GPrgFiles.Value )
          dire := US_FileNameOnlyPath( GetProperty( 'VentanaMain', 'GPrgFiles', 'Cell', VentanaMain.GPrgFiles.Value, NCOLPRGFULLNAME ) )
-         exte := US_Upper( US_FileNameOnlyExt( GetProperty( 'VentanaMain', 'GPrgFiles', 'Cell', VentanaMain.GPrgFiles.Value, NCOLPRGFULLNAME ) ) )
-         VentanaMain.GPrgFiles.DeleteItem( VentanaMain.GPrgFiles.Value )
-         SetProperty( 'VentanaMain', 'GPrgFiles', 'tooltip', '' )
-         IF item > VentanaMain.GPrgFiles.ItemCount
-            item := VentanaMain.GPrgFiles.ItemCount
-         ENDIF
+         exte := Upper( US_FileNameOnlyExt( GetProperty( 'VentanaMain', 'GPrgFiles', 'Cell', VentanaMain.GPrgFiles.Value, NCOLPRGFULLNAME ) ) )
          IF GridImage( 'VentanaMain', 'GPrgFiles', item, NCOLPRGSTATUS, '?', PUB_nGridImgSearchOk )
             TotCaption( 'PRG', -1 )
+         ENDIF
+         VentanaMain.GPrgFiles.DeleteItem( VentanaMain.GPrgFiles.Value )
+         IF item > VentanaMain.GPrgFiles.ItemCount
+            item := VentanaMain.GPrgFiles.ItemCount
          ENDIF
          SetProperty( 'VentanaMain', 'GPrgFiles', 'value', item )
          RichEditDisplay( 'PRG' )
@@ -7190,23 +7621,29 @@ FUNCTION QPM_RemoveFilePRG()
          NEXT
          IF bBorrar
             IF exte == "PRG"
-               Pos := AScan( vExtraFoldersForSearchHB, { |y| US_Upper( US_VarToStr( y ) ) == US_Upper( ChgPathToReal( dire ) ) } )
+               Pos := AScan( vExtraFoldersForSearchHB, { |y| US_Upper( y ) == US_Upper( ChgPathToReal( dire ) ) } )
                IF Pos > 0
                   ADel( vExtraFoldersForSearchHB, Pos )
+                  ASize( vExtraFoldersForSearchHB, Len( vExtraFoldersForSearchHB ) - 1 )
                ENDIF
             ELSE
-               Pos := AScan( vExtraFoldersForSearchC, { |y| US_Upper( US_VarToStr( y ) ) == US_Upper( ChgPathToReal( dire ) ) } )
+               Pos := AScan( vExtraFoldersForSearchC, { |y| US_Upper( y ) == US_Upper( ChgPathToReal( dire ) ) } )
                IF Pos > 0
                   ADel( vExtraFoldersForSearchC, Pos )
+                  ASize( vExtraFoldersForSearchC, Len( vExtraFoldersForSearchC ) - 1 )
                ENDIF
             ENDIF
          ENDIF
          IF bTop
             CambioTitulo()
             IF GetProperty( 'VentanaMain', 'GPrgFiles', 'itemcount' ) > 0
-               MsgInfo( DBLQT + ChgPathToReal( GetProperty( 'VentanaMain', 'GPrgFiles', 'Cell', 1, NCOLPRGFULLNAME ) ) + DBLQT + CRLF + "is the new project's " + DBLQT + "Top File" + DBLQT + '.' )
-            ELSE
-               MsgInfo( "Project's " + DBLQT + "Top File" + DBLQT + " is not defined." )
+               IF Prj_Warn_TopFile
+                  IF MyMsgYesNo( DBLQT + ChgPathToReal( GetProperty( 'VentanaMain', 'GPrgFiles', 'Cell', 1, NCOLPRGFULLNAME ) ) + DBLQT + CRLF + "is the new " + DBLQT + "Top File" + DBLQT + "." + CRLF + ;
+                                 'Omit this message from now on?' )
+                     Prj_Warn_TopFile := .F.
+                     MyMsgInfo( 'Use ' + DBLQT + PUB_MenuResetWarnings + DBLQT + ' option of Settings menu to enable the previous message.' )
+                  ENDIF
+               ENDIF
             ENDIF
          ENDIF
       ENDIF
@@ -7220,13 +7657,12 @@ FUNCTION QPM_RemoveFileHEA()
    IF VentanaMain.GHeaFiles.Value > 0
       IF MyMsgYesNo( 'Remove file' + CRLF + DBLQT + ChgPathToReal( GetProperty( 'VentanaMain', 'GHeaFiles', 'Cell', VentanaMain.GHeaFiles.Value, NCOLHEAFULLNAME ) ) + DBLQT + CRLF + 'from project?', 'Confirm' )
          dire := US_FileNameOnlyPath( GetProperty( 'VentanaMain', 'GHeaFiles', 'Cell', VentanaMain.GHeaFiles.Value, NCOLHEAFULLNAME ) )
-         VentanaMain.GHeaFiles.DeleteItem( VentanaMain.GHeaFiles.Value )
-         SetProperty( 'VentanaMain', 'GHeaFiles', 'tooltip', '' )
-         IF item > VentanaMain.GHeaFiles.ItemCount
-            item := VentanaMain.GHeaFiles.ItemCount
-         ENDIF
          IF GridImage( 'VentanaMain', 'GHeaFiles', item, NCOLHEASTATUS, '?', PUB_nGridImgSearchOk )
             TotCaption( 'HEA', -1 )
+         ENDIF
+         VentanaMain.GHeaFiles.DeleteItem( VentanaMain.GHeaFiles.Value )
+         IF item > VentanaMain.GHeaFiles.ItemCount
+            item := VentanaMain.GHeaFiles.ItemCount
          ENDIF
          SetProperty( 'VentanaMain', 'GHeaFiles', 'value', item )
          RichEditDisplay( 'HEA' )
@@ -7250,13 +7686,15 @@ FUNCTION QPM_RemoveFileHEA()
                bBorrar := .F.
             ENDIF
          NEXT
-         Pos := AScan( vExtraFoldersForSearchHB, { |y| US_Upper( US_VarToStr( y ) ) == US_Upper( ChgPathToReal( dire ) ) } )
+         Pos := AScan( vExtraFoldersForSearchHB, { |y| US_Upper( y ) == US_Upper( ChgPathToReal( dire ) ) } )
          IF Pos > 0 .AND. bBorrar
             ADel( vExtraFoldersForSearchHB, Pos )
+            ASize( vExtraFoldersForSearchHB, Len( vExtraFoldersForSearchHB ) - 1 )
          ENDIF
-         Pos := AScan( vExtraFoldersForSearchC, { |y| US_Upper( US_VarToStr( y ) ) == US_Upper( ChgPathToReal( dire ) ) } )
+         Pos := AScan( vExtraFoldersForSearchC, { |y| US_Upper( y ) == US_Upper( ChgPathToReal( dire ) ) } )
          IF Pos > 0 .AND. bBorrar
             ADel( vExtraFoldersForSearchC, Pos )
+            ASize( vExtraFoldersForSearchC, Len( vExtraFoldersForSearchC ) - 1 )
          ENDIF
       ENDIF
    ENDIF
@@ -7269,13 +7707,12 @@ FUNCTION QPM_RemoveFilePAN()
    IF VentanaMain.GPanFiles.Value > 0
       IF MyMsgYesNo( 'Remove file' + CRLF + DBLQT + ChgPathToReal( GetProperty( 'VentanaMain', 'GPanFiles', 'Cell', VentanaMain.GPanFiles.Value, NCOLPANFULLNAME ) ) + DBLQT + CRLF + 'from project?', 'Confirm' )
          dire := US_FileNameOnlyPath( GetProperty( 'VentanaMain', 'GPanFiles', 'Cell', VentanaMain.GPanFiles.Value, NCOLPANFULLNAME ) )
-         VentanaMain.GPanFiles.DeleteItem( VentanaMain.GPanFiles.Value )
-         SetProperty( 'VentanaMain', 'GPanFiles', 'tooltip', '' )
-         IF item > VentanaMain.GPanFiles.ItemCount
-            item := VentanaMain.GPanFiles.ItemCount
-         ENDIF
          IF GridImage( 'VentanaMain', 'GPanFiles', item, NCOLPANSTATUS, '?', PUB_nGridImgSearchOk )
             TotCaption( 'PAN', -1 )
+         ENDIF
+         VentanaMain.GPanFiles.DeleteItem( VentanaMain.GPanFiles.Value )
+         IF item > VentanaMain.GPanFiles.ItemCount
+            item := VentanaMain.GPanFiles.ItemCount
          ENDIF
          SetProperty( 'VentanaMain', 'GPanFiles', 'value', item )
          RichEditDisplay( 'PAN' )
@@ -7294,9 +7731,10 @@ FUNCTION QPM_RemoveFilePAN()
                bBorrar := .F.
             ENDIF
          NEXT
-         Pos := AScan( vExtraFoldersForSearchHB, { |y| US_Upper( US_VarToStr( y ) ) == US_Upper( ChgPathToReal( dire ) ) } )
+         Pos := AScan( vExtraFoldersForSearchHB, { |y| US_Upper( y ) == US_Upper( ChgPathToReal( dire ) ) } )
          IF Pos > 0 .AND. bBorrar
             ADel( vExtraFoldersForSearchHB, Pos )
+            ASize( vExtraFoldersForSearchHB, Len( vExtraFoldersForSearchHB ) - 1 )
          ENDIF
       ENDIF
    ENDIF
@@ -7307,13 +7745,12 @@ FUNCTION QPM_RemoveFileDBF()
    LOCAL item := VentanaMain.GDbfFiles.Value
    IF VentanaMain.GDbfFiles.Value > 0
       IF MyMsgYesNo( 'Remove file' + CRLF + DBLQT + ChgPathToReal( GetProperty( 'VentanaMain', 'GDbfFiles', 'Cell', VentanaMain.GDbfFiles.Value, NCOLDBFFULLNAME ) ) + DBLQT + CRLF + 'from project?', 'Confirm' )
-         VentanaMain.GDbfFiles.DeleteItem( VentanaMain.GDbfFiles.Value )
-         SetProperty( 'VentanaMain', 'GDbfFiles', 'tooltip', '' )
-         IF item > VentanaMain.GDbfFiles.ItemCount
-            item := VentanaMain.GDbfFiles.ItemCount
-         ENDIF
          IF GridImage( 'VentanaMain', 'GDbfFiles', item, NCOLDBFSTATUS, '?', PUB_nGridImgSearchOk )
             TotCaption( 'DBF', -1 )
+         ENDIF
+         VentanaMain.GDbfFiles.DeleteItem( VentanaMain.GDbfFiles.Value )
+         IF item > VentanaMain.GDbfFiles.ItemCount
+            item := VentanaMain.GDbfFiles.ItemCount
          ENDIF
          SetProperty( 'VentanaMain', 'GDbfFiles', 'value', item )
          IF item == 0
@@ -7327,18 +7764,45 @@ FUNCTION QPM_RemoveFileDBF()
    DoMethod( 'VentanaMain', 'GDbfFiles', 'ColumnsAutoFitH' )
 RETURN .T.
 
+FUNCTION QPM_RemoveDefaultLIB()
+   LOCAL item := VentanaMain.GDefFiles.Value
+   LOCAL cFileUpper := US_Upper( GetProperty( 'VentanaMain', 'GDefFiles', 'Cell', item, NCOLDEFNAME ) )
+   IF cFileUpper == GetGTGUIName() .OR. cFileUpper == GetGTWINName() .OR. cFileUpper == US_Upper( GetMiniguiName() ) .OR. ;
+      ( AScan( { 'VM.LIB', 'LIBVM.A', 'HBVM.LIB', 'LIBHBVM.A', 'VM64.LIB', 'VMMT.LIB', 'LIBVMMT.A', 'HBVMMT.LIB', ;
+                 'LIBHBVMMT.A', 'VMMT64.LIB', 'DEBUG.LIB', 'LIBDEBUG.A', 'HBDEBUG.LIB', 'LIBHBDEBUG.A', 'DEBUGGER.LIB', ;
+                 'LIBDEBUGGER.A', 'HBDEBUGGER.LIB', 'LIBHBDEBUGGER.A', 'C0X32.OBJ', 'C0W32.OBJ' }, cFileUpper ) # 0 )
+      MyMsgStop( "It's not allowed to remove this file from the default list!" + CRLF + ;
+                 'Use "Exclude" section to remove it from this project.' )
+      RETURN .F.
+   ENDIF
+   IF VentanaMain.GDefFiles.Value > 0
+      IF MyMsgYesNo( 'Remove file' + CRLF + DBLQT + GetProperty( 'VentanaMain', 'GDefFiles', 'Cell', VentanaMain.GDefFiles.Value, NCOLDEFNAME ) + DBLQT + CRLF + 'from default libraries list?', 'Confirm' )
+         IF GridImage( 'VentanaMain', 'GDefFiles', item, NCOLDEFSTATUS, '?', PUB_nGridImgSearchOk )
+            TotCaption( 'LIB', -1 )
+         ENDIF
+         VentanaMain.GDefFiles.DeleteItem( VentanaMain.GDefFiles.Value )
+         IF item > VentanaMain.GDefFiles.ItemCount
+            item := VentanaMain.GDefFiles.ItemCount
+         ENDIF
+         SetProperty( 'VentanaMain', 'GDefFiles', 'value', item )
+         RichEditDisplay( 'DEF' )
+      ENDIF
+   ENDIF
+   DoMethod( 'VentanaMain', 'GDefFiles', 'ColumnsAutoFitH' )
+RETURN .T.
+
 FUNCTION QPM_RemoveFileLIB()
    LOCAL pos, dire, i, bBorrar := .T.
    LOCAL item := VentanaMain.GIncFiles.Value
    IF VentanaMain.GIncFiles.Value > 0
       IF MyMsgYesNo( 'Remove file' + CRLF + DBLQT + ChgPathToReal( US_WordSubStr( GetProperty( 'VentanaMain', 'GIncFiles', 'Cell', VentanaMain.GIncFiles.Value, NCOLINCFULLNAME ), 3 ) ) + DBLQT + CRLF + 'from project?', 'Confirm' )
          dire := US_Upper( US_FileNameOnlyPath( ChgPathToReal( US_WordSubStr( GetProperty( 'VentanaMain', 'GIncFiles', 'Cell', VentanaMain.GIncFiles.Value, NCOLINCFULLNAME ), 3 ) ) ) )
+         IF GridImage( 'VentanaMain', 'GIncFiles', item, NCOLINCSTATUS, '?', PUB_nGridImgSearchOk )
+            TotCaption( 'LIB', -1 )
+         ENDIF
          VentanaMain.GIncFiles.DeleteItem( VentanaMain.GIncFiles.Value )
          IF item > VentanaMain.GIncFiles.ItemCount
             item := VentanaMain.GIncFiles.ItemCount
-         ENDIF
-         IF GridImage( 'VentanaMain', 'GIncFiles', item, NCOLINCSTATUS, '?', PUB_nGridImgSearchOk )
-            TotCaption( 'LIB', -1 )
          ENDIF
          SetProperty( 'VentanaMain', 'GIncFiles', 'value', item )
          RichEditDisplay( 'INC' )
@@ -7350,6 +7814,7 @@ FUNCTION QPM_RemoveFileLIB()
          NEXT
          IF Pos > 0 .AND. bBorrar
             ADel( &('vExtraFoldersForLibs'+GetSuffix()), Pos )
+            ASize( &('vExtraFoldersForLibs'+GetSuffix()), Len( &('vExtraFoldersForLibs'+GetSuffix()) ) - 1 )
          ENDIF
       ENDIF
    ENDIF
@@ -7360,6 +7825,9 @@ FUNCTION QPM_RemoveExcludeFileLIB()
    LOCAL item := VentanaMain.GExcFiles.Value
    IF VentanaMain.GExcFiles.Value > 0
       IF MyMsgYesNo( 'Remove file' + CRLF + DBLQT + GetProperty( 'VentanaMain', 'GExcFiles', 'Cell', VentanaMain.GExcFiles.Value, NCOLEXCNAME ) + DBLQT + CRLF + 'from exclude list?', 'Confirm' )
+         IF GridImage( 'VentanaMain', 'GExcFiles', item, NCOLINCSTATUS, '?', PUB_nGridImgSearchOk )
+            TotCaption( 'LIB', -1 )
+         ENDIF
          VentanaMain.GExcFiles.DeleteItem( VentanaMain.GExcFiles.Value )
          IF item > VentanaMain.GExcFiles.ItemCount
             item := VentanaMain.GExcFiles.ItemCount
@@ -7378,27 +7846,25 @@ FUNCTION QPM_RemoveFileHLP()
       IF MyMsgYesNo('Remove topic ' + AllTrim( GetProperty( 'VentanaMain', 'GHlpFiles', 'Cell', VentanaMain.GHlpFiles.Value, NCOLHLPTOPIC ) ) + ' From Help?','Confirm')
          bHlpMoving := .T.
          nAuxRecord := VentanaMain.GHlpFiles.Value
-         VentanaMain.GHlpFiles.DeleteItem( VentanaMain.GHlpFiles.Value )
-         SetProperty( 'VentanaMain', 'GHlpFiles', 'tooltip', '' )
-         IF item > VentanaMain.GHlpFiles.ItemCount
-            item := VentanaMain.GHlpFiles.ItemCount
-         ENDIF
          IF GridImage( 'VentanaMain', 'GHlpFiles', item, NCOLHLPSTATUS, '?', PUB_nGridImgSearchOk )
             TotCaption( 'HLP', -1 )
          ENDIF
+         VentanaMain.GHlpFiles.DeleteItem( VentanaMain.GHlpFiles.Value )
+         IF item > VentanaMain.GHlpFiles.ItemCount
+            item := VentanaMain.GHlpFiles.ItemCount
+         ENDIF
          SetProperty( 'VentanaMain', 'GHlpFiles', 'value', item )
          SHG_DeleteRecord( nAuxRecord )
-      // SHG_NewSecuence()
          RichEditDisplay( 'HLP' )
          bHlpMoving := .F.
       ENDIF
    ELSE
       IF VentanaMain.GHlpFiles.Value == 1
-         MsgInfo( "Global foot can't be edited, it's a System topic!" )
+         MyMsgStop( "Global footer can't be edited!" )
          RETURN .F.
       ENDIF
       IF VentanaMain.GHlpFiles.Value == 2
-         MsgInfo( "Welcome page can't be deleted, it's a System topic!" )
+         MyMsgStop( "Welcome page can't be deleted!" )
          RETURN .F.
       ENDIF
    ENDIF
@@ -7427,28 +7893,27 @@ RETURN .T.
 FUNCTION LibInfo()
    LOCAL a, b, c
    IF VentanaMain.GIncFiles.Value > 0
-      a:='Library name: ' + US_FileNameOnlyNameAndExt( ChgPathToReal( US_WordSubStr( GetProperty( 'VentanaMain', 'GIncFiles', 'Cell', VentanaMain.GIncFiles.Value, NCOLINCFULLNAME ), 3 ) ) )
-      b:='   in Folder: ' + US_FileNameOnlyPath( ChgPathToReal( US_WordSubStr( GetProperty( 'VentanaMain', 'GIncFiles', 'Cell', VentanaMain.GIncFiles.Value, NCOLINCFULLNAME ), 3 ) ) )
-      c:='Concatenated ' + iif( US_Upper( US_Word( GetProperty( 'VentanaMain', 'GIncFiles', 'Cell', VentanaMain.GIncFiles.Value, NCOLINCFULLNAME ), 2 ) ) == '*FIRST*', 'BEFORE MiniGui library', 'AFTER last significant library' )
-      MsgInfo( a + CRLF + ;
-               b + CRLF + ;
-               ' ' + CRLF + ;
-               c + CRLF + ;
-               'Status: ' + LibCheck( VentanaMain.GIncFiles.Value ) )
+      a := 'Library name: ' + US_FileNameOnlyNameAndExt( ChgPathToReal( US_WordSubStr( GetProperty( 'VentanaMain', 'GIncFiles', 'Cell', VentanaMain.GIncFiles.Value, NCOLINCFULLNAME ), 3 ) ) )
+      b := '   in folder: ' + US_FileNameOnlyPath( ChgPathToReal( US_WordSubStr( GetProperty( 'VentanaMain', 'GIncFiles', 'Cell', VentanaMain.GIncFiles.Value, NCOLINCFULLNAME ), 3 ) ) )
+      c := 'was concatenated ' + iif( US_Upper( US_Word( GetProperty( 'VentanaMain', 'GIncFiles', 'Cell', VentanaMain.GIncFiles.Value, NCOLINCFULLNAME ), 2 ) ) == '*FIRST*', 'BEFORE MiniGui library', 'AFTER last significant library.' )
+      MyMsgInfo( a + CRLF + ;
+                 b + CRLF + ;
+                 ' ' + CRLF + ;
+                 c + CRLF + ;
+                 'Status: ' + LibCheck( VentanaMain.GIncFiles.Value ) )
    ENDIF
 RETURN .T.
 
 FUNCTION LibExcludeInfo()
    LOCAL a, c
    IF VentanaMain.GExcFiles.Value > 0
-      a:='Library ' + GetProperty( 'VentanaMain', 'GExcFiles', 'Cell', VentanaMain.GExcFiles.Value, NCOLEXCNAME )
-      c:='will be excluded from the build process-'
-      MsgInfo( a + CRLF + ;
-               ' ' + CRLF + ;
-               c )
+      a := 'Library ' + GetProperty( 'VentanaMain', 'GExcFiles', 'Cell', VentanaMain.GExcFiles.Value, NCOLEXCNAME )
+      c := 'will be excluded from the build process.'
+      MyMsgInfo( a + CRLF + ;
+                 ' ' + CRLF + ;
+                 c )
    ENDIF
 RETURN .T.
-
 
 FUNCTION DefinoWindowsHotKeys()
    SET HELPFILE TO PUB_cQPM_Folder + DEF_SLASH + 'QPM.chm'
@@ -7516,6 +7981,7 @@ FUNCTION TranslateLog( Log )
    LOCAL cEcho2       := '>> ' + Q_SCRIPT_FILE
    LOCAL cEcho        := '> ' + Q_SCRIPT_FILE
    LOCAL cDelete      := '** error 1 ** '
+   LOCAL TMP_RC       := US_FileNameOnlyNameAndExt( QPM_TMP_RC )
                           /* Texto,  Position ( 0=Cualquiera ), Producto */
    LOCAL vWarnings    := { { ') Warning W',                                0, DefineXHarbour }, ; // Warning en Compilaciones
                            { 'Warning W',                                  1, 'CBORLAND' }, ;     // Warning en funcion C
@@ -7538,6 +8004,7 @@ FUNCTION TranslateLog( Log )
                            { 'Packed 0 files.',                            1, 'UPX' }, ;          // Error en UPX
                            { 'Packed 1 file: 0 ok, 1 error.',              1, 'UPX' }, ;          // Error en UPX
                            { 'error:',                                     1, 'RC compiler' }, ;
+                           { 'Error ' + TMP_RC + ' ',                      1, 'RC compiler' }, ;
                            { 'No code generated.',                         1, 'compiler' }, ;
                            { "compilation terminated.",                    1, 'compiler' }, ;
                            { "preprocessing failed.",                      1, 'compiler' } ;
@@ -7611,8 +8078,10 @@ FUNCTION TranslateLog( Log )
    NewLog := StrTran( NewLog, Chr(10) + "Copyright (c) ", " Copyright (c) " )
 
 // This lines must come THIRD and it's order IS significant
-   NewLog := StrTran( NewLog, Chr(10) + '==> SCRIPT_FILE is ', 'SCRIPT_FILE is ' )
-   NewLog := StrTran( NewLog, SCRIPT_FILE, ' SCRIPT_FILE ' )
+   NewLog := StrTran( NewLog, Chr(10) + '==> QPM_TMP_RC is ', Chr(10) + 'QPM_TMP_RC is ' )
+   NewLog := StrTran( NewLog, Chr(10) + '==> SCRIPT_FILE is ', Chr(10) + 'SCRIPT_FILE is ' )
+   NewLog := StrTran( NewLog, Chr(10) + 'Error ' + TMP_RC + ' ', Chr(10) + 'Error at line/col ' )
+   NewLog := StrTran( NewLog, Q_SCRIPT_FILE, 'SCRIPT_FILE' )
    NewLog := StrTran( NewLog, DBLQT + harbour + DBLQT, 'HARBOUR' )
    NewLog := StrTran( NewLog, harbour, 'HARBOUR' )
    NewLog := StrTran( NewLog, DBLQT + gcc + DBLQT, 'GCC' )
@@ -7677,7 +8146,7 @@ FUNCTION TranslateLog( Log )
    i := 1
    DO WHILE ( e := At( "ld.exe: ", SubStr( NewLog, i ) ) ) > 0
       w := RAt( Chr(10), Left( NewLog, i + e - 2 ) )
-      NewLog := Left( NewLog, w ) + "Error: " + SubStr( NewLog, e + 8 )
+      NewLog := Left( NewLog, w ) + "Error: " + SubStr( NewLog, i + e + 8 )
       i := w + 1
    ENDDO
    i := 1
@@ -7811,11 +8280,11 @@ RETURN .T.
 
 FUNCTION SwitchDebug()
    IF Empty( PUB_cProjectFolder ) .OR. ! US_IsDirectory( PUB_cProjectFolder )
-      MsgStop( DBLQT + "Project Folder" + DBLQT + " is not a valid folder:" + CRLF + PUB_cProjectFolder + CRLF + 'Look at tab ' + DBLQT + PagePRG + DBLQT )
+      MyMsgStop( DBLQT + "Project Folder" + DBLQT + " is not a valid folder:" + CRLF + PUB_cProjectFolder + CRLF + 'Look at tab ' + DBLQT + PagePRG + DBLQT )
       RETURN .F.
    ENDIF
    IF VentanaMain.GPrgFiles.ItemCount == 0
-      MsgInfo( "Can't switch debug flag when " + DBLQT + "Sources" + DBLQT + "list is Empty." + CRLF + "Look at tab " + DBLQT + PagePRG + DBLQT )
+      MyMsgInfo( "Can't switch debug flag when " + DBLQT + "Sources" + DBLQT + "list is Empty." + CRLF + "Look at tab " + DBLQT + PagePRG + DBLQT )
       RETURN .F.
    ENDIF
    IF PUB_bDebugActive == .T.
@@ -7837,7 +8306,7 @@ FUNCTION SwitchDebug()
 RETURN .T.
 
 FUNCTION ClearLog()
-   ferase( PUB_cQPM_Folder + DEF_SLASH + 'QPM.LOG' )
+   FErase( PUB_cQPM_Folder + DEF_SLASH + 'QPM.LOG' )
 RETURN .T.
 
 FUNCTION ActOutputTypeSet()
@@ -7866,7 +8335,7 @@ FUNCTION MainInitAutoRun()
    IF ! PUB_bLite
       IF ! File( QPM_HR_Database )
          QPM_Wait( 'QPM_HotRecovery_Migrate()', 'Creating or Migrating Hot Recovery Version database from previous releases ...' )
-         MsgInfo( 'Migration finished.' )
+         MyMsgInfo( 'Migration finished.' )
       ELSE
          QPM_Wait( 'HotRecoveryDatabaseCompatibility( QPM_HR_Database )', 'Checking Compatibility on Hot Recovery Versions Database' )
       ENDIF
@@ -7898,9 +8367,7 @@ FUNCTION HideInitAutoRun()
    LOCAL i, bError := .F.
    IF Len( PUB_vAutoRun ) > 0
       FOR i := 1 TO Len( PUB_vAutoRun )
-     //  eVal( {|| &( PUB_vAutoRun[ i ] ) } )
-         IF !eVal( {|| &( PUB_vAutoRun[ i ] ) } )
-       //   RETURN .F.
+         IF ! Eval( {|| &( PUB_vAutoRun[ i ] ) } )
             bError := .T.
             EXIT
          ENDIF
@@ -7939,9 +8406,8 @@ FUNCTION xRefPrgFmg( vConcatIncludeHB )
       FOR i := 1 TO Len( vConcatIncludeHB )
          IF File( vConcatIncludeHB[i]+DEF_SLASH+US_FileNameOnlyNameAndExt( vPanFiles[f] ) )
             IF ! ( US_Upper( US_ShortName( vConcatIncludeHB[i]+DEF_SLASH+US_FileNameOnlyNameAndExt( vPanFiles[f] ) ) ) == US_Upper( US_ShortName( vPanFiles[f] ) ) )
-               MsgWarn( 'In Folder '+vConcatIncludeHB[i]+' exists the Form '+US_FileNameOnlyNameAndExt( vPanFiles[f] ) + CRLF + ;
-                        "Harbour's search process will locate THIS Form first," + CRLF + ;
-                        'then the form in '+US_FileNameOnlyPath( vPanFiles[f] ) +' will be ignored.' )
+               MyMsgWarn( 'Folder ' + vConcatIncludeHB[i] + ' contains the form ' + DBLQT + US_FileNameOnlyNameAndExt( vPanFiles[f] ) + DBLQT + "." + CRLF + ;
+                          "Harbour's search process locates such form first and will therefore ignore the form located at folder " + DBLQT + US_FileNameOnlyPath( vPanFiles[f] ) + DBLQT + '.' )
             ELSE
                EXIT
             ENDIF
@@ -7956,14 +8422,15 @@ FUNCTION xRefPrgFmg( vConcatIncludeHB )
    /*       Si se usa -BUILD como parametro no tiene ninguna implicancia ya que actúa despues de la primera pasada         */
    FOR f := 1 TO Len( vPANFiles )
       FOR p := 1 TO Len( vPRGFiles )
-         IF AScan( vSinLoadWindow, { |y| US_Upper( US_VarToStr( y ) ) == US_Upper( vPRGFiles[ p ] ) } ) == 0                // a nivel programa
-            IF AScan( vScanned, { |y| US_Upper( US_VarToStr( y ) ) == US_Upper( vPRGFiles[ p ] ) } ) == 0                   // a nivel funcion
+         IF AScan( vSinLoadWindow, { |y| US_Upper( y ) == US_Upper( vPRGFiles[ p ] ) } ) == 0                // a nivel programa
+            IF AScan( vScanned, { |y| US_Upper( y ) == US_Upper( vPRGFiles[ p ] ) } ) == 0                   // a nivel funcion
                IF US_FileDateTime( vPANFiles[ f ] ) > US_FileDateTime( Fol + GetObjName() + DEF_SLASH + US_FileNameOnlyName( vPRGFiles[ p ] ) + '.c' )
+// TODO: ELIMINAR COMPARACION POR =
                   // el primer AScan hace una comparacion parcial ( = ) y se le añade un blanco al final para que solo encuentre palabras completas
                   // el segundo AScan hace una comparacion total ( == ) del string (son dos palabras)
                   // El vector contiene 'myPRG myFmg'
-                  IF ( AScan( vXRefPrgFmg, { |x| US_Upper( US_VarToStr( x ) ) == US_Upper( US_FileNameOnlyNameAndExt( vPrgFiles[ p ] ) ) + ' ' } ) == 0 .OR. ;
-                     AScan( vXRefPrgFmg, { |x| US_Upper( US_VarToStr( x ) ) == US_Upper( US_FileNameOnlyNameAndExt( vPrgFiles[ p ] ) ) + ' ' + US_Upper( US_FileNameOnlyNameAndExt( vPanFiles[ f ] ) ) } ) > 0 )
+                  IF ( AScan( vXRefPrgFmg, { |x| US_Upper( x ) = US_Upper( US_FileNameOnlyNameAndExt( vPrgFiles[ p ] ) ) + ' ' } ) == 0 .OR. ;
+                     AScan( vXRefPrgFmg, { |x| US_Upper( x ) == US_Upper( US_FileNameOnlyNameAndExt( vPrgFiles[ p ] ) ) + ' ' + US_Upper( US_FileNameOnlyNameAndExt( vPanFiles[ f ] ) ) } ) > 0 )
                      IF ! ( FMG_Scan( vPRGFiles[ p ], US_FileDateTime( Fol + GetObjName() + DEF_SLASH + US_FileNameOnlyName( vPRGFiles[ p ] ) + '.c' ), vScanned, vPanFiles ) )
                         AAdd( vSinLoadWindow, US_Upper( vPRGFiles[ p ] ) ) // Para Control de Programa desde segunda pasada hasta que se vuele a ingresar
                         IF bLogActivity
@@ -8003,7 +8470,7 @@ FUNCTION FMG_Scan( cFileIn, DateTimeOfC, vScanned, vPanFiles )
    AAdd( vScanned, cFileIn )     // Para Control de Funcion llamadora xRefPrgFmg()
    hFiIn := fopen( cFileIn )
    IF FError() == 0
-      DO WHILE US_FReadLine( hFiIn, @cLinea, vFines ) == 0
+      DO WHILE hb_FReadLine( hFiIn, @cLinea, vFines ) == 0
          cLinea := AllTrim( strtran( cLinea, Chr(09), ' ' ) )
          IF SubStr( cLinea, 1, 1 ) == '*'   .OR. ;
             SubStr( cLinea, 1, 2 ) == '//'  .OR. ;
@@ -8048,9 +8515,9 @@ FUNCTION xRefPrgHea( vConcatIncludeC )
       FOR i := 1 TO Len( vConcatIncludeC )
          IF File( vConcatIncludeC[i]+DEF_SLASH+US_FileNameOnlyNameAndExt( vHeaFiles[f] ) )
             IF ! ( US_Upper( US_ShortName( vConcatIncludeC[i]+DEF_SLASH+US_FileNameOnlyNameAndExt( vHeaFiles[f] ) ) ) == US_Upper( US_ShortName(vHeaFiles[f]) ) )
-               MsgWarn( 'Folder ' + vConcatIncludeC[i] + ' contains the header ' + US_FileNameOnlyNameAndExt( vHeaFiles[f] ) + "." + CRLF + ;
-                        "If the #include is coded with characters '<' and '>', the search processes of Harbour and C compilers will locate THIS header first, and the header in " + ;
-                        US_FileNameOnlyPath( vHeaFiles[f] ) + ' will be ignored.' )
+               MyMsgWarn( 'Folder ' + vConcatIncludeC[i] + ' contains the header ' + US_FileNameOnlyNameAndExt( vHeaFiles[f] ) + "." + CRLF + ;
+                          "If the #include is coded with characters '<' and '>', the search processes of Harbour and C compilers locate such header first and will therefore ignore the header at folder " + ;
+                          DBLQT + US_FileNameOnlyPath( vHeaFiles[f] ) + DBLQT + ' will be ignored.' )
             ELSE
                EXIT
             ENDIF
@@ -8067,15 +8534,16 @@ FUNCTION xRefPrgHea( vConcatIncludeC )
       FOR p := 1 TO Len( vPRGFiles )
          IF AScan( vScanned, { |y| US_Upper( US_VarToStr( y ) ) == US_Upper( vPrgFiles[ p ] ) } ) == 0                      // a nivel funcion
          // IF US_FileDateTime( vHeaFiles[ f ] ) > US_FileDateTime( Fol + GetObjName() + DEF_SLASH + US_FileNameOnlyName( vPrgFiles[ p ] ) + '.c' )
-         // IF US_FileDateTime( vHeaFiles[ f ] ) > US_FileDateTime( Fol + GetObjName() + DEF_SLASH + US_FileNameOnlyName( vPrgFiles[ p ] ) + iif( US_Upper( US_FileNameOnlyExt( vPrgFiles[ p ] ) ) == 'CPP', '.cpp', '.c' ) )
-            IF US_FileDateTime( vHeaFiles[ f ] ) > US_FileDateTime( Fol + GetObjName() + DEF_SLASH + US_FileNameOnlyName( vPrgFiles[ p ] ) + iif( US_Upper( US_FileNameOnlyExt( vPrgFiles[ p ] ) ) == 'PRG', '.c', '.'+GetObjExt() ) )
+         // IF US_FileDateTime( vHeaFiles[ f ] ) > US_FileDateTime( Fol + GetObjName() + DEF_SLASH + US_FileNameOnlyName( vPrgFiles[ p ] ) + iif( Upper( US_FileNameOnlyExt( vPrgFiles[ p ] ) ) == 'CPP', '.cpp', '.c' ) )
+            IF US_FileDateTime( vHeaFiles[ f ] ) > US_FileDateTime( Fol + GetObjName() + DEF_SLASH + US_FileNameOnlyName( vPrgFiles[ p ] ) + iif( Upper( US_FileNameOnlyExt( vPrgFiles[ p ] ) ) == 'PRG', '.c', '.'+GetObjExt() ) )
                IF AScan( vSinInclude, { |y| US_Upper( US_VarToStr( y ) ) == US_Upper( vPrgFiles[ p ] ) } ) == 0                // a nivel programa
+// TODO: ELIMINAR COMPARACION POR =
                   // el primer AScan hace una comparacion parcial ( = ) y se le añade un blanco al final para que solo encuentre palabras completas
                   // el segundo AScan hace una comparacion total ( == ) del string (son dos palabras)
                   // El vector contiene 'myPRG myHeader.h'
-                  IF ( AScan( vXRefPrgHea, { |x| US_Upper( US_VarToStr( x ) ) == US_Upper( US_FileNameOnlyNameAndExt( vPrgFiles[ p ] ) ) + ' ' } ) == 0 .OR. ;
+                  IF ( AScan( vXRefPrgHea, { |x| US_Upper( US_VarToStr( x ) ) = US_Upper( US_FileNameOnlyNameAndExt( vPrgFiles[ p ] ) ) + ' ' } ) == 0 .OR. ;
                      AScan( vXRefPrgHea, { |x| US_Upper( US_VarToStr( x ) ) == US_Upper( US_FileNameOnlyNameAndExt( vPrgFiles[ p ] ) ) + ' ' + US_Upper( US_FileNameOnlyNameAndExt( vHeaFiles[ f ] ) ) } ) > 0 )
-                     IF ! ( HEA_Scan( vPrgFiles[ p ], US_FileDateTime( Fol + GetObjName() + DEF_SLASH + US_FileNameOnlyName( vPrgFiles[ p ] ) + iif( US_Upper( US_FileNameOnlyExt( vPrgFiles[ p ] ) ) == 'PRG', '.c', '.'+GetObjExt() ) ), vScanned, vHeaFiles ) )
+                     IF ! ( HEA_Scan( vPrgFiles[ p ], US_FileDateTime( Fol + GetObjName() + DEF_SLASH + US_FileNameOnlyName( vPrgFiles[ p ] ) + iif( Upper( US_FileNameOnlyExt( vPrgFiles[ p ] ) ) == 'PRG', '.c', '.'+GetObjExt() ) ), vScanned, vHeaFiles ) )
                         AAdd( vSinInclude, US_Upper( vPrgFiles[ p ] ) ) // Para Control de Programa desde segunda pasada hasta que se vuele a ingresar
                         IF bLogActivity
                            QPM_MemoWrit( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log', MemoRead( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log' ) + "xRefPrgHea Add file '" + vPrgFiles[ p ] + "' to vSinInclude" + CRLF )
@@ -8105,7 +8573,7 @@ FUNCTION HEA_Scan( cFileIn, DateTimeOfC, vScanned, vHeaFiles )
    AAdd( vScanned, cFileIn )     // Para Control de Funcion llamadora xRefPrgHea()
    hFiIn := fopen( cFileIn )
    IF ferror() == 0
-      DO WHILE US_FReadLine( hFiIn, @cLinea, vFines ) == 0
+      DO WHILE hb_FReadLine( hFiIn, @cLinea, vFines ) == 0
          cLinea := AllTrim( strtran( cLinea, Chr(09), ' ' ) )
          IF US_Words( cLinea ) > 1 .AND. ;
             US_Upper( US_Word( cLinea, 1 ) ) == '#INCLUDE'
@@ -8137,7 +8605,7 @@ FUNCTION HEA_Scan( cFileIn, DateTimeOfC, vScanned, vHeaFiles )
             ENDIF
             IF DateTimeOfC < maxDateHeader
                QPM_MemoWrit( PROGRESS_LOG, MemoRead( PROGRESS_LOG ) + US_TimeDis( Time() ) + ' - ' + cName + ' or sub includes forced compilation of ' + cFileIn + CRLF )
-               ferase( GetObjFolder() + DEF_SLASH + US_FileNameOnlyName( cFileIn ) + iif( US_Upper( US_FileNameOnlyExt( cFileIn ) ) == 'PRG', '.c', '.'+GetObjExt() ) )
+               ferase( GetObjFolder() + DEF_SLASH + US_FileNameOnlyName( cFileIn ) + iif( Upper( US_FileNameOnlyExt( cFileIn ) ) == 'PRG', '.c', '.'+GetObjExt() ) )
                IF bLogActivity
                   QPM_MemoWrit( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log', MemoRead( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log' ) + 'xRefPrgHea ' + cName + " or sub includes forced erasure .C of file '" + cFileIn + "' in Scan" + CRLF )
                ENDIF
@@ -8157,7 +8625,7 @@ FUNCTION ScanIncRecursive( cFileIn, cFilePrgAux, vPreventLoop, vHeaFiles )
    LOCAL callDateHeader
    hFiIn := fopen( cFileIn )
    IF ferror() == 0
-      DO WHILE US_FReadLine( hFiIn, @cLinea, vFines ) == 0
+      DO WHILE hb_FReadLine( hFiIn, @cLinea, vFines ) == 0
          cLinea := AllTrim( strtran( cLinea, Chr(09), ' ' ) )
          IF US_Words( cLinea ) > 1 .AND. ;
             US_Upper( US_Word( cLinea, 1 ) ) == '#INCLUDE'
@@ -8189,11 +8657,11 @@ FUNCTION CheckMakeForm( cForm )
    LOCAL hFiIn, cLinea:='', vFines := { Chr(13) + Chr(10), Chr(10) }, reto := 'UNKNOWN'
    hFiIn := fopen( cForm )
    IF ferror() == 0
-      DO WHILE US_FReadLine( hFiIn, @cLinea, vFines ) == 0
+      DO WHILE hb_FReadLine( hFiIn, @cLinea, vFines ) == 0
          cLinea := AllTrim( strtran( cLinea, Chr(09), ' ' ) )
          DO CASE
             CASE US_Upper( US_Word( cLinea, 1 ) ) == '*HMGS-MINIGUI-IDE'
-               reto := 'HMGSIDE (Open Source by Walter Formigoni)'
+               reto := 'HMGSIDE (by Walter Formigoni)'
                EXIT
             CASE At( '* HARBOUR MINIGUI IDE HMI+', US_Upper( cLinea ) ) > 0
                reto := 'HMI (by Ciro Vargas Clemow)'
@@ -8212,7 +8680,7 @@ FUNCTION CheckMakeForm( cForm )
                EXIT
          ENDCASE
       ENDDO
-      fclose( hFiIn )
+      FClose( hFiIn )
    ENDIF
 RETURN reto
 
@@ -8236,6 +8704,62 @@ FUNCTION QPM_SetColor()
             SetProperty( 'VentanaMain', 'RichEditSysout', 'backcolor', DEF_COLORDLL )
       ENDCASE
    ENDIF
+RETURN .T.
+
+FUNCTION ToggleDefMode()
+   LOCAL nRow, cValue, aNoGo := { GetGTGUIName(), GetGTWINName(), "C0X32.OBJ", "C0W32.OBJ", US_Upper( GetMiniguiName() ) }
+   nRow := VentanaMain.GDefFiles.Value
+   IF AScan( aNoGo, US_Upper( GetProperty( 'VentanaMain', 'GDefFiles', 'Cell', nRow, NCOLDEFNAME ) ) ) # 0
+      MyMsgStop( "It's not allowed to change the " + DBLQT + "Mode" + DBLQT + " attribute of this file!" )
+      RETURN .F.
+   ENDIF
+   cValue := GetProperty( 'VentanaMain', 'GDefFiles', 'Cell', nRow, NCOLDEFMODE )
+   IF cValue == "C"       // Console
+      cValue := "G"
+   ELSEIF cValue == "G"   // GUI
+      cValue := "B"
+   ELSE                   // Both
+      cValue := "C"
+   ENDIF
+   SetProperty( 'VentanaMain', 'GDefFiles', 'Cell', nRow, NCOLDEFMODE, cValue )
+RETURN .T.
+
+FUNCTION ToggleDefThreads()
+   LOCAL nRow, cValue
+   LOCAL aNoGo := { "CW32.LIB", "CW32MT.LIB", "VM.LIB", "LIBVM.A", "HBVM.LIB", "LIBHBVM.A", "VM64.LIB", "VMMT.LIB", "HBVMMT.LIB", ;
+                    "LIBVMMT.A", "LIBHBVMMT.A", "VMMT64.LIB", 'CRTMT.LIB', 'CRT.LIB', 'CRTMT64.LIB', 'CRT64.LIB' }
+   nRow := VentanaMain.GDefFiles.Value
+   IF AScan( aNoGo, US_Upper( GetProperty( 'VentanaMain', 'GDefFiles', 'Cell', nRow, NCOLDEFNAME ) ) ) # 0
+      MyMsgStop( "It's not allowed to change the " + DBLQT + "Threads" + DBLQT + " attribute of this file!" )
+      RETURN .F.
+   ENDIF
+   cValue := GetProperty( 'VentanaMain', 'GDefFiles', 'Cell', nRow, NCOLDEFTHREADS )
+   IF cValue == "M"   // Multiple threads
+      cValue := "S"
+   ELSEIF cValue == "S"   // Single thread
+      cValue := "B"
+   ELSE   // Both
+      cValue := "M"
+   ENDIF
+   SetProperty( 'VentanaMain', 'GDefFiles', 'Cell', nRow, NCOLDEFTHREADS, cValue )
+RETURN .T.
+
+FUNCTION ToggleDefDebug()
+   LOCAL nRow, cValue, aNoGo := { "DEBUG.LIB", "HBDEBUG.LIB", "LIBDEBUG.A", "LIBHBDEBUG.A", "DEBUGGER.LIB", "LIBDEBUGGER.A", "HBDEBUGGER.LIB", "LIBHBDEBUGGER.A" }
+   nRow := VentanaMain.GDefFiles.Value
+   IF AScan( aNoGo, US_Upper( GetProperty( 'VentanaMain', 'GDefFiles', 'Cell', nRow, NCOLDEFNAME ) ) ) # 0
+      MyMsgStop( "It's not allowed to change the " + DBLQT + "Debug" + DBLQT + " attribute of this file!" )
+      RETURN .F.
+   ENDIF
+   cValue := GetProperty( 'VentanaMain', 'GDefFiles', 'Cell', nRow, NCOLDEFDEBUG )
+   IF cValue == "Y"   // Debug only mode
+      cValue := "N"
+   ELSEIF cValue == "N"   // Non-debug mode
+      cValue := "B"
+   ELSE   // Both modes
+      cValue := "Y"
+   ENDIF
+   SetProperty( 'VentanaMain', 'GDefFiles', 'Cell', nRow, NCOLDEFDEBUG, cValue )
 RETURN .T.
 
 FUNCTION SortPRG( cVentana, cGrid, nColumna )
@@ -8337,42 +8861,6 @@ FUNCTION SortDBF( cVentana, cGrid, nColumna )
    bDbfSorting := .F.
 RETURN .T.
 
-FUNCTION SortInc( cVentana, cGrid, nColumna )
-   LOCAL i, vAux := {}
-   LOCAL nActual := GetProperty( cVentana, cGrid, 'cell', GetProperty( cVentana, cGrid, 'value' ), nColumna )
-   bIncSorting := .T.
-   DoMethod( cVentana, cGrid, 'DisableUpdate' )
-   FOR i := 1 TO GetProperty( cVentana, cGrid, 'itemcount' )
-      AAdd( vAux, GetProperty( cVentana, cGrid, 'item', i ) )
-   NEXT
-   DoMethod( cVentana, cGrid, 'deleteallitems' )
-   IF nColumna == NCOLINCFULLNAME
-      IF bSortIncAsc
-         ASort( vAux,,, { |x, y| US_Upper(US_WordSubStr(x[nColumna],3)) < US_Upper(US_WordSubStr(y[nColumna],3)) })
-      ELSE
-         ASort( vAux,,, { |x, y| US_Upper(US_WordSubStr(x[nColumna],3)) > US_Upper(US_WordSubStr(y[nColumna],3)) })
-      ENDIF
-   ELSE
-      IF bSortIncAsc
-         ASort( vAux,,, { |x, y| US_Upper( x[nColumna] ) < US_Upper( y[nColumna] ) } )
-      ELSE
-         ASort( vAux,,, { |x, y| US_Upper( x[nColumna] ) > US_Upper( y[nColumna] ) } )
-      ENDIF
-   ENDIF
-   bSortIncAsc := !bSortIncAsc
-   FOR i := 1 TO Len( vAux )
-      DoMethod( cVentana, cGrid, 'additem', vAux[ i ] )
-   NEXT
-   IF nColumna == NCOLINCFULLNAME
-      SetProperty( cVentana, cGrid, 'value', AScan( vAux, {|x| US_WordSubStr( x[ nColumna ], 3 ) == US_WordSubStr( nActual, 3 ) } ) )
-   ELSE
-      SetProperty( cVentana, cGrid, 'value', AScan( vAux, {|x| x[ nColumna ] == nActual } ) )
-   ENDIF
-   DoMethod( cVentana, cGrid, 'setfocus' )
-   DoMethod( cVentana, cGrid, 'EnableUpdate' )
-   bIncSorting := .F.
-RETURN .T.
-
 FUNCTION SortExc( cVentana, cGrid, nColumna )
    LOCAL i, vAux := {}
    LOCAL nActual := GetProperty( cVentana, cGrid, 'cell', GetProperty( cVentana, cGrid, 'value' ), nColumna )
@@ -8397,47 +8885,18 @@ FUNCTION SortExc( cVentana, cGrid, nColumna )
    bExcSorting := .F.
 RETURN .T.
 
-//FUNCTION SortHlp( cVentana, cGrid, nColumna )
-//   LOCAL i, vAux := {}, cAux := GetProperty( cVentana, cGrid, 'item', 1 )
-//   LOCAL nActual := GetProperty( cVentana, cGrid, 'cell', GetProperty( cVentana, cGrid, 'value' ), nColumna )
-//   bHlpSorting := .T.
-//   IF VentanaMain.GHlpFiles.ItemCount > 1
-//      DoMethod( cVentana, cGrid, 'DisableUpdate' )
-//      FOR i := 2 TO GetProperty( cVentana, cGrid, 'itemcount' )
-//         AAdd( vAux, GetProperty( cVentana, cGrid, 'item', i ) )
-//      NEXT
-//      DoMethod( cVentana, cGrid, 'deleteallitems' )
-//      DoMethod( cVentana, cGrid, 'additem', cAux )
-//      IF bSortHlpAsc
-//         ASort( vAux,,, { |x, y| US_Upper(x[nColumna]) < US_Upper(y[nColumna]) })
-//      ELSE
-//         ASort( vAux,,, { |x, y| US_Upper(x[nColumna]) > US_Upper(y[nColumna]) })
-//      ENDIF
-//      bSortHlpAsc := !bSortHlpAsc
-//      FOR i := 1 TO Len( vAux )
-//         DoMethod( cVentana, cGrid, 'additem', vAux[ i ] )
-//      NEXT
-//      SetProperty( cVentana, cGrid, 'value', AScan( vAux, {|x| x[ nColumna ] == nActual } ) + 1 )
-//      DoMethod( cVentana, cGrid, 'setfocus' )
-//      DoMethod( cVentana, cGrid, 'EnableUpdate' )
-//   ENDIF
-//   bHlpSorting := .F.
-//RETURN .T.
-
 FUNCTION UpPrg()
    LOCAL i := GetProperty( 'VentanaMain', 'GPrgFiles', 'value' )
    LOCAL cAux := GetProperty( 'VentanaMain', 'GPrgFiles', 'item', i )
    LOCAL cAux2 := GetProperty( 'VentanaMain', 'GPrgFiles', 'item', i - 1 )
    IF i == 2
-      MsgInfo( 'Use the SetTop button to move this item to Top of Project' )
+      MyMsgStop( 'Use the "SetTop" button to set this file as "Top File".' )
    ENDIF
    IF i > 2
-      bPrgMoving := .T.
       SetProperty( 'VentanaMain', 'GPrgFiles', 'item', i, cAux2 )
       SetProperty( 'VentanaMain', 'GPrgFiles', 'item', i - 1, cAux )
       SetProperty( 'VentanaMain', 'GPrgFiles', 'value', i - 1 )
       DoMethod( 'VentanaMain', 'GPrgFiles', 'setfocus' )
-      bPrgMoving := .F.
    ENDIF
 RETURN .T.
 
@@ -8446,15 +8905,14 @@ FUNCTION DownPrg()
    LOCAL cAux := GetProperty( 'VentanaMain', 'GPrgFiles', 'item', i )
    LOCAL cAux2 := GetProperty( 'VentanaMain', 'GPrgFiles', 'item', i + 1 )
    IF i == 1
-      MsgInfo( DBLQT + "Top File" + DBLQT + " can't be moved. Use the SetTop button to make another source the new " + DBLQT + "Top File" + DBLQT + "." )
+      MyMsgStop( "The " + DBLQT + "Top File" + DBLQT + " can't be moved!" + CRLF + ;
+                 'Use the "SetTop" button to set another file as the new "Top File".' )
    ENDIF
    IF i < GetProperty( 'VentanaMain', 'GPrgFiles', 'itemcount' ) .AND. i > 1
-      bPrgMoving := .T.
       SetProperty( 'VentanaMain', 'GPrgFiles', 'item', i, cAux2 )
       SetProperty( 'VentanaMain', 'GPrgFiles', 'item', i + 1, cAux )
       SetProperty( 'VentanaMain', 'GPrgFiles', 'value', i + 1 )
       DoMethod( 'VentanaMain', 'GPrgFiles', 'setfocus' )
-      bPrgMoving := .F.
    ENDIF
 RETURN .T.
 
@@ -8463,12 +8921,10 @@ FUNCTION UpPan()
    LOCAL cAux := GetProperty( 'VentanaMain', 'GPanFiles', 'item', i )
    LOCAL cAux2 := GetProperty( 'VentanaMain', 'GPanFiles', 'item', i - 1 )
    IF i > 1
-      bPanMoving := .T.
       SetProperty( 'VentanaMain', 'GPanFiles', 'item', i, cAux2 )
       SetProperty( 'VentanaMain', 'GPanFiles', 'item', i - 1, cAux )
       SetProperty( 'VentanaMain', 'GPanFiles', 'value', i - 1 )
       DoMethod( 'VentanaMain', 'GPanFiles', 'setfocus' )
-      bPanMoving := .F.
    ENDIF
 RETURN .T.
 
@@ -8477,12 +8933,10 @@ FUNCTION DownPan()
    LOCAL cAux := GetProperty( 'VentanaMain', 'GPanFiles', 'item', i )
    LOCAL cAux2 := GetProperty( 'VentanaMain', 'GPanFiles', 'item', i + 1 )
    IF i > 0 .AND. i < GetProperty( 'VentanaMain', 'GPanFiles', 'itemcount' )
-      bPanMoving := .T.
       SetProperty( 'VentanaMain', 'GPanFiles', 'item', i, cAux2 )
       SetProperty( 'VentanaMain', 'GPanFiles', 'item', i + 1, cAux )
       SetProperty( 'VentanaMain', 'GPanFiles', 'value', i + 1 )
       DoMethod( 'VentanaMain', 'GPanFiles', 'setfocus' )
-      bPanMoving := .F.
    ENDIF
 RETURN .T.
 
@@ -8491,12 +8945,10 @@ FUNCTION UpDbf()
    LOCAL cAux := GetProperty( 'VentanaMain', 'GDbfFiles', 'item', i )
    LOCAL cAux2 := GetProperty( 'VentanaMain', 'GDbfFiles', 'item', i - 1 )
    IF i > 1
-      bDbfMoving := .T.
       SetProperty( 'VentanaMain', 'GDbfFiles', 'item', i, cAux2 )
       SetProperty( 'VentanaMain', 'GDbfFiles', 'item', i - 1, cAux )
       SetProperty( 'VentanaMain', 'GDbfFiles', 'value', i - 1 )
       DoMethod( 'VentanaMain', 'GDbfFiles', 'setfocus' )
-      bDbfMoving := .F.
    ENDIF
 RETURN .T.
 
@@ -8505,12 +8957,10 @@ FUNCTION DownDbf()
    LOCAL cAux := GetProperty( 'VentanaMain', 'GDbfFiles', 'item', i )
    LOCAL cAux2 := GetProperty( 'VentanaMain', 'GDbfFiles', 'item', i + 1 )
    IF i > 0 .AND. i < GetProperty( 'VentanaMain', 'GDbfFiles', 'itemcount' )
-      bDbfMoving := .T.
       SetProperty( 'VentanaMain', 'GDbfFiles', 'item', i, cAux2 )
       SetProperty( 'VentanaMain', 'GDbfFiles', 'item', i + 1, cAux )
       SetProperty( 'VentanaMain', 'GDbfFiles', 'value', i + 1 )
       DoMethod( 'VentanaMain', 'GDbfFiles', 'setfocus' )
-      bDbfMoving := .F.
    ENDIF
 RETURN .T.
 
@@ -8519,12 +8969,10 @@ FUNCTION UpHea()
    LOCAL cAux := GetProperty( 'VentanaMain', 'GHeaFiles', 'item', i )
    LOCAL cAux2 := GetProperty( 'VentanaMain', 'GHeaFiles', 'item', i - 1 )
    IF i > 1
-      bHeaMoving := .T.
       SetProperty( 'VentanaMain', 'GHeaFiles', 'item', i, cAux2 )
       SetProperty( 'VentanaMain', 'GHeaFiles', 'item', i - 1, cAux )
       SetProperty( 'VentanaMain', 'GHeaFiles', 'value', i - 1 )
       DoMethod( 'VentanaMain', 'GHeaFiles', 'setfocus' )
-      bHeaMoving := .F.
    ENDIF
 RETURN .T.
 
@@ -8533,13 +8981,37 @@ FUNCTION DownHea()
    LOCAL cAux := GetProperty( 'VentanaMain', 'GHeaFiles', 'item', i )
    LOCAL cAux2 := GetProperty( 'VentanaMain', 'GHeaFiles', 'item', i + 1 )
    IF i > 0 .AND. i < GetProperty( 'VentanaMain', 'GHeaFiles', 'itemcount' )
-      bHeaMoving := .T.
       SetProperty( 'VentanaMain', 'GHeaFiles', 'item', i, cAux2 )
       SetProperty( 'VentanaMain', 'GHeaFiles', 'item', i + 1, cAux )
       SetProperty( 'VentanaMain', 'GHeaFiles', 'value', i + 1 )
       DoMethod( 'VentanaMain', 'GHeaFiles', 'setfocus' )
-      bHeaMoving := .F.
    ENDIF
+RETURN .T.
+
+FUNCTION UpLibDefault()
+   LOCAL i := GetProperty( 'VentanaMain', 'GDefFiles', 'value' )
+   LOCAL cAux := GetProperty( 'VentanaMain', 'GDefFiles', 'item', i )
+   LOCAL cAux2 := GetProperty( 'VentanaMain', 'GDefFiles', 'item', i - 1 )
+   IF i > 1
+      SetProperty( 'VentanaMain', 'GDefFiles', 'item', i, cAux2 )
+      SetProperty( 'VentanaMain', 'GDefFiles', 'item', i - 1, cAux )
+      SetProperty( 'VentanaMain', 'GDefFiles', 'value', i - 1 )
+      DoMethod( 'VentanaMain', 'GDefFiles', 'setfocus' )
+   ENDIF
+   CheckRelativeOrderOfLibsGT()
+RETURN .T.
+
+FUNCTION DownLibDefault()
+   LOCAL i := GetProperty( 'VentanaMain', 'GDefFiles', 'value' )
+   LOCAL cAux := GetProperty( 'VentanaMain', 'GDefFiles', 'item', i )
+   LOCAL cAux2 := GetProperty( 'VentanaMain', 'GDefFiles', 'item', i + 1 )
+   IF i > 0 .AND. i < GetProperty( 'VentanaMain', 'GDefFiles', 'itemcount' )
+      SetProperty( 'VentanaMain', 'GDefFiles', 'item', i, cAux2 )
+      SetProperty( 'VentanaMain', 'GDefFiles', 'item', i + 1, cAux )
+      SetProperty( 'VentanaMain', 'GDefFiles', 'value', i + 1 )
+      DoMethod( 'VentanaMain', 'GDefFiles', 'setfocus' )
+   ENDIF
+   CheckRelativeOrderOfLibsGT()
 RETURN .T.
 
 FUNCTION UpLibInclude()
@@ -8547,12 +9019,10 @@ FUNCTION UpLibInclude()
    LOCAL cAux := GetProperty( 'VentanaMain', 'GIncFiles', 'item', i )
    LOCAL cAux2 := GetProperty( 'VentanaMain', 'GIncFiles', 'item', i - 1 )
    IF i > 1
-      bIncMoving := .T.
       SetProperty( 'VentanaMain', 'GIncFiles', 'item', i, cAux2 )
       SetProperty( 'VentanaMain', 'GIncFiles', 'item', i - 1, cAux )
       SetProperty( 'VentanaMain', 'GIncFiles', 'value', i - 1 )
       DoMethod( 'VentanaMain', 'GIncFiles', 'setfocus' )
-      bIncMoving := .F.
    ENDIF
 RETURN .T.
 
@@ -8561,12 +9031,10 @@ FUNCTION DownLibInclude()
    LOCAL cAux := GetProperty( 'VentanaMain', 'GIncFiles', 'item', i )
    LOCAL cAux2 := GetProperty( 'VentanaMain', 'GIncFiles', 'item', i + 1 )
    IF i > 0 .AND. i < GetProperty( 'VentanaMain', 'GIncFiles', 'itemcount' )
-      bIncMoving := .T.
       SetProperty( 'VentanaMain', 'GIncFiles', 'item', i, cAux2 )
       SetProperty( 'VentanaMain', 'GIncFiles', 'item', i + 1, cAux )
       SetProperty( 'VentanaMain', 'GIncFiles', 'value', i + 1 )
       DoMethod( 'VentanaMain', 'GIncFiles', 'setfocus' )
-      bIncMoving := .F.
    ENDIF
 RETURN .T.
 
@@ -8575,12 +9043,10 @@ FUNCTION UpLibExclude()
    LOCAL cAux := GetProperty( 'VentanaMain', 'GExcFiles', 'item', i )
    LOCAL cAux2 := GetProperty( 'VentanaMain', 'GExcFiles', 'item', i - 1 )
    IF i > 1
-      bExcMoving := .T.
       SetProperty( 'VentanaMain', 'GExcFiles', 'item', i, cAux2 )
       SetProperty( 'VentanaMain', 'GExcFiles', 'item', i - 1, cAux )
       SetProperty( 'VentanaMain', 'GExcFiles', 'value', i - 1 )
       DoMethod( 'VentanaMain', 'GExcFiles', 'setfocus' )
-      bExcMoving := .F.
    ENDIF
 RETURN .T.
 
@@ -8589,12 +9055,10 @@ FUNCTION DownLibExclude()
    LOCAL cAux := GetProperty( 'VentanaMain', 'GExcFiles', 'item', i )
    LOCAL cAux2 := GetProperty( 'VentanaMain', 'GExcFiles', 'item', i + 1 )
    IF i > 0 .AND. i < GetProperty( 'VentanaMain', 'GExcFiles', 'itemcount' )
-      bExcMoving := .T.
       SetProperty( 'VentanaMain', 'GExcFiles', 'item', i, cAux2 )
       SetProperty( 'VentanaMain', 'GExcFiles', 'item', i + 1, cAux )
       SetProperty( 'VentanaMain', 'GExcFiles', 'value', i + 1 )
       DoMethod( 'VentanaMain', 'GExcFiles', 'setfocus' )
-      bExcMoving := .F.
    ENDIF
 RETURN .T.
 
@@ -8604,7 +9068,7 @@ FUNCTION UpHlp()
    LOCAL cAux := GetProperty( 'VentanaMain', 'GHlpFiles', 'item', i )
    LOCAL cAux2 := GetProperty( 'VentanaMain', 'GHlpFiles', 'item', i - 1 )
    IF i == 3
-      MsgInfo( "Global foot and Welcome page can't be moved, they're system topics!" )
+      MyMsgStop( "Global footer and Welcome page can't be moved!" )
    ENDIF
    IF i > 3
       bHlpMoving := .T.
@@ -8626,10 +9090,10 @@ FUNCTION DownHlp()
    LOCAL cAux := GetProperty( 'VentanaMain', 'GHlpFiles', 'item', i )
    LOCAL cAux2 := GetProperty( 'VentanaMain', 'GHlpFiles', 'item', i + 1 )
    IF i == 1
-      MsgInfo( "Global foot can't be moved, it's a system topic!" )
+      MyMsgStop( "Global footer can't be moved!" )
    ENDIF
    IF i == 2
-      MsgInfo( "Welcome page can't be moved, it's a system topic!" )
+      MyMsgStop( "Welcome page can't be moved!" )
    ENDIF
    IF i < GetProperty( 'VentanaMain', 'GHlpFiles', 'itemcount' ) .AND. i > 2
       bHlpMoving := .T.
@@ -8644,46 +9108,6 @@ FUNCTION DownHlp()
    ENDIF
 RETURN .T.
 #endif
-
-FUNCTION ToolTipPrgList()
-   IF GetProperty( 'VentanaMain', 'GPrgFiles', 'value' ) == 0
-      SetProperty( 'VentanaMain', 'GPrgFiles', 'tooltip', '' )
-   ELSE
-      SetProperty( 'VentanaMain', 'GPrgFiles', 'tooltip', GetProperty( 'VentanaMain', 'GPrgFiles', 'item', GetProperty( 'VentanaMain', 'GPrgFiles', 'value' ) ) )
-   ENDIF
-RETURN .T.
-
-FUNCTION ToolTipHEAList()
-   IF GetProperty( 'VentanaMain', 'GHeaFiles', 'value' ) == 0
-      SetProperty( 'VentanaMain', 'GHeaFiles', 'tooltip', '' )
-   ELSE
-      SetProperty( 'VentanaMain', 'GHeaFiles', 'tooltip', GetProperty( 'VentanaMain', 'GHeaFiles', 'item', GetProperty( 'VentanaMain', 'GHeaFiles', 'value' ) ) )
-   ENDIF
-RETURN .T.
-
-FUNCTION ToolTipPANList()
-   IF GetProperty( 'VentanaMain', 'GPanFiles', 'value' ) == 0
-      SetProperty( 'VentanaMain', 'GPanFiles', 'tooltip', '' )
-   ELSE
-      SetProperty( 'VentanaMain', 'GPanFiles', 'tooltip', GetProperty( 'VentanaMain', 'GPanFiles', 'item', GetProperty( 'VentanaMain', 'GPanFiles', 'value' ) ) )
-   ENDIF
-RETURN .T.
-
-FUNCTION ToolTipDbfList()
-   IF GetProperty( 'VentanaMain', 'GDbfFiles', 'value' ) == 0
-      SetProperty( 'VentanaMain', 'GDbfFiles', 'tooltip', '' )
-   ELSE
-      SetProperty( 'VentanaMain', 'GDbfFiles', 'tooltip', GetProperty( 'VentanaMain', 'GDbfFiles', 'item', GetProperty( 'VentanaMain', 'GDbfFiles', 'value' ) ) )
-   ENDIF
-RETURN .T.
-
-FUNCTION ToolTipHlpList()
-   IF GetProperty( 'VentanaMain', 'GHlpFiles', 'value' ) == 0
-      SetProperty( 'VentanaMain', 'GHlpFiles', 'tooltip', '' )
-   ELSE
-      SetProperty( 'VentanaMain', 'GHlpFiles', 'tooltip', GetProperty( 'VentanaMain', 'GHlpFiles', 'item', GetProperty( 'VentanaMain', 'GHlpFiles', 'value' ) ) )
-   ENDIF
-RETURN .T.
 
 FUNCTION EraseOBJ()
    LOCAL TopName := US_FileNameOnlyName( GetOutputModuleName() )
@@ -9002,11 +9426,12 @@ FUNCTION PpoDisplay( bOnlyRenumering )
          VentanaMain.RichEditPrg.Value := ''
       ELSE
          nRow := GetProperty( 'VentanaMain', 'GPrgFiles', 'value' )
-         IF US_Upper( US_FileNameOnlyExt( GetProperty( 'VentanaMain', 'GPrgFiles', 'Cell', nRow, NCOLPRGNAME ) ) ) == 'PRG'
+         IF Upper( US_FileNameOnlyExt( GetProperty( 'VentanaMain', 'GPrgFiles', 'Cell', nRow, NCOLPRGNAME ) ) ) == 'PRG'
             ppoFile := GetObjFolder() + DEF_SLASH + US_FileNameOnlyName( GetProperty( 'VentanaMain', 'GPrgFiles', 'Cell', nRow, NCOLPRGNAME ) ) + '.ppo'
             IF File( ppoFile )
                IF Val( US_FileDateTime( ppoFile ) ) < Val( US_FileDateTime( ChgPathToReal( GetProperty( 'VentanaMain', 'GPrgFiles', 'Cell', nRow, NCOLPRGFULLNAME ) ) ) )
-                  MsgInfo( 'Warning, date of prg file is more recent than date of creation of ppo file' + CRLF + 'ReBuild the project after press Non-Incremental Button or after save prg file' )
+                  MyMsgWarn( "The date of the PRG file is more recent than that of the PPO file." + CRLF + ;
+                             'Rebuild the project after pressing "Non-Incremental" button or after saving the PRG file.' )
                ENDIF
                cPpoCaretPrg := AllTrim( Str( VentanaMain.RichEditPRG.CaretPos ) )
                VentanaMain.RichEditPrg.FontColor := DEF_COLORFONTPPO
@@ -9016,18 +9441,23 @@ FUNCTION PpoDisplay( bOnlyRenumering )
                VentanaMain.bReLoadPpo.caption := 'Edit PPO'
                bPpoDisplayado := .T.
             ELSE
-               MsgInfo( 'PreProcess file not found, ReBuild the project after press Non-Incremental Button or after save prg file' )
+               MyMsgWarn( 'PPO file was not found!' + CRLF + ;
+                          'ReBuild the project after pressing "Non-Incremental" button or after saving the PRG file.' )
             ENDIF
          ELSE
-            MsgInfo( 'PreProcess Files is only for PRG files' )
+            IF Prj_Warn_PPO_Browse
+               IF MyMsgYesNo( "PPO file browsing only applies to PRG files." + CRLF + 'Omit this message from now on?' )
+                  Prj_Warn_PPO_Browse := .F.
+                  MyMsgInfo( 'Use ' + DBLQT + PUB_MenuResetWarnings + DBLQT + ' option of Settings menu to enable the previous message.' )
+               ENDIF
+            ENDIF
          ENDIF
       ENDIF
    ENDIF
 RETURN .T.
 
 FUNCTION RichEditDisplay( tipo, bReload, nRow, bForce )
-   LOCAL DbfName
-   LOCAL IncName
+   LOCAL DbfName, IncName, lCont
    LOCAL aStru, x, DbfCode
    LOCAL ListOut, cType := '', AuxRegistro
    LOCAL nInx, LinesKeys, aLines
@@ -9038,386 +9468,396 @@ FUNCTION RichEditDisplay( tipo, bReload, nRow, bForce )
    IF nRow == NIL
       nRow := 0
    ENDIF
-
    DbfName := ChgPathToReal( GetProperty( 'VentanaMain', 'GDbfFiles', 'Cell', nRow, NCOLDBFFULLNAME ) )
    IncName := ChgPathToReal( US_WordSubStr( GetProperty( 'VentanaMain', 'GIncFiles', 'Cell', nRow, NCOLINCFULLNAME ), 3 ) )
    DEFAULT bReload TO .F.
    DEFAULT bForce  TO .F.
    DO CASE
-      CASE tipo == 'PRG'
-         IF nRow == 0
-            VentanaMain.RichEditPrg.Value := ''
-            RETURN .F.
+   CASE tipo == 'PRG'
+      IF nRow == 0
+         VentanaMain.RichEditPrg.Value := ''
+         RETURN .F.
+      ENDIF
+      IF bReload .AND. bGlobalSearch
+         SetProperty( 'VentanaMain', 'GPrgFiles', 'Cell', nRow, NCOLPRGOFFSET, '0' )
+         IF GridImage( 'VentanaMain', 'GPrgFiles', nRow, NCOLPRGSTATUS, '?', PUB_nGridImgSearchOk )
+            TotCaption( tipo, -1 )
          ENDIF
-         IF bReload .AND. bGlobalSearch
-            SetProperty( 'VentanaMain', 'GPrgFiles', 'Cell', nRow, NCOLPRGOFFSET, '0' )
-            IF GridImage( 'VentanaMain', 'GPrgFiles', nRow, NCOLPRGSTATUS, '?', PUB_nGridImgSearchOk )
-               TotCaption( tipo, -1 )
-            ENDIF
-            IF GlobalSearch2( tipo, cLastGlobalSearch, nRow, bLastGlobalSearchFun, bLastGlobalSearchDbf )
-               TotCaption( tipo, +1 )
-            ENDIF
-         ELSE
-            IF nGridPrgLastRow > 0
-               LostRichEdit( 'PRG' )
-            ENDIF
-            nGridPrgLastRow := nRow
+         IF GlobalSearch2( tipo, cLastGlobalSearch, nRow, bLastGlobalSearchFun, bLastGlobalSearchDbf )
+            TotCaption( tipo, +1 )
          ENDIF
-         IF GridImage( 'VentanaMain', 'GPrgFiles', nRow, NCOLPRGSTATUS, '?', PUB_nGridImgEdited )
-            VentanaMain.RichEditPrg.BackColor := DEF_COLORBACKEXTERNALEDIT
-            VentanaMain.RichEditPrg.FontColor := DEF_COLORFONTEXTERNALEDIT
-         ELSE
-            VentanaMain.RichEditPrg.BackColor := DEF_COLORBACKPRG
-            VentanaMain.RichEditPrg.FontColor := DEF_COLORFONTVIEW
+      ELSE
+         IF nGridPrgLastRow > 0
+            LostRichEdit( 'PRG' )
          ENDIF
-         IF Prj_Radio_OutputType == DEF_RG_IMPORT
-            VentanaMain.RichEditPRG.Value := QPM_Wait( "ListModule( '" + ChgPathToReal( GetProperty( 'VentanaMain', 'GPrgFiles', 'Cell', 1, NCOLPRGFULLNAME ) ) + "' )", 'Listing ...', NIL, .T. )
-            VentanaMain.RichEditPRG.CaretPos := 1
-         ELSE
-            bPpoDisplayado := .F.
-            VentanaMain.RichEditPRG.Value := Enumeracion( MemoRead( ChgPathToReal( GetProperty( 'VentanaMain', 'GPrgFiles', 'Cell', nRow, NCOLPRGFULLNAME ) ) ), tipo )
-            VentanaMain.RichEditPRG.CaretPos := Val( GetProperty( 'VentanaMain', 'GPrgFiles', 'Cell', nRow, NCOLPRGOFFSET ) )
-            VentanaMain.bReLoadPpo.caption := 'Browse PPO'
+         nGridPrgLastRow := nRow
+      ENDIF
+      IF GridImage( 'VentanaMain', 'GPrgFiles', nRow, NCOLPRGSTATUS, '?', PUB_nGridImgEdited )
+         VentanaMain.RichEditPrg.BackColor := DEF_COLORBACKEXTERNALEDIT
+         VentanaMain.RichEditPrg.FontColor := DEF_COLORFONTEXTERNALEDIT
+      ELSE
+         VentanaMain.RichEditPrg.BackColor := DEF_COLORBACKPRG
+         VentanaMain.RichEditPrg.FontColor := DEF_COLORFONTVIEW
+      ENDIF
+      IF Prj_Radio_OutputType == DEF_RG_IMPORT
+         VentanaMain.RichEditPRG.Value := QPM_Wait( "ListModule( '" + ChgPathToReal( GetProperty( 'VentanaMain', 'GPrgFiles', 'Cell', 1, NCOLPRGFULLNAME ) ) + "' )", 'Listing ...', NIL, .T. )
+         VentanaMain.RichEditPRG.CaretPos := 1
+      ELSE
+         bPpoDisplayado := .F.
+         VentanaMain.RichEditPRG.Value := Enumeracion( MemoRead( ChgPathToReal( GetProperty( 'VentanaMain', 'GPrgFiles', 'Cell', nRow, NCOLPRGFULLNAME ) ) ), tipo )
+         VentanaMain.RichEditPRG.CaretPos := Val( GetProperty( 'VentanaMain', 'GPrgFiles', 'Cell', nRow, NCOLPRGOFFSET ) )
+         VentanaMain.bReLoadPpo.caption := 'Browse PPO'
+      ENDIF
+   CASE tipo == 'HEA'
+      IF nRow == 0
+         VentanaMain.RichEditHea.Value := ''
+         RETURN .F.
+      ENDIF
+      IF bReload .AND. bGlobalSearch
+         SetProperty( 'VentanaMain', 'GHeaFiles', 'Cell', nRow, NCOLHEAOFFSET, '0' )
+         IF GridImage( 'VentanaMain', 'GHeaFiles', nRow, NCOLHEASTATUS, '?', PUB_nGridImgSearchOk )
+            TotCaption( tipo, -1 )
          ENDIF
-      CASE tipo == 'HEA'
-         IF nRow == 0
-            VentanaMain.RichEditHea.Value := ''
-            RETURN .F.
+         IF GlobalSearch2( tipo, cLastGlobalSearch, nRow, bLastGlobalSearchFun, bLastGlobalSearchDbf )
+            TotCaption( tipo, +1 )
          ENDIF
-         IF bReload .AND. bGlobalSearch
-            SetProperty( 'VentanaMain', 'GHeaFiles', 'Cell', nRow, NCOLHEAOFFSET, '0' )
-        //  IF ! Empty( cLastGlobalSearch )
-        //  GridImage( 'VentanaMain', 'GHeaFiles', nRow, NCOLHEASTATUS, '-', PUB_nGridImgEdited )
-            IF GridImage( 'VentanaMain', 'GHeaFiles', nRow, NCOLHEASTATUS, '?', PUB_nGridImgSearchOk )
-               TotCaption( tipo, -1 )
-            ENDIF
-            IF GlobalSearch2( tipo, cLastGlobalSearch, nRow, bLastGlobalSearchFun, bLastGlobalSearchDbf )
-               TotCaption( tipo, +1 )
-            ENDIF
-        //  ENDIF
-         ELSE
-            IF nGridHeaLastRow > 0
-               LostRichEdit( 'HEA' )
-            ENDIF
-            nGridHeaLastRow := nRow
+      ELSE
+         IF nGridHeaLastRow > 0
+            LostRichEdit( 'HEA' )
          ENDIF
-         IF GridImage( 'VentanaMain', 'GHeaFiles', nRow, NCOLHEASTATUS, '?', PUB_nGridImgEdited )
-            VentanaMain.RichEditHea.BackColor := DEF_COLORBACKEXTERNALEDIT
-            VentanaMain.RichEditHea.FontColor := DEF_COLORFONTEXTERNALEDIT
-         ELSE
-            VentanaMain.RichEditHea.BackColor := DEF_COLORBACKHEA
-            VentanaMain.RichEditHea.FontColor := DEF_COLORFONTVIEW
+         nGridHeaLastRow := nRow
+      ENDIF
+      IF GridImage( 'VentanaMain', 'GHeaFiles', nRow, NCOLHEASTATUS, '?', PUB_nGridImgEdited )
+         VentanaMain.RichEditHea.BackColor := DEF_COLORBACKEXTERNALEDIT
+         VentanaMain.RichEditHea.FontColor := DEF_COLORFONTEXTERNALEDIT
+      ELSE
+         VentanaMain.RichEditHea.BackColor := DEF_COLORBACKHEA
+         VentanaMain.RichEditHea.FontColor := DEF_COLORFONTVIEW
+      ENDIF
+      VentanaMain.RichEditHea.Value := Enumeracion( MemoRead( ChgPathToReal( GetProperty( 'VentanaMain', 'GHeaFiles', 'Cell', nRow, NCOLHEAFULLNAME ) ) ), tipo )
+      VentanaMain.RichEditHea.CaretPos := Val( GetProperty( 'VentanaMain', 'GHeaFiles', 'Cell', nRow, NCOLHEAOFFSET ) )
+   CASE tipo == 'PAN'
+      IF nRow == 0
+         VentanaMain.RichEditPan.Value := ''
+         RETURN .F.
+      ENDIF
+      IF bReload .AND. bGlobalSearch
+         SetProperty( 'VentanaMain', 'GPanFiles', 'Cell', nRow, NCOLPANOFFSET, '0' )
+         IF GridImage( 'VentanaMain', 'GPanFiles', nRow, NCOLPANSTATUS, '?', PUB_nGridImgSearchOk )
+            TotCaption( tipo, -1 )
          ENDIF
-         VentanaMain.RichEditHea.Value := Enumeracion( MemoRead( ChgPathToReal( GetProperty( 'VentanaMain', 'GHeaFiles', 'Cell', nRow, NCOLHEAFULLNAME ) ) ), tipo )
-         VentanaMain.RichEditHea.CaretPos := Val( GetProperty( 'VentanaMain', 'GHeaFiles', 'Cell', nRow, NCOLHEAOFFSET ) )
-      CASE tipo == 'PAN'
-         IF nRow == 0
-            VentanaMain.RichEditPan.Value := ''
-            RETURN .F.
+         IF GlobalSearch2( tipo, cLastGlobalSearch, nRow, bLastGlobalSearchFun, bLastGlobalSearchDbf )
+            TotCaption( tipo, +1 )
          ENDIF
-         IF bReload .AND. bGlobalSearch
-            SetProperty( 'VentanaMain', 'GPanFiles', 'Cell', nRow, NCOLPANOFFSET, '0' )
-            IF GridImage( 'VentanaMain', 'GPanFiles', nRow, NCOLPANSTATUS, '?', PUB_nGridImgSearchOk )
-               TotCaption( tipo, -1 )
-            ENDIF
-            IF GlobalSearch2( tipo, cLastGlobalSearch, nRow, bLastGlobalSearchFun, bLastGlobalSearchDbf )
-               TotCaption( tipo, +1 )
-            ENDIF
-         ELSE
-            IF nGridPanLastRow > 0
-               LostRichEdit( 'PAN' )
-            ENDIF
-            nGridPanLastRow := nRow
+      ELSE
+         IF nGridPanLastRow > 0
+            LostRichEdit( 'PAN' )
          ENDIF
-         IF GridImage( 'VentanaMain', 'GPanFiles', nRow, NCOLPANSTATUS, '?', PUB_nGridImgEdited )
-            VentanaMain.RichEditPan.BackColor := DEF_COLORBACKEXTERNALEDIT
-            VentanaMain.RichEditPan.FontColor := DEF_COLORFONTEXTERNALEDIT
-         ELSE
-            VentanaMain.RichEditPan.BackColor := DEF_COLORBACKPAN
-            VentanaMain.RichEditPan.FontColor := DEF_COLORFONTVIEW
-         ENDIF
-         VentanaMain.RichEditPan.Value := Enumeracion( MemoRead( ChgPathToReal( GetProperty( 'VentanaMain', 'GPanFiles', 'Cell', nRow, NCOLPANFULLNAME ) ) ), tipo )
-         VentanaMain.RichEditPan.CaretPos := Val( GetProperty( 'VentanaMain', 'GPanFiles', 'Cell', nRow, NCOLPANOFFSET ) )
-      CASE tipo == 'DBF'
-         IF nRow == 0
-            VentanaMain.RichEditDbf.Value := ''
-         // DefineRichEditForNotDbfView( 'DBF view is disable while Run Appl!' )
-            RETURN .F.
-         ENDIF
-
-         IF _IsControlDefined( 'DbfBrowse', 'VentanaMain' )
-            AuxRegistro := VentanaMain.DbfBrowse.Value
-         ELSE
-            AuxRegistro := 1
-         ENDIF
-         CloseDbfAutoView()
-         IF bGlobalSearch .AND. bLastGlobalSearchDbf .AND. bAvisoDbfGlobalSearchLow
-            MsgInfo( "Last Global Search with 'Dbf Data' set true causes a very slow reload" + CRLF + 'Use Reset Button for disable this option' )
-            bAvisoDbfGlobalSearchLow := .F.
-         ENDIF
-         IF bReload .AND. bGlobalSearch
-            //GetProperty( 'VentanaMain', 'GDbfFiles', 'Cell', nRow, NCOLDBFOFFSET ) := '0 0'
-            IF GridImage( 'VentanaMain', 'GDbfFiles', nRow, NCOLDBFSTATUS, '?', PUB_nGridImgSearchOk )
-               TotCaption( tipo, -1 )
-            ENDIF
-            IF GlobalSearch2( tipo, cLastGlobalSearch, nRow, bLastGlobalSearchFun, bLastGlobalSearchDbf )
-               TotCaption( tipo, +1 )
-            ENDIF
-         ELSE
-            IF nGridDbfLastRow > 0
-               LostRichEdit( 'DBF', AuxRegistro )
-            ENDIF
-            nGridDbfLastRow := nRow
-         ENDIF
-         IF bReload
-            bAvisoDbfDataSearchLow := .T.
-            bDbfDataSearchAsk     := .T.
-            cDbfDataSearchAskRpta := ''
-         ENDIF
-
-         IF GridImage( 'VentanaMain', 'GDbfFiles', nRow, NCOLDBFSTATUS, '?', PUB_nGridImgEdited )
-            VentanaMain.RichEditDbf.BackColor := DEF_COLORBACKEXTERNALEDIT
-            VentanaMain.RichEditDbf.FontColor := DEF_COLORFONTEXTERNALEDIT
-         ELSE
-            VentanaMain.RichEditDbf.BackColor := DEF_COLORBACKDBF
-            VentanaMain.RichEditDbf.FontColor := DEF_COLORFONTVIEW
-         ENDIF
-
-         DbfCode := US_IsDBF( DbfName )
-         IF ! ( DbfCode == 0 )
-            IF DbfCode == 21   // open exclusive by another program
-               VentanaMain.RichEditDbf.Value := CRLF + ;
-                                                CRLF + ;
-                                                CRLF + ;
-                                                CRLF + ;
-                                                CRLF + ;
-                                                CRLF + ;
-                                                "     Database '"+DbfName+"' is open EXCLUSIVE by another process or DBT file is missing"
+         nGridPanLastRow := nRow
+      ENDIF
+      IF GridImage( 'VentanaMain', 'GPanFiles', nRow, NCOLPANSTATUS, '?', PUB_nGridImgEdited )
+         VentanaMain.RichEditPan.BackColor := DEF_COLORBACKEXTERNALEDIT
+         VentanaMain.RichEditPan.FontColor := DEF_COLORFONTEXTERNALEDIT
+      ELSE
+         VentanaMain.RichEditPan.BackColor := DEF_COLORBACKPAN
+         VentanaMain.RichEditPan.FontColor := DEF_COLORFONTVIEW
+      ENDIF
+      VentanaMain.RichEditPan.Value := Enumeracion( MemoRead( ChgPathToReal( GetProperty( 'VentanaMain', 'GPanFiles', 'Cell', nRow, NCOLPANFULLNAME ) ) ), tipo )
+      VentanaMain.RichEditPan.CaretPos := Val( GetProperty( 'VentanaMain', 'GPanFiles', 'Cell', nRow, NCOLPANOFFSET ) )
+   CASE tipo == 'DBF'
+      IF nRow == 0
+         VentanaMain.RichEditDbf.Value := ''
+         RETURN .F.
+      ENDIF
+      IF _IsControlDefined( 'DbfBrowse', 'VentanaMain' )
+         AuxRegistro := VentanaMain.DbfBrowse.Value
+      ELSE
+         AuxRegistro := 1
+      ENDIF
+      CloseDbfAutoView()
+      IF bGlobalSearch .AND. bLastGlobalSearchDbf
+         IF Prj_Warn_SlowSearch
+            lCont := MyMsgYesNo( 'Loading a DBF when Global Search is active and "DBF Data Search" is selected may take a long time.' + CRLF + ;
+                                 'Select [Yes] to continue or [No] to cancel.' )
+            IF MyMsgYesNo( 'Omit the previous validation from now on?' + CRLF + iif( lCont, "[Yes] will be assumed!", "[No] will be assumed!" ) )
+               Prj_Warn_SlowSearch := .F.
+               Prj_Warn_SlowSearch_Cont := lCont
+               MyMsgInfo( 'Use ' + DBLQT + PUB_MenuResetWarnings + DBLQT + ' option of Settings menu to enable the previous check.' )
             ELSE
-               VentanaMain.RichEditDbf.Value := CRLF + ;
-                                                CRLF + ;
-                                                CRLF + ;
-                                                CRLF + ;
-                                                CRLF + ;
-                                                CRLF + ;
-                                                "     Database '"+DbfName+"' is not valid DBF"
+               Prj_Warn_SlowSearch := .T.
             ENDIF
-            DefineRichEditForNotDbfView( 'DBF Not Open!' )
+         ELSE
+            lCont := Prj_Warn_SlowSearch_Cont
+         ENDIF
+         IF ! lCont
+            bReload := .F.
+         ENDIF
+      ENDIF
+      IF bReload .AND. bGlobalSearch
+         IF GridImage( 'VentanaMain', 'GDbfFiles', nRow, NCOLDBFSTATUS, '?', PUB_nGridImgSearchOk )
+            TotCaption( tipo, -1 )
+         ENDIF
+         IF GlobalSearch2( tipo, cLastGlobalSearch, nRow, bLastGlobalSearchFun, bLastGlobalSearchDbf )
+            TotCaption( tipo, +1 )
+         ENDIF
+      ELSE
+         IF nGridDbfLastRow > 0
+            LostRichEdit( 'DBF', AuxRegistro )
+         ENDIF
+         nGridDbfLastRow := nRow
+      ENDIF
+      IF bReload
+         bAvisoDbfDataSearchLow := .T.
+         bDbfDataSearchAsk      := .T.
+         cDbfDataSearchAskRpta  := ''
+      ENDIF
+      IF GridImage( 'VentanaMain', 'GDbfFiles', nRow, NCOLDBFSTATUS, '?', PUB_nGridImgEdited )
+         VentanaMain.RichEditDbf.BackColor := DEF_COLORBACKEXTERNALEDIT
+         VentanaMain.RichEditDbf.FontColor := DEF_COLORFONTEXTERNALEDIT
+      ELSE
+         VentanaMain.RichEditDbf.BackColor := DEF_COLORBACKDBF
+         VentanaMain.RichEditDbf.FontColor := DEF_COLORFONTVIEW
+      ENDIF
+      DbfCode := US_IsDBF( DbfName )
+      IF ! ( DbfCode == 0 )
+         IF DbfCode == 21   // open exclusive by another program
+            VentanaMain.RichEditDbf.Value := CRLF + ;
+                                             CRLF + ;
+                                             CRLF + ;
+                                             CRLF + ;
+                                             CRLF + ;
+                                             CRLF + ;
+                                             "     Database '"+DbfName+"' is open EXCLUSIVE by another process or DBT file is missing."
          ELSE
             VentanaMain.RichEditDbf.Value := CRLF + ;
-                                             'Structure for Database: ' + DbfName + CRLF + CRLF + ;
-                                             replicate( ' ', 22 ) + padr( 'Field', 15 ) + padr( 'Type', 4 ) + padl( 'Length', 8 )+ padl( 'Decimal', 8 ) + CRLF + ;
-                                             replicate( ' ', 22 ) + replicate( '=', 35 )
+                                             CRLF + ;
+                                             CRLF + ;
+                                             CRLF + ;
+                                             CRLF + ;
+                                             CRLF + ;
+                                             "     Database '"+DbfName+"' is not valid DBF file."
+         ENDIF
+         DefineRichEditForNotDbfView( 'DBF Not Open!' )
+      ELSE
+         VentanaMain.RichEditDbf.Value := CRLF + ;
+                                          'Structure of database: ' + DbfName + CRLF + CRLF + ;
+                                          replicate( ' ', 22 ) + padr( 'Field', 15 ) + padr( 'Type', 4 ) + padl( 'Length', 8 )+ padl( 'Decimal', 8 ) + CRLF + ;
+                                          replicate( ' ', 22 ) + replicate( '=', 35 )
 
-            US_Use( .T.,, DbfName, 'DbfAlias', DEF_DBF_SHARED, DEF_DBF_READ ) /* si lo pongo exclusive y write no funciona el search, revisarlo */
-            aStru:=DBSTRUCT()
-            vDbfJustify := {}
-            vDbfHeaders := {}
-            vDbfWidths  := {}
-            FOR x := 1 TO Len(aStru)
-               AAdd( vDbfJustify, iif( aStru[x][2] == 'N', BROWSE_JTFY_RIGHT, BROWSE_JTFY_LEFT ) )
-               AAdd( vDbfHeaders, aStru[x][1] )
-               AAdd( vDbfWidths, iif( aStru[x][3] > 20, 330, 90 ) )
-               VentanaMain.RichEditDbf.Value := VentanaMain.RichEditDbf.Value + CRLF + ;
-                                                replicate( ' ', 22 ) + padr( aStru[x][1], 15 ) + padr( aStru[x][2], 4 ) + padl( aStru[x][3], 8 )+ padl( aStru[x][4], 8 )
-            NEXT
+         US_Use( .T.,, DbfName, 'DbfAlias', DEF_DBF_SHARED, DEF_DBF_READ ) /* si lo pongo exclusive y write no funciona el search, revisarlo */
+         aStru:=DBSTRUCT()
+         vDbfJustify := {}
+         vDbfHeaders := {}
+         vDbfWidths  := {}
+         FOR x := 1 TO Len(aStru)
+            AAdd( vDbfJustify, iif( aStru[x][2] == 'N', BROWSE_JTFY_RIGHT, BROWSE_JTFY_LEFT ) )
+            AAdd( vDbfHeaders, aStru[x][1] )
+            AAdd( vDbfWidths, iif( aStru[x][3] > 20, 330, 90 ) )
+            VentanaMain.RichEditDbf.Value := VentanaMain.RichEditDbf.Value + CRLF + ;
+                                             replicate( ' ', 22 ) + padr( aStru[x][1], 15 ) + padr( aStru[x][2], 4 ) + padl( aStru[x][3], 8 )+ padl( aStru[x][4], 8 )
+         NEXT
 
-            IF ( bDbfAutoView .AND. !bRunApp ) .OR. bForce
+         IF ( bDbfAutoView .AND. !bRunApp ) .OR. bForce
 
-               IF _IsControlDefined( 'DbfAutoView', 'VentanaMain' )
-                  VentanaMain.DbfAutoView.Release()
-               ENDIF
+            IF _IsControlDefined( 'DbfAutoView', 'VentanaMain' )
+               VentanaMain.DbfAutoView.Release()
+            ENDIF
 
-               SET BROWSESYNC ON
+            SET BROWSESYNC ON
 
-               @ GetDesktopRealHeight() - int( ( GetDesktopRealHeight() * 72 ) / 100 ), 10 BROWSE DbfBrowse ;
-                  OF VentanaMain ;
-                  WIDTH 0 ;
-                  HEIGHT 0 ;
-                  HEADERS ( vDbfHeaders ) ;
-                  WIDTHS ( vDbfWidths ) ;
-                  WORKAREA DbfAlias ;
-                  FIELDS ( vDbfHeaders ) ;
-                  VALUE RECNO() ;
-                  FONT 'CourierNew' SIZE 9 ;
-                  BACKCOLOR DEF_COLORBACKDBF
-                //NOVSCROLL
-            //    ON CHANGE ( GetProperty( 'VentanaMain', 'GDbfFiles', 'Cell', VentanaMain.GDbfFiles.Value, NCOLDBFSEARCH ) := '0 ** 0' )
-            //    EDIT INPLACE
-            //    ON HEADCLICK  { || US_log('headclick') } ;
-            //    ON CHANGE  { || TBL_BrowseRefresh() } ;
-            //    ON DBLCLICK  { || TBL_EjecutoDefault() }
+            @ GetDesktopRealHeight() - int( ( GetDesktopRealHeight() * 72 ) / 100 ), 10 BROWSE DbfBrowse ;
+               OF VentanaMain ;
+               WIDTH 0 ;
+               HEIGHT 0 ;
+               HEADERS ( vDbfHeaders ) ;
+               WIDTHS ( vDbfWidths ) ;
+               WORKAREA DbfAlias ;
+               FIELDS ( vDbfHeaders ) ;
+               VALUE RECNO() ;
+               FONT 'CourierNew' SIZE 9 ;
+               BACKCOLOR DEF_COLORBACKDBF
 
-               VentanaMain.TabFiles.AddControl( 'DbfBrowse', nPageDbf, GetDesktopRealHeight() - int( ( GetDesktopRealHeight() * 72 ) / 100 ), 10 )
-               VentanaMain.DbfBrowse.DisableUpdate()
-               VentanaMain.DbfBrowse.Width  := GetDesktopRealWidth() - 364
-               VentanaMain.DbfBrowse.Height := ( GetDesktopRealHeight() - 237 ) - ( GetDesktopRealHeight() - int( ( GetDesktopRealHeight() * 72 ) / 100 ) )
-               VentanaMain.DbfBrowse.value  := Val( US_Word( GetProperty( 'VentanaMain', 'GDbfFiles', 'Cell', nRow, NCOLDBFOFFSET ), 2 ) )
-               VentanaMain.DbfBrowse.EnableUpdate()
-               VentanaMain.DbfBrowse.Refresh()
+            VentanaMain.TabFiles.AddControl( 'DbfBrowse', nPageDbf, GetDesktopRealHeight() - int( ( GetDesktopRealHeight() * 72 ) / 100 ), 10 )
+            VentanaMain.DbfBrowse.DisableUpdate()
+            VentanaMain.DbfBrowse.Width  := GetDesktopRealWidth() - 364
+            VentanaMain.DbfBrowse.Height := ( GetDesktopRealHeight() - 237 ) - ( GetDesktopRealHeight() - int( ( GetDesktopRealHeight() * 72 ) / 100 ) )
+            VentanaMain.DbfBrowse.value  := Val( US_Word( GetProperty( 'VentanaMain', 'GDbfFiles', 'Cell', nRow, NCOLDBFOFFSET ), 2 ) )
+            VentanaMain.DbfBrowse.EnableUpdate()
+            VentanaMain.DbfBrowse.Refresh()
+         ELSE
+            CloseDbfAutoView()
+            IF bRunApp
+               DefineRichEditForNotDbfView( 'DBF view is disable while the app is running!' )
             ELSE
-               CloseDbfAutoView()
-               IF bRunApp
-                  DefineRichEditForNotDbfView( 'DBF view is disable while Run Appl!' )
-               ELSE
-                  DefineRichEditForNotDbfView( 'DBF AutoView is OFF!' )
-               ENDIF
+               DefineRichEditForNotDbfView( 'DBF AutoView is OFF!' )
             ENDIF
          ENDIF
-         VentanaMain.BLOCALSearchDbf.caption := 'Dbf Search'
-         VentanaMain.BLOCALSearchDbf.Tooltip := "Search in DBF's Data"
-         VentanaMain.RichEditDbf.CaretPos := Val( US_Word( GetProperty( 'VentanaMain', 'GDbfFiles', 'Cell', nRow, NCOLDBFOFFSET ), 1 ) )
-      CASE tipo == 'INC'
-         IF nRow == 0
-            VentanaMain.RichEditLib.Value := ''
-            RETURN .F.
-         ENDIF
-       //VentanaMain.RichEditLib.Value := ListModule( IncName )
-         IF ! File( IncName )
-            VentanaMain.RichEditLib.Value := CRLF + ;
-                                             CRLF + ;
-                                             CRLF + ;
-                                             CRLF + ;
-                                             CRLF + ;
-                                             CRLF + ;
-                                             "     Library '"+IncName+"' not found!"
-         ELSE
-            DO CASE
-               CASE US_Upper( US_FileNameOnlyExt( IncName ) ) == 'LIB'
-                  cType := QPM_ModuleType( IncName ) + ' Library'
-               CASE US_Upper( US_FileNameOnlyExt( IncName ) ) == 'A'
-                  cType := QPM_ModuleType( IncName ) + ' Library'
-               CASE US_Upper( US_FileNameOnlyExt( IncName ) ) == "OBJ"
-                  cType := QPM_ModuleType( IncName ) + ' Object'
-               CASE US_Upper( US_FileNameOnlyExt( IncName ) ) == 'O'
-                  cType := QPM_ModuleType( IncName ) + ' Object'
-               CASE US_Upper( US_FileNameOnlyExt( IncName ) ) == "RES"
-                  cType := QPM_ModuleType( IncName ) + ' Resource'
-               OTHERWISE
-                  US_Log( 'Extension ' + DBLQT + US_Upper( US_FileNameOnlyExt( IncName ) ) + DBLQT + " is not supported." )
-            ENDCASE
-            VentanaMain.RichEditLib.Value := CRLF + ;
-                                             CRLF + ;
-                                             CRLF + ;
-                                             CRLF + ;
-                                             CRLF + ;
-                                             CRLF + ;
-                                             "     Library '" + IncName + "'" + CRLF + ;
-                                             '             Size: ' + AllTrim( Str( US_FileSize( IncName ) ) ) + CRLF + ;
-                                             '             Type: ' + cType + CRLF + ;
-                                             CRLF + ;
-                                             "             Press 'List Library/Object' button for view function in Library or Object"
-         ENDIF
-      CASE tipo == 'OUT'
-         ListOut := GetOutputModuleName()
-         IF Left( ListOut, 1 ) == "."
-            VentanaMain.RichEditOut.Value := CRLF + ;
-                                             CRLF + ;
-                                             CRLF + ;
-                                             CRLF + ;
-                                             CRLF + ;
-                                             CRLF + ;
-                                             "     Output Module file not found!"
-         ELSE
-            IF ! File( ListOut )
-               IF File( ListOut + '.MOVED.TXT' )
-                  ListOut := US_WordSubStr( MemoRead( ListOut + '.MOVED.TXT' ), 7 )
-               ELSE
-                  VentanaMain.RichEditOut.Value := CRLF + ;
-                                                   CRLF + ;
-                                                   CRLF + ;
-                                                   CRLF + ;
-                                                   CRLF + ;
-                                                   CRLF + ;
-                                                   "     Output Module file not found: '" + ListOut + "'!"
-               ENDIF
-            ENDIF
-            cType := US_Upper( US_FileNameOnlyExt( ListOut ) )
-            DO CASE
-            CASE cType == 'LIB'
-               cType := QPM_ModuleType( ListOut ) + ' Library'
-            CASE cType == 'A'
-               cType := QPM_ModuleType( ListOut ) + ' Library'
-            CASE cType == 'EXE'
-               cType := 'Executable ' + QPM_ModuleType( ListOut )
-            CASE cType == 'DLL'
-               cType := 'Dynamic Link Library'
+      ENDIF
+      VentanaMain.BLocalSearchDbf.caption := 'DBF Search'
+      VentanaMain.BLocalSearchDbf.Tooltip := "Search DBF's data for some text."
+      VentanaMain.RichEditDbf.CaretPos := Val( US_Word( GetProperty( 'VentanaMain', 'GDbfFiles', 'Cell', nRow, NCOLDBFOFFSET ), 1 ) )
+   CASE tipo == 'DEF'
+      IF nRow == 0
+         VentanaMain.RichEditLib.Value := ''
+         RETURN .F.
+      ENDIF
+      VentanaMain.RichEditLib.Value := CRLF + ;
+                                       CRLF + ;
+                                       CRLF + ;
+                                       CRLF + ;
+                                       CRLF + ;
+                                       CRLF + ;
+                                       '     To list a default library temporarily add it to "Include" list.'
+   CASE tipo == 'INC'
+      IF nRow == 0
+         VentanaMain.RichEditLib.Value := ''
+         RETURN .F.
+      ENDIF
+      VentanaMain.RichEditLib.Value := ListModule( IncName )
+      IF ! File( IncName )
+         VentanaMain.RichEditLib.Value := CRLF + ;
+                                          CRLF + ;
+                                          CRLF + ;
+                                          CRLF + ;
+                                          CRLF + ;
+                                          CRLF + ;
+                                          "     Library '" + IncName + "' not found!"
+      ELSE
+         DO CASE
+            CASE Upper( US_FileNameOnlyExt( IncName ) ) == 'LIB'
+               cType := QPM_ModuleType( IncName ) + ' Library'
+            CASE Upper( US_FileNameOnlyExt( IncName ) ) == 'A'
+               cType := QPM_ModuleType( IncName ) + ' Library'
+            CASE Upper( US_FileNameOnlyExt( IncName ) ) == "OBJ"
+               cType := QPM_ModuleType( IncName ) + ' Object'
+            CASE Upper( US_FileNameOnlyExt( IncName ) ) == 'O'
+               cType := QPM_ModuleType( IncName ) + ' Object'
+            CASE Upper( US_FileNameOnlyExt( IncName ) ) == "RES"
+               cType := QPM_ModuleType( IncName ) + ' Resource'
             OTHERWISE
-               MsgInfo( 'Wrong Type for List Output: ' + cType )
-            ENDCASE
-            VentanaMain.RichEditOut.Value := CRLF + ;
-                                             CRLF + ;
-                                             CRLF + ;
-                                             CRLF + ;
-                                             CRLF + ;
-                                             CRLF + ;
-                                             "        File '" + ListOut + "'" + CRLF + ;
-                                             '             Size: ' + AllTrim( Str( US_FileSize( ListOut ) ) ) + CRLF + ;
-                                             '             Type: ' + cType + CRLF + ;
-                                             CRLF + ;
-                                             "             Press 'List' button for expand this module info"
+               US_Log( 'Extension ' + DBLQT + Upper( US_FileNameOnlyExt( IncName ) ) + DBLQT + " is not supported." )
+         ENDCASE
+         VentanaMain.RichEditLib.Value := CRLF + ;
+                                          CRLF + ;
+                                          CRLF + ;
+                                          CRLF + ;
+                                          CRLF + ;
+                                          CRLF + ;
+                                          "     Library '" + IncName + "'" + CRLF + ;
+                                          '             Size: ' + AllTrim( Str( US_FileSize( IncName ) ) ) + CRLF + ;
+                                          '             Type: ' + cType + CRLF + ;
+                                          CRLF + ;
+                                          "             Press 'List Library/Object' button for view function in Library or Object"
+      ENDIF
+   CASE tipo == 'OUT'
+      ListOut := GetOutputModuleName()
+      IF Left( ListOut, 1 ) == "."
+         VentanaMain.RichEditOut.Value := CRLF + ;
+                                          CRLF + ;
+                                          CRLF + ;
+                                          CRLF + ;
+                                          CRLF + ;
+                                          CRLF + ;
+                                          "     Output Module file not found!"
+      ELSE
+         IF ! File( ListOut )
+            IF File( ListOut + '.MOVED.TXT' )
+               ListOut := US_WordSubStr( MemoRead( ListOut + '.MOVED.TXT' ), 7 )
+            ELSE
+               VentanaMain.RichEditOut.Value := CRLF + ;
+                                                CRLF + ;
+                                                CRLF + ;
+                                                CRLF + ;
+                                                CRLF + ;
+                                                CRLF + ;
+                                                '     Output Module file "' + ListOut + '" not found!'
+            ENDIF
          ENDIF
+         cType := Upper( US_FileNameOnlyExt( ListOut ) )
+         DO CASE
+         CASE cType == 'LIB'
+            cType := QPM_ModuleType( ListOut ) + ' Library'
+         CASE cType == 'A'
+            cType := QPM_ModuleType( ListOut ) + ' Library'
+         CASE cType == 'EXE'
+            cType := 'Executable ' + QPM_ModuleType( ListOut )
+         CASE cType == 'DLL'
+            cType := 'Dynamic Link Library'
+         OTHERWISE
+            cType += ' ( unknown )'
+         ENDCASE
+         VentanaMain.RichEditOut.Value := CRLF + ;
+                                          CRLF + ;
+                                          CRLF + ;
+                                          CRLF + ;
+                                          CRLF + ;
+                                          CRLF + ;
+                                          "        File '" + ListOut + "'" + CRLF + ;
+                                          '             Size: ' + AllTrim( Str( US_FileSize( ListOut ) ) ) + CRLF + ;
+                                          '             Type: ' + cType + CRLF + ;
+                                          iif( ! "( unknown )" $ cType, 'Press "List" button to expand this module info.' + CRLF, "" )
+      ENDIF
 #ifdef QPM_SHG
-      CASE tipo == 'HLP'
-         IF nRow == 0
-            VentanaMain.RichEditHlp.Value := ''
-            oHlpRichEdit:lChanged := .F.
-            RETURN .F.
+   CASE tipo == 'HLP'
+      IF nRow == 0
+         VentanaMain.RichEditHlp.Value := ''
+         oHlpRichEdit:lChanged := .F.
+         RETURN .F.
+      ENDIF
+      IF bReload .AND. bGlobalSearch
+         SetProperty( 'VentanaMain', 'GHlpFiles', 'Cell', nRow, NCOLHLPOFFSET, '0' )
+         IF GridImage( 'VentanaMain', 'GHlpFiles', nRow, NCOLHLPSTATUS, '?', PUB_nGridImgSearchOk )
+            TotCaption( tipo, -1 )
          ENDIF
-         IF bReload .AND. bGlobalSearch
-            SetProperty( 'VentanaMain', 'GHlpFiles', 'Cell', nRow, NCOLHLPOFFSET, '0' )
-            IF GridImage( 'VentanaMain', 'GHlpFiles', nRow, NCOLHLPSTATUS, '?', PUB_nGridImgSearchOk )
+         IF GlobalSearch2( tipo, cLastGlobalSearch, nRow, bLastGlobalSearchFun, bLastGlobalSearchDbf )
+            TotCaption( tipo, +1 )
+         ENDIF
+      ELSE
+         IF nGridHlpLastRow > 0
+            IF !bHlpMoving
+               IF !bReload
+                  LostRichEdit( 'HLP', nGridHlpLastRow )
+               ENDIF
+            ENDIF
+         ENDIF
+         IF bGlobalSearch
+            IF GridImage( 'VentanaMain', 'GHlpFiles', nGridHlpLastRow, NCOLHLPSTATUS, '?', PUB_nGridImgSearchOk )
                TotCaption( tipo, -1 )
             ENDIF
-            IF GlobalSearch2( tipo, cLastGlobalSearch, nRow, bLastGlobalSearchFun, bLastGlobalSearchDbf )
+            IF GlobalSearch2( tipo, cLastGlobalSearch, nGridHlpLastRow, bLastGlobalSearchFun, bLastGlobalSearchDbf )
                TotCaption( tipo, +1 )
             ENDIF
-         ELSE
-            IF nGridHlpLastRow > 0
-               IF !bHlpMoving
-                  IF !bReload
-                     LostRichEdit( 'HLP', nGridHlpLastRow )
-                  ENDIF
-               ENDIF
-            ENDIF
-            IF bGlobalSearch
-               IF GridImage( 'VentanaMain', 'GHlpFiles', nGridHlpLastRow, NCOLHLPSTATUS, '?', PUB_nGridImgSearchOk )
-                  TotCaption( tipo, -1 )
-               ENDIF
-               IF GlobalSearch2( tipo, cLastGlobalSearch, nGridHlpLastRow, bLastGlobalSearchFun, bLastGlobalSearchDbf )
-                  TotCaption( tipo, +1 )
-               ENDIF
-            ENDIF
-            nGridHlpLastRow := nRow
          ENDIF
-         IF GridImage( 'VentanaMain', 'GHlpFiles', nRow, NCOLHLPSTATUS, '?', PUB_nGridImgEdited )
-            VentanaMain.RichEditHlp.BackColor := DEF_COLORBACKEXTERNALEDIT
-            VentanaMain.RichEditHlp.FontColor := DEF_COLORFONTEXTERNALEDIT
-         ELSE
-            VentanaMain.RichEditHlp.BackColor := DEF_COLORBACKHLP
-            VentanaMain.RichEditHlp.FontColor := DEF_COLORFONTVIEW
-         ENDIF
-         VentanaMain.RichEditHlp.Value := SHG_GetField( 'SHG_MEMOT', nRow )
-         VentanaMain.RichEditHlp.CaretPos := Val( GetProperty( 'VentanaMain', 'GHlpFiles', 'Cell', nRow, NCOLHLPOFFSET ) )
-         oHlpRichEdit:US_EditRefreshButtons()
-         oHlpRichEdit:lChanged := .F.
-         MemoKeys := SHG_GetField( 'SHG_KEYST', VentanaMain.GHlpFiles.Value )
-         LinesKeys := MLCount( MEmoKeys, 254 )
-         aLines := {}
-         FOR nInx := 1 TO LinesKeys
-            AAdd( aLInes, { MemoLine( MemoKeys, 254, nInx ) } )
-         NEXT
-         VentanaMain.GHlpKeys.DisableUpdate
-         VentanaMain.GHlpKeys.DeleteAllItems
-         FOR nInx := 1 TO LinesKeys
-            VentanaMain.GHlpKeys.AddItem( aLines[nInx] )
-         NEXT
-         VentanaMain.GHlpKeys.value := VentanaMain.GHlpFiles.ItemCount
-         VentanaMain.GHlpKeys.EnableUpdate
-         DoMethod( 'VentanaMain', 'GHlpKeys', 'ColumnsAutoFitH' )
+         nGridHlpLastRow := nRow
+      ENDIF
+      IF GridImage( 'VentanaMain', 'GHlpFiles', nRow, NCOLHLPSTATUS, '?', PUB_nGridImgEdited )
+         VentanaMain.RichEditHlp.BackColor := DEF_COLORBACKEXTERNALEDIT
+         VentanaMain.RichEditHlp.FontColor := DEF_COLORFONTEXTERNALEDIT
+      ELSE
+         VentanaMain.RichEditHlp.BackColor := DEF_COLORBACKHLP
+         VentanaMain.RichEditHlp.FontColor := DEF_COLORFONTVIEW
+      ENDIF
+      VentanaMain.RichEditHlp.Value := SHG_GetField( 'SHG_MEMOT', nRow )
+      VentanaMain.RichEditHlp.CaretPos := Val( GetProperty( 'VentanaMain', 'GHlpFiles', 'Cell', nRow, NCOLHLPOFFSET ) )
+      oHlpRichEdit:US_EditRefreshButtons()
+      oHlpRichEdit:lChanged := .F.
+      MemoKeys := SHG_GetField( 'SHG_KEYST', VentanaMain.GHlpFiles.Value )
+      LinesKeys := MLCount( MEmoKeys, 254 )
+      aLines := {}
+      FOR nInx := 1 TO LinesKeys
+         AAdd( aLInes, { MemoLine( MemoKeys, 254, nInx ) } )
+      NEXT
+      VentanaMain.GHlpKeys.DisableUpdate
+      VentanaMain.GHlpKeys.DeleteAllItems
+      FOR nInx := 1 TO LinesKeys
+         VentanaMain.GHlpKeys.AddItem( aLines[nInx] )
+      NEXT
+      VentanaMain.GHlpKeys.value := VentanaMain.GHlpFiles.ItemCount
+      VentanaMain.GHlpKeys.EnableUpdate
+      DoMethod( 'VentanaMain', 'GHlpKeys', 'ColumnsAutoFitH' )
 #endif
-      OTHERWISE
-         MsgInfo( 'Invalid type in RicheditDisplay: ' + US_VarToStr( tipo ) )
+   OTHERWISE
+      RETURN .F.
    ENDCASE
 RETURN .T.
 
@@ -9493,45 +9933,41 @@ FUNCTION ListModule( ModName )
       MemoAux := "File '" + ModName + "' not found!"
       RETURN MemoAux
    ENDIF
-   ferase( ModName + '.Tmp' )
-   ferase( ModName + '.TmpOut' )
-   IF US_Upper( US_FileNameOnlyExt( ModName ) ) == 'LIB'
+   FErase( ModName + '.Tmp' )
+   FErase( ModName + '.TmpOut' )
+   IF Upper( US_FileNameOnlyExt( ModName ) ) == 'LIB'
       TempLibType := QPM_ModuleType( ModName )
       DO CASE
-         CASE TempLibType == 'PELLES'
-            QPM_MemoWrit( RUN_FILE, US_ShortName(PUB_cQPM_Folder) + DEF_SLASH + 'US_PODUMP.EXE -LINKERMEMBER:2 -ARCHIVEMEMBERS ' + US_ShortName( ModName ) + ' > "' + US_ShortName( ModName ) + '.Tmp"' )
-            QPM_Execute( RUN_FILE, "", DEF_QPM_EXEC_WAIT, DEF_QPM_EXEC_MINIMIZE )
-            ferase( RUN_FILE )
-
-            QPM_MemoWrit( RUN_FILE, US_ShortName(PUB_cQPM_Folder) + DEF_SLASH + 'US_SHELL.EXE QPM ANALIZE_LIB_PELLES ' + US_ShortName( ModName ) + '.Tmp' + ' -FILESTOP ' + LOC_RunWaitFileStop + ' > "' + US_ShortName( ModName ) + '.TmpOut"' )
-            QPM_Execute( RUN_FILE, "", DEF_QPM_EXEC_WAIT, DEF_QPM_EXEC_MINIMIZE, LOC_RunWaitFileStop )
-            ferase( RUN_FILE )
-         CASE TempLibType == 'BORLAND'
-            QPM_Execute( US_ShortName(PUB_cQPM_Folder) + DEF_SLASH + 'US_TLIB.EXE', US_ShortName( ModName ) + ', ' + US_ShortName( ModName ) + '.Tmp', DEF_QPM_EXEC_WAIT, DEF_QPM_EXEC_MINIMIZE )
-
-            QPM_MemoWrit( RUN_FILE, US_ShortName(PUB_cQPM_Folder) + DEF_SLASH + 'US_SHELL.EXE QPM ANALIZE_LIB_BORLAND ' + US_ShortName( ModName ) + '.Tmp' + ' -FILESTOP ' + LOC_RunWaitFileStop + ' > "' + US_ShortName( ModName ) + '.TmpOut"' )
-            QPM_Execute( RUN_FILE, "", DEF_QPM_EXEC_WAIT, DEF_QPM_EXEC_MINIMIZE, LOC_RunWaitFileStop )
-            ferase( RUN_FILE )
-         CASE TempLibType == 'NONE'
-            QPM_MemoWrit( ModName + '.TmpOut', 'File not found' )
-         OTHERWISE
-            MsgStop( 'Unknown LIB type: ' + ModName )
+      CASE TempLibType == 'PELLES'
+         QPM_MemoWrit( RUN_FILE, US_ShortName(PUB_cQPM_Folder) + DEF_SLASH + 'US_PODUMP.EXE -LINKERMEMBER:2 -ARCHIVEMEMBERS ' + US_ShortName( ModName ) + ' > "' + US_ShortName( ModName ) + '.Tmp"' )
+         QPM_Execute( RUN_FILE, "", DEF_QPM_EXEC_WAIT, DEF_QPM_EXEC_MINIMIZE )
+         FErase( RUN_FILE )
+         QPM_MemoWrit( RUN_FILE, US_ShortName(PUB_cQPM_Folder) + DEF_SLASH + 'US_SHELL.EXE QPM ANALIZE_LIB_PELLES ' + US_ShortName( ModName ) + '.Tmp' + ' -FILESTOP ' + LOC_RunWaitFileStop + ' > "' + US_ShortName( ModName ) + '.TmpOut"' )
+         QPM_Execute( RUN_FILE, "", DEF_QPM_EXEC_WAIT, DEF_QPM_EXEC_MINIMIZE, LOC_RunWaitFileStop )
+         FErase( RUN_FILE )
+      CASE TempLibType == 'BORLAND'
+         QPM_Execute( US_ShortName(PUB_cQPM_Folder) + DEF_SLASH + 'US_TLIB.EXE', US_ShortName( ModName ) + ', ' + US_ShortName( ModName ) + '.Tmp', DEF_QPM_EXEC_WAIT, DEF_QPM_EXEC_MINIMIZE )
+         QPM_MemoWrit( RUN_FILE, US_ShortName(PUB_cQPM_Folder) + DEF_SLASH + 'US_SHELL.EXE QPM ANALIZE_LIB_BORLAND ' + US_ShortName( ModName ) + '.Tmp' + ' -FILESTOP ' + LOC_RunWaitFileStop + ' > "' + US_ShortName( ModName ) + '.TmpOut"' )
+         QPM_Execute( RUN_FILE, "", DEF_QPM_EXEC_WAIT, DEF_QPM_EXEC_MINIMIZE, LOC_RunWaitFileStop )
+         FErase( RUN_FILE )
+      CASE TempLibType == 'NONE'
+         QPM_MemoWrit( ModName + '.TmpOut', 'File not found' )
+      OTHERWISE
+         QPM_MemoWrit( ModName + '.TmpOut', 'Unknown LIB type: ' + ModName )
       ENDCASE
-   ELSEIF US_Upper( US_FileNameOnlyExt( ModName ) ) == 'A'
+   ELSEIF Upper( US_FileNameOnlyExt( ModName ) ) == 'A'
       QPM_MemoWrit( RUN_FILE, US_ShortName(PUB_cQPM_Folder) + DEF_SLASH + 'US_OBJDUMP.EXE -t -s ' + US_ShortName( ModName ) + ' > "' + US_ShortName( ModName ) + '.Tmp"' )
       QPM_Execute( RUN_FILE, "", DEF_QPM_EXEC_WAIT, DEF_QPM_EXEC_MINIMIZE )
-      ferase( RUN_FILE )
-
+      FErase( RUN_FILE )
       QPM_MemoWrit( RUN_FILE, US_ShortName(PUB_cQPM_Folder) + DEF_SLASH + 'US_SHELL.EXE QPM ANALIZE_LIB_MINGW ' + US_ShortName( ModName ) + '.Tmp' + ' -FILESTOP ' + LOC_RunWaitFileStop + ' > "' + US_ShortName( ModName ) + '.TmpOut"' )
       QPM_Execute( RUN_FILE, "", DEF_QPM_EXEC_WAIT, DEF_QPM_EXEC_MINIMIZE, LOC_RunWaitFileStop )
-      ferase( RUN_FILE )
-   ELSEIF US_Upper( US_FileNameOnlyExt( ModName ) ) == 'DLL'
+      FErase( RUN_FILE )
+   ELSEIF Upper( US_FileNameOnlyExt( ModName ) ) == 'DLL'
       QPM_Execute( US_ShortName(PUB_cQPM_Folder) + DEF_SLASH + 'US_IMPDEF.EXE', US_ShortName( ModName ) + '.Tmp ' + US_ShortName( ModName ), DEF_QPM_EXEC_WAIT, DEF_QPM_EXEC_MINIMIZE )
-
       QPM_MemoWrit( RUN_FILE, US_ShortName(PUB_cQPM_Folder) + DEF_SLASH + 'US_SHELL.EXE QPM -OFF ANALIZE_DLL ' + US_ShortName( ModName ) + '.Tmp' + ' -FILESTOP ' + LOC_RunWaitFileStop + ' > "' + US_ShortName( ModName ) + '.TmpOut"' )
       QPM_Execute( RUN_FILE, "", DEF_QPM_EXEC_WAIT, DEF_QPM_EXEC_MINIMIZE, LOC_RunWaitFileStop )
-      ferase( RUN_FILE )
-   ELSEIF US_Upper( US_FileNameOnlyExt( ModName ) ) == 'EXE'
+      FErase( RUN_FILE )
+   ELSEIF Upper( US_FileNameOnlyExt( ModName ) ) == 'EXE'
       TempExeType := QPM_ModuleType( ModName )
       IF TempExeType == 'COMPRESSED'
          ListModuleUnUpx( US_ShortName( ModName ), US_ShortName( ModName ) + '.UnUpx.Exe' )
@@ -9542,98 +9978,75 @@ FUNCTION ListModule( ModName )
       CASE TempExeType == 'BORLAND'
          QPM_MemoWrit( RUN_FILE, US_ShortName(PUB_cQPM_Folder) + DEF_SLASH + 'US_TDUMP.EXE ' + US_ShortName( ModName ) + ' > "' + US_ShortName( ModName ) + '.TmpOut"' )
          QPM_Execute( RUN_FILE, "", DEF_QPM_EXEC_WAIT, DEF_QPM_EXEC_MINIMIZE )
-         ferase( RUN_FILE )
+         FErase( RUN_FILE )
       CASE TempExeType == 'PELLES'
          QPM_MemoWrit( RUN_FILE, US_ShortName(PUB_cQPM_Folder) + DEF_SLASH + 'US_TDUMP.EXE ' + US_ShortName( ModName ) + ' > "' + US_ShortName( ModName ) + '.TmpOut"' )
          QPM_Execute( RUN_FILE, "", DEF_QPM_EXEC_WAIT, DEF_QPM_EXEC_MINIMIZE )
-         ferase( RUN_FILE )
+         FErase( RUN_FILE )
       CASE TempExeType == 'MINGW'
          QPM_MemoWrit( RUN_FILE, US_ShortName(PUB_cQPM_Folder) + DEF_SLASH + 'US_TDUMP.EXE ' + US_ShortName( ModName ) + ' > "' + US_ShortName( ModName ) + '.TmpOut"' )
          QPM_Execute( RUN_FILE, "", DEF_QPM_EXEC_WAIT, DEF_QPM_EXEC_MINIMIZE )
-         ferase( RUN_FILE )
+         FErase( RUN_FILE )
       CASE TempExeType == 'NONE'
          QPM_MemoWrit( ModName + '.TmpOut', 'File not found' )
       OTHERWISE
-         MsgStop( 'Unknown EXE type: ' + OrigModName )
+         QPM_MemoWrit( ModName + '.TmpOut', 'Unknown EXE type: ' + OrigModName )
       ENDCASE
    ELSE
-      MsgInfo( 'Listing files of type ' + DBLQT + US_Upper( US_FileNameOnlyExt( ModName ) ) + DBLQT + ' is not supported.')
-      RETURN MemoAux
+      QPM_MemoWrit( ModName + '.TmpOut', 'Unsupported file type: ' + Upper( US_FileNameOnlyExt( ModName ) ) )
    ENDIF
    MemoAux := MemoRead( US_ShortName( ModName ) + '.TmpOut' )
-   ferase( US_ShortName( ModName ) + '.Tmp' )
-   ferase( US_ShortName( ModName ) + '.TmpOut' )
-   ferase( US_ShortName( OrigModName ) + '.TmpOut' )
-   ferase( US_ShortName( OrigModName ) + '.UnUpx.Exe' )
+   FErase( US_ShortName( ModName ) + '.Tmp' )
+   FErase( US_ShortName( ModName ) + '.TmpOut' )
+   FErase( US_ShortName( OrigModName ) + '.TmpOut' )
+   FErase( US_ShortName( OrigModName ) + '.UnUpx.Exe' )
 RETURN MemoAux
 
 FUNCTION ListModuleUnUpx( cIn, cOut )
    QPM_MemoWrit( RUN_FILE, US_ShortName(PUB_cQPM_Folder) + DEF_SLASH + 'US_UPX.EXE -d -o' + cOut + ' ' + cIn + ' > "' + cIn + '.TmpOut"' )
    QPM_Execute( RUN_FILE, "", DEF_QPM_EXEC_WAIT, DEF_QPM_EXEC_MINIMIZE )
-   ferase( RUN_FILE )
+   FErase( RUN_FILE )
 RETURN .T.
 
-FUNCTION LOCALSearch( Txt, bFunc )
-   LOCAL cTab := '', PositionAux := 0
-   LOCAL Resultado := {}, CaretAnt
-
- //#define EM_SETSEL   177
-
-   DEFAULT bFunc TO .F.
+FUNCTION LocalSearch( Txt )
+   LOCAL cTab, Resultado, CaretAnt
    IF Empty( Txt )
-      MsgInfo( 'Empty Text for Search ...' )
+      MyMsgStop( "You must input some text before starting a search!" )
       RETURN .F.
    ENDIF
    AddSearchTxt()
    DO CASE
-      CASE VentanaMain.TabFiles.value == nPagePrg
-         cTab := 'PRG'
-      CASE VentanaMain.TabFiles.value == nPageHea
-         cTab := 'HEA'
-      CASE VentanaMain.TabFiles.value == nPagePan
-         cTab := 'PAN'
-      CASE VentanaMain.TabFiles.value == nPageDbf
-         cTab := 'DBF'
-      CASE VentanaMain.TabFiles.value == nPageLib
-         cTab := 'LIB'
-      CASE VentanaMain.TabFiles.value == nPageSysOut
-         cTab := 'SYSOUT'
-      CASE VentanaMain.TabFiles.value == nPageOut
-         cTab := 'OUT'
+   CASE VentanaMain.TabFiles.value == nPagePrg
+      cTab := 'PRG'
+   CASE VentanaMain.TabFiles.value == nPageHea
+      cTab := 'HEA'
+   CASE VentanaMain.TabFiles.value == nPagePan
+      cTab := 'PAN'
+   CASE VentanaMain.TabFiles.value == nPageDbf
+      cTab := 'DBF'
+   CASE VentanaMain.TabFiles.value == nPageLib
+      cTab := 'LIB'
+   CASE VentanaMain.TabFiles.value == nPageSysOut
+      cTab := 'SYSOUT'
+   CASE VentanaMain.TabFiles.value == nPageOut
+      cTab := 'OUT'
 #ifdef QPM_SHG
-      CASE VentanaMain.TabFiles.value == nPageHlp
-         cTab := 'HLP'
+   CASE VentanaMain.TabFiles.value == nPageHlp
+      cTab := 'HLP'
 #endif
-      OTHERWISE
-         MsgInfo( 'Error in function LOCALSearch, TabFile invalid: ' + US_VarToStr( VentanaMain.TabFiles.value ) )
-   ENDCASE
-   IF bFunc .AND. ! ( cTab == 'PRG' )
-      MsgInfo( 'Error in LOCAL Search, invalid bFunc in true with cTab equal '+cTab )
+   OTHERWISE
       RETURN .F.
-   ENDIF
-   CaretAnt := GetProperty( 'VentanaMain', 'RichEdit'+cTab, 'CaretPos' )
-   IF bFunc
-      VentanaMain.Check_SearchCas.Value := bLastGlobalSearchCas := .F.
-      GlobalSearch2( 'PRG', Txt, GetProperty( 'VentanaMain', 'G'+cTab+'Files', 'Value' ), .T.,,,,, @PositionAux )
-      PositionAux--
-      AAdd( Resultado, PositionAux )
-      AAdd( Resultado, PositionAux )
-      AAdd( Resultado, PositionAux )
-      IF Resultado[1] > 0
-         SetProperty( 'VentanaMain', 'RichEdit'+cTab, 'CaretPos', PositionAux )
-         FindChr( GetControlHandle ( 'RichEdit'+cTab, 'VentanaMain' ), Txt, .T., .F., bLastGlobalSearchCas, .T. )
-      ENDIF
-   ELSE
-      bLastGlobalSearchCas := VentanaMain.Check_SearchCas.Value
-      Resultado := FindChr( GetControlHandle( 'RichEdit'+cTab, 'VentanaMain' ), Txt, .T., .F., bLastGlobalSearchCas, .T. )
-   ENDIF
+   ENDCASE
+   CaretAnt := GetProperty( 'VentanaMain', 'RichEdit' + cTab, 'CaretPos' )
+   bLastGlobalSearchCas := VentanaMain.Check_SearchCas.Value
+   Resultado := FindChr( GetControlHandle( 'RichEdit' + cTab, 'VentanaMain' ), Txt, .T., .F., bLastGlobalSearchCas, .T. )
    IF Resultado[3] < 0
       IF CaretAnt == 0
-         MsgOk( 'QPM (QAC based Project Manager)', 'Text not found.', 'E', .T., 2 )
+         MyMsgInfo( 'The text was not found.' )
       ELSE
-         MsgOk( 'QPM (QAC based Project Manager)', 'Text not found.' + CRLF + 'Restart search from top.', 'W', .T., 2 )
+         MyMsgInfo( 'The text was not found.' + CRLF + 'Try again after moving the caret to the top.' )
       ENDIF
-      SetProperty( 'VentanaMain', 'RichEdit'+cTab, 'CaretPos', CaretAnt )
+      SetProperty( 'VentanaMain', 'RichEdit' + cTab, 'CaretPos', CaretAnt )
       RETURN .F.
    ENDIF
 RETURN .T.
@@ -9645,18 +10058,18 @@ FUNCTION DbfDataSearch( Txt )
    LOCAL nAuxRecord
    LOCAL cTypeDbfSearch := 'R'  /* Record Base Type */
    IF VentanaMain.GDbfFiles.Value < 1
-      MsgInfo( 'No DBF has been selected.' )
+      MyMsgStop( 'No DBF file has been selected!' )
       RETURN .F.
    ENDIF
    IF Empty( Txt )
-      MsgInfo( 'No text for Search has been entered.' )
+      MyMsgStop( "You must input some text before starting a search!" )
       RETURN .F.
    ENDIF
    nOldRecord := VentanaMain.DbfBrowse.Value
    nAuxRecord := nOldRecord
    AddSearchTxt()
    IF bAvisoDbfDataSearchLow .OR. ! ( Val( US_Word( GetProperty( 'VentanaMain', 'GDbfFiles', 'Cell', VentanaMain.GDbfFiles.Value, NCOLDBFSEARCH ), 1 ) ) == nOldRecord )
-      IF ! MyMsgYesNo( "Search 'Dbf Data' is very slow." + CRLF + "Do you want to continue?" )
+      IF ! MyMsgYesNo( "Searching text into DBF data may take a long time to end." + CRLF + "Do you want to continue?" )
          RETURN .F.
       ENDIF
       bAvisoDbfDataSearchLow := .F.
@@ -9666,7 +10079,7 @@ FUNCTION DbfDataSearch( Txt )
          cTypeDbfSearch := cDbfDataSearchAskRpta
       ELSE
          SetMGWaitHide()
-         IF ( cTypeDbfSearch := LOCALSearchContinue() ) == ''
+         IF ( cTypeDbfSearch := LocalSearchContinue() ) == ''
             SetMGWaitShow()
             RETURN .F.
          ELSE
@@ -9685,14 +10098,14 @@ FUNCTION DbfDataSearch( Txt )
       DBSelectarea( 'DbfAlias' )
       VentanaMain.DbfBrowse.Value := nRecord
       VentanaMain.DbfBrowse.Refresh()
-#IFDEF __XHARBOUR__
+#ifdef __XHARBOUR__
       VentanaMain.RichEditDbf.Value := '     ' + CRLF + ;
                                        '     ' + CRLF + ;
                                        '     Text found at record: ' + AllTrim( Str( nRecord ) ) + CRLF + ;
                                        '     Field: ' + cFieldName + CRLF + ;
                                        '     Position: ' + AllTrim( Str( nFieldPos ) ) + CRLF + ;
                                        '     Content: ' + SubStr( cFieldTxt, At( US_Upper( Txt ), US_Upper( cFieldTxt ), nFieldPos ), 200 ) + CRLF
-#ELSE
+#else
       VentanaMain.RichEditDbf.Value := '     ' + CRLF + ;
                                        '     ' + CRLF + ;
                                        '     Text found at record: ' + AllTrim( Str( nRecord ) ) + CRLF + ;
@@ -9705,42 +10118,35 @@ FUNCTION DbfDataSearch( Txt )
       FindChr( GetControlHandle ( 'RichEditDbf', 'VentanaMain' ), VentanaMain.CSearch.DisplayValue, FindChr( GetControlHandle ( 'RichEditDbf', 'VentanaMain' ), 'Content: ', .T., .F., bLastGlobalSearchCas, .T. ), .F., bLastGlobalSearchCas, .T. )
       SetProperty( 'VentanaMain', 'GDbfFiles', 'Cell', VentanaMain.GDbfFiles.Value, NCOLDBFSEARCH, AllTrim( Str( nRecord ) ) + ' ' + cFieldName + ' ' + AllTrim( Str( nFieldPos ) ) )
       DoMethod( 'VentanaMain', 'GDbfFiles', 'ColumnsAutoFitH' )
-      VentanaMain.BLOCALSearchDbf.caption := 'Continue Search'
-      VentanaMain.BLOCALSearchDbf.Tooltip := "Continue searching in DBF's data. To reset use " + DBLQT + "Force Display Dbf"  + DBLQT + "button"
+      VentanaMain.BLocalSearchDbf.caption := 'Continue Search'
+      VentanaMain.BLocalSearchDbf.Tooltip := "Continue searching DBF's data. To reset use " + DBLQT + "(Re)Display DBF"  + DBLQT + " button."
       RETURN .T.
    ENDIF
    SetMGWaitHide()
    IF nOldRecord == 1
-      MsgOk( 'QPM (QAC based Project Manager)', 'Text not found', 'E', .T., 2 )
+      MyMsgWarn( 'Text not found.' )
       bAvisoDbfDataSearchLow := .T.
       VentanaMain.RichEditDbf.Value := '     ' + CRLF + ;
-                                       '     Text not found in DBF data'
-  //  IF ! ( US_Word( GetProperty( 'VentanaMain', 'GDbfFiles', 'Cell', VentanaMain.GDbfFiles.Value, NCOLDBFSEARCH ), 1 ) == '0' )
-  //     VentanaMain.RichEditDbf.Value := '     ' + CRLF + ;
-  //                                      '     Text not found in DBF data'
-  //     GetProperty( 'VentanaMain', 'GDbfFiles', 'Cell', VentanaMain.GDbfFiles.Value, NCOLDBFSEARCH ) := '0 ** 0'
-  //  ENDIF
+                                       "     The text was not found into DBF's data."
    ELSE
-      MsgOk( 'QPM (QAC based Project Manager)', 'Text not found'+CRLF+'Re-Search from Top', 'W', .T., 2 )
+      MyMsgWarn( 'Text not found.' + CRLF + 'Try starting the search from the top record.' )
       VentanaMain.RichEditDbf.Value := '     ' + CRLF + ;
-                                       '     Text not found in DBF data from record ' + AllTrim( Str( nOldRecord ) ) + CRLF + ;
-                                       '     Re-Search from Top Record'
-    //GetProperty( 'VentanaMain', 'GDbfFiles', 'Cell', VentanaMain.GDbfFiles.Value, NCOLDBFSEARCH ) := '0 ** 0'
+                                       "     The text was not found into DBF's data while searching from record " + AllTrim( Str( nOldRecord ) ) + " to EOF." + CRLF + ;
+                                       '     Try starting the search from the top record.'
    ENDIF
    VentanaMain.DbfBrowse.Value := nOldRecord
    bDbfDataSearchAsk     := .T.
    cDbfDataSearchAskRpta := ''
-   VentanaMain.BLOCALSearchDbf.caption := 'New Dbf Search'
-   VentanaMain.BLOCALSearchDbf.Tooltip := 'Search in DBF data from the beginning. To reset use "Force Display Dbf" button'
+   VentanaMain.BLocalSearchDbf.caption := 'DBF Search'
+   VentanaMain.BLocalSearchDbf.Tooltip := "Search DBF's data for some text."
    VentanaMain.GDbfFiles.Value := nOldValue
    DoMethod( 'VentanaMain', 'GDbfFiles', 'ColumnsAutoFitH' )
 RETURN .F.
 
 FUNCTION GlobalSearch( Txt )
-   LOCAL i
-   LOCAL nFound, bSearchDbfData
+   LOCAL i, lCont, nFound, bSearchDbfData
    IF Empty( Txt )
-      MsgInfo( 'Empty Text for Search ...' )
+      MyMsgStop( "You must input some text before starting a search!" )
       RETURN .F.
    ENDIF
    ResetImgGrid( '*' )
@@ -9798,14 +10204,24 @@ FUNCTION GlobalSearch( Txt )
    nFound := 0
    TotCaption( 'DBF', 0 )
    IF bSearchDbfData
-      IF ! MyMsgYesNo( "Global Search with 'Dbf Data' is very slow." + CRLF + "Do you want to continue?" )
+      IF Prj_Warn_DBF_Search
+         lCont := MyMsgYesNo( "Global Search into DBF data may be a very slow process." + CRLF + ;
+                              'Select [Yes] to continue or [No] to cancel the search.' )
+         IF MyMsgYesNo( 'Omit the previous validation from now on?' + CRLF + iif( lCont, "[Yes] will be assumed!", "[No] will be assumed!" ) )
+            Prj_Warn_DBF_Search := .F.
+            Prj_Warn_DBF_Search_Cont := lCont
+            MyMsgInfo( 'Use ' + DBLQT + PUB_MenuResetWarnings + DBLQT + ' option of Settings menu to enable the previous check.' )
+         ELSE
+            Prj_Warn_DBF_Search := .T.
+         ENDIF
+      ELSE
+         lCont := Prj_Warn_DBF_Search_Cont
+      ENDIF
+      IF ! lCont
          VentanaMain.Check_SearchDbf.value := .F.
          bLastGlobalSearchDbf := .F.
          RETURN .F.
       ENDIF
-   ENDIF
-   IF bSearchDbfData
-      bAvisoDbfGlobalSearchLow := .T.
    ENDIF
    FOR i := 1 TO VentanaMain.GDbfFiles.ItemCount
       IF GlobalSearch2( 'DBF', Txt, i,, bSearchDbfData )
@@ -9814,7 +10230,6 @@ FUNCTION GlobalSearch( Txt )
    NEXT i
    TotCaption( 'DBF', nFound )
    VentanaMain.Check_SearchDbf.value := bSearchDbfData
-   bAvisoDbfGlobalSearchLow := .T.
 
    nFound := 0
    TotCaption( 'LIB', 0 )
@@ -9907,184 +10322,182 @@ FUNCTION GlobalSearch2( cType, Txt, nRow, bFunc, bDbfData, DBFcBaseType, nRecord
       ENDDO
    ELSE
       DO CASE
-         CASE cType == 'PRG'
-            IF bLastGlobalSearchCas
-               IF Prj_Radio_OutputType == DEF_RG_IMPORT
-                  nPosAux := At( Txt, GetProperty( 'VentanaMain', 'RichEditPRG', 'value' ) )
-               ELSE
-                  nPosAux := At( Txt, MemoRead( ChgPathToReal( GetProperty( 'VentanaMain', 'GPrgFiles', 'Cell', nRow, NCOLPRGFULLNAME ) ) ) )
-               ENDIF
+      CASE cType == 'PRG'
+         IF bLastGlobalSearchCas
+            IF Prj_Radio_OutputType == DEF_RG_IMPORT
+               nPosAux := At( Txt, GetProperty( 'VentanaMain', 'RichEditPRG', 'value' ) )
             ELSE
-               IF Prj_Radio_OutputType == DEF_RG_IMPORT
-                  nPosAux := At( US_Upper( Txt ), US_Upper( GetProperty( 'VentanaMain', 'RichEditPRG', 'value' ) ) )
-               ELSE
-                  nPosAux := At( US_Upper( Txt ), US_Upper( MemoRead( ChgPathToReal( GetProperty( 'VentanaMain', 'GPrgFiles', 'Cell', nRow, NCOLPRGFULLNAME ) ) ) ) )
-               ENDIF
+               nPosAux := At( Txt, MemoRead( ChgPathToReal( GetProperty( 'VentanaMain', 'GPrgFiles', 'Cell', nRow, NCOLPRGFULLNAME ) ) ) )
             ENDIF
-            IF nPosAux > 0
-               IF bChangeImg
-                  GridImage( 'VentanaMain', 'GPrgFiles', nRow, NCOLPRGSTATUS, '+', PUB_nGridImgSearchOk )
-               ENDIF
-               bFound := .T.
+         ELSE
+            IF Prj_Radio_OutputType == DEF_RG_IMPORT
+               nPosAux := At( US_Upper( Txt ), US_Upper( GetProperty( 'VentanaMain', 'RichEditPRG', 'value' ) ) )
             ELSE
-               IF bChangeImg
-                  GridImage( 'VentanaMain', 'GPrgFiles', nRow, NCOLPRGSTATUS, '-', PUB_nGridImgSearchOk )
-               ENDIF
+               nPosAux := At( US_Upper( Txt ), US_Upper( MemoRead( ChgPathToReal( GetProperty( 'VentanaMain', 'GPrgFiles', 'Cell', nRow, NCOLPRGFULLNAME ) ) ) ) )
             ENDIF
-         CASE cType == 'HEA'
-            IF bLastGlobalSearchCas
-               nPosAux := At( Txt, MemoRead( ChgPathToReal( GetProperty( 'VentanaMain', 'GHeaFiles', 'Cell', nRow, NCOLHEAFULLNAME ) ) ) )
+         ENDIF
+         IF nPosAux > 0
+            IF bChangeImg
+               GridImage( 'VentanaMain', 'GPrgFiles', nRow, NCOLPRGSTATUS, '+', PUB_nGridImgSearchOk )
+            ENDIF
+            bFound := .T.
+         ELSE
+            IF bChangeImg
+               GridImage( 'VentanaMain', 'GPrgFiles', nRow, NCOLPRGSTATUS, '-', PUB_nGridImgSearchOk )
+            ENDIF
+         ENDIF
+      CASE cType == 'HEA'
+         IF bLastGlobalSearchCas
+            nPosAux := At( Txt, MemoRead( ChgPathToReal( GetProperty( 'VentanaMain', 'GHeaFiles', 'Cell', nRow, NCOLHEAFULLNAME ) ) ) )
+         ELSE
+            nPosAux := At( US_Upper( Txt ), US_Upper( MemoRead( ChgPathToReal( GetProperty( 'VentanaMain', 'GHeaFiles', 'Cell', nRow, NCOLHEAFULLNAME ) ) ) ) )
+         ENDIF
+         IF nPosAux > 0
+            IF bChangeImg
+               GridImage( 'VentanaMain', 'GHeaFiles', nRow, NCOLHEASTATUS, '+', PUB_nGridImgSearchOk )
+            ENDIF
+            bFound := .T.
+         ELSE
+            IF bChangeImg
+               GridImage( 'VentanaMain', 'GHeaFiles', nRow, NCOLHEASTATUS, '-', PUB_nGridImgSearchOk )
+            ENDIF
+         ENDIF
+      CASE cType == 'PAN'
+         IF bLastGlobalSearchCas
+            nPosAux := At( Txt, MemoRead( ChgPathToReal( GetProperty( 'VentanaMain', 'GPanFiles', 'Cell', nRow, NCOLPANFULLNAME ) ) ) )
+         ELSE
+            nPosAux := At( US_Upper( Txt ), US_Upper( MemoRead( ChgPathToReal( GetProperty( 'VentanaMain', 'GPanFiles', 'Cell', nRow, NCOLPANFULLNAME ) ) ) ) )
+         ENDIF
+         IF nPosAux > 0
+            IF bChangeImg
+               GridImage( 'VentanaMain', 'GPanFiles', nRow, NCOLPANSTATUS, '+', PUB_nGridImgSearchOk )
+            ENDIF
+            bFound := .T.
+         ELSE
+            IF bChangeImg
+               GridImage( 'VentanaMain', 'GPanFiles', nRow, NCOLPANSTATUS, '-', PUB_nGridImgSearchOk )
+            ENDIF
+         ENDIF
+      CASE cType == 'DBF'
+         DbfName := ChgPathToReal( GetProperty( 'VentanaMain', 'GDbfFiles', 'Cell', nRow, NCOLDBFFULLNAME ) )
+         DbfCode := US_IsDBF( DbfName )
+         IF DbfCode == 0
+            US_Use( .T.,, DbfName, 'DSearch', DEF_DBF_SHARED, DEF_DBF_READ ) /* si pongo exclusive y write no funciona el search, revisarlo */
+            aStru := DBSTRUCT()
+            IF ! bDbfData
+               VentanaMain.Check_SearchCas.Value := bLastGlobalSearchCas := .F.
+               FOR x := 1 TO Len( aStru )
+                  IF At( US_Upper( Txt ), aStru[x][1] ) > 0
+                     bFound := .T.
+                     EXIT
+                  ENDIF
+               NEXT x
             ELSE
-               nPosAux := At( US_Upper( Txt ), US_Upper( MemoRead( ChgPathToReal( GetProperty( 'VentanaMain', 'GHeaFiles', 'Cell', nRow, NCOLHEAFULLNAME ) ) ) ) )
-            ENDIF
-            IF nPosAux > 0
-               IF bChangeImg
-                  GridImage( 'VentanaMain', 'GHeaFiles', nRow, NCOLHEASTATUS, '+', PUB_nGridImgSearchOk )
+               cFieldBase  := ''
+               IF DBFcBaseType == 'F'   /* Field base type */
+                  cFieldBase  := US_Word( GetProperty( 'VentanaMain', 'GDbfFiles', 'Cell', nRow, NCOLDBFSEARCH ), 2 )
                ENDIF
-               bFound := .T.
-            ELSE
-               IF bChangeImg
-                  GridImage( 'VentanaMain', 'GHeaFiles', nRow, NCOLHEASTATUS, '-', PUB_nGridImgSearchOk )
+               IF DBFcBaseType == 'P'   /* Position base type */
+                  cFieldBase  := US_Word( GetProperty( 'VentanaMain', 'GDbfFiles', 'Cell', nRow, NCOLDBFSEARCH ), 2 )
                ENDIF
-            ENDIF
-         CASE cType == 'PAN'
-            IF bLastGlobalSearchCas
-               nPosAux := At( Txt, MemoRead( ChgPathToReal( GetProperty( 'VentanaMain', 'GPanFiles', 'Cell', nRow, NCOLPANFULLNAME ) ) ) )
-            ELSE
-               nPosAux := At( US_Upper( Txt ), US_Upper( MemoRead( ChgPathToReal( GetProperty( 'VentanaMain', 'GPanFiles', 'Cell', nRow, NCOLPANFULLNAME ) ) ) ) )
-            ENDIF
-            IF nPosAux > 0
-               IF bChangeImg
-                  GridImage( 'VentanaMain', 'GPanFiles', nRow, NCOLPANSTATUS, '+', PUB_nGridImgSearchOk )
+               DBGoTo( nRecordBase )
+               columnValid := .F.
+               IF DBFcBaseType == 'R'  /* Record base type */
+                  columnValid := .T.
                ENDIF
-               bFound := .T.
-            ELSE
-               IF bChangeImg
-                  GridImage( 'VentanaMain', 'GPanFiles', nRow, NCOLPANSTATUS, '-', PUB_nGridImgSearchOk )
-               ENDIF
-            ENDIF
-         CASE cType == 'DBF'
-            DbfName := ChgPathToReal( GetProperty( 'VentanaMain', 'GDbfFiles', 'Cell', nRow, NCOLDBFFULLNAME ) )
-            DbfCode := US_IsDBF( DbfName )
-            IF DbfCode == 0
-               US_Use( .T.,, DbfName, 'DSearch', DEF_DBF_SHARED, DEF_DBF_READ ) /* si pongo exclusive y write no funciona el search, revisarlo */
-               aStru := DBSTRUCT()
-               IF ! bDbfData
-                  VentanaMain.Check_SearchCas.Value := bLastGlobalSearchCas := .F.
-                  FOR x := 1 TO Len( aStru )
-                     IF At( US_Upper( Txt ), aStru[x][1] ) > 0
-                        bFound := .T.
-                        EXIT
+               DO WHILE !eof()
+                  FOR x:=1 TO Len(aStru)
+                     IF DBFcBaseType == 'F' .AND. !columnValid        /* Field base type */
+                        IF aStru[x][1] == cFieldBase
+                           columnValid := .T.
+                           loop
+                        ENDIF
+                     ENDIF
+                     nPosBase := 1
+                     IF DBFcBaseType == 'P' .AND. !columnValid        /* Position base type */
+                        IF aStru[x][1] == cFieldBase
+                           nPosBase := Val( US_Word( GetProperty( 'VentanaMain', 'GDbfFiles', 'Cell', nRow, NCOLDBFSEARCH ), 3 ) ) + 1
+                           columnValid := .T.
+                        ENDIF
+                     ENDIF
+                     IF columnValid
+                        IF bLastGlobalSearchCas
+#IFDEF __XHARBOUR__
+                           nPosAux := At( Txt, US_VarToStr( &( aStru[x][1] ) ), nPosBase )
+#ELSE
+                           nPosAux := hb_At( Txt, US_VarToStr( &( aStru[x][1] ) ), nPosBase )
+#endif
+                        ELSE
+#IFDEF __XHARBOUR__
+                           nPosAux := At( US_Upper( Txt ), US_Upper( US_VarToStr( &( aStru[x][1] ) ) ), nPosBase )
+#ELSE
+                           nPosAux := hb_At( US_Upper( Txt ), US_Upper( US_VarToStr( &( aStru[x][1] ) ) ), nPosBase )
+#endif
+                        ENDIF
+                        IF nPosAux > 0
+                           bFound := .T.
+                           nRecordFound      := RecNo()
+                           cFieldNameFound   := aStru[x][1]
+                           nFieldPosFound    := nPosAux
+                           cFieldTxtFound    := US_VarToStr( &( aStru[x][1] ) )
+                           EXIT
+                        ENDIF
                      ENDIF
                   NEXT x
-               ELSE
-                  cFieldBase  := ''
-                  IF DBFcBaseType == 'F'   /* Field base type */
-                     cFieldBase  := US_Word( GetProperty( 'VentanaMain', 'GDbfFiles', 'Cell', nRow, NCOLDBFSEARCH ), 2 )
+                  IF bFound
+                     EXIT
                   ENDIF
-                  IF DBFcBaseType == 'P'   /* Position base type */
-                     cFieldBase  := US_Word( GetProperty( 'VentanaMain', 'GDbfFiles', 'Cell', nRow, NCOLDBFSEARCH ), 2 )
-                  ENDIF
-                  DBGoTo( nRecordBase )
-                  columnValid := .F.
-                  IF DBFcBaseType == 'R'  /* Record base type */
-                     columnValid := .T.
-                  ENDIF
-                  DO WHILE !eof()
-                     FOR x:=1 TO Len(aStru)
-                        IF DBFcBaseType == 'F' .AND. !columnValid        /* Field base type */
-                           IF aStru[x][1] == cFieldBase
-                              columnValid := .T.
-                              loop
-                           ENDIF
-                        ENDIF
-                        nPosBase := 1
-                        IF DBFcBaseType == 'P' .AND. !columnValid        /* Position base type */
-                           IF aStru[x][1] == cFieldBase
-                              nPosBase := Val( US_Word( GetProperty( 'VentanaMain', 'GDbfFiles', 'Cell', nRow, NCOLDBFSEARCH ), 3 ) ) + 1
-                              columnValid := .T.
-                           ENDIF
-                        ENDIF
-                        IF columnValid
-                           IF bLastGlobalSearchCas
-#IFDEF __XHARBOUR__
-                              nPosAux := At( Txt, US_VarToStr( &( aStru[x][1] ) ), nPosBase )
-#ELSE
-                              nPosAux := hb_At( Txt, US_VarToStr( &( aStru[x][1] ) ), nPosBase )
-#endif
-                           ELSE
-#IFDEF __XHARBOUR__
-                              nPosAux := At( US_Upper( Txt ), US_Upper( US_VarToStr( &( aStru[x][1] ) ) ), nPosBase )
-#ELSE
-                              nPosAux := hb_At( US_Upper( Txt ), US_Upper( US_VarToStr( &( aStru[x][1] ) ) ), nPosBase )
-#endif
-                           ENDIF
-                           IF nPosAux > 0
-                              bFound := .T.
-                              nRecordFound      := RecNo()
-                              cFieldNameFound   := aStru[x][1]
-                              nFieldPosFound    := nPosAux
-                              cFieldTxtFound    := US_VarToStr( &( aStru[x][1] ) )
-                              EXIT
-                           ENDIF
-                        ENDIF
-                     NEXT x
-                     IF bFound
-                        EXIT
-                     ENDIF
-                     DBSkip( 1 )
-                  ENDDO
-               ENDIF
-               DBCloseArea( 'DSearch' )
+                  DBSkip( 1 )
+               ENDDO
             ENDIF
-            IF bFound
-               IF bChangeImg
-                  GridImage( 'VentanaMain', 'GDbfFiles', nRow, NCOLDBFSTATUS, '+', PUB_nGridImgSearchOk )
-               ENDIF
-               bFound := .T.
-            ELSE
-               IF bChangeImg
-                  GridImage( 'VentanaMain', 'GDbfFiles', nRow, NCOLDBFSTATUS, '-', PUB_nGridImgSearchOk )
-               ENDIF
+            DBCloseArea( 'DSearch' )
+         ENDIF
+         IF bFound
+            IF bChangeImg
+               GridImage( 'VentanaMain', 'GDbfFiles', nRow, NCOLDBFSTATUS, '+', PUB_nGridImgSearchOk )
             ENDIF
-         CASE cType == 'LIB'
-            IF bLastGlobalSearchCas
-               nPosAux := At( Txt, MemoRead( ChgPathToReal( GetProperty( 'VentanaMain', 'GIncFiles', 'Cell', nRow, NCOLINCFULLNAME ) ) ) )
-            ELSE
-               nPosAux := At( US_Upper( Txt ), US_Upper( MemoRead( ChgPathToReal( GetProperty( 'VentanaMain', 'GIncFiles', 'Cell', nRow, NCOLINCFULLNAME ) ) ) ) )
+            bFound := .T.
+         ELSE
+            IF bChangeImg
+               GridImage( 'VentanaMain', 'GDbfFiles', nRow, NCOLDBFSTATUS, '-', PUB_nGridImgSearchOk )
             ENDIF
-            IF nPosAux > 0
-               IF bChangeImg
-                  GridImage( 'VentanaMain', 'GIncFiles', nRow, NCOLINCSTATUS, '+', PUB_nGridImgSearchOk )
-               ENDIF
-               bFound := .T.
-            ELSE
-               IF bChangeImg
-                  GridImage( 'VentanaMain', 'GIncFiles', nRow, NCOLINCSTATUS, '-', PUB_nGridImgSearchOk )
-               ENDIF
+         ENDIF
+      CASE cType == 'LIB'
+         IF bLastGlobalSearchCas
+            nPosAux := At( Txt, MemoRead( ChgPathToReal( GetProperty( 'VentanaMain', 'GIncFiles', 'Cell', nRow, NCOLINCFULLNAME ) ) ) )
+         ELSE
+            nPosAux := At( US_Upper( Txt ), US_Upper( MemoRead( ChgPathToReal( GetProperty( 'VentanaMain', 'GIncFiles', 'Cell', nRow, NCOLINCFULLNAME ) ) ) ) )
+         ENDIF
+         IF nPosAux > 0
+            IF bChangeImg
+               GridImage( 'VentanaMain', 'GIncFiles', nRow, NCOLINCSTATUS, '+', PUB_nGridImgSearchOk )
             ENDIF
+            bFound := .T.
+         ELSE
+            IF bChangeImg
+               GridImage( 'VentanaMain', 'GIncFiles', nRow, NCOLINCSTATUS, '-', PUB_nGridImgSearchOk )
+            ENDIF
+         ENDIF
 #ifdef QPM_SHG
-         CASE cType == 'HLP'
-            IF bLastGlobalSearchCas
-               nPosAux := At( Txt, US_RTF2TXT( SHG_GetField( 'SHG_MEMOT', nRow ) ) )
-            ELSE
-               nPosAux := At( US_Upper( Txt ), US_Upper( US_RTF2TXT( SHG_GetField( 'SHG_MEMOT', nRow ) ) ) )
+      CASE cType == 'HLP'
+         IF bLastGlobalSearchCas
+            nPosAux := At( Txt, US_RTF2TXT( SHG_GetField( 'SHG_MEMOT', nRow ) ) )
+         ELSE
+            nPosAux := At( US_Upper( Txt ), US_Upper( US_RTF2TXT( SHG_GetField( 'SHG_MEMOT', nRow ) ) ) )
+         ENDIF
+         IF nPosAux > 0
+            IF bChangeImg
+               GridImage( 'VentanaMain', 'GHlpFiles', nRow, NCOLHLPSTATUS, '+', PUB_nGridImgSearchOk )
             ENDIF
-            IF nPosAux > 0
-               IF bChangeImg
-                  GridImage( 'VentanaMain', 'GHlpFiles', nRow, NCOLHLPSTATUS, '+', PUB_nGridImgSearchOk )
-               ENDIF
-               bFound := .T.
-            ELSE
-               IF bChangeImg
-                  GridImage( 'VentanaMain', 'GHlpFiles', nRow, NCOLHLPSTATUS, '-', PUB_nGridImgSearchOk )
-               ENDIF
+            bFound := .T.
+         ELSE
+            IF bChangeImg
+               GridImage( 'VentanaMain', 'GHlpFiles', nRow, NCOLHLPSTATUS, '-', PUB_nGridImgSearchOk )
             ENDIF
+         ENDIF
 #endif
-         OTHERWISE
-            MsgInfo( 'Invalid type in GlobalSearch2: ' + cType )
-      ENDCASE
-   ENDIF
+   ENDCASE
+ENDIF
 RETURN bFound
 
 FUNCTION ResetImgGrid( cGrid )
@@ -10099,7 +10512,6 @@ FUNCTION ResetImgGrid( cGrid )
    VentanaMain.LGlobal.visible         := .F.
    bGlobalSearch         := .F.
    bLastGlobalSearchDbf  := .F.
-   bAvisoDbfGlobalSearchLow := .F.
    IF cGrid == 'PRG' .OR. cGrid == '*'
       FOR i := 1 TO VentanaMain.GPrgFiles.ItemCount
          IF GridImage( 'VentanaMain', 'GPrgFiles', i, NCOLPRGSTATUS, '?', PUB_nGridImgSearchOk )
@@ -10135,8 +10547,8 @@ FUNCTION ResetImgGrid( cGrid )
          SetProperty( 'VentanaMain', 'GDbfFiles', 'Cell', i, NCOLDBFSEARCH, '0 ** 0' )
       NEXT i
       VentanaMain.TabGrids.Caption( 4 ) := PageDBF
-      VentanaMain.BLOCALSearchDbf.caption := 'Dbf Search'
-      VentanaMain.BLOCALSearchDbf.Tooltip := 'Search text in Dbf Data'
+      VentanaMain.BLocalSearchDbf.caption := 'DBF Search'
+      VentanaMain.BLocalSearchDbf.Tooltip := "Search DBF's data for some text."
       VentanaMain.RichEditDbf.BackColor := DEF_COLORBACKDBF
       QPM_Wait( "RichEditDisplay( 'DBF', .F. )", 'Loading ...' )
    ENDIF
@@ -10161,7 +10573,7 @@ FUNCTION ResetImgGrid( cGrid )
 RETURN .T.
 
 FUNCTION GridImage( cWin, cGrid, nRow, nCol, cOper, nBitImage )
-   LOCAL nBits  := 256   // ( 2 ** PUB_nGridImgTop ) // ej: 9 imagenes primarias = 256 ( PUB_nGridImgTilde, PUB_nGridImgEquis, etc )
+   LOCAL nBits  := 256   // ( 2 ** PUB_nGridImgTop ) // ej: 9 imagenes primarias equivale a 256 ( PUB_nGridImgTilde, PUB_nGridImgEquis, etc )
    LOCAL i, cString, nAux
    LOCAL vImagesTranslateGrid := { {   0,   0 }, ;              // 0        0            0000 0000
                                    {   1,   1 }, ;              // 1        1            0000 0001
@@ -10192,37 +10604,44 @@ FUNCTION GridImage( cWin, cGrid, nRow, nCol, cOper, nBitImage )
       RETURN .F.
    ENDIF
    IF ( nAux := AScan( vImagesTranslateGrid, { |x| x[2] == GetProperty( cWin, cGrid, 'Cell', nRow, nCol ) } ) ) == 0
-      MsgInfo( 'Error en posicionamiento en Funcion GridImage para el valor: ' + US_VarToStr( GetProperty( cWin, cGrid, 'Cell', nRow, nCol ) ) )
+      MyMsgStop( 'First scan failed at function GridImage for value: ' + US_VarToStr( GetProperty( cWin, cGrid, 'Cell', nRow, nCol ) ) + CRLF + ;
+                  "Please report this error to QPM's Support List." + CRLF + ;
+                  'Thank you.' )
       RETURN .F.
    ENDIF
    cString := NTOC( vImagesTranslateGrid[ nAux ][ 1 ], 2, nBits, '0' )
    FOR i := 1 TO Len( cOper )
       DO CASE
-         CASE SubStr( cOper, i, 1 ) == '?'              /* preguntar si esta activo */
-            IF SubStr( cString, nBits - nBitImage + 1, 1 ) == '1'
-               RETURN .T.
-            ELSE
-               RETURN .F.
-            ENDIF
-         CASE SubStr( cOper, i, 1 ) == '+'              /* agregarle */
-            cString := SubStr( cString, 1, nBits - nBitImage ) + '1' + SubStr( cString, nBits - nBitImage + 2 )
-         CASE SubStr( cOper, i, 1 ) == '-'              /* sacarle */
-            cString := SubStr( cString, 1, nBits - nBitImage ) + '0' + SubStr( cString, nBits - nBitImage + 2 )
-         CASE US_Upper( SubStr( cOper, i, 1 ) ) == 'X'     /* limpiar */
-            cString := strtran( cString, '1', '0' )
- //      CASE US_Upper( SubStr( cOper, i, 1 ) ) == '='     /* setear  */
- //         cString := strtran( cString, '1', '0' )
- //         cString := SubStr( cString, 1, nBits - nBitImage ) + '1' + SubStr( cString, nBits - nBitImage + 2 )
-         OTHERWISE
-            MsgInfo( 'Error in operator from FUNCTION GridImage' )
+      CASE SubStr( cOper, i, 1 ) == '?'              /* preguntar si esta activo */
+         IF SubStr( cString, nBits - nBitImage + 1, 1 ) == '1'
+            RETURN .T.
+         ELSE
+            RETURN .F.
+         ENDIF
+      CASE SubStr( cOper, i, 1 ) == '+'              /* agregarle */
+         cString := SubStr( cString, 1, nBits - nBitImage ) + '1' + SubStr( cString, nBits - nBitImage + 2 )
+      CASE SubStr( cOper, i, 1 ) == '-'              /* sacarle */
+         cString := SubStr( cString, 1, nBits - nBitImage ) + '0' + SubStr( cString, nBits - nBitImage + 2 )
+      CASE US_Upper( SubStr( cOper, i, 1 ) ) == 'X'     /* limpiar */
+         cString := strtran( cString, '1', '0' )
+//    CASE US_Upper( SubStr( cOper, i, 1 ) ) == '='     /* setear  */
+//       cString := strtran( cString, '1', '0' )
+//       cString := SubStr( cString, 1, nBits - nBitImage ) + '1' + SubStr( cString, nBits - nBitImage + 2 )
+      OTHERWISE
+         MyMsgStop( 'Unexpected operator ' + US_Upper( SubStr( cOper, i, 1 ) ) + ' at function GridImage for value: ' + US_VarToStr( GetProperty( cWin, cGrid, 'Cell', nRow, nCol ) ) + CRLF + ;
+                     "Please report this error to QPM's Support List." + CRLF + ;
+                     'Thank you.' )
+         RETURN .F.
       ENDCASE
    NEXT i
-   IF ( nAux := AScan( vImagesTranslateGrid, { |x| x[1] == CTON( cString, 2 ) } ) ) == 0
-      MsgInfo( 'Error en posicionamiento (2) en Funcion GridImage para el valor: ' + US_VarToStr( CTON( cString, 2 ) ) )
+   IF ( nAux := AScan( vImagesTranslateGrid, { |x| x[1] == CToN( cString, 2 ) } ) ) == 0
+      MyMsgStop( 'Last scan failed at function GridImage for value: ' + US_VarToStr( CTON( cString, 2 ) ) + CRLF + ;
+                  "Please report this error to QPM's Support List." + CRLF + ;
+                  'Thank you.' )
       RETURN .F.
    ENDIF
    SetProperty( cWin, cGrid, 'Cell', nRow, nCol, vImagesTranslateGrid[ nAux ][ 2 ] )
-RETURN .F.
+RETURN .T.
 
 FUNCTION AddSearchTxt()
    LOCAL Aux, cValor, i
@@ -10547,7 +10966,7 @@ FUNCTION AddLastOpen( cPrj )
    AAdd( vLastOpen, cPrj )
 RETURN .T.
 
-FUNCTION LOCALSearchContinue()
+FUNCTION LocalSearchContinue()
    LOCAL RPTA := '', Ventana := US_WindowNameRandom( 'NEXT' )
 
    DEFINE WINDOW &( Ventana ) ;
@@ -10574,7 +10993,7 @@ FUNCTION LOCALSearchContinue()
               HEIGHT 25
               CAPTION   'Position'
               ACTION    ( RPTA := 'P', DoMethod( Ventana, 'Release' ) )
-              TOOLTIP   'Resume search from the last text found'
+              TOOLTIP   'Resume search from the last text found.'
       END BUTTONEX
 
       DEFINE BUTTONEX BField
@@ -10584,7 +11003,7 @@ FUNCTION LOCALSearchContinue()
               HEIGHT 25
               CAPTION   'Column'
               ACTION    ( RPTA := 'F', DoMethod( Ventana, 'Release' ) )
-              TOOLTIP   'Resume search from the the NEXT column'
+              TOOLTIP   'Resume search from the the NEXT column.'
       END BUTTONEX
 
       DEFINE BUTTONEX BRecord
@@ -10594,7 +11013,7 @@ FUNCTION LOCALSearchContinue()
               HEIGHT 25
               CAPTION   'Record'
               ACTION    ( RPTA := 'R', DoMethod( Ventana, 'Release' ) )
-              TOOLTIP   'Resume search from the the NEXT record'
+              TOOLTIP   'Resume search from the the NEXT record.'
       END BUTTONEX
 
       DEFINE CHECKBOX Check_Continue
@@ -10603,7 +11022,7 @@ FUNCTION LOCALSearchContinue()
               COL   50
               WIDTH 185
               VALUE     .F.
-              TOOLTIP   "Do not ask again until the search starts from the beginning"
+              TOOLTIP   "Do not ask again until the search starts from the beginning."
               ON CHANGE ( bDbfDataSearchAsk := ! ( GetProperty( Ventana, 'Check_Continue', 'value' ) ) )
       END CHECKBOX
 
@@ -10614,7 +11033,7 @@ FUNCTION LOCALSearchContinue()
               HEIGHT 25
               CAPTION   'Cancel'
               ACTION    ( RPTA := '', DoMethod( Ventana, 'Release' ) )
-              TOOLTIP   'Cancel search'
+              TOOLTIP   'Cancel search.'
       END BUTTONEX
 
    END WINDOW
@@ -10697,6 +11116,7 @@ FUNCTION QPM_DefinoMainMenu()
       ELSE
          ITEM "Hotkeys enabled" ACTION SwitchHotKeys() NAME HOTKEYS CHECKMARK 'GridTilde'
       ENDIF
+      ITEM PUB_MenuResetWarnings ACTION ResetMsgs() NAME WARNINGS
       END POPUP
 
 #ifdef QPM_HOTRECOVERYWINDOW
@@ -10728,18 +11148,22 @@ FUNCTION QPM_DefinoMainMenu()
          ITEM '&License' ACTION QPM_Licence()
       END POPUP
       POPUP '&Links     '
-         ITEM 'Go to topic Link in Help' ACTION US_DisplayHelpTopic( GetActiveHelpFile(), 'links' )
+         ITEM 'Go to the "Links" topic in Help' ACTION US_DisplayHelpTopic( GetActiveHelpFile(), 'links' )
          ITEM 'Go to QPM Home Site: ' + PUB_cQPM_Support_Link ACTION ShellExecute(0, 'open', 'rundll32.exe', 'url.dll,FileProtocolHandler ' + PUB_cQPM_Support_Link,,1)
       END POPUP
-      POPUP '&OnlyForSupport     '
+      POPUP '&Only For Support     '
          ITEM 'Record Activity in Log ' + PUB_cQPM_Folder + DEF_SLASH + 'QPM.log' ACTION ( bLogActivity := !bLogActivity, VentanaMain.MLog.Checked := bLogActivity ) NAME MLog CHECKMARK 'GridTilde'
-         ITEM 'Clear Log File ' + PUB_cQPM_Folder + DEF_SLASH + 'QPM.log' ACTION ClearLog()
-         ITEM 'View Log File ' + PUB_cQPM_Folder + DEF_SLASH + 'QPM.log' ACTION ViewLog()
+         ITEM 'Clear Log ' + PUB_cQPM_Folder + DEF_SLASH + 'QPM.log' ACTION ClearLog()
+         ITEM 'View Log ' + PUB_cQPM_Folder + DEF_SLASH + 'QPM.log' ACTION ViewLog()
          SEPARATOR
          ITEM 'Do not delete auxiliary files'  ACTION ( PUB_DeleteAux := ! PUB_DeleteAux, VentanaMain.MDelete.Checked := ! PUB_DeleteAux ) NAME MDelete CHECKMARK 'GridTilde'
          SEPARATOR
-         ITEM 'Go to QPM Home Site: ' + PUB_cQPM_Support_Link ACTION ShellExecute( 0, 'open', 'rundll32.exe', 'url.dll,FileProtocolHandler ' + PUB_cQPM_Support_Link,, 1)
-         ITEM '&Mail to QPM_Support <' + PUB_cQPM_Support_eMail + '> ...' ACTION ShellExecute( 0, 'open', 'rundll32.exe', 'url.dll,FileProtocolHandler ' + 'mailto:' + PUB_cQPM_Support_eMail + '?cc=&bcc=' + '&subject=' + PUB_cQPM_Title + '&body=Thank%20for%20use%20' + PUB_cQPM_Title + '', NIL, 1)
+         ITEM 'Go to QPM Home Site: ' + PUB_cQPM_Support_Link ACTION ShellExecute( 0, 'open', 'rundll32.exe', 'url.dll,FileProtocolHandler ' + PUB_cQPM_Support_Link, NIL, 1)
+         ITEM '&Mail to QPM_Support <' + PUB_cQPM_Support_eMail + '> ...' ACTION ShellExecute( 0, 'open', 'rundll32.exe', 'url.dll,FileProtocolHandler ' + 'mailto:' + PUB_cQPM_Support_eMail + '?cc=&bcc=' + '&subject=' + PUB_cQPM_Title + '&body=My%20version%20is%20' + PUB_cQPM_Title + '', NIL, 1)
+      END POPUP
+      POPUP '&Make a donation'
+         ITEM "PayPal" ACTION ShellExecute( 0, 'open', 'rundll32.exe', 'url.dll,FileProtocolHandler ' + PUB_cQPM_Donation_Link, NIL, 1)
+         ITEM "Other ways" ACTION ShellExecute( 0, 'open', 'rundll32.exe', 'url.dll,FileProtocolHandler ' + 'mailto:fernando.yurisich@gmail.com?cc=&bcc=' + '&subject=I%20want%20to%20make%20a%20donation&body=Please%20contact%20me.', NIL, 1)
       END POPUP
    END MENU
 
@@ -10818,6 +11242,20 @@ FUNCTION QPM_DefinoMainMenu()
 
 RETURN .T.
 
+FUNCTION ResetMsgs
+   IF MyMsgYesNo( "Enable all warnings and messages?" )
+      Prj_Warn_BccObject       := .T.
+      Prj_Warn_BccObject_Cont  := .T.
+      Prj_Warn_Cpp             := .T.
+      Prj_Warn_GT_Order        := .T.
+      Prj_Warn_GT_Order_Cont   := .T.
+      Prj_Warn_InfoSaved       := .T.
+      Prj_Warn_NullRDD         := .T.
+      Prj_Warn_PPO_Browse      := .T.
+      Prj_Warn_TopFile         := .T.
+   ENDIF
+RETURN NIL
+
 FUNCTION GetPrj_Version()
 RETURN PadL( GetProperty( 'VentanaMain', 'LVerVerNum', 'value' ), DEF_LEN_VER_VERSION, '0' ) + PadL( GetProperty( 'VentanaMain', 'LVerRelNum', 'value' ), DEF_LEN_VER_RELEASE, '0' ) + PadL( GetProperty( 'VentanaMain', 'LVerBuiNum', 'value' ), DEF_LEN_VER_BUILD, '0' )
 
@@ -10854,9 +11292,9 @@ FUNCTION QPM_CompressUtilities()
    QPM_MemoWrit( PUB_cQPM_Folder + DEF_SLASH + 'Compress.bat', Out )
    QPM_Execute( PUB_cQPM_Folder + DEF_SLASH + 'Compress.bat', '', DEF_QPM_EXEC_WAIT, DEF_QPM_EXEC_NORMAL )
 
-   MsgInfo('Compression finished!' + CRLF + ;
-           'To compress QPM.EXE, you must close it and then manually do:' + CRLF + ;
-           'US_upx QPM.EXE')
+   MyMsgInfo( 'Compression done.' + CRLF + ;
+              "To compress QPM.EXE: close QPM, switch to QPM's installation folder and manually execute:" + CRLF + ;
+              'us_upx QPM.EXE')
 RETURN NIL
 
 FUNCTION QPM_DecompressUtilities()
@@ -10883,15 +11321,107 @@ FUNCTION QPM_DecompressUtilities()
       ENDCASE
    NEXT
    Out += 'DEL ' + US_ShortName(PUB_cQPM_Folder) + DEF_SLASH + 'XYZ_UPX.EXE' + CRLF
-// Out += 'PAUSE' + CRLF
 
    QPM_MemoWrit( PUB_cQPM_Folder + DEF_SLASH + 'Decompress.bat', Out )
 
    QPM_Execute( PUB_cQPM_Folder + DEF_SLASH + 'Decompress.bat', '', DEF_QPM_EXEC_WAIT, DEF_QPM_EXEC_NORMAL )
 
-   MsgInfo('Decompression finished!' + CRLF + ;
-           'To decompress QPM.EXE, you must close it and then manually do:' + CRLF + ;
-           'US_UPX -d QPM.EXE')
+   MyMsgInfo( 'Decompression done.' + CRLF + ;
+              "To decompress QPM.EXE: close QPM, switch to QPM's installation folder and manually execute:" + CRLF + ;
+              'us_upx -d QPM.EXE')
+RETURN NIL
+
+FUNCTION CleanAuxFiles
+   LOCAL cAux, TDS_FILE := "", EXP_FILE := "", MAP_FILE := "", SAVE_FILE, ERR_FILE, RC_MAIN
+   LOCAL RC1_SHR := "", RC1_FER := "", RC2_SHR := "", RC2_FER := ""
+
+   IF ! Empty( cAux := US_FileNameOnlyName( GetOutputModuleName() ) )
+      TDS_FILE := cAux + ".TDS"
+      EXP_FILE := cAux + ".EXP"
+   ENDIF
+   IF VentanaMain.GPrgFiles.ItemCount > 0
+      cAux := PUB_cProjectFolder + DEF_SLASH + US_FileNameOnlyName( GetProperty( 'VentanaMain', 'GPrgFiles', 'Cell', 1, NCOLPRGNAME ) )
+      MAP_FILE := cAux + '.MAP'
+      IF ! File( RC_MAIN := US_FileNameOnlyPathAndName( GetProperty( 'VentanaMain', 'GPrgFiles', 'Cell', 1, NCOLPRGNAME ) ) + '.RC' )
+         IF ! File( RC_MAIN := cAux + '.RC' )
+            RC_MAIN := ""
+         ENDIF
+      ENDIF
+      IF ! Empty( RC_MAIN )
+         RC1_SHR := RC_MAIN + '1'
+         RC1_FER := RC_MAIN + '1.Error'
+         RC2_SHR := RC_MAIN + '2'
+         RC2_FER := RC_MAIN + '2.Error'
+      ENDIF
+   ENDIF
+   SAVE_FILE := US_FileNameOnlyPathAndName( TEMP_LOG ) + ".save"
+   ERR_FILE  := PUB_cProjectFolder + DEF_SLASH + '_' + PUB_cSecu + 'TEMP.ERR'
+
+   IF ( File( SCRIPT_FILE ) .OR. File( TEMP_LOG ) .OR. File( END_FILE ) .OR. File( BUILD_BAT ) .OR. ;
+        File( MAKE_FILE ) .OR. File( PROGRESS_LOG ) .OR. File( RUN_FILE ) .OR. File( QPM_GET_DEF ) .OR. ;
+        File( QPM_TMP_RC ) .OR. File( "_hmg_resconfig.h" ) .OR. File( TDS_FILE ) .OR. File( EXP_FILE ) .OR. ;
+        File( MAP_FILE ) .OR. File( SAVE_FILE ) .OR. File( ERR_FILE ) .OR. File( RC1_SHR ) .OR. ;
+        File( RC1_FER ) .OR. File( RC2_SHR ) .OR. File( RC2_FER ) )
+      IF MyMsgYesNo( "Delete auxiliary files?" )
+         IF File( SCRIPT_FILE )
+            FErase( SCRIPT_FILE )
+         ENDIF
+         IF File( TEMP_LOG )
+            FErase( TEMP_LOG )
+         ENDIF
+         IF File( END_FILE )
+            FErase( END_FILE )
+         ENDIF
+         IF File( BUILD_BAT )
+            FErase( BUILD_BAT )
+         ENDIF
+         IF File( MAKE_FILE )
+            FErase( MAKE_FILE )
+         ENDIF
+         IF File( PROGRESS_LOG )
+            FErase( PROGRESS_LOG )
+         ENDIF
+         IF File( RUN_FILE )
+            FErase( RUN_FILE )
+         ENDIF
+         IF File( QPM_GET_DEF )
+            FErase( QPM_GET_DEF )
+         ENDIF
+         IF File( QPM_TMP_RC )
+            FErase( QPM_TMP_RC )
+         ENDIF
+         IF File( "_hmg_resconfig.h" )
+            FErase( "_hmg_resconfig.h" )
+         ENDIF
+         IF File( TDS_FILE )
+            FErase( TDS_FILE )
+         ENDIF
+         IF File( EXP_FILE )
+            FErase( EXP_FILE )
+         ENDIF
+         IF File( MAP_FILE )
+            FErase( MAP_FILE )
+         ENDIF
+         IF File( SAVE_FILE )
+            FErase( SAVE_FILE )
+         ENDIF
+         IF File( ERR_FILE )
+            FErase( ERR_FILE )
+         ENDIF
+         IF File( RC1_SHR )
+            FErase( RC1_SHR )
+         ENDIF
+         IF File( RC1_FER )
+            FErase( RC1_FER )
+         ENDIF
+         IF File( RC2_SHR )
+            FErase( RC2_SHR )
+         ENDIF
+         IF File( RC2_FER )
+            FErase( RC2_FER )
+         ENDIF
+      ENDIF
+   ENDIF
 RETURN NIL
 
 /* eof */
