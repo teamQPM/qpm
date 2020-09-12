@@ -37,14 +37,14 @@ Function QPM_SetProcessPriority( cType )
          nType := 5
          PUB_QPM_bHigh := .F.
       otherwise
-         MsgInfo( "Invalid Priority class in function " + Procname() + ": " + cType )
+         MyMsgInfo( "Invalid Priority class in function " + Procname() + ": " + cType )
          Return 20
    endcase
    For P := Len( aProcSelf ) to 1 Step -2
       if !empty( aProcSelf[ P ] )
          if upper( aProcSelf[ P ] ) == upper( GetModuleFileName( GetInstance() ) )
             if ( nReto := US_SetPriorityToProcess( aProcSelf[ P-1 ] , nType ) ) != 0
-               MsgInfo( "Set High Priority for Process '" + GetModuleFileName( GetInstance() ) + "' Failed with code: " + alltrim( str( nReto ) ) )
+               MyMsgInfo( "Set High Priority for Process '" + GetModuleFileName( GetInstance() ) + "' Failed with code: " + alltrim( str( nReto ) ) )
             endif
             exit
          endif
@@ -225,11 +225,11 @@ Function KillIt( nValue )
             ASize( QPM_KillerProcessLast, Len(QPM_KillerProcessLast) - 1 )
             RefreshGrid( "0" , nPID )
          else
-            MsgStop( "Kill task failed with code: " + alltrim( str( reto ) ) )
+            MyMsgStop( "Kill task failed with code: " + alltrim( str( reto ) ) )
          endif
       ENDIF
    else
-      MsgInfo( "No process selected." )
+      MyMsgInfo( "No process selected." )
    ENDIF
 Return nil
 
