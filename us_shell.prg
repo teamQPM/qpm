@@ -52,7 +52,7 @@ FUNCTION MAIN( ... )
 
    cPar1 := Upper( US_Word( cParam, 1 ) )
    If cPar1 == "-VER" .or. cPar1 == "-VERSION"
-      MemoWrit( "US_Shell.version", Version )
+      hb_MemoWrit( "US_Shell.version", Version )
       Return .T.
    ElseIf cPar1 != "QPM"
       Say( "US_Shell 999E: Running Outside System" )
@@ -184,7 +184,7 @@ FUNCTION MAIN( ... )
                            Say( "US_Shell 235I: Char x'1A' removed" )
                         EndCase
                      EndIf
-                     MemoWrit( cPar2 + ".MOVED.TXT", "File " + cPar2 + " has been moved to: " + cPar3 )
+                     hb_MemoWrit( cPar2 + ".MOVED.TXT", "File " + cPar2 + " has been moved to: " + cPar3 )
                   EndIf
                EndIf
             EndIf
@@ -382,10 +382,10 @@ FUNCTION MAIN( ... )
                US_Shell_Listo()
                Say( "End Functions List", .T. )
                If bObjLst
-                  MemoWrit( cPar2 + cObjExt, MemoObjLst )
+                  hb_MemoWrit( cPar2 + cObjExt, MemoObjLst )
                EndIf
                If bExpLst
-                  MemoWrit( cPar2 + cExpExt, MemoExpLst )
+                  hb_MemoWrit( cPar2 + cExpExt, MemoExpLst )
                EndIf
             EndIf
             If bDelete
@@ -477,10 +477,10 @@ FUNCTION MAIN( ... )
                US_Shell_Listo()
                Say( "End Functions List", .T. )
                If bObjLst
-                  MemoWrit( cPar2 + cObjExt, MemoObjLst )
+                  hb_MemoWrit( cPar2 + cObjExt, MemoObjLst )
                EndIf
                If bExpLst
-                  MemoWrit( cPar2 + cExpExt, MemoExpLst )
+                  hb_MemoWrit( cPar2 + cExpExt, MemoExpLst )
                EndIf
             EndIf
             If bDelete
@@ -595,10 +595,10 @@ FUNCTION MAIN( ... )
             US_Shell_Listo()
             Say( "End Functions List", .T. )
             If bObjLst
-               MemoWrit( cPar2 + cObjExt, MemoObjLst )
+               hb_MemoWrit( cPar2 + cObjExt, MemoObjLst )
             EndIf
             If bExpLst
-               MemoWrit( cPar2 + cExpExt, MemoExpLst )
+               hb_MemoWrit( cPar2 + cExpExt, MemoExpLst )
             EndIf
             If bDelete
                FErase( cPar2 )
@@ -642,7 +642,7 @@ FUNCTION MAIN( ... )
             Say( "US_Shell 072E: Input file not found: " + cPar2 )
             bError := .T.
          Else
-            If MemoWrit( cPar2, StrTran( MemoRead( cPar2 ), cPar3, cPar4 ) )
+            If hb_MemoWrit( cPar2, StrTran( MemoRead( cPar2 ), cPar3, cPar4 ) )
                Say( "US_Shell 073I: Change OK" )
             Else
                Say( "US_Shell 074E: Error in Change File !!!" )
