@@ -40,7 +40,7 @@ FUNCTION MAIN( ... )
    cParam := AllTrim( cParam )
 
    If Upper( US_Word( cParam, 1 ) ) == "-VER" .or. Upper( US_Word( cParam, 1 ) ) == "-VERSION"
-      MemoWrit( "US_Run.version", Version )
+      hb_MemoWrit( "US_Run.version", Version )
       Return bOk
    EndIf
 
