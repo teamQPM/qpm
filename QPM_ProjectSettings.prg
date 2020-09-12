@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  *    QPM - QAC based Project Manager
  *
  *    Copyright 2011-2020 Fernando Yurisich <fernando.yurisich@gmail.com>
@@ -31,6 +27,7 @@
 
 memvar OLD_Check_64bits
 memvar OLD_Check_HarbourIs31
+memvar OLD_Check_StaticBuild
 memvar OLD_Radio_Cpp
 memvar OLD_Radio_Harbour
 memvar OLD_Radio_MiniGui
@@ -39,12 +36,13 @@ Function ProjectSettings()
    Local Folder := '', lAfterOnInit := .F.
 
    if Empty ( PUB_cProjectFolder )
-      MsgStop( 'No project is open.' )
+      MyMsgStop( 'No project is open.' )
       Return .F.
    EndIf
 
    PRIVATE OLD_Check_64bits      := Prj_Check_64bits
    PRIVATE OLD_Check_HarbourIs31 := Prj_Check_HarbourIs31
+   PRIVATE OLD_Check_StaticBuild := Prj_Check_StaticBuild
    PRIVATE OLD_Radio_Cpp         := Prj_Radio_Cpp
    PRIVATE OLD_Radio_Harbour     := Prj_Radio_Harbour
    PRIVATE OLD_Radio_MiniGui     := Prj_Radio_MiniGui
@@ -57,7 +55,6 @@ Function ProjectSettings()
  *    MINIGUI3  + BORLAND
  *    MINIGUI3  + PELLES
  *    MINIGUI3  + XHARBOUR
- *    EXTENDED1 + PELLES
  */
    do case
    case OLD_Radio_MiniGui == DEF_RG_MINIGUI1
@@ -72,23 +69,28 @@ Function ProjectSettings()
          OLD_Radio_Harbour := DEF_RG_HARBOUR
       endif
    case OLD_Radio_MiniGui == DEF_RG_EXTENDED1
-      if OLD_Radio_Cpp == DEF_RG_PELLES
-         OLD_Radio_Cpp := DEF_RG_BORLAND
-      endif
    case OLD_Radio_MiniGui == DEF_RG_OOHG3
    otherwise
       OLD_Radio_MiniGui := DEF_RG_OOHG3
    endcase
 /* Forbiden combinations:
  *    BORLAND + 64 bits
+ *    BORLAND + Non static build
+ *    PELLES + Non static build
  */
    do case
    case OLD_Radio_Cpp == DEF_RG_BORLAND
       if OLD_Check_64bits
          OLD_Check_64bits := .F.
       endif
+      if ! OLD_Check_StaticBuild
+         OLD_Check_StaticBuild := .T.
+      endif
    case OLD_Radio_Cpp == DEF_RG_MINGW
    case OLD_Radio_Cpp == DEF_RG_PELLES
+      if ! OLD_Check_StaticBuild
+         OLD_Check_StaticBuild := .T.
+      endif
    otherwise
       OLD_Radio_Cpp := DEF_RG_MINGW
    endcase
@@ -121,7 +123,7 @@ Function ProjectSettings()
           ON RELEASE QPM_SetColor()
 
       @ 08, 20 FRAME FCompiler ;
-         WIDTH 240 ;
+         WIDTH 250 ;
          HEIGHT 120
 
       @ 13, 30 LABEL LCompiler ;
@@ -146,7 +148,7 @@ Function ProjectSettings()
          TRANSPARENT ;
          LEFTJUSTIFY
 
-      @ 16, 145 RADIOGROUP Radio_Cpp ;
+      @ 16, 150 RADIOGROUP Radio_Cpp ;
          OPTIONS { 'BCC32', 'MinGW', 'Pelles' } ;
          VALUE OLD_Radio_Cpp ;
          WIDTH  100 ;
@@ -199,7 +201,7 @@ Function ProjectSettings()
       END CHECKBOX
 
       @ 138, 20 FRAME FOutputType ;
-         WIDTH 240 ;
+         WIDTH 250 ;
          HEIGHT 120
 
       @ 143, 30 LABEL LOutputType ;
@@ -215,13 +217,13 @@ Function ProjectSettings()
          ON CHANGE SwitchRadioOutputType() ;
          TOOLTIP 'Select Output Type'
 
-      DEFINE CHECKBOX Check_Upx
-              CAPTION         'UPX'
+      DEFINE CHECKBOX Check_StaticBuild
+              CAPTION         'Static'
               ROW             170
               COL             200
-              WIDTH           50
-              VALUE           Prj_Check_Upx
-              TOOLTIP         'Compress EXE using ' + DBLQT + 'Ultimate Packer for eXecutables' + DBLQT + ' -UPX- utility.'
+              WIDTH           60
+              VALUE           OLD_Check_StaticBuild
+              TOOLTIP         'Link EXE using static libraries'
       END CHECKBOX
 
       DEFINE CHECKBOX Check_OutputPrefix
@@ -233,8 +235,17 @@ Function ProjectSettings()
               TOOLTIP         'Add ' + DBLQT + 'Lib' + DBLQT + " prefix to Output's filename"
       END CHECKBOX
 
+      DEFINE CHECKBOX Check_Upx
+              CAPTION         'UPX'
+              ROW             220
+              COL             200
+              WIDTH           50
+              VALUE           Prj_Check_Upx
+              TOOLTIP         'Compress EXE using ' + DBLQT + 'Ultimate Packer for eXecutables' + DBLQT + ' -UPX- utility.'
+      END CHECKBOX
+
       @ 268, 20 FRAME FOutputCopyMove ;
-         WIDTH 240 ;
+         WIDTH 250 ;
          HEIGHT 160
 
       @ 273, 30 LABEL LOutputCopyMove ;
@@ -269,18 +280,18 @@ Function ProjectSettings()
 
       @ 168, 285 FRAME FOutputRename ;
          WIDTH 240 ;
-         HEIGHT 150
+         HEIGHT 117
 
       @ 173, 290 LABEL LOutputRename ;
          VALUE 'Output Rename:' ;
-         WIDTH 150 ;
+         WIDTH 130 ;
          FONT 'arial' SIZE 10 BOLD ;
          FONTCOLOR DEF_COLORBLUE
 
       @ 190, 300 RADIOGROUP Radio_OutputRename ;
          OPTIONS { 'None', 'Rename to ...' } ;
          VALUE Prj_Radio_OutputRename ;
-         WIDTH 160 ;
+         WIDTH 140 ;
          ON CHANGE SwitchRadioOutputRename() ;
          TOOLTIP 'Select what to do after building'
 
@@ -293,18 +304,18 @@ Function ProjectSettings()
 
       DEFINE CHECKBOX Check_OutputSuffix
               CAPTION         'Add Suffix'
-              ROW             280
-              COL             300
-              WIDTH           150
+              ROW             190
+              COL             450
+              WIDTH           100
               VALUE           Prj_Check_OutputSuffix
               TOOLTIP         "Automatically add to the Output's filename a suffix identifying (x)Harbour and Minigui versions"
       END CHECKBOX
 
-      @ 325, 285 FRAME FExtraRun ;
+      @ 292, 285 FRAME FExtraRun ;
          WIDTH 240 ;
          HEIGHT 070
 
-      @ 330, 290 LABEL LExtraRun ;
+      @ 297, 290 LABEL LExtraRun ;
          VALUE 'Extra Run After Successful Build:' ;
          WIDTH 350 ;
          FONT 'arial' SIZE 10 BOLD ;
@@ -312,12 +323,13 @@ Function ProjectSettings()
 
       DEFINE TEXTBOX Text_ExtraRunCmd
               VALUE           Prj_ExtraRunCmdFINAL
-              ROW             360
+              ROW             327
               COL             300
               WIDTH           150
       END TEXTBOX
+
       DEFINE BUTTON Button_ExtraRun
-              ROW             360
+              ROW             327
               COL             460
               WIDTH           25
               HEIGHT          25
@@ -327,7 +339,7 @@ Function ProjectSettings()
       END BUTTON
 
       @ 438, 20 FRAME FDbf ;
-         WIDTH 240 ;
+         WIDTH 250 ;
          HEIGHT 90
 
       @ 443, 30 LABEL LDbf ;
@@ -341,24 +353,24 @@ Function ProjectSettings()
          VALUE Prj_Radio_DbfTool ;
          WIDTH 200
 
-      @ 408, 285 FRAME FForm ;
+      @ 375, 285 FRAME FForm ;
          WIDTH 240 ;
-         HEIGHT 120
+         HEIGHT 153
 
-      @ 413, 290 LABEL LForm ;
+      @ 380, 290 LABEL LForm ;
          VALUE 'Tool for FMG edition:' ;
          WIDTH 275 ;
          FONT 'arial' SIZE 10 BOLD ;
          FONTCOLOR DEF_COLORBLUE
 
-      @ 440, 300 RADIOGROUP Radio_Form ;
-         OPTIONS { 'Automatic', 'OOHG IDE+ (by Ciro Vargas)', 'HMGS-IDE (by Walter Formigoni)' } ;
+      @ 407, 300 RADIOGROUP Radio_Form ;
+         OPTIONS { 'Automatic', 'OOHG IDE+', 'HMGS-IDE', 'HMG-IDE' } ;
          VALUE Prj_Radio_FormTool ;
          WIDTH 200
 
       DEFINE BUTTON B_OK
              ROW             538
-             COL             180
+             COL             190
              WIDTH           80
              HEIGHT          25
              CAPTION         'OK'
@@ -408,6 +420,7 @@ Function ProjectChanged()
       Prj_Text_OutputRenameNewName  != WinPSettings.Text_RenameOutput.value    .or. ;
       Prj_Check_OutputSuffix        != WinPSettings.Check_OutputSuffix.value   .or. ;
       Prj_Check_OutputPrefix        != WinPSettings.Check_OutputPrefix.value   .or. ;
+      Prj_Check_StaticBuild         != WinPSettings.Check_StaticBuild.value    .or. ;
       Prj_Radio_FormTool            != WinPSettings.Radio_Form.value           .or. ;
       Prj_Radio_DbfTool             != WinPSettings.Radio_Dbf.value            .or. ;
       Prj_ExtraRunCmdFINAL          != WinPSettings.Text_ExtraRunCmd.value     .or. ;
@@ -420,23 +433,23 @@ Function ProjectSettingsSave()
    do case
    case WinPSettings.Radio_OutputType.value < DEF_RG_IMPORT .and. ;
         GetProperty( 'VentanaMain', 'GPrgFiles', 'ItemCount' ) == 1 .and. ;
-        ( upper( US_FileNameOnlyExt( GetProperty( 'VentanaMain', 'GPrgFiles', 'Cell', 1, NCOLPRGNAME ) ) ) == 'DLL' .or. ;
-          upper( US_FileNameOnlyExt( GetProperty( 'VentanaMain', 'GPrgFiles', 'Cell', 1, NCOLPRGNAME ) ) ) == 'LIB' .or. ;
-          upper( US_FileNameOnlyExt( GetProperty( 'VentanaMain', 'GPrgFiles', 'Cell', 1, NCOLPRGNAME ) ) ) == 'A' )
-      MsgStop( 'Output types ' + DBLQT + 'Executable' + DBLQT + ' and ' + DBLQT + 'Library' + DBLQT + ' do not support ' + DBLQT + 'DLL' + DBLQT + ', ' + DBLQT + 'LIB' + DBLQT + ' or ' + DBLQT + 'A' + DBLQT + ' into source list.' + HB_OsNewLine() + ;
+        ( Upper( US_FileNameOnlyExt( GetProperty( 'VentanaMain', 'GPrgFiles', 'Cell', 1, NCOLPRGNAME ) ) ) == 'DLL' .or. ;
+          Upper( US_FileNameOnlyExt( GetProperty( 'VentanaMain', 'GPrgFiles', 'Cell', 1, NCOLPRGNAME ) ) ) == 'LIB' .or. ;
+          Upper( US_FileNameOnlyExt( GetProperty( 'VentanaMain', 'GPrgFiles', 'Cell', 1, NCOLPRGNAME ) ) ) == 'A' )
+      MyMsgStop( 'Output types ' + DBLQT + 'Executable' + DBLQT + ' and ' + DBLQT + 'Library' + DBLQT + ' do not support ' + DBLQT + 'DLL' + DBLQT + ', ' + DBLQT + 'LIB' + DBLQT + ' or ' + DBLQT + 'A' + DBLQT + ' into source list.' + HB_OsNewLine() + ;
                'Remove those files before changing the ' + DBLQT + 'Output Type' + DBLQT + '.' )
       Return .F.
    case WinPSettings.Radio_OutputType.value == DEF_RG_IMPORT .and. ;
         GetProperty( 'VentanaMain', 'GPrgFiles', 'ItemCount' ) == 1 .and. ;
-        ( upper( US_FileNameOnlyExt( GetProperty( 'VentanaMain', 'GPrgFiles', 'Cell', 1, NCOLPRGNAME ) ) ) == 'PRG' .or. ;
-          upper( US_FileNameOnlyExt( GetProperty( 'VentanaMain', 'GPrgFiles', 'Cell', 1, NCOLPRGNAME ) ) ) == 'C' .or. ;
-          upper( US_FileNameOnlyExt( GetProperty( 'VentanaMain', 'GPrgFiles', 'Cell', 1, NCOLPRGNAME ) ) ) == 'CPP' )
-      MsgStop( 'Output type ' + DBLQT + 'Interface Library' + DBLQT + ' does not support ' + DBLQT + 'PRG' + DBLQT + ', ' + DBLQT + 'C' + DBLQT + ' or ' + DBLQT + 'CPP' + DBLQT + ' into source list.' + HB_OsNewLine() + ;
+        ( Upper( US_FileNameOnlyExt( GetProperty( 'VentanaMain', 'GPrgFiles', 'Cell', 1, NCOLPRGNAME ) ) ) == 'PRG' .or. ;
+          Upper( US_FileNameOnlyExt( GetProperty( 'VentanaMain', 'GPrgFiles', 'Cell', 1, NCOLPRGNAME ) ) ) == 'C' .or. ;
+          Upper( US_FileNameOnlyExt( GetProperty( 'VentanaMain', 'GPrgFiles', 'Cell', 1, NCOLPRGNAME ) ) ) == 'CPP' )
+      MyMsgStop( 'Output type ' + DBLQT + 'Interface Library' + DBLQT + ' does not support ' + DBLQT + 'PRG' + DBLQT + ', ' + DBLQT + 'C' + DBLQT + ' or ' + DBLQT + 'CPP' + DBLQT + ' into source list.' + HB_OsNewLine() + ;
                'Remove those files before changing the ' + DBLQT + 'Output Type' + DBLQT + '.' )
       Return .F.
    case WinPSettings.Radio_OutputType.value == DEF_RG_IMPORT .and. ;
         GetProperty( 'VentanaMain', 'GPrgFiles', 'ItemCount' ) > 1
-      MsgStop( 'Output type ' + DBLQT + 'Interface Library' + DBLQT + ' does not support ' + DBLQT + 'PRG' + DBLQT + ', ' + DBLQT + 'C' + DBLQT + ' or ' + DBLQT + 'CPP' + DBLQT + ' into source list.' + HB_OsNewLine() + ;
+      MyMsgStop( 'Output type ' + DBLQT + 'Interface Library' + DBLQT + ' does not support ' + DBLQT + 'PRG' + DBLQT + ', ' + DBLQT + 'C' + DBLQT + ' or ' + DBLQT + 'CPP' + DBLQT + ' into source list.' + HB_OsNewLine() + ;
                'Remove those files before changing the ' + DBLQT + 'Output Type' + DBLQT + '.' )
       Return .F.
    endcase
@@ -450,6 +463,12 @@ Function ProjectSettingsSave()
       Prj_Check_MT          != WinPSettings.Check_MT.value         .or. ;
       Prj_Radio_OutputType  != WinPSettings.Radio_OutputType.value
 
+      IF ! Empty( LibsActiva )
+         DescargoDefaultLibs( LibsActiva )
+         DescargoIncludeLibs( LibsActiva )
+         DescargoExcludeLibs( LibsActiva )
+      ENDIF
+
       Prj_Radio_Harbour     := WinPSettings.Radio_Harbour.value
       Prj_Check_HarbourIs31 := WinPSettings.Chk_HBVersion.value
       Prj_Check_64bits      := WinPSettings.Chk_64bits.value
@@ -459,19 +478,12 @@ Function ProjectSettingsSave()
       Prj_Check_MT          := WinPSettings.Check_MT.value
       Prj_Radio_OutputType  := WinPSettings.Radio_OutputType.value
 
-      if Prj_Radio_OutputType == DEF_RG_IMPORT
-         if ! empty( LibsActiva )
-            DesCargoIncludeLibs( LibsActiva )
-            DescargoExcludeLibs( LibsActiva )
-         endif
-      else
-         if ! empty( LibsActiva )
-            DesCargoIncludeLibs( LibsActiva )
-            DescargoExcludeLibs( LibsActiva )
-         endif
+      IF ! Prj_Radio_OutputType == DEF_RG_IMPORT
+         QPM_InitLibrariesForFlavor( GetSuffix() )
+         CargoDefaultLibs( GetSuffix() )
          CargoIncludeLibs( GetSuffix() )
          CargoExcludeLibs( GetSuffix() )
-      endif
+      ENDIF
 
       QPM_SetResumen()
    endif
@@ -482,6 +494,7 @@ Function ProjectSettingsSave()
    Prj_Text_OutputRenameNewName  := WinPSettings.Text_RenameOutput.value
    Prj_Check_OutputSuffix        := WinPSettings.Check_OutputSuffix.value
    Prj_Check_OutputPrefix        := WinPSettings.Check_OutputPrefix.value
+   Prj_Check_StaticBuild         := WinPSettings.Check_StaticBuild.value
    Prj_Radio_FormTool            := WinPSettings.Radio_Form.value
    Prj_Radio_DbfTool             := WinPSettings.Radio_Dbf.value
    Prj_ExtraRunCmdFINAL          := WinPSettings.Text_ExtraRunCmd.value
@@ -536,13 +549,12 @@ Function CheckCombination( lAfterOnInit )
  *    MINIGUI3  + BORLAND
  *    MINIGUI3  + PELLES
  *    MINIGUI3  + XHARBOUR
- *    EXTENDED1 + PELLES
  */
    do case
    case WinPSettings.Radio_MiniGui.value == DEF_RG_MINIGUI1
       if WinPSettings.Radio_Cpp.value != DEF_RG_BORLAND
          if lAfterOnInit
-            MsgStop( 'The selected C compiler is not valid for the selected MiniGui.' )
+            MyMsgStop( 'The selected C compiler is not valid for the selected MiniGui.' )
          endif
          if OLD_Radio_Cpp != DEF_RG_BORLAND
             OLD_Radio_Cpp := DEF_RG_BORLAND
@@ -552,7 +564,7 @@ Function CheckCombination( lAfterOnInit )
    case WinPSettings.Radio_MiniGui.value == DEF_RG_MINIGUI3
       if WinPSettings.Radio_Cpp.value != DEF_RG_MINGW
          if lAfterOnInit
-            MsgStop( 'The selected C compiler is not valid for the selected MiniGui.' )
+            MyMsgStop( 'The selected C compiler is not valid for the selected MiniGui.' )
          endif
          if OLD_Radio_Cpp != DEF_RG_MINGW
             OLD_Radio_Cpp := DEF_RG_MINGW
@@ -561,7 +573,7 @@ Function CheckCombination( lAfterOnInit )
       endif
       if WinPSettings.Radio_Harbour.value != DEF_RG_HARBOUR
          if lAfterOnInit
-            MsgStop( 'The selected PRG compiler is not valid for the selected MiniGui.' )
+            MyMsgStop( 'The selected PRG compiler is not valid for the selected MiniGui.' )
          endif
          if OLD_Radio_Harbour != DEF_RG_HARBOUR
             OLD_Radio_Harbour := DEF_RG_HARBOUR
@@ -569,23 +581,10 @@ Function CheckCombination( lAfterOnInit )
          WinPSettings.Radio_Harbour.value := OLD_Radio_Harbour
       endif
    case WinPSettings.Radio_MiniGui.value == DEF_RG_EXTENDED1
-      if WinPSettings.Radio_Cpp.value == DEF_RG_PELLES
-         if lAfterOnInit
-            MsgStop( 'The selected C compiler is not valid for the selected MiniGui.' )
-         endif
-         if OLD_Radio_Cpp != DEF_RG_MINGW .and. OLD_Radio_Cpp != DEF_RG_BORLAND
-            if WinPSettings.Chk_64bits.value
-               OLD_Radio_Cpp := DEF_RG_MINGW
-            else
-               OLD_Radio_Cpp := DEF_RG_BORLAND
-            endif
-         endif
-         WinPSettings.Radio_Cpp.value := OLD_Radio_Cpp
-      endif
    case WinPSettings.Radio_MiniGui.value == DEF_RG_OOHG3
    otherwise
       if lAfterOnInit
-         MsgStop( 'No valid MiniGui is selected.' )
+         MyMsgStop( 'No valid MiniGui is selected.' )
       endif
       if OLD_Radio_MiniGui != DEF_RG_MINIGUI1 .and. OLD_Radio_MiniGui != DEF_RG_MINIGUI3 .and. OLD_Radio_MiniGui != DEF_RG_EXTENDED1 .and. OLD_Radio_MiniGui != DEF_RG_OOHG3
          OLD_Radio_MiniGui := DEF_RG_OOHG3
@@ -594,23 +593,33 @@ Function CheckCombination( lAfterOnInit )
    endcase
 /* Forbiden combinations:
  *    BORLAND + 64 bits
+ *    BORLAND + Non static build
+ *    PELLES + Non static build
  */
    do case
    case WinPSettings.Radio_Cpp.value == DEF_RG_BORLAND
       if WinPSettings.Chk_64bits.value
          if lAfterOnInit
-            MsgStop( DBLQT + '64 bits' + DBLQT + ' switch only applies to MinGW and Pelles compilers.' )
+            MyMsgStop( DBLQT + '64 bits' + DBLQT + ' switch only applies to MinGW and Pelles compilers.' )
          endif
          if OLD_Check_64bits
             OLD_Check_64bits := .F.
          endif
          WinPSettings.Chk_64bits.value := OLD_Check_64bits
+         if ! OLD_Check_StaticBuild
+            OLD_Check_StaticBuild := .T.
+         endif
+         WinPSettings.Check_StaticBuild.value := OLD_Check_StaticBuild
       endif
    case WinPSettings.Radio_Cpp.value == DEF_RG_MINGW
    case WinPSettings.Radio_Cpp.value == DEF_RG_PELLES
+      if ! OLD_Check_StaticBuild
+         OLD_Check_StaticBuild := .T.
+      endif
+      WinPSettings.Check_StaticBuild.value := OLD_Check_StaticBuild
    otherwise
       if lAfterOnInit
-         MsgStop( 'No valid C compiler is selected.' )
+         MyMsgStop( 'No valid C compiler is selected.' )
       endif
       do case
       case WinPSettings.Radio_MiniGui.value == DEF_RG_MINIGUI1
@@ -640,13 +649,13 @@ Function CheckCombination( lAfterOnInit )
    case WinPSettings.Radio_Harbour.value == DEF_RG_XHARBOUR
       if WinPSettings.Chk_HBVersion.value
          if lAfterOnInit
-            MsgStop( DBLQT + 'Harbour 3.1 or later' + DBLQT + ' switch only applies to Harbour compiler.' )
+            MyMsgStop( DBLQT + 'Harbour 3.1 or later' + DBLQT + ' switch only applies to Harbour compiler.' )
          endif
          WinPSettings.Chk_HBVersion.value := .F.
       endif
    otherwise
       if lAfterOnInit
-         MsgStop( 'No valid PRG compiler is selected.' )
+         MyMsgStop( 'No valid PRG compiler is selected.' )
       endif
       if OLD_Radio_Harbour != DEF_RG_HARBOUR .and. OLD_Radio_Harbour != DEF_RG_XHARBOUR
          OLD_Radio_Harbour := DEF_RG_HARBOUR
@@ -655,6 +664,7 @@ Function CheckCombination( lAfterOnInit )
    endcase
 
    OLD_Check_64bits      := WinPSettings.Chk_64bits.value
+   OLD_Check_StaticBuild := WinPSettings.Check_StaticBuild.value
    OLD_Check_HarbourIs31 := WinPSettings.Chk_HBVersion.value
    OLD_Radio_Cpp         := WinPSettings.Radio_Cpp.value
    OLD_Radio_Harbour     := WinPSettings.Radio_Harbour.value
@@ -676,7 +686,7 @@ Function CheckCombination( lAfterOnInit )
    case WinPSettings.Radio_MiniGui.value == DEF_RG_EXTENDED1
       SetProperty( 'WinPSettings', 'Radio_Cpp',     'enabled', DEF_RG_BORLAND,  .T. )
       SetProperty( 'WinPSettings', 'Radio_Cpp',     'enabled', DEF_RG_MINGW,    .T. )
-      SetProperty( 'WinPSettings', 'Radio_Cpp',     'enabled', DEF_RG_PELLES,   .F. )
+      SetProperty( 'WinPSettings', 'Radio_Cpp',     'enabled', DEF_RG_PELLES,   .T. )
       SetProperty( 'WinPSettings', 'Radio_Harbour', 'enabled', DEF_RG_HARBOUR,  .T. )
       SetProperty( 'WinPSettings', 'Radio_Harbour', 'enabled', DEF_RG_XHARBOUR, .T. )
    case WinPSettings.Radio_MiniGui.value == DEF_RG_OOHG3
@@ -688,11 +698,14 @@ Function CheckCombination( lAfterOnInit )
    endcase
    do case
    case WinPSettings.Radio_Cpp.value == DEF_RG_BORLAND
-      SetProperty( 'WinPSettings', 'Chk_64bits',    'enabled', .F. )
+      SetProperty( 'WinPSettings', 'Chk_64bits',        'enabled', .F. )
+      SetProperty( 'WinPSettings', 'Check_StaticBuild', 'enabled', .F. )
    case WinPSettings.Radio_Cpp.value == DEF_RG_MINGW
-      SetProperty( 'WinPSettings', 'Chk_64bits',    'enabled', .T. )
+      SetProperty( 'WinPSettings', 'Chk_64bits',        'enabled', .T. )
+      SetProperty( 'WinPSettings', 'Check_StaticBuild', 'enabled', .T. )
    case WinPSettings.Radio_Cpp.value == DEF_RG_PELLES
-      SetProperty( 'WinPSettings', 'Chk_64bits',    'enabled', .T. )
+      SetProperty( 'WinPSettings', 'Chk_64bits',        'enabled', .T. )
+      SetProperty( 'WinPSettings', 'Check_StaticBuild', 'enabled', .F. )
    endcase
    do case
    case WinPSettings.Radio_Harbour.value == DEF_RG_HARBOUR
@@ -702,17 +715,19 @@ Function CheckCombination( lAfterOnInit )
    endcase
 Return .T.
 
-FUNCTION cFormTool()
+FUNCTION GetFormTool()
    LOCAL cRet
    DO CASE
    CASE Prj_Radio_FormTool == DEF_RG_EDITOR
       cRet := 'EDITOR'
-   CASE Prj_Radio_FormTool == DEF_RG_HMI
-      cRet := 'HMI'
-   CASE Prj_Radio_FormTool == DEF_RG_HMGS
+   CASE Prj_Radio_FormTool == DEF_RG_OOHGIDE
+      cRet := 'OOHGIDE'
+   CASE Prj_Radio_FormTool == DEF_RG_HMGSIDE
       cRet := 'HMGSIDE'
+   CASE Prj_Radio_FormTool == DEF_RG_HMG_IDE
+      cRet := 'HMG_IDE'
    OTHERWISE
-      cRet := 'ERROR'
+      cRet := 'EDITOR'
    ENDCASE
 RETURN cRet
 
