@@ -354,8 +354,10 @@ FUNCTION QPM_CreatePublicVars()
    PUBLIC Prj_Warn_GT_Order_Cont        := .T.
    PUBLIC Prj_Warn_InfoSaved            := .T.
    PUBLIC Prj_Warn_NullRDD              := .T.
+   PUBLIC Prj_Warn_PPO_Browse           := .T.
    PUBLIC Prj_Warn_SlowSearch           := .T.
    PUBLIC Prj_Warn_SlowSearch_Cont      := .T.
+   PUBLIC Prj_Warn_TopFile              := .T.
    PUBLIC PUB_cConvert                  := ''
    PUBLIC PUB_MI_bDesktopShortCut       := .T.
    PUBLIC PUB_MI_bExeAssociation        := .F.
