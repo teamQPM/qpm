@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  *    QPM - QAC based Project Manager
  *
  *    Copyright 2011-2020 Fernando Yurisich <fernando.yurisich@gmail.com>
@@ -52,15 +48,17 @@ FUNCTION QPM_CreatePublicVars()
 
 // VARIABLES
    PUBLIC BUILD_IN_PROGRESS             := .F.
+   PUBLIC PUB_cQPM_Donation_Link        := 'https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=VYXQYCKWXLWAG&currency_code=USD&source=url'
    PUBLIC PUB_cQPM_Support_Link         := 'https://teamqpm.github.io/'
    PUBLIC PUB_cQPM_Support_Admin        := 'Fernando Yurisich (Uruguay)'
    PUBLIC PUB_cQPM_Support_eMail        := 'qpm-users@lists.sourceforge.net'
    PUBLIC PUB_cStatusLabel              := 'Status: Idle'
    PUBLIC PUB_MenuPrjOptions            := 'Project Options'
    PUBLIC PUB_MenuGblOptions            := 'Global Options (folders for [x]Harbour, MiniGUI, C++ and others)'
+   PUBLIC PUB_MenuResetWarnings         := "Reset omitted messages"
    PUBLIC PUB_cCharTab                  := Chr( 09 )
    PUBLIC PUB_cCharFileNameTemp         := '_'   // MinGW's MAKE doesn't support $, # prevents TEMP.LOG generation
-   PUBLIC PUB_cQPM_Title                := 'QPM (QAC based Project Manager) - Project Manager for MiniGui (' + QPM_VERSION_DISPLAY_LONG + ')'
+   PUBLIC PUB_cQPM_Title                := 'QPM - Project Manager for MiniGui (' + QPM_VERSION_DISPLAY_LONG + ')'
    PUBLIC PUB_cQPM_Folder               := US_FileNameOnlyPath( GetModuleFileName( GetInstance() ) )
    PUBLIC PUB_cTempFolder               := GetTempFolder()
    PUBLIC PUB_cThisFolder               := ''
@@ -126,25 +124,19 @@ FUNCTION QPM_CreatePublicVars()
 #endif
    PUBLIC GBL_TabGridNameFocus          := ''
    PUBLIC PUB_ErrorLogTime              := 0
-   PUBLIC GBL_HR_cLastExternalFileName  := ''
+   PUBLIC Gbl_HR_cLastExternalFileName  := ''
    PUBLIC vDbfHeaders                   := { 'One', 'Two' }
    PUBLIC vDbfWidths                    := { 50, 50 }
    PUBLIC vDbfJustify                   := { BROWSE_JTFY_LEFT, BROWSE_JTFY_LEFT }
    PUBLIC bEditorLongName               := .F.
+   PUBLIC bNoFMGextension               := .F.
    PUBLIC bSuspendControlEdit           := .F.
    PUBLIC bPrgSorting                   := .F.
    PUBLIC bHeaSorting                   := .F.
    PUBLIC bPanSorting                   := .F.
    PUBLIC bDbfSorting                   := .F.
-   PUBLIC bIncSorting                   := .F.
    PUBLIC bExcSorting                   := .F.
    PUBLIC bHlpSorting                   := .F.
-   PUBLIC bPrgMoving                    := .F.
-   PUBLIC bHeaMoving                    := .F.
-   PUBLIC bPanMoving                    := .F.
-   PUBLIC bDbfMoving                    := .F.
-   PUBLIC bIncMoving                    := .F.
-   PUBLIC bExcMoving                    := .F.
    PUBLIC bHlpMoving                    := .F.
    PUBLIC PUB_nGridImgNone              := 0
    PUBLIC PUB_nGridImgTilde             := 1
@@ -187,7 +179,6 @@ FUNCTION QPM_CreatePublicVars()
    PUBLIC bLastGlobalSearchFun          := .F.
    PUBLIC bLastGlobalSearchDbf          := .F.
    PUBLIC bLastGlobalSearchCas          := .F.
-   PUBLIC bAvisoDbfGlobalSearchLow      := .T.
    PUBLIC bAvisoDbfDataSearchLow        := .T.
    PUBLIC bDbfDataSearchAsk             := .T.
    PUBLIC cDbfDataSearchAskRpta         := ''
@@ -228,14 +219,19 @@ FUNCTION QPM_CreatePublicVars()
    PUBLIC NCOLDBFOFFSET                 := 4
    PUBLIC NCOLDBFEDIT                   := 5
    PUBLIC NCOLDBFSEARCH                 := 6
+   PUBLIC NCOLDEFSTATUS                 := 1
+   PUBLIC NCOLDEFNAME                   := 2
+   PUBLIC NCOLDEFMODE                   := 3
+   PUBLIC NCOLDEFTHREADS                := 4
+   PUBLIC NCOLDEFDEBUG                  := 5
    PUBLIC bSortDbfAsc                   := .T.
+   PUBLIC aGridDef                      := {}
    PUBLIC aGridInc                      := {}
    PUBLIC NCOLINCSTATUS                 := 1
    PUBLIC NCOLINCNAME                   := 2
    PUBLIC NCOLINCFULLNAME               := 3
    PUBLIC nColLibStatus                 := NCOLINCSTATUS     // auxiliar var for processes that don't differentiate between inc and exc
    PUBLIC nColLibFullName               := NCOLINCFULLNAME   // auxiliar var for processes that don't differentiate between inc and exc
-   PUBLIC bSortIncAsc                   := .T.
    PUBLIC aGridExc                      := {}
    PUBLIC NCOLEXCSTATUS                 := 1
    PUBLIC NCOLEXCNAME                   := 2
@@ -257,7 +253,7 @@ FUNCTION QPM_CreatePublicVars()
    PUBLIC SHG_BaseOK                    := .F.
    PUBLIC bAutoSyncTab                  := .T.
    PUBLIC bRunParm                      := .F.
-   PUBLIC GBL_cRunParm                  := ''
+   PUBLIC Gbl_cRunParm                  := ''
    PUBLIC bBuildRun                     := .F.
    PUBLIC PUB_bForceRunFromMsgOk        := .F.
    PUBLIC bBuildRunBack                 := .F.
@@ -281,6 +277,10 @@ FUNCTION QPM_CreatePublicVars()
                                              { DefineExtended1 + DefineMinGW   + DefineXHarbour + Define32bits, 'HMG Extended with MinGW and xHarbour, 32 bits' }, ;
                                              { DefineExtended1 + DefineMinGW   + DefineHarbour  + Define64bits, 'HMG Extended with MinGW and Harbour, 64 bits' }, ;
                                              { DefineExtended1 + DefineMinGW   + DefineXHarbour + Define64bits, 'HMG Extended with MinGW and xHarbour, 64 bits' }, ;
+                                             { DefineExtended1 + DefinePelles  + DefineHarbour  + Define32bits, 'HMG Extended with Pelles and Harbour, 32 bits' }, ;
+                                             { DefineExtended1 + DefinePelles  + DefineXHarbour + Define32bits, 'HMG Extended with Pelles and xHarbour, 32 bits' }, ;
+                                             { DefineExtended1 + DefinePelles  + DefineHarbour  + Define64bits, 'HMG Extended with Pelles and Harbour, 64 bits' }, ;
+                                             { DefineExtended1 + DefinePelles  + DefineXHarbour + Define64bits, 'HMG Extended with Pelles and xHarbour, 64 bits' }, ;
                                              { DefineOohg3     + DefineBorland + DefineHarbour  + Define32bits, 'OOHG with BCC32 and Harbour' }, ;
                                              { DefineOohg3     + DefineBorland + DefineXHarbour + Define32bits, 'OOHG with BCC32 and xHarbour' }, ;
                                              { DefineOohg3     + DefineMinGW   + DefineHarbour  + Define32bits, 'OOHG with MinGW and Harbour, 32 bits' }, ;
@@ -291,27 +291,50 @@ FUNCTION QPM_CreatePublicVars()
                                              { DefineOohg3     + DefinePelles  + DefineXHarbour + Define32bits, 'OOHG with Pelles C and xHarbour, 32 bits' }, ;
                                              { DefineOohg3     + DefinePelles  + DefineHarbour  + Define64bits, 'OOHG with Pelles C and Harbour, 64 bits' }, ;
                                              { DefineOohg3     + DefinePelles  + DefineXHarbour + Define64bits, 'OOHG with Pelles C and xHarbour, 64 bits' } }
+   PUBLIC cExeNotFoundMsg               := {}
+   PUBLIC cPrj_Version                  := '00000000'
+   PUBLIC cPrj_VersionAnt               := '00000000'
+   PUBLIC cProjectFileName
+   PUBLIC Gbl_Comillas_DBF              := '"'
    PUBLIC Gbl_Text_DBF                  := ''
    PUBLIC Gbl_Text_Editor               := ''
+   PUBLIC Gbl_Text_HMG_IDE              := ''
    PUBLIC Gbl_Text_HMGSIDE              := ''
-   PUBLIC Gbl_Text_HMI                  := ''
-   PUBLIC Gbl_Comillas_DBF              := '"'
-   PUBLIC QPM_KillerProcessLast         := {}
-   PUBLIC QPM_KillerbLate               := .T.
-   PUBLIC QPM_KillerModule              := ''
-   PUBLIC QPM_bKiller                   := .F.
-   PUBLIC cPrj_VersionAnt               := '00000000'
-   PUBLIC cPrj_Version                  := '00000000'
-   PUBLIC Prj_Check_PlaceRCFirst        := .F.
-   PUBLIC Prj_Check_IgnoreMainRC        := .F.
-   PUBLIC Prj_Check_IgnoreLibRCs        := .F.
+   PUBLIC Gbl_Text_OOHGIDE              := ''
+
    PUBLIC Prj_Check_64bits              := .F.
    PUBLIC Prj_Check_Console             := .F.
    PUBLIC Prj_Check_HarbourIs31         := .T.
+   PUBLIC Prj_Check_IgnoreLibRCs        := .F.
+   PUBLIC Prj_Check_IgnoreMainRC        := .F.
    PUBLIC Prj_Check_MT                  := .F.
    PUBLIC Prj_Check_OutputPrefix        := .T.
    PUBLIC Prj_Check_OutputSuffix        := .F.
+   PUBLIC Prj_Check_PlaceRCFirst        := .F.
+   PUBLIC Prj_Check_StaticBuild         := .T.
    PUBLIC Prj_Check_Upx                 := .F.
+   PUBLIC Prj_ExtraRunCmdEXE            := ''
+   PUBLIC Prj_ExtraRunCmdEXEParm        := ''
+   PUBLIC Prj_ExtraRunCmdFINAL          := ''
+   PUBLIC Prj_ExtraRunCmdFREE           := ''
+   PUBLIC Prj_ExtraRunCmdFREEParm       := ''
+   PUBLIC Prj_ExtraRunCmdQPMParm        := ''
+   PUBLIC Prj_ExtraRunExePause          := .T.
+   PUBLIC Prj_ExtraRunExeWait           := .T.
+   PUBLIC Prj_ExtraRunFreePause         := .T.
+   PUBLIC Prj_ExtraRunFreeWait          := .T.
+   PUBLIC Prj_ExtraRunProjQPM           := ''
+   PUBLIC Prj_ExtraRunQPMAutoExit       := .T.
+   PUBLIC Prj_ExtraRunQPMButtonRun      := .F.
+   PUBLIC Prj_ExtraRunQPMClear          := .F.
+   PUBLIC Prj_ExtraRunQPMForceFull      := .F.
+   PUBLIC Prj_ExtraRunQPMLite           := .T.
+   PUBLIC Prj_ExtraRunQPMLog            := .F.
+   PUBLIC Prj_ExtraRunQPMLogOnlyError   := .F.
+   PUBLIC Prj_ExtraRunQPMRadio          := 'BUILD'
+   PUBLIC Prj_ExtraRunQPMRun            := .F.
+   PUBLIC Prj_ExtraRunType              := 'NONE'
+   PUBLIC Prj_IsNew                     := .F.
    PUBLIC Prj_Radio_Cpp                 := DEF_RG_MINGW
    PUBLIC Prj_Radio_DbFTool             := DEF_RG_DBFTOOL
    PUBLIC Prj_Radio_FormTool            := DEF_RG_EDITOR
@@ -322,75 +345,65 @@ FUNCTION QPM_CreatePublicVars()
    PUBLIC Prj_Radio_OutputType          := DEF_RG_EXE
    PUBLIC Prj_Text_OutputCopyMoveFolder := ''
    PUBLIC Prj_Text_OutputRenameNewName  := ''
-   PUBLIC Prj_ExtraRunCmdFINAL          := ''
-   PUBLIC Prj_ExtraRunProjQPM           := ''
-   PUBLIC Prj_ExtraRunCmdEXE            := ''
-   PUBLIC Prj_ExtraRunCmdFREE           := ''
-   PUBLIC Prj_ExtraRunCmdQPMParm        := ''
-   PUBLIC Prj_ExtraRunCmdEXEParm        := ''
-   PUBLIC Prj_ExtraRunCmdFREEParm       := ''
-   PUBLIC Prj_ExtraRunType              := 'NONE'
-   PUBLIC Prj_ExtraRunQPMRadio          := 'BUILD'
-   PUBLIC Prj_ExtraRunQPMLite           := .T.
-   PUBLIC Prj_ExtraRunQPMForceFull      := .F.
-   PUBLIC Prj_ExtraRunQPMRun            := .F.
-   PUBLIC Prj_ExtraRunQPMButtonRun      := .F.
-   PUBLIC Prj_ExtraRunQPMClear          := .F.
-   PUBLIC Prj_ExtraRunQPMLog            := .F.
-   PUBLIC Prj_ExtraRunQPMLogOnlyError   := .F.
-   PUBLIC Prj_ExtraRunQPMAutoExit       := .T.
-   PUBLIC Prj_ExtraRunExeWait           := .T.
-   PUBLIC Prj_ExtraRunExePause          := .T.
-   PUBLIC Prj_ExtraRunFreeWait          := .T.
-   PUBLIC Prj_ExtraRunFreePause         := .T.
-   PUBLIC Prj_IsNew                     := .F.
-   PUBLIC cProjectFileName
+   PUBLIC Prj_Warn_BccObject            := .T.
+   PUBLIC Prj_Warn_BccObject_Cont       := .T.
+   PUBLIC Prj_Warn_Cpp                  := .T.
+   PUBLIC Prj_Warn_DBF_Search           := .T.
+   PUBLIC Prj_Warn_DBF_Search_Cont      := .T.
+   PUBLIC Prj_Warn_GT_Order             := .T.
+   PUBLIC Prj_Warn_GT_Order_Cont        := .T.
+   PUBLIC Prj_Warn_InfoSaved            := .T.
+   PUBLIC Prj_Warn_NullRDD              := .T.
+   PUBLIC Prj_Warn_SlowSearch           := .T.
+   PUBLIC Prj_Warn_SlowSearch_Cont      := .T.
    PUBLIC PUB_cConvert                  := ''
-   PUBLIC vExtraFoldersForSearchC       := {}
-   PUBLIC vExtraFoldersForSearchHB      := {}
-   PUBLIC bWarningCpp                   := .T.
-   PUBLIC vExeNotFound                  := {}
-   PUBLIC cExeNotFoundMsg               := {}
-   PUBLIC Q_SCRIPT_FILE
-   PUBLIC Q_TEMP_LOG
-   PUBLIC Q_END_FILE
-   PUBLIC Q_MAKE_FILE
-   PUBLIC Q_PROGRESS_LOG
-   PUBLIC Q_QPM_TMP_RC
-   PUBLIC PUB_RunTabChange              := .T.
-   PUBLIC PUB_RunTabAutoSync            := .T.
+   PUBLIC PUB_MI_bDesktopShortCut       := .T.
+   PUBLIC PUB_MI_bExeAssociation        := .F.
+   PUBLIC PUB_MI_bExeBackupOption       := .F.
+   PUBLIC PUB_MI_bLaunchApplication     := .T.
+   PUBLIC PUB_MI_bLaunchBackupOption    := .F.
+   PUBLIC PUB_MI_bNewFile               := .F.
+   PUBLIC PUB_MI_bReboot                := .F.
+   PUBLIC PUB_MI_bSelectAllDBF          := .F.
+   PUBLIC PUB_MI_bSelectAllHEA          := .F.
+   PUBLIC PUB_MI_bSelectAllLIB          := .F.
+   PUBLIC PUB_MI_bSelectAllPAN          := .F.
+   PUBLIC PUB_MI_bSelectAllPRG          := .F.
+   PUBLIC PUB_MI_bStartMenuShortCut     := .T.
+   PUBLIC PUB_MI_cDefaultLanguage       := 'EN'
+   PUBLIC PUB_MI_cDestinationPath       := ''
+   PUBLIC PUB_MI_cExeAssociation        := ''
+   PUBLIC PUB_MI_cImage                 := ''
+   PUBLIC PUB_MI_cInstallerName         := ''
+   PUBLIC PUB_MI_cLeyendUserText        := ''
+   PUBLIC PUB_MI_cNewFileLeyend         := ''
+   PUBLIC PUB_MI_cNewFileUserFile       := ''
+   PUBLIC PUB_MI_nDesktopShortCut       := 1
+   PUBLIC PUB_MI_nDestinationPath       := 1
+   PUBLIC PUB_MI_nExeAssociationIcon    := 1
+   PUBLIC PUB_MI_nInstallerName         := 1
+   PUBLIC PUB_MI_nLaunchApplication     := 1
+   PUBLIC PUB_MI_nLeyendSuggested       := 1
+   PUBLIC PUB_MI_nNewFileEmpty          := 1
+   PUBLIC PUB_MI_nNewFileSuggested      := 1
+   PUBLIC PUB_MI_nStartMenuShortCut     := 1
    PUBLIC PUB_MigrateFolderFrom         := ''
    PUBLIC PUB_MigrateVersionFrom        := ''
-   PUBLIC PUB_MI_bExeAssociation        := .F.
-   PUBLIC PUB_MI_cExeAssociation        := ''
-   PUBLIC PUB_MI_nExeAssociationIcon    := 1
-   PUBLIC PUB_MI_bExeBackupOption       := .F.
-   PUBLIC PUB_MI_bNewFile               := .F.
-   PUBLIC PUB_MI_nNewFileSuggested      := 1
-   PUBLIC PUB_MI_cNewFileLeyend         := ''
-   PUBLIC PUB_MI_nNewFileEmpty          := 1
-   PUBLIC PUB_MI_cNewFileUserFile       := ''
-   PUBLIC PUB_MI_nDestinationPath       := 1
-   PUBLIC PUB_MI_cDestinationPath       := ''
-   PUBLIC PUB_MI_nLeyendSuggested       := 1
-   PUBLIC PUB_MI_cLeyendUserText        := ''
-   PUBLIC PUB_MI_bDesktopShortCut       := .T.
-   PUBLIC PUB_MI_nDesktopShortCut       := 1
-   PUBLIC PUB_MI_bStartMenuShortCut     := .T.
-   PUBLIC PUB_MI_nStartMenuShortCut     := 1
-   PUBLIC PUB_MI_bLaunchApplication     := .T.
-   PUBLIC PUB_MI_nLaunchApplication     := 1
-   PUBLIC PUB_MI_bLaunchBackupOption    := .F.
-   PUBLIC PUB_MI_bReboot                := .F.
-   PUBLIC PUB_MI_cDefaultLanguage       := 'EN'
-   PUBLIC PUB_MI_nInstallerName         := 1
-   PUBLIC PUB_MI_cInstallerName         := ''
-   PUBLIC PUB_MI_cImage                 := ''
-   PUBLIC PUB_MI_bSelectAllPRG          := .F.
-   PUBLIC PUB_MI_bSelectAllHEA          := .F.
-   PUBLIC PUB_MI_bSelectAllPAN          := .F.
-   PUBLIC PUB_MI_bSelectAllDBF          := .F.
-   PUBLIC PUB_MI_bSelectAllLIB          := .F.
+   PUBLIC PUB_RunTabAutoSync            := .T.
+   PUBLIC PUB_RunTabChange              := .T.
+   PUBLIC Q_END_FILE                    := ''
+   PUBLIC Q_MAKE_FILE                   := ''
+   PUBLIC Q_PROGRESS_LOG                := ''
+   PUBLIC Q_QPM_TMP_RC                  := ''
+   PUBLIC Q_SCRIPT_FILE                 := ''
+   PUBLIC Q_TEMP_LOG                    := ''
+   PUBLIC QPM_bKiller                   := .F.
+   PUBLIC QPM_KillerbLate               := .T.
+   PUBLIC QPM_KillerModule              := ''
+   PUBLIC QPM_KillerProcessLast         := {}
+   PUBLIC vExeNotFound                  := {}
+   PUBLIC vExtraFoldersForSearchC       := {}
+   PUBLIC vExtraFoldersForSearchHB      := {}
    PUBLIC vExeList                      := { PUB_cQPM_Folder + DEF_SLASH + 'QPM.EXE', ;          // TODO: check if these files are necessary
                                              PUB_cQPM_Folder + DEF_SLASH + 'QPM.chm', ;
                                              PUB_cQPM_Folder + DEF_SLASH + 'US_dbfview.exe', ;   // by Grigory Filatov
@@ -415,7 +428,7 @@ FUNCTION QPM_CreatePublicVars()
                                              PUB_cQPM_Folder + DEF_SLASH + 'US_res.exe', ;       // Preprocess rc files for MinGW
                                              PUB_cQPM_Folder + DEF_SLASH + 'US_run.exe', ;       // Executes other programs
                                              PUB_cQPM_Folder + DEF_SLASH + 'US_shell.exe', ;     // Executes batch scripts
-                                             PUB_cQPM_Folder + DEF_SLASH + 'US_slash.exe', ;     // Preprocess and compiles C file using MinGW gcc
+                                             PUB_cQPM_Folder + DEF_SLASH + 'US_slash.exe', ;     // Compiles .c files and builds .exe using MinGW gcc
                                              PUB_cQPM_Folder + DEF_SLASH + 'US_tdump.exe', ;     // Dumps info from EXEOBJLIB modules Check for 64 bits files
                                              PUB_cQPM_Folder + DEF_SLASH + 'US_tlib.exe', ;      // Lists LIB (BCC32)
                                              PUB_cQPM_Folder + DEF_SLASH + 'US_upx.exe' }        // EXE compressor
@@ -439,6 +452,10 @@ FUNCTION QPM_CreatePublicVars()
    QPM_VAR2 PUBLIC Gbl_T_P_LIBS_ DEF_MG_MINIGUI1  DEF_MG_BORLAND DEF_MG_XHARBOUR DEF_MG_32 := ''
    QPM_VAR2 PUBLIC Gbl_T_N_      DEF_MG_MINIGUI1  DEF_MG_BORLAND DEF_MG_HARBOUR  DEF_MG_32 := ''           // minigui
    QPM_VAR2 PUBLIC Gbl_T_N_      DEF_MG_MINIGUI1  DEF_MG_BORLAND DEF_MG_XHARBOUR DEF_MG_32 := ''
+   QPM_VAR2 PUBLIC Gbl_T_G_      DEF_MG_MINIGUI1  DEF_MG_BORLAND DEF_MG_HARBOUR  DEF_MG_32 := ''           // gtgui
+   QPM_VAR2 PUBLIC Gbl_T_G_      DEF_MG_MINIGUI1  DEF_MG_BORLAND DEF_MG_XHARBOUR DEF_MG_32 := ''
+   QPM_VAR2 PUBLIC Gbl_DEF_LIBS_ DEF_MG_MINIGUI1  DEF_MG_BORLAND DEF_MG_HARBOUR  DEF_MG_32 := {}           // default libs filtered in
+   QPM_VAR2 PUBLIC Gbl_DEF_LIBS_ DEF_MG_MINIGUI1  DEF_MG_BORLAND DEF_MG_XHARBOUR DEF_MG_32 := {}
    /* MiniGui Oficial 3 with MinGW */
    QPM_VAR2 PUBLIC Gbl_T_C_      DEF_MG_MINIGUI3  DEF_MG_MINGW   DEF_MG_HARBOUR  DEF_MG_32 := ''
    QPM_VAR2 PUBLIC Gbl_T_C_      DEF_MG_MINIGUI3  DEF_MG_MINGW   DEF_MG_HARBOUR  DEF_MG_64 := ''
@@ -454,6 +471,10 @@ FUNCTION QPM_CreatePublicVars()
    QPM_VAR2 PUBLIC Gbl_T_P_LIBS_ DEF_MG_MINIGUI3  DEF_MG_MINGW   DEF_MG_HARBOUR  DEF_MG_64 := ''
    QPM_VAR2 PUBLIC Gbl_T_N_      DEF_MG_MINIGUI3  DEF_MG_MINGW   DEF_MG_HARBOUR  DEF_MG_32 := ''
    QPM_VAR2 PUBLIC Gbl_T_N_      DEF_MG_MINIGUI3  DEF_MG_MINGW   DEF_MG_HARBOUR  DEF_MG_64 := ''
+   QPM_VAR2 PUBLIC Gbl_T_G_      DEF_MG_MINIGUI3  DEF_MG_MINGW   DEF_MG_HARBOUR  DEF_MG_32 := ''
+   QPM_VAR2 PUBLIC Gbl_T_G_      DEF_MG_MINIGUI3  DEF_MG_MINGW   DEF_MG_HARBOUR  DEF_MG_64 := ''
+   QPM_VAR2 PUBLIC Gbl_DEF_LIBS_ DEF_MG_MINIGUI3  DEF_MG_MINGW   DEF_MG_HARBOUR  DEF_MG_32 := {}
+   QPM_VAR2 PUBLIC Gbl_DEF_LIBS_ DEF_MG_MINIGUI3  DEF_MG_MINGW   DEF_MG_HARBOUR  DEF_MG_64 := {}
    /* MiniGui Extended 1 with BCC */
    QPM_VAR2 PUBLIC Gbl_T_C_      DEF_MG_EXTENDED1 DEF_MG_BORLAND DEF_MG_HARBOUR  DEF_MG_32 := ''
    QPM_VAR2 PUBLIC Gbl_T_C_      DEF_MG_EXTENDED1 DEF_MG_BORLAND DEF_MG_XHARBOUR DEF_MG_32 := ''
@@ -469,6 +490,10 @@ FUNCTION QPM_CreatePublicVars()
    QPM_VAR2 PUBLIC Gbl_T_P_LIBS_ DEF_MG_EXTENDED1 DEF_MG_BORLAND DEF_MG_XHARBOUR DEF_MG_32 := ''
    QPM_VAR2 PUBLIC Gbl_T_N_      DEF_MG_EXTENDED1 DEF_MG_BORLAND DEF_MG_HARBOUR  DEF_MG_32 := ''
    QPM_VAR2 PUBLIC Gbl_T_N_      DEF_MG_EXTENDED1 DEF_MG_BORLAND DEF_MG_XHARBOUR DEF_MG_32 := ''
+   QPM_VAR2 PUBLIC Gbl_T_G_      DEF_MG_EXTENDED1 DEF_MG_BORLAND DEF_MG_HARBOUR  DEF_MG_32 := ''
+   QPM_VAR2 PUBLIC Gbl_T_G_      DEF_MG_EXTENDED1 DEF_MG_BORLAND DEF_MG_XHARBOUR DEF_MG_32 := ''
+   QPM_VAR2 PUBLIC Gbl_DEF_LIBS_ DEF_MG_EXTENDED1 DEF_MG_BORLAND DEF_MG_HARBOUR  DEF_MG_32 := {}
+   QPM_VAR2 PUBLIC Gbl_DEF_LIBS_ DEF_MG_EXTENDED1 DEF_MG_BORLAND DEF_MG_XHARBOUR DEF_MG_32 := {}
    /* MiniGui Extended 1 with MinGW */
    QPM_VAR2 PUBLIC Gbl_T_C_      DEF_MG_EXTENDED1 DEF_MG_MINGW   DEF_MG_HARBOUR  DEF_MG_32 := ''
    QPM_VAR2 PUBLIC Gbl_T_C_      DEF_MG_EXTENDED1 DEF_MG_MINGW   DEF_MG_HARBOUR  DEF_MG_64 := ''
@@ -498,82 +523,148 @@ FUNCTION QPM_CreatePublicVars()
    QPM_VAR2 PUBLIC Gbl_T_N_      DEF_MG_EXTENDED1 DEF_MG_MINGW   DEF_MG_HARBOUR  DEF_MG_64 := ''
    QPM_VAR2 PUBLIC Gbl_T_N_      DEF_MG_EXTENDED1 DEF_MG_MINGW   DEF_MG_XHARBOUR DEF_MG_32 := ''
    QPM_VAR2 PUBLIC Gbl_T_N_      DEF_MG_EXTENDED1 DEF_MG_MINGW   DEF_MG_XHARBOUR DEF_MG_64 := ''
+   QPM_VAR2 PUBLIC Gbl_T_G_      DEF_MG_EXTENDED1 DEF_MG_MINGW   DEF_MG_HARBOUR  DEF_MG_32 := ''
+   QPM_VAR2 PUBLIC Gbl_T_G_      DEF_MG_EXTENDED1 DEF_MG_MINGW   DEF_MG_HARBOUR  DEF_MG_64 := ''
+   QPM_VAR2 PUBLIC Gbl_T_G_      DEF_MG_EXTENDED1 DEF_MG_MINGW   DEF_MG_XHARBOUR DEF_MG_32 := ''
+   QPM_VAR2 PUBLIC Gbl_T_G_      DEF_MG_EXTENDED1 DEF_MG_MINGW   DEF_MG_XHARBOUR DEF_MG_64 := ''
+   QPM_VAR2 PUBLIC Gbl_DEF_LIBS_ DEF_MG_EXTENDED1 DEF_MG_MINGW   DEF_MG_HARBOUR  DEF_MG_32 := {}
+   QPM_VAR2 PUBLIC Gbl_DEF_LIBS_ DEF_MG_EXTENDED1 DEF_MG_MINGW   DEF_MG_HARBOUR  DEF_MG_64 := {}
+   QPM_VAR2 PUBLIC Gbl_DEF_LIBS_ DEF_MG_EXTENDED1 DEF_MG_MINGW   DEF_MG_XHARBOUR DEF_MG_32 := {}
+   QPM_VAR2 PUBLIC Gbl_DEF_LIBS_ DEF_MG_EXTENDED1 DEF_MG_MINGW   DEF_MG_XHARBOUR DEF_MG_64 := {}
+   /* MiniGui Extended 1 with Pelles */
+   QPM_VAR2 PUBLIC Gbl_T_C_      DEF_MG_EXTENDED1 DEF_MG_PELLES  DEF_MG_HARBOUR  DEF_MG_32 := ''
+   QPM_VAR2 PUBLIC Gbl_T_C_      DEF_MG_EXTENDED1 DEF_MG_PELLES  DEF_MG_HARBOUR  DEF_MG_64 := ''
+   QPM_VAR2 PUBLIC Gbl_T_C_      DEF_MG_EXTENDED1 DEF_MG_PELLES  DEF_MG_XHARBOUR DEF_MG_32 := ''
+   QPM_VAR2 PUBLIC Gbl_T_C_      DEF_MG_EXTENDED1 DEF_MG_PELLES  DEF_MG_XHARBOUR DEF_MG_64 := ''
+   QPM_VAR2 PUBLIC Gbl_T_C_LIBS_ DEF_MG_EXTENDED1 DEF_MG_PELLES  DEF_MG_HARBOUR  DEF_MG_32 := ''
+   QPM_VAR2 PUBLIC Gbl_T_C_LIBS_ DEF_MG_EXTENDED1 DEF_MG_PELLES  DEF_MG_HARBOUR  DEF_MG_64 := ''
+   QPM_VAR2 PUBLIC Gbl_T_C_LIBS_ DEF_MG_EXTENDED1 DEF_MG_PELLES  DEF_MG_XHARBOUR DEF_MG_32 := ''
+   QPM_VAR2 PUBLIC Gbl_T_C_LIBS_ DEF_MG_EXTENDED1 DEF_MG_PELLES  DEF_MG_XHARBOUR DEF_MG_64 := ''
+   QPM_VAR2 PUBLIC Gbl_T_M_      DEF_MG_EXTENDED1 DEF_MG_PELLES  DEF_MG_HARBOUR  DEF_MG_32 := ''
+   QPM_VAR2 PUBLIC Gbl_T_M_      DEF_MG_EXTENDED1 DEF_MG_PELLES  DEF_MG_HARBOUR  DEF_MG_64 := ''
+   QPM_VAR2 PUBLIC Gbl_T_M_      DEF_MG_EXTENDED1 DEF_MG_PELLES  DEF_MG_XHARBOUR DEF_MG_32 := ''
+   QPM_VAR2 PUBLIC Gbl_T_M_      DEF_MG_EXTENDED1 DEF_MG_PELLES  DEF_MG_XHARBOUR DEF_MG_64 := ''
+   QPM_VAR2 PUBLIC Gbl_T_M_LIBS_ DEF_MG_EXTENDED1 DEF_MG_PELLES  DEF_MG_HARBOUR  DEF_MG_32 := ''
+   QPM_VAR2 PUBLIC Gbl_T_M_LIBS_ DEF_MG_EXTENDED1 DEF_MG_PELLES  DEF_MG_HARBOUR  DEF_MG_64 := ''
+   QPM_VAR2 PUBLIC Gbl_T_M_LIBS_ DEF_MG_EXTENDED1 DEF_MG_PELLES  DEF_MG_XHARBOUR DEF_MG_32 := ''
+   QPM_VAR2 PUBLIC Gbl_T_M_LIBS_ DEF_MG_EXTENDED1 DEF_MG_PELLES  DEF_MG_XHARBOUR DEF_MG_64 := ''
+   QPM_VAR2 PUBLIC Gbl_T_P_      DEF_MG_EXTENDED1 DEF_MG_PELLES  DEF_MG_HARBOUR  DEF_MG_32 := ''
+   QPM_VAR2 PUBLIC Gbl_T_P_      DEF_MG_EXTENDED1 DEF_MG_PELLES  DEF_MG_HARBOUR  DEF_MG_64 := ''
+   QPM_VAR2 PUBLIC Gbl_T_P_      DEF_MG_EXTENDED1 DEF_MG_PELLES  DEF_MG_XHARBOUR DEF_MG_32 := ''
+   QPM_VAR2 PUBLIC Gbl_T_P_      DEF_MG_EXTENDED1 DEF_MG_PELLES  DEF_MG_XHARBOUR DEF_MG_64 := ''
+   QPM_VAR2 PUBLIC Gbl_T_P_LIBS_ DEF_MG_EXTENDED1 DEF_MG_PELLES  DEF_MG_HARBOUR  DEF_MG_32 := ''
+   QPM_VAR2 PUBLIC Gbl_T_P_LIBS_ DEF_MG_EXTENDED1 DEF_MG_PELLES  DEF_MG_HARBOUR  DEF_MG_64 := ''
+   QPM_VAR2 PUBLIC Gbl_T_P_LIBS_ DEF_MG_EXTENDED1 DEF_MG_PELLES  DEF_MG_XHARBOUR DEF_MG_32 := ''
+   QPM_VAR2 PUBLIC Gbl_T_P_LIBS_ DEF_MG_EXTENDED1 DEF_MG_PELLES  DEF_MG_XHARBOUR DEF_MG_64 := ''
+   QPM_VAR2 PUBLIC Gbl_T_N_      DEF_MG_EXTENDED1 DEF_MG_PELLES  DEF_MG_HARBOUR  DEF_MG_32 := ''
+   QPM_VAR2 PUBLIC Gbl_T_N_      DEF_MG_EXTENDED1 DEF_MG_PELLES  DEF_MG_HARBOUR  DEF_MG_64 := ''
+   QPM_VAR2 PUBLIC Gbl_T_N_      DEF_MG_EXTENDED1 DEF_MG_PELLES  DEF_MG_XHARBOUR DEF_MG_32 := ''
+   QPM_VAR2 PUBLIC Gbl_T_N_      DEF_MG_EXTENDED1 DEF_MG_PELLES  DEF_MG_XHARBOUR DEF_MG_64 := ''
+   QPM_VAR2 PUBLIC Gbl_T_G_      DEF_MG_EXTENDED1 DEF_MG_PELLES  DEF_MG_HARBOUR  DEF_MG_32 := ''
+   QPM_VAR2 PUBLIC Gbl_T_G_      DEF_MG_EXTENDED1 DEF_MG_PELLES  DEF_MG_HARBOUR  DEF_MG_64 := ''
+   QPM_VAR2 PUBLIC Gbl_T_G_      DEF_MG_EXTENDED1 DEF_MG_PELLES  DEF_MG_XHARBOUR DEF_MG_32 := ''
+   QPM_VAR2 PUBLIC Gbl_T_G_      DEF_MG_EXTENDED1 DEF_MG_PELLES  DEF_MG_XHARBOUR DEF_MG_64 := ''
+   QPM_VAR2 PUBLIC Gbl_DEF_LIBS_ DEF_MG_EXTENDED1 DEF_MG_PELLES  DEF_MG_HARBOUR  DEF_MG_32 := {}
+   QPM_VAR2 PUBLIC Gbl_DEF_LIBS_ DEF_MG_EXTENDED1 DEF_MG_PELLES  DEF_MG_HARBOUR  DEF_MG_64 := {}
+   QPM_VAR2 PUBLIC Gbl_DEF_LIBS_ DEF_MG_EXTENDED1 DEF_MG_PELLES  DEF_MG_XHARBOUR DEF_MG_32 := {}
+   QPM_VAR2 PUBLIC Gbl_DEF_LIBS_ DEF_MG_EXTENDED1 DEF_MG_PELLES  DEF_MG_XHARBOUR DEF_MG_64 := {}
    /* OOHG with BCC */
-   QPM_VAR2 PUBLIC Gbl_T_C_      DEF_MG_OOHG3    DEF_MG_BORLAND DEF_MG_HARBOUR  DEF_MG_32 := ''
-   QPM_VAR2 PUBLIC Gbl_T_C_      DEF_MG_OOHG3    DEF_MG_BORLAND DEF_MG_XHARBOUR DEF_MG_32 := ''
-   QPM_VAR2 PUBLIC Gbl_T_C_LIBS_ DEF_MG_OOHG3    DEF_MG_BORLAND DEF_MG_HARBOUR  DEF_MG_32 := ''
-   QPM_VAR2 PUBLIC Gbl_T_C_LIBS_ DEF_MG_OOHG3    DEF_MG_BORLAND DEF_MG_XHARBOUR DEF_MG_32 := ''
-   QPM_VAR2 PUBLIC Gbl_T_M_      DEF_MG_OOHG3    DEF_MG_BORLAND DEF_MG_HARBOUR  DEF_MG_32 := ''
-   QPM_VAR2 PUBLIC Gbl_T_M_      DEF_MG_OOHG3    DEF_MG_BORLAND DEF_MG_XHARBOUR DEF_MG_32 := ''
-   QPM_VAR2 PUBLIC Gbl_T_M_LIBS_ DEF_MG_OOHG3    DEF_MG_BORLAND DEF_MG_HARBOUR  DEF_MG_32 := ''
-   QPM_VAR2 PUBLIC Gbl_T_M_LIBS_ DEF_MG_OOHG3    DEF_MG_BORLAND DEF_MG_XHARBOUR DEF_MG_32 := ''
-   QPM_VAR2 PUBLIC Gbl_T_P_      DEF_MG_OOHG3    DEF_MG_BORLAND DEF_MG_HARBOUR  DEF_MG_32 := ''
-   QPM_VAR2 PUBLIC Gbl_T_P_      DEF_MG_OOHG3    DEF_MG_BORLAND DEF_MG_XHARBOUR DEF_MG_32 := ''
-   QPM_VAR2 PUBLIC Gbl_T_P_LIBS_ DEF_MG_OOHG3    DEF_MG_BORLAND DEF_MG_HARBOUR  DEF_MG_32 := ''
-   QPM_VAR2 PUBLIC Gbl_T_P_LIBS_ DEF_MG_OOHG3    DEF_MG_BORLAND DEF_MG_XHARBOUR DEF_MG_32 := ''
-   QPM_VAR2 PUBLIC Gbl_T_N_      DEF_MG_OOHG3    DEF_MG_BORLAND DEF_MG_HARBOUR  DEF_MG_32 := ''
-   QPM_VAR2 PUBLIC Gbl_T_N_      DEF_MG_OOHG3    DEF_MG_BORLAND DEF_MG_XHARBOUR DEF_MG_32 := ''
+   QPM_VAR2 PUBLIC Gbl_T_C_      DEF_MG_OOHG3     DEF_MG_BORLAND DEF_MG_HARBOUR  DEF_MG_32 := ''
+   QPM_VAR2 PUBLIC Gbl_T_C_      DEF_MG_OOHG3     DEF_MG_BORLAND DEF_MG_XHARBOUR DEF_MG_32 := ''
+   QPM_VAR2 PUBLIC Gbl_T_C_LIBS_ DEF_MG_OOHG3     DEF_MG_BORLAND DEF_MG_HARBOUR  DEF_MG_32 := ''
+   QPM_VAR2 PUBLIC Gbl_T_C_LIBS_ DEF_MG_OOHG3     DEF_MG_BORLAND DEF_MG_XHARBOUR DEF_MG_32 := ''
+   QPM_VAR2 PUBLIC Gbl_T_M_      DEF_MG_OOHG3     DEF_MG_BORLAND DEF_MG_HARBOUR  DEF_MG_32 := ''
+   QPM_VAR2 PUBLIC Gbl_T_M_      DEF_MG_OOHG3     DEF_MG_BORLAND DEF_MG_XHARBOUR DEF_MG_32 := ''
+   QPM_VAR2 PUBLIC Gbl_T_M_LIBS_ DEF_MG_OOHG3     DEF_MG_BORLAND DEF_MG_HARBOUR  DEF_MG_32 := ''
+   QPM_VAR2 PUBLIC Gbl_T_M_LIBS_ DEF_MG_OOHG3     DEF_MG_BORLAND DEF_MG_XHARBOUR DEF_MG_32 := ''
+   QPM_VAR2 PUBLIC Gbl_T_P_      DEF_MG_OOHG3     DEF_MG_BORLAND DEF_MG_HARBOUR  DEF_MG_32 := ''
+   QPM_VAR2 PUBLIC Gbl_T_P_      DEF_MG_OOHG3     DEF_MG_BORLAND DEF_MG_XHARBOUR DEF_MG_32 := ''
+   QPM_VAR2 PUBLIC Gbl_T_P_LIBS_ DEF_MG_OOHG3     DEF_MG_BORLAND DEF_MG_HARBOUR  DEF_MG_32 := ''
+   QPM_VAR2 PUBLIC Gbl_T_P_LIBS_ DEF_MG_OOHG3     DEF_MG_BORLAND DEF_MG_XHARBOUR DEF_MG_32 := ''
+   QPM_VAR2 PUBLIC Gbl_T_N_      DEF_MG_OOHG3     DEF_MG_BORLAND DEF_MG_HARBOUR  DEF_MG_32 := ''
+   QPM_VAR2 PUBLIC Gbl_T_N_      DEF_MG_OOHG3     DEF_MG_BORLAND DEF_MG_XHARBOUR DEF_MG_32 := ''
+   QPM_VAR2 PUBLIC Gbl_T_G_      DEF_MG_OOHG3     DEF_MG_BORLAND DEF_MG_HARBOUR  DEF_MG_32 := ''
+   QPM_VAR2 PUBLIC Gbl_T_G_      DEF_MG_OOHG3     DEF_MG_BORLAND DEF_MG_XHARBOUR DEF_MG_32 := ''
+   QPM_VAR2 PUBLIC Gbl_DEF_LIBS_ DEF_MG_OOHG3     DEF_MG_BORLAND DEF_MG_HARBOUR  DEF_MG_32 := {}
+   QPM_VAR2 PUBLIC Gbl_DEF_LIBS_ DEF_MG_OOHG3     DEF_MG_BORLAND DEF_MG_XHARBOUR DEF_MG_32 := {}
    /* OOHG with MinGW */
-   QPM_VAR2 PUBLIC Gbl_T_C_      DEF_MG_OOHG3    DEF_MG_MINGW   DEF_MG_HARBOUR  DEF_MG_32 := ''
-   QPM_VAR2 PUBLIC Gbl_T_C_      DEF_MG_OOHG3    DEF_MG_MINGW   DEF_MG_HARBOUR  DEF_MG_64 := ''
-   QPM_VAR2 PUBLIC Gbl_T_C_      DEF_MG_OOHG3    DEF_MG_MINGW   DEF_MG_XHARBOUR DEF_MG_32 := ''
-   QPM_VAR2 PUBLIC Gbl_T_C_      DEF_MG_OOHG3    DEF_MG_MINGW   DEF_MG_XHARBOUR DEF_MG_64 := ''
-   QPM_VAR2 PUBLIC Gbl_T_C_LIBS_ DEF_MG_OOHG3    DEF_MG_MINGW   DEF_MG_HARBOUR  DEF_MG_32 := ''
-   QPM_VAR2 PUBLIC Gbl_T_C_LIBS_ DEF_MG_OOHG3    DEF_MG_MINGW   DEF_MG_HARBOUR  DEF_MG_64 := ''
-   QPM_VAR2 PUBLIC Gbl_T_C_LIBS_ DEF_MG_OOHG3    DEF_MG_MINGW   DEF_MG_XHARBOUR DEF_MG_32 := ''
-   QPM_VAR2 PUBLIC Gbl_T_C_LIBS_ DEF_MG_OOHG3    DEF_MG_MINGW   DEF_MG_XHARBOUR DEF_MG_64 := ''
-   QPM_VAR2 PUBLIC Gbl_T_M_      DEF_MG_OOHG3    DEF_MG_MINGW   DEF_MG_HARBOUR  DEF_MG_32 := ''
-   QPM_VAR2 PUBLIC Gbl_T_M_      DEF_MG_OOHG3    DEF_MG_MINGW   DEF_MG_HARBOUR  DEF_MG_64 := ''
-   QPM_VAR2 PUBLIC Gbl_T_M_      DEF_MG_OOHG3    DEF_MG_MINGW   DEF_MG_XHARBOUR DEF_MG_32 := ''
-   QPM_VAR2 PUBLIC Gbl_T_M_      DEF_MG_OOHG3    DEF_MG_MINGW   DEF_MG_XHARBOUR DEF_MG_64 := ''
-   QPM_VAR2 PUBLIC Gbl_T_M_LIBS_ DEF_MG_OOHG3    DEF_MG_MINGW   DEF_MG_HARBOUR  DEF_MG_32 := ''
-   QPM_VAR2 PUBLIC Gbl_T_M_LIBS_ DEF_MG_OOHG3    DEF_MG_MINGW   DEF_MG_HARBOUR  DEF_MG_64 := ''
-   QPM_VAR2 PUBLIC Gbl_T_M_LIBS_ DEF_MG_OOHG3    DEF_MG_MINGW   DEF_MG_XHARBOUR DEF_MG_32 := ''
-   QPM_VAR2 PUBLIC Gbl_T_M_LIBS_ DEF_MG_OOHG3    DEF_MG_MINGW   DEF_MG_XHARBOUR DEF_MG_64 := ''
-   QPM_VAR2 PUBLIC Gbl_T_P_      DEF_MG_OOHG3    DEF_MG_MINGW   DEF_MG_HARBOUR  DEF_MG_32 := ''
-   QPM_VAR2 PUBLIC Gbl_T_P_      DEF_MG_OOHG3    DEF_MG_MINGW   DEF_MG_HARBOUR  DEF_MG_64 := ''
-   QPM_VAR2 PUBLIC Gbl_T_P_      DEF_MG_OOHG3    DEF_MG_MINGW   DEF_MG_XHARBOUR DEF_MG_32 := ''
-   QPM_VAR2 PUBLIC Gbl_T_P_      DEF_MG_OOHG3    DEF_MG_MINGW   DEF_MG_XHARBOUR DEF_MG_64 := ''
-   QPM_VAR2 PUBLIC Gbl_T_P_LIBS_ DEF_MG_OOHG3    DEF_MG_MINGW   DEF_MG_HARBOUR  DEF_MG_32 := ''
-   QPM_VAR2 PUBLIC Gbl_T_P_LIBS_ DEF_MG_OOHG3    DEF_MG_MINGW   DEF_MG_HARBOUR  DEF_MG_64 := ''
-   QPM_VAR2 PUBLIC Gbl_T_P_LIBS_ DEF_MG_OOHG3    DEF_MG_MINGW   DEF_MG_XHARBOUR DEF_MG_32 := ''
-   QPM_VAR2 PUBLIC Gbl_T_P_LIBS_ DEF_MG_OOHG3    DEF_MG_MINGW   DEF_MG_XHARBOUR DEF_MG_64 := ''
-   QPM_VAR2 PUBLIC Gbl_T_N_      DEF_MG_OOHG3    DEF_MG_MINGW   DEF_MG_HARBOUR  DEF_MG_32 := ''
-   QPM_VAR2 PUBLIC Gbl_T_N_      DEF_MG_OOHG3    DEF_MG_MINGW   DEF_MG_HARBOUR  DEF_MG_64 := ''
-   QPM_VAR2 PUBLIC Gbl_T_N_      DEF_MG_OOHG3    DEF_MG_MINGW   DEF_MG_XHARBOUR DEF_MG_32 := ''
-   QPM_VAR2 PUBLIC Gbl_T_N_      DEF_MG_OOHG3    DEF_MG_MINGW   DEF_MG_XHARBOUR DEF_MG_64 := ''
+   QPM_VAR2 PUBLIC Gbl_T_C_      DEF_MG_OOHG3     DEF_MG_MINGW   DEF_MG_HARBOUR  DEF_MG_32 := ''
+   QPM_VAR2 PUBLIC Gbl_T_C_      DEF_MG_OOHG3     DEF_MG_MINGW   DEF_MG_HARBOUR  DEF_MG_64 := ''
+   QPM_VAR2 PUBLIC Gbl_T_C_      DEF_MG_OOHG3     DEF_MG_MINGW   DEF_MG_XHARBOUR DEF_MG_32 := ''
+   QPM_VAR2 PUBLIC Gbl_T_C_      DEF_MG_OOHG3     DEF_MG_MINGW   DEF_MG_XHARBOUR DEF_MG_64 := ''
+   QPM_VAR2 PUBLIC Gbl_T_C_LIBS_ DEF_MG_OOHG3     DEF_MG_MINGW   DEF_MG_HARBOUR  DEF_MG_32 := ''
+   QPM_VAR2 PUBLIC Gbl_T_C_LIBS_ DEF_MG_OOHG3     DEF_MG_MINGW   DEF_MG_HARBOUR  DEF_MG_64 := ''
+   QPM_VAR2 PUBLIC Gbl_T_C_LIBS_ DEF_MG_OOHG3     DEF_MG_MINGW   DEF_MG_XHARBOUR DEF_MG_32 := ''
+   QPM_VAR2 PUBLIC Gbl_T_C_LIBS_ DEF_MG_OOHG3     DEF_MG_MINGW   DEF_MG_XHARBOUR DEF_MG_64 := ''
+   QPM_VAR2 PUBLIC Gbl_T_M_      DEF_MG_OOHG3     DEF_MG_MINGW   DEF_MG_HARBOUR  DEF_MG_32 := ''
+   QPM_VAR2 PUBLIC Gbl_T_M_      DEF_MG_OOHG3     DEF_MG_MINGW   DEF_MG_HARBOUR  DEF_MG_64 := ''
+   QPM_VAR2 PUBLIC Gbl_T_M_      DEF_MG_OOHG3     DEF_MG_MINGW   DEF_MG_XHARBOUR DEF_MG_32 := ''
+   QPM_VAR2 PUBLIC Gbl_T_M_      DEF_MG_OOHG3     DEF_MG_MINGW   DEF_MG_XHARBOUR DEF_MG_64 := ''
+   QPM_VAR2 PUBLIC Gbl_T_M_LIBS_ DEF_MG_OOHG3     DEF_MG_MINGW   DEF_MG_HARBOUR  DEF_MG_32 := ''
+   QPM_VAR2 PUBLIC Gbl_T_M_LIBS_ DEF_MG_OOHG3     DEF_MG_MINGW   DEF_MG_HARBOUR  DEF_MG_64 := ''
+   QPM_VAR2 PUBLIC Gbl_T_M_LIBS_ DEF_MG_OOHG3     DEF_MG_MINGW   DEF_MG_XHARBOUR DEF_MG_32 := ''
+   QPM_VAR2 PUBLIC Gbl_T_M_LIBS_ DEF_MG_OOHG3     DEF_MG_MINGW   DEF_MG_XHARBOUR DEF_MG_64 := ''
+   QPM_VAR2 PUBLIC Gbl_T_P_      DEF_MG_OOHG3     DEF_MG_MINGW   DEF_MG_HARBOUR  DEF_MG_32 := ''
+   QPM_VAR2 PUBLIC Gbl_T_P_      DEF_MG_OOHG3     DEF_MG_MINGW   DEF_MG_HARBOUR  DEF_MG_64 := ''
+   QPM_VAR2 PUBLIC Gbl_T_P_      DEF_MG_OOHG3     DEF_MG_MINGW   DEF_MG_XHARBOUR DEF_MG_32 := ''
+   QPM_VAR2 PUBLIC Gbl_T_P_      DEF_MG_OOHG3     DEF_MG_MINGW   DEF_MG_XHARBOUR DEF_MG_64 := ''
+   QPM_VAR2 PUBLIC Gbl_T_P_LIBS_ DEF_MG_OOHG3     DEF_MG_MINGW   DEF_MG_HARBOUR  DEF_MG_32 := ''
+   QPM_VAR2 PUBLIC Gbl_T_P_LIBS_ DEF_MG_OOHG3     DEF_MG_MINGW   DEF_MG_HARBOUR  DEF_MG_64 := ''
+   QPM_VAR2 PUBLIC Gbl_T_P_LIBS_ DEF_MG_OOHG3     DEF_MG_MINGW   DEF_MG_XHARBOUR DEF_MG_32 := ''
+   QPM_VAR2 PUBLIC Gbl_T_P_LIBS_ DEF_MG_OOHG3     DEF_MG_MINGW   DEF_MG_XHARBOUR DEF_MG_64 := ''
+   QPM_VAR2 PUBLIC Gbl_T_N_      DEF_MG_OOHG3     DEF_MG_MINGW   DEF_MG_HARBOUR  DEF_MG_32 := ''
+   QPM_VAR2 PUBLIC Gbl_T_N_      DEF_MG_OOHG3     DEF_MG_MINGW   DEF_MG_HARBOUR  DEF_MG_64 := ''
+   QPM_VAR2 PUBLIC Gbl_T_N_      DEF_MG_OOHG3     DEF_MG_MINGW   DEF_MG_XHARBOUR DEF_MG_32 := ''
+   QPM_VAR2 PUBLIC Gbl_T_N_      DEF_MG_OOHG3     DEF_MG_MINGW   DEF_MG_XHARBOUR DEF_MG_64 := ''
+   QPM_VAR2 PUBLIC Gbl_T_G_      DEF_MG_OOHG3     DEF_MG_MINGW   DEF_MG_HARBOUR  DEF_MG_32 := ''
+   QPM_VAR2 PUBLIC Gbl_T_G_      DEF_MG_OOHG3     DEF_MG_MINGW   DEF_MG_HARBOUR  DEF_MG_64 := ''
+   QPM_VAR2 PUBLIC Gbl_T_G_      DEF_MG_OOHG3     DEF_MG_MINGW   DEF_MG_XHARBOUR DEF_MG_32 := ''
+   QPM_VAR2 PUBLIC Gbl_T_G_      DEF_MG_OOHG3     DEF_MG_MINGW   DEF_MG_XHARBOUR DEF_MG_64 := ''
+   QPM_VAR2 PUBLIC Gbl_DEF_LIBS_ DEF_MG_OOHG3     DEF_MG_MINGW   DEF_MG_HARBOUR  DEF_MG_32 := {}
+   QPM_VAR2 PUBLIC Gbl_DEF_LIBS_ DEF_MG_OOHG3     DEF_MG_MINGW   DEF_MG_HARBOUR  DEF_MG_64 := {}
+   QPM_VAR2 PUBLIC Gbl_DEF_LIBS_ DEF_MG_OOHG3     DEF_MG_MINGW   DEF_MG_XHARBOUR DEF_MG_32 := {}
+   QPM_VAR2 PUBLIC Gbl_DEF_LIBS_ DEF_MG_OOHG3     DEF_MG_MINGW   DEF_MG_XHARBOUR DEF_MG_64 := {}
    /* OOHG with Pelles */
-   QPM_VAR2 PUBLIC Gbl_T_C_      DEF_MG_OOHG3    DEF_MG_PELLES  DEF_MG_HARBOUR  DEF_MG_32 := ''
-   QPM_VAR2 PUBLIC Gbl_T_C_      DEF_MG_OOHG3    DEF_MG_PELLES  DEF_MG_HARBOUR  DEF_MG_64 := ''
-   QPM_VAR2 PUBLIC Gbl_T_C_      DEF_MG_OOHG3    DEF_MG_PELLES  DEF_MG_XHARBOUR DEF_MG_32 := ''
-   QPM_VAR2 PUBLIC Gbl_T_C_      DEF_MG_OOHG3    DEF_MG_PELLES  DEF_MG_XHARBOUR DEF_MG_64 := ''
-   QPM_VAR2 PUBLIC Gbl_T_C_LIBS_ DEF_MG_OOHG3    DEF_MG_PELLES  DEF_MG_HARBOUR  DEF_MG_32 := ''
-   QPM_VAR2 PUBLIC Gbl_T_C_LIBS_ DEF_MG_OOHG3    DEF_MG_PELLES  DEF_MG_HARBOUR  DEF_MG_64 := ''
-   QPM_VAR2 PUBLIC Gbl_T_C_LIBS_ DEF_MG_OOHG3    DEF_MG_PELLES  DEF_MG_XHARBOUR DEF_MG_32 := ''
-   QPM_VAR2 PUBLIC Gbl_T_C_LIBS_ DEF_MG_OOHG3    DEF_MG_PELLES  DEF_MG_XHARBOUR DEF_MG_64 := ''
-   QPM_VAR2 PUBLIC Gbl_T_M_      DEF_MG_OOHG3    DEF_MG_PELLES  DEF_MG_HARBOUR  DEF_MG_32 := ''
-   QPM_VAR2 PUBLIC Gbl_T_M_      DEF_MG_OOHG3    DEF_MG_PELLES  DEF_MG_HARBOUR  DEF_MG_64 := ''
-   QPM_VAR2 PUBLIC Gbl_T_M_      DEF_MG_OOHG3    DEF_MG_PELLES  DEF_MG_XHARBOUR DEF_MG_32 := ''
-   QPM_VAR2 PUBLIC Gbl_T_M_      DEF_MG_OOHG3    DEF_MG_PELLES  DEF_MG_XHARBOUR DEF_MG_64 := ''
-   QPM_VAR2 PUBLIC Gbl_T_M_LIBS_ DEF_MG_OOHG3    DEF_MG_PELLES  DEF_MG_HARBOUR  DEF_MG_32 := ''
-   QPM_VAR2 PUBLIC Gbl_T_M_LIBS_ DEF_MG_OOHG3    DEF_MG_PELLES  DEF_MG_HARBOUR  DEF_MG_64 := ''
-   QPM_VAR2 PUBLIC Gbl_T_M_LIBS_ DEF_MG_OOHG3    DEF_MG_PELLES  DEF_MG_XHARBOUR DEF_MG_32 := ''
-   QPM_VAR2 PUBLIC Gbl_T_M_LIBS_ DEF_MG_OOHG3    DEF_MG_PELLES  DEF_MG_XHARBOUR DEF_MG_64 := ''
-   QPM_VAR2 PUBLIC Gbl_T_P_      DEF_MG_OOHG3    DEF_MG_PELLES  DEF_MG_HARBOUR  DEF_MG_32 := ''
-   QPM_VAR2 PUBLIC Gbl_T_P_      DEF_MG_OOHG3    DEF_MG_PELLES  DEF_MG_HARBOUR  DEF_MG_64 := ''
-   QPM_VAR2 PUBLIC Gbl_T_P_      DEF_MG_OOHG3    DEF_MG_PELLES  DEF_MG_XHARBOUR DEF_MG_32 := ''
-   QPM_VAR2 PUBLIC Gbl_T_P_      DEF_MG_OOHG3    DEF_MG_PELLES  DEF_MG_XHARBOUR DEF_MG_64 := ''
-   QPM_VAR2 PUBLIC Gbl_T_P_LIBS_ DEF_MG_OOHG3    DEF_MG_PELLES  DEF_MG_HARBOUR  DEF_MG_32 := ''
-   QPM_VAR2 PUBLIC Gbl_T_P_LIBS_ DEF_MG_OOHG3    DEF_MG_PELLES  DEF_MG_HARBOUR  DEF_MG_64 := ''
-   QPM_VAR2 PUBLIC Gbl_T_P_LIBS_ DEF_MG_OOHG3    DEF_MG_PELLES  DEF_MG_XHARBOUR DEF_MG_32 := ''
-   QPM_VAR2 PUBLIC Gbl_T_P_LIBS_ DEF_MG_OOHG3    DEF_MG_PELLES  DEF_MG_XHARBOUR DEF_MG_64 := ''
-   QPM_VAR2 PUBLIC Gbl_T_N_      DEF_MG_OOHG3    DEF_MG_PELLES  DEF_MG_HARBOUR  DEF_MG_32 := ''
-   QPM_VAR2 PUBLIC Gbl_T_N_      DEF_MG_OOHG3    DEF_MG_PELLES  DEF_MG_HARBOUR  DEF_MG_64 := ''
-   QPM_VAR2 PUBLIC Gbl_T_N_      DEF_MG_OOHG3    DEF_MG_PELLES  DEF_MG_XHARBOUR DEF_MG_32 := ''
-   QPM_VAR2 PUBLIC Gbl_T_N_      DEF_MG_OOHG3    DEF_MG_PELLES  DEF_MG_XHARBOUR DEF_MG_64 := ''
+   QPM_VAR2 PUBLIC Gbl_T_C_      DEF_MG_OOHG3     DEF_MG_PELLES  DEF_MG_HARBOUR  DEF_MG_32 := ''
+   QPM_VAR2 PUBLIC Gbl_T_C_      DEF_MG_OOHG3     DEF_MG_PELLES  DEF_MG_HARBOUR  DEF_MG_64 := ''
+   QPM_VAR2 PUBLIC Gbl_T_C_      DEF_MG_OOHG3     DEF_MG_PELLES  DEF_MG_XHARBOUR DEF_MG_32 := ''
+   QPM_VAR2 PUBLIC Gbl_T_C_      DEF_MG_OOHG3     DEF_MG_PELLES  DEF_MG_XHARBOUR DEF_MG_64 := ''
+   QPM_VAR2 PUBLIC Gbl_T_C_LIBS_ DEF_MG_OOHG3     DEF_MG_PELLES  DEF_MG_HARBOUR  DEF_MG_32 := ''
+   QPM_VAR2 PUBLIC Gbl_T_C_LIBS_ DEF_MG_OOHG3     DEF_MG_PELLES  DEF_MG_HARBOUR  DEF_MG_64 := ''
+   QPM_VAR2 PUBLIC Gbl_T_C_LIBS_ DEF_MG_OOHG3     DEF_MG_PELLES  DEF_MG_XHARBOUR DEF_MG_32 := ''
+   QPM_VAR2 PUBLIC Gbl_T_C_LIBS_ DEF_MG_OOHG3     DEF_MG_PELLES  DEF_MG_XHARBOUR DEF_MG_64 := ''
+   QPM_VAR2 PUBLIC Gbl_T_M_      DEF_MG_OOHG3     DEF_MG_PELLES  DEF_MG_HARBOUR  DEF_MG_32 := ''
+   QPM_VAR2 PUBLIC Gbl_T_M_      DEF_MG_OOHG3     DEF_MG_PELLES  DEF_MG_HARBOUR  DEF_MG_64 := ''
+   QPM_VAR2 PUBLIC Gbl_T_M_      DEF_MG_OOHG3     DEF_MG_PELLES  DEF_MG_XHARBOUR DEF_MG_32 := ''
+   QPM_VAR2 PUBLIC Gbl_T_M_      DEF_MG_OOHG3     DEF_MG_PELLES  DEF_MG_XHARBOUR DEF_MG_64 := ''
+   QPM_VAR2 PUBLIC Gbl_T_M_LIBS_ DEF_MG_OOHG3     DEF_MG_PELLES  DEF_MG_HARBOUR  DEF_MG_32 := ''
+   QPM_VAR2 PUBLIC Gbl_T_M_LIBS_ DEF_MG_OOHG3     DEF_MG_PELLES  DEF_MG_HARBOUR  DEF_MG_64 := ''
+   QPM_VAR2 PUBLIC Gbl_T_M_LIBS_ DEF_MG_OOHG3     DEF_MG_PELLES  DEF_MG_XHARBOUR DEF_MG_32 := ''
+   QPM_VAR2 PUBLIC Gbl_T_M_LIBS_ DEF_MG_OOHG3     DEF_MG_PELLES  DEF_MG_XHARBOUR DEF_MG_64 := ''
+   QPM_VAR2 PUBLIC Gbl_T_P_      DEF_MG_OOHG3     DEF_MG_PELLES  DEF_MG_HARBOUR  DEF_MG_32 := ''
+   QPM_VAR2 PUBLIC Gbl_T_P_      DEF_MG_OOHG3     DEF_MG_PELLES  DEF_MG_HARBOUR  DEF_MG_64 := ''
+   QPM_VAR2 PUBLIC Gbl_T_P_      DEF_MG_OOHG3     DEF_MG_PELLES  DEF_MG_XHARBOUR DEF_MG_32 := ''
+   QPM_VAR2 PUBLIC Gbl_T_P_      DEF_MG_OOHG3     DEF_MG_PELLES  DEF_MG_XHARBOUR DEF_MG_64 := ''
+   QPM_VAR2 PUBLIC Gbl_T_P_LIBS_ DEF_MG_OOHG3     DEF_MG_PELLES  DEF_MG_HARBOUR  DEF_MG_32 := ''
+   QPM_VAR2 PUBLIC Gbl_T_P_LIBS_ DEF_MG_OOHG3     DEF_MG_PELLES  DEF_MG_HARBOUR  DEF_MG_64 := ''
+   QPM_VAR2 PUBLIC Gbl_T_P_LIBS_ DEF_MG_OOHG3     DEF_MG_PELLES  DEF_MG_XHARBOUR DEF_MG_32 := ''
+   QPM_VAR2 PUBLIC Gbl_T_P_LIBS_ DEF_MG_OOHG3     DEF_MG_PELLES  DEF_MG_XHARBOUR DEF_MG_64 := ''
+   QPM_VAR2 PUBLIC Gbl_T_N_      DEF_MG_OOHG3     DEF_MG_PELLES  DEF_MG_HARBOUR  DEF_MG_32 := ''
+   QPM_VAR2 PUBLIC Gbl_T_N_      DEF_MG_OOHG3     DEF_MG_PELLES  DEF_MG_HARBOUR  DEF_MG_64 := ''
+   QPM_VAR2 PUBLIC Gbl_T_N_      DEF_MG_OOHG3     DEF_MG_PELLES  DEF_MG_XHARBOUR DEF_MG_32 := ''
+   QPM_VAR2 PUBLIC Gbl_T_N_      DEF_MG_OOHG3     DEF_MG_PELLES  DEF_MG_XHARBOUR DEF_MG_64 := ''
+   QPM_VAR2 PUBLIC Gbl_T_G_      DEF_MG_OOHG3     DEF_MG_PELLES  DEF_MG_HARBOUR  DEF_MG_32 := ''
+   QPM_VAR2 PUBLIC Gbl_T_G_      DEF_MG_OOHG3     DEF_MG_PELLES  DEF_MG_HARBOUR  DEF_MG_64 := ''
+   QPM_VAR2 PUBLIC Gbl_T_G_      DEF_MG_OOHG3     DEF_MG_PELLES  DEF_MG_XHARBOUR DEF_MG_32 := ''
+   QPM_VAR2 PUBLIC Gbl_T_G_      DEF_MG_OOHG3     DEF_MG_PELLES  DEF_MG_XHARBOUR DEF_MG_64 := ''
+   QPM_VAR2 PUBLIC Gbl_DEF_LIBS_ DEF_MG_OOHG3     DEF_MG_PELLES  DEF_MG_HARBOUR  DEF_MG_32 := {}
+   QPM_VAR2 PUBLIC Gbl_DEF_LIBS_ DEF_MG_OOHG3     DEF_MG_PELLES  DEF_MG_HARBOUR  DEF_MG_64 := {}
+   QPM_VAR2 PUBLIC Gbl_DEF_LIBS_ DEF_MG_OOHG3     DEF_MG_PELLES  DEF_MG_XHARBOUR DEF_MG_32 := {}
+   QPM_VAR2 PUBLIC Gbl_DEF_LIBS_ DEF_MG_OOHG3     DEF_MG_PELLES  DEF_MG_XHARBOUR DEF_MG_64 := {}
 
 // VARIABLES FOR LIB HANDLING
-   PUBLIC vLibsDefault:= {}
+   PUBLIC vLibsDefault := {}   // array of { name, mode, threads, debug }
+   PUBLIC vLibsToLink  := {}   // array of lib names
    /* MiniGui Oficial 1 with BCC */
    QPM_VAR2 PUBLIC IncludeLibs          DEF_MG_MINIGUI1  DEF_MG_BORLAND  DEF_MG_HARBOUR  DEF_MG_32 := {}
    QPM_VAR2 PUBLIC ExcludeLibs          DEF_MG_MINIGUI1  DEF_MG_BORLAND  DEF_MG_HARBOUR  DEF_MG_32 := {}
@@ -618,6 +709,23 @@ FUNCTION QPM_CreatePublicVars()
    QPM_VAR2 PUBLIC ExcludeLibs          DEF_MG_EXTENDED1 DEF_MG_MINGW    DEF_MG_XHARBOUR DEF_MG_64 := {}
    QPM_VAR2 PUBLIC vExtraFoldersForLibs DEF_MG_EXTENDED1 DEF_MG_MINGW    DEF_MG_XHARBOUR DEF_MG_64 := {}
    QPM_VAR2 PUBLIC cLastLibFolder       DEF_MG_EXTENDED1 DEF_MG_MINGW    DEF_MG_XHARBOUR DEF_MG_64 := ''
+   /* MiniGui Extended 1 with Pelles */
+   QPM_VAR2 PUBLIC IncludeLibs          DEF_MG_EXTENDED1 DEF_MG_PELLES   DEF_MG_HARBOUR  DEF_MG_32 := {}
+   QPM_VAR2 PUBLIC ExcludeLibs          DEF_MG_EXTENDED1 DEF_MG_PELLES   DEF_MG_HARBOUR  DEF_MG_32 := {}
+   QPM_VAR2 PUBLIC vExtraFoldersForLibs DEF_MG_EXTENDED1 DEF_MG_PELLES   DEF_MG_HARBOUR  DEF_MG_32 := {}
+   QPM_VAR2 PUBLIC cLastLibFolder       DEF_MG_EXTENDED1 DEF_MG_PELLES   DEF_MG_HARBOUR  DEF_MG_32 := ''
+   QPM_VAR2 PUBLIC IncludeLibs          DEF_MG_EXTENDED1 DEF_MG_PELLES   DEF_MG_XHARBOUR DEF_MG_32 := {}
+   QPM_VAR2 PUBLIC ExcludeLibs          DEF_MG_EXTENDED1 DEF_MG_PELLES   DEF_MG_XHARBOUR DEF_MG_32 := {}
+   QPM_VAR2 PUBLIC vExtraFoldersForLibs DEF_MG_EXTENDED1 DEF_MG_PELLES   DEF_MG_XHARBOUR DEF_MG_32 := {}
+   QPM_VAR2 PUBLIC cLastLibFolder       DEF_MG_EXTENDED1 DEF_MG_PELLES   DEF_MG_XHARBOUR DEF_MG_32 := ''
+   QPM_VAR2 PUBLIC IncludeLibs          DEF_MG_EXTENDED1 DEF_MG_PELLES   DEF_MG_HARBOUR  DEF_MG_64 := {}
+   QPM_VAR2 PUBLIC ExcludeLibs          DEF_MG_EXTENDED1 DEF_MG_PELLES   DEF_MG_HARBOUR  DEF_MG_64 := {}
+   QPM_VAR2 PUBLIC vExtraFoldersForLibs DEF_MG_EXTENDED1 DEF_MG_PELLES   DEF_MG_HARBOUR  DEF_MG_64 := {}
+   QPM_VAR2 PUBLIC cLastLibFolder       DEF_MG_EXTENDED1 DEF_MG_PELLES   DEF_MG_HARBOUR  DEF_MG_64 := ''
+   QPM_VAR2 PUBLIC IncludeLibs          DEF_MG_EXTENDED1 DEF_MG_PELLES   DEF_MG_XHARBOUR DEF_MG_64 := {}
+   QPM_VAR2 PUBLIC ExcludeLibs          DEF_MG_EXTENDED1 DEF_MG_PELLES   DEF_MG_XHARBOUR DEF_MG_64 := {}
+   QPM_VAR2 PUBLIC vExtraFoldersForLibs DEF_MG_EXTENDED1 DEF_MG_PELLES   DEF_MG_XHARBOUR DEF_MG_64 := {}
+   QPM_VAR2 PUBLIC cLastLibFolder       DEF_MG_EXTENDED1 DEF_MG_PELLES   DEF_MG_XHARBOUR DEF_MG_64 := ''
    /* OOHG with BCC */
    QPM_VAR2 PUBLIC IncludeLibs          DEF_MG_OOHG3     DEF_MG_BORLAND  DEF_MG_HARBOUR  DEF_MG_32 := {}
    QPM_VAR2 PUBLIC ExcludeLibs          DEF_MG_OOHG3     DEF_MG_BORLAND  DEF_MG_HARBOUR  DEF_MG_32 := {}
@@ -702,29 +810,29 @@ FUNCTION QPM_Licence()
             hb_LoadString( ID_LICENSE_LINE_8 ), hb_LoadString( ID_LICENSE_LINE_9 ) ) // this is not translated
 RETURN .T.
 
-FUNCTION QPM_CopyFile( orig, dest )
+FUNCTION QPM_CopyFile( cOrig, cDest )
 
-   LOCAL bError, oSaveHandler
+   LOCAL lError, oSaveHandler
 
-   IF File( orig )
-      IF File( dest )
-         ferase( dest )
+   IF File( cOrig )
+      IF File( cDest )
+         ferase( cDest )
 
-         IF File( dest )
+         IF File( cDest )
             RETURN .F.
          ENDIF
       ENDIF
 
-      bError := .F.
-      oSaveHandler := errorblock( { |x| break(x) } )
+      oSaveHandler := ErrorBlock( { |x| Break( x ) } )
       BEGIN SEQUENCE
-         COPY FILE ( orig ) TO ( dest )
+         COPY FILE ( cOrig ) TO ( cDest )
+         lError := .F.
       RECOVER
-         bError := .T.
+         lError := .T.
       END SEQUENCE
-      errorblock( oSaveHandler )
+      ErrorBlock( oSaveHandler )
 
-      IF ! bError .AND. File( dest )
+      IF ! lError .AND. File( cDest )
          RETURN .T.
       ENDIF
    ENDIF
@@ -777,26 +885,6 @@ Procedure QPM_ForceRecompPRG()
       endif
    endif
 Return
-
-/*
-Function QPM_CartelCancelByBug()
-   MsgInfo( "Selection canceled by user" + HB_OsNewLine() + ;   // esto es debido a un bug que se produce cuando se da escape sin seleccionar archivos: la rutina siguiente no termina
-                                           HB_OsNewLine() + ;
-            "Note: This msgbox fixes an Extended Minigui bug at the GetFile" + HB_OsNewLine() + ;
-            "function that hangs the app if Cancel or Esc key are pressed." )
-Return .T.
-*/
-Function BugGetFile( a, b, c, d, e, f )
-   Local auxReto
-// SetMGWaitHide()
-   auxReto := GetFile( a, b, c, d, e, f )
-// SetMGWaitShow()
-/*
- *   if empty( auxReto )
- *     QPM_CartelCancelByBug()   // esto es debido a un bug que se produce cuando se da escape sin seleccionar archivos la rutina siguiente no termina
- *  endif
- */
-Return auxReto
 
 Function QPM_CreateNewFile( cType, cFile )
    Local cMemo, bReto := .F.
@@ -913,7 +1001,7 @@ Function QPM_CreateNewFile( cType, cFile )
                          "END WINDOW"
                bReto := QPM_MemoWrit( cFile, cMemo )
             Otherwise
-               MsgInfo( "Error: Invalid option in Create PanNew." )
+               MyMsgInfo( "Error: Invalid option in Create PanNew." )
                bReto := .F.
          EndCase
          SetMGWaitShow()
@@ -987,7 +1075,7 @@ Function QPM_CreateNewFile( cType, cFile )
                   bReto := .F.
                endif
             Otherwise
-               MsgInfo( "Error: Invalid option in Create DbfNew." )
+               MyMsgInfo( "Error: Invalid option in Create DbfNew." )
                bReto := .F.
          EndCase
          SetMGWaitShow()
@@ -996,187 +1084,403 @@ Function QPM_CreateNewFile( cType, cFile )
    endcase
 Return bReto
 
-Function QPM_DirValid( cDir, cDirLib, cTipo )
-   Local bReto := .F.
-   if US_IsDirectory( cDir )
-      do case
+FUNCTION QPM_DirValid( cDir, cDirLib, cTipo )
+   LOCAL bReto := .F., cError := ""
+   IF US_IsDirectory( cDir )
+      DO CASE
       // HMG 1.x
-      case cTipo == DefineMiniGui1 + DefineBorland
-         if File( cDir + DEF_SLASH + "INCLUDE" + DEF_SLASH + "minigui.ch" ) .and. ;
-            ! File( cDir + DEF_SLASH + "INCLUDE" + DEF_SLASH + "oohg.ch" ) .and. ;
-            ! US_IsDirectory( cDir + DEF_SLASH + "SOURCE" + DEF_SLASH + "TsBrowse" ) .and. ;
-            File( cDirLib + DEF_SLASH + GetMiniGuiName() )
+      CASE cTipo == DefineMiniGui1 + DefineBorland
+         IF File( cDir + DEF_SLASH + "INCLUDE" + DEF_SLASH + "minigui.ch" )
+            IF ! File( cDir + DEF_SLASH + "INCLUDE" + DEF_SLASH + "oohg.ch" )
+               IF ! US_IsDirectory( cDir + DEF_SLASH + "SOURCE" + DEF_SLASH + "TsBrowse" )
+                  IF Empty( GetMiniGuiName() )
+                     cError := "MiniGUI's main library name is not valid!"
+                  ELSEIF File( cDirLib + DEF_SLASH + GetMiniGuiName() )
+                     bReto := .T.
+                  ELSE
+                     cError := "MiniGUI's main library [" + cDirLib + DEF_SLASH + GetMiniGuiName() + '] was not found!'
+                  ENDIF
+               ELSE
+                  cError := 'Posible Minigui version error.' + CRLF + "Extended's TSBrowse folder found!"
+               ENDIF
+            ELSE
+               cError := 'Posible Minigui version error.' + CRLF + 'File OOHG.CH found!'
+            ENDIF
+         ELSE
+            cError := 'Posible Minigui version error.' + CRLF + 'File MINIGUI.CH not found!'
+         ENDIF
+      CASE cTipo == "C_" + DefineMiniGui1 + DefineBorland
+         IF File( cDir + DEF_SLASH + "BIN" + DEF_SLASH + "BCC32.EXE" )
             bReto := .T.
-         endif
-      case cTipo == "C_" + DefineMiniGui1 + DefineBorland
-         if File( cDir + DEF_SLASH + "BIN" + DEF_SLASH + "BCC32.EXE" )
-            bReto:=.T.
-         endif
+         ELSE
+            cError := "Can't find file BCC32.EXE at BCC32 folder!"
+         ENDIF
       // HMG 3.x
-      case cTipo == DefineMiniGui3 + DefineMinGW
-         if File( cDir + DEF_SLASH + "INCLUDE" + DEF_SLASH + "minigui.ch" ) .and. ;
-            ! File( cDir + DEF_SLASH + "INCLUDE" + DEF_SLASH + "tsbrowse.ch" ) .and. ;
-            ! File( cDir + DEF_SLASH + "INCLUDE" + DEF_SLASH + "oohg.h" )  .and. ;
-            File( cDirLib + DEF_SLASH + GetMiniGuiName() )
+      CASE cTipo == DefineMiniGui3 + DefineMinGW
+         IF File( cDir + DEF_SLASH + "INCLUDE" + DEF_SLASH + "minigui.ch" )
+            IF ! File( cDir + DEF_SLASH + "INCLUDE" + DEF_SLASH + "tsbrowse.ch" )
+               IF ! File( cDir + DEF_SLASH + "INCLUDE" + DEF_SLASH + "oohg.h" )
+                  IF Empty( GetMiniGuiName() )
+                     cError := "MiniGUI's main library name is not valid!"
+                  ELSEIF File( cDirLib + DEF_SLASH + GetMiniGuiName() )
+                     bReto := .T.
+                  ELSE
+                     cError := "MiniGUI's main library [" + cDirLib + DEF_SLASH + GetMiniGuiName() + '] was not found!'
+                  ENDIF
+               ELSE
+                  cError := 'Posible Minigui version error.' + CRLF + 'File OOHG.CH found!'
+               ENDIF
+            ELSE
+               cError := 'Posible Minigui version error.' + CRLF + "Extended's file TSBROWSE.CH found!"
+            ENDIF
+         ELSE
+            cError := 'Posible Minigui version error.' + CRLF + 'File MINIGUI.CH not found!'
+         ENDIF
+      CASE cTipo == "C_" + DefineMiniGui3 + DefineMinGW
+         IF File( cDir + DEF_SLASH + "BIN" + DEF_SLASH + "GCC.EXE" )
             bReto := .T.
-         endif
-      case cTipo == "C_" + DefineMiniGui3 + DefineMinGW
-         if File( cDir + DEF_SLASH + "BIN" + DEF_SLASH + "GCC.EXE" )
-            bReto:=.T.
-         endif
+         ELSE
+            cError := "Can't find file GCC.EXE at MINGW folder!"
+         ENDIF
       // Extended
-      case cTipo == DefineExtended1 + DefineBorland
-         if File( cDir + DEF_SLASH + "INCLUDE" + DEF_SLASH + "minigui.ch" ) .and. ;
-            File( cDir + DEF_SLASH + "INCLUDE" + DEF_SLASH + "tsbrowse.ch" ) .and. ;
-            ! File( cDir + DEF_SLASH + "INCLUDE" + DEF_SLASH + "oohg.ch" ) .and. ;
-            File( cDirLib + DEF_SLASH + GetMiniGuiName() )
-            bReto:=.T.
-         endif
-      case cTipo == "C_" + DefineExtended1 + DefineBorland
-         if File( cDir + DEF_SLASH + "BIN" + DEF_SLASH + "BCC32.EXE" )
-            bReto:=.T.
-         endif
-      case cTipo == DefineExtended1 + DefineMinGW
-         if File( cDir + DEF_SLASH + "INCLUDE" + DEF_SLASH + "minigui.ch" ) .and. ;
-            File( cDir + DEF_SLASH + "INCLUDE" + DEF_SLASH + "tsbrowse.ch" ) .and. ;
-            ! File( cDir + DEF_SLASH + "INCLUDE" + DEF_SLASH + "oohg.ch" )  .and. ;
-            File( cDirLib + DEF_SLASH + GetMiniGuiName() )
-            bReto:=.T.
-         endif
-      case cTipo == "C_" + DefineExtended1 + DefineMinGW
-         if File( cDir + DEF_SLASH + "BIN" + DEF_SLASH + "GCC.EXE" )
-            bReto:=.T.
-         endif
+      CASE cTipo == DefineExtended1 + DefineBorland
+         IF File( cDir + DEF_SLASH + "INCLUDE" + DEF_SLASH + "minigui.ch" )
+            IF File( cDir + DEF_SLASH + "INCLUDE" + DEF_SLASH + "tsbrowse.ch" )
+               IF ! File( cDir + DEF_SLASH + "INCLUDE" + DEF_SLASH + "oohg.ch" )
+                  IF Empty( GetMiniGuiName() )
+                     cError := "MiniGUI's main library name is not valid!"
+                  ELSEIF File( cDirLib + DEF_SLASH + GetMiniGuiName() )
+                     bReto := .T.
+                  ELSE
+                     cError := "MiniGUI's main library [" + cDirLib + DEF_SLASH + GetMiniGuiName() + '] was not found!'
+                  ENDIF
+               ELSE
+                  cError := 'Posible Minigui version error.' + CRLF + 'File OOHG.CH found!'
+               ENDIF
+            ELSE
+               cError := 'Posible Minigui version error.' + CRLF + 'File TSBROWSE.CH not found!'
+            ENDIF
+         ELSE
+            cError := 'Posible Minigui version error.' + CRLF + 'File MINIGUI.CH not found!'
+         ENDIF
+      CASE cTipo == "C_" + DefineExtended1 + DefineBorland
+         IF File( cDir + DEF_SLASH + "BIN" + DEF_SLASH + "BCC32.EXE" )
+            bReto := .T.
+         ELSE
+            cError := "Can't find file BCC32.EXE at BCC32 folder!"
+         ENDIF
+      CASE cTipo == DefineExtended1 + DefineMinGW
+         IF File( cDir + DEF_SLASH + "INCLUDE" + DEF_SLASH + "minigui.ch" )
+            IF File( cDir + DEF_SLASH + "INCLUDE" + DEF_SLASH + "tsbrowse.ch" )
+               IF ! File( cDir + DEF_SLASH + "INCLUDE" + DEF_SLASH + "oohg.ch" )
+                  IF Empty( GetMiniGuiName() )
+                     cError := "MiniGUI's main library name is not valid!"
+                  ELSEIF File( cDirLib + DEF_SLASH + GetMiniGuiName() )
+                     bReto := .T.
+                  ELSE
+                     cError := "MiniGUI's main library [" + cDirLib + DEF_SLASH + GetMiniGuiName() + '] was not found!'
+                  ENDIF
+               ELSE
+                  cError := 'Posible Minigui version error.' + CRLF + 'File OOHG.CH found!'
+               ENDIF
+            ELSE
+               cError := 'Posible Minigui version error.' + CRLF + 'File TSBROWSE.CH not found!'
+            ENDIF
+         ELSE
+            cError := 'Posible Minigui version error.' + CRLF + 'File MINIGUI.CH not found!'
+         ENDIF
+      CASE cTipo == "C_" + DefineExtended1 + DefineMinGW
+         IF File( cDir + DEF_SLASH + "BIN" + DEF_SLASH + "GCC.EXE" )
+            bReto := .T.
+         ELSE
+            cError := "Can't find file GCC.EXE at MINGW folder!"
+         ENDIF
       // OOHG
-      case cTipo == DefineOohg3 + DefineBorland
-         if File( cDir + DEF_SLASH + "INCLUDE" + DEF_SLASH + "oohg.ch" ) .and. ;
-            File( cDirLib + DEF_SLASH + GetMiniGuiName() )
+      CASE cTipo == DefineOohg3 + DefineBorland
+         IF File( cDir + DEF_SLASH + "INCLUDE" + DEF_SLASH + "oohg.ch" )
+            IF Empty( GetMiniGuiName() )
+               cError := "MiniGUI's main library name is not valid!"
+            ELSEIF File( cDirLib + DEF_SLASH + GetMiniGuiName() )
+               bReto := .T.
+            ELSE
+               cError := "MiniGUI's main library [" + cDirLib + DEF_SLASH + GetMiniGuiName() + '] was not found!'
+            ENDIF
+         ELSE
+            cError := 'Posible Minigui version error.' + CRLF + 'File OOHG.CH not found!'
+         ENDIF
+      CASE cTipo == "C_" + DefineOohg3 + DefineBorland
+         IF File( cDir + DEF_SLASH + "BIN" + DEF_SLASH + "BCC32.EXE" )
             bReto:=.T.
-         endif
-      case cTipo == "C_" + DefineOohg3 + DefineBorland
-         if File( cDir + DEF_SLASH + "BIN" + DEF_SLASH + "BCC32.EXE" )
+         ELSE
+            cError := "Can't find file BCC32.EXE at BCC32 folder!"
+         ENDIF
+      CASE cTipo == DefineOohg3 + DefineMinGW
+         IF File( cDir + DEF_SLASH + "INCLUDE" + DEF_SLASH + "oohg.ch" )
+            IF Empty( GetMiniGuiName() )
+               cError := "MiniGUI's main library name is not valid!"
+            ELSEIF File( cDirLib + DEF_SLASH + GetMiniGuiName() )
+               bReto := .T.
+            ELSE
+               cError := "MiniGUI's main library [" + cDirLib + DEF_SLASH + GetMiniGuiName() + '] was not found!'
+            ENDIF
+         ELSE
+            cError := 'Posible Minigui version error.' + CRLF + 'File OOHG.CH not found!'
+         ENDIF
+      CASE cTipo == "C_" + DefineOohg3 + DefineMinGW
+         IF File( cDir + DEF_SLASH + "BIN" + DEF_SLASH + "GCC.EXE" )
+            bReto := .T.
+         ELSE
+            cError := "Can't find file GCC.EXE at MINGW folder!"
+         ENDIF
+      CASE cTipo == DefineOohg3 + DefinePelles
+         IF File( cDir + DEF_SLASH + "INCLUDE" + DEF_SLASH + "oohg.ch" )
+            IF Empty( GetMiniGuiName() )
+               cError := "MiniGUI's main library name is not valid!"
+            ELSEIF File( cDirLib + DEF_SLASH + GetMiniGuiName() )
+               bReto := .T.
+            ELSE
+               cError := "MiniGUI's main library [" + cDirLib + DEF_SLASH + GetMiniGuiName() + '] was not found!'
+            ENDIF
+         ELSE
+            cError := 'Posible Minigui version error.' + CRLF + 'File OOHG.CH not found!'
+         ENDIF
+      CASE cTipo == "C_" + DefineOohg3 + DefinePelles
+         IF File( cDir + DEF_SLASH + "BIN" + DEF_SLASH + "POCC.EXE" )
             bReto:=.T.
-         endif
-      case cTipo == DefineOohg3 + DefineMinGW
-         if File( cDir + DEF_SLASH + "INCLUDE" + DEF_SLASH + "oohg.ch" ) .and. ;
-            File( cDirLib + DEF_SLASH + GetMiniGuiName() )
-            bReto:=.T.
-         endif
-      case cTipo == "C_" + DefineOohg3 + DefineMinGW
-         if File( cDir + DEF_SLASH + "BIN" + DEF_SLASH + "GCC.EXE" )
-            bReto:=.T.
-         endif
-      case cTipo == DefineOohg3 + DefinePelles
-         if File( cDir + DEF_SLASH + "INCLUDE" + DEF_SLASH + "oohg.ch" ) .and. ;
-            File( cDirLib + DEF_SLASH + GetMiniGuiName() )
-            bReto:=.T.
-         endif
-      case cTipo == "C_" + DefineOohg3 + DefinePelles
-         if File( cDir + DEF_SLASH + "BIN" + DEF_SLASH + "POCC.EXE" )
-            bReto:=.T.
-         endif
-      otherwise
+         ELSE
+            cError := "Can't find file POCC.EXE at Pelles folder!"
+         ENDIF
+      OTHERWISE
          cTipo := Left( cTipo, Len( cTipo ) - 3 )
-         do case
+         DO CASE
          // HMG 1.x
-         case cTipo == DefineMiniGui1 + DefineBorland + DefineHarbour
-            if File( cDir + DEF_SLASH + "BIN" + DEF_SLASH + "HARBOUR.EXE" ) .and. ;
-               ( File( cDirLib + DEF_SLASH + "rtl.lib" ) .or. ;
-                 File( cDirLib + DEF_SLASH + "hbrtl.lib" ) )
-               bReto:=.T.
-            endif
-         case cTipo == DefineMiniGui1 + DefineBorland + DefineXHarbour
-            if File( cDir + DEF_SLASH + "BIN" + DEF_SLASH + "HARBOUR.EXE" ) .and. ;
-               File( cDirLib + DEF_SLASH + "rtl.lib" )
-               bReto:=.T.
-            endif
+         CASE cTipo == DefineMiniGui1 + DefineBorland + DefineHarbour
+            IF File( cDir + DEF_SLASH + "BIN" + DEF_SLASH + "HARBOUR.EXE" )
+               IF File( cDirLib + DEF_SLASH + "rtl.lib" ) .OR.  File( cDirLib + DEF_SLASH + "hbrtl.lib" )
+                  bReto := .T.
+               ELSE
+                  cError := 'Posible Harbour version error.' + CRLF + ;
+                            'Neither file "' + cDirLib + DEF_SLASH + 'rtl.lib"' + CRLF + ;
+                            'nor file "' + cDirLib + DEF_SLASH + 'hbrtl.lib" were found!'
+               ENDIF
+            ELSE
+               cError := "Can't find file HARBOUR.EXE at Harbour folder!"
+            ENDIF
+         CASE cTipo == DefineMiniGui1 + DefineBorland + DefineXHarbour
+            IF File( cDir + DEF_SLASH + "BIN" + DEF_SLASH + "HARBOUR.EXE" )
+               IF File( cDirLib + DEF_SLASH + "rtl.lib" )
+                  bReto := .T.
+               ELSE
+                  cError := 'Posible xHarbour version error.' + CRLF + ;
+                            'File "' + cDirLib + DEF_SLASH + 'rtl.lib" not found!'
+               ENDIF
+            ELSE
+               cError := "Can't find file HARBOUR.EXE at xHarbour folder!"
+            ENDIF
          // HMG 3.x
-         case cTipo == DefineMiniGui3 + DefineMinGW + DefineHarbour
-            if File( cDir + DEF_SLASH + "BIN" + DEF_SLASH + "HARBOUR.EXE" ) .and. ;
-               ( File( cDirLib + DEF_SLASH + "librtl.a" ) .or. ;
-                 File( cDirLib + DEF_SLASH + "libhbrtl.a" ) .or. ;
-                 File( cDirLib + DEF_SLASH + "WIN" + DEF_SLASH + "MINGW" + DEF_SLASH + "librtl.a" ) .or. ;
-                 File( cDirLib + DEF_SLASH + "WIN" + DEF_SLASH + "MINGW" + DEF_SLASH + "libhbrtl.a" ) )
-               bReto:=.T.
-            endif
-         case cTipo == DefineMiniGui3 + DefineMinGW + DefineXHarbour
-            if File( cDir + DEF_SLASH + "BIN" + DEF_SLASH + "HARBOUR.EXE" ) .and. ;
-               File( cDirLib + DEF_SLASH + "librtl.a" ) .and. ;
-               File( cDirLib + DEF_SLASH + "libtip.a" )
-               bReto:=.T.
-            endif
+         CASE cTipo == DefineMiniGui3 + DefineMinGW + DefineHarbour
+            IF File( cDir + DEF_SLASH + "BIN" + DEF_SLASH + "HARBOUR.EXE" )
+               IF File( cDirLib + DEF_SLASH + "librtl.a" ) .OR. ;
+                  File( cDirLib + DEF_SLASH + "libhbrtl.a" ) .OR. ;
+                  File( cDirLib + DEF_SLASH + "WIN" + DEF_SLASH + "MINGW" + DEF_SLASH + "librtl.a" ) .OR. ;
+                  File( cDirLib + DEF_SLASH + "WIN" + DEF_SLASH + "MINGW" + DEF_SLASH + "libhbrtl.a" )
+                  bReto := .T.
+               ELSE
+                  cError := 'Posible Harbour version error.' + CRLF + ;
+                            'Neither file "' + cDirLib + DEF_SLASH + 'librtl.a"' + CRLF + ;
+                            'nor file "' + cDirLib + DEF_SLASH + 'libhbrtl.a"' + CRLF + ;
+                            'nor file "' + cDirLib + DEF_SLASH + 'WIN' + DEF_SLASH + 'MINGW' + DEF_SLASH + 'librtl.a"' + CRLF + ;
+                            'nor file "' + cDirLib + DEF_SLASH + 'WIN' + DEF_SLASH + 'MINGW' + DEF_SLASH + 'libhbrtl.a" were found!'
+               ENDIF
+            ELSE
+               cError := "Can't find file HARBOUR.EXE at Harbour folder!"
+            ENDIF
+         CASE cTipo == DefineMiniGui3 + DefineMinGW + DefineXHarbour
+            IF File( cDir + DEF_SLASH + "BIN" + DEF_SLASH + "HARBOUR.EXE" )
+               IF File( cDirLib + DEF_SLASH + "librtl.a" )
+                  IF File( cDirLib + DEF_SLASH + "libtip.a" )
+                     bReto := .T.
+                  ELSE
+                     cError := 'Posible xHarbour version error.' + CRLF + ;
+                               'File "' + cDirLib + DEF_SLASH + 'libtip.a" not found!'
+                  ENDIF
+               ELSE
+                  cError := 'Posible xHarbour version error.' + CRLF + ;
+                            'File "' + cDirLib + DEF_SLASH + 'librtl.a" not found!'
+               ENDIF
+            ELSE
+               cError := "Can't find file HARBOUR.EXE at xHarbour folder!"
+            ENDIF
          // Extended
-         case cTipo == DefineExtended1 + DefineBorland + DefineHarbour
-            if File( cDir + DEF_SLASH + "BIN" + DEF_SLASH + "HARBOUR.EXE" ) .and. ;
-               ( File( cDirLib + DEF_SLASH + "rtl.lib" ) .or. ;
-                 File( cDirLib + DEF_SLASH + "hbrtl.lib" ) )
-               bReto:=.T.
-            endif
-         case cTipo == DefineExtended1 + DefineBorland + DefineXHarbour
-            if File( cDir + DEF_SLASH + "BIN" + DEF_SLASH + "HARBOUR.EXE" ) .and. ;
-               File( cDirLib + DEF_SLASH + "rtl.lib" ) .and. ;
-               File( cDirLib + DEF_SLASH + "tip.lib" )
-               bReto:=.T.
-            endif
-         case cTipo == DefineExtended1 + DefineMinGW + DefineHarbour
-            if File( cDir + DEF_SLASH + "BIN" + DEF_SLASH + "HARBOUR.EXE" ) .and. ;
-               ( File( cDirLib + DEF_SLASH + "librtl.a" ) .or. ;
-                 File( cDirLib + DEF_SLASH + "libhbrtl.a" ) .or. ;
-                 File( cDirLib + DEF_SLASH + "WIN" + DEF_SLASH + "MINGW" + DEF_SLASH + "librtl.a" ) .or. ;
-                 File( cDirLib + DEF_SLASH + "WIN" + DEF_SLASH + "MINGW" + DEF_SLASH + "libhbrtl.a" ) )
-               bReto:=.T.
-            endif
-         case cTipo == DefineExtended1 + DefineMinGW + DefineXHarbour
-            if File( cDir + DEF_SLASH + "BIN" + DEF_SLASH + "HARBOUR.EXE" ) .and. ;
-               File( cDirLib + DEF_SLASH + "librtl.a" ) .and. ;
-               File( cDirLib + DEF_SLASH + "libtip.a" )
-               bReto:=.T.
-            endif
+         CASE cTipo == DefineExtended1 + DefineBorland + DefineHarbour
+            IF File( cDir + DEF_SLASH + "BIN" + DEF_SLASH + "HARBOUR.EXE" )
+               IF File( cDirLib + DEF_SLASH + "rtl.lib" ) .OR. File( cDirLib + DEF_SLASH + "hbrtl.lib" )
+                  bReto := .T.
+               ELSE
+                  cError := 'Posible Harbour version error.' + CRLF + ;
+                            'Neither file "' + cDirLib + DEF_SLASH + 'rtl.lib"' + CRLF + ;
+                            'nor file "' + cDirLib + DEF_SLASH + 'hbrtl.lib" were found!'
+               ENDIF
+            ELSE
+               cError := "Can't find file HARBOUR.EXE at Harbour folder!"
+            ENDIF
+         CASE cTipo == DefineExtended1 + DefineBorland + DefineXHarbour
+            IF File( cDir + DEF_SLASH + "BIN" + DEF_SLASH + "HARBOUR.EXE" )
+               IF File( cDirLib + DEF_SLASH + "rtl.lib" )
+                  IF File( cDirLib + DEF_SLASH + "tip.lib" )
+                     bReto := .T.
+                  ELSE
+                     cError := 'Posible xHarbour version error.' + CRLF + ;
+                               'File "' + cDirLib + DEF_SLASH + 'tip.lib" not found!'
+                  ENDIF
+               ELSE
+                  cError := 'Posible xHarbour version error.' + CRLF + ;
+                            'File "' + cDirLib + DEF_SLASH + 'rtl.lib" not found!'
+               ENDIF
+            ELSE
+               cError := "Can't find file HARBOUR.EXE at xHarbour folder!"
+            ENDIF
+         CASE cTipo == DefineExtended1 + DefineMinGW + DefineHarbour
+            IF File( cDir + DEF_SLASH + "BIN" + DEF_SLASH + "HARBOUR.EXE" )
+               IF File( cDirLib + DEF_SLASH + "librtl.a" ) .OR. ;
+                  File( cDirLib + DEF_SLASH + "libhbrtl.a" ) .OR. ;
+                  File( cDirLib + DEF_SLASH + "WIN" + DEF_SLASH + "MINGW" + DEF_SLASH + "librtl.a" ) .OR. ;
+                  File( cDirLib + DEF_SLASH + "WIN" + DEF_SLASH + "MINGW" + DEF_SLASH + "libhbrtl.a" )
+                  bReto := .T.
+               ELSE
+                  cError := 'Posible Harbour version error.' + CRLF + ;
+                            'Neither file "' + cDirLib + DEF_SLASH + 'librtl.a"' + CRLF + ;
+                            'nor file "' + cDirLib + DEF_SLASH + 'libhbrtl.a"' + CRLF + ;
+                            'nor file "' + cDirLib + DEF_SLASH + 'WIN' + DEF_SLASH + 'MINGW' + DEF_SLASH + 'librtl.a"' + CRLF + ;
+                            'nor file "' + cDirLib + DEF_SLASH + 'WIN' + DEF_SLASH + 'MINGW' + DEF_SLASH + 'libhbrtl.a" were found!'
+               ENDIF
+            ELSE
+               cError := "Can't find file HARBOUR.EXE at Harbour folder!"
+            ENDIF
+         CASE cTipo == DefineExtended1 + DefineMinGW + DefineXHarbour
+            IF File( cDir + DEF_SLASH + "BIN" + DEF_SLASH + "HARBOUR.EXE" )
+               IF File( cDirLib + DEF_SLASH + "librtl.a" ) 
+                  IF File( cDirLib + DEF_SLASH + "libtip.a" )
+                     bReto := .T.
+                  ELSE
+                     cError := 'Posible xHarbour version error.' + CRLF + ;
+                               'File "' + cDirLib + DEF_SLASH + 'libtip.a" not found!'
+                  ENDIF
+               ELSE
+                  cError := 'Posible xHarbour version error.' + CRLF + ;
+                            'File "' + cDirLib + DEF_SLASH + 'librtl.a" not found!'
+               ENDIF
+            ELSE
+               cError := "Can't find file HARBOUR.EXE at xHarbour folder!"
+            ENDIF
          // OOHG
-         case cTipo == DefineOohg3 + DefineBorland + DefineHarbour
-            if File( cDir + DEF_SLASH + "BIN" + DEF_SLASH + "HARBOUR.EXE" ) .and. ;
-               ( File( cDirLib + DEF_SLASH + "rtl.lib" ) .or. ;
-                 File( cDirLib + DEF_SLASH + "hbrtl.lib" ) )
-               bReto:=.T.
-            endif
-         case cTipo == DefineOohg3 + DefineBorland + DefineXHarbour
-            if File( cDir + DEF_SLASH + "BIN" + DEF_SLASH + "HARBOUR.EXE" ) .and. ;
-               File( cDirLib + DEF_SLASH + "rtl.lib" ) .and. ;
-               File( cDirLib + DEF_SLASH + "tip.lib" )
-               bReto:=.T.
-            endif
-         case cTipo == DefineOohg3 + DefineMinGW + DefineHarbour
-            if File( cDir + DEF_SLASH + "BIN" + DEF_SLASH + "HARBOUR.EXE" ) .and. ;
-               ( File( cDirLib + DEF_SLASH + "librtl.a" ) .or. ;
-              File( cDirLib + DEF_SLASH + "libhbrtl.a" ) .or. ;
-                 File( cDirLib + DEF_SLASH + "WIN" + DEF_SLASH + "MINGW" + DEF_SLASH + "librtl.a" ) .or. ;
-                 File( cDirLib + DEF_SLASH + "WIN" + DEF_SLASH + "MINGW" + DEF_SLASH + "libhbrtl.a" ) )
-               bReto:=.T.
-            endif
-         case cTipo == DefineOohg3 + DefineMinGW + DefineXHarbour
-            if File( cDir + DEF_SLASH + "BIN" + DEF_SLASH + "HARBOUR.EXE" ) .and. ;
-               File( cDirLib + DEF_SLASH + "librtl.a" ) .and. ;
-               File( cDirLib + DEF_SLASH + "libtip.a" )
-               bReto:=.T.
-            endif
-         case cTipo == DefineOohg3 + DefinePelles + DefineHarbour
-            if File( cDir + DEF_SLASH + "BIN" + DEF_SLASH + "HARBOUR.EXE" ) .and. ;
-               ( File( cDirLib + DEF_SLASH + "rtl.lib" ) .or. ;
-                 File( cDirLib + DEF_SLASH + "hbrtl.lib" ) )
-               bReto:=.T.
-            endif
-         case cTipo == DefineOohg3 + DefinePelles + DefineXHarbour
-            if File( cDir + DEF_SLASH + "BIN" + DEF_SLASH + "HARBOUR.EXE" ) .and. ;
-               File( cDirLib + DEF_SLASH + "rtl.lib" ) .and. ;
-               File( cDirLib + DEF_SLASH + "tip.lib" )
-               bReto:=.T.
-            endif
-         otherwise
+         CASE cTipo == DefineOohg3 + DefineBorland + DefineHarbour
+            IF File( cDir + DEF_SLASH + "BIN" + DEF_SLASH + "HARBOUR.EXE" )
+               IF File( cDirLib + DEF_SLASH + "rtl.lib" ) .OR. File( cDirLib + DEF_SLASH + "hbrtl.lib" )
+                  bReto := .T.
+               ELSE
+                  cError := 'Posible Harbour version error.' + CRLF + ;
+                            'Neither file "' + cDirLib + DEF_SLASH + 'rtl.lib"' + CRLF + ;
+                            'nor file "' + cDirLib + DEF_SLASH + 'hbrtl.lib" were found!'
+               ENDIF
+            ELSE
+               cError := "Can't find file HARBOUR.EXE at Harbour folder!"
+            ENDIF
+         CASE cTipo == DefineOohg3 + DefineBorland + DefineXHarbour
+            IF File( cDir + DEF_SLASH + "BIN" + DEF_SLASH + "HARBOUR.EXE" ) 
+               IF File( cDirLib + DEF_SLASH + "rtl.lib" )
+                  IF File( cDirLib + DEF_SLASH + "tip.lib" )
+                     bReto := .T.
+                  ELSE
+                     cError := 'Posible xHarbour version error.' + CRLF + ;
+                               'File "' + cDirLib + DEF_SLASH + 'tip.lib" not found!'
+                  ENDIF
+               ELSE
+                  cError := 'Posible xHarbour version error.' + CRLF + ;
+                            'File "' + cDirLib + DEF_SLASH + 'rtl.lib" not found!'
+               ENDIF
+            ELSE
+               cError := "Can't find file HARBOUR.EXE at xHarbour folder!"
+            ENDIF
+         CASE cTipo == DefineOohg3 + DefineMinGW + DefineHarbour
+            IF File( cDir + DEF_SLASH + "BIN" + DEF_SLASH + "HARBOUR.EXE" )
+               IF File( cDirLib + DEF_SLASH + "librtl.a" ) .OR. ;
+                  File( cDirLib + DEF_SLASH + "libhbrtl.a" ) .OR. ;
+                  File( cDirLib + DEF_SLASH + "WIN" + DEF_SLASH + "MINGW" + DEF_SLASH + "librtl.a" ) .OR. ;
+                  File( cDirLib + DEF_SLASH + "WIN" + DEF_SLASH + "MINGW" + DEF_SLASH + "libhbrtl.a" )
+                  bReto := .T.
+               ELSE
+                  cError := 'Posible Harbour version error.' + CRLF + ;
+                            'Neither file "' + cDirLib + DEF_SLASH + 'librtl.a"' + CRLF + ;
+                            'nor file "' + cDirLib + DEF_SLASH + 'libhbrtl.a"' + CRLF + ;
+                            'nor file "' + cDirLib + DEF_SLASH + 'WIN' + DEF_SLASH + 'MINGW' + DEF_SLASH + 'librtl.a"' + CRLF + ;
+                            'nor file "' + cDirLib + DEF_SLASH + 'WIN' + DEF_SLASH + 'MINGW' + DEF_SLASH + 'libhbrtl.a" were found!'
+               ENDIF
+            ELSE
+               cError := "Can't find file HARBOUR.EXE at Harbour folder!"
+            ENDIF
+         CASE cTipo == DefineOohg3 + DefineMinGW + DefineXHarbour
+            IF File( cDir + DEF_SLASH + "BIN" + DEF_SLASH + "HARBOUR.EXE" )
+               IF File( cDirLib + DEF_SLASH + "librtl.a" )
+                  IF File( cDirLib + DEF_SLASH + "libtip.a" )
+                     bReto := .T.
+                  ELSE
+                     cError := 'Posible xHarbour version error.' + CRLF + ;
+                               'File "' + cDirLib + DEF_SLASH + 'libtip.a" not found!'
+                  ENDIF
+               ELSE
+                  cError := 'Posible xHarbour version error.' + CRLF + ;
+                            'File "' + cDirLib + DEF_SLASH + 'librtl.a" not found!'
+               ENDIF
+            ELSE
+               cError := "Can't find file HARBOUR.EXE at xHarbour folder!"
+            ENDIF
+         CASE cTipo == DefineOohg3 + DefinePelles + DefineHarbour
+            IF File( cDir + DEF_SLASH + "BIN" + DEF_SLASH + "HARBOUR.EXE" )
+               IF File( cDirLib + DEF_SLASH + "rtl.lib" ) .OR. File( cDirLib + DEF_SLASH + "hbrtl.lib" )
+                  bReto := .T.
+               ELSE
+                  cError := 'Posible Harbour version error.' + CRLF + ;
+                            'Neither file "' + cDirLib + DEF_SLASH + 'rtl.lib"' + CRLF + ;
+                            'nor file "' + cDirLib + DEF_SLASH + 'hbrtl.lib" were found!'
+               ENDIF
+            ELSE
+               cError := "Can't find file HARBOUR.EXE at Harbour folder!"
+            ENDIF
+         CASE cTipo == DefineOohg3 + DefinePelles + DefineXHarbour
+            IF File( cDir + DEF_SLASH + "BIN" + DEF_SLASH + "HARBOUR.EXE" )
+               IF File( cDirLib + DEF_SLASH + "rtl.lib" ) .OR. File( cDirLib + DEF_SLASH + "rtl64.lib" )
+                  IF File( cDirLib + DEF_SLASH + "tip.lib" )
+                     bReto := .T.
+                  ELSE
+                     cError := 'Posible xHarbour version error.' + CRLF + ;
+                               'File "' + cDirLib + DEF_SLASH + 'tip.lib" not found!'
+                  ENDIF
+               ELSE
+                  cError := 'Posible xHarbour version error.' + CRLF + ;
+                            'Neither file "' + cDirLib + DEF_SLASH + 'rtl.lib"' + CRLF + ;
+                            'nor file "' + cDirLib + DEF_SLASH + 'rtl64.lib" were found!'
+               ENDIF
+            ELSE
+               cError := "Can't find file HARBOUR.EXE at xHarbour folder!"
+            ENDIF
+         OTHERWISE
             US_Log( "Tipo de Directorio inválido: " + cTipo )
-         endcase
-      endcase
-   endif
-Return bReto
+         ENDCASE
+      ENDCASE
+   ELSE
+      cError := '"' + cDir + '" is not a valid folder.'
+   ENDIF
+   IF ! bReto
+      IF MyMsgYesNo( cError + CRLF + ;
+                     CRLF + ;
+                     "The current global configuration does not follow the expected pattern." + CRLF + ;
+                     "This can prevent the project from being built or the result from working." + CRLF + ;
+                     "Do you want to continue anyway?" )
+         bReto := .T.
+      ENDIF
+   ENDIF
+RETURN bReto
 
 Function CambioTitulo()
    if PUB_bLite
@@ -1184,14 +1488,14 @@ Function CambioTitulo()
          SetProperty( "VentanaLite", "Title", 'QPM (' + QPM_VERSION_DISPLAY_LONG + ') [ ' + alltrim( PUB_cProjectFile ) + ' ]' )
       endif
       if _IsWindowDefined( "WinHotRecovery" )
-         SetProperty( "WinHotRecovery", "title", 'Hot Recovery for QPM Projects [ ' + alltrim( PUB_cProjectFile ) + ' ]' )
+         SetProperty( "WinHotRecovery", "Title", 'Hot Recovery for QPM Projects [ ' + alltrim( PUB_cProjectFile ) + ' ]' )
       endif
    else
       if _IsWindowDefined( "VentanaLite" )
-         SetProperty( "VentanaMain", "Title", 'QPM (QAC based Project Manager) - Project Manager for MiniGui (' + QPM_VERSION_DISPLAY_LONG + ') [ ' + alltrim( PUB_cProjectFile ) + ' ]' )
+         SetProperty( "VentanaMain", "Title", 'QPM - Project Manager for MiniGui (' + QPM_VERSION_DISPLAY_LONG + ') [ ' + alltrim( PUB_cProjectFile ) + ' ]' )
       endif
       if _IsWindowDefined( "WinHotRecovery" )
-         SetProperty( "WinHotRecovery", "title", 'QPM (QAC based Project Manager) - Hot Recovery for QPM Projects [ ' + alltrim( PUB_cProjectFile ) + ' ]' )
+         SetProperty( "WinHotRecovery", "Title", 'QPM - Hot Recovery for QPM Projects [ ' + alltrim( PUB_cProjectFile ) + ' ]' )
       endif
    endif
 Return .T.
@@ -1293,6 +1597,12 @@ Return &( "Gbl_T_M_" + GetSuffix() )
 Function GetMiniGuiName()
 Return &( "Gbl_T_N_" + GetSuffix() )
 
+Function GetGTGUIName()
+Return US_Upper( &( "Gbl_T_G_" + GetSuffix() ) )
+
+Function GetGTWINName()
+Return US_Upper( StrTran( US_Upper( &( "Gbl_T_G_" + GetSuffix() ) ), "GUI", "WIN" ) )
+
 Function GetCppFolder()
 Return &( "Gbl_T_C_" + GetSuffix() )
 
@@ -1313,6 +1623,92 @@ Function GetMiniguiLibFolder( lLong )
       endif
    endif
 Return cDir
+
+FUNCTION AutoType( Message, lAutoTypeNoSpaces, lOneItemPerLine )
+
+   LOCAL cMessage, cType, l, i
+
+   DEFAULT lAutoTypeNoSpaces TO .T.
+   DEFAULT lOneItemPerLine TO .T.
+
+   cType := ValType( Message )
+
+   DO CASE
+   CASE cType $ "CNLDM"
+      cMessage := Transform( Message, "@" ) + iif( lAutoTypeNoSpaces, "", "   " )
+   CASE cType == "O"
+      cMessage := Message:ClassName() + " :Object:" + iif( lAutoTypeNoSpaces, "", "   " )
+   CASE cType == "A"
+      l := Len( Message )
+      cMessage := ""
+      FOR i := 1 TO l
+         IF lOneItemPerLine
+            cMessage := cMessage + iif( i == l, AutoType( Message[ i ] ), AutoType( Message[ i ] ) + iif( lAutoTypeNoSpaces, "", "   " ) + CRLF )
+         ELSE
+            cMessage := cMessage + iif( i == l, AutoType( Message[ i ] ) + CRLF, AutoType( Message[ i ] ) + iif( lAutoTypeNoSpaces, "", "   " ) )
+         ENDIF
+      NEXT i
+   CASE cType == "B"
+      cMessage := "{|| Codeblock }" + iif( lAutoTypeNoSpaces, "", "   " )
+   CASE cType == "H"
+      cMessage := ":Hash:" + iif( lAutoTypeNoSpaces, "", "   " )
+   CASE cType == "P"
+      cMessage :=  LTrim( hb_ValToStr( Message )) + " HexToNum()=> " + LTrim( Str( HexToNum( SubStr( hb_ValToStr( Message ), 3 ) ) ) ) + iif( lAutoTypeNoSpaces, "", "   " )
+   CASE cType == "T"
+      cMessage := "t'" + hb_TSToStr( Message, .T. ) + "'" + iif( lAutoTypeNoSpaces, "", "   " )
+   CASE cType == "S"
+      cMessage := "@" + Message:name + "()" + iif( lAutoTypeNoSpaces, "", "   " )
+   CASE cMessage == NIL
+      cMessage := "<NIL>" + iif( lAutoTypeNoSpaces, "", "   " )
+   OTHERWISE
+      cMessage := "???:" + cType + iif( lAutoTypeNoSpaces, "", "   " )
+   ENDCASE
+
+   RETURN cMessage
+
+FUNCTION MyMsgDebug( ... )
+
+   LOCAL i, cMessage, nCnt := PCount()
+
+   cMessage := "Called from: " + ;
+               ProcName( 1 ) + ;
+               " (" + AllTrim( Str( ProcLine( 1 ) ) ) + ")" + ;
+               iif( Empty( ProcFile( 1 ) ), "", " in " + ProcFile( 1 ) ) + ;
+               CRLF + CRLF
+
+   FOR i = 1 TO nCnt
+      cMessage += ValToPrgExp( PValue( i ) ) + iif( i < nCnt, ", ", "" )
+   NEXT
+
+   MsgInfo( cMessage, "DEBUG INFO" ) // this is not translated
+
+RETURN cMessage
+
+/*--------------------------------------------------------------------------------------------------------------------------------*/
+PROCEDURE CallDump( uTitle )
+
+   LOCAL nLevel, cText
+
+   cText := ProcName( 1 ) + ;
+            " (" + ;
+            AllTrim( Str( ProcLine( 1 ) ) ) + ;
+            ")" + ;
+            iif( Empty( ProcFile( 1 ) ), "", " in " + ProcFile( 1 ) )
+
+   nLevel := 2
+   DO WHILE ! Empty( ProcName( nLevel ) )
+      cText += CRLF + ;
+               ProcName( nLevel ) + ;
+               " (" + ;
+               AllTrim( Str( ProcLine( nLevel ) ) ) + ;
+               ")" + ;
+               iif( Empty( ProcFile( nLevel ) ), "", " in " + ProcFile( nLevel ) )
+      nLevel ++
+   ENDDO
+
+   MsgInfo( cText, AutoType( uTitle ) ) // this is not translated
+
+   RETURN
 
 Function GetCppLibFolder( lLong )
    Local cDir := &( "Gbl_T_C_LIBS_" + GetSuffix() )
@@ -1467,39 +1863,45 @@ Function ChgPathToRelative( cLinea )
    cLinea := US_StrTran( cLinea, PUB_cThisFolder + DEF_SLASH,             "<ThisFolder>" + DEF_SLASH )
 Return cLinea
 
-Function MsgOK( titulo, txt, tipo, autoexit, Ptiempo, bButtonRun )
+Function MyMsgOK( titulo, txt, tipo, autoexit, Ptiempo, bButtonRun )
    Local ColorBack, ColorFont
    Private tiempo, WinMsg := US_WindowNameRandom("MsgOk")
    Private PrivAutoExit
    DEFAULT Ptiempo TO 0
    DEFAULT bButtonRun TO .F.
    tiempo := Ptiempo
-   if empty( titulo )
-      titulo := 'QPM (QAC based Project Manager)'
-   endif
    if empty( autoexit )
       autoexit := .F.
    endif
    PrivAutoExit := autoexit
    do case
-      case US_Upper( tipo ) == "E"
-         ColorBack := DEF_COLORRED
-         ColorFont := DEF_COLORWHITE
-         if tiempo == 0
-            tiempo := 10
-         endif
-      case US_Upper( tipo ) == "W"
-         ColorBack := DEF_COLORYELLOW
-         ColorFont := DEF_COLORBLACK
-         if tiempo == 0
-            tiempo := 5
-         endif
-      otherwise
-         ColorBack := DEF_COLORGREEN
-         ColorFont := DEF_COLORWHITE
-         if tiempo == 0
-            tiempo := 2
-         endif
+   case US_Upper( tipo ) == "E"
+      ColorBack := DEF_COLORRED
+      ColorFont := DEF_COLORWHITE
+      if tiempo == 0
+         tiempo := 10
+      endif
+      if empty( titulo )
+         titulo := 'QPM - Error'
+      endif
+   case US_Upper( tipo ) == "W"
+      ColorBack := DEF_COLORYELLOW
+      ColorFont := DEF_COLORBLACK
+      if tiempo == 0
+         tiempo := 5
+      endif
+      if empty( titulo )
+         titulo := 'QPM - Warning'
+      endif
+   otherwise
+      ColorBack := DEF_COLORGREEN
+      ColorFont := DEF_COLORWHITE
+      if tiempo == 0
+         tiempo := 2
+      endif
+      if empty( titulo )
+         titulo := 'QPM - Info'
+      endif
    endcase
 
    if US_IsWindowModalActive()
@@ -1556,7 +1958,7 @@ Function MsgOK( titulo, txt, tipo, autoexit, Ptiempo, bButtonRun )
       WIDTH           100
       HEIGHT          25
       CAPTION         if( PrivAutoExit, 'Ok (' + alltrim( str( tiempo ) ) + ')', 'Ok' )
-      ONCLICK         MsgOk_Salir()
+      ONCLICK         _MsgOk_Salir()
    END BUTTON
 
    if bButtonRun
@@ -1567,7 +1969,7 @@ Function MsgOK( titulo, txt, tipo, autoexit, Ptiempo, bButtonRun )
          WIDTH           100
          HEIGHT          25
          CAPTION         'Run'
-         ONCLICK         ( PUB_bForceRunFromMsgOk := .T., MsgOk_Salir() )
+         ONCLICK         ( PUB_bForceRunFromMsgOk := .T., _MsgOk_Salir() )
       END BUTTON
    endif
 
@@ -1575,7 +1977,7 @@ Function MsgOK( titulo, txt, tipo, autoexit, Ptiempo, bButtonRun )
       DEFINE TIMER Timer_Msg ;
              OF &(WinMsg) ;
              INTERVAL 1000 ;
-             ACTION MsgOk_Contador()
+             ACTION _MsgOk_Contador()
    endif
 
    if bButtonRun
@@ -1588,7 +1990,7 @@ Function MsgOK( titulo, txt, tipo, autoexit, Ptiempo, bButtonRun )
    ACTIVATE WINDOW &WinMsg
 Return .T.
 
-Function MsgOk_Contador()
+STATIC FUNCTION _MsgOk_Contador()
    tiempo--
    if tiempo < 1
       if _IsWindowActive( WinMsg )
@@ -1604,7 +2006,7 @@ Function MsgOk_Contador()
    endif
 Return .F.
 
-Function MsgOk_Salir()
+STATIC FUNCTION _MsgOk_Salir()
    if PrivAutoExit
       if _IsWindowActive( WinMsg )
          SetProperty( WinMsg, "bOK", "enabled", .F. )
@@ -1618,10 +2020,8 @@ Return .T.
 Function MyMsg( titulo, texto, tipo, autoexit )
    if bAutoExit .and. !empty( PUB_cAutoLog )
       PUB_cAutoLogTmp := MemoRead( PUB_cAutoLog )
-      QPM_MemoWrit( PUB_cAutoLog, PUB_cAutoLogTmp + HB_OsNewLine() + ;
-                texto + HB_OsNewLine() + ;
-                "" )
-      msgok( titulo, "Info saved" + HB_OsNewLine() + "Check into LOG", tipo, autoexit )
+      QPM_MemoWrit( PUB_cAutoLog, PUB_cAutoLogTmp + hb_osNewLine() + texto + hb_osNewLine() + "" )
+      MyMsgOK( titulo, "Info saved to log: " + DBLQT + PUB_cAutoLog + DBLQT, tipo, autoexit )
    else
       SetMGWaitHide()
       Do case
@@ -1725,7 +2125,7 @@ Function GetOutputModuleName( bForDisplay )
    endif
    do case
       case Prj_Radio_OutputRename = DEF_RG_NEWNAME
-         if empty( US_FileNameOnlyExt( Prj_Text_OutputRenameNewName ) )
+         if Empty( US_FileNameOnlyExt( Prj_Text_OutputRenameNewName ) )
             if OutputExt() == "A" .and. Prj_Check_OutputPrefix
                cOutputName        := US_ShortName(PUB_cProjectFolder) + DEF_SLASH + 'lib' + US_FileNameOnlyName( Prj_Text_OutputRenameNewName ) + '.' + lower( OutputExt() )
                cOutputNameDisplay := PUB_cProjectFolder + DEF_SLASH + 'lib' + US_FileNameOnlyName( Prj_Text_OutputRenameNewName ) + '.' + lower( OutputExt() )
@@ -1761,7 +2161,7 @@ Function MyMsgYesNo( a, b, c )
    DEFAULT b TO "QPM - Confirm"
    DEFAULT c TO nil
    SetMGWaitHide()
-   Reto := MsgYesNo( a, b, c, .F. )
+   Reto := MsgYesNo( a, b, c, .F. )           // this is not translated
    SetMGWaitShow()
 Return Reto
 
@@ -1769,7 +2169,7 @@ Function MyMsgYesNoCancel( a, b )
    Local Reto
    DEFAULT b TO "QPM - Confirm"
    SetMGWaitHide()
-   Reto := MsgYesNoCancel( a, b, nil, .F. )
+   Reto := MsgYesNoCancel( a, b, nil, .F. )           // this is not translated
    SetMGWaitShow()
 Return Reto
 
@@ -1777,7 +2177,7 @@ Function MyMsgOkCancel( a, b )
    Local Reto
    DEFAULT b TO "QPM - Confirm"
    SetMGWaitHide()
-   Reto := MsgOkCancel( a, b, nil, .F. )
+   Reto := MsgOkCancel( a, b, nil, .F. )           // this is not translated
    SetMGWaitShow()
 Return Reto
 
@@ -1785,7 +2185,7 @@ Function MyMsgRetryCancel( a, b )
    Local Reto
    DEFAULT b TO "QPM - Confirm"
    SetMGWaitHide()
-   Reto := MsgRetryCancel( a, b, nil, .F. )
+   Reto := MsgRetryCancel( a, b, nil, .F. )           // this is not translated
    SetMGWaitShow()
 Return Reto
 
@@ -1854,11 +2254,11 @@ return .T.
 
 Function ViewLog()
    if ! File( AllTrim( Gbl_Text_Editor ) )
-      MsgStop( "Program Editor not Found: " + AllTrim( Gbl_Text_Editor ) + '. Look at ' + PUB_MenuGblOptions + ' of Settings menu.' )
+      MyMsgStop( "Program Editor not Found: " + AllTrim( Gbl_Text_Editor ) + '.' + CRLF + 'Look at ' + PUB_MenuGblOptions + ' of Settings menu.' )
       Return .F.
    endif
    If Empty( Gbl_Text_Editor )
-      MyMsg( 'Operation Aborted', US_VarToStr( 'Program editor not defined. Look at ' + PUB_MenuGblOptions + ' of Settings menu.' ), "E", bAutoExit )
+      MyMsgStop( 'Program editor not defined.' + CRLF + 'Look at ' + PUB_MenuGblOptions + ' of Settings menu.' )
       Return .F.
    Endif
    QPM_Execute( US_ShortName( AllTrim( Gbl_Text_Editor ) ), PUB_cQPM_Folder + DEF_SLASH + "QPM.log" )
@@ -1925,7 +2325,7 @@ Function Enumeracion2( cMemoIn )
    hOut := fcreate( cFileOut, 0 )       // read/write mode
    hIn := fopen( cFileIn, 0 )        // read mode
    if ferror() = 0
-      do while US_FReadLine( hIn, @cLinea, vFines ) == 0
+      do while hb_FReadLine( hIn, @cLinea, vFines ) == 0
          i ++
          nAcum := nAcum + len( cLinea )
          if GetMGWaitStop()
@@ -1967,7 +2367,7 @@ PROCEDURE QPM_Execute( cCMD, cParms, bWait, nSize, RunWaitFileStop )
       CASE nSize == 2            // maximized
          EXECUTE FILE ( cCMD ) PARAMETERS ( cParms ) MAXIMIZE
       OTHERWISE
-         MsgInfo( "Invalid nSize parm in function QPM_Execute: " + US_VarToStr( nSize ) )
+         MyMsgInfo( "Invalid nSize parm in function QPM_Execute: " + US_VarToStr( nSize ) )
       ENDCASE
    ELSE
       DO CASE
@@ -1980,7 +2380,7 @@ PROCEDURE QPM_Execute( cCMD, cParms, bWait, nSize, RunWaitFileStop )
       CASE nSize == 2            // maximized
          cSize := "MAXIMIZE"
       OTHERWISE
-         MsgInfo( "Invalid nSize parm in function QPM_Execute (2): " + US_VarToStr( nSize ) )
+         MyMsgInfo( "Invalid nSize parm in function QPM_Execute (2): " + US_VarToStr( nSize ) )
       ENDCASE
       RunWaitControlFile := US_ShortName( PUB_cProjectFolder ) + DEF_SLASH + "_" + PUB_cSecu + "RWCF" + US_DateTimeCen() + ".cnt"
       RunWaitParms       := US_ShortName( PUB_cProjectFolder ) + DEF_SLASH + "_" + PUB_cSecu + "RWP" + US_DateTimeCen() + ".cng"
@@ -2115,7 +2515,7 @@ Function QPM_Send_SelectAll()
       case GetProperty( "VentanaMain", "TabFiles", "Value" ) == nPageOut
          cType := "OUT"
       otherwise
-         MsgInfo( "Error en SelectAll, página incorrecta." )
+         MyMsgInfo( "Error en SelectAll, página incorrecta." )
          Return .F.
    endcase
    US_Send_SelectAll( "RichEdit" + cType, "VentanaMain" )
@@ -2159,7 +2559,7 @@ Function QPM_Wait( cFun, cTexto, nFila, bStop )
 Return if( GetActiveWindow() == 0, &( cFun ), SM_oMGWait:Ejecutar( cFun ) )
 
 Function SetMGWaitTxt( txt )
-   if US_IsVarDefined( "SM_oMGWait" )
+   if US_IsVar( "SM_oMGWait" )
       SM_oMGWait:cTXT := txt
       DO EVENTS
    endif
@@ -2167,26 +2567,26 @@ Return .T.
 
 Function GetMGWaitTxt()
    Local txt := ""
-   if US_IsVarDefined( "SM_oMGWait" )
+   if US_IsVar( "SM_oMGWait" )
       txt := SM_oMGWait:cTXT
    endif
 Return txt
 
 Function GetMGWaitStop()
-   if US_IsVarDefined( "SM_oMGWait" )
+   if US_IsVar( "SM_oMGWait" )
       Return SM_oMGWait:bStop
    endif
 Return .F.
 
 Function SetMGWaitShow()
-   if US_IsVarDefined( "SM_oMGWait" )
+   if US_IsVar( "SM_oMGWait" )
       US_Wait( ( SM_oMGWait:nTimerRefresh / 1000 ) * 2 )
       SM_oMGWait:bShow := .T.
    endif
 Return .T.
 
 Function SetMGWaitHide()
-   if US_IsVarDefined( "SM_oMGWait" )
+   if US_IsVar( "SM_oMGWait" )
       SM_oMGWait:bShow := .F.
       US_Wait( ( SM_oMGWait:nTimerRefresh / 1000 ) * 2 )
    endif
@@ -2286,20 +2686,18 @@ Function ReplacePrj_Version( cFile, cPrj_Version )
    QPM_MemoWrit( cFile, cMemoOut )
 Return .T.
 
-Function ReplaceDebugActive( cFile, bDebugActive )
-   Local cMemo := MemoRead( cFile ), nInx, cLine, cMemoOut := "", bFound := .F.
-   For nInx := 1 to MLCount( cMemo, 254 )
-      cLine := Memoline( cMemo, 254, nInx )
-      if !bFound .and. ;
-         US_Word( cLine, 1 ) == "DEBUGACTIVE"
-         bFound := .T.
-         cMemoOut := cMemoOut + "DEBUGACTIVE " + IF( bDebugActive, "YES", "NO" ) + HB_OsNewLine()
-      else
-         cMemoOut := cMemoOut + cLine + HB_OsNewLine()
-      endif
-   Next
-   QPM_MemoWrit( cFile, cMemoOut )
-Return .T.
+FUNCTION ReplaceMemoData( cFile, cKey, cValue )
+   LOCAL cMemo := MemoRead( cFile ), i, cLine, cMemoOut := "", lFound := .F.
+   FOR i := 1 TO MLCount( cMemo, 254 )
+      cLine := MemoLine( cMemo, 254, i )
+      IF ! lFound .AND. US_Word( cLine, 1 ) == cKey
+         lFound := .T.
+         cMemoOut := cMemoOut + cKey + " " + cValue + hb_osNewLine()
+      ELSE
+         cMemoOut := cMemoOut + cLine + hb_osNewLine()
+      ENDIF
+   NEXT i
+RETURN QPM_MemoWrit( cFile, cMemoOut )
 
 Function QPM_ProjectFileLock( cFile )
    PUB_nProjectFileHandle := FOpen( cFile, 2 + 32 ) // 2 FO_READWRITE Open for reading or writing + 32 FO_DENYWRITE Prevent others from writing
@@ -2310,5 +2708,58 @@ Function QPM_ProjectFileUnLock()
       FClose( PUB_nProjectFileHandle )
    endif
 Return FError()
+
+FUNCTION QPM_SetDefaultNameOfMiniguiAndGtguiLibs()
+
+   GetSetVar( "Gbl_T_N_"+DefineMiniGui1+DefineBorland+DefineHarbour+Define32bits,   "minigui.lib" )
+   GetSetVar( "Gbl_T_G_"+DefineMiniGui1+DefineBorland+DefineHarbour+Define32bits,   "gtgui.lib" )
+   GetSetVar( "Gbl_T_N_"+DefineMiniGui1+DefineBorland+DefineXHarbour+Define32bits,  "minigui.lib" )
+   GetSetVar( "Gbl_T_G_"+DefineMiniGui1+DefineBorland+DefineXHarbour+Define32bits,  "gtgui.lib" )
+   GetSetVar( "Gbl_T_N_"+DefineMiniGui3+DefineMinGW+DefineHarbour+Define32bits,     "libhmg.a" )
+   GetSetVar( "Gbl_T_G_"+DefineMiniGui3+DefineMinGW+DefineHarbour+Define32bits,     "libgtgui.a" )
+   GetSetVar( "Gbl_T_N_"+DefineMiniGui3+DefineMinGW+DefineHarbour+Define64bits,     "libhmg-64.a" )
+   GetSetVar( "Gbl_T_G_"+DefineMiniGui3+DefineMinGW+DefineHarbour+Define64bits,     "libgtgui-64.a" )
+   GetSetVar( "Gbl_T_N_"+DefineExtended1+DefineBorland+DefineHarbour+Define32bits,  "minigui.lib" )
+   GetSetVar( "Gbl_T_G_"+DefineExtended1+DefineBorland+DefineHarbour+Define32bits,  "gtgui.lib" )
+   GetSetVar( "Gbl_T_N_"+DefineExtended1+DefineBorland+DefineXHarbour+Define32bits, "minigui.lib" )
+   GetSetVar( "Gbl_T_G_"+DefineExtended1+DefineBorland+DefineXHarbour+Define32bits, "gtgui.lib" )
+   GetSetVar( "Gbl_T_N_"+DefineExtended1+DefineMinGW+DefineHarbour+Define32bits,    "libminigui.a" )
+   GetSetVar( "Gbl_T_G_"+DefineExtended1+DefineMinGW+DefineHarbour+Define32bits,    "libgtgui.a" )
+   GetSetVar( "Gbl_T_N_"+DefineExtended1+DefineMinGW+DefineXHarbour+Define32bits,   "libminigui.a" )
+   GetSetVar( "Gbl_T_G_"+DefineExtended1+DefineMinGW+DefineXHarbour+Define32bits,   "libgtgui.a" )
+   GetSetVar( "Gbl_T_N_"+DefineExtended1+DefineMinGW+DefineHarbour+Define64bits,    "libminigui-64.a" )
+   GetSetVar( "Gbl_T_G_"+DefineExtended1+DefineMinGW+DefineHarbour+Define64bits,    "libgtgui-64.a" )
+   GetSetVar( "Gbl_T_N_"+DefineExtended1+DefineMinGW+DefineXHarbour+Define64bits,   "libminigui-64.a" )
+   GetSetVar( "Gbl_T_G_"+DefineExtended1+DefineMinGW+DefineXHarbour+Define64bits,   "libgtgui-64.a" )
+   GetSetVar( "Gbl_T_N_"+DefineOohg3+DefineBorland+DefineHarbour+Define32bits,      "oohg.lib" )
+   GetSetVar( "Gbl_T_G_"+DefineOohg3+DefineBorland+DefineHarbour+Define32bits,      "gtgui.lib" )
+   GetSetVar( "Gbl_T_N_"+DefineOohg3+DefineBorland+DefineXHarbour+Define32bits,     "oohg.lib" )
+   GetSetVar( "Gbl_T_G_"+DefineOohg3+DefineBorland+DefineXHarbour+Define32bits,     "gtgui.lib" )
+   GetSetVar( "Gbl_T_N_"+DefineOohg3+DefineMinGW+DefineHarbour+Define32bits,        "liboohg.a" )
+   GetSetVar( "Gbl_T_G_"+DefineOohg3+DefineMinGW+DefineHarbour+Define32bits,        "libgtgui.a" )
+   GetSetVar( "Gbl_T_N_"+DefineOohg3+DefineMinGW+DefineXHarbour+Define32bits,       "liboohg.a" )
+   GetSetVar( "Gbl_T_G_"+DefineOohg3+DefineMinGW+DefineXHarbour+Define32bits,       "libgtgui.a" )
+   GetSetVar( "Gbl_T_N_"+DefineOohg3+DefineMinGW+DefineHarbour+Define64bits,        "liboohg.a" )
+   GetSetVar( "Gbl_T_G_"+DefineOohg3+DefineMinGW+DefineHarbour+Define64bits,        "libgtgui.a" )
+   GetSetVar( "Gbl_T_N_"+DefineOohg3+DefineMinGW+DefineXHarbour+Define64bits,       "liboohg.a" )
+   GetSetVar( "Gbl_T_G_"+DefineOohg3+DefineMinGW+DefineXHarbour+Define64bits,       "libgtgui.a" )
+   GetSetVar( "Gbl_T_N_"+DefineOohg3+DefinePelles+DefineHarbour+Define32bits,       "oohg.lib" )
+   GetSetVar( "Gbl_T_G_"+DefineOohg3+DefinePelles+DefineHarbour+Define32bits,       "gtgui.lib" )
+   GetSetVar( "Gbl_T_N_"+DefineOohg3+DefinePelles+DefineXHarbour+Define32bits,      "oohg.lib" )
+   GetSetVar( "Gbl_T_G_"+DefineOohg3+DefinePelles+DefineXHarbour+Define32bits,      "gtgui.lib" )
+   GetSetVar( "Gbl_T_N_"+DefineOohg3+DefinePelles+DefineHarbour+Define64bits,       "oohg.lib" )
+   GetSetVar( "Gbl_T_G_"+DefineOohg3+DefinePelles+DefineHarbour+Define64bits,       "gtgui64.lib" )
+   GetSetVar( "Gbl_T_N_"+DefineOohg3+DefinePelles+DefineXHarbour+Define64bits,      "oohg.lib" )
+   GetSetVar( "Gbl_T_G_"+DefineOohg3+DefinePelles+DefineXHarbour+Define64bits,      "gtgui64.lib" )
+
+RETURN NIL
+
+FUNCTION GetSetVar( cVar, cValue )
+   LOCAL x := &cVar
+   IF Empty( x )
+      x := cValue
+      &cVar := x
+   ENDIF
+RETURN x
 
 /* eof */
