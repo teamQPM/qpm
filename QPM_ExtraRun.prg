@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  *    QPM - QAC based Project Manager
  *
  *    Copyright 2011-2020 Fernando Yurisich <fernando.yurisich@gmail.com>
@@ -149,7 +145,7 @@ Function QPM_GetExtraRun()
 
       @ 282,465 BUTTON ExtraRunQPMProjButton ;
          PICTURE 'folderselect';
-         ACTION If ( !Empty( FileName := BugGetFile( { {'QPM Project File (*.QPM)','*.QPM;*.mpmQ'} }, 'Select Project', US_FileNameOnlyPath( ChgPathToReal( ExtraRun.ExtraRunQPMProjText.Value ) ), .F., .T. ) ), ExtraRun.ExtraRunQPMProjText.Value := ChgPathToRelative( FileName ), ) ;
+         ACTION If ( !Empty( FileName := GetFile( { {'QPM Project File (*.QPM)','*.QPM;*.mpmQ'} }, 'Select Project', US_FileNameOnlyPath( ChgPathToReal( ExtraRun.ExtraRunQPMProjText.Value ) ), .F., .T. ) ), ExtraRun.ExtraRunQPMProjText.Value := ChgPathToRelative( FileName ), ) ;
          WIDTH 34 ;
          HEIGHT 31 ;
 
@@ -172,7 +168,7 @@ Function QPM_GetExtraRun()
 
       @ 344,464 BUTTON ExtraRunExeButton ;
          PICTURE 'FolderSelect';
-         ACTION ( iif( ! Empty( FileName := BugGetFile( { {'EXE and BAT Programs','*.BAT;*.EXE'} }, ;
+         ACTION ( iif( ! Empty( FileName := GetFile( { {'EXE and BAT Programs','*.BAT;*.EXE'} }, ;
                                                         'Select Program or Process', ;
                                                         US_FileNameOnlyPath( ChgPathToReal( ExtraRun.ExtraRunExeText.Value ) ), ;
                                                         .F., .T. ) ), ;
@@ -238,7 +234,7 @@ Function QPM_GetExtraRun()
       sep := int( ( GetProperty( "ExtraRun", "Width" ) - GetBorderWidth() - 300 ) / 4 )
 
       @ 530, sep BUTTON ExtraRunOk ;
-         CAPTION 'Ok' ;
+         CAPTION 'OK' ;
          ACTION QPM_GetExtraRunSave() ;
          WIDTH 100 ;
          HEIGHT 28 ;
@@ -273,7 +269,7 @@ Function QPM_GetExtraRunInit()
       case Prj_ExtraRunType == "FREE"
          ExtraRun.ExtraRunSelectRadio.Value := 4
       otherwise
-         MsgInfo( "Invalid ExtraRun Type: "+US_VarToStr( Prj_ExtraRunType ) )
+         MyMsgInfo( "Invalid ExtraRun Type: "+US_VarToStr( Prj_ExtraRunType ) )
    endcase
    ExtraRun.ExtraRunQPMProjText.Value      := Prj_ExtraRunProjQPM
    ExtraRun.ExtraRunExeText.Value          := Prj_ExtraRunCmdEXE
@@ -336,15 +332,15 @@ Function QPM_GetExtraRunSave( bTest )
    endif
    /* */
    if ExtraRun.ExtraRunSelectRadio.Value = 2 .and. empty( ExtraRun.ExtraRunQPMProjText.Value )
-      MsgInfo( "Project name is empty !!!" )
+      MyMsgInfo( "Project name is empty !!!" )
       Return .F.
    endif
    if ExtraRun.ExtraRunSelectRadio.Value = 3 .and. empty( ExtraRun.ExtraRunExeText.Value )
-      MsgInfo( "Run Program o Process is empty !!!" )
+      MyMsgInfo( "Run Program o Process is empty !!!" )
       Return .F.
    endif
    if ExtraRun.ExtraRunSelectRadio.Value = 4 .and. empty( ExtraRun.ExtraRunFreeText.Value )
-      MsgInfo( "Free command is empty !!!" )
+      MyMsgInfo( "Free command is empty !!!" )
       Return .F.
    endif
    &( Prefix + "_ExtraRunProjQPM" ) := ExtraRun.ExtraRunQPMProjText.Value
@@ -360,7 +356,7 @@ Function QPM_GetExtraRunSave( bTest )
       case ExtraRun.ExtraRunQPMRadio.Value == 4
          &( Prefix + "_ExtraRunQPMRadio" ) := "CLEAR"
       otherwise
-         MsgInfo( "Invalid Radio Type: " + US_VarToStr( ExtraRun.ExtraRunQPMRadio.Value ) )
+         MyMsgInfo( "Invalid Radio Type: " + US_VarToStr( ExtraRun.ExtraRunQPMRadio.Value ) )
          &( Prefix + "_ExtraRunQPMRadio" ) := "OPEN"
    endcase
    &( Prefix + "_ExtraRunQPMForceFull" ) := ExtraRun.ExtraRunQPM2ForceFull.Value
@@ -427,7 +423,7 @@ Function QPM_GetExtraRunSave( bTest )
          &( Prefix + "_ExtraRunType" ) := "FREE"
          SetProperty( "WinPSettings", "Text_ExtraRunCmd", "Value", &( Prefix + "_ExtraRunCmdFREE" ) )
       otherwise
-         MsgInfo( "Invalid ExtraRun Radio: " + US_VarToStr( ExtraRun.ExtraRunSelectRadio.Value ) )
+         MyMsgInfo( "Invalid ExtraRun Radio: " + US_VarToStr( ExtraRun.ExtraRunSelectRadio.Value ) )
    endcase
    if bTest
       QPM_ExecuteExtraRun( .T. )
@@ -507,7 +503,7 @@ Function QPM_GetExtraRunOptions()
          ExtraRun.ExtraRunExeParm.Enabled            := .T.
          ExtraRun.ExtraRunExeTextParm.Enabled        := .T.
          ExtraRun.ExtraRunExeWait.Enabled            := .T.
-         ExtraRun.ExtraRunExePause.Enabled := if( upper( US_FileNameOnlyExt( ExtraRun.ExtraRunExeText.Value ) ) == "EXE", .F., .T. )
+         ExtraRun.ExtraRunExePause.Enabled := if( Upper( US_FileNameOnlyExt( ExtraRun.ExtraRunExeText.Value ) ) == "EXE", .F., .T. )
          //ExtraRun.ExtraRunExePause.Enabled           := .T.
          ExtraRun.ExtraRunExeButton.Enabled          := .T.
          ExtraRun.ExtraRunFreeLabel.Enabled          := .F.
@@ -616,9 +612,9 @@ Function QPM_ExecuteExtraRun( bTest )
          QPM_Execute( US_ShortName( ChgPathToReal( "<QPM>" ) ), ChgPathToReal( &( Prefix + "_ExtraRunProjQPM" ) ) + " " + ChgPathToReal( &( Prefix + "_ExtraRunCmdQPMParm" ) ) )
       case &( Prefix + "_ExtraRunType" ) == "EXE"
          do case
-            case UPPER( US_FileNameOnlyExt( ChgPathToReal( &( Prefix + "_ExtraRunCmdEXE" ) ) ) ) == "EXE"
+            case Upper( US_FileNameOnlyExt( ChgPathToReal( &( Prefix + "_ExtraRunCmdEXE" ) ) ) ) == "EXE"
                QPM_Execute( US_ShortName( ChgPathToReal( &( Prefix + "_ExtraRunCmdEXE" ) ) ), ChgPathToReal( &( Prefix + "_ExtraRunCmdEXEParm" ) ) )
-            case UPPER( US_FileNameOnlyExt( ChgPathToReal( &( Prefix + "_ExtraRunCmdEXE" ) ) ) ) == "BAT"
+            case Upper( US_FileNameOnlyExt( ChgPathToReal( &( Prefix + "_ExtraRunCmdEXE" ) ) ) ) == "BAT"
                MemoRun := US_ShortName( PUB_cProjectFolder ) + DEF_SLASH + "_" + PUB_cSecu + "ExtraRun.bat"
                ferase( MemoRun )
                QPM_MemoWrit( MemoRun, 'call "' + ChgPathToReal( &( Prefix + "_ExtraRunCmdEXE" ) ) + '" ' + ChgPathToReal( &( Prefix + "_ExtraRunCmdEXEParm" ) ) + if( &( Prefix + "_ExtraRunExePause" ), HB_OsNewLine() + "Pause", "" ) + HB_OsNewLine() + "del " + MemoRun )
