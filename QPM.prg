@@ -6911,15 +6911,15 @@ FUNCTION QPM_Build2()
                   bld_cmd += 'ECHO Writing Activity Log ...'                                                                    + CRLF
       ENDIF
       // delete preexisting temp files
-                  bld_cmd += 'IF EXIST ' + cB_TMP_ERR    + ' DEL ' + cB_TMP_ERR + ' > NUL'                                      + CRLF
-                  bld_cmd += 'IF EXIST ' + Q_TEMP_LOG    + ' DEL ' + Q_TEMP_LOG + ' > NUL'                                      + CRLF
+                  bld_cmd += 'IF EXIST ' + cB_TMP_ERR    + ' DEL ' + cB_TMP_ERR    + ' > NUL'                                   + CRLF
+                  bld_cmd += 'IF EXIST ' + Q_TEMP_LOG    + ' DEL ' + Q_TEMP_LOG    + ' > NUL'                                   + CRLF
                   bld_cmd += 'IF EXIST ' + Q_SCRIPT_FILE + ' DEL ' + Q_SCRIPT_FILE + ' > NUL'                                   + CRLF
-                  bld_cmd += 'IF EXIST ' + Q_QPM_TMP_RC  + ' DEL ' + Q_QPM_TMP_RC + ' > NUL'                                    + CRLF
-                  bld_cmd += 'IF EXIST ' + cB_RC_CONF    + ' DEL ' + cB_RC_CONF + ' > NUL'                                      + CRLF
-                  bld_cmd += 'IF EXIST ' + cB_RC1_SHR    + ' DEL ' + cB_RC1_SHR + ' > NUL'                                      + CRLF
-                  bld_cmd += 'IF EXIST ' + cB_RC2_SHR    + ' DEL ' + cB_RC2_SHR + ' > NUL'                                      + CRLF
-                  bld_cmd += 'IF EXIST ' + cB_RC1_FER    + ' DEL ' + cB_RC1_FER + ' > NUL'                                      + CRLF
-                  bld_cmd += 'IF EXIST ' + cB_RC2_FER    + ' DEL ' + cB_RC2_FER + ' > NUL'                                      + CRLF
+                  bld_cmd += 'IF EXIST ' + Q_QPM_TMP_RC  + ' DEL ' + Q_QPM_TMP_RC  + ' > NUL'                                   + CRLF
+                  bld_cmd += 'IF EXIST ' + cB_RC_CONF    + ' DEL ' + cB_RC_CONF    + ' > NUL'                                   + CRLF
+                  bld_cmd += 'IF EXIST ' + cB_RC1_SHR    + ' DEL ' + cB_RC1_SHR    + ' > NUL'                                   + CRLF
+                  bld_cmd += 'IF EXIST ' + cB_RC2_SHR    + ' DEL ' + cB_RC2_SHR    + ' > NUL'                                   + CRLF
+                  bld_cmd += 'IF EXIST ' + cB_RC1_FER    + ' DEL ' + cB_RC1_FER    + ' > NUL'                                   + CRLF
+                  bld_cmd += 'IF EXIST ' + cB_RC2_FER    + ' DEL ' + cB_RC2_FER    + ' > NUL'                                   + CRLF
       // concatenate project's and MINIGUI's RC files into a temporary RC file
       IF Prj_Radio_OutputType != DEF_RG_IMPORT .AND. ( ! Prj_Check_IgnoreMainRC .OR. ! Prj_Check_IgnoreLibRCs )
          IF Prj_Check_IgnoreMainRC
@@ -7948,7 +7948,7 @@ FUNCTION LiberoWindowsHotKeys()
 RETURN .T.
 
 FUNCTION TranslateLog( Log )
-   LOCAL NewLog, i, e, w, j, d, aLines, errorlevel
+   LOCAL NewLog, i, e, w, j, d, aLines, errorlevel, nIndLineRC, nIndNameRC, aData
    LOCAL objfolder    := Chr(10) + Upper( US_ShortName( GetObjFolder() ) )
    LOCAL nLenOF       := Len( objfolder )
    LOCAL qpmfolder    := US_ShortName( PUB_cQPM_Folder )
@@ -8077,10 +8077,44 @@ FUNCTION TranslateLog( Log )
    NewLog := StrTran( NewLog, " US_Shell ", '' )
    NewLog := StrTran( NewLog, Chr(10) + "Copyright (c) ", " Copyright (c) " )
 
+   IF At( Chr(10) + 'Error ' + TMP_RC + ' ', NewLog ) > 0
+      // Read RC file and build an array of lines
+      aLines := hb_ATokens( MemoRead( QPM_TMP_RC ), CRLF )
+   ENDIF
+   i := 1
+   DO WHILE ( e := At( Chr(10) + 'Error ' + TMP_RC + ' ', SubStr( NewLog, i ) ) ) > 0
+      nIndNameRC := i + e + 6
+      nIndLineRC := j := i + e + 7 + Len( TMP_RC )
+      w := "0"
+      DO WHILE IsDigit( d := SubStr( NewLog, j, 1 ) )
+         w += d
+         j ++
+      ENDDO
+      i := j
+      IF ( w := Val( w ) ) > 0
+         // Locate the real file and the line number
+         aData := SearchRealNameAndLineRC( aLines, w )   // return {RC filename, RC line number}
+         IF Empty( aData[1] )
+            NewLog := Left( NewLog, nIndNameRC - 1 ) + "in QPM_TMP_RC at line/col " + SubStr( NewLog, nIndLineRC )
+            // Add offending line
+            j := At( Chr(10), SubStr( NewLog, i ) )
+            NewLog := Left( NewLog, i + j - 2 ) + ": " + aLines[w] + SubStr( NewLog, i + j - 1 )
+            i := i + j + Len( aLines[w] )
+         ELSE
+            // Insert RC's name and line number into the log
+            NewLog := Left( NewLog, nIndNameRC - 1 ) + "in " + aData[1] + " at line/col " + aData[2] + SubStr( NewLog, j )
+            // Add offending line
+            j := At( Chr(10), SubStr( NewLog, i ) )
+            NewLog := Left( NewLog, i + j - 2 ) + ": " + aLines[w] + SubStr( NewLog, i + j - 1 )
+            // Continue from
+            i := At( Chr(10), SubStr( NewLog, nIndNameRC ) ) + 1
+         ENDIF
+      ENDIF
+   ENDDO
+
 // This lines must come THIRD and it's order IS significant
    NewLog := StrTran( NewLog, Chr(10) + '==> QPM_TMP_RC is ', Chr(10) + 'QPM_TMP_RC is ' )
    NewLog := StrTran( NewLog, Chr(10) + '==> SCRIPT_FILE is ', Chr(10) + 'SCRIPT_FILE is ' )
-   NewLog := StrTran( NewLog, Chr(10) + 'Error ' + TMP_RC + ' ', Chr(10) + 'Error at line/col ' )
    NewLog := StrTran( NewLog, Q_SCRIPT_FILE, 'SCRIPT_FILE' )
    NewLog := StrTran( NewLog, DBLQT + harbour + DBLQT, 'HARBOUR' )
    NewLog := StrTran( NewLog, harbour, 'HARBOUR' )
@@ -8190,7 +8224,8 @@ FUNCTION TranslateLog( Log )
    ENDIF
    i := 1
    DO WHILE ( e := At( "WINDRES: QPM_TMP_RC line ", SubStr( NewLog, i ) ) ) > 0
-      j := i + e + 24
+      nIndNameRC := i + e + 8
+      nIndLineRC := j := i + e + 24
       w := "0"
       DO WHILE IsDigit( d := SubStr( NewLog, j, 1 ) )
          w += d
@@ -8198,10 +8233,24 @@ FUNCTION TranslateLog( Log )
       ENDDO
       i := j
       IF ( w := Val( w ) ) > 0
-         // Insert RC's offending line into the log
-         j := At( Chr(10), SubStr( NewLog, i ) )
-         NewLog := Left( NewLog, i + j - 2 ) + ": " + aLines[w] + SubStr( NewLog, i + j - 1 )
-         i := i + j + Len( aLines[w] )
+         // Locate the real file and the line number
+         aData := SearchRealNameAndLineRC( aLines, w )   // return {RC filename, RC line number}
+         IF Empty( aData[1] )
+            // Add offending line
+            j := At( Chr(10), SubStr( NewLog, i ) )
+            NewLog := Left( NewLog, i + j - 2 ) + ": " + aLines[w] + SubStr( NewLog, i + j - 1 )
+            i := i + j + Len( aLines[w] )
+         ELSE
+            // Insert RC's offending line into the log
+            NewLog := Left( NewLog, nIndLineRC - 1 ) + aData[2] + SubStr( NewLog, j )
+            // Add offending line
+            j := At( Chr(10), SubStr( NewLog, i ) )
+            NewLog := Left( NewLog, i + j - 2 ) + ": " + aLines[w] + SubStr( NewLog, i + j - 1 )
+            // Insert RC's name into the log
+            NewLog := Left( NewLog, nIndNameRC - 1 ) + aData[1] + SubStr( Newlog, nIndNameRC + Len( "QPM_TMP_RC" ) )
+            // Continue from
+            i := At( Chr(10), SubStr( NewLog, nIndNameRC ) ) + 1
+         ENDIF
       ENDIF
    ENDDO
 
@@ -8262,6 +8311,21 @@ FUNCTION TranslateLog( Log )
    NewLog += CRLF + "==> Build status: " + errorlevel + CRLF
 
 RETURN NewLog
+
+FUNCTION SearchRealNameAndLineRC( aLines, w )
+   LOCAL i, aRet, cData
+   FOR i := w TO 1 STEP -1
+      IF Left( aLines[i], 8 ) == "// line "
+         EXIT
+      ENDIF
+   NEXT i
+   IF i > 0
+      cData := SubStr( aLines[i], 9 )
+      aRet := { US_Word( cData, 2 ), LTrim( Str( w - i + Val( US_Word( cData, 1 ) ) - 1 ) ) }
+   ELSE
+      aRet := { "", LTrim( Str( w ) ) }
+   ENDIF
+RETURN aRet
 
 FUNCTION SwitchAutoInc()
    VentanaMain.AutoInc.Checked := ! VentanaMain.AutoInc.Checked
