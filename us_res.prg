@@ -28,13 +28,13 @@
 #define DBLQT    '"'
 #define SNGQT    "'"
 #define CRLF     hb_osNewLine()
-#define VERSION  "01.11"
+#define VERSION  "01.12"
+MEMVAR cQPMDir
 
-PROCEDURE MAIN( ... )
+FUNCTION MAIN( ... )
    LOCAL aParams := hb_AParams()
-   LOCAL cParam, n, i, bList, cPathTMP, cFileIn, cPathSHR, cFileOut, bForceChg, bInclude, cMemoIn, aLines, cMemoOut
+   LOCAL cParam, n, i, cPathTMP, cFileIn, cPathSHR, cFileOut, bForceChg, bInclude, cMemoIn, aLines, cMemoOut, bList := .F.
    LOCAL c, nInx, cLine, cFileInclude, lWarning, aPaths, aIncLines, nCount, bChg, cRule, cWord3, cPathInc, aIncStk
-
    PRIVATE cQPMDir := ""
 
 /*
@@ -68,16 +68,16 @@ PROCEDURE MAIN( ... )
 
    IF Upper( US_Word( cParam, 1 ) ) == "-VER" .OR. Upper( US_Word( cParam, 1 ) ) == "-VERSION"
       hb_MemoWrit( "US_Res.version", VERSION )
-      RETURN
+      ErrorLevel( 0 )
+      RETURN .T.
    ENDIF
 
    IF Upper( US_Word( cParam, 1 ) ) != "QPM"
-      __Run( "ECHO " + "US_Res 999E: Running Outside System" )
+      __Run( "ECHO " + "US_Res 001E: Running Outside System" )
       ErrorLevel( 1 )
-      RETURN
-   ELSE
-      cParam := US_WordDel( cParam, 1 )
+      RETURN .F.
    ENDIF
+   cParam := US_WordDel( cParam, 1 )
 
    IF Upper( SubStr( cParam, 1, 5 ) ) == "-LIST"
       bList := .T.
@@ -86,9 +86,12 @@ PROCEDURE MAIN( ... )
          cQPMDir += "\"
       ENDIF
       cParam := AllTrim( SubStr( cParam, US_WordInd( cParam, 2 ) ) )
-   ELSE
-      bList := .F.
    ENDIF
+
+   IF bList
+      QPM_Log( "------------ " + "US_Res.version " + VERSION )
+   ENDIF
+
    cPathSHR := aParams[ n ]
    cPathTMP := aParams[ n - 1 ]
    IF ! Right( cPathTMP, 1 ) == "\"
@@ -99,14 +102,11 @@ PROCEDURE MAIN( ... )
    cParam   := AllTrim( SubStr( cParam, 1, US_WordInd( cParam, US_Words( cParam ) - 1 ) - 1 ) )
 
    IF bList
-      QPM_Log( "US_Res " + VERSION )
-      QPM_Log( "US_Res 000I: by QPM_Support ( https://teamqpm.github.io/ )" )
-      QPM_Log( "US_Res 001I: Log into: " + cQPMDir + "QPM.log" )
-      QPM_Log( "US_Res 002I: FileIn  : " + cFileIn )
-      QPM_Log( "US_Res 003I: FileOut : " + cFileOut )
-      QPM_Log( "US_Res 004I: Path    : " + cPathTMP )
-      QPM_Log( "US_Res 005I: PathShrt: " + cPathSHR )
-      QPM_Log( "US_Res 006I: Param   : " + cParam + CRLF )
+      QPM_Log( "US_Res 003I: FileIn  : " + cFileIn )
+      QPM_Log( "US_Res 004I: FileOut : " + cFileOut )
+      QPM_Log( "US_Res 005I: Path    : " + cPathTMP )
+      QPM_Log( "US_Res 006I: PathShrt: " + cPathSHR )
+      QPM_Log( "US_Res 007I: Param   : " + cParam )
    ENDIF
 
    bForceChg := .F.
@@ -119,23 +119,23 @@ PROCEDURE MAIN( ... )
          bInclude := .T.
       OTHERWISE
          IF bList
-            QPM_Log( "US_Res 000E: Parameter error: " + US_Word( cParam, i) + CRLF )
+            QPM_Log( "US_Res 008E: Parameter error: " + US_Word( cParam, i ) )
          ENDIF
          ErrorLevel( 1 )
-         RETURN
+         RETURN .F.
       ENDCASE
    NEXT i
 
    IF ! File( cFileIn )
       IF bList
-         QPM_Log( "US_Res 001E: File not found: " + cFileIn + CRLF )
+         QPM_Log( "US_Res 009E: File not found: " + cFileIn )
       ENDIF
       ErrorLevel( 1 )
-      RETURN
+      RETURN .F.
    ENDIF
 
    IF bList
-      QPM_Log( "US_Res 007I: Process started " + CRLF )
+      QPM_Log( "US_Res 010I: Process started" )
    ENDIF
 
    AAdd( ( aPaths := {} ), US_FileNameOnlyPath( cFileIn ) + "\" )
@@ -173,7 +173,7 @@ PROCEDURE MAIN( ... )
             IF ! File( cFileInclude )
                cMemoOut += cLine + CRLF
                IF bList
-                  QPM_Log( "US_Res 002W: File not found: " + cLine + CRLF )
+                  QPM_Log( "US_Res 011W: File not found: " + cLine )
                ENDIF
                lWarning := .T.
             ELSE
@@ -216,7 +216,7 @@ PROCEDURE MAIN( ... )
                NEXT i
 
                IF bList
-                  QPM_Log( "US_Res 008I: File read: " + cLine + CRLF )
+                  QPM_Log( "US_Res 012I: File read: " + cLine )
                ENDIF
             ENDIF
          ELSE
@@ -239,12 +239,12 @@ PROCEDURE MAIN( ... )
 
       IF lWarning
          IF bList
-            QPM_Log( "US_Res 003E: Process ended with a warning" )
+            QPM_Log( "US_Res 013E: Process ended with a warning" )
             QPM_Log( "------------" )
          ENDIF
       ELSE
          IF bList
-            QPM_Log( "US_Res 009I: Process ended without error" )
+            QPM_Log( "US_Res 014I: Process ended without error" )
             QPM_Log( "------------" )
          ENDIF
       ENDIF
@@ -348,7 +348,7 @@ XXX ICON ZZZ /* ...............
                cRule := "R01"
                cWord3 := US_Word( SubStr( cLine, US_WordInd( cLine, 3 ) + 2 ), 1 )
                IF cPathSHR == "S"
-                  cLine := SubStr( cLine, 1, US_WordInd( cLine, 3 ) - 1 ) + US_ShortName( cPathInc + US_WSlash( cWord3 ) )
+                  cLine := SubStr( cLine, 1, US_WordInd( cLine, 3 ) - 1 ) + US_ShortName( cPathInc + US_WSlash( cWord3 ), bList )
                ELSE
                   cLine := SubStr( cLine, 1, US_WordInd( cLine, 3 ) - 1 ) + cPathInc + US_WSlash( cWord3 )
                ENDIF
@@ -360,7 +360,7 @@ XXX ICON ZZZ /* ...............
                cRule := "R02"
                cWord3 := US_Word( cLine, 3 )
                IF cPathSHR == "S"
-                  cLine := SubStr( cLine, 1, US_WordInd( cLine, 3 ) - 1 ) + US_ShortName( cPathInc + US_WSlash( cWord3 ) )
+                  cLine := SubStr( cLine, 1, US_WordInd( cLine, 3 ) - 1 ) + US_ShortName( cPathInc + US_WSlash( cWord3 ), bList )
                ELSE
                   cLine := SubStr( cLine, 1, US_WordInd( cLine, 3 ) - 1 ) + cPathInc + US_WSlash( cWord3 )
                ENDIF
@@ -374,7 +374,7 @@ XXX ICON ZZZ /* ...............
                cWord3 := US_Word( SubStr( cLine, US_WordInd( cLine, 3 ) ), 1 )
                cWord3 := SubStr( cWord3, RAt( cSlash, cWord3 ) + 1 )
                IF cPathSHR == "S"
-                  cLine := SubStr( cLine, 1, US_WordInd( cLine, 3 ) - 1 ) + US_ShortName( cPathInc + cWord3 )
+                  cLine := SubStr( cLine, 1, US_WordInd( cLine, 3 ) - 1 ) + US_ShortName( cPathInc + cWord3, bList )
                ELSE
                   cLine := SubStr( cLine, 1, US_WordInd( cLine, 3 ) - 1 ) + cPathInc + cWord3
                ENDIF
@@ -391,7 +391,7 @@ XXX ICON ZZZ /* ...............
                cWord3 := SubStr( cWord3, RAt( cSlash, cWord3 ) + 1 )
                cWord3 := SubStr( cWord3, 1, RAt( cChar, cWord3 ) - 1 )
                IF cPathSHR == "S"
-                  cLine := SubStr( cLine, 1, US_WordInd( cLine, 3 ) - 1 ) + US_ShortName( cPathInc + cWord3 )
+                  cLine := SubStr( cLine, 1, US_WordInd( cLine, 3 ) - 1 ) + US_ShortName( cPathInc + cWord3, bList )
                ELSE
                   cLine := SubStr( cLine, 1, US_WordInd( cLine, 3 ) - 1 ) + cPathInc + cWord3
                ENDIF
@@ -401,11 +401,11 @@ XXX ICON ZZZ /* ...............
             cMemoOut += cLine + CRLF
             IF bList
                IF bChg
-                  QPM_Log( "US_Res 010I: Input line: " + cLineAux )
-                  QPM_Log( "US_Res 011I: Rule:       " + cRule + " > " + cWord3 )
-                  QPM_Log( "US_Res 012I: Output:     " + cLine )
+                  QPM_Log( "US_Res 015I: Input line: " + cLineAux )
+                  QPM_Log( "US_Res 016I: Rule:       " + cRule + " > " + cWord3 )
+                  QPM_Log( "US_Res 017I: Output:     " + cLine )
                ELSE
-                  QPM_Log( "US_Res 013I: Unchanged:  " + cLine )
+                  QPM_Log( "US_Res 018I: Unchanged:  " + cLine )
                ENDIF
             ENDIF
          ENDIF
@@ -416,11 +416,12 @@ XXX ICON ZZZ /* ...............
       ErrorLevel( 0 )
 
       IF bList
-         QPM_Log( "US_Res 014I: Process ended without error" + CRLF )
+         QPM_Log( "US_Res 019I: Process ended without error" )
+         QPM_Log( "------------" + CRLF )
       ENDIF
    ENDIF
 
-   RETURN
+   RETURN .T.
 
 //========================================================================
 // EXTRAE UNA PALABRA DE UN STRING
@@ -507,8 +508,7 @@ FUNCTION US_Words( estring )
 //========================================================================
 STATIC FUNCTION QPM_Log( string )
    LOCAL LogArchi := cQPMDir + "QPM.LOG"
-   LOCAL msg := DToS( Date() ) + " " + Time() + " US_RES " + ProcName( 1 ) + "(" + AllTrim( Str( ProcLine( 1 ) ) ) + ")" + " " + string
-
+   LOCAL msg := DToS( Date() ) + " " + Time() + " US_RES " + ProcName( 1 ) + "(" + Str( ProcLine( 1 ), 3, 0 ) + ")" + " " + string
    SET CONSOLE OFF
    SET ALTERNATE TO ( LogArchi ) ADDITIVE
    SET ALTERNATE ON
@@ -553,7 +553,7 @@ FUNCTION US_WordSubstr( estring, pos )
 //========================================================================
 // RETORNA EL NOMBRE 'CORTO' DE UN ARCHIVO O FOLDER
 //========================================================================
-FUNCTION US_ShortName( nombre )
+FUNCTION US_ShortName( nombre, bList )
    LOCAL Reto
 
    IF US_IsDirectory( nombre )
@@ -567,31 +567,48 @@ FUNCTION US_ShortName( nombre )
    ENDIF
    IF At( Chr(0), Reto ) > 0
       IF US_Words( nombre ) > 1
-         MsgInfo( "Name: " + nombre + CRLF + "includes spaces, it won't work correctly with Novell. Please, use a name without spaces.",  NIL,  NIL,  .F. )
+         IF bList
+            QPM_Log( "US_Res 020E: Folder name is not valid: " + DBLQT + nombre + DBLQT )
+            QPM_Log( "US_Res 021E: Folder name is not valid: " + DBLQT + StrTran( Reto, Chr(0), "|" ) + DBLQT )
+         ENDIF
+         MsgStop( "The name: " + DBLQT + nombre + DBLQT + CRLF + ;
+                  "was translated by the OS to a name not supported by QPM." + CRLF + ;
+                  "Please, use an 8.3 name without spaces or parenthesis.", NIL, NIL, .F. )  // this is not translated
          Reto := ""
       ELSE
          Reto := nombre
       ENDIF
    ELSE
       IF US_IsDirectory( nombre ) .AND. ! US_IsDirectory( Reto )
-         MsgStop( "The name: " + nombre + CRLF + ;
-                  "was translated by the OS to a name that's not valid for a folder:" + CRLF + ;
-                  Reto + CRLF + ;
-                  "Please, use a name that follows the 8.3 convention.", NIL, NIL, .F. )  // this is not translated
+         IF bList
+            QPM_Log( "US_Res 022E: Folder name is not valid: " + DBLQT + nombre + DBLQT )
+            QPM_Log( "US_Res 023E: Folder name is not valid: " + DBLQT + Reto + DBLQT )
+         ENDIF
+         MsgStop( "The name: " + DBLQT + nombre + DBLQT + CRLF + ;
+                  "was translated by the OS to a name not supported by QPM." + CRLF + ;
+                  "Please, use an 8.3 name without spaces or parenthesis.", NIL, NIL, .F. )  // this is not translated
          Reto := ""
-      eLSEIF File( nombre ) .AND. ! File( Reto )
-         MsgStop( "The name: " + nombre + CRLF + ;
-                  "was translated by the OS to a name that's not valid for a file:" + CRLF + ;
-                  Reto + CRLF + ;
-                  "Please, use a name that follows the 8.3 convention.", NIL, NIL, .F. )  // this is not translated
+      ELSEIF File( nombre ) .AND. ! File( Reto )
+         IF bList
+            QPM_Log( "US_Res 024E: Folder name is not valid: " + DBLQT + nombre + DBLQT )
+            QPM_Log( "US_Res 025E: Folder name is not valid: " + DBLQT + Reto + DBLQT )
+         ENDIF
+         MsgStop( "The name: " +  DBLQT + nombre + DBLQT + CRLF + ;
+                  "was translated by the OS to a name not supported by QPM." + CRLF + ;
+                  "Please, use an 8.3 name without spaces or parenthesis.", NIL, NIL, .F. )  // this is not translated
          Reto := ""
       ENDIF
    ENDIF
    /* fin parche para Novell */
    /* ini parche para parentesis */
-   IF At( "(", Reto ) > 0
-      MsgStop( "This name doesn't work correctly: " + nombre + CRLF + ;
-               "Please, use a name without parenthesis characters.", NIL, NIL, .F. )  // this is not translated
+   IF At( "(", Reto ) > 0 .OR. At( ')', Reto )
+      IF bList
+         QPM_Log( "US_Res 026E: Folder name is not valid: " + DBLQT + nombre + DBLQT )
+         QPM_Log( "US_Res 027E: Folder name is not valid: " + DBLQT + Reto + DBLQT )
+      ENDIF
+      MsgStop( "The name: " +  DBLQT + nombre + DBLQT + CRLF + ;
+               "was translated by the OS to a name not supported by QPM." + CRLF + ;
+               "Please, use an 8.3 name without spaces or parenthesis.", NIL, NIL, .F. )  // this is not translated
       Reto := ""
    ENDIF
    /* fin parche para parentesis */
@@ -684,6 +701,7 @@ FUNCTION US_Rand( random )
 
    RETURN ( rett * iif( negative, -1, 1 ) )
 
+//========================================================================
 #pragma BEGINDUMP
 
 #define _WIN32_IE      0x0500
