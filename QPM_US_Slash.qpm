@@ -1,128 +1,130 @@
-VERSION 05 05 18                                                                                                                                                                                                                                              
+VERSION 05 05 18
 PRJ_VERSION 01 07 0000
-PROJECTFOLDER <ThisFolder>                                                                                                                                                                                                                                    
-AUTOINC NO                                                                                                                                                                                                                                                    
-CHECK64BITS NO                                                                                                                                                                                                                                                
-CHECKCONSOLE YES                                                                                                                                                                                                                                              
-CHECKCPP B                                                                                                                                                                                                                                                    
-CHECKDBFTOOL DBFVIEW                                                                                                                                                                                                                                          
-CHECKFORMTOOL EDITOR                                                                                                                                                                                                                                          
-CHECKHARBOUR H                                                                                                                                                                                                                                                
-CHECKHARBOURIS31 YES                                                                                                                                                                                                                                          
-CHECKMINIGUI E1                                                                                                                                                                                                                                               
-CHECKMT NO                                                                                                                                                                                                                                                    
-CHECKNOLIBRCS NO                                                                                                                                                                                                                                              
-CHECKNOMAINRC NO                                                                                                                                                                                                                                              
-CHECKOUTPUTPREFIX YES                                                                                                                                                                                                                                         
-CHECKOUTPUTSUFFIX NO                                                                                                                                                                                                                                          
-CHECKPLACERCFIRST NO                                                                                                                                                                                                                                          
-CHECKREIMPORT NO                                                                                                                                                                                                                                              
-CHECKSTATICBUILD YES                                                                                                                                                                                                                                          
-CHECKUPX NO                                                                                                                                                                                                                                                   
-DBFAUTOVIEW .T.                                                                                                                                                                                                                                               
-DEBUGACTIVE NO                                                                                                                                                                                                                                                
-EXTRARUNCMDEXE                                                                                                                                                                                                                                                
-EXTRARUNCMDFINAL                                                                                                                                                                                                                                              
-EXTRARUNCMDFREE                                                                                                                                                                                                                                               
-EXTRARUNEXEPARM                                                                                                                                                                                                                                               
-EXTRARUNEXEPAUSE .T.                                                                                                                                                                                                                                          
-EXTRARUNEXEWAIT .T.                                                                                                                                                                                                                                           
-EXTRARUNFREEPARM                                                                                                                                                                                                                                              
-EXTRARUNFREEPAUSE .T.                                                                                                                                                                                                                                         
-EXTRARUNFREEWAIT .T.                                                                                                                                                                                                                                          
-EXTRARUNPROJQPM                                                                                                                                                                                                                                               
-EXTRARUNQPMAUTOEXIT .T.                                                                                                                                                                                                                                       
-EXTRARUNQPMBUTTONRUN .F.                                                                                                                                                                                                                                      
-EXTRARUNQPMCLEAR .F.                                                                                                                                                                                                                                          
-EXTRARUNQPMFORCEFULL .F.                                                                                                                                                                                                                                      
-EXTRARUNQPMLITE .T.                                                                                                                                                                                                                                           
-EXTRARUNQPMLOG .F.                                                                                                                                                                                                                                            
-EXTRARUNQPMLOGONLYERROR .F.                                                                                                                                                                                                                                   
-EXTRARUNQPMPARM                                                                                                                                                                                                                                               
-EXTRARUNQPMRADIO                                                                                                                                                                                                                                              
-EXTRARUNQPMRUN .F.                                                                                                                                                                                                                                            
-EXTRARUNTYPE NONE                                                                                                                                                                                                                                             
-HOTKEYS YES                                                                                                                                                                                                                                                   
-HOTLASTEXTERNALFILE                                                                                                                                                                                                                                           
-IMPORTGUIONA NO                                                                                                                                                                                                                                               
-LASTLIBFOLDERM1BH_32                                                                                                                                                                                                                                          
-LASTLIBFOLDERM1BX_32                                                                                                                                                                                                                                          
-LASTLIBFOLDERM3GH_32                                                                                                                                                                                                                                          
-LASTLIBFOLDERM3GH_64                                                                                                                                                                                                                                          
-LASTLIBFOLDERE1BH_32 C:\MiniGUI\Harbour\lib                                                                                                                                                                                                                   
-LASTLIBFOLDERE1BX_32                                                                                                                                                                                                                                          
-LASTLIBFOLDERE1GH_32                                                                                                                                                                                                                                          
-LASTLIBFOLDERE1GX_32                                                                                                                                                                                                                                          
-LASTLIBFOLDERE1GH_64                                                                                                                                                                                                                                          
-LASTLIBFOLDERE1GX_64                                                                                                                                                                                                                                          
-LASTLIBFOLDERE1PH_32                                                                                                                                                                                                                                          
-LASTLIBFOLDERE1PX_32                                                                                                                                                                                                                                          
-LASTLIBFOLDERE1PH_64                                                                                                                                                                                                                                          
-LASTLIBFOLDERE1PX_64                                                                                                                                                                                                                                          
-LASTLIBFOLDERO3BH_32                                                                                                                                                                                                                                          
-LASTLIBFOLDERO3BX_32                                                                                                                                                                                                                                          
-LASTLIBFOLDERO3GH_32                                                                                                                                                                                                                                          
-LASTLIBFOLDERO3GX_32                                                                                                                                                                                                                                          
-LASTLIBFOLDERO3GH_64                                                                                                                                                                                                                                          
-LASTLIBFOLDERO3GX_64                                                                                                                                                                                                                                          
-LASTLIBFOLDERO3PH_32                                                                                                                                                                                                                                          
-LASTLIBFOLDERO3PX_32                                                                                                                                                                                                                                          
-LASTLIBFOLDERO3PH_64                                                                                                                                                                                                                                          
-LASTLIBFOLDERO3PX_64                                                                                                                                                                                                                                          
-LIBREIMPORT                                                                                                                                                                                                                                                   
-MI_BDESKTOPSHORTCUT .T.                                                                                                                                                                                                                                       
-MI_BEXEASSOCIATION .F.                                                                                                                                                                                                                                        
-MI_BEXEBACKUPOPTION .F.                                                                                                                                                                                                                                       
-MI_BLAUNCHAPPLICATION .T.                                                                                                                                                                                                                                     
-MI_BLAUNCHBACKUPOPTION .F.                                                                                                                                                                                                                                    
-MI_BNEWFILE .F.                                                                                                                                                                                                                                               
-MI_BREBOOT .F.                                                                                                                                                                                                                                                
-MI_BSELECTALLDBF .F.                                                                                                                                                                                                                                          
-MI_BSELECTALLHEA .F.                                                                                                                                                                                                                                          
-MI_BSELECTALLLIB .F.                                                                                                                                                                                                                                          
-MI_BSELECTALLPAN .F.                                                                                                                                                                                                                                          
-MI_BSELECTALLPRG .F.                                                                                                                                                                                                                                          
-MI_BSTARTMENUSHORTCUT .T.                                                                                                                                                                                                                                     
-MI_CDEFAULTLANGUAGE EN                                                                                                                                                                                                                                        
-MI_CDESTINATIONPATH                                                                                                                                                                                                                                           
-MI_CEXEASSOCIATION                                                                                                                                                                                                                                            
-MI_CIMAGE                                                                                                                                                                                                                                                     
-MI_CINSTALLERNAME                                                                                                                                                                                                                                             
-MI_CLEYENDUSERTEXT                                                                                                                                                                                                                                            
-MI_CNEWFILELEYEND                                                                                                                                                                                                                                             
-MI_CNEWFILEUSERFILE                                                                                                                                                                                                                                           
-MI_NDESKTOPSHORTCUT 0000000001                                                                                                                                                                                                                                
-MI_NDESTINATIONPATH 0000000001                                                                                                                                                                                                                                
-MI_NEXEASSOCIATIONICON 0000000001                                                                                                                                                                                                                             
-MI_NINSTALLERNAME 0000000001                                                                                                                                                                                                                                  
-MI_NLAUNCHAPPLICATION 0000000001                                                                                                                                                                                                                              
-MI_NLEYENDSUGGESTED 0000000001                                                                                                                                                                                                                                
-MI_NNEWFILEEMPTY 0000000001                                                                                                                                                                                                                                   
-MI_NNEWFILESUGGESTED 0000000001                                                                                                                                                                                                                               
-MI_NSTARTMENUSHORTCUT 0000000001                                                                                                                                                                                                                              
-OUTPUTCOPYMOVE NONE                                                                                                                                                                                                                                           
-OUTPUTCOPYMOVEFOLDER                                                                                                                                                                                                                                          
-OUTPUTRENAME NONE                                                                                                                                                                                                                                             
-OUTPUTRENAMENEWNAME                                                                                                                                                                                                                                           
-OUTPUTTYPE SRCEXE                                                                                                                                                                                                                                             
-OVERRIDECOMPILEPARM /w3/es2                                                                                                                                                                                                                                   
-OVERRIDELINKPARM                                                                                                                                                                                                                                              
-RUNFOLDER                                                                                                                                                                                                                                                     
-RUNPARAM                                                                                                                                                                                                                                                      
-SHGDATABASE *NONE*                                                                                                                                                                                                                                            
-SHGHTMLFOLDER                                                                                                                                                                                                                                                 
-SHGLASTFOLDERIMG                                                                                                                                                                                                                                              
-SHGOUTPUTTYPE NO                                                                                                                                                                                                                                              
-SHGWWW                                                                                                                                                                                                                                                        
-WARNBCCOBJECT YES                                                                                                                                                                                                                                             
-WARNBCCOBJECTCONT YES                                                                                                                                                                                                                                         
-WARNCPP YES                                                                                                                                                                                                                                                   
-WARNDBFSEARCH YES                                                                                                                                                                                                                                             
-WARNDBFSEARCHCONT YES                                                                                                                                                                                                                                         
-WARNGTORDER YES                                                                                                                                                                                                                                               
-WARNGTORDERCONT YES                                                                                                                                                                                                                                           
-WARNINFOSAVEDMSG NO                                                                                                                                                                                                                                           
-WARNNULLRDD YES                                                                                                                                                                                                                                               
-WARNSLOWSEARCH YES                                                                                                                                                                                                                                            
-WARNSLOWSEARCHCONT YES                                                                                                                                                                                                                                        
-SOURCE <ProjectFolder>\us_slash.prg                                                                                                                                                                                                                           
+PROJECTFOLDER <ThisFolder>
+AUTOINC NO
+CHECK64BITS NO
+CHECKCONSOLE YES
+CHECKCPP B
+CHECKDBFTOOL DBFVIEW
+CHECKFORMTOOL EDITOR
+CHECKHARBOUR H
+CHECKHARBOURIS31 YES
+CHECKMINIGUI E1
+CHECKMT NO
+CHECKNOLIBRCS NO
+CHECKNOMAINRC NO
+CHECKOUTPUTPREFIX YES
+CHECKOUTPUTSUFFIX NO
+CHECKPLACERCFIRST NO
+CHECKREIMPORT NO
+CHECKSTATICBUILD YES
+CHECKUPX NO
+DBFAUTOVIEW .T.
+DEBUGACTIVE NO
+EXTRARUNCMDEXE
+EXTRARUNCMDFINAL copy us_slash.exe c:\qpm
+EXTRARUNCMDFREE copy us_slash.exe c:\qpm
+EXTRARUNEXEPARM
+EXTRARUNEXEPAUSE .T.
+EXTRARUNEXEWAIT .T.
+EXTRARUNFREEPARM
+EXTRARUNFREEPAUSE .T.
+EXTRARUNFREEWAIT .T.
+EXTRARUNPROJQPM
+EXTRARUNQPMAUTOEXIT .T.
+EXTRARUNQPMBUTTONRUN .F.
+EXTRARUNQPMCLEAR .F.
+EXTRARUNQPMFORCEFULL .F.
+EXTRARUNQPMLITE .T.
+EXTRARUNQPMLOG .F.
+EXTRARUNQPMLOGONLYERROR .F.
+EXTRARUNQPMPARM
+EXTRARUNQPMRADIO BUILD
+EXTRARUNQPMRUN .F.
+EXTRARUNTYPE FREE
+HOTKEYS YES
+HOTLASTEXTERNALFILE
+IMPORTGUIONA NO
+LASTLIBFOLDERM1BH_32
+LASTLIBFOLDERM1BX_32
+LASTLIBFOLDERM3GH_32
+LASTLIBFOLDERM3GH_64
+LASTLIBFOLDERE1BH_32 C:\MiniGUI\Harbour\lib
+LASTLIBFOLDERE1BX_32
+LASTLIBFOLDERE1GH_32
+LASTLIBFOLDERE1GX_32
+LASTLIBFOLDERE1GH_64
+LASTLIBFOLDERE1GX_64
+LASTLIBFOLDERE1PH_32
+LASTLIBFOLDERE1PX_32
+LASTLIBFOLDERE1PH_64
+LASTLIBFOLDERE1PX_64
+LASTLIBFOLDERO3BH_32
+LASTLIBFOLDERO3BX_32
+LASTLIBFOLDERO3GH_32
+LASTLIBFOLDERO3GX_32
+LASTLIBFOLDERO3GH_64
+LASTLIBFOLDERO3GX_64
+LASTLIBFOLDERO3PH_32
+LASTLIBFOLDERO3PX_32
+LASTLIBFOLDERO3PH_64
+LASTLIBFOLDERO3PX_64
+LIBREIMPORT
+MI_BDESKTOPSHORTCUT .T.
+MI_BEXEASSOCIATION .F.
+MI_BEXEBACKUPOPTION .F.
+MI_BLAUNCHAPPLICATION .T.
+MI_BLAUNCHBACKUPOPTION .F.
+MI_BNEWFILE .F.
+MI_BREBOOT .F.
+MI_BSELECTALLDBF .F.
+MI_BSELECTALLHEA .F.
+MI_BSELECTALLLIB .F.
+MI_BSELECTALLPAN .F.
+MI_BSELECTALLPRG .F.
+MI_BSTARTMENUSHORTCUT .T.
+MI_CDEFAULTLANGUAGE EN
+MI_CDESTINATIONPATH
+MI_CEXEASSOCIATION
+MI_CIMAGE
+MI_CINSTALLERNAME
+MI_CLEYENDUSERTEXT
+MI_CNEWFILELEYEND
+MI_CNEWFILEUSERFILE
+MI_NDESKTOPSHORTCUT 0000000001
+MI_NDESTINATIONPATH 0000000001
+MI_NEXEASSOCIATIONICON 0000000001
+MI_NINSTALLERNAME 0000000001
+MI_NLAUNCHAPPLICATION 0000000001
+MI_NLEYENDSUGGESTED 0000000001
+MI_NNEWFILEEMPTY 0000000001
+MI_NNEWFILESUGGESTED 0000000001
+MI_NSTARTMENUSHORTCUT 0000000001
+OUTPUTCOPYMOVE NONE
+OUTPUTCOPYMOVEFOLDER
+OUTPUTRENAME NONE
+OUTPUTRENAMENEWNAME
+OUTPUTTYPE SRCEXE
+OVERRIDECOMPILEPARM /w3/es2
+OVERRIDELINKPARM
+RUNFOLDER
+RUNPARAM
+SHGDATABASE *NONE*
+SHGHTMLFOLDER
+SHGLASTFOLDERIMG
+SHGOUTPUTTYPE NO
+SHGWWW
+WARNBCCOBJECT YES
+WARNBCCOBJECTCONT YES
+WARNCPP YES
+WARNDBFSEARCH YES
+WARNDBFSEARCHCONT YES
+WARNGTORDER YES
+WARNGTORDERCONT YES
+WARNINFOSAVEDMSG NO
+WARNNULLRDD YES
+WARNPPOBROWSE YES
+WARNSLOWSEARCH YES
+WARNSLOWSEARCHCONT YES
+WARNTOPFILE YES
+SOURCE <ProjectFolder>\us_slash.prg

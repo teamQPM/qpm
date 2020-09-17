@@ -24,8 +24,9 @@
 
 #define DBLQT    '"'
 #define SNGQT    "'"
+#define CRLF     hb_osNewLine()
 #define VERSION  "01.07"
-MEMVAR CQPMDIR
+MEMVAR cQPMDIR
 
 // Parameters: 1 -> cParam (multiple words), 2 -> cFileIn (one word), 3 -> cFileOut (one word)
 
@@ -36,7 +37,6 @@ FUNCTION MAIN( ... )
    LOCAL fgccbat := US_FileTmp( NIL, ".bat" )
    LOCAL fstatus := US_FileTmp()
    LOCAL fparams := US_FileTmp()
-
    PRIVATE cQPMDir := ""
 
    cParam := ""
@@ -47,16 +47,16 @@ FUNCTION MAIN( ... )
 
    IF Upper( US_Word( cParam, 1 ) ) == "-VER" .or. Upper( US_Word( cParam, 1 ) ) == "-VERSION"
       hb_MemoWrit( "US_Slash.version", VERSION )
+      ErrorLevel( 0 )
       RETURN .T.
    ENDIF
 
    IF Upper( US_Word( cParam, 1 ) ) != "QPM"
       __Run( "ECHO " + "US_Slash 001E: Running Outside System" )
       ErrorLevel( 1 )
-      RETURN -1
-   ELSE
-      cParam := US_WordDel( cParam, 1 )
+      RETURN .F.
    ENDIF
+   cParam := US_WordDel( cParam, 1 )
 
    IF Upper( SubStr( cParam, 1, 5 ) ) == "-LIST"
       bList := .T.
@@ -69,12 +69,11 @@ FUNCTION MAIN( ... )
    cParam := AllTrim( SubStr( cParam, 1, US_WordInd( cParam, US_Words( cParam ) - 1 ) - 1 ) )
 
    IF bList
-      QPM_Log( "------------" )
-      QPM_Log( "US_Slash 002I: Version:    " + VERSION )
-      QPM_Log( "US_Slash 003I: Log into:   " + cQPMDir + "QPM.log" )
-      QPM_Log( "US_Slash 004I: FileIn:     " + cFileIn )
-      QPM_Log( "US_Slash 005I: FileOut:    " + cFileOut )
-      QPM_Log( "US_Slash 006I: Param:      " + cParam )
+      QPM_Log( "------------ " + "US_Slash.version " + VERSION )
+      QPM_Log( "US_Slash 002I: Log into:   " + cQPMDir + "QPM.log" )
+      QPM_Log( "US_Slash 003I: FileIn:     " + cFileIn )
+      QPM_Log( "US_Slash 004I: FileOut:    " + cFileOut )
+      QPM_Log( "US_Slash 005I: Param:      " + cParam )
    ENDIF
 
    IF Upper( Right( cFileIn, 9 ) ) == 'SCRIPT.LD'
@@ -90,7 +89,7 @@ FUNCTION MAIN( ... )
             cKey := US_Word( cLine, 1 )
             IF ! Empty( cKey )
                IF bList
-                  QPM_Log( "US_Slash 007I: Script      " + cLine )
+                  QPM_Log( "US_Slash 006I: Script      " + cLine )
                ENDIF
                IF cKey == "INPUT("
                   cFileIn += US_Word( cLine, 2 ) + " "
@@ -109,7 +108,7 @@ FUNCTION MAIN( ... )
                ELSEIF cKey == "PATH("
                   cPath := US_Word( cLine, 2 )
                ELSEIF bList
-                  QPM_Log( "US_Slash 008E: Bad key:    " + cKey )
+                  QPM_Log( "US_Slash 007E: Bad key:    " + cKey )
                ENDIF
             ENDIF
          ENDDO
@@ -117,9 +116,10 @@ FUNCTION MAIN( ... )
          cGroup += "-Wl,--end-group -static-libgcc "
       ELSE
          IF bList
-            QPM_Log( "US_Slash 009E: Open error: " + cFileIn + hb_osNewLine() )
+            QPM_Log( "US_Slash 008E: Open error: " + cFileIn )
          ENDIF
-         RETURN 8
+         ErrorLevel( 1 )
+         RETURN .F.
       ENDIF
    ENDIF
 
@@ -129,13 +129,13 @@ FUNCTION MAIN( ... )
    gcc_call := 'GCC.EXE @' + fparams
 
    IF bList
-      QPM_Log( "US_Slash 010I: cFileIn:    " + cFileIn )
-      QPM_Log( "US_Slash 011I: cFileOut:   " + cFileOut )
-      QPM_Log( "US_Slash 012I: cSearch:    " + cSearch )
-      QPM_Log( "US_Slash 013I: cGroup:     " + cGroup )
-      QPM_Log( "US_Slash 014I: cParam:     " + cParam )
-      QPM_Log( "US_Slash 015I: cPath:      " + cPath )
-      QPM_Log( "US_Slash 016I: gcc_call:   " + gcc_call )
+      QPM_Log( "US_Slash 009I: cFileIn:    " + cFileIn )
+      QPM_Log( "US_Slash 010I: cFileOut:   " + cFileOut )
+      QPM_Log( "US_Slash 011I: cSearch:    " + cSearch )
+      QPM_Log( "US_Slash 012I: cGroup:     " + cGroup )
+      QPM_Log( "US_Slash 013I: cParam:     " + cParam )
+      QPM_Log( "US_Slash 014I: cPath:      " + cPath )
+      QPM_Log( "US_Slash 015I: gcc_call:   " + gcc_call )
    ENDIF
 
    cmdbatch := hb_osNewLine() + ;
@@ -151,12 +151,12 @@ FUNCTION MAIN( ... )
    hb_MemoWrit( fgccbat, cmdbatch )
 
    IF bList
-      QPM_Log( "US_Slash 017I: INI Batch" )
+      QPM_Log( "US_Slash 016I: INI Batch" )
       QPM_LOG( Left( cmdbatch, Len( cmdbatch ) - 2 ) )
-      QPM_Log( "US_Slash 018I: END Batch" )
-      QPM_Log( "US_Slash 019I: INI Param" )
+      QPM_Log( "US_Slash 017I: END Batch" )
+      QPM_Log( "US_Slash 018I: INI Param" )
       QPM_LOG( Left( cLine, Len( cLine ) - 2 ) )
-      QPM_Log( "US_Slash 020I: END Param" )
+      QPM_Log( "US_Slash 019I: END Param" )
    ENDIF
 
    __Run( fgccbat )
@@ -164,17 +164,19 @@ FUNCTION MAIN( ... )
    IF MemoLine( MemoRead( fstatus ), 254, 1 ) = "ERROR"
       ErrorLevel( 1 )
       IF bList
-         QPM_Log( "US_Slash 021I: Status:     ERROR" )
-         QPM_Log( "------------" )
+         QPM_Log( "US_Slash 020I: Status:     ERROR" )
+         QPM_Log( "------------" + CRLF )
       ENDIF
    ELSE
       IF bList
-         QPM_Log( "US_Slash 022I: Status:     OK" )
-         QPM_Log( "------------" )
+         QPM_Log( "US_Slash 021I: Status:     OK" )
+         QPM_Log( "------------" + CRLF )
       ENDIF
    ENDIF
    FErase( fgccbat )
    FErase( fstatus )
+
+   ErrorLevel( 0 )
 
    RETURN .T.
 
@@ -246,9 +248,9 @@ FUNCTION US_Word( estring, posicion )
       IF AT( " ", estring ) == 0
          RETURN iif( posicion == cont, estring, "" )
       ELSEIF cont == posicion
-         RETURN SubStr( estring, 1, AT( " ", estring ) - 1 )
+         RETURN SubStr( estring, 1, At( " ", estring ) - 1 )
       ENDIF
-      estring := AllTrim( SubStr( estring, AT( " ", estring ) + 1 ) )
+      estring := AllTrim( SubStr( estring, At( " ", estring ) + 1 ) )
       cont ++
    ENDDO
 
