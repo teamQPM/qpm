@@ -60,7 +60,10 @@ FUNCTION MAIN( ... )
 
    IF Upper( SubStr( cParam, 1, 5 ) ) == "-LIST"
       bList := .T.
-      cQPMDir := SubStr( US_Word( cParam, 1 ), 6 ) + "\"
+      cQPMDir := SubStr( US_Word( cParam, 1), 6 )
+      IF ! Right( cQPMDir, 1 ) == "\"
+         cQPMDir += "\"
+      ENDIF
       cParam := AllTrim( SubStr( cParam, US_WordInd( cParam, 2 ) ) )
    ENDIF
    cFileIn := US_Word( cParam, US_Words( cParam ) - 1 )
