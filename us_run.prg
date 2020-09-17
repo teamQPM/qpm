@@ -27,31 +27,32 @@
 
 // For error codes see: http://msdn2.microsoft.com/en-us/library/ms681382(VS.85).aspx
 
+#define VERSION "01.04"
+MEMVAR cQPMDir
+
 FUNCTION MAIN( ... )
-   Local aParams := hb_aParams(), n, bList
-   Local Version := "01.03", bOk := .T., nLineSize := 1024
-   Local cParam, MemoAux := "", i, cLineaAux := ""
-   Private cCMD := "", cControlFile := "", cDefaultPath := "", cCurrentPath, cMode := "NORMAL"
+   LOCAL aParams := hb_aParams()
+   LOCAL n, bList := .F., bOk := .F., nLineSize := 1024, cParam, MemoAux := "", i, cLineaAux := ""
+   PRIVATE cCMD := "", cControlFile := "", cDefaultPath := "", cCurrentPath, cMode := "NORMAL", cQPMDir := ""
 
    cParam := ""
-   For n := 1 To Len( aParams )
+   FOR n := 1 TO Len( aParams )
       cParam += ( aParams[ n ] + " " )
-   Next n
+   NEXT n
    cParam := AllTrim( cParam )
 
-   If Upper( US_Word( cParam, 1 ) ) == "-VER" .or. Upper( US_Word( cParam, 1 ) ) == "-VERSION"
-      hb_MemoWrit( "US_Run.version", Version )
-      Return bOk
-   EndIf
+   IF Upper( US_Word( cParam, 1 ) ) == "-VER" .or. Upper( US_Word( cParam, 1 ) ) == "-VERSION"
+      hb_MemoWrit( "US_Run.version", VERSION )
+      ErrorLevel( 0 )
+      RETURN .T.
+   ENDIF
 
-   If Upper( US_Word( cParam, 1 ) ) != "QPM"
-      MsgInfo( "US_Run 120E: Running Outside System" )
-      ERRORLEVEL( 1 )
-      bOk := .F.
-      Return bOk
-   Else
-      cParam := US_WordDel( cParam, 1 )
-   EndIf
+   IF Upper( US_Word( cParam, 1 ) ) != "QPM"
+      __Run( "ECHO " + "US_Res 001E: Running Outside System" )
+      ErrorLevel( 1 )
+      RETURN .F.
+   ENDIF
+   cParam := US_WordDel( cParam, 1 )
 
    IF Upper( SubStr( cParam, 1, 5 ) ) == "-LIST"
       bList := .T.
@@ -60,54 +61,51 @@ FUNCTION MAIN( ... )
          cQPMDir += "\"
       ENDIF
       cParam := AllTrim( SubStr( cParam, US_WordInd( cParam, 2 ) ) )
-   ELSE
-      bList := .F.
    ENDIF
 
-   If Empty( cParam )
-      IF bList
-         QPM_Log( "US_Run 121E: Missing Parameters" )
-      ENDIF
-      MsgInfo( "US_Run 121E: Missing Parameters" )
-      ERRORLEVEL( 1 )
-      bOk := .F.
-      Return bOk
-   EndIf
+   IF bList
+      QPM_Log( "------------ " + "US_Run.version " + VERSION )
+   ENDIF
 
-   If ! File( cParam )
+   IF Empty( cParam )
       IF bList
-         QPM_Log( "US_Run 122E: Parameters File Not Found: " + cParam )
+         QPM_Log( "US_Run 002E: Missing Parameters" )
       ENDIF
-      MsgInfo( "US_Run 122E: Parameters File Not Found: " + cParam )
-      ERRORLEVEL( 1 )
-      bOk := .F.
-      Return bOk
-   Else
-      MemoAux := MemoRead( cParam )
-      For i := 1 To MLCount( MemoAux, nLineSize )
-         cLineaAux := AllTrim( MemoLine( MemoAux, nLineSize, i ) )
-         If Upper( US_Word( cLineaAux, 1 ) ) == "COMMAND"
-            cCMD := US_WordSubStr( cLineaAux, 2 )
-         EndIf
-         If Upper( US_Word( cLineaAux, 1 ) ) == "CONTROL"
-            cControlFile := US_WordSubStr( cLineaAux, 2 )
-         EndIf
-         If Upper( US_Word( cLineaAux, 1 ) ) == "DEFAULTPATH"
-            cDefaultPath := US_WordSubStr( cLineaAux, 2 )
-         EndIf
-         If Upper( US_Word( cLineaAux, 1 ) ) == "MODE"
-            cMode := US_WordSubStr( cLineaAux, 2 )
-         EndIf
-      Next i
-      FErase( cParam )
+      ErrorLevel( 1 )
+      RETURN .F.
+   ENDIF
+
+   IF ! File( cParam )
       IF bList
-         QPM_Log( "US_Run 123I:" )
-         QPM_Log( "COMMAND = " + cCMD )
-         QPM_Log( "CONTROL = " + cControlFile )
-         QPM_Log( "DEFPATH = " + cDefaultPath )
-         QPM_Log( "RUNMODE = " + cMode )
+         QPM_Log( "US_Run 003E: Parameters File Not Found: " + cParam )
       ENDIF
-   EndIf
+      ErrorLevel( 1 )
+      RETURN .F.
+   ENDIF
+
+   MemoAux := MemoRead( cParam )
+   FOR i := 1 TO MLCount( MemoAux, nLineSize )
+      cLineaAux := AllTrim( MemoLine( MemoAux, nLineSize, i ) )
+      IF Upper( US_Word( cLineaAux, 1 ) ) == "COMMAND"
+         cCMD := US_WordSubStr( cLineaAux, 2 )
+      ENDIF
+      IF Upper( US_Word( cLineaAux, 1 ) ) == "CONTROL"
+         cControlFile := US_WordSubStr( cLineaAux, 2 )
+      ENDIF
+      IF Upper( US_Word( cLineaAux, 1 ) ) == "DEFAULTPATH"
+         cDefaultPath := US_WordSubStr( cLineaAux, 2 )
+      ENDIF
+      IF Upper( US_Word( cLineaAux, 1 ) ) == "MODE"
+         cMode := US_WordSubStr( cLineaAux, 2 )
+      ENDIF
+   NEXT i
+   FErase( cParam )
+   IF bList
+      QPM_Log( "US_Run 004I: COMMAND = " + cCMD )
+      QPM_Log( "US_Run 005I: CONTROL = " + cControlFile )
+      QPM_Log( "US_Run 006I: DEFPATH = " + cDefaultPath )
+      QPM_Log( "US_Run 007I: RUNMODE = " + cMode )
+   ENDIF
 
    DEFINE WINDOW VentanaMain ;
       AT 0, 0 ;
@@ -117,212 +115,233 @@ FUNCTION MAIN( ... )
       MAIN ;
       ICON "DOS" ;
       NOSHOW ;
-      ON INIT US_RunInit( bList )
+      ON INIT ( bok := US_RunInit( bList ) )
    END WINDOW
 
    ACTIVATE WINDOW VentanaMain
 
    IF bOk
       IF bList
-         QPM_Log( "US_Run 124I: Ended OK" )
+         QPM_Log( "US_Run 008I: Ended OK" )
       ENDIF
    ELSE
       IF bList
-         QPM_Log( "US_Run 124E: Ended with ERROR" )
+         QPM_Log( "US_Run 009E: Ended with ERROR" )
       ENDIF
-      ERRORLEVEL( 1 )
+      ErrorLevel( 1 )
    ENDIF
-RETURN bOk
 
-Function US_RunInit( bList )
-   Local Reto, nHandle
+   RETURN bOk
+
+//========================================================================
+FUNCTION US_RunInit( bList )
+   LOCAL Reto, nHandle, bOk := .T.
 
    DO EVENTS
    nHandle := FOpen( cControlFile, FO_WRITE + FO_EXCLUSIVE )
    IF FError() == 0
-      If ! Empty( cDefaultPath )
+      IF ! Empty( cDefaultPath )
          cCurrentPath := GetCurrentFolder()
          SetCurrentFolder( cDefaultPath )
-      EndIf
+      ENDIF
       IF bList
-         QPM_Log( "US_Run 125I: current folder is " + GetCurrentFolder() )
+         QPM_Log( "US_Run 010I: current folder is " + GetCurrentFolder() )
       ENDIF
       DO EVENTS
-      Do Case
-      Case cMode == "HIDE"
+      DO CASE
+      CASE cMode == "HIDE"
          Reto := WaitRun( cCMD, 0 )            // EXECUTE FILE ( cCMD ) WAIT HIDE
-      Case cMode == "MINIMIZE"
+      CASE cMode == "MINIMIZE"
          Reto := WaitRun( cCMD, 6 )            // EXECUTE FILE ( cCMD ) WAIT MINIMIZE
-      Case cMode == "MAXIMIZE"
+      CASE cMode == "MAXIMIZE"
          Reto := WaitRun( cCMD, 3 )            // EXECUTE FILE ( cCMD ) WAIT MAXIMIZE
-      Otherwise
+      OTHERWISE
          Reto := WaitRun( cCMD, 5 )            // EXECUTE FILE ( cCMD ) WAIT
-      EndCase
+      ENDCASE
       IF bList
-         QPM_Log( "US_Run 126I: WaitRun returned " + US_VarToStr( Reto ) )
+         QPM_Log( "US_Run 011I: WaitRun returned " + US_VarToStr( Reto ) )
       ENDIF
-      If ! Empty( cDefaultPath )
+      IF ! Empty( cDefaultPath )
          SetCurrentFolder( cCurrentPath )
-      EndIf
+      ENDIF
       DO EVENTS
-      If Reto > 8
+      IF Reto > 8
          IF bList
-            QPM_Log( "US_Run 127E: Error Running: " + cCMD + HB_OsNewLine() + "Code: " + US_VarToStr( Reto ) )
+            QPM_Log( "US_Run 012E: Error Running: " + cCMD + HB_OsNewLine() + "Code: " + US_VarToStr( Reto ) )
          ENDIF
-         MsgInfo( "US_Run 127E: Error Running: " + cCMD + HB_OsNewLine() + "Code: " + US_VarToStr( Reto ) )
          bOk := .F.
-      EndIf
+      ENDIF
       FClose( nHandle )
    ELSE
       IF bList
-         QPM_Log( "US_Run 128E: error opening control file." )
+         QPM_Log( "US_Run 013E: error opening control file." )
       ENDIF
-      MsgInfo( "US_Run 128E: Error opening control file." )
       bOk := .F.
    ENDIF
    FErase( cControlFile )
    DO EVENTS
    VentanaMain.Release()
-Return Nil
+
+   RETURN bOk
 
 //========================================================================
 // FUNCION PARA EXTRAER UNA PALABRA DE UN ESTRING
 //========================================================================
 FUNCTION US_WORD(ESTRING, POSICION)
-   LOCAL CONT
-   CONT := 1
-   if Posicion == NIL
+   LOCAL CONT := 1
+
+   IF Posicion == NIL
       Posicion := 1
-   endif
-   ESTRING := ALLTRIM(ESTRING)
+   ENDIF
+   ESTRING := AllTrim( ESTRING )
    DO WHILE .T.
-      IF AT(" ",ESTRING) != 0
+      IF At( " ", ESTRING ) != 0
          IF CONT == POSICION
-            RETURN SUBSTR(ESTRING,1,AT(" ",ESTRING)-1)
+            RETURN SubStr( ESTRING, 1, At( " ", ESTRING ) - 1 )
          ELSE
-            ESTRING := ALLTRIM(SUBSTR(ESTRING,AT(" ",ESTRING) + 1))
-            CONT := CONT + 1
+            ESTRING := AllTrim( SubStr( ESTRING, At( " ", ESTRING ) + 1 ) )
+            CONT ++
          ENDIF
       ELSE
          IF POSICION == CONT
             RETURN ESTRING
          ELSE
-            RETURN ""
+            EXIT
          ENDIF
       ENDIF
    ENDDO
-Return ""
+
+   RETURN ""
 
 //========================================================================
 // FUNCION PARA ELIMINAR UNA PALABRA DE UN STRING
 //========================================================================
-FUNCTION US_WORDDEL(ESTRING,POSICION)
-RETURN IIF(POSICION>0,ALLTRIM(SUBSTR(ESTRING,1,US_WORDIND(ESTRING,POSICION)-1)+STRTRAN(SUBSTR(ESTRING,US_WORDIND(ESTRING,POSICION)),US_WORD(ESTRING,POSICION)," ",1,1)),ESTRING)
+FUNCTION US_WordDel( ESTRING, POSICION )
+   LOCAL cRet
+
+   IF POSICION > 0
+      cRet := AllTrim( SubStr( ESTRING, 1, US_WordInd( ESTRING, POSICION ) - 1 ) + ;
+                       StrTran( SubStr( ESTRING, US_WordInd( ESTRING, POSICION ) ), US_Word( ESTRING, POSICION ), " ", 1, 1 ) )
+   ELSE
+      cRet := ESTRING
+   ENDIF
+
+   RETURN cRet
 
 //========================================================================
 // FUNCION PARA SABER LA POSICION DE LA PALABRA NUMERO ....
 // ESTA FUNCION RETORNA EL BYTE DONDE EMPIEZA LA PALABRA
 //========================================================================
-FUNCTION US_WORDIND(ESTRING, POSICION)
-   LOCAL CONT , ESTR , ESTR2
-   if ESTRING == NIL
+FUNCTION US_WordInd( ESTRING, POSICION )
+   LOCAL CONT, ESTR, ESTR2
+
+   IF ESTRING == NIL
       ESTRING := ""
    ENDIF
-   if us_words( Estring ) < Posicion
-      Return ( len( Estring ) + 1 )
-//    Return 0
-   endif
+   IF US_Words( Estring ) < Posicion
+      RETURN ( Len( Estring ) + 1 )
+   ENDIF
    CONT := 1
    ESTR := ESTRING
-   ESTR2 := RTRIM(ESTRING)
-   ESTRING := ALLTRIM(ESTRING)
+   ESTR2 := RTrim( ESTRING )
+   ESTRING := AllTrim( ESTRING )
    DO WHILE .T.
-      IF AT(" ",ESTRING) != 0
+      IF At(" ",ESTRING) != 0
          IF CONT == POSICION
-            RETURN (LEN(ESTR)-(LEN(ESTRING)+(LEN(ESTR)-LEN(ESTR2)))+1)
+            RETURN ( Len( ESTR ) - ( Len( ESTRING ) + ( Len( ESTR ) - Len( ESTR2 ) ) ) + 1 )
          ELSE
-            ESTRING := ALLTRIM(SUBSTR(ESTRING,AT(" ",ESTRING) + 1))
-            CONT := CONT + 1
+            ESTRING := AllTrim( SubStr( ESTRING, At( " ", ESTRING ) + 1 ) )
+            CONT ++
          ENDIF
       ELSE
          IF POSICION == CONT
-            RETURN (LEN(ESTR)-(LEN(ESTRING)+(LEN(ESTR)-LEN(ESTR2)))+1)
+            RETURN ( Len( ESTR ) - ( Len( ESTRING ) + ( Len( ESTR ) - Len( ESTR2 ) ) ) + 1 )
          ELSE
             RETURN 0
          ENDIF
       ENDIF
    ENDDO
-RETURN 0
+
+   RETURN 0
 
 //========================================================================
 // FUNCION PARA retornar un substr a partir de la posicion de una palabra
 //========================================================================
-FUNCTION US_WordSubstr( estring , pos )
-   if Estring == NIL
+FUNCTION US_WordSubstr( estring, pos )
+
+   IF Estring == NIL
       Estring := ""
-   endif
-RETURN substr( estring , us_wordind( estring , pos ) )
+   ENDIF
+
+   RETURN SubStr( estring, US_WordInd( estring, pos ) )
 
 //========================================================================
 // FUNCION PARA CONTAR LAS PALABRAS EN UN ESTRING
 //========================================================================
-FUNCTION US_WORDS(ESTRING)
-   LOCAL CONT:=0
-   if Estring == NIL
+FUNCTION US_WORDS( ESTRING )
+   LOCAL CONT := 0
+
+   IF Estring == NIL
       Estring := ""
-   endif
-   ESTRING:=ALLTRIM(ESTRING)
+   ENDIF
+   ESTRING := AllTrim( ESTRING )
    DO WHILE .T.
-      IF AT(" ",ESTRING) != 0
-         ESTRING:=ALLTRIM(SUBSTR(ESTRING,AT(" ",ESTRING) + 1))
+      IF At( " ", ESTRING ) != 0
+         ESTRING := AllTrim( SubStr( ESTRING, At( " ", ESTRING ) + 1 ) )
          CONT++
       ELSE
-         IF LEN(ESTRING) > 0
+         IF Len( ESTRING ) > 0
             RETURN CONT + 1
          ELSE
             RETURN CONT
          ENDIF
       ENDIF
    ENDDO
-RETURN 0
 
+   RETURN 0
+
+//========================================================================
 FUNCTION US_VarToStr(X)
-   LOCAL T, StringAux:="" , i
-   if X == NIL
-      X := "*NIL*"
-   endif
-   T=Valtype(X)
-   do case
-      case T='C'
-         return X
-      case T='O'
-         return "*OBJ*"
-      case T='U'
-         return "*UND*"
-      case T='M'
-         return X
-      case T='D'
-         StringAux=DTOS(X)
-         return StringAux
-      case T='N'
-         StringAux=US_STRCERO(X)
-         return StringAux
-      case T='L'
-         StringAux=IF(X,'.T.','.F.')
-         return StringAux
-      case T='A'
-         for i:=1 to ( len(x) - 1 )
-            StringAux:=StringAux + US_VarToStr( x[i] ) + HB_OSNewLine()
-         next
-         if len(x) > 0
-            StringAux:=StringAux + US_VarToStr( x[len(x)] )
-         endif
-         return StringAux
-   endcase
-RETURN ""
+   LOCAL T, StringAux:="", i
 
+   IF X == NIL
+      X := "*NIL*"
+   ENDIF
+   T := ValType( X )
+   DO CASE
+   CASE T = 'C'
+      RETURN X
+   CASE T = 'O'
+      RETURN "*OBJ*"
+   CASE T = 'U'
+      RETURN "*UND*"
+   CASE T = 'M'
+      RETURN X
+   CASE T = 'D'
+      StringAux=DToS(X)
+      RETURN StringAux
+   CASE T = 'N'
+      StringAux := US_STRCERO( X )
+      RETURN StringAux
+   CASE T = 'L'
+      StringAux := iif( X, '.T.', '.F.' )
+      RETURN StringAux
+   CASE T = 'A'
+      FOR i := 1 TO Len( X ) - 1
+         StringAux := StringAux + US_VarToStr( X[ i ] ) + hb_osNewLine()
+      NEXT
+      IF Len( X ) > 0
+         StringAux := StringAux + US_VarToStr( X[ Len( X ) ] )
+      ENDIF
+      RETURN StringAux
+   ENDCASE
+
+   RETURN ""
+
+//========================================================================
 FUNCTION US_StrCero(NUM,LONG,DEC)
    LOCAL INDICIO
+
    IF DEC=NIL
       IF LONG=NIL
          NUM=STR(NUM)
@@ -332,13 +351,14 @@ FUNCTION US_StrCero(NUM,LONG,DEC)
    ELSE
       NUM=STR(NUM,LONG,DEC)
    ENDIF
-   LONG=LEN(NUM)
-   FOR INDICIO=1 TO LONG
-      IF SUBSTR(NUM,INDICIO,1) = " "
-         NUM=STUFF(NUM,INDICIO,1,"0")
+   LONG=Len(NUM)
+   FOR INDICIO := 1 TO LONG
+      IF SubStr( NUM, INDICIO, 1 ) == " "
+         NUM := Stuff( NUM, INDICIO, 1, "0" )
       ENDIF
    NEXT
-RETURN NUM
+
+   RETURN NUM
 
 //========================================================================
 // ESCRIBE EN EL LOG
