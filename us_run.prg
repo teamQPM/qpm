@@ -365,7 +365,7 @@ FUNCTION US_StrCero(NUM,LONG,DEC)
 //========================================================================
 STATIC FUNCTION QPM_Log( string )
    LOCAL LogArchi := cQPMDir + "QPM.LOG"
-   LOCAL msg := DToS( Date() ) + " " + Time() + " US_SLASH " + ProcName( 1 ) + "(" + AllTrim( Str( ProcLine( 1 ) ) ) + ")" + " " + string
+   LOCAL msg := DToS( Date() ) + " " + Time() + " US_RUN " + ProcName( 1 ) + "(" + Str( ProcLine( 1 ), 3, 0 ) + ")" + " " + string
 
    SET CONSOLE OFF
    SET ALTERNATE TO ( LogArchi ) ADDITIVE
