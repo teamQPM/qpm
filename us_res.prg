@@ -120,6 +120,7 @@ FUNCTION MAIN( ... )
       OTHERWISE
          IF bList
             QPM_Log( "US_Res 008E: Parameter error: " + US_Word( cParam, i ) )
+            QPM_Log( "------------" + CRLF )
          ENDIF
          ErrorLevel( 1 )
          RETURN .F.
@@ -129,6 +130,7 @@ FUNCTION MAIN( ... )
    IF ! File( cFileIn )
       IF bList
          QPM_Log( "US_Res 009E: File not found: " + cFileIn )
+         QPM_Log( "------------" + CRLF )
       ENDIF
       ErrorLevel( 1 )
       RETURN .F.
@@ -240,12 +242,12 @@ FUNCTION MAIN( ... )
       IF lWarning
          IF bList
             QPM_Log( "US_Res 013E: Process ended with a warning" )
-            QPM_Log( "------------" )
+            QPM_Log( "------------" + CRLF )
          ENDIF
       ELSE
          IF bList
             QPM_Log( "US_Res 014I: Process ended without error" )
-            QPM_Log( "------------" )
+            QPM_Log( "------------" + CRLF )
          ENDIF
       ENDIF
    ELSE                                           // List and parse each line changing the path of the resources, other lines are copied unchanged
