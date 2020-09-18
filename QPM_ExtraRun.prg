@@ -328,19 +328,19 @@ Function QPM_GetExtraRunSave( bTest )
    if bTest
       Prefix := "Tst"
    else
-      Prefix := "Tmp"
+      Prefix := "Prj"
    endif
    /* */
    if ExtraRun.ExtraRunSelectRadio.Value = 2 .and. empty( ExtraRun.ExtraRunQPMProjText.Value )
-      MyMsgInfo( "Project name is empty !!!" )
+      MyMsgInfo( 'Field "Project" is empty !!!' )
       Return .F.
    endif
    if ExtraRun.ExtraRunSelectRadio.Value = 3 .and. empty( ExtraRun.ExtraRunExeText.Value )
-      MyMsgInfo( "Run Program o Process is empty !!!" )
+      MyMsgInfo( 'Field "Run Exe or Batch" is empty!' )
       Return .F.
    endif
    if ExtraRun.ExtraRunSelectRadio.Value = 4 .and. empty( ExtraRun.ExtraRunFreeText.Value )
-      MyMsgInfo( "Free command is empty !!!" )
+      MyMsgInfo( 'Field "DOS command" is empty!' )
       Return .F.
    endif
    &( Prefix + "_ExtraRunProjQPM" ) := ExtraRun.ExtraRunQPMProjText.Value
@@ -356,23 +356,22 @@ Function QPM_GetExtraRunSave( bTest )
       case ExtraRun.ExtraRunQPMRadio.Value == 4
          &( Prefix + "_ExtraRunQPMRadio" ) := "CLEAR"
       otherwise
-         MyMsgInfo( "Invalid Radio Type: " + US_VarToStr( ExtraRun.ExtraRunQPMRadio.Value ) )
          &( Prefix + "_ExtraRunQPMRadio" ) := "OPEN"
    endcase
-   &( Prefix + "_ExtraRunQPMForceFull" ) := ExtraRun.ExtraRunQPM2ForceFull.Value
-   &( Prefix + "_ExtraRunQPMRun" ) := ExtraRun.ExtraRunQPM2Run.Value
-   &( Prefix + "_ExtraRunQPMAutoExit" ) := ExtraRun.ExtraRunQPM2Exit.Value
-   &( Prefix + "_ExtraRunQPMClear" ) := ExtraRun.ExtraRunQPM2Clear.Value
-   &( Prefix + "_ExtraRunQPMLog" ) := ExtraRun.ExtraRunQPM2Log.Value
+   &( Prefix + "_ExtraRunQPMForceFull" )    := ExtraRun.ExtraRunQPM2ForceFull.Value
+   &( Prefix + "_ExtraRunQPMRun" )          := ExtraRun.ExtraRunQPM2Run.Value
+   &( Prefix + "_ExtraRunQPMAutoExit" )     := ExtraRun.ExtraRunQPM2Exit.Value
+   &( Prefix + "_ExtraRunQPMClear" )        := ExtraRun.ExtraRunQPM2Clear.Value
+   &( Prefix + "_ExtraRunQPMLog" )          := ExtraRun.ExtraRunQPM2Log.Value
    &( Prefix + "_ExtraRunQPMLogOnlyError" ) := ExtraRun.ExtraRunQPM2LogOnlyError.Value
-   &( Prefix + "_ExtraRunQPMButtonRun" ) := ExtraRun.ExtraRunQPM2ButtonRun.Value
-   &( Prefix + "_ExtraRunQPMLite" ) := ExtraRun.ExtraRunQPM2Lite.Value
-   &( Prefix + "_ExtraRunCmdEXEParm" ) := ExtraRun.ExtraRunExeTextParm.Value
-   &( Prefix + "_ExtraRunCmdFREEParm" ) := ""
-   &( Prefix + "_ExtraRunExeWait" ) := ExtraRun.ExtraRunExeWait.Value
-   &( Prefix + "_ExtraRunExePause" ) := ExtraRun.ExtraRunExePause.Value
-   &( Prefix + "_ExtraRunFreeWait" ) := ExtraRun.ExtraRunFreeWait.Value
-   &( Prefix + "_ExtraRunFreePause" ) := ExtraRun.ExtraRunFreePause.Value
+   &( Prefix + "_ExtraRunQPMButtonRun" )    := ExtraRun.ExtraRunQPM2ButtonRun.Value
+   &( Prefix + "_ExtraRunQPMLite" )         := ExtraRun.ExtraRunQPM2Lite.Value
+   &( Prefix + "_ExtraRunCmdEXEParm" )      := ExtraRun.ExtraRunExeTextParm.Value
+   &( Prefix + "_ExtraRunCmdFREEParm" )     := ""
+   &( Prefix + "_ExtraRunExeWait" )         := ExtraRun.ExtraRunExeWait.Value
+   &( Prefix + "_ExtraRunExePause" )        := ExtraRun.ExtraRunExePause.Value
+   &( Prefix + "_ExtraRunFreeWait" )        := ExtraRun.ExtraRunFreeWait.Value
+   &( Prefix + "_ExtraRunFreePause" )       := ExtraRun.ExtraRunFreePause.Value
    do case
       case ExtraRun.ExtraRunSelectRadio.Value = 1
          &( Prefix + "_ExtraRunType" ) := "NONE"
@@ -389,6 +388,8 @@ Function QPM_GetExtraRunSave( bTest )
                &( Prefix + "_ExtraRunCmdQPMParm" ) := &( Prefix + "_ExtraRunCmdQPMParm" ) + " " + "-RUN"
             case &( Prefix + "_ExtraRunQPMRadio" ) = "CLEAR"
                &( Prefix + "_ExtraRunCmdQPMParm" ) := &( Prefix + "_ExtraRunCmdQPMParm" ) + " " + "-CLEAR"
+            otherwise
+               &( Prefix + "_ExtraRunCmdQPMParm" ) := &( Prefix + "_ExtraRunCmdQPMParm" ) + " " + "-OPEN"
          endcase
          if &( Prefix + "_ExtraRunQPMLite" ) .and. ExtraRun.ExtraRunQPM2Lite.Enabled
             &( Prefix + "_ExtraRunCmdQPMParm" ) := &( Prefix + "_ExtraRunCmdQPMParm" ) + " " + "-LITE"
@@ -413,7 +414,6 @@ Function QPM_GetExtraRunSave( bTest )
          endif
          if &( Prefix + "_ExtraRunQPMLog" ) .and. ExtraRun.ExtraRunQPM2Log.Enabled
             &( Prefix + "_ExtraRunCmdQPMParm" ) := &( Prefix + "_ExtraRunCmdQPMParm" ) + " " + "-LOG(" + US_FileNameOnlyName( PUB_cProjectFile ) + ".LOG)"
-          //&( Prefix + "_ExtraRunCmdQPMParm" ) := &( Prefix + "_ExtraRunCmdQPMParm" ) + " " + "-LOG(" + strtran( US_FileNameOnlyName( PUB_cProjectFile ), " ", "_" ) + ".LOG)"
          endif
          SetProperty( "WinPSettings", "Text_ExtraRunCmd", "Value", "<QPM> " + &( Prefix + "_ExtraRunProjQPM" ) + " " + &( Prefix + "_ExtraRunCmdQPMParm" ) )
       case ExtraRun.ExtraRunSelectRadio.Value = 3
@@ -423,12 +423,13 @@ Function QPM_GetExtraRunSave( bTest )
          &( Prefix + "_ExtraRunType" ) := "FREE"
          SetProperty( "WinPSettings", "Text_ExtraRunCmd", "Value", &( Prefix + "_ExtraRunCmdFREE" ) )
       otherwise
-         MyMsgInfo( "Invalid ExtraRun Radio: " + US_VarToStr( ExtraRun.ExtraRunSelectRadio.Value ) )
+         &( Prefix + "_ExtraRunType" ) := "NONE"
+         SetProperty( "WinPSettings", "Text_ExtraRunCmd", "Value", "" )
    endcase
    if bTest
       QPM_ExecuteExtraRun( .T. )
    else
-      ExtraRun.release()
+      ExtraRun.Release()
    endif
 Return .T.
 
