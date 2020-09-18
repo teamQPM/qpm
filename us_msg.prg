@@ -22,61 +22,130 @@
  *    along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-FUNCTION MAIN(cP1,cP2,cP3,cP4,cP5,cP6,cP7,cP8,cP9,cP10,cP11,cP12,cP13,cP14,cP15,cP16,cP17,cP18,cP19,cP20)
-   Local Version:="01.01"
-   Local cFileMemo := "" , cFileOut := "" , cMSG := ""
-   Local cParam := "" , cChkFile := ""
+#define VERSION "01.02"
+MEMVAR CQPMDIR
 
-   cP1 =IIF(cP1 =NIL,"",cP1 )
-   cP2 =IIF(cP2 =NIL,"",cP2 )
-   cP3 =IIF(cP3 =NIL,"",cP3 )
-   cP4 =IIF(cP4 =NIL,"",cP4 )
-   cP5 =IIF(cP5 =NIL,"",cP5 )
-   cP6 =IIF(cP6 =NIL,"",cP6 )
-   cP7 =IIF(cP7 =NIL,"",cP7 )
-   cP8 =IIF(cP8 =NIL,"",cP8 )
-   cP9 =IIF(cP9 =NIL,"",cP9 )
-   cP10=IIF(cP10=NIL,"",cP10)
-   cP11=IIF(cP11=NIL,"",cP11)
-   cP12=IIF(cP12=NIL,"",cP12)
-   cP13=IIF(cP13=NIL,"",cP13)
-   cP14=IIF(cP14=NIL,"",cP14)
-   cP15=IIF(cP15=NIL,"",cP15)
-   cP16=IIF(cP16=NIL,"",cP16)
-   cP17=IIF(cP17=NIL,"",cP17)
-   cP18=IIF(cP18=NIL,"",cP18)
-   cP19=IIF(cP19=NIL,"",cP19)
-   cP20=IIF(cP20=NIL,"",cP20)
-   cParam:=ALLTRIM(cP1+" "+cP2+" "+cP3+" "+cP4+" "+cP5+" "+cP6+" "+cP7+" "+cP8+" "+cP9+" "+cP10+" "+cP11+" "+cP12+" "+cP13+" "+cP14+" "+cP15+" "+cP16+" "+cP17+" "+cP18+" "+cP19+" "+cP20)
+FUNCTION MAIN( ... )
+   LOCAL aParams := hb_aParams()
+   LOCAL cParam, n, cFileMemo, cFileOut, cMSG, cChkFile, bList := .F.
+   PRIVATE cQPMDir := ""
 
-   if Upper( US_Word( cParam , 1 ) ) == "-VER" .or. Upper( US_Word( cParam , 1 ) ) == "-VERSION"
-      hb_MemoWrit( "US_Msg.version" , Version )
-      Return .T.
-   endif
+   cParam := ""
+   FOR n := 1 TO Len( aParams )
+      cParam += ( aParams[ n ] + " " )
+   NEXT n
+   cParam := AllTrim( cParam )
 
-   cFileOut := substr( cParam , 1 , rat( "-MSG:" , upper( cParam ) ) - 1 )
-   cMSG := substr( cParam , rat( "-MSG:" , upper( cParam ) ) + 5 )
-   cChkFile := substr( cFileOut , 1 , rat( "\" , cFileOut ) + 15 ) + "MSG.SYSIN"
+   IF Upper( US_Word( cParam, 1 ) ) == "-VER" .OR. Upper( US_Word( cParam, 1 ) ) == "-VERSION"
+      hb_MemoWrit( "US_Msg.version", VERSION )
+      RETURN .T.
+   ENDIF
 
-   if file( cChkFile )
-      if US_Word( Memoread( cChkFile ) , 1 ) == "STOP"
-         ferase( cChkFile )
+   IF Upper( US_Word( cParam, 1 ) ) != "QPM"
+      __Run( "ECHO " + "US_Msg 001E: Running Outside System" )
+      ErrorLevel( 1 )
+      RETURN .F.
+   ENDIF
+   cParam := US_WordDel( cParam, 1 )
+
+   IF Upper( SubStr( cParam, 1, 5 ) ) == "-LIST"
+      bList := .T.
+      cQPMDir := SubStr( US_Word( cParam, 1), 6 )
+      IF ! Right( cQPMDir, 1 ) == "\"
+         cQPMDir += "\"
+      ENDIF
+   ENDIF
+
+   IF bList
+      QPM_Log( "------------ " + "US_Msg.version " + VERSION )
+   ENDIF
+
+   cFileOut := SubStr( cParam, 1, RAt( "-MSG:", upper( cParam ) ) - 1 )
+   cMSG := SubStr( cParam, RAt( "-MSG:", Upper( cParam ) ) + 5 )
+   cChkFile := SubStr( cFileOut, 1, RAt( "\", cFileOut ) + 15 ) + "MSG.SYSIN"
+
+   IF File( cChkFile )
+      IF US_Word( Memoread( cChkFile ), 1 ) == "STOP"
+         FErase( cChkFile )
          __Run( "ECHO " + ".               ============================================================" )
          __Run( "ECHO " + ".               ==              Build Proccess Stoped by User             ==" )
          __Run( "ECHO " + ".               ============================================================" )
-         ERRORLEVEL(1)
-         return .F.
-      endif
-   endif
+         ErrorLevel(1)
+         RETURN .F.
+      ENDIF
+   ENDIF
 
-   if file( cFileOut )
-      cFileMemo := MemoRead( cFileOut )
-   endif
-   cFileMemo := cFileMemo + US_TimeDis( Time() ) + " - " + cMSG + HB_OsNewLine()
-   hb_MemoWrit( cFileOut , cFileMemo )
-// ? cmsg
-// __run( "pause" )
-return .T.
+   cFileMemo := US_TimeDis( Time() ) + " - " + cMSG + hb_osNewLine()
+   IF File( cFileOut )
+      cFileMemo := MemoRead( cFileOut ) + cFileMemo
+   ENDIF
+   hb_MemoWrit( cFileOut, cFileMemo)
+
+   IF bList
+      QPM_Log( "US_Msg 002I: " + cFileOut )
+      QPM_Log( "US_Msg 003I: " + cMSG )
+      QPM_Log( "------------" + CRLF )
+   ENDIF
+
+   RETURN .T.
+
+//========================================================================
+// FUNCION PARA ELIMINAR UNA PALABRA DE UN STRING
+//========================================================================
+FUNCTION US_WordDel( estring, posicion )
+
+   RETURN iif( posicion > 0, ;
+               AllTrim( SubStr( estring, 1, US_WordInd( estring, posicion ) - 1 ) + ;
+                        StrTran( SubStr( estring, US_WordInd( estring, posicion ) ), US_Word( estring, posicion ), " ", 1, 1 ) ), ;
+               estring )
+
+//========================================================================
+// RETORNA LA POSICION DONDE EMPIEZA LA PALABRA numero
+//========================================================================
+FUNCTION US_WordInd( estring, numero )
+   LOCAL cont, estr, estr2
+
+   IF estring == NIL
+      estring := ""
+   ENDIF
+   IF US_Words( estring ) < numero
+      RETURN ( Len( estring ) + 1 )
+   ENDIF
+   cont := 1
+   estr := estring
+   estr2 := RTrim( estring )
+   estring := AllTrim( estring )
+   DO WHILE .T.
+      IF At( " ", estring ) == 0
+         RETURN iif( numero == cont, Len( estr ) - ( Len( estring ) + ( Len( estr ) - Len( estr2 ) ) ) + 1, 0 )
+      ELSEIF cont == numero
+         RETURN ( Len( estr ) - ( Len( estring ) + ( Len( estr ) - Len( estr2 ) ) ) + 1 )
+      ENDIF
+      estring := AllTrim( SubStr( estring, At( " ", estring ) + 1 ) )
+      cont ++
+   ENDDO
+
+   RETURN 0
+
+//========================================================================
+// CUENTA LAS PALABRAS EN UN STRING
+//========================================================================
+FUNCTION US_Words( estring )
+   LOCAL cont := 0
+
+   IF estring == NIL
+      estring := ""
+   ENDIF
+   estring := AllTrim( estring)
+   DO WHILE .T.
+      IF At( " ", estring ) == 0
+         RETURN iif( Len( estring ) > 0, cont + 1, cont )
+      ENDIF
+      estring := AllTrim( SubStr( estring, At( " ", estring ) + 1 ) )
+      cont ++
+   ENDDO
+
+   RETURN 0
 
 //========================================================================
 // FUNCION PARA EXTRAER UNA PALABRA DE UN ESTRING
@@ -121,5 +190,22 @@ FUNCTION US_TIMEDIS(TIEMPO)
       ENDIF
    NEXT
 RETURN RES+SUBSTR(TIEMPO,I)
+
+//========================================================================
+// ESCRIBE EN EL LOG
+//========================================================================
+STATIC FUNCTION QPM_Log( string )
+   LOCAL LogArchi := cQPMDir + "QPM.LOG"
+   LOCAL msg := DToS( Date() ) + " " + Time() + " US_MSG " + ProcName( 1 ) + "(" + Str( ProcLine( 1 ), 3, 0 ) + ")" + " " + string
+
+   SET CONSOLE OFF
+   SET ALTERNATE TO ( LogArchi ) ADDITIVE
+   SET ALTERNATE ON
+   ? msg
+   SET ALTERNATE OFF
+   SET ALTERNATE TO
+   SET CONSOLE ON
+
+   RETURN .T.
 
 /* eof */
