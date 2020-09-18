@@ -325,12 +325,12 @@ Function ProjectSettings()
               VALUE           Prj_ExtraRunCmdFINAL
               ROW             327
               COL             300
-              WIDTH           150
+              WIDTH           180
       END TEXTBOX
 
       DEFINE BUTTON Button_ExtraRun
               ROW             327
-              COL             460
+              COL             490
               WIDTH           25
               HEIGHT          25
               PICTURE         'folderselect'
