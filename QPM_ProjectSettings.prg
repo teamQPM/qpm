@@ -326,6 +326,7 @@ Function ProjectSettings()
               ROW             327
               COL             300
               WIDTH           180
+              READONLY        .T.
       END TEXTBOX
 
       DEFINE BUTTON Button_ExtraRun
