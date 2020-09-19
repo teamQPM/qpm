@@ -1,7 +1,7 @@
 /*
  *    QPM - QAC based Project Manager
  *
- *    Copyright 2011-2020 Fernando Yurisich <fernando.yurisich@gmail.com>
+ *    Copyright 2011-2020 Fernando Yurisich <teamqpm@gmail.com>
  *    https://teamqpm.github.io/
  *
  *    Based on QAC - Project Manager for (x)Harbour
@@ -11234,7 +11234,7 @@ FUNCTION QPM_DefinoMainMenu()
       END POPUP
       POPUP '&Make a donation'
          ITEM "PayPal" ACTION ShellExecute( 0, 'open', 'rundll32.exe', 'url.dll,FileProtocolHandler ' + PUB_cQPM_Donation_Link, NIL, 1)
-         ITEM "Other ways" ACTION ShellExecute( 0, 'open', 'rundll32.exe', 'url.dll,FileProtocolHandler ' + 'mailto:fernando.yurisich@gmail.com?cc=&bcc=' + '&subject=I%20want%20to%20make%20a%20donation&body=Please%20contact%20me.', NIL, 1)
+         ITEM "Other ways" ACTION ShellExecute( 0, 'open', 'rundll32.exe', 'url.dll,FileProtocolHandler ' + 'mailto:teamqpm@gmail.com?cc=&bcc=' + '&subject=I%20want%20to%20make%20a%20donation&body=Please%20contact%20me.', NIL, 1)
       END POPUP
    END MENU
 

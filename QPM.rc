@@ -1,7 +1,7 @@
 /*
  *    QPM - QAC based Project Manager
  *
- *    Copyright 2011-2020 Fernando Yurisich <fernando.yurisich@gmail.com>
+ *    Copyright 2011-2020 Fernando Yurisich <teamqpm@gmail.com>
  *    https://teamqpm.github.io/
  *
  *    Based on QAC - Project Manager for (x)Harbour
@@ -41,7 +41,7 @@ BEGIN
    		VALUE "CompanyName", "QPM Development Team\000"
    		VALUE "ProductName", "QPM\000"
    		VALUE "ProductVersion", QPM_VERSION_STRINGF_INFO
-   		VALUE "Comments", "<fernando.yurisich@gmail.com>\000"
+   		VALUE "Comments", "<teamqpm@gmail.com>\000"
       END
    END
    BLOCK "VarFileInfo"
