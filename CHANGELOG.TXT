@@ -3,6 +3,634 @@
  * See "How to format your ChangeLog entries" in howtosvn.txt file.
  */
 
+2020-09-19 19:37 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * QPM.iss
+     * Version changed to 05.05.0019.
+     * Donation link changed.
+
+2020-09-19 19:30 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * QPM_AutoProject.qpm
+     * Updated.
+   * QPM.exe
+     * Rebuild.
+   * QPM.prg
+     * Improve debug messages.
+     * Improve some interfase messages.
+     + Functions QPM_LogText and QPM_LogFile to simplify debug logging.
+     ! Debug messages from US_SHELL were always output to 'Log Build Process' tab.
+     + Debug messages from US_RES are copied to the build log.
+     + The contents of _Temp.rc file are copied to the build log.
+     + Functions QPM_LogWrite, QPM_LogFile and QPM_LogText to handle the
+       support log and enable the standarization of its lines.
+     * Allmost all writes to the log now use the aformentioned functions.
+     + Missing writes to the log some functions.
+     * Removed -i switch from US_MAKE call.
+     ! This is part of the fix to the issue: "Stop Build" button does not work.
+   #62
+   #64
+   #66
+   #68
+   #14
+
+2020-09-19 17:27 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * QPM_ProjectSettings.prg
+     ! Field "Extra Run After Successful Build" must be readonly.
+   #67
+
+2020-09-19 16:53 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * QPM_US_Msg.qpm
+     * Updated.
+   * us_msg.exe
+     * Rebuilded.
+   * us_msg.prg
+     * Errorlevel(1) + QUIT was replaced by ExitProcess(1) because HMG calls
+       ExitProcess without Errorlevel parameter before QUIT is processed
+       thus preventing the ErrorLevel to reach the OS.
+     ! This is part of the fix to the issue: "Stop Build" button does not work.
+   #62
+   #66
+
+2020-09-19 16:40 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * QPM_US_Res.qpm
+   * QPM_US_Run.qpm
+   * QPM_US_Shell.qpm
+   * QPM_US_Slash.qpm
+     * Updated.
+   * us_res.exe
+   * us_run.exe
+   * us_shell.exe
+   * us_slash.exe
+     * Rebuilded.
+   * us_res.prg
+   * us_run.prg
+   * us_shell.prg
+   * us_slash.prg
+     * Removed Errorlevel: it's unnecessary because the process return
+       value it's never checked
+   #62
+
+2020-09-18 20:50 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * QPM_ExtraRun.prg
+     ! Extra run command is not been saved.
+     * Some messages improved.
+   #66
+
+2020-09-18 20:40 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * QPM_ProjectSettings.prg
+     * Add more room for extra run command.
+
+2020-09-18 20:38 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * us_res.exe
+     * Rebuilded.
+   * us_res.prg
+     * Debug messages improved.
+   #62
+
+2020-09-18 20:36 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * us_run.exe
+     * Rebuilded.
+   * us_run.prg
+     ! Log messages alignment.
+   #62
+
+2020-09-18 20:33 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * QPM_US_Msg.qpm
+     * Updated.
+   * us_msg.exe
+     * Rebuilded.
+   * us_msg.prg
+     ; Version set to 1.02
+     + Errorlevel.
+     * Debug messages improved.
+     * Parameters handling.
+     + Parameter -LIST to log debug messages.
+     + Check to avoid running outside QPM.
+   #62
+
+2020-09-18 20:20 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * QPM_US_Shell.qpm
+     * Updated.
+   * us_shell.exe
+     * Rebuilded.
+   * us_shell.prg
+     ! Debug messages have wrong procedure names and line numbers.
+     ! Lib listing shows a misleading message upon user stop.
+   #65
+
+2020-09-17 19:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * QPM_US_Res.qpm
+     * Updated.
+   * us_res.exe
+     * Rebuilded.
+   * us_res.prg
+     ; Version set to 1.12
+     + Errorlevel.
+     * Debug messages improved.
+   #62
+
+2020-09-17 18:56 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * us_run.exe
+     * Rebuilded.
+   * us_run.prg
+     ; Version set to 1.04
+     + Errorlevel.
+     * Debug messages improved.
+   #62
+
+2020-09-17 18:45 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * QPM_US_Shell.qpm
+     * Updated.
+   * us_shell.exe
+     * Rebuilded.
+   * us_shell.prg
+     ; Version set to 1.07
+     + Parameter -LIST to log debug messages.
+     + Check to avoid running outside QPM.
+     * Debug messages improved.
+     ! Debug messages were always output to 'Log Build Process' tab.
+   #62
+   #64
+
+2020-09-17 18:41 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * us_slash.exe
+     * Rebuilded.
+   * us_slash.prg
+     ! A log is created into the current folder each time a project is built.
+   #63
+
+2020-09-17 18:09 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * QPM_US_Slash.qpm
+     * Updated.
+   * us_slash.exe
+     * Rebuilded.
+   * us_slash.prg
+     + Errorlevel.
+     * Debug messages improved.
+   #62
+
+2020-09-13 19:43 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * HelpQPM\QPM_SHG.cdx
+   * HelpQPM\QPM_SHG.dbf
+   * HelpQPM\QPM_SHG.fpt
+   * QPM.chm
+     + Info related to next release.
+     + Info on libraries management.
+
+2020-09-13 19:41 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * QPM_AutoProjectOnlyHelp.qpm
+     * Updated.
+
+2020-09-13 19:08 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * QPM.prg
+     + If an error occurs while compiling the RC file, the error log will now
+       show the name of the file that contains the error and the number of the
+       offending line (only if the RC compiler provides this data).
+   #15
+
+2020-09-12 18:42 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * QPM_Functions.prg
+     + Initialization of new public vars.
+
+2020-09-12 18:41 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * QPM.ch
+     + Declarations for new public vars.
+
+2020-09-12 18:34 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * QPM.prg
+     * Use US_SLASH instead of directly calling GCC.
+     ! RTE "hb_xgrab can't assign memory" at function HB_UNZIPFILEINFO.
+     * These errors is caused by an incorrect linking when GCC is called
+       with an input file that includes a GROUP structure.
+   #12
+     * Some messages were improved.
+     * Use functions MyMsg* whenever possible.
+     * Calls to MyMsg replace by MyMsg*.
+     * Function US_FReadLine replaced by hb_FReadLine.
+   #34
+     * Function BugGetFile replaced by GetFile.
+     * Removed some commented out code.
+   #37
+     + Support for customizing the default libraries list and
+       setting its attributes.
+     ; These changes allow the user to customize, for each version of Minigui,
+       the list of libraries to link, thus eliminating the need to modify the
+       inclusion and exclusion lists of each project.
+   #46
+     + Support for automatically adding "-static" switch to MinGW builds.
+   #48
+     + Support for HMG form designer.
+     * Id of OOHG's form designer is now 'OOHGIDE' instead of 'HMI'.
+   #49
+     + Support for a new option that allows to remove the extension from
+       the FMG file name before calling the form editor.
+   #50
+     + Support for donations link.
+   #52
+     ! Cross referencing is not working properly because of SET EXACT ON.
+   #54
+     + Added an option to clear the auxiliary files at QPM's exit.
+   #55
+     ! When a new source is added and the given extension is not PRG, C or CPP,
+       then QPM assigns the wrong extension as part of the name: f.e. if input
+       is "myfile.xxx" then "myfile.xxx.prg" is assigned.
+     ! Ditto for FMG and DBF files.
+   #56
+     ! RTE "Type mismatch" caused by not resizing arrays after deleting an item.
+   #57
+     + Folder MinGW\INCLUDE to the list of included paths when compiling
+       or linking.
+     ! Building process for some MinGW compilers that keep Windows related
+       files in that folder.
+   #58
+     * From now on the Exclude library list also applies to the Include list.
+   #59
+     ! The specified order for objects and libs isn't honored when building a lib.
+   #60
+
+2020-09-12 16:09 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * QPM_Environment.prg
+     * Removed $Id$
+     * Removed some commented out code.
+     - Function BugGetFile because it was replaced by GetFile.
+   #37
+     + Support for HMG Extended + PellesC flavors.
+   #45
+     + Support for loading/saving the default libs from/to config file.
+   #46
+     * Support for new id of OOHG's form designer.
+   #49
+     + Support for new option that allows to remove extension from the
+       FMG file name before calling the form editor.
+   #50
+     + Support for explicit identification of GTGUI library.
+   #51
+
+2020-09-12 16:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * QPM_Functions.prg
+     * Use functions MyMsg* whenever possible.
+     * Function MsgOK renamed to MyMsgOK.
+     * Functions MsgOK_Salir and MsgOK_Contador are now declared as STATIC.
+     * Function US_FReadLine replaced by hb_FReadLine.
+     * Calls to US_IsVarDefined replaced by US_IsVar.
+     - Function ReplaceDebugActive.
+     * Calls to ReplaceDebugActive replace by ReplaceMemoData.
+     + Function ReplaceMemoData.
+     + Function QPM_SetDefaultNameOfMiniguiAndGtguiLibs.
+     + Function GetSetVar.
+   #34
+     * Removed $Id$
+     * Removed some commented out code.
+     - Function BugGetFile because it was replaced by GetFile.
+   #37
+     + Link for donations.
+   #52
+     * Improve error messages from function QPM_DirValid.
+   #53
+     + Initialization of new public vars.
+     + Function GetGTGUIName.
+     + Function GetGTWINName.
+     + Function AutoType.
+     + Function MyMsgDebug.
+     + Function CallDump.
+
+2020-09-12 15:42 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * QPM_CompatibilityOpenProject.ch
+     * Removed $Id$
+   #37
+     * Id of OOHG's form designer is now 'OOHGIDE' instead of 'HMI'.
+   #49
+
+2020-09-12 15:37 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * QPM_HotRecovery.prg
+     * Use functions MyMsg* whenever possible.
+   #34
+     * Removed $Id$
+     * Removed some commented out code.
+     * Function BugGetFile replaced by GetFile.
+   #37
+
+2020-09-12 15:31 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * QPM_GlobalSettings.prg
+     + All input fields now have tooltips.
+   #22
+     * Use functions MyMsg* whenever possible.
+   #34
+     * Removed $Id$
+     * Removed some commented out code.
+     * Function BugGetFile replaced by GetFile.
+   #37
+     + Support for loading/saving the default libs from/to config file.
+   #46
+     + Support for HMG form designer.
+     * Id of OOHG's form designer is now 'OOHGIDE' instead of 'HMI'.
+   #49
+     + New option to remove extension from FMG file name before calling
+       the form editor.
+   #50
+     + Support for explicit identification of GTGUI library.
+   #51
+
+2020-09-12 15:11 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * QPM_ProjectSettings.prg
+     * Use functions MyMsg* whenever possible.
+   #34
+     * Removed $Id$
+     * Removed some commented out code.
+   #37
+     + Support for HMG Extended + PellesC flavors.
+   #45
+     + Support for automatically adding "-static" switch to MinGW builds.
+   #48
+     + Support for HMG form designer.
+   #49
+     + Support for changing the default libs when MiniGui flavor is changed.
+   #46
+
+2020-09-12 14:55 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * QPM_US_Slash.qpm
+     * Updated.
+   * us_slash.exe
+     * Rebuilded.
+   * us_slash.prg
+     ; Version set to 1.07
+     ! Removed unintended -static parameter.
+     ; This parameter will be added automatically whenever the "Static"
+       checkbox of "Output Type" options at "Project options" is checked.
+   #47
+
+2020-09-12 11:38 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * QPM_Libraries.prg
+     * Libraries handling was simplified.
+     * Default libraries list was synced with latter (x)Harbour distros.
+     + Support for some lib attributes:
+       - mode (gui/console/both)
+       - thread (single-threaded/multi-threaded/both)
+       - debug (yes/no/both)
+     ; These changes allow the user to customize, for each version of Minigui,
+       the list of libraries to link, thus eliminating the need to modify the
+       inclusion and exclusion lists of each project.
+   #46
+
+2020-09-12 11:19 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * QPM_ExtraRun.prg
+     * Use functions MyMsg* whenever possible.
+   #34
+     * Function BugGetFile replaced by GetFile.
+   #37
+
+2020-09-12 11:17 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * QPM_Killer.prg
+     * Use functions MyMsg* whenever possible.
+   #34
+
+2020-09-12 11:16 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * QPM_SHG_AssistLink.prg
+   * QPM_SHG_AssistImage.prg
+     * Use functions MyMsg* whenever possible.
+   #34
+     * Function BugGetFile replaced by GetFile.
+   #37
+
+2020-09-12 11:12 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * QPM_SHG_SimpleHelpGenerator.prg
+     * Some messages were improved.
+     * Use functions MyMsg* whenever possible.
+   #34
+
+2020-09-12 11:01 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * QPM.ch
+     + Pseudo-functions MyMsgStop, MsgStop, MyMsgWarn, MsgWarn,
+       MyMsgInfo, MsgInfo and AutoMsgBox.
+   #34
+     + Declarations for new public vars.
+
+2020-09-12 10:40 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * QPM_US_Msg.qpm
+   * QPM_US_Res.qpm
+   * QPM_US_Run.qpm
+   * QPM_US_Shell.qpm
+   * QPM_US_Slash.qpm
+     * Updated.
+
+2020-09-12 10:38 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * us_res.exe
+     * Rebuilded.
+   * us_res.prg
+     * Function MemoWrit was replaced by HB_MemoWrit.
+   #37
+     + Support for calculating the real line number where the resource
+       compiler detects an error.
+   #15
+
+2020-09-12 10:30 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * us_msg.exe
+     * Rebuilded.
+   * us_msg.prg
+     * Function MemoWrit was replaced by HB_MemoWrit.
+   #37
+
+2020-09-12 10:29 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * us_run.exe
+     * Rebuilded.
+   * us_run.prg
+     * Function MemoWrit was replaced by HB_MemoWrit.
+   #37
+
+2020-09-12 10:28 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * us_shell.exe
+     * Rebuilded.
+   * us_shell.prg
+     * Function MemoWrit was replaced by HB_MemoWrit.
+   #37
+
+2020-09-12 10:13 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * us_slash.exe
+     * Rebuilded.
+   * QPM_US_Slash.qpm
+     * GCC is now called with an input file as parameter (gcc @file).
+     ! RTE "hb_xgrab can't assign memory" at function HB_UNZIPFILEINFO.
+     * These errors is caused by an incorrect linking when GCC is called
+       with an input file that includes a GROUP structure.
+   #12
+
+2020-09-11 20:56 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * FuentesComunes\US_HB.PRG
+     * Removed commented out code.
+     * Some messages changed.
+   #37
+
+2020-08-29 09:32 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * QPM_SHG_AssistImage.prg
+     * Removed $Id$
+     * Removed some commented out code.
+   #37
+
+2020-08-29 09:31 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * QPM_SHG_AssistLink.prg
+     * Removed $Id$
+     * Removed some commented out code.
+   #37
+
+2020-08-28 19:09 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * QPM_SHG_SimpleHelpGenerator.prg
+     ! Test of file extension may fail if it's not lowercased.
+   #42
+     ! CHM file is not saved to project's folder when project's file was
+       opened using "Open/New" button.
+   #43
+     * Removed $Id$
+     * Removed some commented out code.
+   #37
+
+2020-08-28 18:50 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * QPM_US_Msg.qpm
+   * QPM_US_Redir.qpm
+   * QPM_US_Reimp.qpm
+   * QPM_US_Res.qpm
+   * QPM_US_Run.qpm
+   * QPM_US_Shell.qpm
+   * QPM_US_Slash.qpm
+     * Updated to last version.
+
+2020-08-28 18:43 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * us_msg.exe
+   * us_redir.exe
+   * us_res.exe
+   * us_run.exe
+   * us_shell.exe
+   * us_slash.exe
+     * Rebuilded.
+
+2020-08-28 18:41 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * us_shell.prg
+     * Removed $Id$
+   #37
+
+2020-08-28 18:31 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * us_run.rc
+     * Removed $Id$
+   #37
+
+2020-08-28 18:29 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * us_run.prg
+     * Removed $Id$
+   #37
+     + Added support for -LIST param to log the error messages.
+   #41
+
+2020-08-28 18:12 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * us_res.prg
+     * Removed $Id$
+   #37
+     ! Some log messages are always displayed.
+   #40
+
+2020-08-28 17:42 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * us_redir.c
+     * Removed $Id$
+     * Cancelation message changed.
+   #37
+
+2020-08-28 17:40 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * ar.c
+     * Removed $Id$
+   #37
+
+2020-08-27 20:28 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * HelpQPM\SHG_Change.prg
+   * qpm.h
+   * QPM_CompatibilityHotRecovery.ch
+   * QPM_CompatibilityOpenGlobal.ch
+   * QPM_CompatibilityStatistics.ch
+   * QPM_Killer.prg
+   * QPM_Resources.ch
+   * QPM_SyncRecovery.prg
+   * QPM_Version.prg
+   * resource.h
+   * us_msg.prg
+   * us_slash.prg
+     * Removed $Id$
+   #37
+
+2020-08-27 20:22 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * PayPal Donate.url
+     * Updated.
+
+2020-08-27 20:20 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * FuentesComunes\US_MG.PRG
+     * Removed $Id$
+     * Removed commented out code.
+   #37
+
+2020-08-27 20:02 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * FuentesComunes\US_i_richeditbox.ch
+   * FuentesComunes\US_K.CH
+   * FuentesComunes\US_l_richeditbox.prg
+   * FuentesComunes\US_Log.h
+   * FuentesComunes\US_Log.prg
+   * FuentesComunes\US_MG_Null.prg
+   * FuentesComunes\US_ProcessWin.prg
+   * FuentesComunes\US_RichEdit.rc
+   * LICENSE.TXT
+     * Removed $Id$
+   #37
+
+2020-08-27 19:57 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * FuentesComunes\US_HB.PRG
+     * Removed commented out code.
+   #37
+     ! Function US_IsVar breaks error handling of QPM code because it
+       fails to restore the previous errorblock handler.
+   #39
+
+2020-08-27 19:45 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * FuentesComunes\TAxPrg.prg
+   * FuentesComunes\US_ActiveX.prg
+   * FuentesComunes\US_ActiveX_Eventos.c
+   * FuentesComunes\US_Clases.prg
+   * FuentesComunes\US_Edit_CharFijo.prg
+   * FuentesComunes\US_Env.h
+     * Removed $Id$
+   #37
+
+2020-08-27 19:40 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * doc\us_reimp_readme.txt
+     * Removed $Id$
+   #37
+
+2020-08-27 19:36 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   + doc\us_redir.txt
+     * Removed $Id$
+     * Added title.
+   #37
+
+2020-08-27 19:34 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * doc\UpgradeReadme.txt
+     * Removed $Id$
+   #37
+
+2020-08-27 19:33 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   + doc\notes.txt
+     * Removed $Id$
+     * Added title.
+   #37
+
+2020-08-27 19:32 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   + doc\dirstruc.txt
+     * Removed $Id$
+     * Removed unneeded paragraph.
+   #37
+
+2020-08-27 19:30 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * BuildAll.bat
+     * Removed $Id$
+   #37
+
+2020-08-25 23:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * doc\OOHG_Configuration.txt
+     + Information on how to configure for OOHG's 64 bits HM3264 distro.
+   #38
+
 2020-06-30 20:43 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * QPM_Libraries.prg
    * QPM_Functions.prg
@@ -664,7 +1292,7 @@
    * QPM.exe
    * QPM.prg
    * QPM_Functions.prg
-     ! Compilation aborts because RC filenames for HMG flavor are wrong.
+     ! Compilation ends because RC filenames for HMG flavor are wrong.
 
 2020-04-20 19:08 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * QPM.ch
@@ -784,10 +1412,10 @@
      * Updated to 05_05_12.
      * Compiled with Harbour MiniGUI Extended Edition 19.04 (Update 1).
    * QPM.prg
-     ! Building with BCC aborts when the main resource file contains icons.
-     ! Building with MinGW aborts when the main resource file contains entries
+     ! Building with BCC ends when the main resource file contains icons.
+     ! Building with MinGW ends when the main resource file contains entries
        with long filenames.
-     ! xHarbour+MinGW compilation aborts because of missing mainstd.o or
+     ! xHarbour+MinGW compilation ends because of missing mainstd.o or
        mainwin.o files.
    * QPM_US_Res.qpm
    * us_res.exe
@@ -824,7 +1452,7 @@
      * Added support for RES files to function QPM_ModuleType.
    * QPM.prg
      * Added support for RES files to LIB tab.
-     ! Building with BCC aborts because the resource file is
+     ! Building with BCC ends because the resource file is
        not compiled.
      + Additional RES files can be added to the project using
        the LIB tab.
@@ -2764,7 +3392,7 @@
    * QPM.EXE
      * Updated to version 05_03_01.
    * QPM.PRG
-     ! Fixed: building aborted when UPX option is checked.
+     ! Fixed: building ends when UPX option is checked.
      * Process log improved (added blank lines).
      - Removed US_A*.EXE from list of needed files.
      - Removed US_S*.EXE from list of needed files.
