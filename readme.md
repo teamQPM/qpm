@@ -25,7 +25,3 @@ and linking by offering interactive and batch tools to:
 + Create static libraries and DLL access interfaces.
 + Show the names of the functions included in static and dynamic libraries.
 + Compress EXE files with the UPX utility.
-
-###### Development site: https://github.com/fyurisich/qpm
-###### Bug reports and feature or help requests: https://github.com/fyurisich/qpm/issues
-###### Community support: https://sourceforge.net/projects/qpm/lists/qpm-users
