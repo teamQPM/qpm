@@ -28,18 +28,19 @@
 #define VERSION "01.07"
 #define CRLF hb_osNewLine()
 MEMVAR CQPMDIR
+MEMVAR bList
 
-FUNCTION MAIN( ... )
+PROCEDURE MAIN( ... )
    LOCAL aParams := hb_AParams()
-   LOCAL cTxtAux := "", cTxtAux2 := "", i := 0
-   LOCAL cModuleNameAux := "?", cLineaAux := "", cLineaAux2 := "", bEncontroValido := .F.
-   LOCAL nPos := 0, bObjLst := .F., bExpLst := .F., cObjExt := ".ObjLst", cExpExt := ".ExpLst"
-   LOCAL MemoObjLst := "", MemoExpLst := "EXPORTS", bError := .F.
-   LOCAL bDelete := .F., cLastModuleFound := "", nZap := 0, cFileStop := "", lStop := .F.
-   LOCAL bPellesDynamic := .F., bBorlandDynamic, bMinGWDynamic := .F.
-   LOCAL cDLL_Name := "", nDLL_NameAux := 0, cDLL_NameFunAux := "", cDLL_NameMemoAux := ""
+   LOCAL cTxtAux, cTxtAux2 := "", i
+   LOCAL cModuleNameAux, cLineaAux, cLineaAux2, bEncontroValido := .F.
+   LOCAL nPos, bObjLst := .F., bExpLst := .F., cObjExt := ".ObjLst", cExpExt := ".ExpLst"
+   LOCAL MemoObjLst := "", MemoExpLst := "EXPORTS"
+   LOCAL bDelete := .F., nZap, cFileStop := "", lStop := .F.
+   LOCAL bPellesDynamic, bBorlandDynamic, bMinGWDynamic
+   LOCAL cDLL_Name := "", nDLL_NameAux, cDLL_NameFunAux, cDLL_NameMemoAux
    LOCAL cParam, cPar1, cPar2, cPar3, cPar4, j, vFun := {}
-   LOCAL nLineaBaseExport := 0, vObjectsPelles := {}, vFuncionesPelles := {}, bFunList := .F.
+   LOCAL nLineaBaseExport, vObjectsPelles := {}, vFuncionesPelles := {}, bFunList
 
    PRIVATE cQPMDir := "", bList := .F.
 
@@ -51,14 +52,12 @@ FUNCTION MAIN( ... )
 
    IF Upper( US_Word( cParam, 1 ) ) == "-VER" .or. Upper( US_Word( cParam, 1 ) ) == "-VERSION"
       hb_MemoWrit( "US_Shell.version", VERSION )
-      ErrorLevel( 0 )
-      RETURN .T.
+      RETURN
    ENDIF
 
    IF Upper( US_Word( cParam, 1 ) ) != "QPM"
       __Run( "ECHO " + "US_Res 001E: Running Outside System" )
-      ErrorLevel( 1 )
-      RETURN .F.
+      RETURN
    ENDIF
    cParam := US_WordDel( cParam, 1 )
 
@@ -76,8 +75,7 @@ FUNCTION MAIN( ... )
    IF ( nPos := US_WordPos( "-FILESTOP", US_Upper( cParam ) ) ) > 0
       IF US_Words( cParam ) == nPos
          Say(  "US_Shell 001E: FILESTOP without file, USE: -FILESTOP cDisc:\cPath\cFileName.ext" )
-         ErrorLevel( 1 )
-         RETURN .F.
+         RETURN
       ENDIF
       cFileStop := StrTran( US_Word( cParam, nPos + 1 ), "|", " " )
       Say(  "US_Shell 001I: FILESTOP: " + cFileStop )
@@ -93,7 +91,6 @@ FUNCTION MAIN( ... )
       IF US_Words( cParam ) < 2
          Say( "US_Shell 101E: Invalid parameter count: " + cParam + CRLF )
          Say( "No file to check!", .T. )
-         bError := .T.
       ELSE
          Say( "US_Shell 101I: Processing: " + cParam )
          cPar2 := US_Word( cParam, 2 )
@@ -104,14 +101,12 @@ FUNCTION MAIN( ... )
             IF ! File( cPar3 )
                Say( "US_Shell 104I: File not found" + CRLF )
                Say( "File not found!", .T. )
-               bError := .T.
             ELSE
                Say( "US_Shell 105I: File found" )
                Say( "US_Shell 106I: Size " + AllTrim( Str( US_FileSize( cPar3 ) ) ) + ' bytes' + CRLF )
             ENDIF
          ELSE
             Say( "US_Shell 107E: Invalid parameter" + CRLF )
-            bError := .T.
          ENDIF
       ENDIF
    CASE cPar1 == "COPY" .OR. cPar1 == "COPYZAP"
@@ -119,7 +114,6 @@ FUNCTION MAIN( ... )
       IF US_Words( cParam ) < 3
          Say( "US_Shell 201E: Invalid parameter count: " + cParam + CRLF )
          Say( "No file to copy!", .T. )
-         bError := .T.
       ELSE
          Say( "US_Shell 101I: Processing: " + cParam )
          cPar2 := StrTran( US_Word( cParam, 2 ), "|", " " )
@@ -127,14 +121,12 @@ FUNCTION MAIN( ... )
          IF ! File( cPar2 )
             Say( "US_Shell 203E: File not found" + CRLF )
             Say( "File not found!", .T. )
-            bError := .T.
          ELSE
             cPar3 := StrTran( US_Word( cParam, 3 ), "|", " " )
             Say( "US_Shell 203I: Folder Out: " + cPar3 )
             IF ! US_IsDirectory( US_FileNameOnlyPath( cPar3 ) )
                Say( "US_Shell 204E: Output folder not found: " + cPar3 + CRLF )
                Say( "Output folder not found!", .T. )
-               bError := .T.
             ELSE
                IF FileCopy( cPar2, cPar3 ) == US_FileSize( cPar2 )
                   IF cPar1 == "COPYZAP"
@@ -155,7 +147,6 @@ FUNCTION MAIN( ... )
                ELSE
                   Say( "US_Shell 208E: ERROR" + CRLF )
                   Say( "Error copying file!", .T. )
-                  bError := .T.
                ENDIF
             ENDIF
          ENDIF
@@ -165,7 +156,6 @@ FUNCTION MAIN( ... )
       IF US_Words( cParam ) < 3
          Say( "US_Shell 301E: Invalid parameter count: " + cParam + CRLF )
          Say( "No file to move!", .T. )
-         bError := .T.
       ELSE
          Say( "US_Shell 301I: Processing: " + cParam )
          cPar2 := StrTran( US_Word( cParam, 2 ), "|", " " )
@@ -173,14 +163,12 @@ FUNCTION MAIN( ... )
          IF ! File( cPar2 )
             Say( "US_Shell 303E: File not found" + CRLF )
             Say( "File not found!", .T. )
-            bError := .T.
          ELSE
             cPar3 := StrTran( US_Word( cParam, 3 ), "|", " " )
             Say( "US_Shell 303I: Folder Out: " + cPar3 )
             IF ! US_IsDirectory( US_FileNameOnlyPath( cPar3 ) )
                Say( "US_Shell 304E: Output folder not found: " + cPar3 + CRLF )
                Say( "Output folder not found!", .T. )
-               bError := .T.
             ELSE
                IF FileCopy( cPar2, cPar3 ) == US_FileSize( cPar2 )
                   IF FErase( cPar2 ) != -1
@@ -203,12 +191,10 @@ FUNCTION MAIN( ... )
                   ELSE
                      Say( "US_Shell 308E: ERROR deleting" + CRLF )
                      Say( "Error deleting file!", .T. )
-                     bError := .T.
                   ENDIF
                ELSE
                   Say( "US_Shell 309E: ERROR copying" + CRLF )
                   Say( "Error copying file!", .T. )
-                  bError := .T.
                ENDIF
             ENDIF
          ENDIF
@@ -218,7 +204,6 @@ FUNCTION MAIN( ... )
       IF US_Words( cParam ) < 2
          Say( "US_Shell 401E: Invalid parameter count: " + cParam + CRLF )
          Say( "No file to list!", .T. )
-         bError := .T.
       ELSE
          Say( "US_Shell 401I: Processing: " + cParam )
          IF ( nPos := US_WordPos( "-DELETE", US_Upper( cParam ) ) ) > 0
@@ -230,7 +215,6 @@ FUNCTION MAIN( ... )
          IF ! File( cPar2 )
             Say( "US_Shell 402E: File not found" + CRLF )
             Say( "File not found!", .T. )
-            bError := .T.
          ELSE
             cTxtAux := MemoRead( cPar2 )
             FOR i := 1 TO MLCount( cTxtAux, 254 )
@@ -256,7 +240,6 @@ FUNCTION MAIN( ... )
       IF US_Words( cParam ) < 2
          Say( "US_Shell 501E: Invalid parameter count: " + cParam + CRLF )
          Say( "No file to analize!", .T. )
-         bError := .T.
       ELSE
          Say( "US_Shell 501I: Processing: " + cParam )
          IF ( nPos := US_WordPos( "-DELETE", US_Upper( cParam ) ) ) > 0
@@ -269,7 +252,6 @@ FUNCTION MAIN( ... )
          IF ! File( cPar2 )
             Say( "US_Shell 502E: File not found" + CRLF )
             Say( "File not found!", .T. )
-            bError := .T.
          ELSE
             Say( "Functions exported: ", .T. )
             Say( "US_Shell 503I: Functions exported: " )
@@ -313,7 +295,6 @@ FUNCTION MAIN( ... )
       IF US_Words( cParam ) < 2
          Say( "US_Shell 601E: Invalid parameter count: " + cParam + CRLF )
          Say( "No file to analize!", .T. )
-         bError := .T.
       ELSE
          Say( "US_Shell 601I: Processing: " + cParam )
          IF ( nPos := US_WordPos( "-DELETE", US_Upper( cParam ) ) ) > 0
@@ -336,7 +317,6 @@ FUNCTION MAIN( ... )
          IF ! File( cPar2 )
             Say( "File not found!" )
             Say( "US_Shell 604E: File not found" + CRLF )
-            bError := .T.
          ELSE
             IF bObjLst
                Say( "File Obj: " + cPar2 + cObjExt, .T. )
@@ -463,7 +443,6 @@ FUNCTION MAIN( ... )
       IF US_Words( cParam ) < 2
          Say( "US_Shell 701E: Invalid parameter count: " + cParam + CRLF )
          Say( "No file to analize!", .T. )
-         bError := .T.
       ELSE
          Say( "US_Shell 701I: Processing: " + cParam )
          IF ( nPos := US_WordPos( "-DELETE", US_Upper( cParam ) ) ) > 0
@@ -486,7 +465,6 @@ FUNCTION MAIN( ... )
          IF ! File( cPar2 )
             Say( "File not found!" )
             Say( "US_Shell 704E: File not found" + CRLF )
-            bError := .T.
          ELSE
             IF bObjLst
                Say( "File Obj: " + cPar2 + cObjExt, .T. )
@@ -569,7 +547,6 @@ FUNCTION MAIN( ... )
       IF US_Words( cParam ) < 2
          Say( "US_Shell 801E: Invalid parameter count: " + cParam + CRLF )
          Say( "No file to analize!", .T. )
-         bError := .T.
       ELSE
          Say( "US_Shell 801I: Processing: " + cParam )
          IF ( nPos := US_WordPos( "-DELETE", US_Upper( cParam ) ) ) > 0
@@ -591,7 +568,6 @@ FUNCTION MAIN( ... )
          IF ! File( cPar2 )
             Say( "File not found!" )
             Say( "US_Shell 804E: File not found" + CRLF )
-            bError := .T.
          ELSE
             IF bObjLst
                Say( "File Obj: " + cPar2 + cObjExt, .T. )
@@ -608,12 +584,6 @@ FUNCTION MAIN( ... )
             FOR i := 1 TO MLCount( cTxtAux, 254 )
                cLineaAux := MemoLine( cTxtAux, 254, i )
                cLineaAux2 := MemoLine( cTxtAux, 254, i + 1 )
-               IF US_Words( cLineaAux ) > 3
-                  IF AllTrim( US_WordSubStr( cLineaAux, 2 ) ) == "file format pe-i386"
-                     cLastModuleFound := US_Word( cLineaAux, 1 )
-                     cLastModuleFound := AllTrim( StrTran( cLastModuleFound, ":", "" ) )
-                  ENDIF
-               ENDIF
                IF US_Word( cLineaAux, 1 ) == "SYMBOL" .AND. ;
                   US_Word( cLineaAux, 2 ) == "TABLE:"
                   cModuleNameAux := US_Word( cLineaAux2, US_Words( cLineaAux2 ) )
@@ -625,7 +595,6 @@ FUNCTION MAIN( ... )
                   // is a module originated by import
                   IF cModuleNameAux == ".text"
                      bEncontroValido := .F.
-                     cModuleNameAux := cLastModuleFound
                      IF ! bMinGWDynamic
                         cDLL_Name := SubStr( cTxtAux, at( "Contents of section", cTxtAux ) )
                         nDLL_NameAux := RAt( " ", SubStr( cDLL_Name, 1, At( ".DLL....", Upper( cDLL_Name ) ) ) ) + 1
@@ -634,13 +603,14 @@ FUNCTION MAIN( ... )
                         bMinGWDynamic := .T.
                      ENDIF
                      AAdd( vFun, "             " + US_Word( MemoLine( cTxtAux, 254, i + 8 ), US_Words( MemoLine( cTxtAux, 254, i + 8 ) ) ) )
+                     LOOP
                   ELSE
                      // standard module
                      bEncontroValido := .T.
                      cModuleNameAux := SubStr( cModuleNameAux, 1, RAt( ".", cModuleNameAux ) - 1 )
                      Say( "    Static Module " + cModuleNameAux )
                      IF bObjLst
-                        MemoObjLst := MemoObjLst + If( ! Empty( MemoObjLst ), hb_osNewLine(), "" ) + cModuleNameAux
+                        MemoObjLst := MemoObjLst + iif( ! Empty( MemoObjLst ), hb_osNewLine(), "" ) + cModuleNameAux
                      ENDIF
                   ENDIF
                   lStop := US_Shell_Listo( cFileStop, vFun )
@@ -694,7 +664,6 @@ FUNCTION MAIN( ... )
       IF US_Words( cParam ) < 2
          Say( "US_Shell 901E: Invalid parameter count: " + cParam + CRLF )
          Say( "No file to delete!", .T. )
-         bError := .T.
       ELSE
          Say( "US_Shell 901I: Processing: " + cParam )
          cPar2 := StrTran( US_Word( cParam, 2 ), "|", " " )
@@ -702,7 +671,6 @@ FUNCTION MAIN( ... )
             IF FErase( cPar2 ) == -1
                Say( "US_Shell 902E: ERROR" + CRLF )
                Say( "Error deleting file!", .T. )
-               bError := .T.
             ELSE
                Say( "US_Shell 902I: OK" + CRLF )
             ENDIF
@@ -714,7 +682,6 @@ FUNCTION MAIN( ... )
       Say( "US_Shell 910I: CHANGE" )
       IF US_Words( cParam ) != 4
          Say( "US_Shell 911E: Invalid parameter count: " + cParam + CRLF )
-         bError := .T.
       ELSE
          Say( "US_Shell 911I: Processing: " + cParam )
          cPar2 := StrTran( US_Word( cParam, 2 ), "|", " " )
@@ -726,14 +693,12 @@ FUNCTION MAIN( ... )
          IF ! File( cPar2 )
             Say( "US_Shell 912E: File not found" + CRLF )
             Say( "File not found!", .T. )
-            bError := .T.
          ELSE
             IF hb_MemoWrit( cPar2, StrTran( MemoRead( cPar2 ), cPar3, cPar4 ) )
                Say( "US_Shell 913I: OK" + CRLF )
             ELSE
                Say( "US_Shell 913E: ERROR" + CRLF )
                Say( "Error changing file!", .T. )
-               bError := .T.
             ENDIF
          ENDIF
       ENDIF
@@ -746,16 +711,11 @@ FUNCTION MAIN( ... )
       ENDIF
    OTHERWISE
       Say( "US_Shell 002E: Invalid parameter: " + cParam + CRLF )
-      bError := .T.
    ENDCASE
 
    FErase( cFileStop )
 
-   IF bError
-      ErrorLevel( 1 )
-   ENDIF
-
-   RETURN .T.
+   RETURN
 
 //========================================================================
 FUNCTION US_Shell_Listo( cFileStop, vFun )

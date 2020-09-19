@@ -30,7 +30,7 @@ MEMVAR cQPMDIR
 
 // Parameters: 1 -> cParam (multiple words), 2 -> cFileIn (one word), 3 -> cFileOut (one word)
 
-FUNCTION MAIN( ... )
+PROCEDURE MAIN( ... )
    LOCAL aParams := hb_AParams(), n, cLib, cSearch := "", cGroup := ""
    LOCAL bLoop := .T., cLine, cFines := { Chr(13) + Chr(10), Chr(10) }, hParam, cKey
    LOCAL cFileOut, cFileIn, cParam, gcc_call, cmdbatch, bList := .F., cPath := ""
@@ -47,14 +47,12 @@ FUNCTION MAIN( ... )
 
    IF Upper( US_Word( cParam, 1 ) ) == "-VER" .or. Upper( US_Word( cParam, 1 ) ) == "-VERSION"
       hb_MemoWrit( "US_Slash.version", VERSION )
-      ErrorLevel( 0 )
-      RETURN .T.
+      RETURN
    ENDIF
 
    IF Upper( US_Word( cParam, 1 ) ) != "QPM"
       __Run( "ECHO " + "US_Slash 001E: Running Outside System" )
-      ErrorLevel( 1 )
-      RETURN .F.
+      RETURN
    ENDIF
    cParam := US_WordDel( cParam, 1 )
 
@@ -121,8 +119,7 @@ FUNCTION MAIN( ... )
          IF bList
             QPM_Log( "US_Slash 008E: Open error: " + cFileIn )
          ENDIF
-         ErrorLevel( 1 )
-         RETURN .F.
+         RETURN
       ENDIF
    ENDIF
 
@@ -163,9 +160,9 @@ FUNCTION MAIN( ... )
    ENDIF
 
    __Run( fgccbat )
+   FErase( fgccbat )
 
    IF MemoLine( MemoRead( fstatus ), 254, 1 ) = "ERROR"
-      ErrorLevel( 1 )
       IF bList
          QPM_Log( "US_Slash 020I: Status:     ERROR" )
          QPM_Log( "------------" + CRLF )
@@ -176,12 +173,9 @@ FUNCTION MAIN( ... )
          QPM_Log( "------------" + CRLF )
       ENDIF
    ENDIF
-   FErase( fgccbat )
    FErase( fstatus )
 
-   ErrorLevel( 0 )
-
-   RETURN .T.
+   RETURN
 
 //========================================================================
 // RETORNA EL NOMBRE DE UN ARCHIVO INEXISTENTE

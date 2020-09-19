@@ -31,10 +31,11 @@
 #define VERSION  "01.12"
 MEMVAR cQPMDir
 
-FUNCTION MAIN( ... )
+PROCEDURE MAIN( ... )
    LOCAL aParams := hb_AParams()
    LOCAL cParam, n, i, cPathTMP, cFileIn, cPathSHR, cFileOut, bForceChg, bInclude, cMemoIn, aLines, cMemoOut, bList := .F.
-   LOCAL c, nInx, cLine, cFileInclude, lWarning, aPaths, aIncLines, nCount, bChg, cRule, cWord3, cPathInc, aIncStk
+   LOCAL nInx, cLine, cFileInclude, lWarning, aPaths, aIncLines, nCount, bChg, cRule, cWord3, cPathInc, aIncStk
+   LOCAL nEnd, cLineAux, cSlash, cChar
    PRIVATE cQPMDir := ""
 
 /*
@@ -68,14 +69,12 @@ FUNCTION MAIN( ... )
 
    IF Upper( US_Word( cParam, 1 ) ) == "-VER" .OR. Upper( US_Word( cParam, 1 ) ) == "-VERSION"
       hb_MemoWrit( "US_Res.version", VERSION )
-      ErrorLevel( 0 )
-      RETURN .T.
+      RETURN
    ENDIF
 
    IF Upper( US_Word( cParam, 1 ) ) != "QPM"
       __Run( "ECHO " + "US_Res 001E: Running Outside System" )
-      ErrorLevel( 1 )
-      RETURN .F.
+      RETURN
    ENDIF
    cParam := US_WordDel( cParam, 1 )
 
@@ -122,8 +121,7 @@ FUNCTION MAIN( ... )
             QPM_Log( "US_Res 008E: Parameter error: " + US_Word( cParam, i ) )
             QPM_Log( "------------" + CRLF )
          ENDIF
-         ErrorLevel( 1 )
-         RETURN .F.
+         RETURN
       ENDCASE
    NEXT i
 
@@ -132,8 +130,7 @@ FUNCTION MAIN( ... )
          QPM_Log( "US_Res 009E: File not found: " + cFileIn )
          QPM_Log( "------------" + CRLF )
       ENDIF
-      ErrorLevel( 1 )
-      RETURN .F.
+      RETURN
    ENDIF
 
    IF bList
@@ -169,8 +166,7 @@ FUNCTION MAIN( ... )
          ATail( aIncStk )[ 2 ] ++
 
          IF Upper( US_Word( cLine, 1 ) ) == "#INCLUDE"
-            cFileInclude := US_WordSubStr( cLine, 2 )
-            cFileInclude := AllTrim( StrTran( StrTran( cFileInclude, DBLQT, "" ), SNGQT, "" ) )
+            cFileInclude := AllTrim( StrTran( StrTran( US_WordSubStr( cLine, 2 ), DBLQT, "" ), SNGQT, "" ) )
 
             IF ! File( cFileInclude )
                cMemoOut += cLine + CRLF
@@ -237,7 +233,6 @@ FUNCTION MAIN( ... )
 
       // Save new text to output file
       hb_MemoWrit( cFileOut, cMemoOut )
-      ErrorLevel( 0 )
 
       IF lWarning
          IF bList
@@ -270,10 +265,8 @@ FUNCTION MAIN( ... )
          bChg := .F.
 
          IF Left( cLine, 28 ) == "// QPM - INI #INCLUDE file: "
-            cFileInclude := SubStr( cLine, 29 )
-            cPathInc := US_FileNameOnlyPath( cFileInclude )
+            cPathInc := US_FileNameOnlyPath( SubStr( cLine, 29 ) )
             IF Empty( cPathInc )
-               cFileInclude := cPathTMP + cFileInclude
                cPathInc := cPathTMP
             ELSE
                cPathInc += "\"
@@ -415,7 +408,6 @@ XXX ICON ZZZ /* ...............
 
       // Save new text to output file, exit loop and return
       hb_MemoWrit( cFileOut, cMemoOut )
-      ErrorLevel( 0 )
 
       IF bList
          QPM_Log( "US_Res 019I: Process ended without error" )
@@ -423,7 +415,7 @@ XXX ICON ZZZ /* ...............
       ENDIF
    ENDIF
 
-   RETURN .T.
+   RETURN
 
 //========================================================================
 // EXTRAE UNA PALABRA DE UN STRING

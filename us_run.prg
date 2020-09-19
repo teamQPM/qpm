@@ -30,7 +30,7 @@
 #define VERSION "01.04"
 MEMVAR cQPMDir
 
-FUNCTION MAIN( ... )
+PROCEDURE MAIN( ... )
    LOCAL aParams := hb_aParams()
    LOCAL n, bList := .F., bOk := .F., nLineSize := 1024, cParam, MemoAux := "", i, cLineaAux := ""
    PRIVATE cCMD := "", cControlFile := "", cDefaultPath := "", cCurrentPath, cMode := "NORMAL", cQPMDir := ""
@@ -43,14 +43,12 @@ FUNCTION MAIN( ... )
 
    IF Upper( US_Word( cParam, 1 ) ) == "-VER" .or. Upper( US_Word( cParam, 1 ) ) == "-VERSION"
       hb_MemoWrit( "US_Run.version", VERSION )
-      ErrorLevel( 0 )
-      RETURN .T.
+      RETURN
    ENDIF
 
    IF Upper( US_Word( cParam, 1 ) ) != "QPM"
       __Run( "ECHO " + "US_Res 001E: Running Outside System" )
-      ErrorLevel( 1 )
-      RETURN .F.
+      RETURN
    ENDIF
    cParam := US_WordDel( cParam, 1 )
 
@@ -71,16 +69,14 @@ FUNCTION MAIN( ... )
       IF bList
          QPM_Log( "US_Run 002E: Missing Parameters" )
       ENDIF
-      ErrorLevel( 1 )
-      RETURN .F.
+      RETURN
    ENDIF
 
    IF ! File( cParam )
       IF bList
          QPM_Log( "US_Run 003E: Parameters File Not Found: " + cParam )
       ENDIF
-      ErrorLevel( 1 )
-      RETURN .F.
+      RETURN
    ENDIF
 
    MemoAux := MemoRead( cParam )
@@ -128,10 +124,9 @@ FUNCTION MAIN( ... )
       IF bList
          QPM_Log( "US_Run 009E: Ended with ERROR" )
       ENDIF
-      ErrorLevel( 1 )
    ENDIF
 
-   RETURN bOk
+   RETURN
 
 //========================================================================
 FUNCTION US_RunInit( bList )
