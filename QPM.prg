@@ -34,9 +34,12 @@
 #define  RUN_FILE     ( US_ShortName( PUB_cProjectFolder ) + DEF_SLASH + '_' + PUB_cSecu + 'runshell.bat' )
 #define  QPM_GET_DEF  ( US_ShortName( PUB_cProjectFolder ) + DEF_SLASH + '_' + PUB_cSecu + 'qpm_gt.prg' )
 #define  QPM_TMP_RC   ( US_ShortName( PUB_cProjectFolder ) + DEF_SLASH + '_' + PUB_cSecu + 'temp.rc' )
+#define  MSG_SYSIN    ( US_ShortName( PUB_cProjectFolder ) + DEF_SLASH + '_' + PUB_cSecu + 'MSG.SYSIN' )
 
-FUNCTION Main( PAR_cP01, PAR_cP02, PAR_cP03, PAR_cP04, PAR_cP05, PAR_cP06, PAR_cP07, PAR_cP08, PAR_cP09, PAR_cP10, ;
-               PAR_cP11, PAR_cP12, PAR_cP13, PAR_cP14, PAR_cP15, PAR_cP16, PAR_cP17, PAR_cP18, PAR_cP19, PAR_cP20 )
+#define LISTOLOG iif( bLogActivity, ' -LIST' + US_ShortName(PUB_cQPM_Folder) + ' ', ' ' )
+
+PROCEDURE Main( PAR_cP01, PAR_cP02, PAR_cP03, PAR_cP04, PAR_cP05, PAR_cP06, PAR_cP07, PAR_cP08, PAR_cP09, PAR_cP10, ;
+                PAR_cP11, PAR_cP12, PAR_cP13, PAR_cP14, PAR_cP15, PAR_cP16, PAR_cP17, PAR_cP18, PAR_cP19, PAR_cP20 )
    LOCAL Folder, FileName, i, nPos, LogIni, LOC_cParam, nRow, nCol, nWidth, nHeight
 
    REQUEST DBFCDX, DBFFPT
@@ -86,7 +89,7 @@ FUNCTION Main( PAR_cP01, PAR_cP02, PAR_cP03, PAR_cP04, PAR_cP05, PAR_cP06, PAR_c
 // check screen size
    IF GetDesktopRealWidth() < 800
       MyMsgStop( 'Sorry, QPM needs a minimun screen configuration of 800x600.' + CRLF + 'QPM is optimized for 1024x768 resolution.' )
-      RETURN .F.
+      ExitProcess( 1 )
    ENDIF
 
    IF Empty( LOC_cParam )
@@ -111,10 +114,12 @@ FUNCTION Main( PAR_cP01, PAR_cP02, PAR_cP03, PAR_cP04, PAR_cP05, PAR_cP06, PAR_c
          cExeNotFoundMsg := cExeNotFoundMsg + vExeList[i] + CRLF
       NEXT
       MyMsgStop( cExeNotFoundMsg )
-      RETURN .F.
+      ExitProcess( 1 )
    ENDIF
    IF ! File( PUB_cQPM_Folder + DEF_SLASH + 'filler' )
+      QPM_LogText( "Filler file" )
       QPM_MemoWrit( PUB_cQPM_Folder + DEF_SLASH + 'filler', Chr( 13 ) + Chr( 10 ) )
+      QPM_LogText( "Created" )
    ENDIF
 
 // analize parameters
@@ -157,8 +162,10 @@ FUNCTION Main( PAR_cP01, PAR_cP02, PAR_cP03, PAR_cP04, PAR_cP05, PAR_cP06, PAR_c
       ENDIF
       DO CASE
       CASE US_Upper( US_Word( LOC_cParam, 1 ) ) == '-VER' .OR. US_Upper( US_Word( LOC_cParam, 1 ) ) == '-VERSION'
+         QPM_LogText( QPM_VERSION_NUMBER_LONG )
          QPM_MemoWrit( US_FileNameOnlyPathAndName( GetModuleFileName( GetInstance() ) ) + '.version', QPM_VERSION_NUMBER_LONG )
-         RETURN .T.
+         QPM_LogText( "Done" )
+         ExitProcess( 0 )
       CASE ( nPos := US_WordPos( '-BUILD', US_Upper( LOC_cParam ) ) ) > 0
          LOC_cParam := US_WordDel( LOC_cParam, nPos )
          AAdd( PUB_vAutoRun, 'QPM_OpenProject(PUB_cProjectFile)' )
@@ -337,7 +344,9 @@ FUNCTION Main( PAR_cP01, PAR_cP02, PAR_cP03, PAR_cP04, PAR_cP05, PAR_cP06, PAR_c
       ENDIF
       PUB_cAutoLogTmp += 'Project file: ' + PUB_cProjectFile + CRLF
       PUB_cAutoLogTmp += US_VarToStr( Date() ) + ' ' + US_VarToStr( Time() ) + CRLF
+      QPM_LogText( "Creating Autolog" )
       QPM_MemoWrit( PUB_cAutoLog, PUB_cAutoLogTmp )
+      QPM_LogText( "Done" )
    ENDIF
 
    SET FONT TO 'Arial', 9
@@ -555,7 +564,7 @@ FUNCTION Main( PAR_cP01, PAR_cP02, PAR_cP03, PAR_cP04, PAR_cP05, PAR_cP06, PAR_c
                WIDTH 30
                HEIGHT 25
                PICTURE 'hotrec'
-               TOOLTIP 'Force the saving of a Hot Recovery Version for the selected source'
+               TOOLTIP 'Save a Hot Recovery Version for the selected source'
                ONCLICK QPM_ForceHotRecovery( 'PRG' )
             END BUTTONEX
 #endif
@@ -2394,7 +2403,7 @@ FUNCTION Main( PAR_cP01, PAR_cP02, PAR_cP03, PAR_cP04, PAR_cP05, PAR_cP06, PAR_c
          DefinoWindowsHotKeys()
       ENDIF
 
-   END WINDOW
+   END WINDOW   // VentanaMain
 
 #ifdef QPM_KILLER
    QPM_DefinoKillerWindow()
@@ -2538,7 +2547,8 @@ FUNCTION Main( PAR_cP01, PAR_cP02, PAR_cP03, PAR_cP04, PAR_cP05, PAR_cP06, PAR_c
    ACTIVATE WINDOW VentanaMain
 #endif
 
-RETURN NIL
+   ExitProcess( 0 )
+RETURN
 
 FUNCTION QPM_AddFilesPRG
 RETURN QPM_Wait( 'QPM_AddFilesPRG2()', 'Loading file ...' )
@@ -3044,9 +3054,7 @@ FUNCTION QPM_EditPRG
       MyMsgStop( 'Editor ' + DBLQT + AllTrim( Gbl_Text_Editor ) + DBLQT + ' not found!' + CRLF + 'Look at ' + PUB_MenuGblOptions + ' of Settings menu.' )
       RETURN .F.
    ENDIF
-   IF bLogActivity
-      QPM_MemoWrit( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log', MemoRead( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log' ) + 'Edit PRG ' + i + CRLF )
-   ENDIF
+   QPM_LogText( 'Edit PRG ' + i )
    IF bSuspendControlEdit
       IF bEditorLongName
          cLineCmd := Editor
@@ -3056,9 +3064,7 @@ FUNCTION QPM_EditPRG
          cLineFile := US_ShortName( i )
       ENDIF
       QPM_Execute( cLineCmd, cLineFile )
-      IF bLogActivity
-         QPM_MemoWrit( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log', MemoRead( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log' ) + "COMMAND " + cLineCmd + CRLF + "FILE " + cLineFile + CRLF )
-      ENDIF
+      QPM_LogText( "COMMAND " + cLineCmd + CRLF + "FILE " + cLineFile )
    ELSE
       IF GridImage( 'VentanaMain', 'GPrgFiles', VentanaMain.GPrgFiles.Value, NCOLPRGSTATUS, '?', PUB_nGridImgEdited )
          MyMsgStop( 'The file is already open!' )
@@ -3086,28 +3092,24 @@ FUNCTION QPM_EditPRG
          cLineCmd := US_ShortName( Editor )
          cLineFile := US_ShortName( i )
       ENDIF
+      QPM_LogText( RunParms )
       QPM_MemoWrit( RunParms, 'Run Parms For ' + i + CRLF + ;
                               "COMMAND " + cLineCmd + " " + cLineFile + CRLF + ;
                               'CONTROL ' + EditControlFile + CRLF )
+      QPM_LogFile( RunParms )
       QPM_MemoWrit( EditControlFile, 'Edit Control File For ' + i )
-      QPM_Execute( US_ShortName( PUB_cQPM_Folder ) + DEF_SLASH + 'US_Run.exe', 'QPM ' + iif( bLogActivity, '-LIST' + US_ShortName(PUB_cQPM_Folder) + ' ', ' ' ) + RunParms )
-      IF bLogActivity
-         QPM_MemoWrit( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log', MemoRead( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log' ) + MemoRead( RunParms ) + CRLF )
-      ENDIF
+      QPM_Execute( US_ShortName( PUB_cQPM_Folder ) + DEF_SLASH + 'US_Run.exe', 'QPM' + LISTOLOG + RunParms )
+      QPM_LogText( "Done" )
    ENDIF
    IF ( Rs := AScan( vSinLoadWindow, { |y| US_Upper( US_VarToStr( y ) ) == US_Upper( ChgPathToReal( GetProperty( 'VentanaMain', 'GPrgFiles', 'Cell', VentanaMain.GPrgFiles.Value, NCOLPRGFULLNAME ) ) ) } ) ) > 0 // Para Forzar Scan de PRG en busca de xREF con FMG
       ADel( vSinLoadWindow, Rs ) // Para Forzar Scan de PRG en busca de xREF con FMG
       ASize( vSinLoadWindow, Len( vSinLoadWindow ) - 1 )
-      IF bLogActivity
-         QPM_MemoWrit( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log', MemoRead( PUB_cQPM_Folder+DEF_SLASH + 'QPM.log' ) + 'xRefPrgFmg Delete ' + GetProperty( 'VentanaMain', 'GPrgFiles', 'Cell', VentanaMain.GPrgFiles.Value, NCOLPRGFULLNAME ) + ' from vSinLoadWindow by Edit' + CRLF )
-      ENDIF
+      QPM_LogText( 'xRefPrgFmg Delete ' + GetProperty( 'VentanaMain', 'GPrgFiles', 'Cell', VentanaMain.GPrgFiles.Value, NCOLPRGFULLNAME ) + ' from vSinLoadWindow by Edit' )
    ENDIF
    IF ( Rs := AScan( vSinInclude, { |y| US_Upper( US_VarToStr( y ) ) == US_Upper( ChgPathToReal( GetProperty( 'VentanaMain', 'GPrgFiles', 'Cell', VentanaMain.GPrgFiles.Value, NCOLPRGFULLNAME ) ) ) } ) ) > 0 // Para Forzar Scan de PRG en busca de xREF con Header
       ADel( vSinInclude, Rs ) // Para Forzar Scan de PRG en busca de xREF con HEA
       ASize( vSinInclude, Len( vSinInclude ) - 1 )
-      IF bLogActivity
-         QPM_MemoWrit( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log', MemoRead( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log' ) + 'xRefPrgHea Delete ' + GetProperty( 'VentanaMain', 'GPrgFiles', 'Cell', VentanaMain.GPrgFiles.Value, NCOLPRGFULLNAME ) + ' from vSinInclude by Edit' + CRLF )
-      ENDIF
+      QPM_LogText( 'xRefPrgHea Delete ' + GetProperty( 'VentanaMain', 'GPrgFiles', 'Cell', VentanaMain.GPrgFiles.Value, NCOLPRGFULLNAME ) + ' from vSinInclude by Edit' )
    ENDIF
    /* limpio las ocurrencias del prg dentro de xref con header */
    FOR i := 1 TO Len( vXRefPrgHea )
@@ -3156,9 +3158,7 @@ FUNCTION QPM_EditPPO
       MyMsgStop( 'Editor not found: ' + AllTrim( Gbl_Text_Editor ) + CRLF + 'Look at ' + PUB_MenuGblOptions + ' of Settings menu.' )
       RETURN .F.
    ENDIF
-   IF bLogActivity
-      QPM_MemoWrit( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log', MemoRead( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log' ) + 'Edit PPO ' + i + CRLF )
-   ENDIF
+   QPM_LogText( 'Edit PPO ' + i )
    IF bEditorLongName
       cLineCmd := Editor
       cLineFile := i
@@ -3167,9 +3167,7 @@ FUNCTION QPM_EditPPO
       cLineFile := US_ShortName( i )
    ENDIF
    QPM_Execute( cLineCmd, cLineFile )
-   IF bLogActivity
-      QPM_MemoWrit( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log', MemoRead( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log' ) + "COMMAND " + cLineCmd + CRLF + "FILE " + cLineFile + CRLF )
-   ENDIF
+   QPM_LogText( 'COMMAND ' + cLineCmd + CRLF + "FILE " + cLineFile )
 RETURN .T.
 
 FUNCTION QPM_EditHEA
@@ -3198,9 +3196,7 @@ FUNCTION QPM_EditHEA
       MyMsgStop( 'Editor not found: ' + AllTrim( Gbl_Text_Editor ) + CRLF + 'Look at ' + PUB_MenuGblOptions + ' of Settings menu.' )
       RETURN .F.
    ENDIF
-   IF bLogActivity
-      QPM_MemoWrit( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log', MemoRead( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log' ) + 'Edit Header ' + i + CRLF )
-   ENDIF
+   QPM_LogText( 'Edit Header ' + i )
    IF bSuspendControlEdit
       IF bEditorLongName
          cLineCmd := Editor
@@ -3210,9 +3206,7 @@ FUNCTION QPM_EditHEA
          cLineFile := US_ShortName( i )
       ENDIF
       QPM_Execute( cLineCmd, cLineFile )
-      IF bLogActivity
-         QPM_MemoWrit( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log', MemoRead( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log' ) + "COMMAND " + cLineCmd + CRLF + "FILE " + cLineFile + CRLF )
-      ENDIF
+      QPM_LogText( 'COMMAND ' + cLineCmd + CRLF + "FILE " + cLineFile )
    ELSE
       IF GridImage( 'VentanaMain', 'GHeaFiles', VentanaMain.GHeaFiles.Value, NCOLHEASTATUS, '?', PUB_nGridImgEdited )
          MyMsgStop( 'The file is already open!' )
@@ -3240,14 +3234,14 @@ FUNCTION QPM_EditHEA
          cLineCmd := US_ShortName( Editor )
          cLineFile := US_ShortName( i )
       ENDIF
+      QPM_LogText( RunParms )
       QPM_MemoWrit( RunParms, 'Run Parms For ' + i + CRLF + ;
                               "COMMAND " + cLineCmd + " " + cLineFile + CRLF + ;
                               'CONTROL ' + EditControlFile )
+      QPM_LogFile( RunParms )
       QPM_MemoWrit( EditControlFile, 'Edit Control File For ' + i )
-      QPM_Execute( US_ShortName( PUB_cQPM_Folder ) + DEF_SLASH + 'US_Run.exe', 'QPM ' + iif( bLogActivity, '-LIST' + US_ShortName(PUB_cQPM_Folder) + ' ', ' ' ) + RunParms )
-      IF bLogActivity
-         QPM_MemoWrit( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log', MemoRead( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log' ) + MemoRead( RunParms ) + CRLF )
-      ENDIF
+      QPM_Execute( US_ShortName( PUB_cQPM_Folder ) + DEF_SLASH + 'US_Run.exe', 'QPM' + LISTOLOG + RunParms )
+      QPM_LogText( "Done" )
    ENDIF
 RETURN .T.
 
@@ -3287,9 +3281,7 @@ FUNCTION QPM_EditPAN( bForceEditor )
          MyMsgStop( 'Editor not found: ' + AllTrim( Gbl_Text_Editor ) + CRLF + 'Look at ' + PUB_MenuGblOptions + ' of Settings menu.' )
          RETURN .F.
       ENDIF
-      IF bLogActivity
-         QPM_MemoWrit( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log', MemoRead( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log' ) + 'Edit PAN ' + i + CRLF )
-      ENDIF
+      QPM_LogText( 'Edit PAN ' + i )
       IF bSuspendControlEdit
          IF bEditorLongName
             cLineCmd := Editor
@@ -3299,9 +3291,7 @@ FUNCTION QPM_EditPAN( bForceEditor )
             cLineFile := US_ShortName( i )
          ENDIF
          QPM_Execute( cLineCmd, iif( bNoFMGextension, US_FileNameOnlyPathAndName( cLineFile ), cLineFile ) )
-         IF bLogActivity
-            QPM_MemoWrit( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log', MemoRead( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log' ) + "COMMAND " + cLineCmd + CRLF + "FILE " + cLineFile + CRLF )
-         ENDIF
+         QPM_LogText( 'COMMAND ' + cLineCmd + CRLF + "FILE " + cLineFile )
       ELSE
          IF GridImage( 'VentanaMain', 'GPanFiles', VentanaMain.GPanFiles.Value, NCOLPANSTATUS, '?', PUB_nGridImgEdited )
             MyMsgStop( 'The file is already open!' )
@@ -3330,14 +3320,14 @@ FUNCTION QPM_EditPAN( bForceEditor )
             cLineCmd := US_ShortName( Editor )
             cLineFile := US_ShortName( i )
          ENDIF
+         QPM_LogText( RunParms )
          QPM_MemoWrit( RunParms, 'Run Parms For ' + i + CRLF + ;
                                  "COMMAND " + cLineCmd + " " + iif( bNoFMGextension, US_FileNameOnlyPathAndName( cLineFile ), cLineFile ) + CRLF + ;
                                  'CONTROL ' + EditControlFile )
+         QPM_LogFile( RunParms )
          QPM_MemoWrit( EditControlFile, 'Edit Control File For ' + i )
-         QPM_Execute( US_ShortName( PUB_cQPM_Folder ) + DEF_SLASH + 'US_Run.exe', 'QPM ' + iif( bLogActivity, '-LIST' + US_ShortName(PUB_cQPM_Folder) + ' ', ' ' ) + RunParms )
-         IF bLogActivity
-            QPM_MemoWrit( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log', MemoRead( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log' ) + MemoRead( RunParms ) + CRLF )
-         ENDIF
+         QPM_Execute( US_ShortName( PUB_cQPM_Folder ) + DEF_SLASH + 'US_Run.exe', 'QPM' + LISTOLOG + RunParms )
+         QPM_LogFile( "Done" )
       ENDIF
    CASE ToolAux == "OOHGIDE" .OR. ToolAux == 'HMGSIDE' .OR. ToolAux == 'HMG_IDE'
       IF ToolAux == 'OOHG'
@@ -3374,9 +3364,7 @@ FUNCTION QPM_EditPAN( bForceEditor )
             cLineFile := US_ShortName( i )
          ENDIF
          QPM_Execute( cLineCmd, iif( bNoFMGextension, US_FileNameOnlyPathAndName( cLineFile ), cLineFile ) )
-         IF bLogActivity
-            QPM_MemoWrit( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log', MemoRead( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log' ) + "COMMAND " + cLineCmd + CRLF + "FILE " + cLineFile + CRLF )
-         ENDIF
+         QPM_LogText( 'COMMAND ' + cLineCmd + CRLF + "FILE " + cLineFile )
       ELSE
          IF GridImage( 'VentanaMain', 'GPanFiles', VentanaMain.GPanFiles.Value, NCOLPANSTATUS, '?', PUB_nGridImgEdited )
             MyMsgStop( 'The file is already open!' )
@@ -3418,19 +3406,17 @@ FUNCTION QPM_EditPAN( bForceEditor )
             cLineCmd := US_ShortName( Editor )
             cLineFile := US_ShortName( i )
          ENDIF
+         QPM_LogText( RunParms )
          QPM_MemoWrit( RunParms, 'Run Parms For ' + i + CRLF + ;
                                  "COMMAND " + cLineCmd + " " + iif( bNoFMGextension, US_FileNameOnlyPathAndName( cLineFile ), cLineFile ) + CRLF + ;
                                  'CONTROL ' + EditControlFile )
+         QPM_LogFile( RunParms )
          QPM_MemoWrit( EditControlFile, 'Edit Control File For ' + i )
-         QPM_Execute( US_ShortName( PUB_cQPM_Folder ) + DEF_SLASH + 'US_Run.exe', 'QPM ' + iif( bLogActivity, '-LIST' + US_ShortName(PUB_cQPM_Folder) + ' ', ' ' ) + RunParms )
-         IF bLogActivity
-            QPM_MemoWrit( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log', MemoRead( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log' ) + MemoRead( RunParms ) + CRLF )
-         ENDIF
+         QPM_Execute( US_ShortName( PUB_cQPM_Folder ) + DEF_SLASH + 'US_Run.exe', 'QPM' + LISTOLOG + RunParms )
+         QPM_LogText( "Done" )
       ENDIF
    OTHERWISE
-      IF bLogActivity
-         QPM_MemoWrit( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log', MemoRead( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log' ) + 'Edit PAN ' + i + CRLF + 'Form tool is not supported: ' + ToolAux + CRLF )
-      ENDIF
+      QPM_LogText( 'Edit PAN ' + i + CRLF + 'Form tool is not supported: ' + ToolAux )
       MyMsgStop( 'Form tool error!' + CRLF + 'Look at ' + PUB_MenuPrjOptions + ' of Settings menu.' )
       RETURN .F.
    ENDCASE
@@ -3454,9 +3440,7 @@ FUNCTION QPM_EditDBF()
       MyMsgStop( 'File not found: ' + DBLQT + i + DBLQT )
       RETURN .F.
    ENDIF
-   IF bLogActivity
-      QPM_MemoWrit( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log', MemoRead( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log' ) + 'Edit DBF ' + i + CRLF )
-   ENDIF
+   QPM_LogText( 'Edit DBF ' + i )
    IF Prj_Radio_DbfTool == DEF_RG_DBFTOOL
       IF ! File( Editor := ChgPathToReal( AllTrim( PUB_cQPM_Folder ) + DEF_SLASH + 'US_DBFVIEW.exe' ) )
          MyMsgStop( "QPM's DBF editor (US_DBFVIEW.exe) not found!" + CRLF + 'Reinstall QPM.' )
@@ -3471,9 +3455,7 @@ FUNCTION QPM_EditDBF()
             cLineFile := US_ShortName( i )
          ENDIF
          QPM_Execute( cLineCmd, cLineFile )
-         IF bLogActivity
-            QPM_MemoWrit( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log', MemoRead( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log' ) + "COMMAND " + cLineCmd + CRLF + "FILE " + cLineFile + CRLF )
-         ENDIF
+         QPM_LogText( 'COMMAND ' + cLineCmd + CRLF + "FILE " + cLineFile )
       ELSE
          GridImage( 'VentanaMain', 'GDbfFiles', VentanaMain.GDbfFiles.Value, NCOLDBFSTATUS, '+', PUB_nGridImgEdited )
          VentanaMain.RichEditDbf.BackColor := DEF_COLORBACKEXTERNALEDIT
@@ -3490,14 +3472,14 @@ FUNCTION QPM_EditDBF()
             cLineCmd := US_ShortName( Editor )
             cLineFile := US_ShortName( i )
          ENDIF
+         QPM_LogText( RunParms )
          QPM_MemoWrit( RunParms, 'Run Parms For ' + i + CRLF + ;
                                  "COMMAND " + cLineCmd + " " + cLineFile + CRLF + ;
                                  'CONTROL ' + EditControlFile )
+         QPM_LogFile( RunParms )
          QPM_MemoWrit( EditControlFile, 'Edit Control File For ' + i )
-         QPM_Execute( US_ShortName( PUB_cQPM_Folder ) + DEF_SLASH + 'US_Run.exe', 'QPM ' + iif( bLogActivity, '-LIST' + US_ShortName(PUB_cQPM_Folder) + ' ', ' ' ) + RunParms )
-         IF bLogActivity
-            QPM_MemoWrit( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log', MemoRead( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log' ) + MemoRead( RunParms ) + CRLF )
-         ENDIF
+         QPM_Execute( US_ShortName( PUB_cQPM_Folder ) + DEF_SLASH + 'US_Run.exe', 'QPM' + LISTOLOG + RunParms )
+         QPM_LogText( "Done" )
       ENDIF
    ELSE // 'OTHER'
       IF Empty( Gbl_Text_DBF )
@@ -3517,9 +3499,7 @@ FUNCTION QPM_EditDBF()
             cLineFile := US_ShortName( i )
          ENDIF
          QPM_Execute( cLineCmd, cLineFile )
-         IF bLogActivity
-            QPM_MemoWrit( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log', MemoRead( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log' ) + "COMMAND " + cLineCmd + CRLF + "FILE " + cLineFile + CRLF )
-         ENDIF
+         QPM_LogText( 'COMMAND ' + cLineCmd + CRLF + "FILE " + cLineFile )
       ELSE
          GridImage( 'VentanaMain', 'GDbfFiles', VentanaMain.GDbfFiles.Value, NCOLDBFSTATUS, '+', PUB_nGridImgEdited )
          VentanaMain.RichEditDbf.BackColor := DEF_COLORBACKEXTERNALEDIT
@@ -3536,14 +3516,14 @@ FUNCTION QPM_EditDBF()
             cLineCmd := US_ShortName( Editor )
             cLineFile := Gbl_Comillas_DBF + US_ShortName( i ) + Gbl_Comillas_DBF
          ENDIF
+         QPM_LogText( RunParms )
          QPM_MemoWrit( RunParms, 'Run Parms For ' + i + CRLF + ;
                                  "COMMAND " + cLineCmd + " " + cLineFile + CRLF + ;
                                  'CONTROL ' + EditControlFile )
+         QPM_LogFile( RunParms )
          QPM_MemoWrit( EditControlFile, 'Edit Control File For ' + i )
-         QPM_Execute( US_ShortName( PUB_cQPM_Folder ) + DEF_SLASH + 'US_Run.exe', 'QPM ' + iif( bLogActivity, '-LIST' + US_ShortName(PUB_cQPM_Folder) + ' ', ' ' ) + RunParms )
-         IF bLogActivity
-            QPM_MemoWrit( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log', MemoRead( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log' ) + MemoRead( RunParms ) + CRLF )
-         ENDIF
+         QPM_Execute( US_ShortName( PUB_cQPM_Folder ) + DEF_SLASH + 'US_Run.exe', 'QPM' + LISTOLOG + RunParms )
+         QPM_LogText( "Done" )
       ENDIF
    ENDIF
 RETURN .T.
@@ -3624,16 +3604,12 @@ FUNCTION QPM_EditRES
                           'Do you want to create an empty file?' )
             RETURN .F.
          ENDIF
-         IF bLogActivity
-            QPM_MemoWrit( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log', MemoRead( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log' ) + 'New RC ' + FileRC + CRLF )
-         ENDIF
+         QPM_LogText( 'New RC ' + FileRC )
          QPM_MemoWrit( FileRC, 'MAIN ICON     .' + DEF_SLASH + 'RESOURCES' + DEF_SLASH + 'MAIN.ICO' )
          MyMsgInfo( "Main resource file " + DBLQT + FileRC + DBLQT + "was created." )
       ENDIF
    ENDIF
-   IF bLogActivity
-      QPM_MemoWrit( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log', MemoRead( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log' ) + 'Edit RC ' + FileRC + CRLF )
-   ENDIF
+   QPM_LogText( 'Edit RC ' + FileRC )
    IF bSuspendControlEdit
       IF bEditorLongName
          cLineCmd := Editor
@@ -3645,9 +3621,7 @@ FUNCTION QPM_EditRES
       VentanaMain.BEditRC.Enabled := .F.
       QPM_Execute( cLineCmd, cLineFile )
       VentanaMain.BEditRC.Enabled := .T.
-      IF bLogActivity
-         QPM_MemoWrit( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log', MemoRead( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log' ) + "COMMAND " + cLineCmd + CRLF + "FILE " + cLineFile + CRLF )
-      ENDIF
+      QPM_LogText( 'COMMAND ' + cLineCmd + CRLF + "FILE " + cLineFile )
    ELSE
       IF ! Empty( cEditControlFileRC )
          MyMsgStop( 'The file is already open!' )
@@ -3671,14 +3645,14 @@ FUNCTION QPM_EditRES
          cLineCmd := US_ShortName( Editor )
          cLineFile := US_ShortName( FileRC )
       ENDIF
+      QPM_LogText( RunParms )
       QPM_MemoWrit( RunParms, 'Run Parms For ' + FileRC + CRLF + ;
                               "COMMAND " + cLineCmd + " " + cLineFile + CRLF + ;
                               'CONTROL ' + EditControlFile )
+      QPM_LogFile( RunParms )
       QPM_MemoWrit( EditControlFile, 'Edit Control File For ' + FileRC )
-      QPM_Execute( US_ShortName( PUB_cQPM_Folder ) + DEF_SLASH + 'US_Run.exe', 'QPM ' + iif( bLogActivity, '-LIST' + US_ShortName(PUB_cQPM_Folder) + ' ', ' ' ) + RunParms )
-      IF bLogActivity
-         QPM_MemoWrit( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log', MemoRead( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log' ) + MemoRead( RunParms ) + CRLF )
-      ENDIF
+      QPM_Execute( US_ShortName( PUB_cQPM_Folder ) + DEF_SLASH + 'US_Run.exe', 'QPM' + LISTOLOG + RunParms )
+      QPM_LogText( "Done" )
    ENDIF
 RETURN .T.
 
@@ -4001,9 +3975,7 @@ FUNCTION QPM_OpenProject2()
 #endif
 
    IF ! Empty( cProjectFileName )
-      IF bLogActivity
-         QPM_MemoWrit( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log', MemoRead( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log' ) + 'QPM_OpenProject ' + cProjectFileName + CRLF )
-      ENDIF
+      QPM_LogText( 'QPM_OpenProject ' + cProjectFileName )
 
       cLastProjectFolder                        := US_FileNameOnlyPath( cProjectFileName )
       PUB_cThisFolder                           := cLastProjectFolder
@@ -4591,7 +4563,7 @@ FUNCTION QPM_OpenProject2()
       ELSE
          IF Empty( SHG_Database )
             SHG_Database := SHG_StrTran( SHG_GetDatabaseName( US_FileNameOnlyPathAndName(cProjectFileName) ) + '_SHG.dbf' )
-            IF MyMsgYesNo( 'Create Simple Help Generator (SHG) database ' + DBLQT + SHG_Database + DBLQT + "?")
+            IF MyMsgYesNo( 'Create Simple Help Generator (SHG) database ' + DBLQT + SHG_Database + DBLQT + "?" )
                SHG_CreateDatabase( SHG_Database )
             ELSE
                SHG_Database := ''
@@ -4938,10 +4910,12 @@ NEXT
                IF Empty( PUB_cProjectFile )
                   QPM_SaveAsProject( .T. )
                ELSE
+                  QPM_LogText( "Writing project file " + PUB_cProjectFile )
                   QPM_ProjectFileUnLock()
                   QPM_MemoWrit( PUB_cProjectFile, cINI )
                   bWrite := .T.
                   QPM_ProjectFileLock( PUB_cProjectFile )
+                  QPM_LogText( "Done" )
                ENDIF
                cPrj_VersionAnt := GetPrj_Version()
                PUB_bDebugActiveAnt := PUB_bDebugActive
@@ -4950,24 +4924,30 @@ NEXT
       ENDIF
       IF ! bWrite
          IF ! ( cPrj_VersionAnt == GetPrj_Version() )
+            QPM_LogText( "Replacing project version: file " + PUB_cProjectFile + " version " + MakePrj_Version() )
             QPM_ProjectFileUnLock()
             ReplacePrj_Version( PUB_cProjectFile, MakePrj_Version() )
             QPM_ProjectFileLock( PUB_cProjectFile )
+            QPM_LogText( "Done" )
             cPrj_VersionAnt := GetPrj_Version()
             bWrite := .T.
          ENDIF
          IF ! ( PUB_bDebugActiveAnt == PUB_bDebugActive )
+            QPM_LogText( "Replacing DEBUGATIVE: file " + PUB_cProjectFile + " value " + iif( PUB_bDebugActive, "YES", "NO" ) )
             QPM_ProjectFileUnLock()
             ReplaceMemoData( PUB_cProjectFile, 'DEBUGACTIVE', iif( PUB_bDebugActive, "YES", "NO" ) )
             QPM_ProjectFileLock( PUB_cProjectFile )
+            QPM_LogText( "Done" )
             PUB_bDebugActiveAnt := PUB_bDebugActive
             bWrite := .T.
          ENDIF
       ENDIF
    ELSE
+      QPM_LogText( "Writing project file " + PUB_cProjectFile )
       QPM_ProjectFileUnLock()
       QPM_MemoWrit( PUB_cProjectFile, cINI )
       QPM_ProjectFileLock( PUB_cProjectFile )
+      QPM_LogText( "Done" )
       cPrj_VersionAnt := GetPrj_Version()
       PUB_bDebugActiveAnt := PUB_bDebugActive
       bWrite := .T.
@@ -4976,9 +4956,11 @@ NEXT
    IF bWrite .AND. Prj_Warn_InfoSaved
       IF MyMsgYesNo( "Project's information was saved." + CRLF + 'Omit this message from now on?' )
          Prj_Warn_InfoSaved := .F.
+         QPM_LogText( "Replacing WARNINFOSAVEDMSG: file " + PUB_cProjectFile + " value NO" )
          QPM_ProjectFileUnLock()
          ReplaceMemoData( PUB_cProjectFile, 'WARNINFOSAVEDMSG', "NO" )
          QPM_ProjectFileLock( PUB_cProjectFile )
+         QPM_LogText( "Done" )
          MyMsgInfo( 'Use ' + DBLQT + PUB_MenuResetWarnings + DBLQT + ' option of Settings menu to enable the previous message.' )
       ENDIF
    ENDIF
@@ -5185,7 +5167,9 @@ FUNCTION QPM_EXIT( bWait )
       PUB_cAutoLogTmp += CRLF
       PUB_cAutoLogTmp += Replicate( '=', 80 )
       PUB_cAutoLogTmp += CRLF
+      QPM_LogText( "Saving Autolog" )
       QPM_MemoWrit( PUB_cAutoLog, PUB_cAutoLogTmp )
+      QPM_LogText( "Done" )
    ENDIF
 RETURN .F.
 
@@ -5339,12 +5323,10 @@ FUNCTION QPM_Build2()
 
    DO EVENTS
 
-   IF bLogActivity
-      QPM_MemoWrit( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log', MemoRead( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log' ) + '****** BUILD START' + CRLF )
-      QPM_MemoWrit( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log', MemoRead( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log' ) + "Content of " + cProjectFileName + CRLF )
-      QPM_MemoWrit( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log', MemoRead( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log' ) + MemoRead( cProjectFileName ) + CRLF + CRLF )
-      QPM_MemoWrit( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log', MemoRead( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log' ) + replicate( '>',80 ) + CRLF )
-   ENDIF
+   QPM_LogText( PadR( '*****  BUILD START: ' + US_VarToStr( Date() ) + ' ' + US_VarToStr( Time() ) + '  ', 100, '*' ) + CRLF + ;
+                CRLF + ;
+                "Content of " + cProjectFileName )
+   QPM_LogText( ( i := MemoRead( cProjectFileName ) ) + iif( Right( i, 2 ) == CRLF, "", CRLF ) + "Done" + CRLF )
 
    PUB_xHarbourMT := ''
    DO CASE
@@ -5456,19 +5438,25 @@ FUNCTION QPM_Build2()
    // This handles the lack of a default GT in HMG 3.x
    IF IsMinGW .AND. GetMiniGuiSuffix() == DefineMiniGui3 .AND. Prj_Radio_OutputType != DEF_RG_IMPORT
       IF Prj_Check_Console
+         QPM_LogText( "QPM_GT_WIN" )
          QPM_Memowrit( QPM_GET_DEF, 'ANNOUNCE GT_SYS' + CRLF + 'REQUEST HB_GT_WIN_DEFAULT' + CRLF )
          IF File( QPM_GET_DEF )
+            QPM_LogFile( QPM_GET_DEF )
             AAdd( PRGFILES, QPM_GET_DEF )
          ELSE
+            QPM_LogText( "Not done" )
             MyMsgWarn( "QPM can't add QPM_GT.PRG auxiliary file to your project." + CRLF + ;
                        "In order for your app to work properly, you may need to add " + CRLF + ;
                        DBLQT + "REQUEST HB_GT_WIN_DEFAULT" + DBLQT + " before Main()." )
          ENDIF
       ELSE
+         QPM_LogText( "QPM_GT_GUI" )
          QPM_Memowrit( QPM_GET_DEF, 'ANNOUNCE GT_SYS' + CRLF + 'REQUEST HB_GT_GUI_DEFAULT' + CRLF )
          IF File( QPM_GET_DEF )
+            QPM_LogFile( QPM_GET_DEF )
             AAdd( PRGFILES, QPM_GET_DEF )
          ELSE
+            QPM_LogText( "Not done" )
             MyMsgWarn( "QPM can't add QPM_GT.PRG auxiliary file to your project." + CRLF + ;
                        "In order for your app to work properly, you may need to add " + CRLF + ;
                        DBLQT + "REQUEST HB_GT_GUI_DEFAULT" + DBLQT + " before Main()." )
@@ -5855,7 +5843,7 @@ FUNCTION QPM_Build2()
 
    DO EVENTS
 
-   FErase( PUB_cProjectFolder + DEF_SLASH + '_' + PUB_cSecu + 'MSG.SYSIN' )
+   FErase( MSG_SYSIN )
 
    SetCurrentFolder( PUB_cProjectFolder )
    IF ! US_CreateFolder( GetObjFolder() )
@@ -5877,10 +5865,10 @@ FUNCTION QPM_Build2()
 
    IF Prj_Radio_OutputType == DEF_RG_EXE .OR. Prj_Radio_OutputType == DEF_RG_LIB
       IF VentanaMain.GHeaFiles.itemcount > 0
-         xRefPrgHea( vConcatIncludeC )
+         FUNC_xRefPrgHea( vConcatIncludeC )
       ENDIF
       IF VentanaMain.GPanFiles.itemcount > 0
-         xRefPrgFmg( vConcatIncludeHB )
+         FUNC_xRefPrgFmg( vConcatIncludeHB )
       ENDIF
    ENDIF
 
@@ -6544,8 +6532,8 @@ FUNCTION QPM_Build2()
          DO CASE
          CASE Prj_Radio_OutputType == DEF_RG_EXE
             Out := Out + PUB_cCharTab + '$(US_MSG_EXE) ' + Q_PROGRESS_LOG + ' -MSG:Linking ' + cOutputNameDisplay + ' ...' + CRLF
-            Out := Out + PUB_cCharTab + '$(ILINK_EXE) QPM' + iif( bLogActivity, ' -LIST' + US_ShortName(PUB_cQPM_Folder), '' ) + ;
-                        ' -Wall ' + iif( Prj_Check_Console, '-mconsole ', '-mwindows ' ) + iif( Prj_Check_64bits, '-m64 ', '' ) + ;
+            Out := Out + PUB_cCharTab + '$(ILINK_EXE) QPM' + LISTOLOG + ;
+                        '-Wall ' + iif( Prj_Check_Console, '-mconsole ', '-mwindows ' ) + iif( Prj_Check_64bits, '-m64 ', '' ) + ;
                          iif( ! Empty( GetProperty( 'VentanaMain', 'OverrideLink', 'value' ) ), '$(USER_FLAGS_LINK) ', "" ) + ;
                         Q_SCRIPT_FILE + ;
                         ' -o$(APP_NAME)' + CRLF
@@ -6649,7 +6637,7 @@ FUNCTION QPM_Build2()
          CASE Prj_Radio_OutputType == DEF_RG_LIB
             Out := Out + PUB_cCharTab + '$(US_MSG_EXE) ' + Q_PROGRESS_LOG + ' -MSG:Making Library ' + cOutputNameDisplay + ' ...' + CRLF
             // La siguiente linea tiene el string *AMPERSAND* porque en el sistema operativo Windows 2003 Server Enterprise Edition si codifico el & no funciona el PIPE (>)
-            Out := Out + PUB_cCharTab + '$(US_SHELL_EXE) QPM CHANGE ' + Q_SCRIPT_FILE + ' *AMPERSAND* & ' + CRLF
+            Out := Out + PUB_cCharTab + '@$(US_SHELL_EXE) QPM' + LISTOLOG + ' CHANGE ' + Q_SCRIPT_FILE + ' *AMPERSAND* & ' + CRLF
             Out := Out + PUB_cCharTab + '$(TLIB_EXE) /P32 $@ @' + Q_SCRIPT_FILE + CRLF
          OTHERWISE
             Out := Out + PUB_cCharTab + '$(US_MSG_EXE) ' + Q_PROGRESS_LOG + ' -MSG:Output Type Invalid: '+ US_VarToStr( Prj_Radio_OutputType ) + CRLF
@@ -6661,7 +6649,7 @@ FUNCTION QPM_Build2()
       // Copy or Move
       IF Prj_Radio_OutputCopyMove # DEF_RG_NONE
          Out := Out + PUB_cCharTab + '$(US_MSG_EXE) ' + Q_PROGRESS_LOG + ' -MSG:' + cOutputCopyMove() + ' ' + cOutputNameDisplay + ' to ' + Prj_Text_OutputCopyMoveFolder + DEF_SLASH + US_FileNameOnlyNameAndExt( cOutputNameDisplay ) + ' ...' + CRLF
-         Out := Out + PUB_cCharTab + iif(! bLogActivity, '@', '') + '$(US_SHELL_EXE) QPM ' + iif(! bLogActivity, '-OFF ','') + cOutputCopyMove() + ' ' + cOutputName + ' ' + US_ShortName( Prj_Text_OutputCopyMoveFolder ) + DEF_SLASH + US_FileNameOnlyNameAndExt( cOutputName ) + CRLF
+         Out := Out + PUB_cCharTab + '@$(US_SHELL_EXE) QPM' + LISTOLOG + cOutputCopyMove() + ' ' + cOutputName + ' ' + US_ShortName( Prj_Text_OutputCopyMoveFolder ) + DEF_SLASH + US_FileNameOnlyNameAndExt( cOutputName ) + CRLF
       ENDIF
 
       IF PUB_bDebugActive
@@ -6689,17 +6677,17 @@ FUNCTION QPM_Build2()
          Out := Out + PUB_cCharTab + '$(US_MSG_EXE) ' + Q_PROGRESS_LOG + ' -MSG:Processing ' + PRGFILES[i] + ' ...' + CRLF
          IF Upper( US_FileNameOnlyExt( PRGFILES[i] ) ) == US_Upper( 'C' ) .OR. ;
             Upper( US_FileNameOnlyExt( PRGFILES[i] ) ) == US_Upper( 'CPP' )
-            Out := Out + PUB_cCharTab + iif(! bLogActivity, '@', '') + '$(US_SHELL_EXE) QPM ' + iif(! bLogActivity, '-OFF ','') + 'COPYZAP $< $@' + CRLF
+            Out := Out + PUB_cCharTab + '@$(US_SHELL_EXE) QPM' + LISTOLOG + 'COPYZAP $< $@' + CRLF
          ELSE
-            Out := Out + PUB_cCharTab + iif(! bLogActivity, '@', '') + '$(US_SHELL_EXE) QPM ' + iif(! bLogActivity, '-OFF ', '') + 'DELETE $@' + CRLF
+            Out := Out + PUB_cCharTab + '@$(US_SHELL_EXE) QPM' + LISTOLOG + 'DELETE $@' + CRLF
             IF QPM_IsXHarbour()
                Out := Out + PUB_cCharTab + '$(HARBOUR_EXE) $(HARBOUR_FLAGS) /q /po' + US_ShortName( PUB_cProjectFolder ) + DEF_SLASH + US_FileNameOnlyName( PRGFILES[i] ) + '.ppo $< -o$@' + CRLF
             ELSE
                Out := Out + PUB_cCharTab + '$(HARBOUR_EXE) $(HARBOUR_FLAGS) /q /p' + US_ShortName( PUB_cProjectFolder ) + DEF_SLASH + US_FileNameOnlyName( PRGFILES[i] ) + '.ppo $< -o$@' + CRLF
             ENDIF
-            Out := Out + PUB_cCharTab + iif(! bLogActivity, '@', '') + '$(US_SHELL_EXE) QPM ' + iif(! bLogActivity, '-OFF ', '') + 'MOVE ' + US_ShortName( PUB_cProjectFolder ) + DEF_SLASH + US_FileNameOnlyName( PRGFILES[i] ) + '.ppo $(DIR_OBJECTS)' + DEF_SLASH + US_FileNameOnlyName( PRGFILES[i] ) + '.ppo' + CRLF
-            Out := Out + PUB_cCharTab + iif(! bLogActivity, '@', '') + '$(US_SHELL_EXE) QPM ' + iif(! bLogActivity, '-OFF ', '') + 'DELETE ' + US_ShortName( PUB_cProjectFolder ) + DEF_SLASH + US_FileNameOnlyName( PRGFILES[i] ) + '.ppo.MOVED.TXT' + CRLF
-            Out := Out + PUB_cCharTab + iif(! bLogActivity, '@', '') + '$(US_SHELL_EXE) QPM ' + iif(! bLogActivity, '-OFF ', '') + 'CHECKRC NOTFILE $@' + CRLF
+            Out := Out + PUB_cCharTab + '@$(US_SHELL_EXE) QPM' + LISTOLOG + 'MOVE ' + US_ShortName( PUB_cProjectFolder ) + DEF_SLASH + US_FileNameOnlyName( PRGFILES[i] ) + '.ppo $(DIR_OBJECTS)' + DEF_SLASH + US_FileNameOnlyName( PRGFILES[i] ) + '.ppo' + CRLF
+            Out := Out + PUB_cCharTab + '@$(US_SHELL_EXE) QPM' + LISTOLOG + 'DELETE ' + US_ShortName( PUB_cProjectFolder ) + DEF_SLASH + US_FileNameOnlyName( PRGFILES[i] ) + '.ppo.MOVED.TXT' + CRLF
+            Out := Out + PUB_cCharTab + '@$(US_SHELL_EXE) QPM' + LISTOLOG + 'CHECKRC NOTFILE $@' + CRLF
          ENDIF
          Out := Out + CRLF
          IF IsMinGW
@@ -6708,10 +6696,10 @@ FUNCTION QPM_Build2()
             Out := Out + '$(DIR_OBJECTS)' + DEF_SLASH + US_FileNameOnlyName( PRGFILES[i] ) + '.obj : $(C_DIR)' + DEF_SLASH + US_FileNameOnlyName( PRGFILES[i] ) + '.' + iif( Upper( US_FileNameOnlyExt( PRGFILES[i] ) ) == 'CPP', 'cpp', 'c' ) + CRLF
          ENDIF
          Out := Out + PUB_cCharTab + '$(US_MSG_EXE) ' + Q_PROGRESS_LOG + ' -MSG:Processing ' + US_FileNameOnlyName( PRGFILES[i] ) + '.' + iif( Upper( US_FileNameOnlyExt( PRGFILES[i] ) ) == 'CPP', 'cpp', 'c' ) + ' ...' + CRLF
-         Out := Out + PUB_cCharTab + iif(! bLogActivity, '@', '') + '$(US_SHELL_EXE) QPM ' + iif(! bLogActivity, '-OFF ', '' ) + 'DELETE $@' + CRLF
+         Out := Out + PUB_cCharTab + '@$(US_SHELL_EXE) QPM' + LISTOLOG + 'DELETE $@' + CRLF
          DO CASE
          CASE IsMinGW
-            Out := Out + PUB_cCharTab + '$(COMPILATOR_C) QPM' + iif( bLogActivity, ' -LIST' + US_ShortName(PUB_cQPM_Folder), '' ) + ' $(COBJFLAGS) $< -o$@' + CRLF
+            Out := Out + PUB_cCharTab + '$(COMPILATOR_C) QPM' + LISTOLOG + '$(COBJFLAGS) $< -o$@' + CRLF
          CASE IsPelles
             Out := Out + PUB_cCharTab + '$(COMPILATOR_C) $(COBJFLAGS) /Fo$@ $<' + CRLF
          CASE IsBorland
@@ -6719,7 +6707,7 @@ FUNCTION QPM_Build2()
          OTHERWISE
             US_Log( 'Error 6324' )
          ENDCASE
-         Out := Out + PUB_cCharTab + iif(! bLogActivity, '@', '') + '$(US_SHELL_EXE) QPM ' + iif(! bLogActivity, '-OFF ', '') + 'CHECKRC NOTFILE $@' + CRLF
+         Out := Out + PUB_cCharTab + '@$(US_SHELL_EXE) QPM' + LISTOLOG + 'CHECKRC NOTFILE $@' + CRLF
       NEXT i
 
    ENDIF
@@ -6732,51 +6720,51 @@ FUNCTION QPM_Build2()
                Out := Out + PUB_cCharTab + '$(US_MSG_EXE) ' + Q_PROGRESS_LOG + ' -MSG:ReImport from library ' + cInputReImpNameDisplay + CRLF
                Out := Out + PUB_cCharTab + '$(REIMPORT_EXE) -d ' + cInputReImpName + CRLF
                Out := Out + PUB_cCharTab + '$(US_MSG_EXE) ' + Q_PROGRESS_LOG + ' -MSG:DLL functions list for ' + cInputNameDisplay + ' ...' + CRLF
-               Out := Out + PUB_cCharTab + iif(! bLogActivity, '@', '') + '$(US_SHELL_EXE) QPM ' + iif(! bLogActivity, '-OFF ', '') + 'ANALIZE_DLL ' + cInputReImpDef + CRLF
+               Out := Out + PUB_cCharTab + '@$(US_SHELL_EXE) QPM' + LISTOLOG + 'ANALIZE_DLL ' + cInputReImpDef + CRLF
                Out := Out + PUB_cCharTab + '$(US_MSG_EXE) ' + Q_PROGRESS_LOG + ' -MSG:Generating interface library (.' + US_Word( PUB_cConvert, 2 ) + ') FOR ' + cInputNameDisplay + ' ...' + CRLF
                Out := Out + PUB_cCharTab + '$(IMPLIB_MGW_EXE) -k -d ' + US_USlash( cInputReImpDef ) + ' -D ' + US_FileNameOnlyNameAndExt( cInputNameDisplay ) + ' -l ' + US_USlash( cOutputName ) + CRLF
-               Out := Out + PUB_cCharTab + iif(! bLogActivity, '@', '') + '$(US_SHELL_EXE) QPM ' + iif(! bLogActivity, '-OFF ', '') + 'DELETE ' + cInputReImpDef + CRLF
+               Out := Out + PUB_cCharTab + '@$(US_SHELL_EXE) QPM' + LISTOLOG + 'DELETE ' + cInputReImpDef + CRLF
             ELSE
                Out := Out + PUB_cCharTab + '$(US_MSG_EXE) ' + Q_PROGRESS_LOG + ' -MSG:DLL functions list for ' + cInputNameDisplay + ' ...' + CRLF
                Out := Out + PUB_cCharTab + '$(IMPDEF_MGW_EXE) ' + cInputNameLong + ' > ' + cInputNameLong + '.def ' + CRLF
-               Out := Out + PUB_cCharTab + iif(! bLogActivity, '@', '') + '$(US_SHELL_EXE) QPM ' + iif(! bLogActivity, '-OFF ', '') + 'ANALIZE_DLL ' + cInputNameLong + '.def ' + CRLF
+               Out := Out + PUB_cCharTab + '@$(US_SHELL_EXE) QPM' + LISTOLOG + 'ANALIZE_DLL ' + cInputNameLong + '.def ' + CRLF
                Out := Out + PUB_cCharTab + '$(US_MSG_EXE) ' + Q_PROGRESS_LOG + ' -MSG:Generating interface library (.' + US_Word( PUB_cConvert, 2 ) + ') for ' + cInputNameDisplay + ' ...' + CRLF
                Out := Out + PUB_cCharTab + '$(IMPLIB_MGW_EXE) -d ' + US_USlash( cInputNameLong ) + '.def -D ' + US_FileNameOnlyNameAndExt( cInputNameDisplay ) + ' -l ' + US_USlash( cOutputName ) + CRLF
-               Out := Out + PUB_cCharTab + iif(! bLogActivity, '@', '') + '$(US_SHELL_EXE) QPM ' + iif(! bLogActivity, '-OFF ', '') + 'DELETE ' + cInputNameLong + '.def' + CRLF
+               Out := Out + PUB_cCharTab + '@$(US_SHELL_EXE) QPM' + LISTOLOG + 'DELETE ' + cInputNameLong + '.def' + CRLF
             ENDIF
          CASE PUB_cConvert == 'DLL LIB'
             DO CASE
                CASE Prj_Radio_Cpp == DEF_RG_PELLES
                   Out := Out + PUB_cCharTab + '$(US_MSG_EXE) ' + Q_PROGRESS_LOG + ' -MSG:DLL functions list for ' + cInputNameDisplay + ' ...' + CRLF
                   Out := Out + PUB_cCharTab + '$(IMPDEF_PC_EXE) ' + cInputNameLong + '.def ' + cInputNameLong + CRLF
-                  Out := Out + PUB_cCharTab + iif(! bLogActivity, '@', '') + '$(US_SHELL_EXE) QPM ' + iif(! bLogActivity, '-OFF ', '') + 'ANALIZE_DLL ' + cInputNameLong + '.def ' + CRLF
+                  Out := Out + PUB_cCharTab + '@$(US_SHELL_EXE) QPM' + LISTOLOG + 'ANALIZE_DLL ' + cInputNameLong + '.def ' + CRLF
                   //
                   Out := Out + PUB_cCharTab + '$(US_MSG_EXE) ' + Q_PROGRESS_LOG + ' -MSG:Generating interface library (.' + US_Word( PUB_cConvert, 2 ) + ') for ' + cInputNameDisplay + ' ...' + CRLF
                   Out := Out + PUB_cCharTab + '$(IMPLIB_PC_EXE) ' + iif( GetProperty( 'VentanaMain', 'Check_GuionA', 'Value' ), '', '-NOUND ' ) + cInputNameLong + ' -OUT:' + cOutputName + CRLF
                   //
-                  Out := Out + PUB_cCharTab + iif(! bLogActivity, '@', '') + '$(US_SHELL_EXE) QPM ' + iif(! bLogActivity, '-OFF ', '') + 'DELETE ' + cInputNameLong + '.def' + CRLF
+                  Out := Out + PUB_cCharTab + '@$(US_SHELL_EXE) QPM' + LISTOLOG + 'DELETE ' + cInputNameLong + '.def' + CRLF
                CASE Prj_Radio_Cpp == DEF_RG_BORLAND
                   Out := Out + PUB_cCharTab + '$(US_MSG_EXE) ' + Q_PROGRESS_LOG + ' -MSG:DLL functions list for ' + cInputNameDisplay + ' ...' + CRLF
                   Out := Out + PUB_cCharTab + '$(IMPDEF_BCC_EXE) ' + cInputNameLong + '.def ' + cInputNameLong + CRLF
-                  Out := Out + PUB_cCharTab + iif(! bLogActivity, '@', '') + '$(US_SHELL_EXE) QPM ' + iif(! bLogActivity, '-OFF ', '') + 'ANALIZE_DLL ' + cInputNameLong + '.def ' + CRLF
+                  Out := Out + PUB_cCharTab + '@$(US_SHELL_EXE) QPM' + LISTOLOG + 'ANALIZE_DLL ' + cInputNameLong + '.def ' + CRLF
                   //
                   Out := Out + PUB_cCharTab + '$(US_MSG_EXE) ' + Q_PROGRESS_LOG + ' -MSG:Generating Interface Library (.' + US_Word( PUB_cConvert, 2 ) + ') for ' + cInputNameDisplay + ' ...' + CRLF
                   Out := Out + PUB_cCharTab + '$(IMPLIB_BCC_EXE) ' + iif( GetProperty( 'VentanaMain', 'Check_GuionA', 'Value' ), '-a ', '' ) + cOutputName + ' ' + cInputNameLong + CRLF
                   //
-                  Out := Out + PUB_cCharTab + iif(! bLogActivity, '@', '') + '$(US_SHELL_EXE) QPM ' + iif(! bLogActivity, '-OFF ', '') + 'DELETE ' + cInputNameLong + '.def' + CRLF
+                  Out := Out + PUB_cCharTab + '@$(US_SHELL_EXE) QPM' + LISTOLOG + 'DELETE ' + cInputNameLong + '.def' + CRLF
                OTHERWISE
                   US_Log( 'Error in Convert DLL to LIB, Invalid C Compiler: ' + US_VarToStr( Prj_Radio_Cpp ) )
             ENDCASE
          CASE PUB_cConvert == 'LIB DLL'
             Out := Out + PUB_cCharTab + '$(US_MSG_EXE) ' + Q_PROGRESS_LOG + ' -MSG:Copying Library (.' + US_Word( PUB_cConvert, 1 ) + ') to Working Folder' + ' ...' + CRLF
-            Out := Out + PUB_cCharTab + '$(US_SHELL_EXE) QPM COPY ' + cInputName + ' ' + OBJFOLDER + DEF_SLASH + US_FileNameOnlyNameAndExt( cInputName ) + CRLF
+            Out := Out + PUB_cCharTab + '@$(US_SHELL_EXE) QPM' + LISTOLOG + 'COPY ' + cInputName + ' ' + OBJFOLDER + DEF_SLASH + US_FileNameOnlyNameAndExt( cInputName ) + CRLF
             //
             Out := Out + PUB_cCharTab + '$(US_MSG_EXE) ' + Q_PROGRESS_LOG + ' -MSG:Listing Functions in Library (.' + US_Word( PUB_cConvert, 1 ) + ')' + ' ...' + CRLF
             Out := Out + PUB_cCharTab + '$(LSTLIB_EXE) ' + OBJFOLDER + DEF_SLASH + US_FileNameOnlyNameAndExt( cInputName ) + ', ' + OBJFOLDER + DEF_SLASH + US_FileNameOnlyNameAndExt( cInputName ) + '.lst ' + CRLF
-            Out := Out + PUB_cCharTab + '$(US_SHELL_EXE) QPM ANALIZE_LIB_BORLAND ' + OBJFOLDER + DEF_SLASH + US_FileNameOnlyNameAndExt( cInputName ) + '.lst ' + CRLF
+            Out := Out + PUB_cCharTab + '@$(US_SHELL_EXE) QPM' + LISTOLOG + 'ANALIZE_LIB_BORLAND ' + OBJFOLDER + DEF_SLASH + US_FileNameOnlyNameAndExt( cInputName ) + '.lst ' + CRLF
             //
             QPM_Execute( US_ShortName(PUB_cQPM_Folder) + DEF_SLASH + 'US_TLIB.EXE', cInputName + ', ' + OBJFOLDER + DEF_SLASH + US_FileNameOnlyNameAndExt( cInputName ) + '.lst', DEF_QPM_EXEC_WAIT, DEF_QPM_EXEC_MINIMIZE )
-            QPM_Execute( US_ShortName(PUB_cQPM_Folder) + DEF_SLASH + 'US_SHELL.EXE', 'QPM ANALIZE_LIB_BORLAND ' + OBJFOLDER + DEF_SLASH + US_FileNameOnlyNameAndExt( cInputName ) + '.lst -OBJLST -EXPLST -OFF', DEF_QPM_EXEC_WAIT, DEF_QPM_EXEC_MINIMIZE )
+            QPM_Execute( US_ShortName(PUB_cQPM_Folder) + DEF_SLASH + 'US_SHELL.EXE', 'QPM' + LISTOLOG + 'ANALIZE_LIB_BORLAND ' + OBJFOLDER + DEF_SLASH + US_FileNameOnlyNameAndExt( cInputName ) + '.lst -OBJLST -EXPLST', DEF_QPM_EXEC_WAIT, DEF_QPM_EXEC_MINIMIZE )
             //
             MemoObj := MemoRead( OBJFOLDER + DEF_SLASH + US_FileNameOnlyNameAndExt( cInputName ) + '.Lst.ObjLst' )
             //
@@ -6796,27 +6784,30 @@ FUNCTION QPM_Build2()
             //
             Out := Out + PUB_cCharTab + '$(US_MSG_EXE) ' + Q_PROGRESS_LOG + ' -MSG:DLL functions list for ' + cOutputNameDisplay + ' ...' + CRLF
             Out := Out + PUB_cCharTab + '$(IMPDEF_BCC_EXE) ' + cOutputName + '.def ' + cOutputName + CRLF
-            Out := Out + PUB_cCharTab + iif(! bLogActivity, '@', '') + '$(US_SHELL_EXE) QPM ' + iif(! bLogActivity, '-OFF ', '') + 'ANALIZE_DLL ' + cOutputName + '.def -DELETE' + CRLF
+            Out := Out + PUB_cCharTab + '@$(US_SHELL_EXE) QPM' + LISTOLOG + 'ANALIZE_DLL ' + cOutputName + '.def -DELETE' + CRLF
             //
             Out := Out + PUB_cCharTab + '$(US_MSG_EXE) ' + Q_PROGRESS_LOG + ' -MSG:Cleaning temporary files' + ' ...' + CRLF
-            Out := Out + PUB_cCharTab + '$(US_SHELL_EXE) QPM DELETE ' + OBJFOLDER + DEF_SLASH + US_FileNameOnlyNameAndExt( cInputName ) + ' -OFF' + CRLF
-            Out := Out + PUB_cCharTab + '$(US_SHELL_EXE) QPM DELETE ' + OBJFOLDER + DEF_SLASH + US_FileNameOnlyNameAndExt( cInputName ) + '.lst -OFF' + CRLF
+            Out := Out + PUB_cCharTab + '@$(US_SHELL_EXE) QPM' + LISTOLOG + 'DELETE ' + OBJFOLDER + DEF_SLASH + US_FileNameOnlyNameAndExt( cInputName ) + CRLF
+            Out := Out + PUB_cCharTab + '@$(US_SHELL_EXE) QPM' + LISTOLOG + 'DELETE ' + OBJFOLDER + DEF_SLASH + US_FileNameOnlyNameAndExt( cInputName ) + '.lst' + CRLF
             FOR i := 1 TO MLCount( MemoObj, 254 )
-               Out := Out + PUB_cCharTab + '$(US_SHELL_EXE) QPM DELETE ' + OBJFOLDER + DEF_SLASH + AllTrim( memoline( MemoObj, 254, i ) ) + '.obj -OFF' + CRLF
+               Out := Out + PUB_cCharTab + '@$(US_SHELL_EXE) QPM' + LISTOLOG + 'DELETE ' + OBJFOLDER + DEF_SLASH + AllTrim( memoline( MemoObj, 254, i ) ) + '.obj' + CRLF
             NEXT
-            Out := Out + PUB_cCharTab + '$(US_SHELL_EXE) QPM DELETE ' + OBJFOLDER + DEF_SLASH + US_FileNameOnlyNameAndExt( cInputName ) + '.lst.ObjLst -OFF' + CRLF
-            Out := Out + PUB_cCharTab + '$(US_SHELL_EXE) QPM DELETE ' + OBJFOLDER + DEF_SLASH + US_FileNameOnlyNameAndExt( cInputName ) + '.lst.ExpLst -OFF' + CRLF
+            Out := Out + PUB_cCharTab + '@$(US_SHELL_EXE) QPM' + LISTOLOG + 'DELETE ' + OBJFOLDER + DEF_SLASH + US_FileNameOnlyNameAndExt( cInputName ) + '.lst.ObjLst' + CRLF
+            Out := Out + PUB_cCharTab + '@$(US_SHELL_EXE) QPM' + LISTOLOG + 'DELETE ' + OBJFOLDER + DEF_SLASH + US_FileNameOnlyNameAndExt( cInputName ) + '.lst.ExpLst' + CRLF
          CASE PUB_cConvert == 'A DLL'
             Out := Out + PUB_cCharTab + '$(US_MSG_EXE) ' + Q_PROGRESS_LOG + ' -MSG:Copying Library (.' + US_Word( PUB_cConvert, 1 ) + ') to Working Folder' + ' ...' + CRLF
-            Out := Out + PUB_cCharTab + '$(US_SHELL_EXE) QPM COPY ' + cInputName + ' ' + OBJFOLDER + DEF_SLASH + US_FileNameOnlyNameAndExt( cInputName ) + CRLF
+            Out := Out + PUB_cCharTab + '@$(US_SHELL_EXE) QPM COPY ' + cInputName + ' ' + OBJFOLDER + DEF_SLASH + US_FileNameOnlyNameAndExt( cInputName ) + CRLF
             //
             Out := Out + PUB_cCharTab + '$(US_MSG_EXE) ' + Q_PROGRESS_LOG + ' -MSG:Listing Functions in Library (.' + US_Word( PUB_cConvert, 1 ) + ')' + ' ...' + CRLF
             Out := Out + PUB_cCharTab + '$(LSTA_EXE) -x ' + OBJFOLDER + DEF_SLASH + US_FileNameOnlyNameAndExt( cInputName ) + ' > ' + OBJFOLDER + DEF_SLASH + US_FileNameOnlyNameAndExt( cInputName ) + '.lst ' + CRLF
-            Out := Out + PUB_cCharTab + '$(US_SHELL_EXE) QPM ANALIZE_LIB_MINGW ' + OBJFOLDER + DEF_SLASH + US_FileNameOnlyNameAndExt( cInputName ) + '.lst ' + CRLF
+            Out := Out + PUB_cCharTab + '@$(US_SHELL_EXE) QPM' + LISTOLOG + 'ANALIZE_LIB_MINGW ' + OBJFOLDER + DEF_SLASH + US_FileNameOnlyNameAndExt( cInputName ) + '.lst ' + CRLF
             //
+            QPM_LogText( "A DLL" )
             QPM_MemoWrit( RUN_FILE, US_ShortName(PUB_cQPM_Folder) + DEF_SLASH + 'US_OBJDUMP.EXE -t ' + cInputName + ' > ' + OBJFOLDER + DEF_SLASH + US_FileNameOnlyNameAndExt( cInputName ) + '.lst' )
+            QPM_LogFile( RUN_FILE )
             QPM_Execute( RUN_FILE, "", DEF_QPM_EXEC_WAIT, DEF_QPM_EXEC_MINIMIZE )
-            ferase( RUN_FILE )
+            QPM_LogText( "Done" )
+            FErase( RUN_FILE )
             QPM_Execute( US_ShortName(PUB_cQPM_Folder) + DEF_SLASH + 'US_SHELL.EXE', 'QPM ANALIZE_LIB_MINGW ' + OBJFOLDER + DEF_SLASH + US_FileNameOnlyNameAndExt( cInputName ) + '.lst -OBJLST -EXPLST', DEF_QPM_EXEC_WAIT, DEF_QPM_EXEC_MINIMIZE )
             //
             MemoObj := MemoRead( OBJFOLDER + DEF_SLASH + US_FileNameOnlyNameAndExt( cInputName ) + '.Lst.ObjLst' )
@@ -6840,16 +6831,16 @@ FUNCTION QPM_Build2()
             //
             Out := Out + PUB_cCharTab + '$(US_MSG_EXE) ' + Q_PROGRESS_LOG + ' -MSG:DLL functions list for ' + cOutputNameDisplay + ' ...' + CRLF
             Out := Out + PUB_cCharTab + '$(IMPDEF_MGW_EXE) ' + cOutputName + ' > ' + cOutputName + '.def ' + CRLF
-            Out := Out + PUB_cCharTab + iif(! bLogActivity, '@', '') + '$(US_SHELL_EXE) QPM ' + iif(! bLogActivity, '-OFF ', '') + 'ANALIZE_DLL ' + cOutputName + '.def -DELETE' + CRLF
+            Out := Out + PUB_cCharTab + '@$(US_SHELL_EXE) QPM' + LISTOLOG + 'ANALIZE_DLL ' + cOutputName + '.def -DELETE' + CRLF
             //
             Out := Out + PUB_cCharTab + '$(US_MSG_EXE) ' + Q_PROGRESS_LOG + ' -MSG:Cleaning Temporary Files' + ' ...' + CRLF
-            Out := Out + PUB_cCharTab + '$(US_SHELL_EXE) QPM DELETE ' + OBJFOLDER + DEF_SLASH + US_FileNameOnlyNameAndExt( cInputName ) + ' -OFF' + CRLF
-            Out := Out + PUB_cCharTab + '$(US_SHELL_EXE) QPM DELETE ' + OBJFOLDER + DEF_SLASH + US_FileNameOnlyNameAndExt( cInputName ) + '.lst -OFF' + CRLF
+            Out := Out + PUB_cCharTab + '@$(US_SHELL_EXE) QPM' + LISTOLOG + 'DELETE ' + OBJFOLDER + DEF_SLASH + US_FileNameOnlyNameAndExt( cInputName ) + CRLF
+            Out := Out + PUB_cCharTab + '@$(US_SHELL_EXE) QPM' + LISTOLOG + 'DELETE ' + OBJFOLDER + DEF_SLASH + US_FileNameOnlyNameAndExt( cInputName ) + '.lst' + CRLF
             FOR i := 1 TO MLCount( MemoObj, 254 )
-               Out := Out + PUB_cCharTab + '$(US_SHELL_EXE) QPM DELETE ' + US_ShortName( GetCppFolder() ) + DEF_SLASH + 'BIN' + DEF_SLASH + AllTrim( memoline( MemoObj, 254, i ) ) + '.o -OFF' + CRLF
+               Out := Out + PUB_cCharTab + '@$(US_SHELL_EXE) QPM' + LISTOLOG + 'DELETE ' + US_ShortName( GetCppFolder() ) + DEF_SLASH + 'BIN' + DEF_SLASH + AllTrim( memoline( MemoObj, 254, i ) ) + '.o' + CRLF
             NEXT
-            Out := Out + PUB_cCharTab + '$(US_SHELL_EXE) QPM DELETE ' + OBJFOLDER + DEF_SLASH + US_FileNameOnlyNameAndExt( cInputName ) + '.lst.ObjLst -OFF' + CRLF
-            Out := Out + PUB_cCharTab + '$(US_SHELL_EXE) QPM DELETE ' + OBJFOLDER + DEF_SLASH + US_FileNameOnlyNameAndExt( cInputName ) + '.lst.ExpLst -OFF' + CRLF
+            Out := Out + PUB_cCharTab + '@$(US_SHELL_EXE) QPM' + LISTOLOG + 'DELETE ' + OBJFOLDER + DEF_SLASH + US_FileNameOnlyNameAndExt( cInputName ) + '.lst.ObjLst' + CRLF
+            Out := Out + PUB_cCharTab + '@$(US_SHELL_EXE) QPM' + LISTOLOG + 'DELETE ' + OBJFOLDER + DEF_SLASH + US_FileNameOnlyNameAndExt( cInputName ) + '.lst.ExpLst' + CRLF
       ENDCASE
    ENDIF
 
@@ -6875,7 +6866,7 @@ FUNCTION QPM_Build2()
       cB_RCM_ERR := ( "US_Res from Batch Error: Resource File Not Found: " + cB_RC_MINI )
       cB_RC_CONF := ( DBLQT + PUB_cProjectFolder + DEF_SLASH + GetResConfigFileName() + DBLQT )
       cB_RCF_ERR := ( "US_Res from Batch Error: Can't create ResConfig File: " + cB_RC_CONF )
-      cB_US_RES  := ( DBLQT + PUB_cQPM_Folder + DEF_SLASH + 'US_Res.exe' + DBLQT + ' QPM' + iif( bLogActivity, ' -LIST' + US_ShortName(PUB_cQPM_Folder), '' ) )
+      cB_US_RES  := ( DBLQT + PUB_cQPM_Folder + DEF_SLASH + 'US_Res.exe' + DBLQT + ' QPM' + LISTOLOG )
    IF File( US_FileNameOnlyPathAndName( PRGFILES[1] ) + '.RC' )
       cB_RC_MAIN := ( US_FileNameOnlyPathAndName( PRGFILES[1] ) + '.RC' )
       cB_RC1_PTH := ( DBLQT + US_FileNameOnlyPath( cB_RC_MAIN ) + "\" + DBLQT )
@@ -6954,14 +6945,14 @@ FUNCTION QPM_Build2()
                ENDIF
             ENDIF
          ELSE
-            // check IF the project has an RC file
+            // check if the project has an RC file
                   bld_cmd += 'ECHO #define ' + GetResConfigVarName() + ' ' + cB_RC_FOLD + ' > ' + cB_RC_CONF                    + CRLF
                   bld_cmd += 'IF NOT EXIST ' + cB_RC_CONF + ' ECHO ' + cB_RCF_ERR + ' > ' + cB_TMP_ERR                          + CRLF
                   bld_cmd += 'IF NOT EXIST ' + cB_RC_MAIN + ' GOTO NORC'                                                        + CRLF
             // in project's RC file change .\ and ..\ to full path ("S" means use 8.3 path, "N" means use long path)
-                  bld_cmd += cB_US_RES + ' -ONLYINCLUDE ' + cB_RC_MA_S + ' ' + cB_RC1_SHR + ' ' + cB_RC1_PTH + ' ' + "N"        + CRLF
+                  bld_cmd += cB_US_RES + '-ONLYINCLUDE ' + cB_RC_MA_S + ' ' + cB_RC1_SHR + ' ' + cB_RC1_PTH + ' ' + "N"        + CRLF
                   bld_cmd += 'IF ERRORLEVEL 1 GOTO ERROR'                                                                     + CRLF
-                  bld_cmd += cB_US_RES  + ' ' + cB_RC1_SHR + ' ' + cB_RC2_SHR + ' ' + cB_RC1_PTH + ' ' + "N"                    + CRLF
+                  bld_cmd += cB_US_RES  + cB_RC1_SHR + ' ' + cB_RC2_SHR + ' ' + cB_RC1_PTH + ' ' + "N"                    + CRLF
                   bld_cmd += 'IF ERRORLEVEL 1 GOTO ERROR'                                                                     + CRLF
             // concatenate project's and MINIGUI's RC files into a temporary RC file
             IF Prj_Check_IgnoreLibRCs
@@ -7031,7 +7022,7 @@ FUNCTION QPM_Build2()
             ENDIF
          ENDIF
       ENDIF
-      // check IF the tool exists
+      // check if the tool exists
                   bld_cmd += ':NEXT'                                                                                            + CRLF
       IF Prj_Radio_OutputType == DEF_RG_IMPORT
                   bld_cmd += 'IF NOT EXIST ' + cB_DLLTOOL + ' ECHO ' + cB_DLL_ERR + ' > ' + cB_TMP_ERR                          + CRLF
@@ -7041,7 +7032,7 @@ FUNCTION QPM_Build2()
       // build
                   bld_cmd += 'SET PATH=' + cB_CPP_BIN                                                                           + CRLF
                   bld_cmd += ':MAKE'                                                                                            + CRLF
-                  bld_cmd += cB_US_MAKE + ' ' + '-f' + Q_MAKE_FILE + ' >> ' + Q_TEMP_LOG + ' 2>&1'                              + CRLF
+                  bld_cmd += cB_US_MAKE + ' ' + '-f ' + Q_MAKE_FILE + ' >> ' + Q_TEMP_LOG + ' 2>&1'                              + CRLF
       // check errors
       DO CASE
       CASE Prj_Radio_OutputCopyMove == DEF_RG_MOVE
@@ -7069,7 +7060,6 @@ FUNCTION QPM_Build2()
                   bld_cmd += 'IF EXIST ' + cB_RC1_FER  + ' DEL ' + cB_RC1_FER + ' > NUL'                                        + CRLF
                   bld_cmd += 'IF EXIST ' + cB_RC2_FER  + ' DEL ' + cB_RC2_FER + ' > NUL'                                        + CRLF
       ENDIF
-
       QPM_MemoWrit( BUILD_BAT, bld_cmd )
    CASE ( IsBorland .OR. IsPelles )
                   bld_cmd := '@ECHO OFF'                                                                                        + CRLF
@@ -7116,14 +7106,14 @@ FUNCTION QPM_Build2()
                ENDIF
             ENDIF
          ELSE
-            // check IF the project has an RC file
+            // check if the project has an RC file
                   bld_cmd += 'ECHO #define ' + GetResConfigVarName() + ' ' + cB_RC_FOLD + ' > ' + cB_RC_CONF                    + CRLF
                   bld_cmd += 'IF NOT EXIST ' + cB_RC_CONF + ' ECHO ' + cB_RCF_ERR + ' > ' + cB_TMP_ERR                          + CRLF
                   bld_cmd += 'IF NOT EXIST ' + cB_RC_MAIN + ' GOTO NORC'                                                        + CRLF
             // in project's RC file change .\ and ..\ to full path ("S" means use 8.3 path, "N" means use long path)
-                  bld_cmd += cB_US_RES + ' -ONLYINCLUDE ' + cB_RC_MA_S + ' ' + cB_RC1_SHR + ' ' + cB_RC1_PTH + ' ' + "N"        + CRLF
+                  bld_cmd += cB_US_RES + '-ONLYINCLUDE ' + cB_RC_MA_S + ' ' + cB_RC1_SHR + ' ' + cB_RC1_PTH + ' ' + "N"        + CRLF
                   bld_cmd += 'IF ERRORLEVEL 1 GOTO ERROR'                                                                       + CRLF
-                  bld_cmd += cB_US_RES  + ' ' + cB_RC1_SHR + ' ' + cB_RC2_SHR + ' ' + cB_RC1_PTH + ' ' + "N"                    + CRLF
+                  bld_cmd += cB_US_RES  + cB_RC1_SHR + ' ' + cB_RC2_SHR + ' ' + cB_RC1_PTH + ' ' + "N"                    + CRLF
                   bld_cmd += 'IF ERRORLEVEL 1 GOTO ERROR'                                                                       + CRLF
             // concatenate project's and MINIGUI's RC files into a temporary RC file
             IF Prj_Check_IgnoreLibRCs
@@ -7196,7 +7186,7 @@ FUNCTION QPM_Build2()
       // build
                   bld_cmd += ':NEXT'                                                                                            + CRLF
                   bld_cmd += 'SET PATH=' + cB_CPP_BIN                                                                           + CRLF
-                  bld_cmd += cB_US_MAKE + ' ' + '-i -f' + Q_MAKE_FILE + ' >> ' + Q_TEMP_LOG + ' 2>&1'                           + CRLF
+                  bld_cmd += cB_US_MAKE + ' ' + '-f ' + Q_MAKE_FILE + ' >> ' + Q_TEMP_LOG + ' 2>&1'                           + CRLF
       // check errors
       DO CASE
       CASE Prj_Radio_OutputCopyMove == DEF_RG_MOVE
@@ -7224,7 +7214,6 @@ FUNCTION QPM_Build2()
                   bld_cmd += 'IF EXIST ' + cB_RC1_FER  + ' DEL ' + cB_RC1_FER + ' > NUL'                                        + CRLF
                   bld_cmd += 'IF EXIST ' + cB_RC2_FER  + ' DEL ' + cB_RC2_FER + ' > NUL'                                        + CRLF
       ENDIF
-
       QPM_MemoWrit( BUILD_BAT, bld_cmd )
    OTHERWISE
       US_Log( 'Unknown C compiler.' )
@@ -7344,15 +7333,18 @@ FUNCTION QPM_Run( bWithParm )
 
       CloseDbfAutoView()
       IF VentanaMain.GDbfFiles.Value > 0
-         DefineRichEditForNotDbfView( 'DBF view is disable while running application!' )
+         DefineRichEditForNotDbfView( 'DBF view is disable while application is running!' )
       ENDIF
       RunParms := US_ShortName( PUB_cProjectFolder ) + DEF_SLASH + '_' + PUB_cSecu + 'RUN' + US_DateTimeCen() + '.cng'
+      QPM_LogText( RunParms )
       AAdd( RunControlFile, US_ShortName( PUB_cProjectFolder ) + DEF_SLASH + '_' + PUB_cSecu + 'RCF' + US_DateTimeCen() + '.cnt' )
       QPM_MemoWrit( RunParms, 'Run Parms For ' + App + CRLF + ;
                               'COMMAND ' + App + ' ' + cParm + CRLF + ;
                               'CONTROL ' + RunControlFile[ Len( RunControlFile ) ] )
+      QPM_LogFile( RunParms )
       QPM_MemoWrit( RunControlFile[ Len( RunControlFile ) ], 'Run Control File for ' + App )
-      QPM_Execute( US_ShortName( PUB_cQPM_Folder ) + DEF_SLASH + 'US_Run.exe', 'QPM ' + iif( bLogActivity, '-LIST' + US_ShortName(PUB_cQPM_Folder) + ' ', ' ' ) + RunParms )
+      QPM_LogFile( RunControlFile[ Len( RunControlFile ) ] )
+      QPM_Execute( US_ShortName( PUB_cQPM_Folder ) + DEF_SLASH + 'US_Run.exe', 'QPM' + LISTOLOG + RunParms )
       bRunApp := .T.
       VentanaMain.Check_DbfAutoView.Enabled := .F.
 
@@ -7393,8 +7385,7 @@ RETURN .T.
 FUNCTION QPM_Timer_StatusRefresh()
    LOCAL memotmp, lenAux
    LOCAL Venta := iif( PUB_bLite, 'VentanaLite', 'VentanaMain' )
-   LOCAL TopName
-   LOCAL OutName, estado
+   LOCAL TopName, OutName, estado
    LOCAL cBaseVerVer := Replicate( '0', DEF_LEN_VER_VERSION )
    LOCAL cBaseVerRel := Replicate( '0', DEF_LEN_VER_RELEASE )
    LOCAL cBaseVerBui := Replicate( '0', DEF_LEN_VER_BUILD )
@@ -7413,42 +7404,27 @@ FUNCTION QPM_Timer_StatusRefresh()
       ENDIF
       IF File( END_FILE )
          PUB_bIsProcessing := .F.
-         ferase( PUB_cProjectFolder + DEF_SLASH + '_' + PUB_cSecu + 'MSG.SYSIN' ) /* por si estubiera activado el proceso de stop y la compilacion cancela por error */
-         IF PUB_bLite
-            VentanaLite.bStop.Enabled := .F.
-         ELSE
-            VentanaMain.bStop.Enabled := .F.
-         ENDIF
+         FErase( MSG_SYSIN )   /* por si estubiera activado el proceso de stop y la compilacion cancela por error */
+         SetProperty( Venta, 'bStop', 'enabled', .T. )
          VentanaMain.TabFiles.Value := nPageSysout
          TabChange( 'FILES' )
+         QPM_LogText( "Translating log" )
          QPM_MemoWrit( TEMP_LOG, cLog := TranslateLog( MemoRead( TEMP_LOG ) ) )
-         TopName       := US_FileNameOnlyName(GetProperty( 'VentanaMain', 'GPrgFiles', 'Cell', 1, NCOLPRGNAME ))
-         OutName       := US_FileNameOnlyName( GetOutputModuleName() )
-         estado        := US_Word( memoread( END_FILE ), 1 )
-
-/*
-La existencia del ejecutable se verifica en BUILD.BAT teniendo en cuenta el COPY/MOVE
-         IF estado == 'ERROR'
-            IF File( GetOutputModuleName()+'.MOVED.TXT' )
-               estado := 'OK'
-            ENDIF
-         ENDIF
-*/
-
-         /* ini Parche para cuando el EXE esta corriendo y queremos hacer build sin modificar ningun prg */
+         QPM_LogText( "Done" )
+         estado := US_Word( MemoRead( END_FILE ), 1 )
+         /* ini Parche para cuando el EXE esta corriendo y queremos hacer build sin modificar ningún prg */
          IF MLCount( GetProperty( Venta, 'RichEditSysout', 'value' ) ) < 3 .AND. ;
             US_Word( GetProperty( Venta, 'RichEditSysout', 'value' ), 1 ) == 'MAKE'
             SetProperty( Venta, 'RichEditSysout', 'value', GetProperty( Venta, 'RichEditSysout', 'value' ) + CRLF + 'Fatal error opening "' + GetOutputModuleName() + '".' + CRLF + 'May be the program is still running?' )
             estado := 'ERROR'
          ENDIF
          /* Fin Parche para cuando el EXE esta corriendo y queremos hacer build sin modificar ningun prg */
-
          IF bAutoEXIT .AND. ! Empty( PUB_cAutoLog )
             PUB_cAutoLogTmp := MemoRead( PUB_cAutoLog )
             PUB_cAutoLogTmp += CRLF
             PUB_cAutoLogTmp += 'Result: ' + estado
             IF estado == 'ERROR' .OR. ( ! PUB_bLogOnlyError .AND. estado == 'WARNING' )
-               IF ! left(cLog, 1) == CRLF
+               IF ! Left( cLog, 1 ) == CRLF
                   PUB_cAutoLogTmp += CRLF
                ENDIF
                PUB_cAutoLogTmp += cLog
@@ -7456,47 +7432,51 @@ La existencia del ejecutable se verifica en BUILD.BAT teniendo en cuenta el COPY
             PUB_cAutoLogTmp += CRLF
             PUB_cAutoLogTmp += Replicate( '=', 80 )
             PUB_cAutoLogTmp += CRLF
+            QPM_LogText( "Writing result to AutoLog" )
             QPM_MemoWrit( PUB_cAutoLog, PUB_cAutoLogTmp )
+            QPM_LogText( "Done" )
          ENDIF
-
-         SetProperty( Venta, 'RichEditSysout', 'value', MemoRead( TEMP_LOG ) )
-         SetProperty( Venta, 'RichEditSysout', 'CaretPos', Len( GetProperty( Venta, 'RichEditSysout', 'value' ) ) )
+         // Write to QPM's log
          IF bLogActivity
-            memoTMP := MemoRead( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log' )
-
-            memoTMP := memoTMP + '****** ' + PUB_cProjectFolder + DEF_SLASH + '_' + PUB_cSecu + 'Progress.Log' + CRLF+ CRLF
+            memoTMP := MemoRead( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log' ) + CRLF
+            memoTMP := memoTMP + '****** ' + PUB_cProjectFolder + DEF_SLASH + '_' + PUB_cSecu + 'Progress.Log' + CRLF + CRLF
             memoTMP := memoTMP + MemoRead( PROGRESS_LOG ) + CRLF
-
-            memoTMP := memoTMP + '****** ' + PUB_cProjectFolder + DEF_SLASH + '_' + PUB_cSecu + 'Build.Bat' + CRLF+ CRLF
+            memoTMP := memoTMP + '****** ' + PUB_cProjectFolder + DEF_SLASH + '_' + PUB_cSecu + 'Build.Bat'    + CRLF + CRLF
             memoTMP := memoTMP + MemoRead( BUILD_BAT ) + CRLF
-
-            memoTMP := memoTMP + '****** ' + PUB_cProjectFolder + DEF_SLASH + '_' + PUB_cSecu + 'Temp.Log' + CRLF
+            memoTMP := memoTMP + '****** ' + PUB_cProjectFolder + DEF_SLASH + '_' + PUB_cSecu + 'Temp.Log'     + CRLF + CRLF
             memoTMP := memoTMP + MemoRead( TEMP_LOG ) + CRLF
-
-            memoTMP := memoTMP + '****** ' + PUB_cProjectFolder + DEF_SLASH + '_' + PUB_cSecu + 'Temp.Bc' + CRLF + CRLF
+            memoTMP := memoTMP + '****** ' + PUB_cProjectFolder + DEF_SLASH + '_' + PUB_cSecu + 'Temp.Bc'      + CRLF + CRLF
             memoTMP := memoTMP + MemoRead( MAKE_FILE ) + CRLF
-
-            memoTMP := memoTMP + '****** ' + PUB_cProjectFolder + DEF_SLASH + '_' + PUB_cSecu + 'Script.ld' + CRLF+ CRLF
+            memoTMP := memoTMP + '****** ' + PUB_cProjectFolder + DEF_SLASH + '_' + PUB_cSecu + 'Script.ld'    + CRLF + CRLF
             memoTMP := memoTMP + MemoRead( SCRIPT_FILE ) + CRLF
-
-            memoTMP := memoTMP + replicate( '>',80 ) + CRLF
-
+         IF File( QPM_TMP_RC )
+            memoTMP := memoTMP + '****** ' + PUB_cProjectFolder + DEF_SLASH + '_' + PUB_cSecu + 'temp.rc'      + CRLF + CRLF
+            memoTMP := memoTMP + MemoRead( QPM_TMP_RC ) + CRLF
+         ELSE
+            memoTMP := memoTMP + '****** Project has no RC file'                                               + CRLF + CRLF
+         ENDIF
+            memoTMP := memoTMP + PadR( '*****  BUILD END: ' + US_VarToStr( Date() ) + ' ' + US_VarToStr( Time() ) + '  ', 100, '*' ) + CRLF + CRLF
             QPM_MemoWrit( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log', memoTMP )
          ENDIF
-
+         // Load build log to richedit control
+         SetProperty( Venta, 'RichEditSysout', 'value', MemoRead( TEMP_LOG ) )
+         SetProperty( Venta, 'RichEditSysout', 'CaretPos', Len( GetProperty( Venta, 'RichEditSysout', 'value' ) ) )
+         // Update status
          SetProperty( Venta, 'LStatusLabel', 'value', 'Status: Idle' )
+         // Show result
          DO CASE
-            CASE estado == 'OK'
-               MyMsgOk( NIL, 'Build Finished'+CRLF+'OK', 'I', iif( bBuildRun .OR. ! Empty( Prj_ExtraRunCmdFINAL ), .T., bAutoEXIT ), iif( bBuildRun, 2, ), iif( !bBuildRun .AND. Empty( Prj_ExtraRunCmdFINAL ) .AND. US_Upper( OutputExt() ) == 'EXE', .T., .F. ) )
-            CASE estado == 'WARNING'
-               MyMsgOk( NIL, 'Build Finished'+CRLF+'with Warnings', 'W', iif( bBuildRun .OR. ! Empty( Prj_ExtraRunCmdFINAL ), .T., bAutoEXIT ), iif( bBuildRun, 4, ), iif( !bBuildRun .AND. Empty( Prj_ExtraRunCmdFINAL ) .AND. US_Upper( OutputExt() ) == 'EXE', .T., .F. ) )
-            CASE estado == 'ERROR'
-               MyMsgOk( NIL, 'Build Finished'+CRLF+'WITH ERRORS', 'E', bAutoEXIT )
-            OTHERWISE
-               MyMsgOk( NIL, 'Invalid RETURN Code'+CRLF+'form Build Process: '+estado, 'E' )
+         CASE estado == 'OK'
+            MyMsgOk( NIL, 'Build Finished'+CRLF+'OK', 'I', iif( bBuildRun .OR. ! Empty( Prj_ExtraRunCmdFINAL ), .T., bAutoEXIT ), iif( bBuildRun, 2, ), iif( !bBuildRun .AND. Empty( Prj_ExtraRunCmdFINAL ) .AND. US_Upper( OutputExt() ) == 'EXE', .T., .F. ) )
+         CASE estado == 'WARNING'
+            MyMsgOk( NIL, 'Build Finished'+CRLF+'with Warnings', 'W', iif( bBuildRun .OR. ! Empty( Prj_ExtraRunCmdFINAL ), .T., bAutoEXIT ), iif( bBuildRun, 4, ), iif( !bBuildRun .AND. Empty( Prj_ExtraRunCmdFINAL ) .AND. US_Upper( OutputExt() ) == 'EXE', .T., .F. ) )
+         CASE estado == 'ERROR'
+            MyMsgOk( NIL, 'Build Finished'+CRLF+'with ERRORS', 'E', bAutoEXIT )
+         OTHERWISE
+            MyMsgOk( NIL, 'Build Finished'+CRLF+'with Invalid Code: '+estado, 'E' )
          ENDCASE
+         // Show log
          RichEditDisplay( 'OUT' )
-
+         // Restore controls
          SetProperty( Venta, 'LFull', 'FontColor', DEF_COLORGREEN )
          SetProperty( Venta, 'LFull', 'value', 'Incremental' )
          SetProperty( 'VentanaMain', 'EraseALL', 'enabled', .T. )
@@ -7509,22 +7489,23 @@ La existencia del ejecutable se verifica en BUILD.BAT teniendo en cuenta el COPY
          IF Prj_Radio_OutputType == DEF_RG_EXE
             SetProperty( 'VentanaMain', 'run', 'enabled', .T. )
          ENDIF
-
          DO EVENTS
-
+         // Execute extra run commands
          IF estado == 'OK' .AND. ! Empty( Prj_ExtraRunCmdFINAL )
             QPM_ExecuteExtraRun()
          ENDIF
          // ini BUG ======================================================================================
          // No pone enable el boton build
-         IF !GetProperty( 'VentanaMain', 'build', 'enabled' )
+         IF ! GetProperty( 'VentanaMain', 'build', 'enabled' )
             SetProperty( 'VentanaMain', 'build', 'enabled', .F. )
             SetProperty( 'VentanaMain', 'build', 'enabled', .T. )
             US_Log( 'Boton Build sigue disable', .F. )
          ENDIF
          // fin BUG ======================================================================================
-
+         // Clean auxiliary files
          IF PUB_DeleteAux
+            TopName := US_FileNameOnlyName( GetProperty( 'VentanaMain', 'GPrgFiles', 'Cell', 1, NCOLPRGNAME ) )
+            OutName := US_FileNameOnlyName( GetOutputModuleName() )
             FErase( QPM_GET_DEF )
             FErase( BUILD_BAT )
             FErase( END_FILE )
@@ -7539,7 +7520,7 @@ La existencia del ejecutable se verifica en BUILD.BAT teniendo en cuenta el COPY
             FErase( PUB_cProjectFolder + DEF_SLASH + TopName + '.MAP' )
             FErase( PUB_cProjectFolder + DEF_SLASH + '_' + PUB_cSecu + 'TEMP.ERR' )
          ENDIF
-
+         // Update version numbers
          IF VentanaMain.AutoInc.Checked
             IF estado == 'OK' .OR. estado == 'WARNING'
                IF Val( GetProperty( 'VentanaMain', 'LVerBuiNum', 'value' ) ) == Val( cTopVerBui )
@@ -7562,11 +7543,12 @@ La existencia del ejecutable se verifica en BUILD.BAT teniendo en cuenta el COPY
                ENDIF
             ENDIF
          ENDIF
-
+         DO EVENTS
+         // Execute
          IF ( bBuildRun .OR. PUB_bForceRunFromMsgOk ) .AND. ( estado == 'OK' .OR. estado == 'WARNING' )
             QPM_Run( bRunParm )
          ENDIF
-
+         // Restore status
          BUILD_IN_PROGRESS := .F.
       ELSE
          lenAux := US_FileSize( PROGRESS_LOG )
@@ -7948,7 +7930,7 @@ FUNCTION LiberoWindowsHotKeys()
 RETURN .T.
 
 FUNCTION TranslateLog( Log )
-   LOCAL NewLog, i, e, w, j, d, aLines, errorlevel, nIndLineRC, nIndNameRC, aData
+   LOCAL NewLog, i, e, w, j, d, aLines, cErrLvl, nIndLineRC, nIndNameRC, aData
    LOCAL objfolder    := Chr(10) + Upper( US_ShortName( GetObjFolder() ) )
    LOCAL nLenOF       := Len( objfolder )
    LOCAL qpmfolder    := US_ShortName( PUB_cQPM_Folder )
@@ -8014,20 +7996,20 @@ FUNCTION TranslateLog( Log )
    VentanaMain.RichEditSysout.SetFocus()
    VentanaMain.RichEditSysout.CaretPos := Len( VentanaMain.RichEditSysout.Value )
 
-// Set build's errorlevel
-   errorlevel := US_Word( MemoRead( END_FILE ), 1 )
-   IF errorlevel == 'OK'
+// Set build's error level
+   cErrLvl := US_Word( MemoRead( END_FILE ), 1 )
+   IF cErrLvl == 'OK'
       FOR i := 1 TO Len( vWarnings )
          IF At( vWarnings[i][1], Log ) > 0
-            QPM_MemoWrit( END_FILE, ( errorlevel := 'WARNING' ) )
+            QPM_MemoWrit( END_FILE, ( cErrLvl := 'WARNING' ) )
             EXIT
          ENDIF
       NEXT
    ENDIF
-   IF ! errorlevel == 'ERROR'
+   IF ! cErrLvl == 'ERROR'
       FOR i := 1 TO Len( vErrors )
          IF At( vErrors[i][1], Log ) > 0
-            QPM_MemoWrit( END_FILE, ( errorlevel := 'ERROR' ) )
+            QPM_MemoWrit( END_FILE, ( cErrLvl := 'ERROR' ) )
             EXIT
          ENDIF
       NEXT
@@ -8308,7 +8290,7 @@ FUNCTION TranslateLog( Log )
 
 // Show build status
 
-   NewLog += CRLF + "==> Build status: " + errorlevel + CRLF
+   NewLog += CRLF + "==> Build status: " + cErrLvl + CRLF
 
 RETURN NewLog
 
@@ -8455,14 +8437,12 @@ FUNCTION EnableButtonRun()
    ON KEY ESCAPE OF VentanaLite ACTION DoMethod( 'VentanaLite', 'release' )
 RETURN .T.
 
-FUNCTION xRefPrgFmg( vConcatIncludeHB )
+FUNCTION FUNC_xRefPrgFmg( vConcatIncludeHB )
    LOCAL f, p, Fol := PUB_cProjectFolder+DEF_SLASH, MemoAux, i
    LOCAL vScanned := {}, vPRGFiles := {}, vPANFiles := {}
-   MemoAux := memoread( PROGRESS_LOG )
+   QPM_LogText( "FUNC_xRefPrgFmg start" )
+   MemoAux := MemoRead( PROGRESS_LOG )
    QPM_MemoWrit( PROGRESS_LOG, MemoAux + US_TimeDis( Time() ) + ' - Checking cross references between PRG files and FMG files ...' + CRLF )
-   IF bLogActivity
-      QPM_MemoWrit( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log', MemoRead( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log' ) + 'xRefPrgFmg Initialize' + CRLF )
-   ENDIF
    FOR f := 1 TO VentanaMain.GPanFiles.itemcount
       AAdd( vPANFiles, ChgPathToReal( GetProperty( 'VentanaMain', 'GPanFiles', 'Cell', f, NCOLPANFULLNAME ) ) )
    NEXT f
@@ -8470,8 +8450,9 @@ FUNCTION xRefPrgFmg( vConcatIncludeHB )
       FOR i := 1 TO Len( vConcatIncludeHB )
          IF File( vConcatIncludeHB[i]+DEF_SLASH+US_FileNameOnlyNameAndExt( vPanFiles[f] ) )
             IF ! ( US_Upper( US_ShortName( vConcatIncludeHB[i]+DEF_SLASH+US_FileNameOnlyNameAndExt( vPanFiles[f] ) ) ) == US_Upper( US_ShortName( vPanFiles[f] ) ) )
-               MyMsgWarn( 'Folder ' + vConcatIncludeHB[i] + ' contains the form ' + DBLQT + US_FileNameOnlyNameAndExt( vPanFiles[f] ) + DBLQT + "." + CRLF + ;
-                          "Harbour's search process locates such form first and will therefore ignore the form located at folder " + DBLQT + US_FileNameOnlyPath( vPanFiles[f] ) + DBLQT + '.' )
+               QPM_LogText( "Warning on " + US_FileNameOnlyNameAndExt( vPanFiles[f] ) )
+               MyMsgWarn( 'Folder ' + vConcatIncludeHB[i] + ' contains a form named ' + DBLQT + US_FileNameOnlyNameAndExt( vPanFiles[f] ) + DBLQT + "." + CRLF + ;
+                          "Harbour's search process will locate it first and will therefore ignore the form located at folder " + DBLQT + US_FileNameOnlyPath( vPanFiles[f] ) + DBLQT + '.' )
             ELSE
                EXIT
             ENDIF
@@ -8493,13 +8474,11 @@ FUNCTION xRefPrgFmg( vConcatIncludeHB )
                   // el primer AScan hace una comparacion parcial ( = ) y se le añade un blanco al final para que solo encuentre palabras completas
                   // el segundo AScan hace una comparacion total ( == ) del string (son dos palabras)
                   // El vector contiene 'myPRG myFmg'
-                  IF ( AScan( vXRefPrgFmg, { |x| US_Upper( x ) = US_Upper( US_FileNameOnlyNameAndExt( vPrgFiles[ p ] ) ) + ' ' } ) == 0 .OR. ;
-                     AScan( vXRefPrgFmg, { |x| US_Upper( x ) == US_Upper( US_FileNameOnlyNameAndExt( vPrgFiles[ p ] ) ) + ' ' + US_Upper( US_FileNameOnlyNameAndExt( vPanFiles[ f ] ) ) } ) > 0 )
+                  IF ( AScan( vXRefPrgFmg, { |x| US_Upper( x ) = US_Upper( US_FileNameOnlyNameAndExt( vPRGFiles[ p ] ) ) + ' ' } ) == 0 .OR. ;
+                     AScan( vXRefPrgFmg, { |x| US_Upper( x ) == US_Upper( US_FileNameOnlyNameAndExt( vPRGFiles[ p ] ) ) + ' ' + US_Upper( US_FileNameOnlyNameAndExt( vPanFiles[ f ] ) ) } ) > 0 )
                      IF ! ( FMG_Scan( vPRGFiles[ p ], US_FileDateTime( Fol + GetObjName() + DEF_SLASH + US_FileNameOnlyName( vPRGFiles[ p ] ) + '.c' ), vScanned, vPanFiles ) )
                         AAdd( vSinLoadWindow, US_Upper( vPRGFiles[ p ] ) ) // Para Control de Programa desde segunda pasada hasta que se vuele a ingresar
-                        IF bLogActivity
-                           QPM_MemoWrit( PUB_cQPM_Folder+DEF_SLASH + 'QPM.log', MemoRead( PUB_cQPM_Folder+DEF_SLASH + 'QPM.log' ) + "xRefPrgFmg Add file '" + vPRGFiles[ p ] + "' to vSinLoadWindow" + CRLF )
-                        ENDIF
+                        QPM_LogText( 'FUNC_xRefPrgFmg: file "' + vPRGFiles[ p ] + '" added to vSinLoadWindow' )
                      ENDIF
                   ENDIF
                ENDIF
@@ -8507,19 +8486,15 @@ FUNCTION xRefPrgFmg( vConcatIncludeHB )
          ENDIF
       NEXT
    NEXT
-   IF bLogActivity
-      QPM_MemoWrit( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log', MemoRead( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log' ) + 'xRefPrgFmg Ended' + CRLF + CRLF )
-   ENDIF
+   QPM_LogText( 'FUNC_xRefPrgFmg end' + CRLF + CRLF )
 RETURN .T.
 
 FUNCTION FMG_Scan( cFileIn, DateTimeOfC, vScanned, vPanFiles )
    LOCAL hFiIn, i, cLinea:='', vFines := { Chr(13) + Chr(10), Chr(10) }, bLoadWindow := .F.
    LOCAL vAux := {}
    LOCAL cFilePrgAux := US_Upper( US_FileNameOnlyNameAndExt( cFileIn ) )
-   IF bLogActivity
-      QPM_MemoWrit( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log', MemoRead( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log' ) + "xRefPrgFmg Scan file '" + cFileIn + "'" + CRLF )
-   ENDIF
-   QPM_MemoWrit( PROGRESS_LOG, MemoRead( PROGRESS_LOG ) + US_TimeDis( Time() ) + ' - ' + 'Scanning: '+cFileIn + CRLF )
+   QPM_LogText( 'FMG_Scan file "' + cFileIn + '"' + CRLF )
+   QPM_MemoWrit( PROGRESS_LOG, MemoRead( PROGRESS_LOG ) + US_TimeDis( Time() ) + ' - ' + 'Scanning: ' + cFileIn + CRLF )
    /* limpio las ocurrencias del prg */
    FOR i := 1 TO Len( vXRefPrgFmg )
       IF ! ( US_Word( vXRefPrgFmg[i], 1 ) == cFilePrgAux )
@@ -8532,7 +8507,7 @@ FUNCTION FMG_Scan( cFileIn, DateTimeOfC, vScanned, vPanFiles )
    NEXT
    /* fin limpio las ocurrencias del prg */
    AAdd( vScanned, cFileIn )     // Para Control de Funcion llamadora xRefPrgFmg()
-   hFiIn := fopen( cFileIn )
+   hFiIn := FOpen( cFileIn )
    IF FError() == 0
       DO WHILE hb_FReadLine( hFiIn, @cLinea, vFines ) == 0
          cLinea := AllTrim( strtran( cLinea, Chr(09), ' ' ) )
@@ -8549,29 +8524,27 @@ FUNCTION FMG_Scan( cFileIn, DateTimeOfC, vScanned, vPanFiles )
                AAdd( vXRefPrgFmg, cFilePrgAux + ' ' + US_Upper( US_Word( cLinea, 3 ) + '.FMG' ) )
                IF AScan( vPanFiles, { |x| US_Upper( US_FileNameOnlyNameAndExt( x ) ) == US_Upper( US_Word( cLinea, 3 ) + '.FMG' ) } ) > 0 .AND. ;
                   DateTimeOfC < US_FileDateTime( vPanFiles[ AScan( vPanFiles, { |x| US_Upper( US_FileNameOnlyNameAndExt( x ) ) == US_Upper( US_Word( cLinea, 3 ) + '.FMG' ) } ) ] )
-                  QPM_MemoWrit( PROGRESS_LOG, MemoRead( PROGRESS_LOG ) + US_TimeDis( Time() ) + ' - ' + US_Word( cLinea, 3 ) + '.FMG' + ' forced compilation of ' + cFileIn + CRLF )
-                  ferase( GetObjFolder() + DEF_SLASH + US_FileNameOnlyName( cFileIn ) + '.C' )
-                  IF bLogActivity
-                     QPM_MemoWrit( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log', MemoRead( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log' ) + 'xRefPrgFmg ' + US_Word( cLinea, 3 ) + '.FMG' + " forced erasure .C of file '" + cFileIn + "' in Scan" + CRLF )
-                  ENDIF
+                  QPM_LogText( '"' + US_Word( cLinea, 3 ) + '.FMG" triggers forced compilation of "' + cFileIn + '"' )
+                  QPM_MemoWrit( PROGRESS_LOG, MemoRead( PROGRESS_LOG ) + US_TimeDis( Time() ) + ' - "' + US_Word( cLinea, 3 ) + '.FMG" triggers forced compilation of ' + cFileIn + CRLF )
+                  FErase( GetObjFolder() + DEF_SLASH + US_FileNameOnlyName( cFileIn ) + '.C' )
+                  QPM_LogText( GetObjFolder() + DEF_SLASH + US_FileNameOnlyName( cFileIn ) + '.c was erased' )
                   EXIT
                ENDIF
             ENDIF
          ENDIF
       ENDDO
-      fclose( hFiIn )
+      FClose( hFiIn )
    ELSE
       RETURN bLoadWindow
    ENDIF
+   QPM_LogText( 'FMG_Scan end' + CRLF )
 RETURN bLoadWindow
 
-FUNCTION xRefPrgHea( vConcatIncludeC )
+FUNCTION FUNC_xRefPrgHea( vConcatIncludeC )
    LOCAL i, f, p, Fol := PUB_cProjectFolder + DEF_SLASH
    LOCAL vScanned := {}, vPRGFiles := {}, vHEAFiles := {}
+   QPM_LogText( "FUNC_xRefPrgHea start" )
    QPM_MemoWrit( PROGRESS_LOG, US_TimeDis( Time() ) + ' - Checking cross references between PRG files and Header files ...' + CRLF )
-   IF bLogActivity
-      QPM_MemoWrit( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log', MemoRead( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log' ) + 'xRefPrgHea Initialize' + CRLF + CRLF )
-   ENDIF
    FOR f := 1 TO VentanaMain.GHeaFiles.itemcount
       AAdd( vHEAFiles, ChgPathToReal( GetProperty( 'VentanaMain', 'GHeaFiles', 'Cell', f, NCOLHEAFULLNAME ) ) )
    NEXT f
@@ -8579,9 +8552,10 @@ FUNCTION xRefPrgHea( vConcatIncludeC )
       FOR i := 1 TO Len( vConcatIncludeC )
          IF File( vConcatIncludeC[i]+DEF_SLASH+US_FileNameOnlyNameAndExt( vHeaFiles[f] ) )
             IF ! ( US_Upper( US_ShortName( vConcatIncludeC[i]+DEF_SLASH+US_FileNameOnlyNameAndExt( vHeaFiles[f] ) ) ) == US_Upper( US_ShortName(vHeaFiles[f]) ) )
-               MyMsgWarn( 'Folder ' + vConcatIncludeC[i] + ' contains the header ' + US_FileNameOnlyNameAndExt( vHeaFiles[f] ) + "." + CRLF + ;
-                          "If the #include is coded with characters '<' and '>', the search processes of Harbour and C compilers locate such header first and will therefore ignore the header at folder " + ;
-                          DBLQT + US_FileNameOnlyPath( vHeaFiles[f] ) + DBLQT + ' will be ignored.' )
+               QPM_LogText( "Warning on " + US_FileNameOnlyNameAndExt( vHeaFiles[f] ) )
+               MyMsgWarn( 'Folder ' + vConcatIncludeC[i] + ' contains a header named ' + US_FileNameOnlyNameAndExt( vHeaFiles[f] ) + "." + CRLF + ;
+                          "If the #include is coded with characters '<' and '>', the search processes of Harbour and C compilers will locate it first and will therefore ignore the header located at folder " + ;
+                          DBLQT + US_FileNameOnlyPath( vHeaFiles[f] ) + DBLQT + '.' )
             ELSE
                EXIT
             ENDIF
@@ -8596,22 +8570,20 @@ FUNCTION xRefPrgHea( vConcatIncludeC )
    /*       Si se usa -BUILD como parametro no tiene ninguna implicancia ya que actúa despues de la primera pasada      */
    FOR f := 1 TO Len( vHEAFiles )
       FOR p := 1 TO Len( vPRGFiles )
-         IF AScan( vScanned, { |y| US_Upper( US_VarToStr( y ) ) == US_Upper( vPrgFiles[ p ] ) } ) == 0                      // a nivel funcion
-         // IF US_FileDateTime( vHeaFiles[ f ] ) > US_FileDateTime( Fol + GetObjName() + DEF_SLASH + US_FileNameOnlyName( vPrgFiles[ p ] ) + '.c' )
-         // IF US_FileDateTime( vHeaFiles[ f ] ) > US_FileDateTime( Fol + GetObjName() + DEF_SLASH + US_FileNameOnlyName( vPrgFiles[ p ] ) + iif( Upper( US_FileNameOnlyExt( vPrgFiles[ p ] ) ) == 'CPP', '.cpp', '.c' ) )
-            IF US_FileDateTime( vHeaFiles[ f ] ) > US_FileDateTime( Fol + GetObjName() + DEF_SLASH + US_FileNameOnlyName( vPrgFiles[ p ] ) + iif( Upper( US_FileNameOnlyExt( vPrgFiles[ p ] ) ) == 'PRG', '.c', '.'+GetObjExt() ) )
-               IF AScan( vSinInclude, { |y| US_Upper( US_VarToStr( y ) ) == US_Upper( vPrgFiles[ p ] ) } ) == 0                // a nivel programa
+         IF AScan( vScanned, { |y| US_Upper( US_VarToStr( y ) ) == US_Upper( vPRGFiles[ p ] ) } ) == 0                      // a nivel funcion
+         // IF US_FileDateTime( vHeaFiles[ f ] ) > US_FileDateTime( Fol + GetObjName() + DEF_SLASH + US_FileNameOnlyName( vPRGFiles[ p ] ) + '.c' )
+         // IF US_FileDateTime( vHeaFiles[ f ] ) > US_FileDateTime( Fol + GetObjName() + DEF_SLASH + US_FileNameOnlyName( vPRGFiles[ p ] ) + iif( Upper( US_FileNameOnlyExt( vPRGFiles[ p ] ) ) == 'CPP', '.cpp', '.c' ) )
+            IF US_FileDateTime( vHeaFiles[ f ] ) > US_FileDateTime( Fol + GetObjName() + DEF_SLASH + US_FileNameOnlyName( vPRGFiles[ p ] ) + iif( Upper( US_FileNameOnlyExt( vPRGFiles[ p ] ) ) == 'PRG', '.c', '.'+GetObjExt() ) )
+               IF AScan( vSinInclude, { |y| US_Upper( US_VarToStr( y ) ) == US_Upper( vPRGFiles[ p ] ) } ) == 0                // a nivel programa
 // TODO: ELIMINAR COMPARACION POR =
                   // el primer AScan hace una comparacion parcial ( = ) y se le añade un blanco al final para que solo encuentre palabras completas
                   // el segundo AScan hace una comparacion total ( == ) del string (son dos palabras)
                   // El vector contiene 'myPRG myHeader.h'
-                  IF ( AScan( vXRefPrgHea, { |x| US_Upper( US_VarToStr( x ) ) = US_Upper( US_FileNameOnlyNameAndExt( vPrgFiles[ p ] ) ) + ' ' } ) == 0 .OR. ;
-                     AScan( vXRefPrgHea, { |x| US_Upper( US_VarToStr( x ) ) == US_Upper( US_FileNameOnlyNameAndExt( vPrgFiles[ p ] ) ) + ' ' + US_Upper( US_FileNameOnlyNameAndExt( vHeaFiles[ f ] ) ) } ) > 0 )
-                     IF ! ( HEA_Scan( vPrgFiles[ p ], US_FileDateTime( Fol + GetObjName() + DEF_SLASH + US_FileNameOnlyName( vPrgFiles[ p ] ) + iif( Upper( US_FileNameOnlyExt( vPrgFiles[ p ] ) ) == 'PRG', '.c', '.'+GetObjExt() ) ), vScanned, vHeaFiles ) )
-                        AAdd( vSinInclude, US_Upper( vPrgFiles[ p ] ) ) // Para Control de Programa desde segunda pasada hasta que se vuele a ingresar
-                        IF bLogActivity
-                           QPM_MemoWrit( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log', MemoRead( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log' ) + "xRefPrgHea Add file '" + vPrgFiles[ p ] + "' to vSinInclude" + CRLF )
-                        ENDIF
+                  IF ( AScan( vXRefPrgHea, { |x| US_Upper( US_VarToStr( x ) ) = US_Upper( US_FileNameOnlyNameAndExt( vPRGFiles[ p ] ) ) + ' ' } ) == 0 .OR. ;
+                     AScan( vXRefPrgHea, { |x| US_Upper( US_VarToStr( x ) ) == US_Upper( US_FileNameOnlyNameAndExt( vPRGFiles[ p ] ) ) + ' ' + US_Upper( US_FileNameOnlyNameAndExt( vHeaFiles[ f ] ) ) } ) > 0 )
+                     IF ! ( HEA_Scan( vPRGFiles[ p ], US_FileDateTime( Fol + GetObjName() + DEF_SLASH + US_FileNameOnlyName( vPRGFiles[ p ] ) + iif( Upper( US_FileNameOnlyExt( vPRGFiles[ p ] ) ) == 'PRG', '.c', '.'+GetObjExt() ) ), vScanned, vHeaFiles ) )
+                        AAdd( vSinInclude, US_Upper( vPRGFiles[ p ] ) ) // Para Control de Programa desde segunda pasada hasta que se vuele a ingresar
+                        QPM_LogText( 'FUNC_xRefPrgHea: file "' + vPRGFiles[ p ] + '" added to vSinInclude' )
                      ENDIF
                   ENDIF
                ENDIF
@@ -8619,9 +8591,7 @@ FUNCTION xRefPrgHea( vConcatIncludeC )
          ENDIF
       NEXT
    NEXT
-   IF bLogActivity
-      QPM_MemoWrit( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log', MemoRead( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log' ) + 'xRefPrgHea Ended' + CRLF + CRLF )
-   ENDIF
+   QPM_LogText( 'FUNC_xRefPrgHea end' )
 RETURN .T.
 
 FUNCTION HEA_Scan( cFileIn, DateTimeOfC, vScanned, vHeaFiles )
@@ -8630,13 +8600,11 @@ FUNCTION HEA_Scan( cFileIn, DateTimeOfC, vScanned, vHeaFiles )
    LOCAL vAux := {}
    LOCAL cFilePrgAux := US_Upper( US_FileNameOnlyNameAndExt( cFileIn ) )
    LOCAL vPreventLoop := {}
-   QPM_MemoWrit( PROGRESS_LOG, MemoRead( PROGRESS_LOG ) + US_TimeDis( Time() ) + ' - ' + 'Scanning: '+cFileIn + CRLF )
-   IF bLogActivity
-      QPM_MemoWrit( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log', MemoRead( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log' ) + "xRefPrgHea Scan file '" + cFileIn + "'" + CRLF )
-   ENDIF
-   AAdd( vScanned, cFileIn )     // Para Control de Funcion llamadora xRefPrgHea()
-   hFiIn := fopen( cFileIn )
-   IF ferror() == 0
+   QPM_LogText( 'HEA_Scan file "' + cFileIn + '"' + CRLF )
+   QPM_MemoWrit( PROGRESS_LOG, MemoRead( PROGRESS_LOG ) + US_TimeDis( Time() ) + ' - ' + 'Scanning: ' + cFileIn + CRLF )
+   AAdd( vScanned, cFileIn )     // Para Control de funcion llamadora FUNC_xRefPrgHea()
+   hFiIn := FOpen( cFileIn )
+   IF FError() == 0
       DO WHILE hb_FReadLine( hFiIn, @cLinea, vFines ) == 0
          cLinea := AllTrim( strtran( cLinea, Chr(09), ' ' ) )
          IF US_Words( cLinea ) > 1 .AND. ;
@@ -8668,27 +8636,27 @@ FUNCTION HEA_Scan( cFileIn, DateTimeOfC, vScanned, vHeaFiles )
                ENDIF
             ENDIF
             IF DateTimeOfC < maxDateHeader
-               QPM_MemoWrit( PROGRESS_LOG, MemoRead( PROGRESS_LOG ) + US_TimeDis( Time() ) + ' - ' + cName + ' or sub includes forced compilation of ' + cFileIn + CRLF )
-               ferase( GetObjFolder() + DEF_SLASH + US_FileNameOnlyName( cFileIn ) + iif( Upper( US_FileNameOnlyExt( cFileIn ) ) == 'PRG', '.c', '.'+GetObjExt() ) )
-               IF bLogActivity
-                  QPM_MemoWrit( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log', MemoRead( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log' ) + 'xRefPrgHea ' + cName + " or sub includes forced erasure .C of file '" + cFileIn + "' in Scan" + CRLF )
-               ENDIF
+               QPM_LogText( '"' + US_Word( cLinea, 3 ) + '.FMG" triggers forced compilation of "' + cFileIn + '"' )
+               QPM_MemoWrit( PROGRESS_LOG, MemoRead( PROGRESS_LOG ) + US_TimeDis( Time() ) + ' - "' + cName + '" or a nested #include triggers forced compilation of ' + cFileIn + CRLF )
+               FErase( GetObjFolder() + DEF_SLASH + US_FileNameOnlyName( cFileIn ) + iif( Upper( US_FileNameOnlyExt( cFileIn ) ) == 'PRG', '.c', '.' + GetObjExt() ) )
+               QPM_LogText( GetObjFolder() + DEF_SLASH + US_FileNameOnlyName( cFileIn ) + iif( Upper( US_FileNameOnlyExt( cFileIn ) ) == 'PRG', '.c', '.' + GetObjExt() ) + ' was erased' )
                EXIT
             ENDIF
          ENDIF
       ENDDO
-      fclose( hFiIn )
+      FClose( hFiIn )
    ELSE
       RETURN bIncludeFound
    ENDIF
+   QPM_LogText( 'HEA_Scan end' + CRLF )
 RETURN bIncludeFound
 
 FUNCTION ScanIncRecursive( cFileIn, cFilePrgAux, vPreventLoop, vHeaFiles )
    LOCAL cName, i, hFiIn, cLinea:='', vFines := { Chr(13) + Chr(10), Chr(10) }
    LOCAL maxDateHeader  := US_FileDateTime( cFileIn ), incChars := { { '"', '"' }, { "'", "'" }, { '<', '>' } }
    LOCAL callDateHeader
-   hFiIn := fopen( cFileIn )
-   IF ferror() == 0
+   hFiIn := FOpen( cFileIn )
+   IF FError() == 0
       DO WHILE hb_FReadLine( hFiIn, @cLinea, vFines ) == 0
          cLinea := AllTrim( strtran( cLinea, Chr(09), ' ' ) )
          IF US_Words( cLinea ) > 1 .AND. ;
@@ -8711,7 +8679,7 @@ FUNCTION ScanIncRecursive( cFileIn, cFilePrgAux, vPreventLoop, vHeaFiles )
             ENDIF
          ENDIF
       ENDDO
-      fclose( hFiIn )
+      FClose( hFiIn )
    ELSE
       RETURN maxDateHeader
    ENDIF
@@ -8719,8 +8687,8 @@ RETURN maxDateHeader
 
 FUNCTION CheckMakeForm( cForm )
    LOCAL hFiIn, cLinea:='', vFines := { Chr(13) + Chr(10), Chr(10) }, reto := 'UNKNOWN'
-   hFiIn := fopen( cForm )
-   IF ferror() == 0
+   hFiIn := FOpen( cForm )
+   IF FError() == 0
       DO WHILE hb_FReadLine( hFiIn, @cLinea, vFines ) == 0
          cLinea := AllTrim( strtran( cLinea, Chr(09), ' ' ) )
          DO CASE
@@ -8746,26 +8714,27 @@ FUNCTION CheckMakeForm( cForm )
       ENDDO
       FClose( hFiIn )
    ENDIF
+   QPM_LogText( "CheckMakeForm = " + reto )
 RETURN reto
 
 FUNCTION QPM_SetColor()
    IF PUB_bLite
       DO CASE
-         CASE Prj_Radio_OutputType == DEF_RG_EXE
-            SetProperty( 'VentanaLite', 'RichEditSysout', 'backcolor', DEF_COLOREXE )
-         CASE Prj_Radio_OutputType == DEF_RG_LIB
-            SetProperty( 'VentanaLite', 'RichEditSysout', 'backcolor', DEF_COLORLIB )
-         CASE Prj_Radio_OutputType == DEF_RG_IMPORT
-            SetProperty( 'VentanaLite', 'RichEditSysout', 'backcolor', DEF_COLORDLL )
+      CASE Prj_Radio_OutputType == DEF_RG_EXE
+         SetProperty( 'VentanaLite', 'RichEditSysout', 'backcolor', DEF_COLOREXE )
+      CASE Prj_Radio_OutputType == DEF_RG_LIB
+         SetProperty( 'VentanaLite', 'RichEditSysout', 'backcolor', DEF_COLORLIB )
+      CASE Prj_Radio_OutputType == DEF_RG_IMPORT
+         SetProperty( 'VentanaLite', 'RichEditSysout', 'backcolor', DEF_COLORDLL )
       ENDCASE
    ELSE
       DO CASE
-         CASE Prj_Radio_OutputType == DEF_RG_EXE
-            SetProperty( 'VentanaMain', 'RichEditSysout', 'backcolor', DEF_COLOREXE )
-         CASE Prj_Radio_OutputType == DEF_RG_LIB
-            SetProperty( 'VentanaMain', 'RichEditSysout', 'backcolor', DEF_COLORLIB )
-         CASE Prj_Radio_OutputType == DEF_RG_IMPORT
-            SetProperty( 'VentanaMain', 'RichEditSysout', 'backcolor', DEF_COLORDLL )
+      CASE Prj_Radio_OutputType == DEF_RG_EXE
+         SetProperty( 'VentanaMain', 'RichEditSysout', 'backcolor', DEF_COLOREXE )
+      CASE Prj_Radio_OutputType == DEF_RG_LIB
+         SetProperty( 'VentanaMain', 'RichEditSysout', 'backcolor', DEF_COLORLIB )
+      CASE Prj_Radio_OutputType == DEF_RG_IMPORT
+         SetProperty( 'VentanaMain', 'RichEditSysout', 'backcolor', DEF_COLORDLL )
       ENDCASE
    ENDIF
 RETURN .T.
@@ -9192,13 +9161,8 @@ FUNCTION EraseOBJ()
    vSinInclude    := {}
    vXRefPrgHea    := {}
    vXRefPrgFmg    := {}
-   IF bLogActivity
-      QPM_MemoWrit( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log', MemoRead( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log' ) + 'xRefPrgFmg CleanUp of vSinLoadWindow by EraseObj' + CRLF )
-      QPM_MemoWrit( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log', MemoRead( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log' ) + 'xRefPrgHea CleanUp of vSinInclude by EraseObj' + CRLF )
-      QPM_MemoWrit( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log', MemoRead( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log' ) + 'xRefPrgHea CleanUp of vXRefPrgHea by EraseObj' + CRLF )
-      QPM_MemoWrit( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log', MemoRead( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log' ) + 'xRefPrgFmg CleanUp of vXRefPrgFmg by EraseObj' + CRLF )
-   ENDIF
    RichEditDisplay('OUT')
+   QPM_LogText( "EraseOBJ() done" )
 RETURN .T.
 
 FUNCTION EraseALL()
@@ -9227,17 +9191,12 @@ FUNCTION EraseALL()
       vSinInclude    := {}
       vXRefPrgHea    := {}
       vXRefPrgFmg    := {}
-      IF bLogActivity
-         QPM_MemoWrit( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log', MemoRead( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log' ) + 'xRefPrgFmg CleanUp of vSinLoadWindow by EraseALL' + CRLF )
-         QPM_MemoWrit( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log', MemoRead( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log' ) + 'xRefPrgHea CleanUp of vSinInclude by EraseALL' + CRLF )
-         QPM_MemoWrit( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log', MemoRead( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log' ) + 'xRefPrgHea CleanUp of vXRefPrgHea by EraseALL' + CRLF )
-         QPM_MemoWrit( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log', MemoRead( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log' ) + 'xRefPrgFmg CleanUp of vXRefPrgFmg by EraseALL' + CRLF )
-      ENDIF
+      QPM_LogText( "Done" + CRLF )
    ENDIF
 RETURN .T.
 
 FUNCTION BuildStop()
-   QPM_MemoWrit( PUB_cProjectFolder + DEF_SLASH + '_' + PUB_cSecu + 'MSG.SYSIN', 'STOP ' )
+   QPM_MemoWrit( MSG_SYSIN, 'STOP ' )
    IF PUB_bLite
       VentanaLite.bStop.Enabled := .F.
    ELSE
@@ -9245,10 +9204,11 @@ FUNCTION BuildStop()
    ENDIF
    VentanaMain.TabFiles.Value := nPageSysout
    TabChange( 'FILES' )
-   DO WHILE File( PUB_cProjectFolder + DEF_SLASH + '_' + PUB_cSecu + 'MSG.SYSIN' )
+   DO WHILE File( MSG_SYSIN )
       US_Wait( 2 )
       DO EVENTS
    ENDDO
+   QPM_LogText( "BuildStop() done" + CRLF )
 RETURN .T.
 
 FUNCTION TabAutoSync( tab )
@@ -9990,6 +9950,28 @@ FUNCTION ListModuleMoved( ModName )
    ENDIF
 RETURN QPM_Wait( "ListModule( '" + ListOut + "' )", "Listing ...", NIL, .T. )
 
+FUNCTION QPM_LogWrite( cData )
+   QPM_MemoWrit( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log', ;
+                 MemoRead( PUB_cQPM_Folder + DEF_SLASH + 'QPM.log' ) + ;
+                 DToS( Date() ) + " " + Time() + " US_QPM " + ProcName( 2 ) + "(" + Str( ProcLine( 2 ), 5, 0 ) + ")" + " " + cData + CRLF )
+RETURN NIL
+
+FUNCTION QPM_LogFile( cFile, lName )
+   IF bLogActivity
+      IF File( cFile )
+         QPM_LogWrite( iif( HB_ISLOGICAL( lName ) .AND. lName, "File " + cFile + CRLF, "" ) + MemoRead( cFile ) )
+      ELSE
+         QPM_LogWrite( "File not found: " + cFile + CRLF + MemoRead( cFile )  )
+      ENDIF
+   ENDIF
+RETURN NIL
+
+FUNCTION QPM_LogText( cText, cTitle )
+   IF bLogActivity .AND. ! Empty( cText )
+      QPM_LogWrite( iif( ! Empty( cTitle), cTitle + CRLF, "" ) + cText )
+   ENDIF
+RETURN NIL
+
 FUNCTION ListModule( ModName )
    LOCAL MemoAux, TempExeType, LOC_RunWaitFileStop := US_ShortName( PUB_cProjectFolder ) + DEF_SLASH + '_' + PUB_cSecu + 'RWFS' + US_DateTimeCen() + '.cnt'
    LOCAL OrigModName := ModName, TempLibType
@@ -9997,6 +9979,7 @@ FUNCTION ListModule( ModName )
       MemoAux := "File '" + ModName + "' not found!"
       RETURN MemoAux
    ENDIF
+   QPM_LogText( "ListModule start" )
    FErase( ModName + '.Tmp' )
    FErase( ModName + '.TmpOut' )
    IF Upper( US_FileNameOnlyExt( ModName ) ) == 'LIB'
@@ -10004,59 +9987,77 @@ FUNCTION ListModule( ModName )
       DO CASE
       CASE TempLibType == 'PELLES'
          QPM_MemoWrit( RUN_FILE, US_ShortName(PUB_cQPM_Folder) + DEF_SLASH + 'US_PODUMP.EXE -LINKERMEMBER:2 -ARCHIVEMEMBERS ' + US_ShortName( ModName ) + ' > "' + US_ShortName( ModName ) + '.Tmp"' )
+         QPM_LogFile( RUN_FILE )
          QPM_Execute( RUN_FILE, "", DEF_QPM_EXEC_WAIT, DEF_QPM_EXEC_MINIMIZE )
          FErase( RUN_FILE )
          QPM_MemoWrit( RUN_FILE, US_ShortName(PUB_cQPM_Folder) + DEF_SLASH + 'US_SHELL.EXE QPM ANALIZE_LIB_PELLES ' + US_ShortName( ModName ) + '.Tmp' + ' -FILESTOP ' + LOC_RunWaitFileStop + ' > "' + US_ShortName( ModName ) + '.TmpOut"' )
+         QPM_LogFile( RUN_FILE )
          QPM_Execute( RUN_FILE, "", DEF_QPM_EXEC_WAIT, DEF_QPM_EXEC_MINIMIZE, LOC_RunWaitFileStop )
          FErase( RUN_FILE )
       CASE TempLibType == 'BORLAND'
+         QPM_LogText( US_ShortName(PUB_cQPM_Folder) + DEF_SLASH + 'US_TLIB.EXE ' + US_ShortName( ModName ) + ', ' + US_ShortName( ModName ) + '.Tmp' )
          QPM_Execute( US_ShortName(PUB_cQPM_Folder) + DEF_SLASH + 'US_TLIB.EXE', US_ShortName( ModName ) + ', ' + US_ShortName( ModName ) + '.Tmp', DEF_QPM_EXEC_WAIT, DEF_QPM_EXEC_MINIMIZE )
          QPM_MemoWrit( RUN_FILE, US_ShortName(PUB_cQPM_Folder) + DEF_SLASH + 'US_SHELL.EXE QPM ANALIZE_LIB_BORLAND ' + US_ShortName( ModName ) + '.Tmp' + ' -FILESTOP ' + LOC_RunWaitFileStop + ' > "' + US_ShortName( ModName ) + '.TmpOut"' )
+         QPM_LogFile( RUN_FILE )
          QPM_Execute( RUN_FILE, "", DEF_QPM_EXEC_WAIT, DEF_QPM_EXEC_MINIMIZE, LOC_RunWaitFileStop )
          FErase( RUN_FILE )
       CASE TempLibType == 'NONE'
+         QPM_LogText( 'File not found' )
          QPM_MemoWrit( ModName + '.TmpOut', 'File not found' )
       OTHERWISE
+         QPM_LogText( 'Unknown LIB type: ' + ModName )
          QPM_MemoWrit( ModName + '.TmpOut', 'Unknown LIB type: ' + ModName )
       ENDCASE
    ELSEIF Upper( US_FileNameOnlyExt( ModName ) ) == 'A'
       QPM_MemoWrit( RUN_FILE, US_ShortName(PUB_cQPM_Folder) + DEF_SLASH + 'US_OBJDUMP.EXE -t -s ' + US_ShortName( ModName ) + ' > "' + US_ShortName( ModName ) + '.Tmp"' )
+      QPM_LogFile( RUN_FILE )
       QPM_Execute( RUN_FILE, "", DEF_QPM_EXEC_WAIT, DEF_QPM_EXEC_MINIMIZE )
       FErase( RUN_FILE )
       QPM_MemoWrit( RUN_FILE, US_ShortName(PUB_cQPM_Folder) + DEF_SLASH + 'US_SHELL.EXE QPM ANALIZE_LIB_MINGW ' + US_ShortName( ModName ) + '.Tmp' + ' -FILESTOP ' + LOC_RunWaitFileStop + ' > "' + US_ShortName( ModName ) + '.TmpOut"' )
+      QPM_LogFile( RUN_FILE )
       QPM_Execute( RUN_FILE, "", DEF_QPM_EXEC_WAIT, DEF_QPM_EXEC_MINIMIZE, LOC_RunWaitFileStop )
       FErase( RUN_FILE )
    ELSEIF Upper( US_FileNameOnlyExt( ModName ) ) == 'DLL'
+      QPM_LogText( US_ShortName(PUB_cQPM_Folder) + DEF_SLASH + 'US_IMPDEF.EXE' + US_ShortName( ModName ) + '.Tmp ' + US_ShortName( ModName ) )
       QPM_Execute( US_ShortName(PUB_cQPM_Folder) + DEF_SLASH + 'US_IMPDEF.EXE', US_ShortName( ModName ) + '.Tmp ' + US_ShortName( ModName ), DEF_QPM_EXEC_WAIT, DEF_QPM_EXEC_MINIMIZE )
-      QPM_MemoWrit( RUN_FILE, US_ShortName(PUB_cQPM_Folder) + DEF_SLASH + 'US_SHELL.EXE QPM -OFF ANALIZE_DLL ' + US_ShortName( ModName ) + '.Tmp' + ' -FILESTOP ' + LOC_RunWaitFileStop + ' > "' + US_ShortName( ModName ) + '.TmpOut"' )
+      QPM_MemoWrit( RUN_FILE, US_ShortName(PUB_cQPM_Folder) + DEF_SLASH + 'US_SHELL.EXE QPM' + LISTOLOG + 'ANALIZE_DLL ' + US_ShortName( ModName ) + '.Tmp' + ' -FILESTOP ' + LOC_RunWaitFileStop + ' > "' + US_ShortName( ModName ) + '.TmpOut"' )
+      QPM_LogFile( RUN_FILE )
       QPM_Execute( RUN_FILE, "", DEF_QPM_EXEC_WAIT, DEF_QPM_EXEC_MINIMIZE, LOC_RunWaitFileStop )
       FErase( RUN_FILE )
    ELSEIF Upper( US_FileNameOnlyExt( ModName ) ) == 'EXE'
       TempExeType := QPM_ModuleType( ModName )
+      QPM_LogText( TempExeType )
       IF TempExeType == 'COMPRESSED'
+         QPM_LogText( ModName )
          ListModuleUnUpx( US_ShortName( ModName ), US_ShortName( ModName ) + '.UnUpx.Exe' )
          ModName := US_Shortname( ModName ) + '.UnUpx.Exe'
          TempExeType := QPM_ModuleType( ModName )
+         QPM_LogText( TempExeType )
       ENDIF
       DO CASE
       CASE TempExeType == 'BORLAND'
          QPM_MemoWrit( RUN_FILE, US_ShortName(PUB_cQPM_Folder) + DEF_SLASH + 'US_TDUMP.EXE ' + US_ShortName( ModName ) + ' > "' + US_ShortName( ModName ) + '.TmpOut"' )
+         QPM_LogFile( RUN_FILE )
          QPM_Execute( RUN_FILE, "", DEF_QPM_EXEC_WAIT, DEF_QPM_EXEC_MINIMIZE )
          FErase( RUN_FILE )
       CASE TempExeType == 'PELLES'
          QPM_MemoWrit( RUN_FILE, US_ShortName(PUB_cQPM_Folder) + DEF_SLASH + 'US_TDUMP.EXE ' + US_ShortName( ModName ) + ' > "' + US_ShortName( ModName ) + '.TmpOut"' )
+         QPM_LogFile( RUN_FILE )
          QPM_Execute( RUN_FILE, "", DEF_QPM_EXEC_WAIT, DEF_QPM_EXEC_MINIMIZE )
          FErase( RUN_FILE )
       CASE TempExeType == 'MINGW'
          QPM_MemoWrit( RUN_FILE, US_ShortName(PUB_cQPM_Folder) + DEF_SLASH + 'US_TDUMP.EXE ' + US_ShortName( ModName ) + ' > "' + US_ShortName( ModName ) + '.TmpOut"' )
+         QPM_LogFile( RUN_FILE )
          QPM_Execute( RUN_FILE, "", DEF_QPM_EXEC_WAIT, DEF_QPM_EXEC_MINIMIZE )
          FErase( RUN_FILE )
       CASE TempExeType == 'NONE'
          QPM_MemoWrit( ModName + '.TmpOut', 'File not found' )
       OTHERWISE
+         QPM_LogText( 'Unknown EXE type: ' + OrigModName )
          QPM_MemoWrit( ModName + '.TmpOut', 'Unknown EXE type: ' + OrigModName )
       ENDCASE
    ELSE
+      QPM_LogText( 'Unsupported file type: ' + Upper( US_FileNameOnlyExt( ModName ) ) )
       QPM_MemoWrit( ModName + '.TmpOut', 'Unsupported file type: ' + Upper( US_FileNameOnlyExt( ModName ) ) )
    ENDIF
    MemoAux := MemoRead( US_ShortName( ModName ) + '.TmpOut' )
@@ -10068,6 +10069,7 @@ RETURN MemoAux
 
 FUNCTION ListModuleUnUpx( cIn, cOut )
    QPM_MemoWrit( RUN_FILE, US_ShortName(PUB_cQPM_Folder) + DEF_SLASH + 'US_UPX.EXE -d -o' + cOut + ' ' + cIn + ' > "' + cIn + '.TmpOut"' )
+   QPM_LogFile( RUN_FILE )
    QPM_Execute( RUN_FILE, "", DEF_QPM_EXEC_WAIT, DEF_QPM_EXEC_MINIMIZE )
    FErase( RUN_FILE )
 RETURN .T.
@@ -10790,7 +10792,10 @@ FUNCTION LostRichEdit( tipo, nRecord )
 RETURN .T.
 
 FUNCTION FormQuickView()
-   QPM_MemoWrit( PUB_cProjectFolder + DEF_SLASH + '_' + PUB_cSecu + 'RunViewForm.Cng', ;
+   LOCAL cCng := PUB_cProjectFolder + DEF_SLASH + '_' + PUB_cSecu + 'RunViewForm.cng'
+   LOCAL cBat := PUB_cProjectFolder + DEF_SLASH + '_' + PUB_cSecu + 'RunView.bat'
+   QPM_LogText( "FormQuickView" )
+   QPM_MemoWrit( cCng, ;
                  'PATH ' + US_ShortName( PUB_cProjectFolder ) + CRLF + ;
                  'SECUENCE ' + PUB_cSecu + CRLF + ;
                  'HARBOUR ' + US_ShortName( GetHarbourFolder() ) + DEF_SLASH + 'BIN'+DEF_SLASH+'HARBOUR.EXE' + CRLF + ;
@@ -10798,9 +10803,11 @@ FUNCTION FormQuickView()
                  'MINIGUIINCLUDE ' + US_ShortName(GetMiniGuiFolder()) + DEF_SLASH + 'INCLUDE' + CRLF + ;
                  'FORMINCLUDE ' + US_ShortName( US_FileNameOnlyPath( ChgPathToReal( GetProperty( 'VentanaMain', 'GPanFiles', 'Cell', nGridPanLastRow, NCOLPANFULLNAME ) ) ) ) + CRLF + ;
                  'FORM ' + US_FileNameOnlyName( ChgPathToReal( GetProperty( 'VentanaMain', 'GPanFiles', 'Cell', nGridPanLastRow, NCOLPANFULLNAME ) ) ) )
-   QPM_MemoWrit( PUB_cProjectFolder + DEF_SLASH + '_'+PUB_cSecu+'RunView.bat', US_ShortName( PUB_cQPM_Folder ) + DEF_SLASH + 'US_VIEW_' + GetHarbourSuffix() + GetMiniGuiSuffix() + '.EXE ' + US_ShortName( PUB_cProjectFolder ) + DEF_SLASH + '_' + PUB_cSecu + 'RunViewForm.Cng' )
-   QPM_Execute( US_ShortName( PUB_cProjectFolder ) + DEF_SLASH + '_'+PUB_cSecu+'RunView.bat',, DEF_QPM_EXEC_WAIT, DEF_QPM_EXEC_HIDE )
-// ferase( US_ShortName( PUB_cProjectFolder ) + DEF_SLASH + '_'+PUB_cSecu+'RunView.bat' )
+   QPM_LogFile( cCng )
+   QPM_MemoWrit( cBat, US_ShortName( PUB_cQPM_Folder ) + DEF_SLASH + 'US_VIEW_' + GetHarbourSuffix() + GetMiniGuiSuffix() + '.EXE ' + cCng )
+   QPM_LogFile( cBat )
+   QPM_Execute( cBat, NIL, DEF_QPM_EXEC_WAIT, DEF_QPM_EXEC_HIDE )
+   FErase( cBat )
 RETURN .T.
 
 FUNCTION QPM_Timer_Edit()
@@ -11216,7 +11223,7 @@ FUNCTION QPM_DefinoMainMenu()
          ITEM 'Go to QPM Home Site: ' + PUB_cQPM_Support_Link ACTION ShellExecute(0, 'open', 'rundll32.exe', 'url.dll,FileProtocolHandler ' + PUB_cQPM_Support_Link,,1)
       END POPUP
       POPUP '&Only For Support     '
-         ITEM 'Record Activity in Log ' + PUB_cQPM_Folder + DEF_SLASH + 'QPM.log' ACTION ( bLogActivity := !bLogActivity, VentanaMain.MLog.Checked := bLogActivity ) NAME MLog CHECKMARK 'GridTilde'
+         ITEM 'Record Activity in Log ' + PUB_cQPM_Folder + DEF_SLASH + 'QPM.log' ACTION ( bLogActivity := ! bLogActivity, VentanaMain.MLog.Checked := bLogActivity ) NAME MLog CHECKMARK 'GridTilde'
          ITEM 'Clear Log ' + PUB_cQPM_Folder + DEF_SLASH + 'QPM.log' ACTION ClearLog()
          ITEM 'View Log ' + PUB_cQPM_Folder + DEF_SLASH + 'QPM.log' ACTION ViewLog()
          SEPARATOR
@@ -11329,7 +11336,7 @@ RETURN .T.
 #endif
 
 FUNCTION QPM_CompressUtilities()
-   LOCAL i, Out
+   LOCAL i, Out, cBat := PUB_cQPM_Folder + DEF_SLASH + 'Compress.bat'
 
    QPM_Execute( PUB_cQPM_Folder + DEF_SLASH + 'US_UPX.EXE ' + US_ShortName(PUB_cQPM_Folder) + DEF_SLASH + 'US_RUN.EXE', '', DEF_QPM_EXEC_NOWAIT, DEF_QPM_EXEC_HIDE )
    DO EVENTS
@@ -11353,16 +11360,18 @@ FUNCTION QPM_CompressUtilities()
    NEXT
    Out += 'DEL ' + US_ShortName(PUB_cQPM_Folder) + DEF_SLASH + 'XYZ_UPX.EXE' + CRLF
 
-   QPM_MemoWrit( PUB_cQPM_Folder + DEF_SLASH + 'Compress.bat', Out )
-   QPM_Execute( PUB_cQPM_Folder + DEF_SLASH + 'Compress.bat', '', DEF_QPM_EXEC_WAIT, DEF_QPM_EXEC_NORMAL )
+   QPM_LogFile( cBat )
+   QPM_MemoWrit( cBat, Out )
+   QPM_Execute( cBat, NIL, DEF_QPM_EXEC_WAIT, DEF_QPM_EXEC_NORMAL )
 
    MyMsgInfo( 'Compression done.' + CRLF + ;
               "To compress QPM.EXE: close QPM, switch to QPM's installation folder and manually execute:" + CRLF + ;
               'us_upx QPM.EXE')
+   QPM_LogText( "Done" )
 RETURN NIL
 
 FUNCTION QPM_DecompressUtilities()
-   LOCAL i, Out
+   LOCAL i, Out, cBat := PUB_cQPM_Folder + DEF_SLASH + 'Decompress.bat'
 
    QPM_Execute( PUB_cQPM_Folder + DEF_SLASH + 'US_UPX.EXE -d ' + US_ShortName(PUB_cQPM_Folder) + DEF_SLASH + 'US_RUN.EXE', '', DEF_QPM_EXEC_NOWAIT, DEF_QPM_EXEC_HIDE )
    DO EVENTS
@@ -11386,19 +11395,21 @@ FUNCTION QPM_DecompressUtilities()
    NEXT
    Out += 'DEL ' + US_ShortName(PUB_cQPM_Folder) + DEF_SLASH + 'XYZ_UPX.EXE' + CRLF
 
-   QPM_MemoWrit( PUB_cQPM_Folder + DEF_SLASH + 'Decompress.bat', Out )
-
-   QPM_Execute( PUB_cQPM_Folder + DEF_SLASH + 'Decompress.bat', '', DEF_QPM_EXEC_WAIT, DEF_QPM_EXEC_NORMAL )
+   QPM_LogFile( cBat )
+   QPM_MemoWrit( cBat, Out )
+   QPM_Execute( cBat, NIL, DEF_QPM_EXEC_WAIT, DEF_QPM_EXEC_NORMAL )
 
    MyMsgInfo( 'Decompression done.' + CRLF + ;
               "To decompress QPM.EXE: close QPM, switch to QPM's installation folder and manually execute:" + CRLF + ;
               'us_upx -d QPM.EXE')
+   QPM_LogText( "Done" )
 RETURN NIL
 
 FUNCTION CleanAuxFiles
    LOCAL cAux, TDS_FILE := "", EXP_FILE := "", MAP_FILE := "", SAVE_FILE, ERR_FILE, RC_MAIN
    LOCAL RC1_SHR := "", RC1_FER := "", RC2_SHR := "", RC2_FER := ""
 
+   QPM_LogText( "CleanAuxFile start" )
    IF ! Empty( cAux := US_FileNameOnlyName( GetOutputModuleName() ) )
       TDS_FILE := cAux + ".TDS"
       EXP_FILE := cAux + ".EXP"
@@ -11486,6 +11497,7 @@ FUNCTION CleanAuxFiles
          ENDIF
       ENDIF
    ENDIF
+   QPM_LogText( "CleanAuxFile end" )
 RETURN NIL
 
 /* eof */
