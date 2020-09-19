@@ -25,7 +25,7 @@
 #define VERSION "01.02"
 MEMVAR CQPMDIR
 
-FUNCTION MAIN( ... )
+PROCEDURE MAIN( ... )
    LOCAL aParams := hb_aParams()
    LOCAL cParam, n, cFileMemo, cFileOut, cMSG, cChkFile, bList := .F.
    PRIVATE cQPMDir := ""
@@ -41,12 +41,9 @@ FUNCTION MAIN( ... )
       RETURN .T.
    ENDIF
 
-   IF Upper( US_Word( cParam, 1 ) ) != "QPM"
-      __Run( "ECHO " + "US_Msg 001E: Running Outside System" )
-      ErrorLevel( 1 )
-      RETURN .F.
+   IF Upper( US_Word( cParam, 1 ) ) == "QPM"
+      cParam := US_WordDel( cParam, 1 )
    ENDIF
-   cParam := US_WordDel( cParam, 1 )
 
    IF Upper( SubStr( cParam, 1, 5 ) ) == "-LIST"
       bList := .T.
@@ -64,14 +61,20 @@ FUNCTION MAIN( ... )
    cMSG := SubStr( cParam, RAt( "-MSG:", Upper( cParam ) ) + 5 )
    cChkFile := SubStr( cFileOut, 1, RAt( "\", cFileOut ) + 15 ) + "MSG.SYSIN"
 
+   IF bList
+      QPM_Log( "US_Msg 002I: " + cFileOut )
+      QPM_Log( "US_Msg 003I: " + cMSG )
+      QPM_Log( "US_Msg 004I: " + cChkFile )
+      QPM_Log( "------------" + CRLF )
+   ENDIF
+
    IF File( cChkFile )
       IF US_Word( Memoread( cChkFile ), 1 ) == "STOP"
          FErase( cChkFile )
          __Run( "ECHO " + ".               ============================================================" )
-         __Run( "ECHO " + ".               ==              Build Proccess Stoped by User             ==" )
+         __Run( "ECHO " + ".               ==          Build proccess was stoped by the user         ==" )
          __Run( "ECHO " + ".               ============================================================" )
-         ErrorLevel(1)
-         RETURN .F.
+         ExitProcess( 1 )
       ENDIF
    ENDIF
 
@@ -81,13 +84,9 @@ FUNCTION MAIN( ... )
    ENDIF
    hb_MemoWrit( cFileOut, cFileMemo)
 
-   IF bList
-      QPM_Log( "US_Msg 002I: " + cFileOut )
-      QPM_Log( "US_Msg 003I: " + cMSG )
-      QPM_Log( "------------" + CRLF )
-   ENDIF
+   ExitProcess( 0 )
 
-   RETURN .T.
+   RETURN
 
 //========================================================================
 // FUNCION PARA ELIMINAR UNA PALABRA DE UN STRING
