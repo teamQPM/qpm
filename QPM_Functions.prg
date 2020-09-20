@@ -408,6 +408,8 @@ FUNCTION QPM_CreatePublicVars()
    PUBLIC vExtraFoldersForSearchHB      := {}
    PUBLIC vExeList                      := { PUB_cQPM_Folder + DEF_SLASH + 'QPM.EXE', ;          // TODO: check if these files are necessary
                                              PUB_cQPM_Folder + DEF_SLASH + 'QPM.chm', ;
+                                             PUB_cQPM_Folder + DEF_SLASH + 'PayPal Donate.url', ;
+                                             PUB_cQPM_Folder + DEF_SLASH + 'dbfview.chm', ;      // by Grigory Filatov
                                              PUB_cQPM_Folder + DEF_SLASH + 'US_dbfview.exe', ;   // by Grigory Filatov
                                              PUB_cQPM_Folder + DEF_SLASH + 'US_dif.exe', ;       // CSDiff file-difference analysis tool
                                              PUB_cQPM_Folder + DEF_SLASH + 'US_difwi.dll', ;     // CSDiff file-difference analysis tool
