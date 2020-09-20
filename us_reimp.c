@@ -29,6 +29,42 @@
 /*    Adapted from reimp.c
  *    Convert MS import libraries to GNU imports.
  *    Copyright (C) 1999 Anders Norlander
+ *
+ *    This tool converts Microsoft's new-style (short) import libraries to import
+ *    libraries for win32 ports of GNU tools (mingw32, cygwin).
+ *    It reads an MS import library and writes all imports to the corresponding
+ *    .DEF file(s) that it feeds to DLLTOOL to create the import library.
+ *    Usage: REIMP [options] IMPLIB
+ *    Options:
+ *      -s, --dump-symbols      dump symbols to stdout
+ *      -d, --only-def          only create .def files
+ *      -c, --keep-case         keep case in lib*.a file names
+ *      --dlltool <name>        use <name> for dlltool
+ *      --as <name>             use <name> for assembler
+ *    The '--dump-symbols' option makes REIMP use a quick method for finding
+ *    imported symbols and sending the names of found symbols to stdout. If the
+ *    input library contain non-imported symbols they will be listed as well.
+ *    The output symbols will have all decoration preserved (i.e '_' will prefix
+ *    most symbols), so if you feed it to dlltool you should strip leading
+ *    underscores. For example:
+ *      echo EXPORTS > imp.def
+ *      reimp imp.lib | sed 's/_//' >> imp.def
+ *      dlltool -k --def imp.def --output-lib libimp.a --dllname imp.dll
+ *    The '--only-def' option makes REIMP to stop after generating the .DEF file(s).
+ *    By default REIMP converts all output library names to lower-case. Use the
+ *    'keep-case' to preserve the case of the importe DLL. Note that KERNEL32.dll
+ *    will generate libKERNEL32.a and not libkernel32.a as it would be the default.
+ *    Notes on mixed libraries: if an input library contains regular objects
+ *    (non-imports, i.e code and data) then REIMP will write out those objects
+ *    unless you specify '--only-def' or '--dump-symbols' options. You probably want
+ *    to include those objects as well in the generated library. Note that REIMP
+ *    doesn't do that automatically so you have to do it manually using AR utility:
+ *      REIMP imp.lib          # this generates several .o or .obj files.
+ *      AR rcs libimp.a *.obj  # add them to library
+ *
+ *    Contact information:
+ *    URL: http://www.acc.umu.se/~anorland/gnu-win32/
+ *    Anders Norlander <anorland@hem2.passagen.se>
  */
 
 
