@@ -3,6 +3,69 @@
  * See "How to format your ChangeLog entries" in howtosvn.txt file.
  */
 
+2020-09-20 19:56 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * QPM.exe
+     * Updated to version 05.05.0019.
+     * Rebuild.
+
+2020-09-20 19:55 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * QPM.chm
+     * Updated.
+
+2020-09-20 19:54 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * HelpQPM\QPM_SHG.dbf
+   * HelpQPM\QPM_SHG.fpt
+   * QPM.chm
+     + Info related to the next release.
+
+2020-09-20 19:53 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * QPM_AutoProject.qpm
+   * QPM_AutoProjectOnlyHelp.qpm
+     * Updated.
+
+2020-09-20 19:19 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * QPM_Version.ch
+     * Version changed to 05.05.0019.
+
+2020-09-20 19:17 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * QPM_Functions.prg
+     + Check on files 'dbfview.chm' and 'PayPal Donate.url'.
+
+2020-09-20 19:02 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   - doc\codestyl.txt
+
+2020-09-20 18:59 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * readme.md
+     * Format adjusted.
+
+2020-09-20 18:44 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   - doc\OOHG_Configuration.txt
+
+2020-09-20 18:43 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * readme.md
+     + Info from doc\OOHG_Configuration.txt
+
+2020-09-20 12:08 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   - doc\us_reimp_readme.txt
+
+2020-09-20 12:07 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * us_reimp.c
+     + Info form doc\us_reimp_readme.txt
+
+2020-09-20 11:44 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   - doc\notes.txt.
+
+2020-09-20 11:43 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * readme.md
+     + Info from doc\notes.txt.
+
+2020-09-20 10:29 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   - doc\howtosvn.txt.
+
+2020-09-20 09:30 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * readme.md
+     + Info from doc\howtosvn.txt.
+
 2020-09-19 21:51 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * doc\codestyl.txt
      * Updated.
