@@ -25,3 +25,26 @@ and linking by offering interactive and batch tools to:
 + Create static libraries and DLL access interfaces.
 + Show the names of the functions included in static and dynamic libraries.
 + Compress EXE files with the UPX utility.
+
+**Site structure**
+
+Folder|Content
+------|-------
+QPM|Contain all the various make files, the ChangeLog, the main source files and the utilities.
+doc|Documentation and white-papers.
+FuentesComunes|Miscelaneous functions.
+FuentesComunes\Recursos|Miscelaneous images used by QPM.
+HelpQPM|Miscelaneous images and other files used for building QPM's help.
+htmlhelp|Folder used for building QPM's help.
+OldDistros|Installers for older versions.
+Resource|Miscelaneous images used by QPM.
+RTFtoHTML|VB project to convert encoded Rich Text to HTML format.
+Samples|Miscelaneous samples.
+Samples\Agenda|How to build a GUI application.
+Samples\ConsoleMode|How to build a CUI application.
+Samples\Contactos|How to build a GUI application.
+Samples\MakeLIB|How to build a library.
+Samples\MergeConsoleModeWithWindowsMode|How to build a mixed CUI/GUI application.
+Samples\SHG_SimpleHelpGenerator|How to build and use a CHM help file.
+Samples\TsBrowse_(Extended_1_5_b54)|How to build an application based on TSBrowse class from MiniGUI Extended.
+users-list|Messages from the old user group on Yahoo.
