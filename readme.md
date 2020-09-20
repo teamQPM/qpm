@@ -38,6 +38,7 @@ See https://github.com/teamQPM/qpm/issues/new/choose
 3. Make your changes and commit them: `git commit -m '<commit_message>'`
 4. Push to the original branch: `git push origin <project_name>/<location>`
 5. [Create a pull request](https://help.github.com/en/github/collaborating-with-issues-and-pull-requests/creating-a-pull-request).
+6. See "Developers Section".
 #### With money:
 [![Donate](https://img.shields.io/badge/Donate-Now-ff4500.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=VYXQYCKWXLWAG&currency_code=USD&source=url "Donate Now")
 
@@ -64,6 +65,173 @@ Samples\SHG_SimpleHelpGenerator|How to build and use a CHM help file.
 Samples\TsBrowse_(Extended_1_5_b54)|How to build an application based on TSBrowse class from MiniGUI Extended.
 users-list|Messages from the old user group on Yahoo.
 
+# Users Section
+
+#### QPM configuration for OOHG based projects
+
+**HM30 = Harbour 3.0 + MinGW 4.5.2 - 32 bits**
+
+   Project Configuration
+      Compilers  = Harbour + MinGW
+      GUI        = OOHG + MT Mode
+      FMG Editor = OOHG IDE+
+
+   Global Configuration
+      OOHG Folder          = C:\OOHG_HM30
+      OOHG Libs Folder     = C:\OOHG_HM30\lib
+      Lib name             = liboohg.a
+      MinGW Folder         = C:\OOHG_HM30\hb30\comp\mingw
+      MinGW Libs Folder    = C:\OOHG_HM30\hb30\comp\mingw\lib
+      Harbour Folder       = C:\OOHG_HM30\hb30
+      Harbour Libs Folder  = C:\OOHG_HM30\hb30\lib\win\mingw
+      GTGUI name           = libgtgui.a
+
+**HM32 = Harbour 3.2 + MinGW 8.1.0 - 32 bits**
+
+   Project Configuration
+      Compilers  = Harbour + Harbour 3.1 or later + MinGW
+      GUI        = OOHG + MT Mode
+      FMG Editor = OOHG IDE+
+
+   Global Configuration
+      OOHG Folder          = C:\OOHG_HM32
+      OOHG Libs Folder     = C:\OOHG_HM32\lib\hb\mingw
+      Lib name             = liboohg.a
+      MinGW Folder         = C:\OOHG_HM32\hb32\comp\mingw
+      MinGW Libs Folder    = C:\OOHG_HM32\hb32\comp\mingw\i686-w64-mingw32\lib
+      Harbour Folder       = C:\OOHG_HM32\hb32
+      Harbour Libs Folder  = C:\OOHG_HM32\hb32\lib\win\mingw
+      GTGUI name           = libgtgui.a
+
+**HM3264 = Harbour 3.2 + MinGW 9.3.0 - 64 bits**
+
+   Project Configuration
+      Compilers  = Harbour + Harbour 3.1 or later + MinGW + 64 bits
+      GUI        = OOHG + MT Mode
+      FMG Editor = OOHG IDE+
+
+   Global Configuration
+      OOHG Folder          = C:\OOHG_HM3264
+      OOHG Libs Folder     = C:\OOHG_HM3264\lib\hb\mingw64
+      Lib name             = liboohg.a
+      MinGW Folder         = C:\OOHG_HM3264\hb3264\comp\mingw
+      MinGW Libs Folder    = C:\OOHG_HM3264\hb3264\comp\mingw\x86_64-w64-mingw32\lib
+      Harbour Folder       = C:\OOHG_HM3264\hb3264
+      Harbour Libs Folder  = C:\OOHG_HM3264\hb3264\lib\win\mingw64
+      GTGUI name           = libgtgui.a
+
+**HM34 = Harbour 3.4 + cLang/LLVM 5.0.0 - 32 bits**
+
+   Project Configuration
+      Compilers  = Harbour + Harbour 3.1 or later + MinGW
+      GUI        = OOHG + MT Mode
+      FMG Editor = OOHG IDE+
+
+   Global Configuration
+      OOHG Folder          = C:\OOHG_HM34
+      OOHG Libs Folder     = C:\OOHG_HM34\lib\hb34\mingw
+      Lib name             = liboohg.a
+      MinGW Folder         = C:\OOHG_HM34\hb34\comp\mingw
+      MinGW Libs Folder    = C:\OOHG_HM34\hb34\comp\mingw\i686-w64-mingw32\lib
+      Harbour Folder       = C:\OOHG_HM34\hb34
+      Harbour Libs Folder  = C:\OOHG_HM34\hb34\lib\win\clang
+      GTGUI name           = libgtgui.a
+
+   You may need to add libhbpcre2.a from Harbour Libs Folder.
+
+**XM = XHarbour 1.2.3 build 20181212 + MinGW 7.3.0 - 32 bits**
+
+   Project Configuration
+      Compilers  = xHarbour + MinGW
+      GUI        = OOHG + MT Mode
+      FMG Editor = OOHG IDE+
+
+   Global Configuration
+      OOHG Folder          = C:\OOHG_XM
+      OOHG Libs Folder     = C:\OOHG_XM\lib\xhb\mingw
+      Lib name             = liboohg.a
+      MinGW Folder         = C:\OOHG_XM\xhmingw\comp\mingw
+      MinGW Libs Folder    = C:\OOHG_XM\xhmingw\comp\mingw\i686-w64-mingw32\lib
+      xHarbour Folder      = C:\OOHG_XM\xhmingw
+      xHarbour Libs Folder = C:\OOHG_XM\xhmingw\lib
+      GTGUI name            = libgtgui.a
+
+   You may need to add mainwin.o from Harbour Libs Folder.
+
+**XB = XHarbour 1.2.3 build 20181212 + BCC 5.5.1 - 32 bits**
+
+   Project Configuration
+      Compilers  = xHarbour + BCC32
+      GUI        = OOHG + MT Mode
+      FMG Editor = OOHG IDE+
+
+   Global Configuration
+      OOHG Folder          = C:\OOHG_XB
+      OOHG Libs Folder     = C:\OOHG_XB\lib\xhb\bcc
+      Lib name             = oohg.lib
+      BCC Folder           = C:\Borland\BCC55
+      BCC Libs Folder      = C:\Borland\BCC55\lib
+      xHarbour Folder      = C:\OOHG_XB\xhbcc
+      xHarbour Libs Folder = C:\OOHG_XB\xhbcc\lib
+      GTGUI name            = gtgui.lib
+
+
+
+#### QPM configuration for HMG Extended based projects
+
+**Harbour 3.2 + MinGW 8.1 - 32-bits**
+
+   Project Configuration
+      Compilers  = Harbour + MinGW
+      GUI        = HMG Extended
+      FMG Editor = HMGS-IDE
+
+   Global Configuration
+      Extended Folder       = C:\minigui
+      Extended  Libs Folder = C:\minigui\lib
+      Lib name              = libminigui.a
+      MinGW Folder          = C:\minigui\mingw32
+      MinGW Libs Folder     = C:\minigui\mingw32\i686-w64-mingw32\lib
+      Harbour Folder        = C:\minigui\harbour
+      Harbour Libs Folder   = C:\minigui\harbour\lib\win\mingw
+      GTGUI name            = libgtgui.a
+
+**Harbour 3.2 + MinGW 8.2 - 64-bits**
+
+   Project Configuration
+      Compilers  = Harbour + MinGW
+      GUI        = HMG Extended
+      FMG Editor = HMGS-IDE
+
+   Global Configuration
+      Extended Folder       = C:\minigui
+      Extended  Libs Folder = C:\minigui\lib
+      Lib name              = libminigui.a
+      MinGW Folder          = C:\minigui\mingw64
+      MinGW Libs Folder     = C:\minigui\mingw64\x86_64-w64-mingw32\lib
+      Harbour Folder        = C:\minigui\harbour
+      Harbour Libs Folder   = C:\minigui\harbour\lib\win\mingw64
+      GTGUI name            = libgtgui.a
+
+**Harbour 3.2 + BCC 5.5.1 - 32 bits**
+
+   Project Configuration
+      Compilers  = Harbour + BCC32
+      GUI        = HMG Extended
+      FMG Editor = HMGS-IDE
+
+   Global Configuration
+      Extended Folder       = C:\minigui
+      Extended  Libs Folder = C:\minigui\Lib
+      Lib name              = minigui.lib
+      BCC32 Folder          = C:\Herramientas\Borland\BCC55
+      BCC32 Libs Folder     = C:\Herramientas\Borland\BCC55\Lib
+      Harbour Folder        = C:\minigui\Harbour
+      Harbour Libs Folder   = C:\minigui\Harbour\lib
+      GTGUI name            = gtgui.lib
+
+# Developers Section
+
 ## How to build QPM from scratch
 
 1. Download the last QPM installer from https://github.com/teamQPM/qpm/releases and install to folder C:\QPMdev.
@@ -78,7 +246,6 @@ users-list|Messages from the old user group on Yahoo.
 the files used by QPM to build QPM.CHM help file. The building tools do not support relative paths so a full default path must be
 specified (C:\QPMdev). If you fail to do this, QPM will complain that it can't found the images and zips files.
 8. Launch CompileAll.bat to build all the binaries.
-
 
 ## How to build a new release
 
@@ -159,3 +326,7 @@ specified (C:\QPMdev). If you fail to do this, QPM will complain that it can't f
   - Removed: ...    
   ; Note
 ```
+
+## Coding standards
+
+Please try to follow the coding standards of "The Harbour Project": https://github.com/harbour/core/blob/master/doc/codestyl.txt
