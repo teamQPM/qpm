@@ -172,14 +172,12 @@ Documentation
 File structure
 --------------
 
-[1] All files must have at the very top de SVN ID.  See ./doc/howtosvn.txt
-
-[2] All source files ( *.prg, *.ch, *.rc ) must have at the very top the following license information:
+[1] All source files ( *.prg, *.ch, *.rc ) must have at the very top the following license information:
     
 /*
  *    QPM - QAC based Project Manager
  *
- *    Copyright 2011-2020 Fernando Yurisich <teamqpm@gmail.com>
+ *    Copyright 2011-2020 ...name.. <..mail..>
  *    https://teamqpm.github.io/
  *
  *    Based on QAC - Project Manager for (x)Harbour
@@ -200,6 +198,6 @@ File structure
  *    along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-[3] All files must end with a newline char preceded by the following line:
+[2] All files must end with a CR+LF preceded by the following line:
 
 /* eof */
