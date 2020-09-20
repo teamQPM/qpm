@@ -3,6 +3,37 @@
  * See "How to format your ChangeLog entries" in howtosvn.txt file.
  */
 
+2020-09-19 21:51 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * doc\codestyl.txt
+     * Updated.
+
+2020-09-19 21:43 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * BuildAll.bat
+     - Line to build us_redir.
+
+2020-09-19 21:40 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   - QPM_US_Redir.qpm
+   - us_redir.c
+   - doc\us_redir.txt
+   + Samples\Redir\QPM_US_Redir.qpm
+   + Samples\Redir\us_redir.c
+   + Samples\Redir\us_redir.txt
+     ; This files are not longer needed by QPM to run.
+
+2020-09-19 21:13 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   - doc\UpgradeReadme.txt
+
+2020-09-19 21:09 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   - doc\dirstruc.txt
+
+2020-09-19 21:07 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * readme.md
+     + Folder structure.
+
+2020-09-19 20:43 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * readme.md
+     * No longer needed links were removed.
+
 2020-09-19 19:37 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * QPM.iss
      * Version changed to 05.05.0019.
