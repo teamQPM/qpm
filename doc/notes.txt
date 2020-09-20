@@ -2,17 +2,14 @@
 Notas varias
 ------------
 
-Al regenerar el help, va a decir que no encuentra la ruta de las im·genes y
-archivos zip de ejemplo, eso es porque no le habÌa podido encontrar la vuelta a
+Al regenerar el help, va a decir que no encuentra la ruta de las im√°genes y
+archivos zip de ejemplo, eso es porque no le hab√≠a podido encontrar la vuelta a
 los paths relativos en dicho proceso.
-Hay un programita pequeÒito en ./source/HelpQPM que se llama SHG_Change.prg que
+Hay un programita peque√±ito en ./source/HelpQPM que se llama SHG_Change.prg que
 sirve para cambiar la ruta de acuerdo al ambiente de desarrollo.
 
-El instalador se construye con el script ./source/qpm.iss de inno setup.
-Descargar desde http://www.jrsoftware.org/isinfo.php
-
-El Help est· generado desde QPM con la utilidad SHG, al igual que el sitio de
-internet (excepto el index.htm que est· hecho a mano).
+El Help est√° generado desde QPM con la utilidad SHG, al igual que el sitio de
+internet (excepto el index.htm que est√° hecho a mano).
 
 us_r2h.exe es un programa que convierte texto rtf a html, se usa para el
 help, el fuente es Visual Basic y esta en el paquete de QPM.
