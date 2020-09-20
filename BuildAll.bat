@@ -19,7 +19,6 @@ if exist CompileAll.log del CompileAll.log
 
 "qpm_autoproject.qpm" -BUILD -LITE -FORCEFULL -CLEAR -EXIT -log(CompileAll.log)
 "qpm_us_msg.qpm"      -BUILD -LITE -FORCEFULL -CLEAR -EXIT -log(CompileAll.log)
-"qpm_us_redir.qpm"    -BUILD -LITE -FORCEFULL -CLEAR -EXIT -log(CompileAll.log)
 "qpm_us_res.qpm"      -BUILD -LITE -FORCEFULL -CLEAR -EXIT -log(CompileAll.log)
 "qpm_us_run.qpm"      -BUILD -LITE -FORCEFULL -CLEAR -EXIT -log(CompileAll.log)
 "qpm_us_shell.qpm"    -BUILD -LITE -FORCEFULL -CLEAR -EXIT -log(CompileAll.log)
