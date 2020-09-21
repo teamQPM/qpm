@@ -156,7 +156,7 @@ SOURCE <FR> <ProjectFolder>\QPM_Version.PRG
 SOURCE <ProjectFolder>\FuentesComunes\US_Clases.prg
 SOURCE <ProjectFolder>\FuentesComunes\US_Edit_CharFijo.prg
 SOURCE <ProjectFolder>\FuentesComunes\US_HB.PRG
-SOURCE <ProjectFolder>\FuentesComunes\US_Log.prg
 SOURCE <ProjectFolder>\FuentesComunes\US_l_richeditbox.prg
+SOURCE <ProjectFolder>\FuentesComunes\US_Log.prg
 SOURCE <ProjectFolder>\FuentesComunes\US_MG.PRG
 SOURCE <ProjectFolder>\FuentesComunes\US_ProcessWin.prg
