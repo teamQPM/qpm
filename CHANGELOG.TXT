@@ -3,7 +3,22 @@
  * See "How to format your ChangeLog entries" in howtosvn.txt file.
  */
 
-2020-09-21 18:03 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2020-09-21 20:16 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * QPM.exe
+     * Rebuild.
+
+2020-09-21 20:15 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * QPM_AutoProject.qpm
+     * Updated.
+
+2020-09-21 20:09 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   - FuentesComunes\TAxPrg.prg
+   - FuentesComunes\US_ActiveX.prg
+   - FuentesComunes\US_ActiveX_Eventos.c
+   - FuentesComunes\US_K.CH
+   - FuentesComunes\US_MG_Null.prg
+
+2020-09-21 18:04 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * QPM_Libraries.prg
      + Missing libodbc32.a for MinGW builds.
 
