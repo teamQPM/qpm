@@ -3,6 +3,17 @@
  * See "How to format your ChangeLog entries" in howtosvn.txt file.
  */
 
+2020-09-20 21:10 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   - LICENSE.TXT
+
+2020-09-20 21:08 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   + license.md
+
+2020-09-20 21:01 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   - Samples\Redir\us_redir.txt
+   * Samples\Redir\us_redir.c
+     + Info from us_redir.txt
+
 2020-09-20 19:56 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * QPM.exe
      * Updated to version 05.05.0019.
