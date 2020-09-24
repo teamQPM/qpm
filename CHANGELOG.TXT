@@ -3,6 +3,18 @@
  * See "How to format your ChangeLog entries" in howtosvn.txt file.
  */
 
+2020-09-24 18:18 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * QPM.exe
+     * Rebuild.
+
+2020-09-24 18:15 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * QPM_Functions.prg
+     * Name of MiniGui libs for HMG Extended+Harbour+MinGW+64bits flavor.
+
+2020-09-24 18:14 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * QPM_Libraries.prg
+     + Missing version.lib and libversion.a
+
 2020-09-21 20:16 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * QPM.exe
      * Rebuild.
