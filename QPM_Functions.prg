@@ -2040,86 +2040,95 @@ Function MyMsg( titulo, texto, tipo, autoexit )
    endif
 Return .T.
 
-Function QPM_ModuleType( cFile )
-   Local MemoAux, u0, u1, u2
-   Local cAux1 := "Bor"
-   Local cBorland55 := cAux1 + "land C++ - Copyright 1999 Inprise Corporation"
-   Local cBorland58 := cAux1 + "land C++ - Copyright 2005 Borland Corporation"
-   Local cAux2 := "Min"
-   Local cMinGW   := cAux2 + "GW GNU C"
-   Local cAux3 := "___m"
-   Local cMinGW2  := cAux3 + "ingw_CRTStartup"
-   Local cAux4 := "Pel"
-   Local cPelles  := cAux4 + "les ISO C Compiler"
-   Local cAux5 := "UP"
+FUNCTION QPM_ModuleType( cFile )
+   LOCAL MemoAux, u0, u1, u2
+   LOCAL cAux1 := "Bor"
+   LOCAL cBorland55 := cAux1 + "land C++ - Copyright 1999 Inprise Corporation"
+   LOCAL cBorland58 := cAux1 + "land C++ - Copyright 2005 Borland Corporation"
+   LOCAL cAux2 := "Min"
+   LOCAL cMinGW   := cAux2 + "GW GNU C"
+   LOCAL cMinGW64 := cAux2 + "gw-w64"
+   LOCAL cAux3 := "___mingw"
+   LOCAL cMinGW2  := cAux3 + "_CRTStartup"
+   LOCAL cAux4 := "/mingw"
+   LOCAL cMinGW3  := cAux4 + "-w64-crt/"
+   LOCAL cAux5 := "Pel"
+   LOCAL cPelles  := cAux5 + "les ISO C Compiler"
+   LOCAL cAux6 := "UP"
 
-   if !file( cFile )
-      Return "NONE"
-   endif
-   MemoAux := memoread( cFile )
-   if Upper( US_FileNameOnlyExt( cFile ) ) == "EXE" .and. ;
-      ( u0 := at( cAux5 + "X0", MemoAux ) ) > 0 .and. ;
-      ( u1 := at( cAux5 + "X1", MemoAux ) ) > 0 .and. ;
-      ( u2 := at( cAux5 + "X!", MemoAux ) ) > 0 .and. ;
-      u0 < u1 .and. u1 < u2
-      Return "COMPRESSED"
-   endif
-   if Upper( US_FileNameOnlyExt( cFile ) ) == "EXE" .and. ;
-      ( at( cBorland55, MemoAux ) > 0 .or. at( cBorland58, MemoAux ) > 0 ) .and. ;
-      at( cMinGW  , MemoAux ) = 0 .and. ;
-      at( cMinGW2 , MemoAux ) = 0 .and. ;
-      at( cPelles , MemoAux ) = 0
-      Return "BORLAND"
-   endif
-   if Upper( US_FileNameOnlyExt( cFile ) ) == "EXE" .and. ;
-      at( cBorland55, MemoAux ) = 0 .and. ;
-      at( cBorland58, MemoAux ) = 0 .and. ;
-      at( cMinGW  , MemoAux ) > 0 .and. ;
-      at( cMinGW2 , MemoAux ) > 0 .and. ;
-      at( cPelles , MemoAux ) = 0
-      Return "MINGW"
-   endif
-   if Upper( US_FileNameOnlyExt( cFile ) ) == "EXE" .and. ;
-      at( cBorland55, MemoAux ) = 0 .and. ;
-      at( cBorland58, MemoAux ) = 0 .and. ;
-      at( cMinGW  , MemoAux ) = 0 .and. ;
-      at( cMinGW2 , MemoAux ) = 0 .and. ;
-      at( cPelles , MemoAux ) > 0
-      Return "PELLES"
-   endif
-   if Upper( US_FileNameOnlyExt( cFile ) ) == "LIB" .and. ;
-      at( "<arch>", MemoAux ) == 2
-      Return "PELLES"
-   endif
-   if Upper( US_FileNameOnlyExt( cFile ) ) == "LIB" .and. ;
-      at( "Borland C++ 5.5.", MemoAux ) > 0
-      Return "BORLAND"
-   endif
-   if Upper( US_FileNameOnlyExt( cFile ) ) == "LIB" .and. ;
-      at( CHR( 240 ), MemoAux ) == 1
-      Return "BORLAND"
-   endif
-   if Upper( US_FileNameOnlyExt( cFile ) ) == "A" .and. ;
-      at( "<arch>", MemoAux ) == 2
-      Return "MINGW"
-   endif
-   if Upper( US_FileNameOnlyExt( cFile ) ) == "OBJ" .and. ;
-      at( "L", MemoAux ) == 1 .and. ;
-      at( "CRT$XIC", MemoAux ) > 0
-      Return "PELLES"
-   endif
-   if Upper( US_FileNameOnlyExt( cFile ) ) == "OBJ" .and. ;
-      at( "Borland C++ 5.5.", MemoAux ) > 0
-      Return "BORLAND"
-   endif
-   if Upper( US_FileNameOnlyExt( cFile ) ) == "O"
-      Return "MINGW"
-   endif
-   if Upper( US_FileNameOnlyExt( cFile ) ) == "RES" .and. ;
-      at( CHR(0)+CHR(0)+CHR(0)+CHR(0)+CHR(32)+CHR(0)+CHR(0)+CHR(0)+CHR(255)+CHR(255)+CHR(0)+CHR(0)+CHR(255)+CHR(255), MemoAux ) > 0
-      Return "BORLAND"
-   endif
-Return "UNKNOWN"
+   IF ! File( cFile )
+      RETURN "NONE"
+   ENDIF
+   MemoAux := MemoRead( cFile )
+
+   IF Upper( US_FileNameOnlyExt( cFile ) ) == "EXE" .AND. ;
+      ( u0 := At( cAux6 + "X0", MemoAux ) ) > 0 .AND. ;
+      ( u1 := At( cAux6 + "X1", MemoAux ) ) > 0 .AND. ;
+      ( u2 := At( cAux6 + "X!", MemoAux ) ) > 0 .AND. ;
+      u0 < u1 .AND. u1 < u2
+      RETURN "COMPRESSED"
+   ENDIF
+   IF Upper( US_FileNameOnlyExt( cFile ) ) == "EXE" .AND. ;
+      ( At( cBorland55, MemoAux ) > 0 .OR. At( cBorland58, MemoAux ) > 0 ) .AND. ;
+      At( cMinGW, MemoAux ) = 0 .AND. ;
+      At( cMinGW64, MemoAux ) = 0 .AND. ;
+      At( cMinGW2, MemoAux ) = 0 .AND. ;
+      At( cMinGW3, MemoAux ) = 0 .AND. ;
+      At( cPelles, MemoAux ) = 0
+      RETURN "BORLAND"
+   ENDIF
+   IF Upper( US_FileNameOnlyExt( cFile ) ) == "EXE" .AND. ;
+      At( cBorland55, MemoAux ) = 0 .AND. ;
+      At( cBorland58, MemoAux ) = 0 .AND. ;
+      At( cPelles, MemoAux ) = 0 .AND. ;
+      ( ( At( cMinGW, MemoAux ) > 0 .AND. At( cMinGW2, MemoAux ) > 0 ) .OR. ;
+        ( At( cMinGW64, MemoAux ) > 0 .AND. At( cMinGW3, MemoAux ) > 0 ) )
+      RETURN "MINGW"
+   ENDIF
+   IF Upper( US_FileNameOnlyExt( cFile ) ) == "EXE" .AND. ;
+      At( cBorland55, MemoAux ) = 0 .AND. ;
+      At( cBorland58, MemoAux ) = 0 .AND. ;
+      At( cMinGW, MemoAux ) = 0 .AND. ;
+      At( cMinGW2, MemoAux ) = 0 .AND. ;
+      At( cMinGW64, MemoAux ) = 0 .AND. ;
+      At( cMinGW3, MemoAux ) = 0 .AND. ;
+      At( cPelles, MemoAux ) > 0
+      RETURN "PELLES"
+   ENDIF
+   IF Upper( US_FileNameOnlyExt( cFile ) ) == "LIB" .AND. ;
+      At( "<arch>", MemoAux ) == 2
+      RETURN "PELLES"
+   ENDIF
+   IF Upper( US_FileNameOnlyExt( cFile ) ) == "LIB" .AND. ;
+      At( "Borland C++ 5.5.", MemoAux ) > 0
+      RETURN "BORLAND"
+   ENDIF
+   IF Upper( US_FileNameOnlyExt( cFile ) ) == "LIB" .AND. ;
+      At( Chr( 240 ), MemoAux ) == 1
+      RETURN "BORLAND"
+   ENDIF
+   IF Upper( US_FileNameOnlyExt( cFile ) ) == "A" .AND. ;
+      At( "<arch>", MemoAux ) == 2
+      RETURN "MINGW"
+   ENDIF
+   IF Upper( US_FileNameOnlyExt( cFile ) ) == "OBJ" .AND. ;
+      At( "L", MemoAux ) == 1 .AND. ;
+      At( "CRT$XIC", MemoAux ) > 0
+      RETURN "PELLES"
+   ENDIF
+   IF Upper( US_FileNameOnlyExt( cFile ) ) == "OBJ" .AND. ;
+      ( At( "Borland C++ 5.5.", MemoAux ) > 0 .OR. ;
+        At( "Borland C++ 5.82", MemoAux ) > 0 )
+      RETURN "BORLAND"
+   ENDIF
+   IF Upper( US_FileNameOnlyExt( cFile ) ) == "O"
+      RETURN "MINGW"
+   ENDIF
+   IF Upper( US_FileNameOnlyExt( cFile ) ) == "RES" .AND. ;
+      At( Chr(0)+Chr(0)+Chr(0)+Chr(0)+Chr(32)+Chr(0)+Chr(0)+Chr(0)+Chr(255)+Chr(255)+Chr(0)+Chr(0)+Chr(255)+Chr(255), MemoAux ) > 0
+      RETURN "BORLAND"
+   ENDIF
+RETURN "UNKNOWN"
 
 Function GetOutputModuleName( bForDisplay )
    Local cOutputName
