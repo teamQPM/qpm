@@ -225,6 +225,9 @@ PROCEDURE MAIN( ... )
                   Say( "US_Shell 402W: User Stop" + CRLF )
                   EXIT
                ENDIF
+               IF i % 100 == 0
+                  hb_idleState()
+               ENDIF
             NEXT i
             IF ! lStop
                Say( "End of list.", .T. )
@@ -267,6 +270,9 @@ PROCEDURE MAIN( ... )
                   Say( "US_Shell 504W: User Stop" + CRLF )
                   EXIT
                ENDIF
+               IF i % 100 == 0
+                  hb_idleState()
+               ENDIF
             NEXT i
             IF ! lStop
                FOR i := nLineaBaseExport TO MLCount( cTxtAux, 254 )
@@ -278,6 +284,9 @@ PROCEDURE MAIN( ... )
                      Say( "User stop!", .T. )
                      Say( "US_Shell 506W: User Stop" )
                      EXIT
+                  ENDIF
+                  IF i % 100 == 0
+                     hb_idleState()
                   ENDIF
                NEXT i
                IF ! lStop
@@ -341,6 +350,9 @@ PROCEDURE MAIN( ... )
                   Say( "US_Shell 506W: User Stop" + CRLF )
                   EXIT
                ENDIF
+               IF i % 100 == 0
+                  hb_idleState()
+               ENDIF
             NEXT i
             IF ! lStop
                IF Len( vObjectsPelles ) == 0
@@ -374,6 +386,9 @@ PROCEDURE MAIN( ... )
                      Say( "User stop!", .T. )
                      Say( "US_Shell 506W: User Stop" + CRLF )
                      EXIT
+                  ENDIF
+                  IF i % 100 == 0
+                     hb_idleState()
                   ENDIF
                NEXT i
                IF ! lStop
@@ -413,11 +428,14 @@ PROCEDURE MAIN( ... )
                               MemoExpLst := MemoExpLst + hb_osNewLine() + SubStr( US_Word( cLineaAux, 3 ), 1 )
                            ENDIF
                         ENDIF
-                        IF ( lStop := US_Shell_Listo( cFileStop, vFun ) )
+                        IF ( lStop := US_Shell_Listo( cFileStop, @vFun ) )
                            lStop := .T.
                            Say( "User stop!", .T. )
                            Say( "US_Shell 611W: User Stop" + CRLF )
                            EXIT
+                        ENDIF
+                        IF i % 100 == 0
+                           hb_idleState()
                         ENDIF
                      NEXT i
                      IF ! lStop
@@ -520,10 +538,13 @@ PROCEDURE MAIN( ... )
                         ENDIF
                      ENDIF
                   ENDIF
-                  IF ( lStop := US_Shell_Listo( cFileStop, vFun ) )
+                  IF ( lStop := US_Shell_Listo( cFileStop, @vFun ) )
                      Say( "User stop!", .T. )
                      Say( "US_Shell 710W: User Stop" + CRLF )
                      EXIT
+                  ENDIF
+                  IF i % 100 == 0
+                     hb_idleState()
                   ENDIF
                NEXT i
                IF ! lStop
@@ -613,7 +634,7 @@ PROCEDURE MAIN( ... )
                         MemoObjLst := MemoObjLst + iif( ! Empty( MemoObjLst ), hb_osNewLine(), "" ) + cModuleNameAux
                      ENDIF
                   ENDIF
-                  lStop := US_Shell_Listo( cFileStop, vFun )
+                  lStop := US_Shell_Listo( cFileStop, @vFun )
                ELSE
                   // function in standard module
                   IF AllTrim( cLineaAux ) == "File" .AND. bEncontroValido
@@ -631,7 +652,7 @@ PROCEDURE MAIN( ... )
                            i := j
                            EXIT
                         ENDIF
-                        IF ( lStop := US_Shell_Listo( cFileStop, vFun ) )
+                        IF ( lStop := US_Shell_Listo( cFileStop, @vFun ) )
                            EXIT
                         ENDIF
                      NEXT j
@@ -642,6 +663,9 @@ PROCEDURE MAIN( ... )
                   Say( "User stop!", .T. )
                   Say( "US_Shell 808W: User Stop" + CRLF )
                   EXIT
+               ENDIF
+               IF i % 100 == 0
+                  hb_idleState()
                ENDIF
             NEXT i
             IF ! lStop
@@ -724,9 +748,13 @@ FUNCTION US_Shell_Listo( cFileStop, vFun )
    ASort( vFun, {|x, y| US_Word( x, 1 ) < US_Word( y, 1 ) } )
    FOR j := 1 TO len( vFun )
       Say( vFun[j] )
+      Say( vFun[j], .T. )
       IF File( cFileStop )
          lRet := .T.
          EXIT
+      ENDIF
+      IF j % 100 == 0
+         hb_idleState()
       ENDIF
    NEXT
    vFun := {}
