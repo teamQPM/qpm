@@ -372,6 +372,16 @@ Function QPM_GetExtraRunSave( bTest )
    &( Prefix + "_ExtraRunExePause" )        := ExtraRun.ExtraRunExePause.Value
    &( Prefix + "_ExtraRunFreeWait" )        := ExtraRun.ExtraRunFreeWait.Value
    &( Prefix + "_ExtraRunFreePause" )       := ExtraRun.ExtraRunFreePause.Value
+
+   IF ! _IsWindowDefined( 'WinPSettings' )
+      MyMsgStop( "WinPSettings not defined!" + hb_osNewLine() + "Exit QPM and retry." )
+      RETURN .F.
+   ENDIF
+   IF ! _IsControlDefined ( "Text_ExtraRunCmd", 'WinPSettings' )
+      MyMsgStop( "Text_ExtraRunCmd not defined!" + hb_osNewLine() + "Exit QPM and retry." )
+      RETURN .F.
+   ENDIF
+
    do case
       case ExtraRun.ExtraRunSelectRadio.Value = 1
          &( Prefix + "_ExtraRunType" ) := "NONE"

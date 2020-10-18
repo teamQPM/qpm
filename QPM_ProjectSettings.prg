@@ -407,62 +407,107 @@ Function ProjectEscape()
 Return .T.
 
 Function ProjectChanged()
-   if Prj_Radio_Harbour             != WinPSettings.Radio_Harbour.value        .or. ;
-      Prj_Check_HarbourIs31         != WinPSettings.Chk_HBVersion.value        .or. ;
-      Prj_Check_64bits              != WinPSettings.Chk_64bits.value           .or. ;
-      Prj_Radio_Cpp                 != WinPSettings.Radio_Cpp.value            .or. ;
-      Prj_Radio_MiniGui             != WinPSettings.Radio_MiniGui.value        .or. ;
-      Prj_Check_Console             != WinPSettings.Check_Console.value        .or. ;
-      Prj_Check_MT                  != WinPSettings.Check_MT.value             .or. ;
-      Prj_Radio_OutputType          != WinPSettings.Radio_OutputType.value     .or. ;
-      Prj_Radio_OutputCopyMove      != WinPSettings.Radio_OutputCopyMove.value .or. ;
-      Prj_Text_OutputCopyMoveFolder != WinPSettings.Text_CopyMove.value        .or. ;
-      Prj_Radio_OutputRename        != WinPSettings.Radio_OutputRename.value   .or. ;
-      Prj_Text_OutputRenameNewName  != WinPSettings.Text_RenameOutput.value    .or. ;
-      Prj_Check_OutputSuffix        != WinPSettings.Check_OutputSuffix.value   .or. ;
-      Prj_Check_OutputPrefix        != WinPSettings.Check_OutputPrefix.value   .or. ;
-      Prj_Check_StaticBuild         != WinPSettings.Check_StaticBuild.value    .or. ;
-      Prj_Radio_FormTool            != WinPSettings.Radio_Form.value           .or. ;
-      Prj_Radio_DbfTool             != WinPSettings.Radio_Dbf.value            .or. ;
-      Prj_ExtraRunCmdFINAL          != WinPSettings.Text_ExtraRunCmd.value     .or. ;
-      Prj_Check_Upx                 != WinPSettings.Check_Upx.value
+   if Prj_Radio_Harbour             != GetProperty( 'WinPSettings', 'Radio_Harbour', 'Value' )        .or. ;
+      Prj_Check_HarbourIs31         != GetProperty( 'WinPSettings', 'Chk_HBVersion', 'Value' )        .or. ;
+      Prj_Check_64bits              != GetProperty( 'WinPSettings', 'Chk_64bits', 'Value' )           .or. ;
+      Prj_Radio_Cpp                 != GetProperty( 'WinPSettings', 'Radio_Cpp', 'Value' )            .or. ;
+      Prj_Radio_MiniGui             != GetProperty( 'WinPSettings', 'Radio_MiniGui', 'Value' )        .or. ;
+      Prj_Check_Console             != GetProperty( 'WinPSettings', 'Check_Console', 'Value' )        .or. ;
+      Prj_Check_MT                  != GetProperty( 'WinPSettings', 'Check_MT', 'Value' )             .or. ;
+      Prj_Radio_OutputType          != GetProperty( 'WinPSettings', 'Radio_OutputType', 'Value' )     .or. ;
+      Prj_Radio_OutputCopyMove      != GetProperty( 'WinPSettings', 'Radio_OutputCopyMove', 'Value' ) .or. ;
+      Prj_Text_OutputCopyMoveFolder != GetProperty( 'WinPSettings', 'Text_CopyMove', 'Value' )        .or. ;
+      Prj_Radio_OutputRename        != GetProperty( 'WinPSettings', 'Radio_OutputRename', 'Value' )   .or. ;
+      Prj_Text_OutputRenameNewName  != GetProperty( 'WinPSettings', 'Text_RenameOutput', 'Value' )    .or. ;
+      Prj_Check_OutputSuffix        != GetProperty( 'WinPSettings', 'Check_OutputSuffix', 'Value' )   .or. ;
+      Prj_Check_OutputPrefix        != GetProperty( 'WinPSettings', 'Check_OutputPrefix', 'Value' )   .or. ;
+      Prj_Check_StaticBuild         != GetProperty( 'WinPSettings', 'Check_StaticBuild', 'Value' )    .or. ;
+      Prj_Radio_FormTool            != GetProperty( 'WinPSettings', 'Radio_Form', 'Value' )           .or. ;
+      Prj_Radio_DbfTool             != GetProperty( 'WinPSettings', 'Radio_Dbf', 'Value' )            .or. ;
+      Prj_ExtraRunCmdFINAL          != GetProperty( 'WinPSettings', 'Text_ExtraRunCmd', 'Value' )     .or. ;
+      Prj_Check_Upx                 != GetProperty( 'WinPSettings', 'Check_Upx', 'Value' )
       Return .T.
    endif
 Return .F.
 
-Function ProjectSettingsSave()
-   do case
-   case WinPSettings.Radio_OutputType.value < DEF_RG_IMPORT .and. ;
-        GetProperty( 'VentanaMain', 'GPrgFiles', 'ItemCount' ) == 1 .and. ;
-        ( Upper( US_FileNameOnlyExt( GetProperty( 'VentanaMain', 'GPrgFiles', 'Cell', 1, NCOLPRGNAME ) ) ) == 'DLL' .or. ;
-          Upper( US_FileNameOnlyExt( GetProperty( 'VentanaMain', 'GPrgFiles', 'Cell', 1, NCOLPRGNAME ) ) ) == 'LIB' .or. ;
-          Upper( US_FileNameOnlyExt( GetProperty( 'VentanaMain', 'GPrgFiles', 'Cell', 1, NCOLPRGNAME ) ) ) == 'A' )
-      MyMsgStop( 'Output types ' + DBLQT + 'Executable' + DBLQT + ' and ' + DBLQT + 'Library' + DBLQT + ' do not support ' + DBLQT + 'DLL' + DBLQT + ', ' + DBLQT + 'LIB' + DBLQT + ' or ' + DBLQT + 'A' + DBLQT + ' into source list.' + HB_OsNewLine() + ;
-               'Remove those files before changing the ' + DBLQT + 'Output Type' + DBLQT + '.' )
-      Return .F.
-   case WinPSettings.Radio_OutputType.value == DEF_RG_IMPORT .and. ;
-        GetProperty( 'VentanaMain', 'GPrgFiles', 'ItemCount' ) == 1 .and. ;
-        ( Upper( US_FileNameOnlyExt( GetProperty( 'VentanaMain', 'GPrgFiles', 'Cell', 1, NCOLPRGNAME ) ) ) == 'PRG' .or. ;
-          Upper( US_FileNameOnlyExt( GetProperty( 'VentanaMain', 'GPrgFiles', 'Cell', 1, NCOLPRGNAME ) ) ) == 'C' .or. ;
-          Upper( US_FileNameOnlyExt( GetProperty( 'VentanaMain', 'GPrgFiles', 'Cell', 1, NCOLPRGNAME ) ) ) == 'CPP' )
-      MyMsgStop( 'Output type ' + DBLQT + 'Interface Library' + DBLQT + ' does not support ' + DBLQT + 'PRG' + DBLQT + ', ' + DBLQT + 'C' + DBLQT + ' or ' + DBLQT + 'CPP' + DBLQT + ' into source list.' + HB_OsNewLine() + ;
-               'Remove those files before changing the ' + DBLQT + 'Output Type' + DBLQT + '.' )
-      Return .F.
-   case WinPSettings.Radio_OutputType.value == DEF_RG_IMPORT .and. ;
-        GetProperty( 'VentanaMain', 'GPrgFiles', 'ItemCount' ) > 1
-      MyMsgStop( 'Output type ' + DBLQT + 'Interface Library' + DBLQT + ' does not support ' + DBLQT + 'PRG' + DBLQT + ', ' + DBLQT + 'C' + DBLQT + ' or ' + DBLQT + 'CPP' + DBLQT + ' into source list.' + HB_OsNewLine() + ;
-               'Remove those files before changing the ' + DBLQT + 'Output Type' + DBLQT + '.' )
-      Return .F.
-   endcase
+FUNCTION ProjectSettingsSave()
+   LOCAL i
+   LOCAL aCtrls := { 'Radio_OutputType', ;
+                     'Radio_OutputCopyMove', ;
+                     'Text_CopyMove', ;
+                     'Radio_OutputRename', ;
+                     'Text_RenameOutput', ;
+                     'Check_OutputSuffix', ;
+                     'Check_OutputPrefix', ;
+                     'Check_StaticBuild', ;
+                     'Radio_Form', ;
+                     'Radio_Dbf', ;
+                     'Text_ExtraRunCmd', ;
+                     'Check_Upx', ;
+                     'Radio_Harbour', ;
+                     'Chk_HBVersion', ;
+                     'Chk_64bits', ;
+                     'Radio_Cpp', ;
+                     'Radio_MiniGui', ;
+                     'Check_Console', ;
+                     'Check_MT', ;
+                     'Radio_OutputType' }
 
-   if Prj_Radio_Harbour     != WinPSettings.Radio_Harbour.value    .or. ;
-      Prj_Check_HarbourIs31 != WinPSettings.Chk_HBVersion.value    .or. ;
-      Prj_Check_64bits      != WinPSettings.Chk_64bits.value       .or. ;
-      Prj_Radio_Cpp         != WinPSettings.Radio_Cpp.value        .or. ;
-      Prj_Radio_MiniGui     != WinPSettings.Radio_MiniGui.value    .or. ;
-      Prj_Check_Console     != WinPSettings.Check_Console.value    .or. ;
-      Prj_Check_MT          != WinPSettings.Check_MT.value         .or. ;
-      Prj_Radio_OutputType  != WinPSettings.Radio_OutputType.value
+   IF ! _IsWindowDefined( 'WinPSettings' )
+      MyMsgStop( "WinPSettings not defined!" + hb_osNewLine() + "Exit QPM and retry." )
+      RETURN .F.
+   ENDIF
+   FOR i := 1 TO Len( aCtrls )
+      IF ! _IsControlDefined ( aCtrls[i], 'WinPSettings' )
+         MyMsgStop( aCtrls[i] + " not defined!" + hb_osNewLine() + "Exit QPM and retry." )
+         RETURN .F.
+      ENDIF
+   NEXT i
+
+   DO CASE
+   CASE GetProperty( 'WinPSettings', 'Radio_OutputType', 'Value' ) < DEF_RG_IMPORT .AND. ;
+        GetProperty( 'VentanaMain', 'GPrgFiles', 'ItemCount' ) == 1 .AND. ;
+        ( Upper( US_FileNameOnlyExt( GetProperty( 'VentanaMain', 'GPrgFiles', 'Cell', 1, NCOLPRGNAME ) ) ) == 'DLL' .OR. ;
+          Upper( US_FileNameOnlyExt( GetProperty( 'VentanaMain', 'GPrgFiles', 'Cell', 1, NCOLPRGNAME ) ) ) == 'LIB' .OR. ;
+          Upper( US_FileNameOnlyExt( GetProperty( 'VentanaMain', 'GPrgFiles', 'Cell', 1, NCOLPRGNAME ) ) ) == 'A' )
+      MyMsgStop( 'Output types ' + DBLQT + 'Executable' + DBLQT + ' and ' + DBLQT + 'Library' + DBLQT + ' do not support ' + DBLQT + 'DLL' + DBLQT + ', ' + DBLQT + 'LIB' + DBLQT + ' or ' + DBLQT + 'A' + DBLQT + ' into source list.' + hb_osNewLine() + ;
+               'Remove those files before changing the ' + DBLQT + 'Output Type' + DBLQT + '.' )
+      RETURN .F.
+   CASE GetProperty( 'WinPSettings', 'Radio_OutputType', 'Value' ) == DEF_RG_IMPORT .AND. ;
+        GetProperty( 'VentanaMain', 'GPrgFiles', 'ItemCount' ) == 1 .AND. ;
+        ( Upper( US_FileNameOnlyExt( GetProperty( 'VentanaMain', 'GPrgFiles', 'Cell', 1, NCOLPRGNAME ) ) ) == 'PRG' .OR. ;
+          Upper( US_FileNameOnlyExt( GetProperty( 'VentanaMain', 'GPrgFiles', 'Cell', 1, NCOLPRGNAME ) ) ) == 'C' .OR. ;
+          Upper( US_FileNameOnlyExt( GetProperty( 'VentanaMain', 'GPrgFiles', 'Cell', 1, NCOLPRGNAME ) ) ) == 'CPP' )
+      MyMsgStop( 'Output type ' + DBLQT + 'Interface Library' + DBLQT + ' does not support ' + DBLQT + 'PRG' + DBLQT + ', ' + DBLQT + 'C' + DBLQT + ' or ' + DBLQT + 'CPP' + DBLQT + ' into source list.' + hb_osNewLine() + ;
+               'Remove those files before changing the ' + DBLQT + 'Output Type' + DBLQT + '.' )
+      RETURN .F.
+   CASE GetProperty( 'WinPSettings', 'Radio_OutputType', 'Value' ) == DEF_RG_IMPORT .AND. ;
+        GetProperty( 'VentanaMain', 'GPrgFiles', 'ItemCount' ) > 1
+      MyMsgStop( 'Output type ' + DBLQT + 'Interface Library' + DBLQT + ' does not support ' + DBLQT + 'PRG' + DBLQT + ', ' + DBLQT + 'C' + DBLQT + ' or ' + DBLQT + 'CPP' + DBLQT + ' into source list.' + hb_osNewLine() + ;
+               'Remove those files before changing the ' + DBLQT + 'Output Type' + DBLQT + '.' )
+      RETURN .F.
+   ENDCASE
+
+   Prj_Radio_OutputCopyMove      := GetProperty( 'WinPSettings', 'Radio_OutputCopyMove', 'Value' )
+   Prj_Text_OutputCopyMoveFolder := GetProperty( 'WinPSettings', 'Text_CopyMove', 'Value' )
+   Prj_Radio_OutputRename        := GetProperty( 'WinPSettings', 'Radio_OutputRename', 'Value' )
+   Prj_Text_OutputRenameNewName  := GetProperty( 'WinPSettings', 'Text_RenameOutput', 'Value' )
+   Prj_Check_OutputSuffix        := GetProperty( 'WinPSettings', 'Check_OutputSuffix', 'Value' )
+   Prj_Check_OutputPrefix        := GetProperty( 'WinPSettings', 'Check_OutputPrefix', 'Value' )
+   Prj_Check_StaticBuild         := GetProperty( 'WinPSettings', 'Check_StaticBuild', 'Value' )
+   Prj_Radio_FormTool            := GetProperty( 'WinPSettings', 'Radio_Form', 'Value' )
+   Prj_Radio_DbfTool             := GetProperty( 'WinPSettings', 'Radio_Dbf', 'Value' )
+   Prj_ExtraRunCmdFINAL          := GetProperty( 'WinPSettings', 'Text_ExtraRunCmd', 'Value' )
+   Prj_Check_Upx                 := GetProperty( 'WinPSettings', 'Check_Upx', 'Value' )
+
+   IF Prj_Radio_Harbour     != GetProperty( 'WinPSettings', 'Radio_Harbour', 'Value' )    .OR. ;
+      Prj_Check_HarbourIs31 != GetProperty( 'WinPSettings', 'Chk_HBVersion', 'Value' )    .OR. ;
+      Prj_Check_64bits      != GetProperty( 'WinPSettings', 'Chk_64bits', 'Value' )       .OR. ;
+      Prj_Radio_Cpp         != GetProperty( 'WinPSettings', 'Radio_Cpp', 'Value' )        .OR. ;
+      Prj_Radio_MiniGui     != GetProperty( 'WinPSettings', 'Radio_MiniGui', 'Value' )    .OR. ;
+      Prj_Check_Console     != GetProperty( 'WinPSettings', 'Check_Console', 'Value' )    .OR. ;
+      Prj_Check_MT          != GetProperty( 'WinPSettings', 'Check_MT', 'Value' )         .OR. ;
+      Prj_Radio_OutputType  != GetProperty( 'WinPSettings', 'Radio_OutputType', 'Value' )
 
       IF ! Empty( LibsActiva )
          DescargoDefaultLibs( LibsActiva )
@@ -470,36 +515,22 @@ Function ProjectSettingsSave()
          DescargoExcludeLibs( LibsActiva )
       ENDIF
 
-      Prj_Radio_Harbour     := WinPSettings.Radio_Harbour.value
-      Prj_Check_HarbourIs31 := WinPSettings.Chk_HBVersion.value
-      Prj_Check_64bits      := WinPSettings.Chk_64bits.value
-      Prj_Radio_Cpp         := WinPSettings.Radio_Cpp.value
-      Prj_Radio_MiniGui     := WinPSettings.Radio_MiniGui.value
-      Prj_Check_Console     := WinPSettings.Check_Console.value
-      Prj_Check_MT          := WinPSettings.Check_MT.value
-      Prj_Radio_OutputType  := WinPSettings.Radio_OutputType.value
+      Prj_Radio_Harbour     := GetProperty( 'WinPSettings', 'Radio_Harbour', 'Value' )
+      Prj_Check_HarbourIs31 := GetProperty( 'WinPSettings', 'Chk_HBVersion', 'Value' )
+      Prj_Check_64bits      := GetProperty( 'WinPSettings', 'Chk_64bits', 'Value' )
+      Prj_Radio_Cpp         := GetProperty( 'WinPSettings', 'Radio_Cpp', 'Value' )
+      Prj_Radio_MiniGui     := GetProperty( 'WinPSettings', 'Radio_MiniGui', 'Value' )
+      Prj_Check_Console     := GetProperty( 'WinPSettings', 'Check_Console', 'Value' )
+      Prj_Check_MT          := GetProperty( 'WinPSettings', 'Check_MT', 'Value' )
+      Prj_Radio_OutputType  := GetProperty( 'WinPSettings', 'Radio_OutputType', 'Value' )
 
-      IF ! Prj_Radio_OutputType == DEF_RG_IMPORT
-         QPM_InitLibrariesForFlavor( GetSuffix() )
-         CargoDefaultLibs( GetSuffix() )
-         CargoIncludeLibs( GetSuffix() )
-         CargoExcludeLibs( GetSuffix() )
-      ENDIF
+      QPM_InitLibrariesForFlavor( GetSuffix() )
+      CargoDefaultLibs( GetSuffix() )
+      CargoIncludeLibs( GetSuffix() )
+      CargoExcludeLibs( GetSuffix() )
 
       QPM_SetResumen()
    endif
-
-   Prj_Radio_OutputCopyMove      := WinPSettings.Radio_OutputCopyMove.value
-   Prj_Text_OutputCopyMoveFolder := WinPSettings.Text_CopyMove.value
-   Prj_Radio_OutputRename        := WinPSettings.Radio_OutputRename.value
-   Prj_Text_OutputRenameNewName  := WinPSettings.Text_RenameOutput.value
-   Prj_Check_OutputSuffix        := WinPSettings.Check_OutputSuffix.value
-   Prj_Check_OutputPrefix        := WinPSettings.Check_OutputPrefix.value
-   Prj_Check_StaticBuild         := WinPSettings.Check_StaticBuild.value
-   Prj_Radio_FormTool            := WinPSettings.Radio_Form.value
-   Prj_Radio_DbfTool             := WinPSettings.Radio_Dbf.value
-   Prj_ExtraRunCmdFINAL          := WinPSettings.Text_ExtraRunCmd.value
-   Prj_Check_Upx                 := WinPSettings.Check_Upx.value
 
    ActOutputTypeSet()
    ActLibReimp()
@@ -532,7 +563,7 @@ Function SwitchRadioOutputRename()
 Return .T.
 
 Function SwitchRadioOutputType()
-   if WinPSettings.Radio_OutputType.value < DEF_RG_IMPORT
+   if GetProperty( 'WinPSettings', 'Radio_OutputType', 'Value' ) < DEF_RG_IMPORT
       WinPSettings.Check_Console.Enabled := .T.
       WinPSettings.Radio_Harbour.Enabled := .T.
    else
