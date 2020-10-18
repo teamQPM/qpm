@@ -533,7 +533,7 @@ FUNCTION LoadEnvironment
 RETURN .T.
 
 FUNCTION SaveEnvironment( lDefaultFile )
-   LOCAL c := '', i, j, cMiniguiLib, TmpName, aLibs
+   LOCAL c := '', i, j, TmpName, aLibs
 
    c := c + 'VERSION '            + QPM_VERSION_NUMBER + hb_osNewLine()
    c := c + 'PROGRAMEDITOR'       + RTrim( " " + Gbl_Text_Editor ) + hb_osNewLine()
@@ -787,13 +787,10 @@ FUNCTION SaveEnvironment( lDefaultFile )
 
    /* Save default libraries to configuration file */
    DescargoDefaultLibs( LibsActiva )
-   cMiniguiLib := US_Upper( GetMiniGuiName() )
    FOR i := 1 TO Len( vSuffix )
       aLibs := AClone( &( "Gbl_DEF_LIBS_" + vSuffix[i,1] ) )
       FOR j := 1 TO Len( aLibs )
-         IF ! US_Upper( aLibs[j,1] ) == cMiniguiLib
-            c := c + "DEFAULTLIBS" + vSuffix[i,1] + " " + aLibs[j,1] + " " + aLibs[j,2] + aLibs[j,3] + aLibs[j,4] + hb_osNewLine()
-         ENDIF
+         c := c + "DEFAULTLIBS" + vSuffix[i,1] + " " + aLibs[j,1] + " " + aLibs[j,2] + aLibs[j,3] + aLibs[j,4] + hb_osNewLine()
       NEXT j
    NEXT i
 
