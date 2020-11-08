@@ -32,7 +32,7 @@ MEMVAR bList
 
 PROCEDURE MAIN( ... )
    LOCAL aParams := hb_AParams()
-   LOCAL cTxtAux, cTxtAux2 := "", i
+   LOCAL cTxtAux, cTxtAux2 := "", i, nCount, cWord
    LOCAL cModuleNameAux, cLineaAux, cLineaAux2, bEncontroValido := .F.
    LOCAL nPos, bObjLst := .F., bExpLst := .F., cObjExt := ".ObjLst", cExpExt := ".ExpLst"
    LOCAL MemoObjLst := "", MemoExpLst := "EXPORTS"
@@ -225,9 +225,6 @@ PROCEDURE MAIN( ... )
                   Say( "US_Shell 402W: User Stop" + CRLF )
                   EXIT
                ENDIF
-               IF i % 100 == 0
-                  hb_idleState()
-               ENDIF
             NEXT i
             IF ! lStop
                Say( "End of list.", .T. )
@@ -270,9 +267,6 @@ PROCEDURE MAIN( ... )
                   Say( "US_Shell 504W: User Stop" + CRLF )
                   EXIT
                ENDIF
-               IF i % 100 == 0
-                  hb_idleState()
-               ENDIF
             NEXT i
             IF ! lStop
                FOR i := nLineaBaseExport TO MLCount( cTxtAux, 254 )
@@ -284,9 +278,6 @@ PROCEDURE MAIN( ... )
                      Say( "User stop!", .T. )
                      Say( "US_Shell 506W: User Stop" )
                      EXIT
-                  ENDIF
-                  IF i % 100 == 0
-                     hb_idleState()
                   ENDIF
                NEXT i
                IF ! lStop
@@ -350,9 +341,6 @@ PROCEDURE MAIN( ... )
                   Say( "US_Shell 506W: User Stop" + CRLF )
                   EXIT
                ENDIF
-               IF i % 100 == 0
-                  hb_idleState()
-               ENDIF
             NEXT i
             IF ! lStop
                IF Len( vObjectsPelles ) == 0
@@ -386,9 +374,6 @@ PROCEDURE MAIN( ... )
                      Say( "User stop!", .T. )
                      Say( "US_Shell 506W: User Stop" + CRLF )
                      EXIT
-                  ENDIF
-                  IF i % 100 == 0
-                     hb_idleState()
                   ENDIF
                NEXT i
                IF ! lStop
@@ -428,17 +413,16 @@ PROCEDURE MAIN( ... )
                               MemoExpLst := MemoExpLst + hb_osNewLine() + SubStr( US_Word( cLineaAux, 3 ), 1 )
                            ENDIF
                         ENDIF
-                        IF ( lStop := US_Shell_Listo( cFileStop, @vFun ) )
+                        IF File( cFileStop )
+                           US_Shell_Listo( vFun )
                            lStop := .T.
                            Say( "User stop!", .T. )
                            Say( "US_Shell 611W: User Stop" + CRLF )
                            EXIT
                         ENDIF
-                        IF i % 100 == 0
-                           hb_idleState()
-                        ENDIF
                      NEXT i
                      IF ! lStop
+                        US_Shell_Listo( vFun )
                         Say( "US_Shell 612I: End of list" + CRLF )
                         Say( "End of list.", .T. )
                         IF bObjLst
@@ -538,16 +522,16 @@ PROCEDURE MAIN( ... )
                         ENDIF
                      ENDIF
                   ENDIF
-                  IF ( lStop := US_Shell_Listo( cFileStop, @vFun ) )
+                  IF File( cFileStop )
+                     US_Shell_Listo( vFun )
+                     lStop := .T.
                      Say( "User stop!", .T. )
                      Say( "US_Shell 710W: User Stop" + CRLF )
                      EXIT
                   ENDIF
-                  IF i % 100 == 0
-                     hb_idleState()
-                  ENDIF
                NEXT i
                IF ! lStop
+                  US_Shell_Listo( vFun )
                   Say( "US_Shell 711I: End of list" + CRLF )
                   Say( "End of list.", .T. )
                   IF bObjLst
@@ -564,7 +548,7 @@ PROCEDURE MAIN( ... )
          ENDIF
       ENDIF
    CASE cPar1 == "ANALIZE_LIB_MINGW"
-      Say( "US_Shell 800I: ANALIZE_LIB_BORLAND" )
+      Say( "US_Shell 800I: ANALIZE_LIB_MINGW" )
       IF US_Words( cParam ) < 2
          Say( "US_Shell 801E: Invalid parameter count: " + cParam + CRLF )
          Say( "No file to analize!", .T. )
@@ -584,7 +568,7 @@ PROCEDURE MAIN( ... )
          ENDIF
          Say( "US_Shell 802I: Analizing Definition File for MinGW Static Library" )
          cPar2 := StrTran( US_Word( cParam, 2 ), "|", " " )
-         Say( "File In: " + cPar2, .T. )
+         Say( "File In: " + SubStr( cPar2, 1, Len( cPar2 ) - 4 ), .T. )
          Say( "US_Shell 803I: File In: " + cPar2 )
          IF ! File( cPar2 )
             Say( "File not found!" )
@@ -602,29 +586,28 @@ PROCEDURE MAIN( ... )
             Say( "US_Shell 807E: Functions exported: " )
             cTxtAux := MemoRead( cPar2 )
             bMinGWDynamic := .F.
-            FOR i := 1 TO MLCount( cTxtAux, 254 )
+            nCount := MLCount( cTxtAux, 254 )
+            FOR i := 1 TO nCount
                cLineaAux := MemoLine( cTxtAux, 254, i )
-               cLineaAux2 := MemoLine( cTxtAux, 254, i + 1 )
-               IF US_Word( cLineaAux, 1 ) == "SYMBOL" .AND. ;
-                  US_Word( cLineaAux, 2 ) == "TABLE:"
+               IF US_Word( cLineaAux, 1 ) == "SYMBOL" .AND. US_Word( cLineaAux, 2 ) == "TABLE:"
+                  cLineaAux2 := MemoLine( cTxtAux, 254, i + 1 )
                   cModuleNameAux := US_Word( cLineaAux2, US_Words( cLineaAux2 ) )
                   // ignore first two files in import originated libraries
                   IF cModuleNameAux == "fake"
                      bEncontroValido := .F.
-                     Loop
+                     LOOP
                   ENDIF
                   // is a module originated by import
                   IF cModuleNameAux == ".text"
                      bEncontroValido := .F.
                      IF ! bMinGWDynamic
-                        cDLL_Name := SubStr( cTxtAux, at( "Contents of section", cTxtAux ) )
-                        nDLL_NameAux := RAt( " ", SubStr( cDLL_Name, 1, At( ".DLL....", Upper( cDLL_Name ) ) ) ) + 1
+                        cDLL_Name := SubStr( cTxtAux, At( "Contents of section", cTxtAux ) )
+                        nDLL_NameAux := RAt( " ", SubStr( cDLL_Name, 1, At( ".DLL.", Upper( cDLL_Name ) ) ) ) + 1
                         cDLL_Name := StrTran( US_Word( SubStr( cDLL_Name, nDLL_NameAux ), 1 ), "....", "" )
                         Say( "    Dynamic link import (IMPDEF) from " + cDLL_Name )
                         bMinGWDynamic := .T.
                      ENDIF
                      AAdd( vFun, "             " + US_Word( MemoLine( cTxtAux, 254, i + 8 ), US_Words( MemoLine( cTxtAux, 254, i + 8 ) ) ) )
-                     LOOP
                   ELSE
                      // standard module
                      bEncontroValido := .T.
@@ -634,41 +617,45 @@ PROCEDURE MAIN( ... )
                         MemoObjLst := MemoObjLst + iif( ! Empty( MemoObjLst ), hb_osNewLine(), "" ) + cModuleNameAux
                      ENDIF
                   ENDIF
-                  lStop := US_Shell_Listo( cFileStop, @vFun )
                ELSE
                   // function in standard module
                   IF AllTrim( cLineaAux ) == "File" .AND. bEncontroValido
-                     FOR j := i + 1 TO MLCount( cTxtAux, 254 )
+                     FOR j := i + 1 TO nCount
                         cLineaAux = MemoLine( cTxtAux, 254, j )
-                        IF SubStr( US_Word( cLineaAux, US_Words( cLineaAux ) ), 1, 7 ) == "_HB_FUN"
+                        cWord := US_Word( cLineaAux, US_Words( cLineaAux ) )
+                        IF Left( cWord, 1 ) == "."
+                           i := j
+                           EXIT
+                        ENDIF
+                        IF SubStr( cWord, 1, 7 ) == "_HB_FUN"
                            AAdd( vFun, "             " + US_Word( cLineaAux, US_Words( cLineaAux ) ) )
                            IF bExpLst
                               MemoExpLst := MemoExpLst + hb_osNewLine() + US_Word( cLineaAux, US_Words( cLineaAux ) )
                            ENDIF
                            i := j
                         ENDIF
-                        IF SubStr( US_Word( cLineaAux, US_Words( cLineaAux ) ), 1, 1 ) == "." .OR. ;
-                           ( !( SubStr( US_Word( cLineaAux, 1 ), 1, 1 ) == "[" ) .AND. !( US_Word( cLineaAux, 1 ) == "AUX" ) )
+                        cWord := US_Word( cLineaAux, 1 )
+                        IF Left( cWord, 1 ) # "[" .AND. cWord # "AUX"
                            i := j
                            EXIT
                         ENDIF
-                        IF ( lStop := US_Shell_Listo( cFileStop, @vFun ) )
+                        IF File( cFileStop )
                            EXIT
                         ENDIF
                      NEXT j
                      bEncontroValido := .F.
                   ENDIF
                ENDIF
-               IF lStop
+               IF File( cFileStop )
+                  US_Shell_Listo( vFun )
+                  lStop := .T.
                   Say( "User stop!", .T. )
                   Say( "US_Shell 808W: User Stop" + CRLF )
                   EXIT
                ENDIF
-               IF i % 100 == 0
-                  hb_idleState()
-               ENDIF
             NEXT i
             IF ! lStop
+               US_Shell_Listo( vFun )
                Say( "US_Shell 809I: End of list" + CRLF )
                Say( "End of list.", .T. )
                IF bObjLst
@@ -736,30 +723,19 @@ PROCEDURE MAIN( ... )
    OTHERWISE
       Say( "US_Shell 002E: Invalid parameter: " + cParam + CRLF )
    ENDCASE
+   Say( CRLF )
 
    FErase( cFileStop )
 
    RETURN
 
 //========================================================================
-FUNCTION US_Shell_Listo( cFileStop, vFun )
-   LOCAL j, lRet := .F.
+FUNCTION US_Shell_Listo( vFun )
 
    ASort( vFun, {|x, y| US_Word( x, 1 ) < US_Word( y, 1 ) } )
-   FOR j := 1 TO len( vFun )
-      Say( vFun[j] )
-      Say( vFun[j], .T. )
-      IF File( cFileStop )
-         lRet := .T.
-         EXIT
-      ENDIF
-      IF j % 100 == 0
-         hb_idleState()
-      ENDIF
-   NEXT
-   vFun := {}
+   AEval( vFun, {|x| Say( x ), Say( x, .T. ) } )
 
-   RETURN lRet
+   RETURN NIL
 
 //========================================================================
 // FUNCION PARA EXTRAER UNA PALABRA DE UN ESTRING
@@ -1078,31 +1054,18 @@ FUNCTION US_IsDirectory( Dire )
    RETURN IsDirectory( Dire )
 
 //========================================================================
-// ESCRIBE EN EL LOG
-//========================================================================
-STATIC FUNCTION QPM_Log( string, nLevel )
-
-   IF nLevel == NIL
-      nLevel := 1
-   ENDIF
-
-   SET CONSOLE OFF
-   SET ALTERNATE TO ( cQPMDir + "QPM.LOG" ) ADDITIVE
-   SET ALTERNATE ON
-   ? DToS( Date() ) + " " + Time() + " US_SHELL " + ProcName( nLevel ) + "(" + Str( ProcLine( nLevel ), 3, 0 ) + ")" + " " + string
-   SET ALTERNATE OFF
-   SET ALTERNATE TO
-   SET CONSOLE ON
-
-   RETURN .T.
-
-//========================================================================
 FUNCTION Say( txt, lSay )
 
    IF HB_ISLOGICAL( lSay ) .AND. lSay
       __Run( "ECHO " + US_VarToStr( txt ) )
    ELSEIF bList
-      QPM_Log( txt, 2 )
+      SET CONSOLE OFF
+      SET ALTERNATE TO ( cQPMDir + "QPM.LOG" ) ADDITIVE
+      SET ALTERNATE ON
+      ? DToS( Date() ) + " " + Time() + " US_SHELL " + ProcName( 2 ) + "(" + Str( ProcLine( 2 ), 3, 0 ) + ")" + " " + txt
+      SET ALTERNATE OFF
+      SET ALTERNATE TO
+      SET CONSOLE ON
    ENDIF
 
    RETURN .T.
