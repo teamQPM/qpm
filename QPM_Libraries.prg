@@ -25,434 +25,386 @@
 #include "minigui.ch"
 #include <QPM.ch>
 
+FUNCTION QPM_ResetLibrariesForFlavor( cFlavor )
+   ASize( &('Gbl_DEF_LIBS_'+cFlavor), 0 )
+   QPM_InitLibrariesForFlavor( cFlavor )
+   CargoDefaultLibs( GetSuffix() )                   // This loads the default libraries grid
+RETURN .T.
+
 FUNCTION QPM_InitLibrariesForFlavor( cFlavor )
-   LOCAL  nCant, i, aLibs, aData
+   LOCAL aLibs, nCant, i, aData, n, e, s
 
    aLibs := &('Gbl_DEF_LIBS_'+cFlavor)
-   IF( nCant := Len( aLibs ) ) == 0
-      nCant := SetDefaultLibraries( cFlavor )
+   IF Len( aLibs ) == 0
+      SetDefaultLibraries( cFlavor )
       aLibs := &('Gbl_DEF_LIBS_'+cFlavor)
    ENDIF
 
-   vLibsDefault := {}   // array of { name, mode, threads, debug }
-   vLibsToLink  := {}   // array of lib names
+   i := 1
+   DO WHILE i <= Len( aLibs )
+      IF aLibs[i,2] == "B"
+         ASize( aLibs, Len( aLibs ) + 1 )
+         AIns( aLibs, i+1 )
+         aLibs[i+1] := { aLibs[i,1], "G", aLibs[i,3], aLibs[i,4] }
+         aLibs[i,2] := "C"
+      ENDIF
+      IF aLibs[i,3] == "B"
+         ASize( aLibs, Len( aLibs ) + 1 )
+         AIns( aLibs, i+1 )
+         aLibs[i+1] := { aLibs[i,1], aLibs[i,2], "M", aLibs[i,4] }
+         aLibs[i,3] := "S"
+      ENDIF
+      IF aLibs[i,4] == "B"
+         ASize( aLibs, Len( aLibs ) + 1 )
+         AIns( aLibs, i+1 )
+         aLibs[i+1] := { aLibs[i,1], aLibs[i,2], aLibs[i,3], "Y" }
+         aLibs[i,4] := "N"
+      ENDIF
+      i ++
+   ENDDO
+
+   vLibsDefault := {}   // array of { name, mode, threads, debug } - some libs may not exist
+   vLibsToLink  := {}   // array of lib names                      - all libs exist
+
+   nCant := Len( aLibs )
    FOR i := 1 TO nCant
       aData := aLibs[i]   // cFile, cMode, cThreads, cDebug
       AAdd( vLibsDefault, aData )
-      AAdd( vLibsToLink, aData[1] )
+      IF ( Prj_Check_Console .AND. aLibs[i,2] == "C" ) .OR. ( ! Prj_Check_Console .AND. aLibs[i,2] == "G" )
+         IF ( Prj_Check_MT .AND. aLibs[i,3] == "M" ) .OR. ( ! Prj_Check_MT .AND. aLibs[i,3] == "S" )
+            IF ( PUB_bDebugActive .AND. aLibs[i,4] == "Y" ) .OR. ( ! PUB_bDebugActive .AND. aLibs[i,4] == "N" )
+               e := Upper( US_FileNameOnlyExt( n := aLibs[i,1] ) )
+               s := GetCppSuffix()
+               IF e == 'O' .OR. e == 'OBJ'
+                  IF File( GetMiniGuiFolder() + DEF_SLASH + 'RESOURCES' + DEF_SLASH + n )
+                     AAdd( vLibsToLink, n )
+                  ELSEIF File( PUB_cProjectFolder + DEF_SLASH + n )
+                     AAdd( vLibsToLink, n )
+                  ELSEIF File( GetCppLibFolder() + DEF_SLASH + n )
+                     AAdd( vLibsToLink, n )
+                  ENDIF
+               ELSEIF File( GetMiniGuiLibFolder() + DEF_SLASH + n )
+                  AAdd( vLibsToLink, n )
+               ELSEIF File( GetHarbourLibFolder() + DEF_SLASH + n )
+                  AAdd( vLibsToLink, n )
+               ELSEIF File( GetCppLibFolder() + DEF_SLASH + n )
+                  AAdd( vLibsToLink, n )
+               ELSEIF s == DefineMinGW
+                  IF File( GetCppFolder() + DEF_SLASH + "lib" + DEF_SLASH + n )
+                     AAdd( vLibsToLink, n )
+                  ELSEIF Prj_Check_64bits .AND. File( GetCppFolder() + DEF_SLASH + "x86_64-w64-mingw32" + DEF_SLASH + "lib" + DEF_SLASH + n )
+                     AAdd( vLibsToLink, n )
+                  ELSEIF ! Prj_Check_64bits .AND. File( GetCppFolder() + DEF_SLASH + "i686-w64-mingw32" + DEF_SLASH + "lib" + DEF_SLASH + n )
+                     AAdd( vLibsToLink, n )
+                  ENDIF
+               ELSEIF s == DefinePelles
+                  IF File( GetCppLibFolder() + DEF_SLASH + 'WIN' + DEF_SLASH + n )
+                     AAdd( vLibsToLink, n )
+                  ENDIF
+               ELSEIF s == DefineBorland
+                  IF File( GetCppLibFolder() + DEF_SLASH + 'PSDK' + DEF_SLASH + n )
+                     AAdd( vLibsToLink, n )
+                  ENDIF
+               ENDIF
+            ENDIF
+         ENDIF
+      ENDIF
    NEXT i
 
 RETURN .T.
 
 STATIC FUNCTION SetDefaultLibraries( cFlavor )
 
-   LOCAL cCpp := GetCppSuffix(), cBits := GetBitsSuffix(), aDefaultLibs := {}
+   LOCAL cCpp := GetCppSuffix(), cBits := GetBitsSuffix(), cPrg := GetHarbourSuffix(), aDefaultLibs := {}
 
    DO CASE
-   CASE cCpp == DefineBorland .OR. cCpp == DefinePelles
-      // C compiler libs
-      IF cCpp == DefineBorland
+   CASE cCpp == DefineBorland
+      // the order of the following libs is the same order used by HMG Extended
          AAdd( aDefaultLibs, { 'c0x32.obj',              'C', 'B', 'B' } )
          AAdd( aDefaultLibs, { 'c0w32.obj',              'G', 'B', 'B' } )
+         AAdd( aDefaultLibs, { 'dbginit.obj',            'B', 'B', 'Y' } )
+         AAdd( aDefaultLibs, { 'tsbrowse.lib',           'B', 'B', 'B' } )
+         AAdd( aDefaultLibs, { 'propgrid.lib',           'B', 'B', 'B' } )
+         AAdd( aDefaultLibs, { 'minigui.lib',            'B', 'B', 'B' } )
+         AAdd( aDefaultLibs, { 'oohg.lib',               'B', 'B', 'B' } )
+         AAdd( aDefaultLibs, { 'dll.lib',                'B', 'B', 'B' } )
+         AAdd( aDefaultLibs, { 'calldll.lib',            'B', 'B', 'B' } )
+         AAdd( aDefaultLibs, { 'gtwin.lib',              'C', 'B', 'B' } )
+         AAdd( aDefaultLibs, { 'gtgui.lib',              'C', 'B', 'B' } )
+         AAdd( aDefaultLibs, { 'gtgui.lib',              'G', 'B', 'B' } )
+         AAdd( aDefaultLibs, { 'gtwin.lib',              'G', 'B', 'B' } )
+         AAdd( aDefaultLibs, { 'hbodbc.lib',             'B', 'B', 'B' } )   // ODBC 1
+         AAdd( aDefaultLibs, { 'odbc32.lib',             'B', 'B', 'B' } )   // ODBC 2
+      IF cPrg == DefineHarbour
+         AAdd( aDefaultLibs, { 'hbziparc.lib',           'B', 'B', 'B' } )   // ZIP 1
+         AAdd( aDefaultLibs, { 'hbmzip.lib',             'B', 'B', 'B' } )   // ZIP 2
+         AAdd( aDefaultLibs, { 'minizip.lib',            'B', 'B', 'B' } )   // ZIP 3
+         AAdd( aDefaultLibs, { 'hbzlib.lib',             'B', 'B', 'B' } )   // ZIP 4
+      ELSE   // DefineXHarbour
+         AAdd( aDefaultLibs, { 'hbzip.lib',              'B', 'B', 'B' } )   // ZIP
+      ENDIF
+         AAdd( aDefaultLibs, { 'rddads.lib',             'B', 'B', 'B' } )   // ADS 1
+         AAdd( aDefaultLibs, { 'ace32.lib',              'B', 'B', 'B' } )   // ADS 2
+         AAdd( aDefaultLibs, { 'hbmysql.lib',            'B', 'B', 'B' } )   // MYSQL 1
+         AAdd( aDefaultLibs, { 'libmysql.lib',           'B', 'B', 'B' } )   // MYSQL 2
+         AAdd( aDefaultLibs, { 'libpq.lib',              'B', 'B', 'B' } )   // PGSQL 1
+         AAdd( aDefaultLibs, { 'hbpgsql.lib',            'B', 'B', 'B' } )   // PGSQL 2
+         AAdd( aDefaultLibs, { 'bostaurus.lib',          'B', 'B', 'B' } )   // BT
+      // add other libs here
+      IF cPrg == DefineHarbour
+         AAdd( aDefaultLibs, { 'hbcplr.lib',             'B', 'B', 'B' } )
+         AAdd( aDefaultLibs, { 'hbrtl.lib',              'B', 'B', 'B' } )
+         AAdd( aDefaultLibs, { 'hbvm.lib',               'B', 'S', 'B' } )
+         AAdd( aDefaultLibs, { 'hbvmmt.lib',             'B', 'M', 'B' } )
+         AAdd( aDefaultLibs, { 'hbhpdf.lib',             'B', 'B', 'B' } )                // must come before xhb, hbwin, hblang
+         AAdd( aDefaultLibs, { 'hblang.lib',             'B', 'B', 'B' } )                // must come after haru, hpdf, libharu and libhpdf
+         AAdd( aDefaultLibs, { 'hbcpage.lib',            'B', 'B', 'B' } )
+         AAdd( aDefaultLibs, { 'hbmacro.lib',            'B', 'B', 'B' } )
+         AAdd( aDefaultLibs, { 'hbrdd.lib',              'B', 'B', 'B' } )
+         AAdd( aDefaultLibs, { 'hbhsx.lib',              'B', 'B', 'B' } )
+         AAdd( aDefaultLibs, { 'rddntx.lib',             'B', 'B', 'B' } )
+         AAdd( aDefaultLibs, { 'rddcdx.lib',             'B', 'B', 'B' } )
+         AAdd( aDefaultLibs, { 'rddfpt.lib',             'B', 'B', 'B' } )
+         AAdd( aDefaultLibs, { 'hbsix.lib',              'B', 'B', 'B' } )
+         AAdd( aDefaultLibs, { 'hbcommon.lib',           'B', 'B', 'B' } )
+         AAdd( aDefaultLibs, { 'hbdebug.lib',            'B', 'B', 'Y' } )
+         AAdd( aDefaultLibs, { 'hbpp.lib',               'B', 'B', 'B' } )
+         AAdd( aDefaultLibs, { 'hbpcre.lib',             'B', 'B', 'B' } )
+         AAdd( aDefaultLibs, { 'hbct.lib',               'B', 'B', 'B' } )
+         AAdd( aDefaultLibs, { 'hbmisc.lib',             'B', 'B', 'B' } )
+         AAdd( aDefaultLibs, { 'hbtip.lib',              'B', 'B', 'B' } )
+         AAdd( aDefaultLibs, { 'hbvpdf.lib',             'B', 'B', 'B' } )
+         AAdd( aDefaultLibs, { 'hbwin.lib',              'B', 'B', 'B' } )                // must come after haru, hpdf, libharu and libhpdf
+         AAdd( aDefaultLibs, { 'xhb.lib',                'B', 'B', 'B' } )                // must come after haru, hpdf, libharu and libhpdf
+         AAdd( aDefaultLibs, { 'ws2_32.lib',             'B', 'B', 'B' } )
+      ELSE   // DefineXHarbour
+         AAdd( aDefaultLibs, { 'rtl.lib',                'B', 'B', 'B' } )
+         AAdd( aDefaultLibs, { 'vm.lib',                 'B', 'B', 'B' } )
+         AAdd( aDefaultLibs, { 'lang.lib',               'B', 'B', 'B' } )                // must come after haru, hpdf, libharu and libhpdf
+         AAdd( aDefaultLibs, { 'codepage.lib',           'B', 'B', 'B' } )
+         AAdd( aDefaultLibs, { 'macro.lib',              'B', 'B', 'B' } )
+         AAdd( aDefaultLibs, { 'rdd.lib',                'B', 'B', 'B' } )
+         AAdd( aDefaultLibs, { 'dbfntx.lib',             'B', 'B', 'B' } )
+         AAdd( aDefaultLibs, { 'dbfcdx.lib',             'B', 'B', 'B' } )
+         AAdd( aDefaultLibs, { 'dbffpt.lib',             'B', 'B', 'B' } )
+         AAdd( aDefaultLibs, { 'hbsix.lib',              'B', 'B', 'B' } )
+         AAdd( aDefaultLibs, { 'common.lib',             'B', 'B', 'B' } )
+         AAdd( aDefaultLibs, { 'debug.lib',              'B', 'B', 'B' } )
+         AAdd( aDefaultLibs, { 'pp.lib',                 'B', 'B', 'B' } )
+         AAdd( aDefaultLibs, { 'pcrepos.lib',            'B', 'B', 'B' } )
+         AAdd( aDefaultLibs, { 'ct.lib',                 'B', 'B', 'B' } )
+         AAdd( aDefaultLibs, { 'libmisc.lib',            'B', 'B', 'B' } )
+         AAdd( aDefaultLibs, { 'tip.lib',                'B', 'B', 'B' } )
+         AAdd( aDefaultLibs, { 'hbvpdf.lib',             'B', 'B', 'B' } )
+      ENDIF
+         AAdd( aDefaultLibs, { 'hbprinter.lib',          'B', 'B', 'B' } )
+         AAdd( aDefaultLibs, { 'miniprint.lib',          'B', 'B', 'B' } )
+         AAdd( aDefaultLibs, { 'socket.lib',             'B', 'B', 'B' } )
+         AAdd( aDefaultLibs, { 'import32.lib',           'B', 'B', 'B' } )
+         AAdd( aDefaultLibs, { 'iphlpapi.lib',           'B', 'B', 'B' } )
+         AAdd( aDefaultLibs, { 'msimg32.lib',            'B', 'B', 'B' } )
          AAdd( aDefaultLibs, { 'cw32mt.lib',             'B', 'M', 'B' } )
-         AAdd( aDefaultLibs, { 'cw32.lib',               'B', 'S', 'B' } )
-      ELSEIF cBits == Define32bits
+         AAdd( aDefaultLibs, { 'cw32.lib',               'B', 'S', 'B' } )     
+
+   CASE cCpp == DefinePelles
+         AAdd( aDefaultLibs, { 'tsbrowse.lib',           'B', 'B', 'B' } )
+         AAdd( aDefaultLibs, { 'propgrid.lib',           'B', 'B', 'B' } )
+         AAdd( aDefaultLibs, { 'minigui.lib',            'B', 'B', 'B' } )
+         AAdd( aDefaultLibs, { 'oohg.lib',               'B', 'B', 'B' } )
+         AAdd( aDefaultLibs, { 'dll.lib',                'B', 'B', 'B' } )
+         AAdd( aDefaultLibs, { 'gtwin.lib',              'C', 'B', 'B' } )
+         AAdd( aDefaultLibs, { 'gtgui.lib',              'C', 'B', 'B' } )
+         AAdd( aDefaultLibs, { 'gtgui.lib',              'G', 'B', 'B' } )
+         AAdd( aDefaultLibs, { 'gtwin.lib',              'G', 'B', 'B' } )
+         AAdd( aDefaultLibs, { 'hbodbc.lib',             'B', 'B', 'B' } )   // ODBC 1
+         AAdd( aDefaultLibs, { 'odbc32.lib',             'B', 'B', 'B' } )   // ODBC 2
+      IF cPrg == DefineHarbour
+         AAdd( aDefaultLibs, { 'hbziparc.lib',           'B', 'B', 'B' } )   // ZIP 1
+         AAdd( aDefaultLibs, { 'hbmzip.lib',             'B', 'B', 'B' } )   // ZIP 2
+         AAdd( aDefaultLibs, { 'minizip.lib',            'B', 'B', 'B' } )   // ZIP 3
+         AAdd( aDefaultLibs, { 'hbzlib.lib',             'B', 'B', 'B' } )   // ZIP 4
+      ELSE   // DefineXHarbour
+         AAdd( aDefaultLibs, { 'hbzip.lib',              'B', 'B', 'B' } )   // ZIP
+      ENDIF
+         AAdd( aDefaultLibs, { 'rddads.lib',             'B', 'B', 'B' } )   // ADS 1
+         AAdd( aDefaultLibs, { 'ace32.lib',              'B', 'B', 'B' } )   // ADS 2
+         AAdd( aDefaultLibs, { 'hbmysql.lib',            'B', 'B', 'B' } )   // MYSQL 1
+         AAdd( aDefaultLibs, { 'libmysql.lib',           'B', 'B', 'B' } )   // MYSQL 2
+         AAdd( aDefaultLibs, { 'libpq.lib',              'B', 'B', 'B' } )   // PGSQL 2
+         AAdd( aDefaultLibs, { 'hbpgsql.lib',            'B', 'B', 'B' } )   // PGSQL 2
+         AAdd( aDefaultLibs, { 'bostaurus.lib',          'B', 'B', 'B' } )   // BT
+      // add other libs here
+      IF cPrg == DefineHarbour
+         AAdd( aDefaultLibs, { 'hbcplr.lib',             'B', 'B', 'B' } )
+         AAdd( aDefaultLibs, { 'hbrtl.lib',              'B', 'B', 'B' } )
+         AAdd( aDefaultLibs, { 'hbvm.lib',               'B', 'S', 'B' } )
+         AAdd( aDefaultLibs, { 'hbvmmt.lib',             'B', 'M', 'B' } )
+         AAdd( aDefaultLibs, { 'hbhpdf.lib',             'B', 'B', 'B' } )                // must come before xhb, hbwin, hblang
+         AAdd( aDefaultLibs, { 'hblang.lib',             'B', 'B', 'B' } )                // must come after haru, hpdf, libharu and libhpdf
+         AAdd( aDefaultLibs, { 'hbcpage.lib',            'B', 'B', 'B' } )
+         AAdd( aDefaultLibs, { 'hbmacro.lib',            'B', 'B', 'B' } )
+         AAdd( aDefaultLibs, { 'hbrdd.lib',              'B', 'B', 'B' } )
+         AAdd( aDefaultLibs, { 'hbhsx.lib',              'B', 'B', 'B' } )
+         AAdd( aDefaultLibs, { 'rddntx.lib',             'B', 'B', 'B' } )
+         AAdd( aDefaultLibs, { 'rddcdx.lib',             'B', 'B', 'B' } )
+         AAdd( aDefaultLibs, { 'rddfpt.lib',             'B', 'B', 'B' } )
+         AAdd( aDefaultLibs, { 'hbsix.lib',              'B', 'B', 'B' } )
+         AAdd( aDefaultLibs, { 'hbcommon.lib',           'B', 'B', 'B' } )
+         AAdd( aDefaultLibs, { 'hbdebug.lib',            'B', 'B', 'Y' } )
+         AAdd( aDefaultLibs, { 'hbpp.lib',               'B', 'B', 'B' } )
+         AAdd( aDefaultLibs, { 'hbpcre.lib',             'B', 'B', 'B' } )
+         AAdd( aDefaultLibs, { 'hbct.lib',               'B', 'B', 'B' } )
+         AAdd( aDefaultLibs, { 'hbmisc.lib',             'B', 'B', 'B' } )
+         AAdd( aDefaultLibs, { 'hbtip.lib',              'B', 'B', 'B' } )
+         AAdd( aDefaultLibs, { 'hbvpdf.lib',             'B', 'B', 'B' } )
+         AAdd( aDefaultLibs, { 'hbwin.lib',              'B', 'B', 'B' } )                // must come after haru, hpdf, libharu and libhpdf
+         AAdd( aDefaultLibs, { 'xhb.lib',                'B', 'B', 'B' } )                // must come after haru, hpdf, libharu and libhpdf
+         AAdd( aDefaultLibs, { 'ws2_32.lib',             'B', 'B', 'B' } )
+      ELSE   // DefineXHarbour
+         AAdd( aDefaultLibs, { 'rtl.lib',                'B', 'B', 'B' } )
+         AAdd( aDefaultLibs, { 'vm.lib',                 'B', 'B', 'B' } )
+         AAdd( aDefaultLibs, { 'lang.lib',               'B', 'B', 'B' } )                // must come after haru, hpdf, libharu and libhpdf
+         AAdd( aDefaultLibs, { 'codepage.lib',           'B', 'B', 'B' } )
+         AAdd( aDefaultLibs, { 'macro.lib',              'B', 'B', 'B' } )
+         AAdd( aDefaultLibs, { 'rdd.lib',                'B', 'B', 'B' } )
+         AAdd( aDefaultLibs, { 'dbfntx.lib',             'B', 'B', 'B' } )
+         AAdd( aDefaultLibs, { 'dbfcdx.lib',             'B', 'B', 'B' } )
+         AAdd( aDefaultLibs, { 'dbffpt.lib',             'B', 'B', 'B' } )
+         AAdd( aDefaultLibs, { 'hbsix.lib',              'B', 'B', 'B' } )
+         AAdd( aDefaultLibs, { 'common.lib',             'B', 'B', 'B' } )
+         AAdd( aDefaultLibs, { 'debug.lib',              'B', 'B', 'B' } )
+         AAdd( aDefaultLibs, { 'pp.lib',                 'B', 'B', 'B' } )
+         AAdd( aDefaultLibs, { 'pcrepos.lib',            'B', 'B', 'B' } )
+         AAdd( aDefaultLibs, { 'ct.lib',                 'B', 'B', 'B' } )
+         AAdd( aDefaultLibs, { 'libmisc.lib',            'B', 'B', 'B' } )
+         AAdd( aDefaultLibs, { 'tip.lib',                'B', 'B', 'B' } )
+         AAdd( aDefaultLibs, { 'hbvpdf.lib',             'B', 'B', 'B' } )
+      ENDIF
+         AAdd( aDefaultLibs, { 'hbprinter.lib',          'B', 'B', 'B' } )
+         AAdd( aDefaultLibs, { 'miniprint.lib',          'B', 'B', 'B' } )
+         AAdd( aDefaultLibs, { 'socket.lib',             'B', 'B', 'B' } )
+         AAdd( aDefaultLibs, { 'import32.lib',           'B', 'B', 'B' } )
+         AAdd( aDefaultLibs, { 'iphlpapi.lib',           'B', 'B', 'B' } )
+         AAdd( aDefaultLibs, { 'msimg32.lib',            'B', 'B', 'B' } )
+      IF cBits == Define32bits
          AAdd( aDefaultLibs, { 'crtmt.lib',              'B', 'M', 'B' } )
          AAdd( aDefaultLibs, { 'crt.lib',                'B', 'S', 'B' } )
       ELSE
          AAdd( aDefaultLibs, { 'crtmt64.lib',            'B', 'M', 'B' } )
          AAdd( aDefaultLibs, { 'crt64.lib',              'B', 'S', 'B' } )
       ENDIF
-         AAdd( aDefaultLibs, { 'comctl32.lib',           'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'comdlg32.lib',           'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'gdi32.lib',              'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'import32.lib',           'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'iphlpapi.lib',           'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'mapi32.lib',             'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'mpr.lib',                'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'msimg32.lib',            'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'odbc32.lib',             'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'ole32.lib',              'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'oleaut32.lib',           'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'shell32.lib',            'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'user32.lib',             'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'uuid.lib',               'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'version.lib',            'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'vfw32.lib',              'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'winmm.lib',              'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'winspool.lib',           'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'ws2_32.lib',             'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'wsock32.lib',            'B', 'B', 'B' } )
-      // gt, debug and mt lib
-         AAdd( aDefaultLibs, { 'gtwin.lib',              'C', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'gtgui.lib',              'C', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'debug.lib',              'C', 'B', 'Y' } )
-         AAdd( aDefaultLibs, { 'hbdebug.lib',            'C', 'B', 'Y' } )
-         AAdd( aDefaultLibs, { 'gtgui.lib',              'G', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'gtwin.lib',              'G', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'debug.lib',              'G', 'B', 'Y' } )
-         AAdd( aDefaultLibs, { 'hbdebug.lib',            'G', 'B', 'Y' } )
-         AAdd( aDefaultLibs, { 'vmmt.lib',               'B', 'M', 'B' } )
-         AAdd( aDefaultLibs, { 'hbvmmt.lib',             'B', 'M', 'B' } )
-         AAdd( aDefaultLibs, { 'vm.lib',                 'B', 'S', 'B' } )
-         AAdd( aDefaultLibs, { 'hbvm.lib',               'B', 'S', 'B' } )
-      // other (x)Harbour libs
-         AAdd( aDefaultLibs, { 'ace32.lib',              'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'adordd.lib',             'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'advapi32.lib',           'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'bmdbfcdx.lib',           'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'bmsixcdx.lib',           'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'bostaurus.lib',          'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'calldll.lib',            'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'codepage.lib',           'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'common.lib',             'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'compiler.lib',           'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'ct.lib',                 'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'dbfcdx.lib',             'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'dbfdbt.lib',             'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'dbffpt.lib',             'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'dbfmdx.lib',             'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'dbfnsx.lib',             'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'dbfntx.lib',             'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'dll.lib',                'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'dllmain.lib',            'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'fi_lib.lib',             'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'fmstat.lib',             'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'freeimage.lib',          'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'hbaes.lib',              'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'hbcgi.lib',              'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'hbcomio.lib',            'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'hbcomm.lib',             'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'hbcommon.lib',           'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'hbcpage.lib',            'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'hbcplr.lib',             'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'hbcrypto.lib',           'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'hbct.lib',               'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'hbcurl.lib',             'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'hbcurls.lib',            'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'hbextern.lib',           'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'hbfimage.lib',           'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'hbfoxpro.lib',           'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'hbfship.lib',            'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'hbgdip.lib',             'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'hbgzio.lib',             'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'hbhpdf.lib',             'B', 'B', 'B' } )                // must come before xhb, hbwin, hblang
-         AAdd( aDefaultLibs, { 'hbhsx.lib',              'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'hblang.lib',             'B', 'B', 'B' } )                // must come after hbhpdf
-         AAdd( aDefaultLibs, { 'hbmacro.lib',            'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'hbmemio.lib',            'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'hbmisc.lib',             'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'hbmxml.lib',             'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'hbmysql.lib',            'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'hbmzip.lib',             'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'hbnetio.lib',            'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'hbnf.lib',               'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'hbodbc.lib',             'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'hbole.lib',              'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'hbpcre.lib',             'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'hbpcre2.lib',            'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'hbpgsql.lib',            'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'hbpipeio.lib',           'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'hbpp.lib',               'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'hbprinter.lib',          'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'hbrdd.lib',              'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'hbrtl.lib',              'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'hbsix.lib',              'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'hbsqldd.lib',            'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'hbsqldd.lib',            'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'hbsqlite3.lib',          'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'hbssl.lib',              'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'hbssls.lib',             'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'hbtcpio.lib',            'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'hbtip.lib',              'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'hbuddall.lib',           'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'hbunrar.lib',            'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'hbusrrdd.lib',           'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'hbvpdf.lib',             'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'hbw32.lib',              'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'hbwin.lib',              'B', 'B', 'B' } )                // must come after hbhpdf
-         AAdd( aDefaultLibs, { 'hbxlsxml.lib',           'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'hbxml.lib',              'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'hbxpp.lib',              'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'hbzebra.lib',            'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'hbzeegrid.lib',          'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'hbzip.lib',              'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'hbziparc.lib',           'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'hbziparch.lib',          'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'hbzlib.lib',             'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'hmg_hpdf.lib',           'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'hpdf.lib',               'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'hsx.lib',                'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'lang.lib',               'B', 'B', 'B' } )                // must come after hbhpdf
-         AAdd( aDefaultLibs, { 'libct.lib',              'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libcurl.lib',            'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libeay32.lib',           'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libharu.lib',            'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libhpdf.lib',            'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libmisc.lib',            'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libmysql.lib',           'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libnf.lib',              'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libpng.lib',             'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libpq.lib',              'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'macro.lib',              'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'mapi32.lib',             'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'miniprint.lib',          'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'minizip.lib',            'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'mxml.lib',               'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'mysql.lib',              'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'pcrepos.lib',            'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'pdfprinter.lib',         'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'png.lib',                'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'pp.lib',                 'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'pscript.lib',            'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'rdd.lib',                'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'rddads.lib',             'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'rddbm.lib',              'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'rddcdx.lib',             'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'rdddbt.lib',             'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'rddfpt.lib',             'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'rddleto.lib',            'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'rddnsx.lib',             'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'rddntx.lib',             'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'rdds.lib',               'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'rddsql.lib',             'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'redbfcdx.lib',           'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'redbffpt.lib',           'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'rtl.lib',                'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'sddmy.lib',              'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'sddodbc.lib',            'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'sddsqlt3.lib',           'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'selector.lib',           'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'sevenzip.lib',           'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'sixcdx.lib',             'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'socket.lib',             'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'sqlite3.lib',            'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'sqlite3facade.lib',      'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'ssleay32.lib',           'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'tdatabase.lib',          'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'tip.lib',                'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'tmsagent.lib',           'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'usrrdd.lib',             'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'ziparchive.lib',         'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'zlib.lib',               'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'zlib1.lib',              'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'xhb.lib',                'B', 'B', 'B' } )                // must come after hbhpdf
+
    CASE cCpp == DefineMinGW
-      // C compiler libs
-         AAdd( aDefaultLibs, { 'libcomctl32.a',          'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libcomdlg32.a',          'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libgdi32.a',             'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libimport32.a',          'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libiphlpapi.a',          'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libmapi32.a',            'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libmpr.a',               'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libmsimg32.a',           'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libodbc32.a',            'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libole32.a',             'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'liboleaut32.a',          'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libshell32.a',           'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libuser32.a',            'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libuuid.a',              'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libversion.a',           'B', 'B', 'B' } )
+      // the order of the following libs is the same order used by HMG Extended
+         AAdd( aDefaultLibs, { 'libminigui.a',           'B', 'B', 'B' } )
+         AAdd( aDefaultLibs, { 'liboohg.a',              'B', 'B', 'B' } )
+         AAdd( aDefaultLibs, { 'libhbprinter.a',         'B', 'B', 'B' } )
+      IF cBits == Define32bits
+         AAdd( aDefaultLibs, { 'libminiprint.a',         'B', 'B', 'B' } )
+      ELSE
+         AAdd( aDefaultLibs, { 'libminiprint2.a',        'B', 'B', 'B' } )
+      ENDIF
+         AAdd( aDefaultLibs, { 'libbostaurus.a',         'B', 'B', 'B' } )
+         AAdd( aDefaultLibs, { 'libadordd.a',            'B', 'B', 'B' } )
+         AAdd( aDefaultLibs, { 'libcalldll.a',           'B', 'B', 'B' } )
+         AAdd( aDefaultLibs, { 'libtsbrowse.a',          'B', 'B', 'B' } )
+         AAdd( aDefaultLibs, { 'libhbct.a',              'B', 'B', 'B' } )
+         AAdd( aDefaultLibs, { 'libhbtip.a',             'B', 'B', 'B' } )
+         AAdd( aDefaultLibs, { 'libhbwin.a',             'B', 'B', 'B' } )                // must come after haru, hpdf, libharu and libhpdf
+         AAdd( aDefaultLibs, { 'libhbvpdf.a',            'B', 'B', 'B' } )
+         AAdd( aDefaultLibs, { 'libxhb.a',               'B', 'B', 'B' } )                // must come after haru, hpdf, libharu and libhpdf
+         AAdd( aDefaultLibs, { 'libhbmisc.a',            'B', 'B', 'B' } )
+         AAdd( aDefaultLibs, { 'libhbziparc.a',          'B', 'B', 'B' } )   // ZIP 1
+         AAdd( aDefaultLibs, { 'libhbmzip.a',            'B', 'B', 'B' } )   // ZIP 2
+         AAdd( aDefaultLibs, { 'libminizip.a',           'B', 'B', 'B' } )   // ZIP 3
+         AAdd( aDefaultLibs, { 'libmsvfw32.a',           'B', 'B', 'B' } )
          AAdd( aDefaultLibs, { 'libvfw32.a',             'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libwinmm.a',             'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libwinspool.a',          'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libws2_32.a',            'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libwsock32.a',           'B', 'B', 'B' } )
-      // gt, debug and mt lib
+         AAdd( aDefaultLibs, { 'libhbextern.a',          'B', 'B', 'B' } )
+         AAdd( aDefaultLibs, { 'libhbdebug.a',           'B', 'B', 'Y' } )
+         AAdd( aDefaultLibs, { 'libhbvm.a',              'B', 'S', 'B' } )
+         AAdd( aDefaultLibs, { 'libhbvmmt.a',            'B', 'M', 'B' } )
+         AAdd( aDefaultLibs, { 'libhbrtl.a',             'B', 'B', 'B' } )
+         AAdd( aDefaultLibs, { 'libhblang.a',            'B', 'B', 'B' } )                // must come after haru, hpdf, libharu and libhpdf
+         AAdd( aDefaultLibs, { 'libhbcpage.a',           'B', 'B', 'B' } )
          AAdd( aDefaultLibs, { 'libgtwin.a',             'C', 'B', 'B' } )
          AAdd( aDefaultLibs, { 'libgtgui.a',             'C', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libdebug.a',             'C', 'B', 'Y' } )
-         AAdd( aDefaultLibs, { 'libhbdebug.a',           'C', 'B', 'Y' } )
          AAdd( aDefaultLibs, { 'libgtgui.a',             'G', 'B', 'B' } )
          AAdd( aDefaultLibs, { 'libgtwin.a',             'G', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libdebug.a',             'G', 'B', 'Y' } )
-         AAdd( aDefaultLibs, { 'libhbdebug.a',           'G', 'B', 'Y' } )
-         AAdd( aDefaultLibs, { 'libvmmt.a',              'B', 'M', 'B' } )
-         AAdd( aDefaultLibs, { 'libhbvmmt.a',            'B', 'M', 'B' } )
-         AAdd( aDefaultLibs, { 'libvm.a',                'B', 'S', 'B' } )
-         AAdd( aDefaultLibs, { 'libhbvm.a',              'B', 'S', 'B' } )
-      // other (x)Harbour libs
-         AAdd( aDefaultLibs, { 'libace32.a',             'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libadordd.a',            'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'liballeg42.a',           'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libbgd.a',               'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libblat.a',              'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libbmdbfcdx.a',          'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libbmsixcdx.a',          'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libbostaurus.a',         'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libbz2.a',               'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libcairo.a',             'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libcalldll.a',           'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libcodepage.a',          'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libcommon.a',            'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libcompiler.a',          'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libcrypt.a',             'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libct.a',                'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libdbfcdx.a',            'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libdbfdbt.a',            'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libdbfmdx.a',            'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libdbfnsx.a',            'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libdbfntx.a',            'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libdll.a',               'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libdllmain.a',           'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libedit.a',              'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libeditex.a',            'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libexpat.a',             'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libfbclient.a',          'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libfi_lib.a',            'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libFreeImage.a',         'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libgraph.a',             'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libhbamf.a',             'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libhbblat.a',            'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libhbblink.a',           'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libhbbz2.a',             'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libhbbz2io.a',           'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libhbcairo.a',           'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libhbcgi.a',             'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libhbcomio.a',           'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libhbcomm.a',            'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libhbcommon.a',          'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libhbcpage.a',           'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libhbcplr.a',            'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libhbct.a',              'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libhbcurl.a',            'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libhbcurls.a',           'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libhbexpat.a',           'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libhbextern.a',          'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libhbfbird.a',           'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libhbfimage.a',          'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libhbformat.a',          'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libhbfoxpro.a',          'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libhbfship.a',           'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libhbgd.a',              'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libhbgt.a',              'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libhbgzio.a',            'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libhbhpdf.a',            'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libhbhsx.a',             'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libhbhttpd.a',           'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libhblzf.a',             'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libhbmacro.a',           'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libhbmemio.a',           'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libhbmisc.a',            'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libhbmlzo.a',            'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libhbmxml.a',            'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libhbmysql.a',           'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libhbmzip.a',            'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libhbnetio.a',           'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libhbnf.a',              'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libhbodbc.a',            'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libhbole.a',             'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libhboslib.a',           'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libhbpcre.a',            'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libhbpcre2.a',           'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libhbpgsql.a',           'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libhbpipeio.a',          'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libhbpp.a',              'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libhbprinter.a',         'B', 'B', 'B' } )
          AAdd( aDefaultLibs, { 'libhbrdd.a',             'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libhbrtl.a',             'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libhbsix.a',             'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libhbsms.a',             'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libhbsqlit3.a',          'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libhbssl.a',             'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libhbssls.a',            'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libhbtcpio.a',           'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libhbtest.a',            'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libhbtinymt.a',          'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libhbtip.a',             'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libhbuddall.a',          'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libhbunrar.a',           'B', 'B', 'B' } )
          AAdd( aDefaultLibs, { 'libhbusrrdd.a',          'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libhbvpdf.a',            'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libhbw32.a',             'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libhbxml.a',             'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libhbxpp.a',             'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libhbzebra.a',           'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libhbzip.a',             'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libhbziparc.a',          'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libhbzlib.a',            'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libhmg_hpdf.a',          'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libhpdf.a',              'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libhsx.a',               'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libini.a',               'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libjpeg.a',              'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'liblang.a',              'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'liblibeay32.a',          'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'liblibharu.a',           'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'liblibhpdf.a',           'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'liblibmisc.a',           'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'liblibmySQL.a',          'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'liblibnf.a',             'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'liblibpng.a',            'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'liblibpq.a',             'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'liblzf.a',               'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libmacro.a',             'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libminilzo.a',           'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libminiprint.a',         'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libminizip.a',           'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libmxml.a',              'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libmysql.a',             'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libmysqldll.a',          'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libociliba.a',           'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libocilibm.a',           'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libocilibw.a',           'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libpcrepos.a',           'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libpng.a',               'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libpp.a',                'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libpropgrid.a',          'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libpropsheet.a',         'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libpscript.a',           'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libqhtm.a',              'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'librdd.a',               'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'librddads.a',            'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'librddbm.a',             'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'librddcdx.a',            'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'librdddbt.a',            'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'librddfpt.a',            'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'librddnsx.a',            'B', 'B', 'B' } )
          AAdd( aDefaultLibs, { 'librddntx.a',            'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'librdds.a',              'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'librddsql.a',            'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libredbfcdx.a',          'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libredbffpt.a',          'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libregistry.a',          'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libreport.a',            'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'librtl.a',               'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libsddfb.a',             'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libsddmy.a',             'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libsddoci.a',            'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libsddodbc.a',           'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libsddpg.a',             'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libsddsqlt3.a',          'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libselector.a',          'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libsevenzip.a',          'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libsixcdx.a',            'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libsocket.a',            'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libsqlite3.a',           'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libssleay32.a',          'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libtiff.a',              'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libtinymt.a',            'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libtip.a',               'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libtmsagent.a',          'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libtsbrowse.a',          'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libunrar.a',             'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libusrrdd.a',            'B', 'B', 'B' } )
+         AAdd( aDefaultLibs, { 'librddcdx.a',            'B', 'B', 'B' } )
+         AAdd( aDefaultLibs, { 'librddnsx.a',            'B', 'B', 'B' } )
+         AAdd( aDefaultLibs, { 'librddfpt.a',            'B', 'B', 'B' } )
+         AAdd( aDefaultLibs, { 'libhbrdd.a',             'B', 'B', 'B' } )
+         AAdd( aDefaultLibs, { 'libhbhsx.a',             'B', 'B', 'B' } )
+         AAdd( aDefaultLibs, { 'libhbsix.a',             'B', 'B', 'B' } )
+         AAdd( aDefaultLibs, { 'libhbmacro.a',           'B', 'B', 'B' } )
+         AAdd( aDefaultLibs, { 'libhbcplr.a',            'B', 'B', 'B' } )
+         AAdd( aDefaultLibs, { 'libhbpp.a',              'B', 'B', 'B' } )
+         AAdd( aDefaultLibs, { 'libhbcommon.a',          'B', 'B', 'B' } )
+         AAdd( aDefaultLibs, { 'libhbmainwin.a',         'B', 'B', 'B' } )
+         AAdd( aDefaultLibs, { 'libkernel32.a',          'B', 'B', 'B' } )
+         AAdd( aDefaultLibs, { 'libuser32.a',            'B', 'B', 'B' } )
+         AAdd( aDefaultLibs, { 'libgdi32.a',             'B', 'B', 'B' } )
+         AAdd( aDefaultLibs, { 'libadvapi32.a',          'B', 'B', 'B' } )
+         AAdd( aDefaultLibs, { 'libws2_32.a',            'B', 'B', 'B' } )
+         AAdd( aDefaultLibs, { 'libiphlpapi.a',          'B', 'B', 'B' } )
+         AAdd( aDefaultLibs, { 'libwinspool.a',          'B', 'B', 'B' } )
+         AAdd( aDefaultLibs, { 'libcomctl32.a',          'B', 'B', 'B' } )
+         AAdd( aDefaultLibs, { 'libcomdlg32.a',          'B', 'B', 'B' } )
+         AAdd( aDefaultLibs, { 'libshell32.a',           'B', 'B', 'B' } )
+         AAdd( aDefaultLibs, { 'libuuid.a',              'B', 'B', 'B' } )
+         AAdd( aDefaultLibs, { 'libole32.a',             'B', 'B', 'B' } )
+         AAdd( aDefaultLibs, { 'liboleaut32.a',          'B', 'B', 'B' } )
+         AAdd( aDefaultLibs, { 'libmpr.a',               'B', 'B', 'B' } )
          AAdd( aDefaultLibs, { 'libwinmm.a',             'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libwinreport.a',         'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libxcrypt.a',            'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libxdiff.a',             'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libxeditex.a',           'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libxgraph.a',            'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libxini.a',              'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libxregistry.a',         'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libxreport.a',           'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libzebra.a',             'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libzlib.a',              'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libzlib1.a',             'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libhblang.a',            'B', 'B', 'B' } )                // must come after haru, hpdf, libharu and libhpdf
-         AAdd( aDefaultLibs, { 'libhbwin.a',             'B', 'B', 'B' } )                // must come after haru, hpdf, libharu and libhpdf
-         AAdd( aDefaultLibs, { 'libxhb.a',               'B', 'B', 'B' } )                // must come after haru, hpdf, libharu and libhpdf
+         AAdd( aDefaultLibs, { 'libmapi32.a',            'B', 'B', 'B' } )
+         AAdd( aDefaultLibs, { 'libimm32.a',             'B', 'B', 'B' } )
+         AAdd( aDefaultLibs, { 'libmsimg32.a',           'B', 'B', 'B' } )
+         AAdd( aDefaultLibs, { 'libwininet.a',           'B', 'B', 'B' } )
+         AAdd( aDefaultLibs, { 'libhbpcre2.a',           'B', 'B', 'B' } )
+         AAdd( aDefaultLibs, { 'libhbzlib.a',            'B', 'B', 'B' } )   // ZIP 4
+         AAdd( aDefaultLibs, { 'libhbxml.a',             'B', 'B', 'B' } )   // XML
+/*
+// otras
+      IF cPrg == DefineHarbour
+         AAdd( aDefaultLibs, { 'libhbpcre.a',            'B', 'B', 'B' } )
+         AAdd( aDefaultLibs, { 'libhbodbc.a',            'B', 'B', 'B' } )   // ODBC 1
+         AAdd( aDefaultLibs, { 'libhbmysql.a',           'B', 'B', 'B' } )   // MYSQL 1
+         AAdd( aDefaultLibs, { 'liblibmysql.a',          'B', 'B', 'B' } )   // MYSQL 2
+         AAdd( aDefaultLibs, { 'libhbhpdf.a',            'B', 'B', 'B' } )                // must come before xhb, hbwin, hblang
+         AAdd( aDefaultLibs, { 'liblibhpdf.a',           'B', 'B', 'B' } )                
+      ELSE   // DefineXHarbour
+         AAdd( aDefaultLibs, { 'libhbzip.a',             'B', 'B', 'B' } )   // ZIP
+         AAdd( aDefaultLibs, { 'librtl.a',               'B', 'B', 'B' } )
+         AAdd( aDefaultLibs, { 'libvm.a',                'B', 'B', 'B' } )
+         AAdd( aDefaultLibs, { 'liblang.a',              'B', 'B', 'B' } )                // must come after haru, hpdf, libharu and libhpdf
+         AAdd( aDefaultLibs, { 'libcodepage.a',          'B', 'B', 'B' } )
+         AAdd( aDefaultLibs, { 'libmacro.a',             'B', 'B', 'B' } )
+         AAdd( aDefaultLibs, { 'librdd.a',               'B', 'B', 'B' } )
+         AAdd( aDefaultLibs, { 'libdbfntx.a',            'B', 'B', 'B' } )
+         AAdd( aDefaultLibs, { 'libdbfcdx.a',            'B', 'B', 'B' } )
+         AAdd( aDefaultLibs, { 'libdbffpt.a',            'B', 'B', 'B' } )
+         AAdd( aDefaultLibs, { 'libhbsix.a',             'B', 'B', 'B' } )
+         AAdd( aDefaultLibs, { 'libcommon.a',            'B', 'B', 'B' } )
+         AAdd( aDefaultLibs, { 'libdebug.a',             'B', 'B', 'B' } )
+         AAdd( aDefaultLibs, { 'libpp.a',                'B', 'B', 'B' } )
+         AAdd( aDefaultLibs, { 'libpcrepos.a',           'B', 'B', 'B' } )
+         AAdd( aDefaultLibs, { 'libct.a',                'B', 'B', 'B' } )
+         AAdd( aDefaultLibs, { 'liblibmisc.a',           'B', 'B', 'B' } )
+         AAdd( aDefaultLibs, { 'libtip.a',               'B', 'B', 'B' } )
+      ENDIF
+      IF cBits == Define32bits
+         AAdd( aDefaultLibs, { 'libodbc32.a',            'B', 'B', 'B' } )   // ODBC 2
+         AAdd( aDefaultLibs, { 'librddads.a',            'B', 'B', 'B' } )   // ADS 1
+         AAdd( aDefaultLibs, { 'libace32.a',             'B', 'B', 'B' } )   // ADS 2
+         AAdd( aDefaultLibs, { 'liblibpq.a',             'B', 'B', 'B' } )   // PGSQL 1
+         AAdd( aDefaultLibs, { 'libhbpgsql.a',           'B', 'B', 'B' } )   // PGSQL 2
+         AAdd( aDefaultLibs, { 'libsocket.a',            'B', 'B', 'B' } )
+      ELSE
+      ENDIF
+*/
    OTHERWISE
       RETURN 0
    ENDCASE
@@ -462,55 +414,3 @@ STATIC FUNCTION SetDefaultLibraries( cFlavor )
 RETURN Len( aDefaultLibs )
 
 /* eof */
-
-/*  TODO: Dynamic libs, add a switch at Project Options
-32 bits
-         AAdd( aDefaultLibs, { 'libharbour-32.a',        'B', 'B', 'B' } )
-64 bits
-         AAdd( aDefaultLibs, { 'libhbct-x64.a',          'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libhbexpat-x64.a',       'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libharbour-32-x64.a',    'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libhbamf-x64.a',         'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libhbblink-x64.a',       'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libhbbz2io-x64.a',       'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libhbbz2-x64.a',         'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libhbcomio-x64.a',       'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libhbcomm-x64.a',        'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libhbformat-x64.a',      'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libhbfoxpro-x64.a',      'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libhbfship-x64.a',       'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libhbgt-x64.a',          'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libhbgzio-x64.a',        'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libhbhpdf-x64.a',        'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libhbhttpd-x64.a',       'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libhblzf-x64.a',         'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libhbmemio-x64.a',       'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libhbmisc-x64.a',        'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libhbmlzo-x64.a',        'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libhbmxml-x64.a',        'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libhbmzip-x64.a',        'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libhbnetio-x64.a',       'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libhbnf-x64.a',          'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libhbodbc-x64.a',        'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libhboslib-x64.a',       'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libhbpipeio-x64.a',      'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libhbsms-x64.a',         'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libhbsqlit3-x64.a',      'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libhbtcpio-x64.a',       'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libhbtest-x64.a',        'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libhbtinymt-x64.a',      'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libhbtip-x64.a',         'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libhbtpathy.a',          'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libhbtpathy-x64.a',      'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libhbxdiff.a',           'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libhbxdiff-x64.a',       'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libhbxpp-x64.a',         'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libhbzebra-x64.a',       'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libhbziparc-x64.a',      'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'librddbm-x64.a',         'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'librddsql-x64.a',        'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libsddodbc-x64.a',       'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libsddsqlt3-x64.a',      'B', 'B', 'B' } )
-         AAdd( aDefaultLibs, { 'libhbwin-x64.a',         'B', 'B', 'B' } )                // must come after haru, hpdf, libharu and libhpdf
-         AAdd( aDefaultLibs, { 'libxhb-x64.a',           'B', 'B', 'B' } )                // must come after haru, hpdf, libharu and libhpdf
-*/
