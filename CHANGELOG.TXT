@@ -3,6 +3,88 @@
  * See "How to format your ChangeLog entries" in howtosvn.txt file.
  */
 
+2020-11-08 19:30 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * QPM.exe
+     * Rebuild.
+
+2020-11-08 19:25 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * QPM.prg
+     * Libs handling was simplified.
+     * Do not allow to create or open another project if the current one
+       is still running.
+     + Support for new switches.
+     ! Some messages stop execution when lite mode is on.
+     ! Object file is not included in the list of files to link.
+     ! .A lib function listing takes a very long time for big files.
+     + Menu option to reset default libs list.
+     * Support email address.
+
+2020-11-08 19:05 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * QPM.ch
+     + Support for new switches.
+     - No longer needed vars.
+
+2020-11-08 19:03 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * QPM_Functions.prg
+     + Support for new switches.
+     - No longer needed vars.
+     * Some messages.
+
+2020-11-08 19:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * QPM_Libraries.prg
+     + Function to reset default libs list.
+     + Logic to filter out non-existent libs.
+     * Default libs list now follows HMG Extended libs order.
+
+2020-11-08 18:54 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * QPM_ProjectSettings.prg
+     + Allow multiple definitions switch.
+     + Strip symbols from exe switch.
+
+2020-11-08 18:50 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * us_objdump.exe
+     * Updated to version 2.31.1
+
+2020-11-08 18:49 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * us_shell.prg
+   * QPM_US_Shell.qpm
+   * us_shell.exe
+     ! .A lib function list has duplicate names.
+     ! .A lib function listing takes a very long time for big files.
+
+2020-11-08 11:18 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * us_slash.exe
+   * us_slash.prg
+     ! MinGW builds fail because aux file is prematurely deleted.
+
+2020-10-18 12:23 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * QPM_ProjectSettings.prg
+   * QPM_ExtraRun.prg
+     + Check to detect if the settings window exists before saving changes.
+
+2020-10-18 08:52 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * QPM_Functions.prg
+     ! EXE type is not recognized.
+
+2020-10-18 08:46 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * QPM_Environment.prg
+     ! MiniGUI lib is removed from lib list on exit.
+
+2020-10-18 08:34 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * us_tdump.exe
+     * Updated to a newer version.
+
+2020-10-18 08:32 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * us_shell.prg
+   * QPM_US_Shell.qpm
+   * us_shell.exe
+     ! DLL function list has duplicate names.
+     ! DLL function listing takes a very long time for big files.
+
+2020-10-18 08:23 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * All *.c, *.prg, *.h, *.ch, *.rc
+     * Email changed.
+
 2020-09-24 18:18 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * QPM.exe
      * Rebuild.
@@ -1979,7 +2061,7 @@
      + Code removed from QPM.prg and QPM_ExtraRun.prg
      - Function WinPSettingsInit. It's useful context was moved to ON INIT.
      - Function ActRadioCpp. It´s context was moved to CheckCombination().
-     - Funciton FSwitchMode. It´s context was moved to ProjectSettingsSave().
+     - Function FSwitchMode. It´s context was moved to ProjectSettingsSave().
      ! Some radio options are not enabled or can't be changed.
    * QPM_GlobalSettings.prg
      - Tab pages for invalid combinations HMG 3.x + xHarbour.
