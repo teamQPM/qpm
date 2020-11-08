@@ -55,7 +55,7 @@ FUNCTION QPM_CreatePublicVars()
    PUBLIC PUB_cStatusLabel              := 'Status: Idle'
    PUBLIC PUB_MenuPrjOptions            := 'Project Options'
    PUBLIC PUB_MenuGblOptions            := 'Global Options (folders for [x]Harbour, MiniGUI, C++ and others)'
-   PUBLIC PUB_MenuResetWarnings         := "Reset omitted messages"
+   PUBLIC PUB_MenuResetWarnings         := "Reset Omitted Messages"
    PUBLIC PUB_cCharTab                  := Chr( 09 )
    PUBLIC PUB_cCharFileNameTemp         := '_'   // MinGW's MAKE doesn't support $, # prevents TEMP.LOG generation
    PUBLIC PUB_cQPM_Title                := 'QPM - Project Manager for MiniGui (' + QPM_VERSION_DISPLAY_LONG + ')'
@@ -221,9 +221,6 @@ FUNCTION QPM_CreatePublicVars()
    PUBLIC NCOLDBFSEARCH                 := 6
    PUBLIC NCOLDEFSTATUS                 := 1
    PUBLIC NCOLDEFNAME                   := 2
-   PUBLIC NCOLDEFMODE                   := 3
-   PUBLIC NCOLDEFTHREADS                := 4
-   PUBLIC NCOLDEFDEBUG                  := 5
    PUBLIC bSortDbfAsc                   := .T.
    PUBLIC aGridDef                      := {}
    PUBLIC aGridInc                      := {}
@@ -303,6 +300,7 @@ FUNCTION QPM_CreatePublicVars()
    PUBLIC Gbl_Text_OOHGIDE              := ''
 
    PUBLIC Prj_Check_64bits              := .F.
+   PUBLIC Prj_Check_AllowM              := .F.
    PUBLIC Prj_Check_Console             := .F.
    PUBLIC Prj_Check_HarbourIs31         := .T.
    PUBLIC Prj_Check_IgnoreLibRCs        := .F.
@@ -312,6 +310,7 @@ FUNCTION QPM_CreatePublicVars()
    PUBLIC Prj_Check_OutputSuffix        := .F.
    PUBLIC Prj_Check_PlaceRCFirst        := .F.
    PUBLIC Prj_Check_StaticBuild         := .T.
+   PUBLIC Prj_Check_Strip               := .F.
    PUBLIC Prj_Check_Upx                 := .F.
    PUBLIC Prj_ExtraRunCmdEXE            := ''
    PUBLIC Prj_ExtraRunCmdEXEParm        := ''
@@ -667,8 +666,8 @@ FUNCTION QPM_CreatePublicVars()
    QPM_VAR2 PUBLIC Gbl_DEF_LIBS_ DEF_MG_OOHG3     DEF_MG_PELLES  DEF_MG_XHARBOUR DEF_MG_64 := {}
 
 // VARIABLES FOR LIB HANDLING
-   PUBLIC vLibsDefault := {}   // array of { name, mode, threads, debug }
-   PUBLIC vLibsToLink  := {}   // array of lib names
+   PUBLIC vLibsDefault := {}   // array of { name, mode, threads, debug } - some libs may not exist
+   PUBLIC vLibsToLink  := {}   // array of lib names                      - all libs exist
    /* MiniGui Oficial 1 with BCC */
    QPM_VAR2 PUBLIC IncludeLibs          DEF_MG_MINIGUI1  DEF_MG_BORLAND  DEF_MG_HARBOUR  DEF_MG_32 := {}
    QPM_VAR2 PUBLIC ExcludeLibs          DEF_MG_MINIGUI1  DEF_MG_BORLAND  DEF_MG_HARBOUR  DEF_MG_32 := {}
@@ -2684,20 +2683,19 @@ Function QPM_ChangePrj_VersionOK()
    WinChangeVersion.Release()
 Return .T.
 
-Function ReplacePrj_Version( cFile, cPrj_Version )
-   Local cMemo := MemoRead( cFile ), nInx, cLine, cMemoOut := "", bFound := .F.
-   For nInx := 1 to MLCount( cMemo, 254 )
-      cLine := Memoline( cMemo, 254, nInx )
-      if ! bFound .and. ;
-         US_Word( cLine, 1 ) == "PRJ_VERSION"
+FUNCTION ReplacePrj_Version( cFile, cPrj_Version )
+   LOCAL cMemo := MemoRead( cFile ), nInx, cLine, cMemoOut := "", bFound := .F.
+   FOR nInx := 1 TO MLCount( cMemo, 254 )
+      cLine := MemoLine( cMemo, 254, nInx )
+      IF ! bFound .AND. US_Word( cLine, 1 ) == "PRJ_VERSION"
          bFound := .T.
-         cMemoOut := cMemoOut + "PRJ_VERSION " + cPrj_Version + HB_OsNewLine()
-      else
-         cMemoOut := cMemoOut + cLine + HB_OsNewLine()
-      endif
-   Next
+         cMemoOut := cMemoOut + "PRJ_VERSION " + cPrj_Version + hb_osNewLine()
+      ELSE
+         cMemoOut := cMemoOut + AllTrim( cLine ) + HB_OsNewLine()
+      ENDIF
+   NEXT
    QPM_MemoWrit( cFile, cMemoOut )
-Return .T.
+RETURN .T.
 
 FUNCTION ReplaceMemoData( cFile, cKey, cValue )
    LOCAL cMemo := MemoRead( cFile ), i, cLine, cMemoOut := "", lFound := .F.
@@ -2707,7 +2705,7 @@ FUNCTION ReplaceMemoData( cFile, cKey, cValue )
          lFound := .T.
          cMemoOut := cMemoOut + cKey + " " + cValue + hb_osNewLine()
       ELSE
-         cMemoOut := cMemoOut + cLine + hb_osNewLine()
+         cMemoOut := cMemoOut + AllTrim( cLine ) + hb_osNewLine()
       ENDIF
    NEXT i
 RETURN QPM_MemoWrit( cFile, cMemoOut )
