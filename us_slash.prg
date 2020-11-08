@@ -160,7 +160,6 @@ PROCEDURE MAIN( ... )
    ENDIF
 
    __Run( fgccbat )
-   FErase( fgccbat )
 
    IF MemoLine( MemoRead( fstatus ), 254, 1 ) = "ERROR"
       IF bList
@@ -173,6 +172,8 @@ PROCEDURE MAIN( ... )
          QPM_Log( "------------" + CRLF )
       ENDIF
    ENDIF
+   FErase( fgccbat )
+   FErase( fparams )
    FErase( fstatus )
 
    RETURN
