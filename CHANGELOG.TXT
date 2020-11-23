@@ -3,6 +3,34 @@
  * See "How to format your ChangeLog entries" in howtosvn.txt file.
  */
 
+2020-11-23 11:09 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   + RELEASE: TAG v05.05.0020 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+2020-11-23 11:06 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * QPM.iss
+     * Version changed to 05.05.0020.
+
+2020-11-23 11:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * QPM.exe
+     * Updated to version 05.05.0020.
+     * Rebuild.
+
+2020-11-23 10:59 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * HelpQPM\QPM_SHG.dbf
+   * HelpQPM\QPM_SHG.fpt
+   * QPM.chm
+     + Info related to the next release.
+     * Info on libraries management.
+
+2020-11-23 10:57 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * QPM_AutoProject.qpm
+   * QPM_AutoProjectOnlyHelp.qpm
+     * Updated.
+
+2020-11-23 10:57 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * QPM_Version.ch
+     * Version changed to 05.05.0020.
+
 2020-11-08 19:30 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * QPM.exe
      * Rebuild.
@@ -10,7 +38,7 @@
 2020-11-08 19:25 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * QPM.prg
      * Libs handling was simplified.
-     * Do not allow to create or open another project if the current one
+     ! Do not allow to create or open another project if the current one
        is still running.
      + Support for new switches.
      ! Some messages stop execution when lite mode is on.
@@ -34,7 +62,7 @@
    * QPM_Libraries.prg
      + Function to reset default libs list.
      + Logic to filter out non-existent libs.
-     * Default libs list now follows HMG Extended libs order.
+     ! Default libs list now follows HMG Extended libs order.
 
 2020-11-08 18:54 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * QPM_ProjectSettings.prg
