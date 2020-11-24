@@ -3,6 +3,14 @@
  * See "How to format your ChangeLog entries" in howtosvn.txt file.
  */
 
+2020-11-24 19:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * QPM.exe
+     * Rebuild.
+   * QPM.prg
+     ! Build stops because a linker parameter is wrong. This happens
+       when you set two or more of the switches "Static", Strip EXE"
+       and "Allow multiple definitions".
+
 2020-11-23 11:09 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    + RELEASE: TAG v05.05.0020 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
