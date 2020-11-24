@@ -5850,7 +5850,7 @@ FUNCTION QPM_Build2()
       i := " " + AllTrim( GetProperty( 'VentanaMain', 'OverrideLink', 'value' ) ) + " "
       IF Prj_Check_StaticBuild
          IF ! " -static " $ i
-            i := "-static" + i
+            i := " -static" + i
             SetProperty( 'VentanaMain', 'OverrideLink', 'value', i )
          ENDIF
       ELSE
@@ -5861,7 +5861,7 @@ FUNCTION QPM_Build2()
       ENDIF
       IF Prj_Check_Strip
          IF ! " -s " $ i
-            i := "-s" + i
+            i := " -s" + i
             SetProperty( 'VentanaMain', 'OverrideLink', 'value', i )
          ENDIF
       ELSE
@@ -5872,7 +5872,7 @@ FUNCTION QPM_Build2()
       ENDIF
       IF Prj_Check_AllowM
          IF ! " -Wl,--allow-multiple-definition " $ i
-            i := "-Wl,--allow-multiple-definition" + i
+            i := " -Wl,--allow-multiple-definition" + i
             SetProperty( 'VentanaMain', 'OverrideLink', 'value', i )
          ENDIF
       ELSE
