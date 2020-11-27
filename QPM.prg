@@ -4493,10 +4493,10 @@ FUNCTION QPM_OpenProject2()
 
          ELSEIF  SubStr( US_Word( US_Upper ( LOC_cLine ), 1 ), 1, 7 ) == 'INCLUDE'
                   IF US_IsVar( 'IncludeLibs' + SubStr( US_Upper( US_Word( LOC_cLine, 1 ) ), 8 ) )
-                     AAdd( &( 'IncludeLibs' + SubStr( US_Upper( US_Word( LOC_cLine, 1 ) ), 8 ) ), US_Word( LOC_cLine, 2 ) + ' ' + SubStr( LOC_cLine, US_WordInd( LOC_cLine, 3 ) ) )
+                     AAdd( &( 'IncludeLibs' + SubStr( US_Upper( US_Word( LOC_cLine, 1 ) ), 8 ) ), US_Upper( US_Word( LOC_cLine, 2 ) ) + ' ' + SubStr( LOC_cLine, US_WordInd( LOC_cLine, 3 ) ) )
                   ELSE
                      IF US_IsVar( 'IncludeLibs' + SubStr( US_Upper( US_Word( LOC_cLine, 1 ) ), 8 ) + Define32bits )
-                        AAdd( &( 'IncludeLibs' + SubStr( US_Upper( US_Word( LOC_cLine, 1 ) ), 8 ) + Define32bits ), US_Word( LOC_cLine, 2 ) + ' ' + SubStr( LOC_cLine, US_WordInd( LOC_cLine, 3 ) ) )
+                        AAdd( &( 'IncludeLibs' + SubStr( US_Upper( US_Word( LOC_cLine, 1 ) ), 8 ) + Define32bits ), US_Upper( US_Word( LOC_cLine, 2 ) ) + ' ' + SubStr( LOC_cLine, US_WordInd( LOC_cLine, 3 ) ) )
                      ENDIF
                   ENDIF
          ELSEIF  SubStr( US_Word( US_Upper ( LOC_cLine ), 1 ), 1, 7 ) == 'EXCLUDE'
@@ -5008,7 +5008,7 @@ FUNCTION LibPos( item, pos )
       IF Empty( pos )
          pos := US_Word( GetProperty( 'VentanaMain', 'GIncFiles', 'Cell', item, NCOLINCFULLNAME ), 2 )
       ENDIF
-      SetProperty( 'VentanaMain', 'GIncFiles', 'Cell', item, NCOLINCFULLNAME, LibCheck( item ) + ' ' + Pos + ' ' + US_WordSubStr( GetProperty( 'VentanaMain', 'GIncFiles', 'Cell', item, NCOLINCFULLNAME ), 3 ) )
+      SetProperty( 'VentanaMain', 'GIncFiles', 'Cell', item, NCOLINCFULLNAME, LibCheck( item ) + ' ' + pos + ' ' + US_WordSubStr( GetProperty( 'VentanaMain', 'GIncFiles', 'Cell', item, NCOLINCFULLNAME ), 3 ) )
    ENDIF
    VentanaMain.GIncFiles.setfocus
 RETURN .T.
