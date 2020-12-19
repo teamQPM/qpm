@@ -3186,7 +3186,7 @@ FUNCTION QPM_EditHEA
 RETURN .T.
 
 FUNCTION QPM_EditPAN( bForceEditor )
-   LOCAL Editor, toolMake, ToolAux, i
+   LOCAL Editor, toolMake, ToolAux, i, toolText
    LOCAL EditControlFile, RunParms, cLineCmd, cLineFile
 #ifdef QPM_HOTRECOVERY
    LOCAL HotRecoveryControlFile
@@ -3270,7 +3270,7 @@ FUNCTION QPM_EditPAN( bForceEditor )
          QPM_LogFile( "Done" )
       ENDIF
    CASE ToolAux == "OOHGIDE" .OR. ToolAux == 'HMGSIDE' .OR. ToolAux == 'HMG_IDE'
-      IF ToolAux == 'OOHG'
+      IF ToolAux == 'OOHGIDE'
          IF Empty( Gbl_Text_OOHGIDE )
             MyMsgStop( 'Form tool is not defined.' + CRLF + 'Look at ' + PUB_MenuGblOptions + ' of Settings menu.' )
             RETURN .F.
@@ -3310,7 +3310,11 @@ FUNCTION QPM_EditPAN( bForceEditor )
             MyMsgStop( 'The file is already open!' )
             RETURN .F.
          ENDIF
-         toolMake := US_Word( CheckMakeForm( US_ShortName( i ) ), 1 )
+         toolText := CheckMakeForm( US_ShortName( i ) )
+         toolMake := US_Word( toolText, 1 )
+         IF toolMake == "OOHG"
+            toolMake := "OOHGIDE"
+         ENDIF
          IF toolMake == 'UNKNOWN'
             IF ! MyMsgYesNo( 'The form was built with an unknown tool.' + CRLF + ;
                              'Do you want to edit it with ' + DBLQT + iif( ToolAux == "OOHGIDE", 'OOHG IDE+', iif( ToolAux == 'HMGS-IDE', 'HMGS-IDE', 'HMG-IDE' ) ) + DBLQT + '?' + CRLF + ;
@@ -3318,7 +3322,7 @@ FUNCTION QPM_EditPAN( bForceEditor )
                RETURN .F.
             ENDIF
          ELSEIF ! toolMake == ToolAux
-            IF ! MyMsgYesNo( 'The form was built with tool: ' + DBLQT + toolMake + DBLQT + CRLF + ;
+            IF ! MyMsgYesNo( 'The form was built with tool: ' + DBLQT + toolText + DBLQT + CRLF + ;
                              'Do you want to edit it with ' + DBLQT + iif( ToolAux == "OOHGIDE", 'OOHG IDE+', iif( ToolAux == 'HMGS-IDE', 'HMGS-IDE', 'HMG-IDE' ) ) + DBLQT + '?' + CRLF + ;
                              'Note that some form features may not be supported by this tool.' )
                RETURN .F.
