@@ -9,6 +9,7 @@
    * QPM_ProjectSettings.prg
      ! "Strip EXE" and "Allow multiple definitios" options are not enabled
        after changing compiler from Borland to MinGw.
+   #74
 
 2020-12-19 09:23 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * QPM.exe
