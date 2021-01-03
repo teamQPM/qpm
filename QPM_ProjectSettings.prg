@@ -821,7 +821,9 @@ FUNCTION CheckCombination( lAfterOnInit )
       SetProperty( 'WinPSettings', 'Check_Strip',       'enabled', .F. )
    CASE WinPSettings.Radio_Cpp.value == DEF_RG_MINGW
       SetProperty( 'WinPSettings', 'Check_64bits',      'enabled', .T. )
+      SetProperty( 'WinPSettings', 'Check_AllowM',      'enabled', .T. )
       SetProperty( 'WinPSettings', 'Check_StaticBuild', 'enabled', .T. )
+      SetProperty( 'WinPSettings', 'Check_Strip',       'enabled', .T. )
    CASE WinPSettings.Radio_Cpp.value == DEF_RG_PELLES
       SetProperty( 'WinPSettings', 'Check_64bits',      'enabled', .T. )
       SetProperty( 'WinPSettings', 'Check_AllowM',      'enabled', .F. )
