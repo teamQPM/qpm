@@ -2845,12 +2845,12 @@ FUNCTION CheckRelativeOrderOfLibsGT()
          iWin := i
       ENDIF
    NEXT i
-   IF ! PUB_bLite .AND. Prj_Check_Console .AND. iGui > 0 .AND. iWin > 0
+   IF ! PUB_bLite .AND. ( Prj_Check_Console .OR. PUB_bDebugActive ) .AND. iGui > 0 .AND. iWin > 0
       IF iGui < iWin
          IF Prj_Warn_GT_Order
-            lCont := MyMsgYesNo( 'For a CONSOLE project the usual lib order is GTWIN first followed by GTGUI.' + CRLF + ;
+            lCont := MyMsgYesNo( "For CONSOLE and 'With Debug' projects the usual lib order is GTWIN followed by GTGUI." + CRLF + ;
                                  'Changing this order could end in a non-functional application.' + CRLF + ;
-                                 'Select [Yes] to continue or [No] to change the order.' )
+                                 'Select [Yes] to continue or [No] to revert the order.' )
             IF MyMsgYesNo( 'Omit the previous validation from now on?' + CRLF + iif( lCont, "[Yes] will be assumed!", "[No] will be assumed!" ) )
                Prj_Warn_GT_Order := .F.
                Prj_Warn_GT_Order_Cont := lCont
@@ -2861,19 +2861,19 @@ FUNCTION CheckRelativeOrderOfLibsGT()
          ELSE
             lCont := Prj_Warn_GT_Order_Cont
          ENDIF
-         IF lCont
+         IF ! lCont
             n := GetProperty( 'VentanaMain', 'GDefFiles', 'Cell', iGui, NCOLDEFNAME )
             SetProperty( 'VentanaMain', 'GDefFiles', 'Cell', iGui, NCOLDEFNAME, GetProperty( 'VentanaMain', 'GDefFiles', 'Cell', iWin, NCOLDEFNAME ) )
             SetProperty( 'VentanaMain', 'GDefFiles', 'Cell', iWin, NCOLDEFNAME, n )
          ENDIF
       ENDIF
    ENDIF
-   IF ! PUB_bLite .AND. ! Prj_Check_Console .AND. iGui > 0 .AND. iWin > 0
+   IF ! PUB_bLite .AND. ! Prj_Check_Console .AND. ! PUB_bDebugActive .AND. iGui > 0 .AND. iWin > 0
       IF iWin < iGui
          IF Prj_Warn_GT_Order
             lCont := MyMsgYesNo( 'For a GUI project the usual lib order is GTGUI first followed by GTWIN.' + CRLF + ;
                                  'Changing this order could end in a non-functional application.' + CRLF + ;
-                                 'Select [Yes] to continue or [No] to change the order.' )
+                                 'Select [Yes] to continue or [No] to revert the order.' )
             IF MyMsgYesNo( 'Omit the previous validation from now on?' + CRLF + iif( lCont, "[Yes] will be assumed!", "[No] will be assumed!" ) )
                Prj_Warn_GT_Order := .F.
                Prj_Warn_GT_Order_Cont := lCont
@@ -2884,7 +2884,7 @@ FUNCTION CheckRelativeOrderOfLibsGT()
          ELSE
             lCont := Prj_Warn_GT_Order_Cont
          ENDIF
-         IF lCont
+         IF ! lCont
             n := GetProperty( 'VentanaMain', 'GDefFiles', 'Cell', iGui, NCOLDEFNAME )
             SetProperty( 'VentanaMain', 'GDefFiles', 'Cell', iGui, NCOLDEFNAME, GetProperty( 'VentanaMain', 'GDefFiles', 'Cell', iWin, NCOLDEFNAME ) )
             SetProperty( 'VentanaMain', 'GDefFiles', 'Cell', iWin, NCOLDEFNAME, n )
@@ -5520,6 +5520,7 @@ FUNCTION QPM_Build2()
                lCont := Prj_Warn_BccObject_Cont
             ENDIF
             IF ! lCont
+               MyMsgStop( "Add file [C0X32.OBJ] from Borland's LIB folder before building!" )
                BUILD_IN_PROGRESS := .F.
                RETURN .F.
             ENDIF
@@ -5539,6 +5540,7 @@ FUNCTION QPM_Build2()
                lCont := Prj_Warn_BccObject_Cont
             ENDIF
             IF ! lCont
+               MyMsgStop( "Add file [C0X32.OBJ] from Borland's LIB folder before building!" )
                BUILD_IN_PROGRESS := .F.
                RETURN .F.
             ENDIF
@@ -5561,6 +5563,7 @@ FUNCTION QPM_Build2()
                lCont := Prj_Warn_BccObject_Cont
             ENDIF
             IF ! lCont
+               MyMsgStop( "Add file [C0W32.OBJ] from Borland's LIB folder before building!" )
                BUILD_IN_PROGRESS := .F.
                RETURN .F.
             ENDIF
@@ -5580,10 +5583,22 @@ FUNCTION QPM_Build2()
                lCont := Prj_Warn_BccObject_Cont
             ENDIF
             IF ! lCont
+               MyMsgStop( "Add file [C0W32.OBJ] from Borland's LIB folder before building!" )
                BUILD_IN_PROGRESS := .F.
                RETURN .F.
             ENDIF
          ENDIF
+      ENDIF
+
+      i := AScan( vLibsToLink, { |x| US_Upper( x ) == "DBGINIT.OBJ" } )
+      IF i # 0
+         ADel( vLibsToLink, i )
+         ASize( vLibsToLink, Len( vLibsToLink ) - 1 )
+      ENDIF
+      i := AScan( vLibIncludeFiles, { |x| US_Upper( US_FileNameOnlyNameAndExt( x ) ) == "DBGINIT.OBJ" } )
+      IF i # 0
+         ADel( vLibIncludeFiles, i )
+         ASize( vLibIncludeFiles, Len( vLibIncludeFiles ) - 1 )
       ENDIF
    ENDIF
 
@@ -5949,8 +5964,7 @@ FUNCTION QPM_Build2()
          CASE IsPelles
             Out := Out + 'COBJFLAGS =  -c -O2 -tWM -M $(DIR_C_INCLUDE) -L' + GetCppLibFolder() + CRLF
          CASE IsBorland
-// TODO: sincronizar flags con HMG Extended: -c -q -d -O2 -OS -Ov -Oc -Oi -6 -tW -tWM
-            Out := Out + 'COBJFLAGS =  -c -O2 -tWM -M -I$(DIR_C_INCLUDE) -L' + GetCppLibFolder() + CRLF
+            Out := Out + 'COBJFLAGS = -c -q0 -d -O2 -OS -Ov -Oc -Oi -6 ' + iif( Prj_Check_Console .OR. PUB_bDebugActive, '', '-tW ' ) + '-tWM -I$(DIR_C_INCLUDE) -L' + GetCppLibFolder() + CRLF
          OTHERWISE
             US_Log( 'Error 5598' )
          ENDCASE
@@ -5961,8 +5975,7 @@ FUNCTION QPM_Build2()
          CASE IsPelles
             Out := Out + 'COBJFLAGS = ' + iif( ! Prj_Check_Console, ' /Ze /Zx /Go /Tx86-coff /D__WIN32__ ', ' /Ze /Zx /Go /Tx86-coff /D__WIN32__ ' ) + ' $(DIR_C_INCLUDE)' + CRLF
          CASE IsBorland
-            // TODO: use this flags -6 -OS -Ov -Oi -Oc
-            Out := Out + 'COBJFLAGS = ' + iif( Prj_Check_Console, '-c -O2 -d -M', '-c -O2 -tW -M' ) + ' -I$(DIR_C_INCLUDE) -L' + GetCppLibFolder() + CRLF
+            Out := Out + 'COBJFLAGS = -c -q0 -d -O2 -OS -Ov -Oc -Oi -6 ' + iif( Prj_Check_Console .OR. PUB_bDebugActive, '', '-tW ' ) + '-I$(DIR_C_INCLUDE) -L' + GetCppLibFolder() + CRLF
          OTHERWISE
             US_Log( 'Error 5598' )
          ENDCASE
@@ -6396,6 +6409,10 @@ FUNCTION QPM_Build2()
 
          CASE IsBorland
 
+            IF PUB_bDebugActive
+               Out := Out + PUB_cCharTab + 'echo $(DIR_MINIGUI_LIB)' + DEF_SLASH + 'dbginit.obj + >> ' + Q_SCRIPT_FILE + CRLF
+            ENDIF
+
 /*
  * BCC32: add libraries marked *FIRST*
  */
@@ -6613,9 +6630,9 @@ FUNCTION QPM_Build2()
             w_LibFolders := GetCppLibFolder()
             w_LibFolders += ";" + w_LibFolders + "\PSDK;"
             IF Empty( GetProperty( 'VentanaMain', 'OverrideLink', 'value' ) )
-               Out := Out + PUB_cCharTab + '$(ILINK_EXE) -x -Gn -Tpe ' + iif( Prj_Check_Console, '-ap ', '-aa ' ) + '-L' + w_LibFolders + ' @' + Q_SCRIPT_FILE + CRLF
+               Out := Out + PUB_cCharTab + '$(ILINK_EXE) -x -Gn -Tpe ' + iif( Prj_Check_Console .OR. PUB_bDebugActive, '-ap ', '-aa ' ) + '-L' + w_LibFolders + ' @' + Q_SCRIPT_FILE + CRLF
             ELSE
-               Out := Out + PUB_cCharTab + '$(ILINK_EXE) -x -Gn -Tpe ' + iif( Prj_Check_Console, '-ap ', '-aa ') + '$(USER_FLAGS_LINK) -L' + w_LibFolders + ' @' + Q_SCRIPT_FILE + CRLF
+               Out := Out + PUB_cCharTab + '$(ILINK_EXE) -x -Gn -Tpe ' + iif( Prj_Check_Console .OR. PUB_bDebugActive, '-ap ', '-aa ') + '$(USER_FLAGS_LINK) -L' + w_LibFolders + ' @' + Q_SCRIPT_FILE + CRLF
             ENDIF
             IF Prj_Check_Upx
                Out := Out + PUB_cCharTab + '$(US_MSG_EXE) ' + Q_PROGRESS_LOG + ' -MSG:Compressing ' + cOutputNameDisplay + ' with UPX ...' + CRLF
@@ -6668,9 +6685,9 @@ FUNCTION QPM_Build2()
          ELSE
             Out := Out + PUB_cCharTab + '@$(US_SHELL_EXE) QPM' + LISTOLOG + 'DELETE $@' + CRLF
             IF QPM_IsXHarbour()
-               Out := Out + PUB_cCharTab + '$(HARBOUR_EXE) $(HARBOUR_FLAGS) /q /po' + US_ShortName( PUB_cProjectFolder ) + DEF_SLASH + US_FileNameOnlyName( PRGFILES[i] ) + '.ppo $< -o$@' + CRLF
+               Out := Out + PUB_cCharTab + '$(HARBOUR_EXE) $(HARBOUR_FLAGS) /q0 /po' + US_ShortName( PUB_cProjectFolder ) + DEF_SLASH + US_FileNameOnlyName( PRGFILES[i] ) + '.ppo $< -o$@' + CRLF
             ELSE
-               Out := Out + PUB_cCharTab + '$(HARBOUR_EXE) $(HARBOUR_FLAGS) /q /p' + US_ShortName( PUB_cProjectFolder ) + DEF_SLASH + US_FileNameOnlyName( PRGFILES[i] ) + '.ppo $< -o$@' + CRLF
+               Out := Out + PUB_cCharTab + '$(HARBOUR_EXE) $(HARBOUR_FLAGS) /q0 /p' + US_ShortName( PUB_cProjectFolder ) + DEF_SLASH + US_FileNameOnlyName( PRGFILES[i] ) + '.ppo $< -o$@' + CRLF
             ENDIF
             Out := Out + PUB_cCharTab + '@$(US_SHELL_EXE) QPM' + LISTOLOG + 'MOVE ' + US_ShortName( PUB_cProjectFolder ) + DEF_SLASH + US_FileNameOnlyName( PRGFILES[i] ) + '.ppo $(DIR_OBJECTS)' + DEF_SLASH + US_FileNameOnlyName( PRGFILES[i] ) + '.ppo' + CRLF
             Out := Out + PUB_cCharTab + '@$(US_SHELL_EXE) QPM' + LISTOLOG + 'DELETE ' + US_ShortName( PUB_cProjectFolder ) + DEF_SLASH + US_FileNameOnlyName( PRGFILES[i] ) + '.ppo.MOVED.TXT' + CRLF
@@ -7936,6 +7953,10 @@ FUNCTION TranslateLog( Log )
    LOCAL dlltool      := cppfolder + DEF_SLASH + 'DLLTOOL.EXE'
    LOCAL ImpLibBor    := Chr(10) + 'Borland Implib Version 3.0.22 Copyright (c) 1991, 2000 Inprise Corporation' + Chr(10)
    LOCAL ImpDefBor    := Chr(10) + 'Borland Impdef Version 3.0.22 Copyright (c) 1991, 2000 Inprise Corporation' + Chr(10)
+   LOCAL ResBor1      := Chr(10) + 'Borland Resource Compiler  Version 5.40' + Chr(10)
+   LOCAL ResBor2      := Chr(10) + 'Copyright (c) 1990, 1999 Inprise Corporation.  All rights reserved.' + Chr(10)
+   LOCAL ComBor       := Chr(10) + 'Borland C++ 5.82 for Win32 Copyright (c) 1993, 2005 Borland' + Chr(10)
+   LOCAL TLink        := Chr(10) + 'Turbo Incremental Link 5.69 Copyright (c) 1997-2005 Borland' + Chr(10)
    LOCAL QPM_Ver      := '/D__QPM_VERSION__="' + "'" + QPM_VERSION_NUMBER_SHORT + "'" + '" '
    LOCAL PRJ_Ver      := '/D__PRJ_VERSION__="' + "'" + cPrj_Version + "'" + '" '
    LOCAL PRJ_Folder   := '/D__PROJECT_FOLDER__="' + "'" + VentanaMain.TProjectFolder.Value + "'" + '" '
@@ -8028,8 +8049,12 @@ FUNCTION TranslateLog( Log )
    NewLog := StrTran( NewLog, ' -o', ' -o ' )
    NewLog := StrTran( NewLog, cEcho2, '' )
    NewLog := StrTran( NewLog, cEcho, '' )
-   NewLog := StrTran( NewLog, ImpLibBor, '' )
-   NewLog := StrTran( NewLog, ImpDefBor, '' )
+   NewLog := StrTran( NewLog, ImpLibBor, Chr(10) )
+   NewLog := StrTran( NewLog, ImpDefBor, Chr(10) )
+   NewLog := StrTran( NewLog, ComBor, Chr(10) )
+   NewLog := StrTran( NewLog, ResBor1, Chr(10) )
+   NewLog := StrTran( NewLog, ResBor2, Chr(10) )
+   NewLog := StrTran( NewLog, TLink, Chr(10) )
    NewLog := StrTran( NewLog, QPM_Ver, '' )
    NewLog := StrTran( NewLog, PRJ_Ver, '' )
    NewLog := StrTran( NewLog, PRJ_Folder, '' )
@@ -8265,10 +8290,12 @@ FUNCTION TranslateLog( Log )
    NewLog := StrTran( NewLog, PUB_cCharTab, '    ' )
 
 // Make the log readable
+   IF Right( NewLog, 1 ) # Chr(10)
+      NewLog += Chr(10)
+   ENDIF
    NewLog := StrTran( NewLog, Chr(10), CRLF )
 
 // Show build status
-
    NewLog += CRLF + "==> Build status: " + cErrLvl + CRLF
 
 RETURN NewLog
