@@ -3,6 +3,19 @@
  * See "How to format your ChangeLog entries" in howtosvn.txt file.
  */
 
+2021-03-06 14:51 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * QPM.exe
+     * Rebuild.
+   * QPM.prg
+     ! Unable to compile with debug option and BCC compiler.
+   #75
+     ! Order reversion at GT order warning is not working properly.
+   #76
+     * BCC compiler flags were synchronized with MINIGUI builds.
+   #77
+     - Some useless messages were remove from the build log.
+   #78
+
 2021-01-03 14:16 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * QPM.exe
      * Rebuild.
