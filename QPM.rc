@@ -1,7 +1,7 @@
 /*
  *    QPM - QAC based Project Manager
  *
- *    Copyright 2011-2020 Fernando Yurisich <qpm-users@lists.sourceforge.net>
+ *    Copyright 2011-2021 Fernando Yurisich <qpm-users@lists.sourceforge.net>
  *    https://teamqpm.github.io/
  *
  *    Based on QAC - Project Manager for (x)Harbour
@@ -35,7 +35,7 @@ BEGIN
    		VALUE "FileDescription", "QPM - QAC based project manager\000"
    		VALUE "FileVersion", QPM_VERSION_STRINGF_INFO
    		VALUE "InternalName", "QPM\000"
-   		VALUE "LegalCopyright", " © 2011-2020 Fernando Yurisich\000"
+   		VALUE "LegalCopyright", " © 2011-2021 Fernando Yurisich\000"
    		VALUE "LegalTrademarks", "Harbour, QAC, MiniGUI\000"
    		VALUE "OriginalFilename", "QPM.exe\000"
    		VALUE "CompanyName", "QPM Development Team\000"
