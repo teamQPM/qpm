@@ -274,6 +274,7 @@ MEMVAR bLastGlobalSearchCas
 MEMVAR bLastGlobalSearchDbf
 MEMVAR bLastGlobalSearchFun
 MEMVAR bLogActivity
+MEMVAR bNoAt
 MEMVAR bNoFMGextension
 MEMVAR bNumberOnHea
 MEMVAR bNumberOnPan
@@ -726,6 +727,7 @@ MEMVAR Prj_Check_PlaceRCFirst
 MEMVAR Prj_Check_StaticBuild
 MEMVAR Prj_Check_Strip
 MEMVAR Prj_Check_Upx
+MEMVAR Prj_Check_UseAt
 MEMVAR Prj_ExtraRunCmdEXE
 MEMVAR Prj_ExtraRunCmdEXEParm
 MEMVAR Prj_ExtraRunCmdFINAL
