@@ -1,7 +1,7 @@
 /*
  *    QPM - QAC based Project Manager
  *
- *    Copyright 2011-2020 Fernando Yurisich <qpm-users@lists.sourceforge.net>
+ *    Copyright 2011-2021 Fernando Yurisich <qpm-users@lists.sourceforge.net>
  *    https://teamqpm.github.io/
  *
  *    Based on QAC - Project Manager for (x)Harbour
@@ -37,6 +37,7 @@
 #define  MSG_SYSIN    ( US_ShortName( PUB_cProjectFolder ) + DEF_SLASH + '_' + PUB_cSecu + 'MSG.SYSIN' )
 
 #define LISTOLOG iif( bLogActivity, ' -LIST' + US_ShortName(PUB_cQPM_Folder) + ' ', ' ' )
+#define NOAT     iif( Prj_Check_UseAt, ' -NOAT ', ' ' )
 
 PROCEDURE Main( PAR_cP01, PAR_cP02, PAR_cP03, PAR_cP04, PAR_cP05, PAR_cP06, PAR_cP07, PAR_cP08, PAR_cP09, PAR_cP10, ;
                 PAR_cP11, PAR_cP12, PAR_cP13, PAR_cP14, PAR_cP15, PAR_cP16, PAR_cP17, PAR_cP18, PAR_cP19, PAR_cP20 )
@@ -1706,7 +1707,7 @@ PROCEDURE Main( PAR_cP01, PAR_cP02, PAR_cP03, PAR_cP04, PAR_cP05, PAR_cP06, PAR_
       DEFINE LABEL LExtra
          ROW 28
          COL 600
-         WIDTH 200
+         WIDTH 300
          HEIGHT 18
          VALUE ''
          FONTNAME 'arial'
@@ -3957,6 +3958,7 @@ FUNCTION QPM_OpenProject2()
       Prj_Check_HarbourIs31                     := .T.
       Prj_Check_StaticBuild                     := .T.
       Prj_Check_Strip                           := .F.
+      Prj_Check_UseAt                           := .T.
       Prj_Radio_Cpp                             := DEF_RG_MINGW
       Prj_Radio_Harbour                         := DEF_RG_HARBOUR
       Prj_Radio_MiniGui                         := DEF_RG_OOHG3
@@ -4209,6 +4211,8 @@ FUNCTION QPM_OpenProject2()
                  Prj_Check_AllowM := iif( US_Word( LOC_cLine, 2 ) == 'YES', .T., .F. )
          ELSEIF  US_Upper( US_Word( LOC_cLine, 1 ) ) == 'CHECKSTRIP'
                  Prj_Check_Strip := iif( US_Word( LOC_cLine, 2 ) == 'YES', .T., .F. )
+         ELSEIF  US_Upper( US_Word( LOC_cLine, 1 ) ) == 'CHECKUSEAT'
+                 Prj_Check_UseAt := iif( US_Word( LOC_cLine, 2 ) == 'YES', .T., .F. )
          ELSEIF  US_Upper( US_Word( LOC_cLine, 1 ) ) == 'AUTOINC'
                  PUB_bAutoInc := iif( US_Word( LOC_cLine, 2 ) == 'NO', .F., .T. )
          ELSEIF  US_Upper( US_Word( LOC_cLine, 1 ) ) == 'HOTKEYS'
@@ -4335,6 +4339,8 @@ FUNCTION QPM_OpenProject2()
                  Prj_Check_AllowM := iif( US_Word( LOC_cLine, 2 ) == 'YES', .T., .F. )
          ELSEIF  US_Upper( US_Word( LOC_cLine, 1 ) ) == 'CHECKSTRIP'
                  Prj_Check_Strip := iif( US_Word( LOC_cLine, 2 ) == 'YES', .T., .F. )
+         ELSEIF  US_Upper( US_Word( LOC_cLine, 1 ) ) == 'CHECKUSEAT'
+                 Prj_Check_UseAt := iif( US_Word( LOC_cLine, 2 ) == 'YES', .T., .F. )
          ELSEIF  US_Upper( US_Word( LOC_cLine, 1 ) ) == 'WARNBCCOBJECT'
                  Prj_Warn_BccObject := iif( US_Word( LOC_cLine, 2 ) == 'YES', .T., .F. )
          ELSEIF  US_Upper( US_Word( LOC_cLine, 1 ) ) == 'WARNBCCOBJECTCONT'
@@ -4725,6 +4731,7 @@ FUNCTION QPM_SaveProject( bCheck )
       cINI += 'CHECKSTATICBUILD '           + iif( Prj_Check_StaticBuild, 'YES', 'NO' ) + CRLF
       cINI += 'CHECKSTRIP '                 + iif( Prj_Check_Strip, 'YES', 'NO' ) + CRLF
       cINI += 'CHECKUPX '                   + iif( Prj_Check_Upx, 'YES', 'NO' ) + CRLF
+      cINI += 'CHECKUSEAT '                 + iif( Prj_Check_UseAt, 'YES', 'NO' ) + CRLF
    FOR i := 1 TO VentanaMain.GDbfFiles.ItemCount
       cINI += 'DBF '                        + ChgPathToRelative( GetProperty( 'VentanaMain', 'GDbfFiles', 'Cell', i, NCOLDBFFULLNAME ) ) + CRLF
    NEXT i
@@ -5190,6 +5197,7 @@ FUNCTION QPM_Build2()
    LOCAL Out
    LOCAL PanFILES := {}
    LOCAL PRGFILES := {}
+   LOCAL RUNFOLDER
    LOCAL vConcatIncludeC := {}
    LOCAL vConcatIncludeHB := {}
    LOCAL vDebugPath := {}
@@ -6536,7 +6544,7 @@ FUNCTION QPM_Build2()
          DO CASE
          CASE Prj_Radio_OutputType == DEF_RG_EXE
             Out := Out + PUB_cCharTab + '$(US_MSG_EXE) ' + Q_PROGRESS_LOG + ' -MSG:Linking ' + cOutputNameDisplay + ' ...' + CRLF
-            Out := Out + PUB_cCharTab + '$(ILINK_EXE) QPM' + LISTOLOG + ;
+            Out := Out + PUB_cCharTab + '$(ILINK_EXE) QPM' + NOAT + LISTOLOG + ;
                         '-Wall ' + iif( Prj_Check_Console, '-mconsole ', '-mwindows ' ) + iif( Prj_Check_64bits, '-m64 ', '' ) + ;
                          iif( ! Empty( GetProperty( 'VentanaMain', 'OverrideLink', 'value' ) ), '$(USER_FLAGS_LINK) ', "" ) + ;
                         Q_SCRIPT_FILE + ;
@@ -6630,9 +6638,9 @@ FUNCTION QPM_Build2()
             w_LibFolders := GetCppLibFolder()
             w_LibFolders += ";" + w_LibFolders + "\PSDK;"
             IF Empty( GetProperty( 'VentanaMain', 'OverrideLink', 'value' ) )
-               Out := Out + PUB_cCharTab + '$(ILINK_EXE) -x -Gn -Tpe ' + iif( Prj_Check_Console .OR. PUB_bDebugActive, '-ap ', '-aa ' ) + '-L' + w_LibFolders + ' @' + Q_SCRIPT_FILE + CRLF
+               Out := Out + PUB_cCharTab + '$(ILINK_EXE) -x -Gn -Tpe ' + iif( Prj_Check_Console, '-ap ', '-aa ' ) + '-L' + w_LibFolders + ' @' + Q_SCRIPT_FILE + CRLF
             ELSE
-               Out := Out + PUB_cCharTab + '$(ILINK_EXE) -x -Gn -Tpe ' + iif( Prj_Check_Console .OR. PUB_bDebugActive, '-ap ', '-aa ') + '$(USER_FLAGS_LINK) -L' + w_LibFolders + ' @' + Q_SCRIPT_FILE + CRLF
+               Out := Out + PUB_cCharTab + '$(ILINK_EXE) -x -Gn -Tpe ' + iif( Prj_Check_Console, '-ap ', '-aa ') + '$(USER_FLAGS_LINK) -L' + w_LibFolders + ' @' + Q_SCRIPT_FILE + CRLF
             ENDIF
             IF Prj_Check_Upx
                Out := Out + PUB_cCharTab + '$(US_MSG_EXE) ' + Q_PROGRESS_LOG + ' -MSG:Compressing ' + cOutputNameDisplay + ' with UPX ...' + CRLF
@@ -6657,6 +6665,19 @@ FUNCTION QPM_Build2()
       ENDIF
 
       IF PUB_bDebugActive
+         RUNFOLDER := AllTrim( US_FileNameOnlyPath( VentanaMain.TRunProjectFolder.Value ) )
+         IF Empty( RUNFOLDER )
+            RUNFOLDER := PUB_cProjectFolder
+         ENDIF
+         IF ! US_IsDirectory( RUNFOLDER )
+            IF US_CreateFolder( RUNFOLDER )
+               QPM_LogText( 'Missing Run Folder was created: ' + RUNFOLDER )
+               MyMsgInfo( 'Missing Run Folder was created: ' + RUNFOLDER )
+            ELSE
+               QPM_LogText( 'Unable to create missing Run Folder: ' + RUNFOLDER )
+               MyMsgStop( 'Unable to create missing Run Folder: ' + RUNFOLDER )
+            ENDIF
+         ENDIF
          IF Prj_Radio_OutputCopyMove == DEF_RG_MOVE
             DebugOptions( US_ShortName( Prj_Text_OutputCopyMoveFolder ), cDebugPath )
          ELSE
@@ -7253,7 +7274,6 @@ FUNCTION QPM_Build2()
 RETURN .T.
 
 FUNCTION QPM_Run( bWithParm )
-// QPM_Run2
    LOCAL RUNFOLDER     := AllTrim(US_FileNameOnlyPath(VentanaMain.TRunProjectFolder.Value))
    LOCAL App
    LOCAL cParm         := ''
@@ -7306,7 +7326,7 @@ FUNCTION QPM_Run( bWithParm )
          RUNFOLDER := PUB_cProjectFolder
          IF PUB_bDebugActive
             IF ! File( PUB_cProjectFolder + DEF_SLASH + 'Init.Cld' )
-               MyMsgStop( 'Configuration file for debug is missing, rebuild the project with Debug option and try again.' )
+               MyMsgStop( 'Debug configuration file is missing from Project Folder. Rebuild the project with Debug option and try again.' )
                RETURN .F.
             ENDIF
          ENDIF
@@ -7315,8 +7335,9 @@ FUNCTION QPM_Run( bWithParm )
             IF ! File( RUNFOLDER + DEF_SLASH + 'Init.Cld' )
                IF File( PUB_cProjectFolder + DEF_SLASH + 'Init.Cld' )
                   US_FileCopy( PUB_cProjectFolder + DEF_SLASH + 'Init.Cld', RUNFOLDER + DEF_SLASH + 'Init.Cld' )
-               ELSE
-                  MyMsgStop( 'Configuration file for debug is missing, rebuild the project with Debug option and try again.' )
+               ENDIF
+               IF ! File( RUNFOLDER + DEF_SLASH + 'Init.Cld' )
+                  MyMsgStop( 'Debug configuration file is missing from Run Folder. Check that the folder exists, rebuild the project with Debug option and try again.' )
                   RETURN .F.
                ENDIF
             ENDIF
@@ -7933,7 +7954,9 @@ FUNCTION TranslateLog( Log )
    LOCAL cppfolder    := US_ShortName( GetCppFolder() ) + DEF_SLASH + 'BIN'
    LOCAL msg          := DBLQT + qpmfolder + DEF_SLASH + 'US_MSG.EXE'+ DBLQT + " " + Q_PROGRESS_LOG + ' -MSG:'
    LOCAL slash        := DBLQT + qpmfolder + DEF_SLASH + 'US_SLASH.EXE' + DBLQT + ' QPM'
+   LOCAL slashnoatg    := DBLQT + qpmfolder + DEF_SLASH + 'US_SLASH.EXE' + DBLQT + ' QPM -NOAT '
    LOCAL slashlist    := DBLQT + qpmfolder + DEF_SLASH + 'US_SLASH.EXE' + DBLQT + ' QPM -LIST' + qpmfolder
+   LOCAL slashnoli    := DBLQT + qpmfolder + DEF_SLASH + 'US_SLASH.EXE' + DBLQT + ' QPM -NOAT  -LIST' + qpmfolder
    LOCAL upx          := DBLQT + qpmfolder + DEF_SLASH + 'US_UPX.EXE' + DBLQT
    LOCAL shellCZ      := DBLQT + qpmfolder + DEF_SLASH + 'US_SHELL.EXE' + DBLQT + ' QPM COPYZAP '
    LOCAL shellMZ      := DBLQT + qpmfolder + DEF_SLASH + 'US_SHELL.EXE' + DBLQT + ' QPM MOVEZAP '
@@ -8033,8 +8056,10 @@ FUNCTION TranslateLog( Log )
 
 // This lines must come SECOND and it's order IS NOT significant
    NewLog := StrTran( NewLog, msg, '==> ' )
-   NewLog := StrTran( NewLog, slash, 'GCC' )
+   NewLog := StrTran( NewLog, slashnoli, 'GCC' )
    NewLog := StrTran( NewLog, slashlist, 'GCC' )
+   NewLog := StrTran( NewLog, slashnoat, 'GCC' )
+   NewLog := StrTran( NewLog, slash, 'GCC' )
    NewLog := StrTran( NewLog, upx, 'UPX' )
    NewLog := StrTran( NewLog, shellCZ, 'COPY -z' )
    NewLog := StrTran( NewLog, shellMZ, 'MOVE -z' )
