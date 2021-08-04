@@ -1,7 +1,7 @@
 /*
  *    QPM - QAC based Project Manager
  *
- *    Copyright 2011-2020 Fernando Yurisich <qpm-users@lists.sourceforge.net>
+ *    Copyright 2011-2021 Fernando Yurisich <qpm-users@lists.sourceforge.net>
  *    https://teamqpm.github.io/
  *
  *    Based on QAC - Project Manager for (x)Harbour
@@ -24,9 +24,9 @@
 
 #define QPM_VERSION_NUMBER_MAYOR   '05'
 #define QPM_VERSION_NUMBER_MINOR   '05'
-#define QPM_VERSION_NUMBER_BUILD   '20'
+#define QPM_VERSION_NUMBER_BUILD   '21'
 
-#define QPM_VERSION_VERSION_INFO   5,5,20
-#define QPM_VERSION_STRINGF_INFO   "v05.05 Build 0020\000"
+#define QPM_VERSION_VERSION_INFO   5,5,21
+#define QPM_VERSION_STRINGF_INFO   "v05.05 Build 0021\000"
 
 /* eof */

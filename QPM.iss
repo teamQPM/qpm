@@ -1,7 +1,7 @@
 ;
 ;     QPM - QAC based Project Manager
 ;
-;     Copyright 2011-2020 Fernando Yurisich <fernando.yurisich@gmail.com>
+;     Copyright 2011-2021 Fernando Yurisich <fernando.yurisich@gmail.com>
 ;     https://teamqpm.github.io/
 ;
 ;     Based on QAC - Project Manager for (x)Harbour
@@ -30,9 +30,9 @@
 ; (To generate a new GUID, click Tools | Generate GUID inside the IDE.)
 AppId={{97C57005-5ED6-4F8F-BF4B-6A4CBA41A342}
 AppName=QPM (QAC based Project Manager)
-AppVerName=QPM v05.05.0020
+AppVerName=QPM v05.05.0021
 AppPublisher=Fernando Yurisich
-AppCopyright=Copyright 2011-2020 QPM Development Team
+AppCopyright=Copyright 2011-2021 QPM Development Team
 AppPublisherURL=https://github.com/fyurisich/qpm
 AppSupportURL=https://github.com/fyurisich/qpm
 AppUpdatesURL=https://github.com/fyurisich/qpm
@@ -41,7 +41,7 @@ UsePreviousAppDir=yes
 DefaultGroupName=QPM (QAC based Project Manager)
 AllowNoIcons=yes
 OutputDir=OBJE1BH_32
-OutputBaseFilename=QPM_05_05_0020_Install
+OutputBaseFilename=QPM_05_05_0021_Install
 SetupIconFile=.\Resource\QPM_Install.ico
 Compression=lzma2
 ChangesAssociations=yes
