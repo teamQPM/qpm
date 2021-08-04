@@ -7954,7 +7954,7 @@ FUNCTION TranslateLog( Log )
    LOCAL cppfolder    := US_ShortName( GetCppFolder() ) + DEF_SLASH + 'BIN'
    LOCAL msg          := DBLQT + qpmfolder + DEF_SLASH + 'US_MSG.EXE'+ DBLQT + " " + Q_PROGRESS_LOG + ' -MSG:'
    LOCAL slash        := DBLQT + qpmfolder + DEF_SLASH + 'US_SLASH.EXE' + DBLQT + ' QPM'
-   LOCAL slashnoatg    := DBLQT + qpmfolder + DEF_SLASH + 'US_SLASH.EXE' + DBLQT + ' QPM -NOAT '
+   LOCAL slashnoat    := DBLQT + qpmfolder + DEF_SLASH + 'US_SLASH.EXE' + DBLQT + ' QPM -NOAT '
    LOCAL slashlist    := DBLQT + qpmfolder + DEF_SLASH + 'US_SLASH.EXE' + DBLQT + ' QPM -LIST' + qpmfolder
    LOCAL slashnoli    := DBLQT + qpmfolder + DEF_SLASH + 'US_SLASH.EXE' + DBLQT + ' QPM -NOAT  -LIST' + qpmfolder
    LOCAL upx          := DBLQT + qpmfolder + DEF_SLASH + 'US_UPX.EXE' + DBLQT
