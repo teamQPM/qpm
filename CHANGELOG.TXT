@@ -3,6 +3,125 @@
  * See "How to format your ChangeLog entries" in howtosvn.txt file.
  */
 
+2021-08-04 19:12 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * QPM_AutoProject.qpm
+     * Version changed to 05.05.0021.
+
+2021-08-04 19:11 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * QPM.exe
+     * Rebuild.
+
+2021-08-04 19:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * QPM.prg
+     ! A typo that prevents compilation.
+   #83
+
+2021-08-04 18:50 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * QPM.iss
+   * QPM_Version.ch
+     * Version changed to 05.05.0021.
+     * Copyright was updated.
+
+2021-08-04 18:48 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * QPM.prg
+     * Copyright was updated.
+     * Error message about debug configuration file was improved.
+     ! Information about build options is shown truncated.
+   #79
+     ! Project does not run if the specified run folder is not present.
+   #80
+     + Support for NOAT parameter to ommit @ char from calls to old versions
+       of MinGW's gcc utility.
+    #81
+     ! Do not force console compilation under BCC32 when debug
+       option is active.
+    #82
+
+2021-08-04 18:25 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * QPM.ch
+     + Support for NOAT parameter to ommit @ char from calls to old versions
+       of MinGW's gcc utility.
+    #81
+
+2021-08-04 18:23 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * QPM_Functions.prg
+     + Support for NOAT parameter to ommit @ char from calls to old versions
+       of MinGW's gcc utility.
+    #81
+
+2021-08-04 18:21 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * QPM_US_Slash.qpm
+     * Updated.
+
+2021-08-04 18:19 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * QPM_ProjectSettings.prg
+     + Support for NOAT parameter to ommit @ char from calls to old versions
+       of MinGW's gcc utility.
+    #81
+
+2021-08-04 17:33 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * us_slash.exe
+     * Recompiled.
+   #81
+
+2021-08-04 17:31 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * us_slash.prg
+     + Add support for new NOAT parameter to ommit @ char from calls to
+       old versions of MinGW's gcc utility.
+    ; Version set to 1.08
+   #81
+
+2021-03-17 19:59 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * QPM.rc
+     * Copyright was updated.
+
+2021-03-17 19:57 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * ar.c
+   * FuentesComunes\US_Clases.prg
+   * FuentesComunes\US_Edit_CharFijo.prg
+   * FuentesComunes\US_Env.h
+   * FuentesComunes\US_HB.PRG
+   * FuentesComunes\US_i_richeditbox.ch
+   * FuentesComunes\US_l_richeditbox.prg
+   * FuentesComunes\US_Log.h
+   * FuentesComunes\US_Log.prg
+   * FuentesComunes\US_MG.PRG
+   * FuentesComunes\US_ProcessWin.prg
+   * FuentesComunes\US_RichEdit.rc
+   * HelpQPM\SHG_Change.prg
+   * QPM.ch
+   * qpm.h
+   * QPM_CompatibilityHotRecovery.ch
+   * QPM_CompatibilityOpenGlobal.ch
+   * QPM_CompatibilityOpenProject.ch
+   * QPM_CompatibilityStatistics.ch
+   * QPM_Environment.prg
+   * QPM_ExtraRun.prg
+   * QPM_Functions.prg
+   * QPM_GlobalSettings.prg
+   * QPM_HotRecovery.prg
+   * QPM_Killer.prg
+   * QPM_Libraries.prg
+   * QPM_ProjectSettings.prg
+   * QPM_Resources.ch
+   * QPM_SHG_AssistImage.prg
+   * QPM_SHG_AssistLink.prg
+   * QPM_SHG_SimpleHelpGenerator.prg
+   * QPM_SyncRecovery.prg
+   * reimp.h
+   * resource.h
+   * Samples\Redir\us_redir.c
+   * us_msg.prg
+   * us_redir.c
+   * us_reimp.c
+   * us_res.prg
+   * us_run.prg
+   * us_run.rc
+   * us_shell.prg
+   * us_slash.prg
+   * util.c
+     * Copyright was updated.
+
 2021-03-06 14:51 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * QPM.exe
      * Rebuild.
@@ -21,7 +140,7 @@
      * Rebuild.
    * QPM_ProjectSettings.prg
      ! "Strip EXE" and "Allow multiple definitios" options are not enabled
-       after changing compiler from Borland to MinGw.
+       after changing compiler from Borland to MinGW.
    #74
 
 2020-12-19 09:23 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
