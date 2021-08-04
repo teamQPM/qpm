@@ -102,6 +102,7 @@ FUNCTION QPM_CreatePublicVars()
    PUBLIC vXRefPrgFmg                   := {}
    PUBLIC cLastProjectFolder            := ''
    PUBLIC bLogActivity                  := .F.
+   PUBLIC bNoAt                         := .F.
    PUBLIC PUB_DeleteAux                 := .T.
    PUBLIC PUB_vAutoRun                  := {}
    PUBLIC RunControlFile                := {}
@@ -312,6 +313,7 @@ FUNCTION QPM_CreatePublicVars()
    PUBLIC Prj_Check_StaticBuild         := .T.
    PUBLIC Prj_Check_Strip               := .F.
    PUBLIC Prj_Check_Upx                 := .F.
+   PUBLIC Prj_Check_UseAt               := .T.
    PUBLIC Prj_ExtraRunCmdEXE            := ''
    PUBLIC Prj_ExtraRunCmdEXEParm        := ''
    PUBLIC Prj_ExtraRunCmdFINAL          := ''
