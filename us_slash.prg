@@ -25,18 +25,18 @@
 #define DBLQT    '"'
 #define SNGQT    "'"
 #define CRLF     hb_osNewLine()
-#define VERSION  "01.07"
+#define VERSION  "01.08"
 MEMVAR cQPMDIR
 
 // Parameters: 1 -> cParam (multiple words), 2 -> cFileIn (one word), 3 -> cFileOut (one word)
 
 PROCEDURE MAIN( ... )
-   LOCAL aParams := hb_AParams(), n, cLib, cSearch := "", cGroup := ""
+   LOCAL aParams := hb_AParams(), n, cLib, cSearch := "", cGroup := "", bDoubleSlash, bUseAt
    LOCAL bLoop := .T., cLine, cFines := { Chr(13) + Chr(10), Chr(10) }, hParam, cKey
    LOCAL cFileOut, cFileIn, cParam, gcc_call, cmdbatch, bList := .F., cPath := ""
    LOCAL fgccbat := US_FileTmp( NIL, ".bat" )
-   LOCAL fstatus := US_FileTmp()
-   LOCAL fparams := US_FileTmp()
+   LOCAL fstatus := US_FileTmp( NIL, ".res" )
+   LOCAL fparams := US_FileTmp( NIL, ".par" )
    PRIVATE cQPMDir := ""
 
    cParam := ""
@@ -55,6 +55,20 @@ PROCEDURE MAIN( ... )
       RETURN
    ENDIF
    cParam := US_WordDel( cParam, 1 )
+
+   IF Upper( US_Word( cParam, 1 ) ) == "SSLASH"
+      bDoubleSlash := .F.
+      cParam := US_WordDel( cParam, 1 )
+   ELSE
+      bDoubleSlash := .T.
+   ENDIF
+
+   IF Upper( US_Word( cParam, 1 ) ) == "NOAT"
+      bUseAt := .F.
+      cParam := US_WordDel( cParam, 1 )
+   ELSE
+      bUseAt := .T.
+   ENDIF
 
    IF Upper( SubStr( cParam, 1, 5 ) ) == "-LIST"
       bList := .T.
@@ -124,9 +138,15 @@ PROCEDURE MAIN( ... )
    ENDIF
 
    cLine := cFileIn + ' -o ' + cFileOut + ' ' + cSearch + cGroup + cParam + hb_osNewLine()
-   cLine := StrTran( cLine, "\", "\\" )
+   IF bDoubleSlash
+      cLine := StrTran( cLine, "\", "\\" )
+   ENDIF
    hb_MemoWrit( fparams, cLine )
-   gcc_call := 'GCC.EXE @' + fparams
+   IF bUseAt
+      gcc_call := 'GCC.EXE @' + fparams
+   ELSE
+      gcc_call := 'GCC.EXE ' + cLine
+   ENDIF
 
    IF bList
       QPM_Log( "US_Slash 009I: cFileIn:    " + cFileIn )
@@ -136,6 +156,7 @@ PROCEDURE MAIN( ... )
       QPM_Log( "US_Slash 013I: cParam:     " + cParam )
       QPM_Log( "US_Slash 014I: cPath:      " + cPath )
       QPM_Log( "US_Slash 015I: gcc_call:   " + gcc_call )
+      QPM_Log( "US_Slash 016I: cLine:      " + cLine )
    ENDIF
 
    cmdbatch := hb_osNewLine() + ;
@@ -151,24 +172,24 @@ PROCEDURE MAIN( ... )
    hb_MemoWrit( fgccbat, cmdbatch )
 
    IF bList
-      QPM_Log( "US_Slash 016I: INI Batch" )
+      QPM_Log( "US_Slash 017I: INI Batch" )
       QPM_LOG( Left( cmdbatch, Len( cmdbatch ) - 2 ) )
-      QPM_Log( "US_Slash 017I: END Batch" )
-      QPM_Log( "US_Slash 018I: INI Param" )
+      QPM_Log( "US_Slash 018I: END Batch" )
+      QPM_Log( "US_Slash 019I: INI Param" )
       QPM_LOG( Left( cLine, Len( cLine ) - 2 ) )
-      QPM_Log( "US_Slash 019I: END Param" )
+      QPM_Log( "US_Slash 020I: END Param" )
    ENDIF
 
    __Run( fgccbat )
 
    IF MemoLine( MemoRead( fstatus ), 254, 1 ) = "ERROR"
       IF bList
-         QPM_Log( "US_Slash 020I: Status:     ERROR" )
+         QPM_Log( "US_Slash 021I: Status:     ERROR" )
          QPM_Log( "------------" + CRLF )
       ENDIF
    ELSE
       IF bList
-         QPM_Log( "US_Slash 021I: Status:     OK" )
+         QPM_Log( "US_Slash 022I: Status:     OK" )
          QPM_Log( "------------" + CRLF )
       ENDIF
    ENDIF
