@@ -30,6 +30,7 @@ MEMVAR OLD_Check_AllowM
 MEMVAR OLD_Check_HarbourIs31
 MEMVAR OLD_Check_StaticBuild
 MEMVAR OLD_Check_Strip
+MEMVAR OLD_Check_UseAt
 MEMVAR OLD_Radio_Cpp
 MEMVAR OLD_Radio_Harbour
 MEMVAR OLD_Radio_MiniGui
@@ -47,6 +48,7 @@ FUNCTION ProjectSettings()
    PRIVATE OLD_Check_HarbourIs31 := Prj_Check_HarbourIs31
    PRIVATE OLD_Check_StaticBuild := Prj_Check_StaticBuild
    PRIVATE OLD_Check_Strip       := Prj_Check_Strip
+   PRIVATE OLD_Check_UseAt       := Prj_Check_UseAt
    PRIVATE OLD_Radio_Cpp         := Prj_Radio_Cpp
    PRIVATE OLD_Radio_Harbour     := Prj_Radio_Harbour
    PRIVATE OLD_Radio_MiniGui     := Prj_Radio_MiniGui
@@ -97,6 +99,9 @@ FUNCTION ProjectSettings()
       IF OLD_Check_Strip
          OLD_Check_Strip := .F.
       ENDIF
+      IF OLD_Check_UseAt
+         OLD_Check_UseAt := .F.
+      ENDIF
       IF OLD_Check_AllowM
          OLD_Check_AllowM := .F.
       ENDIF
@@ -107,6 +112,9 @@ FUNCTION ProjectSettings()
       ENDIF
       IF OLD_Check_Strip
          OLD_Check_Strip := .F.
+      ENDIF
+      IF OLD_Check_UseAt
+         OLD_Check_UseAt := .F.
       ENDIF
       IF OLD_Check_AllowM
          OLD_Check_AllowM := .F.
@@ -167,14 +175,14 @@ FUNCTION ProjectSettings()
          VALUE OLD_Check_HarbourIs31 ;
          TRANSPARENT
 
-      @ 16, 180 RADIOGROUP Radio_Cpp ;
+      @ 16, 190 RADIOGROUP Radio_Cpp ;
          OPTIONS { 'BCC32', 'MinGW', 'Pelles' } ;
          VALUE OLD_Radio_Cpp ;
-         WIDTH  100 ;
+         WIDTH 70 ;
          TOOLTIP 'Select C compiler' ;
          ON CHANGE CheckCombination( lAfterOnInit )
 
-      @ 96, 180 CHECKBOX Check_64Bits ;
+      @ 96, 190 CHECKBOX Check_64Bits ;
          CAPTION '64 bits' ;
          WIDTH 60 ;
          HEIGHT 24 ;
@@ -238,7 +246,7 @@ FUNCTION ProjectSettings()
       DEFINE CHECKBOX Check_StaticBuild
               CAPTION         'Static'
               ROW             165
-              COL             200
+              COL             190
               WIDTH           60
               VALUE           OLD_Check_StaticBuild
               TOOLTIP         'Link EXE using static libraries'
@@ -248,7 +256,7 @@ FUNCTION ProjectSettings()
       DEFINE CHECKBOX Check_OutputPrefix
               CAPTION         'Add Lib'
               ROW             190
-              COL             200
+              COL             190
               WIDTH           60
               VALUE           Prj_Check_OutputPrefix
               TOOLTIP         'Add ' + DBLQT + 'Lib' + DBLQT + " prefix to Output's filename"
@@ -257,8 +265,8 @@ FUNCTION ProjectSettings()
       DEFINE CHECKBOX Check_Upx
               CAPTION         'UPX'
               ROW             215
-              COL             200
-              WIDTH           50
+              COL             190
+              WIDTH           60
               VALUE           Prj_Check_Upx
               TOOLTIP         'Compress EXE using ' + DBLQT + 'Ultimate Packer for eXecutables' + DBLQT + ' -UPX- utility.'
       END CHECKBOX
@@ -266,10 +274,20 @@ FUNCTION ProjectSettings()
       DEFINE CHECKBOX Check_Strip
               CAPTION         'Strip EXE'
               ROW             240
-              COL             30
-              WIDTH           150
+              COL             190
+              WIDTH           70
               VALUE           Prj_Check_Strip
               TOOLTIP         'Omit all symbol information from the output file.'
+              ON CHANGE       CheckCombination( lAfterOnInit )
+      END CHECKBOX
+
+      DEFINE CHECKBOX Check_UseAt
+              CAPTION         'Use @file with GCC'
+              ROW             240
+              COL             30
+              WIDTH           155
+              VALUE           Prj_Check_UseAt
+              TOOLTIP         'Uncheck for older versions of GCC.'
               ON CHANGE       CheckCombination( lAfterOnInit )
       END CHECKBOX
 
@@ -463,6 +481,7 @@ FUNCTION ProjectChanged()
       Prj_Check_OutputPrefix        != GetProperty( 'WinPSettings', 'Check_OutputPrefix', 'Value' )   .OR. ;
       Prj_Check_StaticBuild         != GetProperty( 'WinPSettings', 'Check_StaticBuild', 'Value' )    .OR. ;
       Prj_Check_Strip               != GetProperty( 'WinPSettings', 'Check_Strip', 'Value' )          .OR. ;
+      Prj_Check_UseAt               != GetProperty( 'WinPSettings', 'Check_UseAt', 'Value' )          .OR. ;
       Prj_Check_AllowM              != GetProperty( 'WinPSettings', 'Check_AllowM', 'Value' )         .OR. ;
       Prj_Radio_FormTool            != GetProperty( 'WinPSettings', 'Radio_Form', 'Value' )           .OR. ;
       Prj_Radio_DbfTool             != GetProperty( 'WinPSettings', 'Radio_Dbf', 'Value' )            .OR. ;
@@ -491,6 +510,7 @@ FUNCTION ProjectSettingsSave()
                      'Check_64bits', ;
                      'Check_AllowM', ;
                      'Check_Strip', ;
+                     'Check_UseAt', ;
                      'Check_StaticBuild', ;
                      'Radio_Cpp', ;
                      'Radio_MiniGui', ;
@@ -541,6 +561,7 @@ FUNCTION ProjectSettingsSave()
    Prj_Check_OutputPrefix        := GetProperty( 'WinPSettings', 'Check_OutputPrefix', 'Value' )
    Prj_Check_StaticBuild         := GetProperty( 'WinPSettings', 'Check_StaticBuild', 'Value' )
    Prj_Check_Strip               := GetProperty( 'WinPSettings', 'Check_Strip', 'Value' )
+   Prj_Check_UseAt               := GetProperty( 'WinPSettings', 'Check_UseAt', 'Value' )
    Prj_Check_AllowM              := GetProperty( 'WinPSettings', 'Check_AllowM', 'Value' )
    Prj_Radio_FormTool            := GetProperty( 'WinPSettings', 'Radio_Form', 'Value' )
    Prj_Radio_DbfTool             := GetProperty( 'WinPSettings', 'Radio_Dbf', 'Value' )
@@ -702,6 +723,13 @@ FUNCTION CheckCombination( lAfterOnInit )
          ENDIF
          WinPSettings.Check_Strip.value := .F.
       ENDIF
+      OLD_Check_UseAt := .F.
+      IF WinPSettings.Check_UseAt.value
+         IF lAfterOnInit
+            MyMsgStop( DBLQT + 'Use @file' + DBLQT + ' switch only applies to MinGW compiler.' )
+         ENDIF
+         WinPSettings.Check_UseAt.value := .F.
+      ENDIF
       OLD_Check_AllowM := .F.
       IF WinPSettings.Check_AllowM.value
          IF lAfterOnInit
@@ -724,6 +752,13 @@ FUNCTION CheckCombination( lAfterOnInit )
             MyMsgStop( DBLQT + 'Strip EXE' + DBLQT + ' switch only applies to MinGW compiler.' )
          ENDIF
          WinPSettings.Check_Strip.value := .F.
+      ENDIF
+      OLD_Check_UseAt := .F.
+      IF WinPSettings.Check_UseAt.value
+         IF lAfterOnInit
+            MyMsgStop( DBLQT + 'Use @file' + DBLQT + ' switch only applies to MinGW compiler.' )
+         ENDIF
+         WinPSettings.Check_UseAt.value := .F.
       ENDIF
       OLD_Check_AllowM := .F.
       IF WinPSettings.Check_AllowM.value
@@ -783,6 +818,7 @@ FUNCTION CheckCombination( lAfterOnInit )
    OLD_Check_HarbourIs31 := WinPSettings.Check_HBVersion.value
    OLD_Check_StaticBuild := WinPSettings.Check_StaticBuild.value
    OLD_Check_Strip       := WinPSettings.Check_Strip.value
+   OLD_Check_UseAt       := WinPSettings.Check_UseAt.value
    OLD_Radio_Cpp         := WinPSettings.Radio_Cpp.value
    OLD_Radio_Harbour     := WinPSettings.Radio_Harbour.value
    OLD_Radio_MiniGui     := WinPSettings.Radio_MiniGui.value
@@ -819,16 +855,19 @@ FUNCTION CheckCombination( lAfterOnInit )
       SetProperty( 'WinPSettings', 'Check_AllowM',      'enabled', .F. )
       SetProperty( 'WinPSettings', 'Check_StaticBuild', 'enabled', .F. )
       SetProperty( 'WinPSettings', 'Check_Strip',       'enabled', .F. )
+      SetProperty( 'WinPSettings', 'Check_UseAt',       'enabled', .F. )
    CASE WinPSettings.Radio_Cpp.value == DEF_RG_MINGW
       SetProperty( 'WinPSettings', 'Check_64bits',      'enabled', .T. )
       SetProperty( 'WinPSettings', 'Check_AllowM',      'enabled', .T. )
       SetProperty( 'WinPSettings', 'Check_StaticBuild', 'enabled', .T. )
       SetProperty( 'WinPSettings', 'Check_Strip',       'enabled', .T. )
+      SetProperty( 'WinPSettings', 'Check_UseAt',       'enabled', .T. )
    CASE WinPSettings.Radio_Cpp.value == DEF_RG_PELLES
       SetProperty( 'WinPSettings', 'Check_64bits',      'enabled', .T. )
       SetProperty( 'WinPSettings', 'Check_AllowM',      'enabled', .F. )
       SetProperty( 'WinPSettings', 'Check_StaticBuild', 'enabled', .F. )
       SetProperty( 'WinPSettings', 'Check_Strip',       'enabled', .F. )
+      SetProperty( 'WinPSettings', 'Check_UseAt',       'enabled', .F. )
    ENDCASE
    DO CASE
    CASE WinPSettings.Radio_Harbour.value == DEF_RG_HARBOUR
