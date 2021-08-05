@@ -37,7 +37,7 @@
 #define  MSG_SYSIN    ( US_ShortName( PUB_cProjectFolder ) + DEF_SLASH + '_' + PUB_cSecu + 'MSG.SYSIN' )
 
 #define LISTOLOG iif( bLogActivity, ' -LIST' + US_ShortName(PUB_cQPM_Folder) + ' ', ' ' )
-#define NOAT     iif( Prj_Check_UseAt, ' -NOAT ', ' ' )
+#define NOAT     iif( Prj_Check_UseAt, ' ', ' -NOAT ' )
 
 PROCEDURE Main( PAR_cP01, PAR_cP02, PAR_cP03, PAR_cP04, PAR_cP05, PAR_cP06, PAR_cP07, PAR_cP08, PAR_cP09, PAR_cP10, ;
                 PAR_cP11, PAR_cP12, PAR_cP13, PAR_cP14, PAR_cP15, PAR_cP16, PAR_cP17, PAR_cP18, PAR_cP19, PAR_cP20 )
@@ -6129,7 +6129,7 @@ FUNCTION QPM_Build2()
 /*
  * Grabo objeto generado a partir del archivo de recursos en script.ld
  */
-            IF ! Prj_Check_IgnoreMainRC .OR. ! Prj_Check_IgnoreLibRCs
+            IF ! Prj_Check_IgnoreLibRCs .OR. ( ! Prj_Check_IgnoreMainRC .AND. File( US_FileNameOnlyPathAndName( PRGFILES[1] ) + '.RC' ) )
                Out := Out + PUB_cCharTab + 'echo INPUT( $(DIR_OBJECTS)' + DEF_SLASH + '_Temp.o ) >> ' + Q_SCRIPT_FILE + CRLF
             ENDIF
 
@@ -6395,7 +6395,7 @@ FUNCTION QPM_Build2()
 /*
  * PELLES: add resource files
  */
-            IF ! Prj_Check_IgnoreMainRC .OR. ! Prj_Check_IgnoreLibRCs
+            IF ! Prj_Check_IgnoreLibRCs .OR. ( ! Prj_Check_IgnoreMainRC .AND. File( US_FileNameOnlyPathAndName( PRGFILES[1] ) + '.RC' ) )
                FOR i := 1 TO Len ( vLibIncludeFiles )
                   IF US_Upper( US_Word( GetProperty( 'VentanaMain' , 'GIncFiles' , 'Cell' , i , NCOLINCFULLNAME ) , 2 ) ) == '*FIRST*' // for .res
                      IF Upper( US_FileNameOnlyExt( vLibIncludeFiles[i] ) ) == 'RES'
@@ -6486,10 +6486,8 @@ FUNCTION QPM_Build2()
                   ENDIF
                ENDIF
             NEXT i
-            IF ! Prj_Check_IgnoreMainRC .OR. ! Prj_Check_IgnoreLibRCs
-               IF ( ! Prj_Check_IgnoreMainRC .AND. File( US_FileNameOnlyPathAndName( PRGFILES[1] ) + '.RC' ) ) .OR. ! Prj_Check_IgnoreLibRCs
-                  Out := Out + PUB_cCharTab + 'echo $(DIR_OBJECTS)' + DEF_SLASH + '_Temp.res + >> ' + Q_SCRIPT_FILE + CRLF
-               ENDIF
+            IF ! Prj_Check_IgnoreLibRCs .OR. ( ! Prj_Check_IgnoreMainRC .AND. File( US_FileNameOnlyPathAndName( PRGFILES[1] ) + '.RC' ) )
+               Out := Out + PUB_cCharTab + 'echo $(DIR_OBJECTS)' + DEF_SLASH + '_Temp.res + >> ' + Q_SCRIPT_FILE + CRLF
             ENDIF
             FOR i := 1 TO Len ( vLibIncludeFiles )
                IF US_Word( GetProperty( 'VentanaMain' , 'GIncFiles' , 'Cell' , i , NCOLINCFULLNAME ) , 2 ) == '*LAST*' // for .res
