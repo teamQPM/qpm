@@ -3,6 +3,19 @@
  * See "How to format your ChangeLog entries" in howtosvn.txt file.
  */
 
+2021-08-05 18:37 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * QPM.exe
+     * Rebuild.
+
+2021-08-05 18:35 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * QPM.prg
+     ! Error "unrecognized command line option -NOAT" when building
+       a project under MinGW.
+   #84
+     ! Error "missing _Temp.o file" when building a project that has no
+       RC file and the option "Don't compile Main .RC" is not marked.
+   #85
+
 2021-08-04 19:15 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    + RELEASE: TAG v05.05.0021 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
