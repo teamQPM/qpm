@@ -3,6 +3,19 @@
  * See "How to format your ChangeLog entries" in howtosvn.txt file.
  */
 
+2021-08-05 19:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   + RELEASE: TAG v05.05.0022 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+2021-08-05 19:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * QPM.exe
+     * Rebuild.
+
+2021-08-05 18:55 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * QPM.iss
+   * QPM_AutoProject.qpm
+   * QPM_Version.ch
+     * Version changed to 05.05.0022.
+
 2021-08-05 18:37 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * QPM.exe
      * Rebuild.
