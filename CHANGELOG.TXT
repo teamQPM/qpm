@@ -3,8 +3,14 @@
  * See "How to format your ChangeLog entries" in howtosvn.txt file.
  */
 
-2021-08-05 19:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+2021-08-05 21:22 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    + RELEASE: TAG v05.05.0022 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+2021-08-05 21:14 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   + infobefore.txt
+     ; License information and other stuff.
+   * QPM.iss
+     * Added content of infobefore.txt.
 
 2021-08-05 19:00 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * QPM.exe
