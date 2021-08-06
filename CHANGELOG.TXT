@@ -3,6 +3,12 @@
  * See "How to format your ChangeLog entries" in howtosvn.txt file.
  */
 
+2021-08-06 20:15 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * QPM.prg
+     * Some comments were changed.
+     * Some commented code was removed.
+     * Some code's indentation was changed.
+
 2021-08-05 21:22 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    + RELEASE: TAG v05.05.0022 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
