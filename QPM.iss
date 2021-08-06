@@ -46,6 +46,7 @@ SetupIconFile=.\Resource\QPM_Install.ico
 Compression=lzma2
 ChangesAssociations=yes
 UninstallDisplayIcon={uninstallexe}
+InfoBeforeFile=infobefore.txt
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
@@ -134,6 +135,8 @@ Type: files; Name: "{app}\QPM.exe.LOG"
 BeveledLabel=QPM (QAC based Project Manager)
 
 [Code]
+var InfoBeforeCheck: TNewCheckBox;
+  
 procedure CurUninstallStepChanged(CurUninstallStep: TUninstallStep);
 begin
   if CurUninstallStep = usDone then
@@ -142,5 +145,47 @@ begin
     begin
       MsgBox(ExpandConstant('Installation folder {app} was not removed' + #13#10 + 'because it contains user created files!'), mbInformation, MB_OK);
     end; 
+  end;
+end;
+
+procedure CheckInfoBeforeRead;
+begin
+  { Enable the NextButton only if InfoBeforeCheck is checked or }
+  { installer is running in the silent mode }
+  WizardForm.NextButton.Enabled := InfoBeforeCheck.Checked or WizardSilent;
+end;
+
+procedure InfoBeforeCheckClick(Sender: TObject);
+begin
+  { Update state of the Next button, whenever the InfoBeforeCheck is toggled }
+  CheckInfoBeforeRead;
+end;  
+
+procedure InitializeWizard();
+begin
+  InfoBeforeCheck := TNewCheckBox.Create(WizardForm);
+  InfoBeforeCheck.Parent := WizardForm.InfoBeforePage;
+  { Follow the License page layout }
+  InfoBeforeCheck.Top := WizardForm.LicenseNotAcceptedRadio.Top;
+  InfoBeforeCheck.Left := WizardForm.LicenseNotAcceptedRadio.Left;
+  InfoBeforeCheck.Width := WizardForm.LicenseNotAcceptedRadio.Width;
+  InfoBeforeCheck.Height := WizardForm.LicenseNotAcceptedRadio.Height;
+  InfoBeforeCheck.Caption := 'I swear I read this';
+  InfoBeforeCheck.OnClick := @InfoBeforeCheckClick;
+
+  { Make the gap between the InfoBeforeMemo and the InfoBeforeCheck the same }
+  { as the gap between LicenseMemo and LicenseAcceptedRadio }
+  WizardForm.InfoBeforeMemo.Height :=
+    ((WizardForm.LicenseMemo.Top + WizardForm.LicenseMemo.Height) -
+     WizardForm.InfoBeforeMemo.Top) +
+    (InfoBeforeCheck.Top - WizardForm.LicenseAcceptedRadio.Top);
+end;
+
+procedure CurPageChanged(CurPageID: Integer);
+begin
+  if CurPageID = wpInfoBefore then
+  begin
+    { Initial state of the Next button }
+    CheckInfoBeforeRead;
   end;
 end;
