@@ -2632,7 +2632,7 @@ FUNCTION QPM_AddFilesHEA2()
          ENDIF
       ENDIF
    ENDIF
-   FOR x := 1 TO Len ( Files )
+   FOR x := 1 TO Len( Files )
       Exists := .F.
       Files[x] := ChgPathToRelative( Files[x] )
       FOR i := 1 TO VentanaMain.GHeaFiles.ItemCount
@@ -2687,7 +2687,7 @@ FUNCTION QPM_AddFilesPAN2()
       ENDIF
    ENDIF
    SetMGWaitShow()
-   FOR x := 1 TO Len ( Files )
+   FOR x := 1 TO Len( Files )
       Exists := .F.
       IF SubStr( US_FileNameOnlyPath( Files[x] ), 2, 2 ) == ':' + DEF_SLASH .AND. Len( US_FileNameOnlyPath( Files[x] ) ) == 3
          MyMsgStop( 'Components located in a root folder will not work correctly in QPM: ' + Files[ x ] )
@@ -2743,7 +2743,7 @@ FUNCTION QPM_AddFilesDBF2()
          ENDIF
       ENDIF
    ENDIF
-   FOR x := 1 TO Len ( Files )
+   FOR x := 1 TO Len( Files )
       Exists := .F.
       Files[x] := ChgPathToRelative( Files[x] )
       FOR i := 1 TO VentanaMain.GDbfFiles.ItemCount
@@ -2932,7 +2932,7 @@ RETURN .T.
 FUNCTION QPM_AddExcludeLibs
    LOCAL Files, x, i, Exists
    Files := QPM_GetExcludeFilesLIB( )
-   FOR x := 1 TO Len ( Files )
+   FOR x := 1 TO Len( Files )
        Exists := .F.
        FOR i := 1 TO VentanaMain.GExcFiles.ItemCount
           IF US_Upper( Files[x] ) == US_Upper( GetProperty( 'VentanaMain', 'GExcFiles', 'Cell', i, NCOLEXCNAME ) )
@@ -6076,7 +6076,7 @@ FUNCTION QPM_Build2()
 /*
  * Grabo en script.ld los objetos listados en las Include Libraries que estén marcados *FIRST* y que no estén excluidos
  */
-         FOR i := 1 TO Len ( vLibIncludeFiles )
+         FOR i := 1 TO Len( vLibIncludeFiles )
             IF US_Upper( US_Word( GetProperty( 'VentanaMain', 'GIncFiles', 'Cell', i, NCOLINCFULLNAME ), 2 ) ) == '*FIRST*'
                DO CASE
                CASE IsMinGW
@@ -6109,7 +6109,7 @@ FUNCTION QPM_Build2()
 /*
  * Grabo lista de objetos derivados de los .prg en script.ld
  */
-         FOR i := 1 TO Len ( PRGFILES )
+         FOR i := 1 TO Len( PRGFILES )
             DO CASE
             CASE IsMinGW
                Out := Out + PUB_cCharTab + 'echo INPUT( $(DIR_OBJECTS)' + DEF_SLASH + US_FileNameOnlyName( PRGFILES[i] ) + '.o ) >> ' + Q_SCRIPT_FILE + CRLF
@@ -6156,7 +6156,7 @@ FUNCTION QPM_Build2()
 /*
  * Grabo en script.ld los objetos listados en las Include Libraries que estén marcados *LAST*
  */
-            FOR i := 1 TO Len ( vLibIncludeFiles )
+            FOR i := 1 TO Len( vLibIncludeFiles )
                IF US_Word( GetProperty( 'VentanaMain', 'GIncFiles', 'Cell', i, NCOLINCFULLNAME ), 2 ) == '*LAST*'
                   IF Upper( US_FileNameOnlyExt( vLibIncludeFiles[i] ) ) == 'O'
                      IF ! QPM_IsXHarbour() .OR. ! ( US_Upper( US_FileNameOnlyName( vLibIncludeFiles[i] ) ) $ ( 'MAINSTD' + CRLF + 'MAINWIN' ) )
@@ -6189,7 +6189,7 @@ FUNCTION QPM_Build2()
 /*
  * Grabo en script.ld los objetos listados en las Include Libraries que estén marcados *LAST*
  */
-            FOR i := 1 TO Len ( vLibIncludeFiles )
+            FOR i := 1 TO Len( vLibIncludeFiles )
                IF US_Word( GetProperty( 'VentanaMain', 'GIncFiles', 'Cell', i, NCOLINCFULLNAME ), 2 ) == '*LAST*'
                   IF Upper( US_FileNameOnlyExt( vLibIncludeFiles[i] ) ) == 'OBJ'
                      Out := Out + PUB_cCharTab + 'echo ' + US_ShortName( vLibIncludeFiles[i] ) + ' + >> ' + Q_SCRIPT_FILE + CRLF
@@ -6225,7 +6225,7 @@ FUNCTION QPM_Build2()
 /*
  * Grabo en script.ld los objetos listados en las Include Libraries que estén marcados *LAST*
  */
-            FOR i := 1 TO Len ( vLibIncludeFiles )
+            FOR i := 1 TO Len( vLibIncludeFiles )
                IF US_Word( GetProperty( 'VentanaMain', 'GIncFiles', 'Cell', i, NCOLINCFULLNAME ), 2 ) == '*LAST*'
                   IF Upper( US_FileNameOnlyExt( vLibIncludeFiles[i] ) ) == 'OBJ'
                      Out := Out + PUB_cCharTab + 'echo ' + US_ShortName( vLibIncludeFiles[i] ) + ' + >> ' + Q_SCRIPT_FILE + CRLF
@@ -6255,7 +6255,7 @@ FUNCTION QPM_Build2()
 /*
  * MINGW: add libraries marked *FIRST* that are not excluded
  */
-            FOR i := 1 TO Len ( vLibIncludeFiles )
+            FOR i := 1 TO Len( vLibIncludeFiles )
                IF US_Upper( US_Word( GetProperty( 'VentanaMain', 'GIncFiles', 'Cell', i, NCOLINCFULLNAME ), 2 ) ) == '*FIRST*'
                   IF Upper( US_FileNameOnlyExt( vLibIncludeFiles[i] ) ) == 'A'
                      IF AScan( vLibExcludeFiles, { |x| US_Upper( x ) == US_Upper( US_FileNameOnlyNameAndExt( vLibIncludeFiles[i] ) ) } ) == 0
@@ -6303,7 +6303,7 @@ FUNCTION QPM_Build2()
 /*
  * MINGW: add libraries marked *LAST* that are not excluded
  */
-            FOR i := 1 TO Len ( vLibIncludeFiles )
+            FOR i := 1 TO Len( vLibIncludeFiles )
                IF US_Word( GetProperty( 'VentanaMain', 'GIncFiles', 'Cell', i, NCOLINCFULLNAME ), 2 ) == '*LAST*'
                   IF Upper( US_FileNameOnlyExt( vLibIncludeFiles[i] ) ) == 'A'
                      IF AScan( vLibExcludeFiles, { |x| US_Upper( x ) == US_Upper( US_FileNameOnlyNameAndExt( vLibIncludeFiles[i] ) ) } ) == 0
@@ -6343,9 +6343,9 @@ FUNCTION QPM_Build2()
          CASE IsPelles
 
 /*
- * PELLES: add libraries marked *FIRST*
+ * PELLES: add libraries marked *FIRST* that are not excluded
  */
-            FOR i := 1 TO Len ( vLibIncludeFiles )
+            FOR i := 1 TO Len( vLibIncludeFiles )
                IF US_Upper( US_Word( GetProperty( 'VentanaMain', 'GIncFiles', 'Cell', i, NCOLINCFULLNAME ), 2 ) ) == '*FIRST*'
                   IF Upper( US_FileNameOnlyExt( vLibIncludeFiles[i] ) ) == 'LIB'
                      IF AScan( vLibExcludeFiles, { |x| US_Upper( x ) == US_Upper( US_FileNameOnlyNameAndExt( vLibIncludeFiles[i] ) ) } ) == 0
@@ -6361,17 +6361,19 @@ FUNCTION QPM_Build2()
  * PELLES: add default libraries that are not excluded
  */
             FOR i := 1 TO Len( vLibsToLink )
-               IF AScan( vLibExcludeFiles, { |x| US_Upper( x ) == US_Upper( vLibsToLink[i] ) } ) == 0
-                  DO CASE
-                  CASE File( GetMiniguiLibFolder() + DEF_SLASH + vLibsToLink[i] )
-                     Out := Out + PUB_cCharTab + 'echo $(DIR_MINIGUI_LIB)' + DEF_SLASH + vLibsToLink[i] + ' + >> ' + Q_SCRIPT_FILE + CRLF
-                  CASE File( GetHarbourLibFolder() + DEF_SLASH + vLibsToLink[i] )
-                     Out := Out + PUB_cCharTab + 'echo $(DIR_HARBOUR_LIB)' + DEF_SLASH + vLibsToLink[i] + ' + >> ' + Q_SCRIPT_FILE + CRLF
-                  CASE File( GetCppLibFolder() + DEF_SLASH + vLibsToLink[i] )
-                     Out := Out + PUB_cCharTab + 'echo ' + vLibsToLink[i] + ' >> ' + Q_SCRIPT_FILE + CRLF
-                  CASE File( GetCppLibFolder() + DEF_SLASH + 'WIN' + DEF_SLASH + vLibsToLink[i] )
-                     Out := Out + PUB_cCharTab + 'echo ' + vLibsToLink[i] + ' >> ' + Q_SCRIPT_FILE + CRLF
-                  ENDCASE
+               IF Upper( US_FileNameOnlyExt( vLibsToLink[i] ) ) == 'LIB'
+                  IF AScan( vLibExcludeFiles, { |x| US_Upper( x ) == US_Upper( vLibsToLink[i] ) } ) == 0
+                     DO CASE
+                     CASE File( GetMiniguiLibFolder() + DEF_SLASH + vLibsToLink[i] )
+                        Out := Out + PUB_cCharTab + 'echo $(DIR_MINIGUI_LIB)' + DEF_SLASH + vLibsToLink[i] + ' + >> ' + Q_SCRIPT_FILE + CRLF
+                     CASE File( GetHarbourLibFolder() + DEF_SLASH + vLibsToLink[i] )
+                        Out := Out + PUB_cCharTab + 'echo $(DIR_HARBOUR_LIB)' + DEF_SLASH + vLibsToLink[i] + ' + >> ' + Q_SCRIPT_FILE + CRLF
+                     CASE File( GetCppLibFolder() + DEF_SLASH + vLibsToLink[i] )
+                        Out := Out + PUB_cCharTab + 'echo ' + vLibsToLink[i] + ' >> ' + Q_SCRIPT_FILE + CRLF
+                     CASE File( GetCppLibFolder() + DEF_SLASH + 'WIN' + DEF_SLASH + vLibsToLink[i] )
+                        Out := Out + PUB_cCharTab + 'echo ' + vLibsToLink[i] + ' >> ' + Q_SCRIPT_FILE + CRLF
+                     ENDCASE
+                  ENDIF
                ENDIF
             NEXT
 
@@ -6380,7 +6382,7 @@ FUNCTION QPM_Build2()
 /*
  * PELLES: add libraries marked *LAST*
  */
-            FOR i := 1 TO Len ( vLibIncludeFiles )
+            FOR i := 1 TO Len( vLibIncludeFiles )
                IF US_Word( GetProperty( 'VentanaMain', 'GIncFiles', 'Cell', i, NCOLINCFULLNAME ), 2 ) == '*LAST*'
                   IF Upper( US_FileNameOnlyExt( vLibIncludeFiles[i] ) ) == 'LIB'
                      IF AScan( vLibExcludeFiles, { |x| US_Upper( x ) == US_Upper( US_FileNameOnlyNameAndExt( vLibIncludeFiles[i] ) ) } ) == 0
@@ -6396,7 +6398,7 @@ FUNCTION QPM_Build2()
  * PELLES: add resource files
  */
             IF ! Prj_Check_IgnoreLibRCs .OR. ( ! Prj_Check_IgnoreMainRC .AND. File( US_FileNameOnlyPathAndName( PRGFILES[1] ) + '.RC' ) )
-               FOR i := 1 TO Len ( vLibIncludeFiles )
+               FOR i := 1 TO Len( vLibIncludeFiles )
                   IF US_Upper( US_Word( GetProperty( 'VentanaMain' , 'GIncFiles' , 'Cell' , i , NCOLINCFULLNAME ) , 2 ) ) == '*FIRST*' /* for .res */
                      IF Upper( US_FileNameOnlyExt( vLibIncludeFiles[i] ) ) == 'RES'
                         Out := Out + PUB_cCharTab + 'echo ' + US_ShortName( vLibIncludeFiles[i] ) + ' >> ' + Q_SCRIPT_FILE + CRLF
@@ -6406,7 +6408,7 @@ FUNCTION QPM_Build2()
                IF File( US_FileNameOnlyPathAndName( PRGFILES[1] ) + '.RC' )
                   Out := Out + PUB_cCharTab + 'echo $(DIR_OBJECTS)' + DEF_SLASH + '_Temp.res' + ' >> ' + Q_SCRIPT_FILE + CRLF
                ENDIF
-               FOR i := 1 TO Len ( vLibIncludeFiles )
+               FOR i := 1 TO Len( vLibIncludeFiles )
                   IF US_Word( GetProperty( 'VentanaMain' , 'GIncFiles' , 'Cell' , i , NCOLINCFULLNAME ) , 2 ) == '*LAST*' /* for .res */
                      IF Upper( US_FileNameOnlyExt( vLibIncludeFiles[i] ) ) == 'RES'
                         Out := Out + PUB_cCharTab + 'echo ' + US_ShortName( vLibIncludeFiles[i] ) + ' >> ' + Q_SCRIPT_FILE + CRLF
@@ -6424,7 +6426,7 @@ FUNCTION QPM_Build2()
 /*
  * BCC32: add libraries marked *FIRST*
  */
-            FOR i := 1 TO Len ( vLibIncludeFiles )
+            FOR i := 1 TO Len( vLibIncludeFiles )
                IF US_Upper( US_Word( GetProperty( 'VentanaMain', 'GIncFiles', 'Cell', i, NCOLINCFULLNAME ), 2 ) ) == '*FIRST*'
                   IF Upper( US_FileNameOnlyExt( vLibIncludeFiles[i] ) ) == 'LIB'
                      IF AScan( vLibExcludeFiles, { |x| US_Upper( x ) == US_Upper( US_FileNameOnlyNameAndExt( vLibIncludeFiles[i] ) ) } ) == 0
@@ -6440,7 +6442,7 @@ FUNCTION QPM_Build2()
  * BCC32: add default libraries that are not excluded
  */
             FOR i := 1 TO Len( vLibsToLink )
-               IF ! Upper( US_FileNameOnlyExt( vLibsToLink[i] ) ) == 'OBJ'
+               IF Upper( US_FileNameOnlyExt( vLibsToLink[i] ) ) == 'LIB'
                   IF AScan( vLibExcludeFiles, { |x| US_Upper( x ) == US_Upper( vLibsToLink[i] ) } ) == 0
                      DO CASE
                      CASE File( GetMiniguiLibFolder() + DEF_SLASH + vLibsToLink[i] )
@@ -6461,7 +6463,7 @@ FUNCTION QPM_Build2()
 /*
  * BCC32: add libraries marked *LAST*
  */
-            FOR i := 1 TO Len ( vLibIncludeFiles )
+            FOR i := 1 TO Len( vLibIncludeFiles )
                IF US_Word( GetProperty( 'VentanaMain', 'GIncFiles', 'Cell', i, NCOLINCFULLNAME ), 2 ) == '*LAST*'
                   IF Upper( US_FileNameOnlyExt( vLibIncludeFiles[i] ) ) == 'LIB'
                      IF AScan( vLibExcludeFiles, { |x| US_Upper( x ) == US_Upper( US_FileNameOnlyNameAndExt( vLibIncludeFiles[i] ) ) } ) == 0
@@ -6477,7 +6479,7 @@ FUNCTION QPM_Build2()
  * BCC32: add resource files
  */
             Out := Out + PUB_cCharTab + 'echo , , + >> ' + Q_SCRIPT_FILE + CRLF
-            FOR i := 1 TO Len ( vLibIncludeFiles )
+            FOR i := 1 TO Len( vLibIncludeFiles )
                IF US_Upper( US_Word( GetProperty( 'VentanaMain' , 'GIncFiles' , 'Cell' , i , NCOLINCFULLNAME ) , 2 ) ) == '*FIRST*' /* for .res */
                   IF Upper( US_FileNameOnlyExt( vLibIncludeFiles[i] ) ) == 'RES'
                      IF AScan( vLibExcludeFiles, { |x| US_Upper( x ) == US_Upper( US_FileNameOnlyNameAndExt( vLibIncludeFiles[i] ) ) } ) == 0
@@ -6489,7 +6491,7 @@ FUNCTION QPM_Build2()
             IF ! Prj_Check_IgnoreLibRCs .OR. ( ! Prj_Check_IgnoreMainRC .AND. File( US_FileNameOnlyPathAndName( PRGFILES[1] ) + '.RC' ) )
                Out := Out + PUB_cCharTab + 'echo $(DIR_OBJECTS)' + DEF_SLASH + '_Temp.res + >> ' + Q_SCRIPT_FILE + CRLF
             ENDIF
-            FOR i := 1 TO Len ( vLibIncludeFiles )
+            FOR i := 1 TO Len( vLibIncludeFiles )
                IF US_Word( GetProperty( 'VentanaMain' , 'GIncFiles' , 'Cell' , i , NCOLINCFULLNAME ) , 2 ) == '*LAST*' /* for .res */
                   IF Upper( US_FileNameOnlyExt( vLibIncludeFiles[i] ) ) == 'RES'
                      IF AScan( vLibExcludeFiles, { |x| US_Upper( x ) == US_Upper( US_FileNameOnlyNameAndExt( vLibIncludeFiles[i] ) ) } ) == 0
@@ -6511,7 +6513,7 @@ FUNCTION QPM_Build2()
          ENDIF
 
       CASE Prj_Radio_OutputType == DEF_RG_LIB
-         FOR i := 1 TO Len ( PRGFILES )
+         FOR i := 1 TO Len( PRGFILES )
             DO CASE
                CASE IsMinGW
                CASE IsPelles
@@ -6556,13 +6558,13 @@ FUNCTION QPM_Build2()
 /*
  * Grabo lista de objetos derivados de los .prg 
  */
-            FOR i := 1 TO Len ( PRGFILES )
+            FOR i := 1 TO Len( PRGFILES )
                Out := Out + PUB_cCharTab + '$(TLIB_EXE) rc ' + cOutputName + ' $(DIR_OBJECTS)' + DEF_SLASH + US_FileNameOnlyName( PRGFILES[i] ) + '.o' + CRLF
             NEXT i
 /*
  * Grabo los objetos listados en las Include Libraries marcados *FIRST* que no estén excluidos
  */
-            FOR i := 1 TO Len ( vLibIncludeFiles )
+            FOR i := 1 TO Len( vLibIncludeFiles )
                IF Upper( US_FileNameOnlyExt( vLibIncludeFiles[i] ) ) == 'O'
                   IF US_Upper( US_Word( GetProperty( 'VentanaMain', 'GIncFiles', 'Cell', i, NCOLINCFULLNAME ), 2 ) ) == '*FIRST*'
                      IF ! ( US_Upper( US_FileNameOnlyName( vLibIncludeFiles[i] ) ) $ ( 'MAINSTD' + CRLF + 'MAINWIN' ) )
@@ -6594,7 +6596,7 @@ FUNCTION QPM_Build2()
 /*
  * Grabo los objetos listados en las Include Libraries marcados *LAST* que no estén excluidos
  */
-            FOR i := 1 TO Len ( vLibIncludeFiles )
+            FOR i := 1 TO Len( vLibIncludeFiles )
                IF Upper( US_FileNameOnlyExt( vLibIncludeFiles[i] ) ) == 'O'
                   IF US_Upper( US_Word( GetProperty( 'VentanaMain', 'GIncFiles', 'Cell', i, NCOLINCFULLNAME ), 2 ) ) == '*LAST*'
                      IF ! ( US_Upper( US_FileNameOnlyName( vLibIncludeFiles[i] ) ) $ ( 'MAINSTD' + CRLF + 'MAINWIN' ) )
@@ -6694,7 +6696,7 @@ FUNCTION QPM_Build2()
 /*
  * Add commands for compiling to script.ld
  */
-      FOR i := 1 TO Len ( PRGFILES )
+      FOR i := 1 TO Len( PRGFILES )
          Out := Out + CRLF
          Out := Out + '$(C_DIR)' + DEF_SLASH + US_FileNameOnlyName( PRGFILES[i] ) + '.' + iif( Upper( US_FileNameOnlyExt( PRGFILES[i] ) ) == 'CPP', 'cpp', 'c' ) + ' : ' + US_ShortName( US_FileNameOnlyPath( PRGFILES[i] ) ) + DEF_SLASH + US_FileNameOnlyNameAndExt( PRGFILES[i] ) + CRLF
          Out := Out + PUB_cCharTab + '$(US_MSG_EXE) ' + Q_PROGRESS_LOG + ' -MSG:Processing ' + PRGFILES[i] + ' ...' + CRLF
@@ -8125,7 +8127,7 @@ FUNCTION TranslateLog( Log )
    NewLog := StrTran( NewLog, dlltool, "GENERATE 'A'" )
    NewLog := StrTran( NewLog, " QPM_TMP_RC :", 'QPM_TMP_RC line ' )
 
-// Remove or translate obscure or uninformative messages
+/* Remove or translate obscure or uninformative messages */
    i := 1
    DO WHILE ( e := At( "fatal error: when writing output to : Broken pipe", SubStr( NewLog, i ) ) ) > 0
       w := RAt( Chr(10), Left( NewLog, i + e - 2 ) )
