@@ -3,6 +3,19 @@
  * See "How to format your ChangeLog entries" in howtosvn.txt file.
  */
 
+2021-08-08 11:35 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * FuentesComunes\US_HB.PRG
+     * Function HB_LOADSTRING was renamed as US_C_LOADSTRING.
+   #86
+
+2021-08-06 22:36 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * QPM.prg
+     * Some comments were changed.
+     * Some format was changed.
+     ! Pelles default libraries to link.
+     ! Borland default libraries to link.
+   #87
+
 2021-08-06 20:15 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * QPM.prg
      * Some comments were changed.
