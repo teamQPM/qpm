@@ -3,6 +3,14 @@
  * See "How to format your ChangeLog entries" in howtosvn.txt file.
  */
 
+2021-08-08 20:06 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * QPM_Killer.prg
+     * Function US_GetProcesses no longer checks for Windows version.
+     * Some format was changed.
+     * Function QPM_SetProcessPriority no longer shows an error message when
+       the change fails. Also, it no longer changes the value of PUB_QPM_bHigh.
+   #88
+
 2021-08-08 11:35 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * FuentesComunes\US_HB.PRG
      * Function HB_LOADSTRING was renamed as US_C_LOADSTRING.
