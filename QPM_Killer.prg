@@ -27,30 +27,37 @@
 
 #ifdef QPM_KILLER
 
-Function QPM_SetProcessPriority( cType )
-   Local nType , P , nReto , aProcSelf := US_GetProcesses()
-   Do case
-      case cType == "HIGH"
-         nType := 3
-         PUB_QPM_bHigh := .T.
-      case cType == "NORMAL"
-         nType := 5
-         PUB_QPM_bHigh := .F.
-      otherwise
-         MyMsgInfo( "Invalid Priority class in function " + Procname() + ": " + cType )
-         Return 20
-   endcase
-   For P := Len( aProcSelf ) to 1 Step -2
-      if !empty( aProcSelf[ P ] )
-         if upper( aProcSelf[ P ] ) == upper( GetModuleFileName( GetInstance() ) )
-            if ( nReto := US_SetPriorityToProcess( aProcSelf[ P-1 ] , nType ) ) != 0
-               MyMsgInfo( "Set High Priority for Process '" + GetModuleFileName( GetInstance() ) + "' Failed with code: " + alltrim( str( nReto ) ) )
-            endif
-            exit
-         endif
-      endif
-   Next P
-Return nReto
+FUNCTION QPM_SetProcessPriority( cType )
+   LOCAL lBefore, nType, aProcSelf, nReto, i
+   lBefore := PUB_QPM_bHigh
+   DO CASE
+   CASE cType == "HIGH"
+      nType := 3
+      PUB_QPM_bHigh := .T.
+   CASE cType == "NORMAL"
+      nType := 5
+      PUB_QPM_bHigh := .F.
+   CASE ValType( PUB_QPM_bHigh ) == "L" .AND. PUB_QPM_bHigh
+      nType := 5
+      PUB_QPM_bHigh := .F.
+   OTHERWISE
+      nType := 3
+      PUB_QPM_bHigh := .T.
+   ENDCASE
+   aProcSelf := US_GetProcesses()
+   nReto := 0
+   FOR i := Len( aProcSelf ) TO 1 STEP -2
+      IF ! Empty( aProcSelf[ i ] )
+         IF Upper( aProcSelf[ i ] ) == Upper( GetModuleFileName( GetInstance() ) )
+            nReto := US_SetPriorityToProcess( aProcSelf[ i - 1 ], nType )
+            EXIT
+         ENDIF
+      ENDIF
+   NEXT i
+   IF nReto # 0
+      PUB_QPM_bHigh := lBefore
+   ENDIF
+RETURN PUB_QPM_bHigh
 
 Function QPM_DefinoKillerWindow()
 
@@ -162,7 +169,7 @@ Function QPM_DefinoKillerWindow()
            WIDTH  74
            HEIGHT 26
            CAPTION "&Restore QPM"
-           ACTION ( WinKiller.TimerRefresh.Enabled := .F. , SetProperty( "VentanaMain" , "bKill" , "Enabled" , .T. ) , DoMethod( "VentanaMain" , "restore" ) , ThisWindow.Hide() , QPM_bKiller := .F. , if( !bRunApp , QPM_SetProcessPriority( "NORMAL" ) , ) )
+           ACTION ( WinKiller.TimerRefresh.Enabled := .F., SetProperty( "VentanaMain", "bKill", "Enabled", .T. ), DoMethod( "VentanaMain", "restore" ), ThisWindow.Hide(), QPM_bKiller := .F., iif( bRunApp, NIL, QPM_SetProcessPriority( "NORMAL" ) ) )
            FONTNAME "MS Sans Serif"
            FONTSIZE 8
            TOOLTIP "Hide " + DBLQT + "Killer Task" + DBLQT + " and restore QPM's desktop"
@@ -324,7 +331,7 @@ Function PidToPos( cPId )
 Return 0
 
 Function US_GetProcesses()
-Return IF(IsWinNT(), US_GetProcessesNT(), US_GetProcessesW9x())
+Return US_GetProcessesNT()
 
 #endif
 
