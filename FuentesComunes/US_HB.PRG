@@ -1613,7 +1613,7 @@ HB_FUNC( US_PROCESSMESS )
    }
 }
 
-HB_FUNC( HB_LOADSTRING )
+HB_FUNC( US_C_LOADSTRING )
 {
    LPBYTE cBuffer;
    cBuffer = GlobalAlloc( GPTR, 255 );
