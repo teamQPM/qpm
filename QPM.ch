@@ -768,6 +768,8 @@ MEMVAR Prj_Warn_DBF_Search_Cont
 MEMVAR Prj_Warn_GT_Order
 MEMVAR Prj_Warn_GT_Order_Cont
 MEMVAR Prj_Warn_InfoSaved
+MEMVAR Prj_Warn_LibOrder
+MEMVAR Prj_Warn_MiniGuiLib
 MEMVAR Prj_Warn_NullRDD
 MEMVAR Prj_Warn_PPO_Browse
 MEMVAR Prj_Warn_SlowSearch

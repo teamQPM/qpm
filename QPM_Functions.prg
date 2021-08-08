@@ -354,6 +354,8 @@ FUNCTION QPM_CreatePublicVars()
    PUBLIC Prj_Warn_GT_Order             := .T.
    PUBLIC Prj_Warn_GT_Order_Cont        := .T.
    PUBLIC Prj_Warn_InfoSaved            := .T.
+   PUBLIC Prj_Warn_LibOrder             := .T.
+   PUBLIC Prj_Warn_MiniGuiLib           := .T.
    PUBLIC Prj_Warn_NullRDD              := .T.
    PUBLIC Prj_Warn_PPO_Browse           := .T.
    PUBLIC Prj_Warn_SlowSearch           := .T.
@@ -802,17 +804,17 @@ FUNCTION QPM_About()
 RETURN .T.
 
 FUNCTION QPM_Licence()
-   MsgInfo( hb_LoadString( ID_LICENSE_LINE_1 ) + CRLF + ;
+   MsgInfo( US_C_LoadString( ID_LICENSE_LINE_1 ) + CRLF + ;
             CRLF + ;
-            hb_LoadString( ID_LICENSE_LINE_2 ) + CRLF + ;
-            hb_LoadString( ID_LICENSE_LINE_3 ) + CRLF + ;
+            US_C_LoadString( ID_LICENSE_LINE_2 ) + CRLF + ;
+            US_C_LoadString( ID_LICENSE_LINE_3 ) + CRLF + ;
             CRLF + ;
-            hb_LoadString( ID_LICENSE_LINE_4 ) + CRLF + ;
+            US_C_LoadString( ID_LICENSE_LINE_4 ) + CRLF + ;
             CRLF + ;
-            hb_LoadString( ID_LICENSE_LINE_5 ) + ' ' + hb_LoadString( ID_LICENSE_LINE_6 ) + CRLF + ;
+            US_C_LoadString( ID_LICENSE_LINE_5 ) + ' ' + US_C_LoadString( ID_LICENSE_LINE_6 ) + CRLF + ;
             CRLF + ;
-            hb_LoadString( ID_LICENSE_LINE_7 ) + CRLF + ;
-            hb_LoadString( ID_LICENSE_LINE_8 ), hb_LoadString( ID_LICENSE_LINE_9 ) ) // this is not translated
+            US_C_LoadString( ID_LICENSE_LINE_7 ) + CRLF + ;
+            US_C_LoadString( ID_LICENSE_LINE_8 ), US_C_LoadString( ID_LICENSE_LINE_9 ) ) // this is not translated
 RETURN .T.
 
 FUNCTION QPM_CopyFile( cOrig, cDest )
@@ -1364,7 +1366,7 @@ FUNCTION QPM_DirValid( cDir, cDirLib, cTipo )
             ENDIF
          CASE cTipo == DefineExtended1 + DefineMinGW + DefineXHarbour
             IF File( cDir + DEF_SLASH + "BIN" + DEF_SLASH + "HARBOUR.EXE" )
-               IF File( cDirLib + DEF_SLASH + "librtl.a" ) 
+               IF File( cDirLib + DEF_SLASH + "librtl.a" )
                   IF File( cDirLib + DEF_SLASH + "libtip.a" )
                      bReto := .T.
                   ELSE
@@ -1607,6 +1609,102 @@ Return US_Upper( &( "Gbl_T_G_" + GetSuffix() ) )
 
 Function GetGTWINName()
 Return US_Upper( StrTran( US_Upper( &( "Gbl_T_G_" + GetSuffix() ) ), "GUI", "WIN" ) )
+
+Function GetRTLName()
+   LOCAL cFlvr, cDirH, cRet
+   cFlvr := GetMiniGuiSuffix() + GetCppSuffix() + GetHarbourSuffix()
+   cDirH := US_ShortName( GetHarbourLibFolder() )
+   DO CASE
+   // HMG 1.x
+   CASE cFlvr == DefineMiniGui1 + DefineBorland + DefineHarbour
+      IF File( cDirH + DEF_SLASH + "rtl.lib" )
+         cRet := "rtl.lib"
+      ELSEIF File( cDirH + DEF_SLASH + "hbrtl.lib" )
+         cRet := "rtl.lib"
+      ENDIF
+   CASE cFlvr == DefineMiniGui1 + DefineBorland + DefineXHarbour
+      IF File( cDirH + DEF_SLASH + "rtl.lib" )
+         cRet := "rtl.lib"
+      ENDIF
+   // HMG 3.x
+   CASE cFlvr == DefineMiniGui3 + DefineMinGW + DefineHarbour
+      IF File( cDirH + DEF_SLASH + "librtl.a" )
+         cRet := "librtl.a"
+      ELSEIF File( cDirH + DEF_SLASH + "libhbrtl.a" )
+         cRet := "libhbrtl.a"
+      ELSEIF File( cDirH + DEF_SLASH + "WIN" + DEF_SLASH + "MINGW" + DEF_SLASH + "librtl.a" )
+         cRet := "librtl.a"
+      ELSEIF File( cDirH + DEF_SLASH + "WIN" + DEF_SLASH + "MINGW" + DEF_SLASH + "libhbrtl.a" )
+         cRet := "libhbrtl.a"
+      ENDIF
+   CASE cFlvr == DefineMiniGui3 + DefineMinGW + DefineXHarbour
+      IF File( cDirH + DEF_SLASH + "librtl.a" )
+         cRet := "librtl.a"
+      ENDIF
+   // Extended
+   CASE cFlvr == DefineExtended1 + DefineBorland + DefineHarbour
+      IF File( cDirH + DEF_SLASH + "rtl.lib" )
+         cRet := "rtl.lib"
+      ELSEIF File( cDirH + DEF_SLASH + "hbrtl.lib" )
+         cRet := "hbrtl.lib"
+      ENDIF
+   CASE cFlvr == DefineExtended1 + DefineBorland + DefineXHarbour
+      IF File( cDirH + DEF_SLASH + "rtl.lib" )
+         cRet := "rtl.lib"
+      ENDIF
+   CASE cFlvr == DefineExtended1 + DefineMinGW + DefineHarbour
+      IF File( cDirH + DEF_SLASH + "librtl.a" )
+         cRet := "librtl.a"
+      ELSEIF File( cDirH + DEF_SLASH + "libhbrtl.a" )
+         cRet := "libhbrtl.a"
+      ELSEIF File( cDirH + DEF_SLASH + "WIN" + DEF_SLASH + "MINGW" + DEF_SLASH + "librtl.a" )
+         cRet := "librtl.a"
+      ELSEIF File( cDirH + DEF_SLASH + "WIN" + DEF_SLASH + "MINGW" + DEF_SLASH + "libhbrtl.a" )
+         cRet := "libhbrtl.a"
+      ENDIF
+   CASE cFlvr == DefineExtended1 + DefineMinGW + DefineXHarbour
+      IF File( cDirH + DEF_SLASH + "librtl.a" )
+         cRet := "librtl.a"
+      ENDIF
+   // OOHG
+   CASE cFlvr == DefineOohg3 + DefineBorland + DefineHarbour
+      IF File( cDirH + DEF_SLASH + "rtl.lib" )
+         cRet := "rtl.lib"
+      ELSEIF File( cDirH + DEF_SLASH + "hbrtl.lib" )
+         cRet := "hbrtl.lib"
+      ENDIF
+   CASE cFlvr == DefineOohg3 + DefineBorland + DefineXHarbour
+      IF File( cDirH + DEF_SLASH + "rtl.lib" )
+         cRet := "rtl.lib"
+      ENDIF
+   CASE cFlvr == DefineOohg3 + DefineMinGW + DefineHarbour
+      IF File( cDirH + DEF_SLASH + "librtl.a" )
+         cRet := "librtl.a"
+      ELSEIF File( cDirH + DEF_SLASH + "libhbrtl.a" )
+         cRet := "libhbrtl.a"
+      ELSEIF File( cDirH + DEF_SLASH + "WIN" + DEF_SLASH + "MINGW" + DEF_SLASH + "librtl.a" )
+         cRet := "librtl.a"
+      ELSEIF File( cDirH + DEF_SLASH + "WIN" + DEF_SLASH + "MINGW" + DEF_SLASH + "libhbrtl.a" )
+         cRet := "libhbrtl.a"
+      ENDIF
+   CASE cFlvr == DefineOohg3 + DefineMinGW + DefineXHarbour
+      IF File( cDirH + DEF_SLASH + "librtl.a" )
+         cRet := "librtl.a"
+      ENDIF
+   CASE cFlvr == DefineOohg3 + DefinePelles + DefineHarbour
+      IF File( cDirH + DEF_SLASH + "rtl.lib" )
+         cRet := "rtl.lib"
+      ELSEIF File( cDirH + DEF_SLASH + "hbrtl.lib" )
+         cRet := "hbrtl.lib"
+      ENDIF
+   CASE cFlvr == DefineOohg3 + DefinePelles + DefineXHarbour
+      IF File( cDirH + DEF_SLASH + "rtl.lib" )
+         cRet := "rtl.lib"
+      ELSEIF File( cDirH + DEF_SLASH + "rtl64.lib" )
+         cRet := "rtl64.lib"
+      ENDIF
+   ENDCASE
+RETURN cRet
 
 Function GetCppFolder()
 Return &( "Gbl_T_C_" + GetSuffix() )
