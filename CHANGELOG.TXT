@@ -3,6 +3,13 @@
  * See "How to format your ChangeLog entries" in howtosvn.txt file.
  */
 
+2021-08-08 20:24 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * QPM.ch
+   * QPM_Functions.prg
+     * Replace HB_LOADSTRING call with US_C_LOADSTRING.
+     + Function GetRTLName to get the name of the (x)Harbour runtime lib.
+     + Public vars Prj_Warn_LibOrder and Prj_Warn_MiniGuiLib.
+
 2021-08-08 20:06 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * QPM_Killer.prg
      * Function US_GetProcesses no longer checks for Windows version.
