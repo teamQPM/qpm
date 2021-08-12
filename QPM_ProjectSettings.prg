@@ -38,11 +38,6 @@ MEMVAR OLD_Radio_MiniGui
 FUNCTION ProjectSettings()
    LOCAL Folder := '', lAfterOnInit := .F.
 
-   IF Empty( PUB_cProjectFolder )
-      MyMsgStop( 'No project is open.' )
-      RETURN .F.
-   ENDIF
-
    PRIVATE OLD_Check_64bits      := Prj_Check_64bits
    PRIVATE OLD_Check_AllowM      := Prj_Check_AllowM
    PRIVATE OLD_Check_HarbourIs31 := Prj_Check_HarbourIs31
