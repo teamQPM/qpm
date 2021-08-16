@@ -3,6 +3,37 @@
  * See "How to format your ChangeLog entries" in howtosvn.txt file.
  */
 
+2021-08-12 19:54 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * QPM.prg
+     ! The exclusion of some included libs was not being honored.
+   #87
+     + Check for missing MiniGui lib.
+   #89
+     + Check for misplaced MiniGui lib to avoid "multiple definition of
+       HB_FUN_ERRORSYS" link error.
+   #90
+     + Set process to high priority before build if it's no set already.
+   #91
+     ! Some messages and questions are shown in LITE mode.
+   #92
+     + The posibility to update the default/include/exclude libs when
+       no project is open.
+   #93
+     ! RTE when building a project that has no files.
+   #94
+     ! Libs are linked twice if they are in the default list and in
+       the include list.
+   #95
+     * Code readability was improved.
+     * Minor optimizations.
+     * Some messages were improved.
+     * Some comments were changed.
+
+2021-08-12 18:33 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
+   * QPM_ProjectSettings.prg
+     * Enable setting changes when no project is open.
+   #93
+
 2021-08-08 20:24 UTC-0300 Fernando Yurisich <fyurisich@users.sourceforge.net>
    * QPM.ch
    * QPM_Functions.prg
