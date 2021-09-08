@@ -30,7 +30,7 @@
 ; (To generate a new GUID, click Tools | Generate GUID inside the IDE.)
 AppId={{97C57005-5ED6-4F8F-BF4B-6A4CBA41A342}
 AppName=QPM (QAC based Project Manager)
-AppVerName=QPM v05.05.0022
+AppVerName=QPM v05.05.0023
 AppPublisher=Fernando Yurisich
 AppCopyright=Copyright 2011-2021 QPM Development Team
 AppPublisherURL=https://github.com/fyurisich/qpm
@@ -41,7 +41,7 @@ UsePreviousAppDir=yes
 DefaultGroupName=QPM (QAC based Project Manager)
 AllowNoIcons=yes
 OutputDir=OBJE1BH_32
-OutputBaseFilename=QPM_05_05_0022_Install
+OutputBaseFilename=QPM_05_05_0023_Install
 SetupIconFile=.\Resource\QPM_Install.ico
 Compression=lzma2
 ChangesAssociations=yes
