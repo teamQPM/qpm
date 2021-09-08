@@ -45,6 +45,11 @@ FUNCTION QPM_CreatePublicVars()
    QPM_VAR0 PUBLIC DefinePelles         := DEF_MG_PELLES
    QPM_VAR0 PUBLIC Define32bits         := DEF_MG_32
    QPM_VAR0 PUBLIC Define64bits         := DEF_MG_64
+   QPM_VAR0 PUBLIC DefineHBNone         := DEF_CB_HBNONE
+   QPM_VAR0 PUBLIC DefineHB30           := DEF_CB_HB30
+   QPM_VAR0 PUBLIC DefineHB31           := DEF_CB_HB31
+   QPM_VAR0 PUBLIC DefineHB32           := DEF_CB_HB32
+   QPM_VAR0 PUBLIC DefineHB34           := DEF_CB_HB34
 
 // VARIABLES
    PUBLIC BUILD_IN_PROGRESS             := .F.
@@ -303,7 +308,6 @@ FUNCTION QPM_CreatePublicVars()
    PUBLIC Prj_Check_64bits              := .F.
    PUBLIC Prj_Check_AllowM              := .F.
    PUBLIC Prj_Check_Console             := .F.
-   PUBLIC Prj_Check_HarbourIs31         := .T.
    PUBLIC Prj_Check_IgnoreLibRCs        := .F.
    PUBLIC Prj_Check_IgnoreMainRC        := .F.
    PUBLIC Prj_Check_MT                  := .F.
@@ -337,6 +341,7 @@ FUNCTION QPM_CreatePublicVars()
    PUBLIC Prj_ExtraRunType              := 'NONE'
    PUBLIC Prj_IsNew                     := .F.
    PUBLIC Prj_Radio_Cpp                 := DEF_RG_MINGW
+   PUBLIC Prj_Combo_HBVersion           := DEF_CB_HB32
    PUBLIC Prj_Radio_DbFTool             := DEF_RG_DBFTOOL
    PUBLIC Prj_Radio_FormTool            := DEF_RG_EDITOR
    PUBLIC Prj_Radio_Harbour             := DEF_RG_HARBOUR
@@ -2634,7 +2639,9 @@ Function QPM_Send_SelectAll()
    DO EVENTS
 Return .T.
 
-Function QPM_Wait( cFun, cTexto, nFila, bStop )
+Function QPM_Wait( cFun, cTexto, nFila, bStop, cDone )
+   LOCAL uRet
+
    PRIVATE SM_oMGWait := US_MGWait():New()
 
    if cTexto == NIL
@@ -2668,7 +2675,12 @@ Function QPM_Wait( cFun, cTexto, nFila, bStop )
 // us_log( _HMG_aFormNames[ AScan( _HMG_aFormHandles, GetActiveWindow() ) ], .F. )
 // AScan( US_StackListArray(), { |x| x = "QPM_TIMER_" .or. substr( x, 3 ) = "QPM_TIMER_" } ) > 0    // Notese que la comparacion es por "="
 //
-Return if( GetActiveWindow() == 0, &( cFun ), SM_oMGWait:Ejecutar( cFun ) )
+   uRet := iif( GetActiveWindow() == 0, &( cFun ), SM_oMGWait:Ejecutar( cFun ) )
+   IF ! Empty( cDone )
+      MyMsgInfo( cDone )
+   ENDIF
+
+RETURN uRet
 
 Function SetMGWaitTxt( txt )
    if US_IsVar( "SM_oMGWait" )

@@ -29,6 +29,7 @@ FUNCTION QPM_ResetLibrariesForFlavor( cFlavor )
    ASize( &('Gbl_DEF_LIBS_'+cFlavor), 0 )
    QPM_InitLibrariesForFlavor( cFlavor )
    CargoDefaultLibs( GetSuffix() )                   // This loads the default libraries grid
+   MyMsgInfo( "Default Libraries List was reseted!" )
 RETURN .T.
 
 FUNCTION QPM_InitLibrariesForFlavor( cFlavor )
@@ -363,7 +364,11 @@ STATIC FUNCTION SetDefaultLibraries( cFlavor )
          AAdd( aDefaultLibs, { 'libimm32.a',             'B', 'B', 'B' } )
          AAdd( aDefaultLibs, { 'libmsimg32.a',           'B', 'B', 'B' } )
          AAdd( aDefaultLibs, { 'libwininet.a',           'B', 'B', 'B' } )
+      IF Prj_Combo_HBVersion == DEF_CB_HB34
          AAdd( aDefaultLibs, { 'libhbpcre2.a',           'B', 'B', 'B' } )
+      ELSE
+         AAdd( aDefaultLibs, { 'libhbpcre.a',            'B', 'B', 'B' } )
+      ENDIF
          AAdd( aDefaultLibs, { 'libhbzlib.a',            'B', 'B', 'B' } )   // ZIP 4
          AAdd( aDefaultLibs, { 'libhbxml.a',             'B', 'B', 'B' } )   // XML
 /*

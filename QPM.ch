@@ -124,6 +124,13 @@
 #define DEF_MG_32                  _32
 #define DEF_MG_64                  _64
 
+// ComboBox items
+#define DEF_CB_HBNONE              0
+#define DEF_CB_HB30                1
+#define DEF_CB_HB31                2
+#define DEF_CB_HB32                3
+#define DEF_CB_HB34                4
+
 // RadioGroups items
 #define DEF_RG_HARBOUR             1
 #define DEF_RG_XHARBOUR            2
@@ -333,6 +340,11 @@ MEMVAR Define64bits
 MEMVAR DefineBorland
 MEMVAR DefineExtended1
 MEMVAR DefineHarbour
+MEMVAR DefineHB30
+MEMVAR DefineHB31
+MEMVAR DefineHB32
+MEMVAR DefineHB34
+MEMVAR DefineHBNone
 MEMVAR DefineLibName
 MEMVAR DefineMinGW
 MEMVAR DefineMiniGui1
@@ -716,7 +728,6 @@ MEMVAR PRI_COMPATIBILITY_THISFOLDER
 MEMVAR Prj_Check_64bits
 MEMVAR Prj_Check_AllowM
 MEMVAR Prj_Check_Console
-MEMVAR Prj_Check_HarbourIs31
 MEMVAR Prj_Check_IgnoreLibRCs
 MEMVAR Prj_Check_IgnoreMainRC
 MEMVAR Prj_Check_IgnoreOtherRCs
@@ -728,6 +739,7 @@ MEMVAR Prj_Check_StaticBuild
 MEMVAR Prj_Check_Strip
 MEMVAR Prj_Check_Upx
 MEMVAR Prj_Check_UseAt
+MEMVAR Prj_Combo_HBVersion
 MEMVAR Prj_ExtraRunCmdEXE
 MEMVAR Prj_ExtraRunCmdEXEParm
 MEMVAR Prj_ExtraRunCmdFINAL

@@ -2907,7 +2907,7 @@ FUNCTION QPM_AddIncludeLibs2()
       Exists := .F.
       cFile := US_Upper( AllTrim(  ChgPathToRelative( Files[ x ] ) ) )
       FOR i := 1 TO VentanaMain.GIncFiles.ItemCount
-         IF cFile == US_Upper( US_WordSubStr( GetProperty( 'VentanaMain', 'GIncFiles', 'Cell', i, NCOLINCFULLNAME ), 3 ) )       // TODO: revisar
+         IF cFile == US_Upper( US_WordSubStr( GetProperty( 'VentanaMain', 'GIncFiles', 'Cell', i, NCOLINCFULLNAME ), 3 ) )
             Exists := .T.
             EXIT
          ENDIF
@@ -3968,11 +3968,11 @@ FUNCTION QPM_OpenProject2()
 /* Start: Project Options default values */
       Prj_Check_64bits                           := .F.
       Prj_Check_AllowM                           := .F.
-      Prj_Check_HarbourIs31                      := .T.
       Prj_Check_StaticBuild                      := .T.
       Prj_Check_Strip                            := .F.
       Prj_Check_UseAt                            := .T.
       Prj_Radio_Cpp                              := DEF_RG_MINGW
+      Prj_Combo_HBVersion                        := DEF_CB_HB32
       Prj_Radio_Harbour                          := DEF_RG_HARBOUR
       Prj_Radio_MiniGui                          := DEF_RG_OOHG3
       Prj_Check_Console                          := .F.
@@ -4202,7 +4202,20 @@ FUNCTION QPM_OpenProject2()
          ELSEIF US_Upper( US_Word( LOC_cLine, 1 ) ) == 'CHECKHARBOUR'
              Prj_Radio_Harbour := iif( US_Word( LOC_cLine, 2 ) == DefineXHarbour, DEF_RG_XHARBOUR, DEF_RG_HARBOUR )
          ELSEIF US_Upper( US_Word( LOC_cLine, 1 ) ) == 'CHECKHARBOURIS31'
-             Prj_Check_HarbourIs31 := iif( US_Word( LOC_cLine, 2 ) == 'YES', .T., .F. )
+             Prj_Combo_HBVersion := iif( US_Word( LOC_cLine, 2 ) == 'YES', DEF_CB_HB32, DEF_CB_HB30 )
+         ELSEIF US_Upper( US_Word( LOC_cLine, 1 ) ) == 'HARBOURVERSION'
+            DO CASE
+            CASE US_Word( LOC_cLine, 2 ) == DefineHB30
+               Prj_Combo_HBVersion := DEF_CB_HB30
+            CASE US_Word( LOC_cLine, 2 ) == DefineHB31
+               Prj_Combo_HBVersion := DEF_CB_HB31
+            CASE US_Word( LOC_cLine, 2 ) == DefineHB32
+               Prj_Combo_HBVersion := DEF_CB_HB32
+            CASE US_Word( LOC_cLine, 2 ) == DefineHB34
+               Prj_Combo_HBVersion := DEF_CB_HB34
+            OTHERWISE
+               Prj_Combo_HBVersion := DEF_CB_HBNONE
+            ENDCASE
          ELSEIF US_Upper( US_Word( LOC_cLine, 1 ) ) == 'CHECKPLACERCFIRST'
              Prj_Check_PlaceRCFirst := iif( US_Word( LOC_cLine, 2 ) == 'YES', .T., .F. )
              VentanaMain.Check_Place.Value := Prj_Check_PlaceRCFirst
@@ -4732,7 +4745,6 @@ FUNCTION QPM_SaveProject( bCheck )
       cINI += 'CHECKDBFTOOL '               + cDbfTool() + CRLF
       cINI += 'CHECKFORMTOOL '              + GetFormTool() + CRLF
       cINI += 'CHECKHARBOUR '               + iif( Prj_Radio_Harbour == DEF_RG_XHARBOUR, DefineXHarbour, DefineHarbour ) + CRLF
-      cINI += 'CHECKHARBOURIS31 '           + iif( Prj_Check_HarbourIs31, 'YES', 'NO' ) + CRLF
       cINI += 'CHECKMINIGUI '               + GetMiniGuiSuffix() + CRLF
       cINI += 'CHECKMT '                    + iif( Prj_Check_MT, 'YES', 'NO' ) + CRLF
       cINI += 'CHECKNOLIBRCS '              + iif( Prj_Check_IgnoreLibRCs, 'YES', 'NO' ) + CRLF
@@ -4780,6 +4792,7 @@ FUNCTION QPM_SaveProject( bCheck )
    FOR i := 1 TO VentanaMain.GPanFiles.ItemCount
       cINI += 'FORM '                       + ChgPathToRelative( GetProperty( 'VentanaMain', 'GPanFiles', 'Cell', i, NCOLPANFULLNAME ) ) + CRLF
    NEXT i
+      cINI += 'HARBOURVERSION '             + US_VarToStr( Prj_Combo_HBVersion ) + CRLF
    FOR i := 1 TO VentanaMain.GHeaFiles.ItemCount
       cINI += 'HEAD '                       + ChgPathToRelative( GetProperty( 'VentanaMain', 'GHeaFiles', 'Cell', i, NCOLHEAFULLNAME ) ) + CRLF
    NEXT i
@@ -5059,8 +5072,6 @@ FUNCTION DescargoExcludeLibs( cFlavor )
    &( 'ExcludeLibs' + cFlavor ) := aLibs
 RETURN .T.
 
-/* TODO: format from here */
-
 FUNCTION DescargoDefaultLibs( cFlavor )
    LOCAL i, n
 /* Remove from vLibsDefault all the libs included in vLibsToLink */
@@ -5109,7 +5120,7 @@ RETURN TmpName
 
 FUNCTION QPM_EXIT( bWait )
    LOCAL r
-   IF ! hb_IsLogical( bWait )
+   IF ! HB_ISLOGICAL( bWait )
       bWait := .F.
    ENDIF
    IF bWait .AND. BUILD_IN_PROGRESS
@@ -5537,7 +5548,6 @@ FUNCTION QPM_Build2()
          BUILD_IN_PROGRESS := .F.
          RETURN .F.
       ENDIF
-// TODO: check if there's a Default Lib with the same name and throw a warning
       AAdd( vLibIncludeFiles, vTemp )
    NEXT i
 
@@ -6773,115 +6783,115 @@ FUNCTION QPM_Build2()
    IF Prj_Radio_OutputType == DEF_RG_IMPORT
       Out := Out + '$(APP_NAME) : ' + US_ShortName( PrgFILES[ 1 ] ) + CRLF
       DO CASE
-         CASE PUB_cConvert == 'DLL A'
-            IF GetProperty( 'VentanaMain', 'Check_Reimp', 'Value' )
-               Out := Out + PUB_cCharTab + '$(US_MSG_EXE) ' + Q_PROGRESS_LOG + ' -MSG:ReImport from library ' + cInputReImpNameDisplay + CRLF
-               Out := Out + PUB_cCharTab + '$(REIMPORT_EXE) -d ' + cInputReImpName + CRLF
+      CASE PUB_cConvert == 'DLL A'
+         IF GetProperty( 'VentanaMain', 'Check_Reimp', 'Value' )
+            Out := Out + PUB_cCharTab + '$(US_MSG_EXE) ' + Q_PROGRESS_LOG + ' -MSG:ReImport from library ' + cInputReImpNameDisplay + CRLF
+            Out := Out + PUB_cCharTab + '$(REIMPORT_EXE) -d ' + cInputReImpName + CRLF
+            Out := Out + PUB_cCharTab + '$(US_MSG_EXE) ' + Q_PROGRESS_LOG + ' -MSG:DLL functions list for ' + cInputNameDisplay + ' ...' + CRLF
+            Out := Out + PUB_cCharTab + '@$(US_SHELL_EXE) QPM' + LISTOLOG + 'ANALIZE_DLL ' + cInputReImpDef + CRLF
+            Out := Out + PUB_cCharTab + '$(US_MSG_EXE) ' + Q_PROGRESS_LOG + ' -MSG:Generating interface library (.' + US_Word( PUB_cConvert, 2 ) + ') FOR ' + cInputNameDisplay + ' ...' + CRLF
+            Out := Out + PUB_cCharTab + '$(IMPLIB_MGW_EXE) -k -d ' + US_USlash( cInputReImpDef ) + ' -D ' + US_FileNameOnlyNameAndExt( cInputNameDisplay ) + ' -l ' + US_USlash( cOutputName ) + CRLF
+            Out := Out + PUB_cCharTab + '@$(US_SHELL_EXE) QPM' + LISTOLOG + 'DELETE ' + cInputReImpDef + CRLF
+         ELSE
+            Out := Out + PUB_cCharTab + '$(US_MSG_EXE) ' + Q_PROGRESS_LOG + ' -MSG:DLL functions list for ' + cInputNameDisplay + ' ...' + CRLF
+            Out := Out + PUB_cCharTab + '$(IMPDEF_MGW_EXE) ' + cInputNameLong + ' > ' + cInputNameLong + '.def ' + CRLF
+            Out := Out + PUB_cCharTab + '@$(US_SHELL_EXE) QPM' + LISTOLOG + 'ANALIZE_DLL ' + cInputNameLong + '.def ' + CRLF
+            Out := Out + PUB_cCharTab + '$(US_MSG_EXE) ' + Q_PROGRESS_LOG + ' -MSG:Generating interface library (.' + US_Word( PUB_cConvert, 2 ) + ') for ' + cInputNameDisplay + ' ...' + CRLF
+            Out := Out + PUB_cCharTab + '$(IMPLIB_MGW_EXE) -d ' + US_USlash( cInputNameLong ) + '.def -D ' + US_FileNameOnlyNameAndExt( cInputNameDisplay ) + ' -l ' + US_USlash( cOutputName ) + CRLF
+            Out := Out + PUB_cCharTab + '@$(US_SHELL_EXE) QPM' + LISTOLOG + 'DELETE ' + cInputNameLong + '.def' + CRLF
+         ENDIF
+      CASE PUB_cConvert == 'DLL LIB'
+         DO CASE
+            CASE Prj_Radio_Cpp == DEF_RG_PELLES
                Out := Out + PUB_cCharTab + '$(US_MSG_EXE) ' + Q_PROGRESS_LOG + ' -MSG:DLL functions list for ' + cInputNameDisplay + ' ...' + CRLF
-               Out := Out + PUB_cCharTab + '@$(US_SHELL_EXE) QPM' + LISTOLOG + 'ANALIZE_DLL ' + cInputReImpDef + CRLF
-               Out := Out + PUB_cCharTab + '$(US_MSG_EXE) ' + Q_PROGRESS_LOG + ' -MSG:Generating interface library (.' + US_Word( PUB_cConvert, 2 ) + ') FOR ' + cInputNameDisplay + ' ...' + CRLF
-               Out := Out + PUB_cCharTab + '$(IMPLIB_MGW_EXE) -k -d ' + US_USlash( cInputReImpDef ) + ' -D ' + US_FileNameOnlyNameAndExt( cInputNameDisplay ) + ' -l ' + US_USlash( cOutputName ) + CRLF
-               Out := Out + PUB_cCharTab + '@$(US_SHELL_EXE) QPM' + LISTOLOG + 'DELETE ' + cInputReImpDef + CRLF
-            ELSE
-               Out := Out + PUB_cCharTab + '$(US_MSG_EXE) ' + Q_PROGRESS_LOG + ' -MSG:DLL functions list for ' + cInputNameDisplay + ' ...' + CRLF
-               Out := Out + PUB_cCharTab + '$(IMPDEF_MGW_EXE) ' + cInputNameLong + ' > ' + cInputNameLong + '.def ' + CRLF
+               Out := Out + PUB_cCharTab + '$(IMPDEF_PC_EXE) ' + cInputNameLong + '.def ' + cInputNameLong + CRLF
                Out := Out + PUB_cCharTab + '@$(US_SHELL_EXE) QPM' + LISTOLOG + 'ANALIZE_DLL ' + cInputNameLong + '.def ' + CRLF
                Out := Out + PUB_cCharTab + '$(US_MSG_EXE) ' + Q_PROGRESS_LOG + ' -MSG:Generating interface library (.' + US_Word( PUB_cConvert, 2 ) + ') for ' + cInputNameDisplay + ' ...' + CRLF
-               Out := Out + PUB_cCharTab + '$(IMPLIB_MGW_EXE) -d ' + US_USlash( cInputNameLong ) + '.def -D ' + US_FileNameOnlyNameAndExt( cInputNameDisplay ) + ' -l ' + US_USlash( cOutputName ) + CRLF
+               Out := Out + PUB_cCharTab + '$(IMPLIB_PC_EXE) ' + iif( GetProperty( 'VentanaMain', 'Check_GuionA', 'Value' ), '', '-NOUND ' ) + cInputNameLong + ' -OUT:' + cOutputName + CRLF
                Out := Out + PUB_cCharTab + '@$(US_SHELL_EXE) QPM' + LISTOLOG + 'DELETE ' + cInputNameLong + '.def' + CRLF
-            ENDIF
-         CASE PUB_cConvert == 'DLL LIB'
-            DO CASE
-               CASE Prj_Radio_Cpp == DEF_RG_PELLES
-                  Out := Out + PUB_cCharTab + '$(US_MSG_EXE) ' + Q_PROGRESS_LOG + ' -MSG:DLL functions list for ' + cInputNameDisplay + ' ...' + CRLF
-                  Out := Out + PUB_cCharTab + '$(IMPDEF_PC_EXE) ' + cInputNameLong + '.def ' + cInputNameLong + CRLF
-                  Out := Out + PUB_cCharTab + '@$(US_SHELL_EXE) QPM' + LISTOLOG + 'ANALIZE_DLL ' + cInputNameLong + '.def ' + CRLF
-                  Out := Out + PUB_cCharTab + '$(US_MSG_EXE) ' + Q_PROGRESS_LOG + ' -MSG:Generating interface library (.' + US_Word( PUB_cConvert, 2 ) + ') for ' + cInputNameDisplay + ' ...' + CRLF
-                  Out := Out + PUB_cCharTab + '$(IMPLIB_PC_EXE) ' + iif( GetProperty( 'VentanaMain', 'Check_GuionA', 'Value' ), '', '-NOUND ' ) + cInputNameLong + ' -OUT:' + cOutputName + CRLF
-                  Out := Out + PUB_cCharTab + '@$(US_SHELL_EXE) QPM' + LISTOLOG + 'DELETE ' + cInputNameLong + '.def' + CRLF
-               CASE Prj_Radio_Cpp == DEF_RG_BORLAND
-                  Out := Out + PUB_cCharTab + '$(US_MSG_EXE) ' + Q_PROGRESS_LOG + ' -MSG:DLL functions list for ' + cInputNameDisplay + ' ...' + CRLF
-                  Out := Out + PUB_cCharTab + '$(IMPDEF_BCC_EXE) ' + cInputNameLong + '.def ' + cInputNameLong + CRLF
-                  Out := Out + PUB_cCharTab + '@$(US_SHELL_EXE) QPM' + LISTOLOG + 'ANALIZE_DLL ' + cInputNameLong + '.def ' + CRLF
-                  Out := Out + PUB_cCharTab + '$(US_MSG_EXE) ' + Q_PROGRESS_LOG + ' -MSG:Generating Interface Library (.' + US_Word( PUB_cConvert, 2 ) + ') for ' + cInputNameDisplay + ' ...' + CRLF
-                  Out := Out + PUB_cCharTab + '$(IMPLIB_BCC_EXE) ' + iif( GetProperty( 'VentanaMain', 'Check_GuionA', 'Value' ), '-a ', '' ) + cOutputName + ' ' + cInputNameLong + CRLF
-                  Out := Out + PUB_cCharTab + '@$(US_SHELL_EXE) QPM' + LISTOLOG + 'DELETE ' + cInputNameLong + '.def' + CRLF
-               OTHERWISE
-                  US_Log( 'Error in Convert DLL to LIB, Invalid C Compiler: ' + US_VarToStr( Prj_Radio_Cpp ) )
-            ENDCASE
-         CASE PUB_cConvert == 'LIB DLL'
-            Out := Out + PUB_cCharTab + '$(US_MSG_EXE) ' + Q_PROGRESS_LOG + ' -MSG:Copying Library (.' + US_Word( PUB_cConvert, 1 ) + ') to Working Folder' + ' ...' + CRLF
-            Out := Out + PUB_cCharTab + '@$(US_SHELL_EXE) QPM' + LISTOLOG + 'COPY ' + cInputName + ' ' + OBJFOLDER + DEF_SLASH + US_FileNameOnlyNameAndExt( cInputName ) + CRLF
-            Out := Out + PUB_cCharTab + '$(US_MSG_EXE) ' + Q_PROGRESS_LOG + ' -MSG:Listing Functions in Library (.' + US_Word( PUB_cConvert, 1 ) + ')' + ' ...' + CRLF
-            Out := Out + PUB_cCharTab + '$(LSTLIB_EXE) ' + OBJFOLDER + DEF_SLASH + US_FileNameOnlyNameAndExt( cInputName ) + ', ' + OBJFOLDER + DEF_SLASH + US_FileNameOnlyNameAndExt( cInputName ) + '.lst ' + CRLF
-            Out := Out + PUB_cCharTab + '@$(US_SHELL_EXE) QPM' + LISTOLOG + 'ANALIZE_LIB_BORLAND ' + OBJFOLDER + DEF_SLASH + US_FileNameOnlyNameAndExt( cInputName ) + '.lst ' + CRLF
-            QPM_Execute( US_ShortName( PUB_cQPM_Folder ) + DEF_SLASH + 'US_TLIB.EXE', cInputName + ', ' + OBJFOLDER + DEF_SLASH + US_FileNameOnlyNameAndExt( cInputName ) + '.lst', DEF_QPM_EXEC_WAIT, DEF_QPM_EXEC_MINIMIZE )
-            QPM_Execute( US_ShortName( PUB_cQPM_Folder ) + DEF_SLASH + 'US_SHELL.EXE', 'QPM' + LISTOLOG + 'ANALIZE_LIB_BORLAND ' + OBJFOLDER + DEF_SLASH + US_FileNameOnlyNameAndExt( cInputName ) + '.lst -OBJLST -EXPLST', DEF_QPM_EXEC_WAIT, DEF_QPM_EXEC_MINIMIZE )
-            MemoObj := MemoRead( OBJFOLDER + DEF_SLASH + US_FileNameOnlyNameAndExt( cInputName ) + '.Lst.ObjLst' )
-            Out := Out + PUB_cCharTab + '$(US_MSG_EXE) ' + Q_PROGRESS_LOG + ' -MSG:Extracting Modules from Library (.' + US_Word( PUB_cConvert, 1 ) + ')' + ' ...' + CRLF
-            Out := Out + PUB_cCharTab + '$(TLIB_EXE) ' + OBJFOLDER + DEF_SLASH + US_FileNameOnlyNameAndExt( cInputName )
-            FOR i := 1 TO MLCount( MemoObj, 254 )
-               Out := Out + PUB_cCharTab + '*' + OBJFOLDER + DEF_SLASH + AllTrim( memoline( MemoObj, 254, i ) )
-            NEXT
-            Out := Out + ' ' + CRLF
-            Out := Out + PUB_cCharTab + '$(US_MSG_EXE) ' + Q_PROGRESS_LOG + ' -MSG:Making DLL from Modules Object of Library (.' + US_Word( PUB_cConvert, 1 ) + ') in ' + cOutputNameDisplay + ' ...' + CRLF
-            Out := Out + PUB_cCharTab + '$(ILINK_EXE) ' + iif( !Prj_Check_Console, '-Gn -Tpd '+iif(PUB_bDebugActive,'-ap ','-aa '), '-Gn -Tpd ' ) + '-L' + GetCppLibFolder()
-            FOR i := 1 TO MLCount( MemoObj, 254 )
-               Out := Out + ' ' + OBJFOLDER + DEF_SLASH + AllTrim( memoline( MemoObj, 254, i ) ) + '.obj'
-            NEXT
-            Out := Out + ' c0d32.obj, ' + cOutputName + ',, import32.lib msimg32.lib cw32.lib, '
-            Out := Out + ' ' + OBJFOLDER + DEF_SLASH + US_FileNameOnlyNameAndExt( cInputName ) + '.Lst.ExpLst' + CRLF
-            Out := Out + PUB_cCharTab + '$(US_MSG_EXE) ' + Q_PROGRESS_LOG + ' -MSG:DLL functions list for ' + cOutputNameDisplay + ' ...' + CRLF
-            Out := Out + PUB_cCharTab + '$(IMPDEF_BCC_EXE) ' + cOutputName + '.def ' + cOutputName + CRLF
-            Out := Out + PUB_cCharTab + '@$(US_SHELL_EXE) QPM' + LISTOLOG + 'ANALIZE_DLL ' + cOutputName + '.def -DELETE' + CRLF
-            Out := Out + PUB_cCharTab + '$(US_MSG_EXE) ' + Q_PROGRESS_LOG + ' -MSG:Cleaning temporary files' + ' ...' + CRLF
-            Out := Out + PUB_cCharTab + '@$(US_SHELL_EXE) QPM' + LISTOLOG + 'DELETE ' + OBJFOLDER + DEF_SLASH + US_FileNameOnlyNameAndExt( cInputName ) + CRLF
-            Out := Out + PUB_cCharTab + '@$(US_SHELL_EXE) QPM' + LISTOLOG + 'DELETE ' + OBJFOLDER + DEF_SLASH + US_FileNameOnlyNameAndExt( cInputName ) + '.lst' + CRLF
-            FOR i := 1 TO MLCount( MemoObj, 254 )
-               Out := Out + PUB_cCharTab + '@$(US_SHELL_EXE) QPM' + LISTOLOG + 'DELETE ' + OBJFOLDER + DEF_SLASH + AllTrim( memoline( MemoObj, 254, i ) ) + '.obj' + CRLF
-            NEXT
-            Out := Out + PUB_cCharTab + '@$(US_SHELL_EXE) QPM' + LISTOLOG + 'DELETE ' + OBJFOLDER + DEF_SLASH + US_FileNameOnlyNameAndExt( cInputName ) + '.lst.ObjLst' + CRLF
-            Out := Out + PUB_cCharTab + '@$(US_SHELL_EXE) QPM' + LISTOLOG + 'DELETE ' + OBJFOLDER + DEF_SLASH + US_FileNameOnlyNameAndExt( cInputName ) + '.lst.ExpLst' + CRLF
-         CASE PUB_cConvert == 'A DLL'
-            Out := Out + PUB_cCharTab + '$(US_MSG_EXE) ' + Q_PROGRESS_LOG + ' -MSG:Copying Library (.' + US_Word( PUB_cConvert, 1 ) + ') to Working Folder' + ' ...' + CRLF
-            Out := Out + PUB_cCharTab + '@$(US_SHELL_EXE) QPM COPY ' + cInputName + ' ' + OBJFOLDER + DEF_SLASH + US_FileNameOnlyNameAndExt( cInputName ) + CRLF
-            Out := Out + PUB_cCharTab + '$(US_MSG_EXE) ' + Q_PROGRESS_LOG + ' -MSG:Listing Functions in Library (.' + US_Word( PUB_cConvert, 1 ) + ')' + ' ...' + CRLF
-            Out := Out + PUB_cCharTab + '$(LSTA_EXE) -x ' + OBJFOLDER + DEF_SLASH + US_FileNameOnlyNameAndExt( cInputName ) + ' > ' + OBJFOLDER + DEF_SLASH + US_FileNameOnlyNameAndExt( cInputName ) + '.lst ' + CRLF
-            Out := Out + PUB_cCharTab + '@$(US_SHELL_EXE) QPM' + LISTOLOG + 'ANALIZE_LIB_MINGW ' + OBJFOLDER + DEF_SLASH + US_FileNameOnlyNameAndExt( cInputName ) + '.lst ' + CRLF
-            QPM_LogText( "A DLL" )
-            QPM_MemoWrit( RUN_FILE, US_ShortName( PUB_cQPM_Folder ) + DEF_SLASH + 'US_OBJDUMP.EXE -t ' + cInputName + ' > ' + OBJFOLDER + DEF_SLASH + US_FileNameOnlyNameAndExt( cInputName ) + '.lst' )
-            QPM_LogFile( RUN_FILE )
-            QPM_Execute( RUN_FILE, "", DEF_QPM_EXEC_WAIT, DEF_QPM_EXEC_MINIMIZE )
-            QPM_LogText( "Done" )
-            FErase( RUN_FILE )
-            QPM_Execute( US_ShortName( PUB_cQPM_Folder ) + DEF_SLASH + 'US_SHELL.EXE', 'QPM' + LISTOLOG + 'ANALIZE_LIB_MINGW ' + OBJFOLDER + DEF_SLASH + US_FileNameOnlyNameAndExt( cInputName ) + '.lst -OBJLST -EXPLST', DEF_QPM_EXEC_WAIT, DEF_QPM_EXEC_MINIMIZE )
-            MemoObj := MemoRead( OBJFOLDER + DEF_SLASH + US_FileNameOnlyNameAndExt( cInputName ) + '.Lst.ObjLst' )
-            Out := Out + PUB_cCharTab + '$(US_MSG_EXE) ' + Q_PROGRESS_LOG + ' -MSG:Extracting Modules from Library (.' + US_Word( PUB_cConvert, 1 ) + ')' + ' ...' + CRLF
-            Out := Out + PUB_cCharTab + '$(TLIB_EXE) x ' + OBJFOLDER + DEF_SLASH + US_FileNameOnlyNameAndExt( cInputName )
-            FOR i := 1 TO MLCount( MemoObj, 254 )
-               Out := Out + ' ' + AllTrim( memoline( MemoObj, 254, i ) ) + '.o'
-            NEXT
-            Out := Out + ' ' + CRLF
-            Out := Out + PUB_cCharTab + '$(US_MSG_EXE) ' + Q_PROGRESS_LOG + ' -MSG:Making DLL from Modules Object of Library (.' + US_Word( PUB_cConvert, 1 ) + ') in ' + cOutputNameDisplay + ' ...' + CRLF
-            Out := Out + PUB_cCharTab + '$(ILINK_EXE) -shared -o' + cOutputName + ' '
-            FOR i := 1 TO MLCount( MemoObj, 254 )
-               Out := Out + ' ' + US_ShortName( GetCppFolder() ) + DEF_SLASH + 'BIN' + DEF_SLASH + AllTrim( memoline( MemoObj, 254, i ) ) + '.o '
-            NEXT
-            Out := Out + iif( Prj_Check_Console, ' -mconsole', ' -mwindows' ) + ;
-                   ' -L$(DIR_COMPC_LIB)' + ;
-                   ' -L$(DIR_MINIGUI_LIB)' + ;
-                   ' -L$(DIR_HARBOUR_LIB)' + CRLF
-            Out := Out + PUB_cCharTab + '$(US_MSG_EXE) ' + Q_PROGRESS_LOG + ' -MSG:DLL functions list for ' + cOutputNameDisplay + ' ...' + CRLF
-            Out := Out + PUB_cCharTab + '$(IMPDEF_MGW_EXE) ' + cOutputName + ' > ' + cOutputName + '.def ' + CRLF
-            Out := Out + PUB_cCharTab + '@$(US_SHELL_EXE) QPM' + LISTOLOG + 'ANALIZE_DLL ' + cOutputName + '.def -DELETE' + CRLF
-            Out := Out + PUB_cCharTab + '$(US_MSG_EXE) ' + Q_PROGRESS_LOG + ' -MSG:Cleaning Temporary Files' + ' ...' + CRLF
-            Out := Out + PUB_cCharTab + '@$(US_SHELL_EXE) QPM' + LISTOLOG + 'DELETE ' + OBJFOLDER + DEF_SLASH + US_FileNameOnlyNameAndExt( cInputName ) + CRLF
-            Out := Out + PUB_cCharTab + '@$(US_SHELL_EXE) QPM' + LISTOLOG + 'DELETE ' + OBJFOLDER + DEF_SLASH + US_FileNameOnlyNameAndExt( cInputName ) + '.lst' + CRLF
-            FOR i := 1 TO MLCount( MemoObj, 254 )
-               Out := Out + PUB_cCharTab + '@$(US_SHELL_EXE) QPM' + LISTOLOG + 'DELETE ' + US_ShortName( GetCppFolder() ) + DEF_SLASH + 'BIN' + DEF_SLASH + AllTrim( memoline( MemoObj, 254, i ) ) + '.o' + CRLF
-            NEXT
-            Out := Out + PUB_cCharTab + '@$(US_SHELL_EXE) QPM' + LISTOLOG + 'DELETE ' + OBJFOLDER + DEF_SLASH + US_FileNameOnlyNameAndExt( cInputName ) + '.lst.ObjLst' + CRLF
-            Out := Out + PUB_cCharTab + '@$(US_SHELL_EXE) QPM' + LISTOLOG + 'DELETE ' + OBJFOLDER + DEF_SLASH + US_FileNameOnlyNameAndExt( cInputName ) + '.lst.ExpLst' + CRLF
+            CASE Prj_Radio_Cpp == DEF_RG_BORLAND
+               Out := Out + PUB_cCharTab + '$(US_MSG_EXE) ' + Q_PROGRESS_LOG + ' -MSG:DLL functions list for ' + cInputNameDisplay + ' ...' + CRLF
+               Out := Out + PUB_cCharTab + '$(IMPDEF_BCC_EXE) ' + cInputNameLong + '.def ' + cInputNameLong + CRLF
+               Out := Out + PUB_cCharTab + '@$(US_SHELL_EXE) QPM' + LISTOLOG + 'ANALIZE_DLL ' + cInputNameLong + '.def ' + CRLF
+               Out := Out + PUB_cCharTab + '$(US_MSG_EXE) ' + Q_PROGRESS_LOG + ' -MSG:Generating Interface Library (.' + US_Word( PUB_cConvert, 2 ) + ') for ' + cInputNameDisplay + ' ...' + CRLF
+               Out := Out + PUB_cCharTab + '$(IMPLIB_BCC_EXE) ' + iif( GetProperty( 'VentanaMain', 'Check_GuionA', 'Value' ), '-a ', '' ) + cOutputName + ' ' + cInputNameLong + CRLF
+               Out := Out + PUB_cCharTab + '@$(US_SHELL_EXE) QPM' + LISTOLOG + 'DELETE ' + cInputNameLong + '.def' + CRLF
+            OTHERWISE
+               US_Log( 'Error in Convert DLL to LIB, Invalid C Compiler: ' + US_VarToStr( Prj_Radio_Cpp ) )
+         ENDCASE
+      CASE PUB_cConvert == 'LIB DLL'
+         Out := Out + PUB_cCharTab + '$(US_MSG_EXE) ' + Q_PROGRESS_LOG + ' -MSG:Copying Library (.' + US_Word( PUB_cConvert, 1 ) + ') to Working Folder' + ' ...' + CRLF
+         Out := Out + PUB_cCharTab + '@$(US_SHELL_EXE) QPM' + LISTOLOG + 'COPY ' + cInputName + ' ' + OBJFOLDER + DEF_SLASH + US_FileNameOnlyNameAndExt( cInputName ) + CRLF
+         Out := Out + PUB_cCharTab + '$(US_MSG_EXE) ' + Q_PROGRESS_LOG + ' -MSG:Listing Functions in Library (.' + US_Word( PUB_cConvert, 1 ) + ')' + ' ...' + CRLF
+         Out := Out + PUB_cCharTab + '$(LSTLIB_EXE) ' + OBJFOLDER + DEF_SLASH + US_FileNameOnlyNameAndExt( cInputName ) + ', ' + OBJFOLDER + DEF_SLASH + US_FileNameOnlyNameAndExt( cInputName ) + '.lst ' + CRLF
+         Out := Out + PUB_cCharTab + '@$(US_SHELL_EXE) QPM' + LISTOLOG + 'ANALIZE_LIB_BORLAND ' + OBJFOLDER + DEF_SLASH + US_FileNameOnlyNameAndExt( cInputName ) + '.lst ' + CRLF
+         QPM_Execute( US_ShortName( PUB_cQPM_Folder ) + DEF_SLASH + 'US_TLIB.EXE', cInputName + ', ' + OBJFOLDER + DEF_SLASH + US_FileNameOnlyNameAndExt( cInputName ) + '.lst', DEF_QPM_EXEC_WAIT, DEF_QPM_EXEC_MINIMIZE )
+         QPM_Execute( US_ShortName( PUB_cQPM_Folder ) + DEF_SLASH + 'US_SHELL.EXE', 'QPM' + LISTOLOG + 'ANALIZE_LIB_BORLAND ' + OBJFOLDER + DEF_SLASH + US_FileNameOnlyNameAndExt( cInputName ) + '.lst -OBJLST -EXPLST', DEF_QPM_EXEC_WAIT, DEF_QPM_EXEC_MINIMIZE )
+         MemoObj := MemoRead( OBJFOLDER + DEF_SLASH + US_FileNameOnlyNameAndExt( cInputName ) + '.Lst.ObjLst' )
+         Out := Out + PUB_cCharTab + '$(US_MSG_EXE) ' + Q_PROGRESS_LOG + ' -MSG:Extracting Modules from Library (.' + US_Word( PUB_cConvert, 1 ) + ')' + ' ...' + CRLF
+         Out := Out + PUB_cCharTab + '$(TLIB_EXE) ' + OBJFOLDER + DEF_SLASH + US_FileNameOnlyNameAndExt( cInputName )
+         FOR i := 1 TO MLCount( MemoObj, 254 )
+            Out := Out + PUB_cCharTab + '*' + OBJFOLDER + DEF_SLASH + AllTrim( memoline( MemoObj, 254, i ) )
+         NEXT
+         Out := Out + ' ' + CRLF
+         Out := Out + PUB_cCharTab + '$(US_MSG_EXE) ' + Q_PROGRESS_LOG + ' -MSG:Making DLL from Modules Object of Library (.' + US_Word( PUB_cConvert, 1 ) + ') in ' + cOutputNameDisplay + ' ...' + CRLF
+         Out := Out + PUB_cCharTab + '$(ILINK_EXE) ' + iif( !Prj_Check_Console, '-Gn -Tpd '+iif(PUB_bDebugActive,'-ap ','-aa '), '-Gn -Tpd ' ) + '-L' + GetCppLibFolder()
+         FOR i := 1 TO MLCount( MemoObj, 254 )
+            Out := Out + ' ' + OBJFOLDER + DEF_SLASH + AllTrim( memoline( MemoObj, 254, i ) ) + '.obj'
+         NEXT
+         Out := Out + ' c0d32.obj, ' + cOutputName + ',, import32.lib msimg32.lib cw32.lib, '
+         Out := Out + ' ' + OBJFOLDER + DEF_SLASH + US_FileNameOnlyNameAndExt( cInputName ) + '.Lst.ExpLst' + CRLF
+         Out := Out + PUB_cCharTab + '$(US_MSG_EXE) ' + Q_PROGRESS_LOG + ' -MSG:DLL functions list for ' + cOutputNameDisplay + ' ...' + CRLF
+         Out := Out + PUB_cCharTab + '$(IMPDEF_BCC_EXE) ' + cOutputName + '.def ' + cOutputName + CRLF
+         Out := Out + PUB_cCharTab + '@$(US_SHELL_EXE) QPM' + LISTOLOG + 'ANALIZE_DLL ' + cOutputName + '.def -DELETE' + CRLF
+         Out := Out + PUB_cCharTab + '$(US_MSG_EXE) ' + Q_PROGRESS_LOG + ' -MSG:Cleaning temporary files' + ' ...' + CRLF
+         Out := Out + PUB_cCharTab + '@$(US_SHELL_EXE) QPM' + LISTOLOG + 'DELETE ' + OBJFOLDER + DEF_SLASH + US_FileNameOnlyNameAndExt( cInputName ) + CRLF
+         Out := Out + PUB_cCharTab + '@$(US_SHELL_EXE) QPM' + LISTOLOG + 'DELETE ' + OBJFOLDER + DEF_SLASH + US_FileNameOnlyNameAndExt( cInputName ) + '.lst' + CRLF
+         FOR i := 1 TO MLCount( MemoObj, 254 )
+            Out := Out + PUB_cCharTab + '@$(US_SHELL_EXE) QPM' + LISTOLOG + 'DELETE ' + OBJFOLDER + DEF_SLASH + AllTrim( memoline( MemoObj, 254, i ) ) + '.obj' + CRLF
+         NEXT
+         Out := Out + PUB_cCharTab + '@$(US_SHELL_EXE) QPM' + LISTOLOG + 'DELETE ' + OBJFOLDER + DEF_SLASH + US_FileNameOnlyNameAndExt( cInputName ) + '.lst.ObjLst' + CRLF
+         Out := Out + PUB_cCharTab + '@$(US_SHELL_EXE) QPM' + LISTOLOG + 'DELETE ' + OBJFOLDER + DEF_SLASH + US_FileNameOnlyNameAndExt( cInputName ) + '.lst.ExpLst' + CRLF
+      CASE PUB_cConvert == 'A DLL'
+         Out := Out + PUB_cCharTab + '$(US_MSG_EXE) ' + Q_PROGRESS_LOG + ' -MSG:Copying Library (.' + US_Word( PUB_cConvert, 1 ) + ') to Working Folder' + ' ...' + CRLF
+         Out := Out + PUB_cCharTab + '@$(US_SHELL_EXE) QPM COPY ' + cInputName + ' ' + OBJFOLDER + DEF_SLASH + US_FileNameOnlyNameAndExt( cInputName ) + CRLF
+         Out := Out + PUB_cCharTab + '$(US_MSG_EXE) ' + Q_PROGRESS_LOG + ' -MSG:Listing Functions in Library (.' + US_Word( PUB_cConvert, 1 ) + ')' + ' ...' + CRLF
+         Out := Out + PUB_cCharTab + '$(LSTA_EXE) -x ' + OBJFOLDER + DEF_SLASH + US_FileNameOnlyNameAndExt( cInputName ) + ' > ' + OBJFOLDER + DEF_SLASH + US_FileNameOnlyNameAndExt( cInputName ) + '.lst ' + CRLF
+         Out := Out + PUB_cCharTab + '@$(US_SHELL_EXE) QPM' + LISTOLOG + 'ANALIZE_LIB_MINGW ' + OBJFOLDER + DEF_SLASH + US_FileNameOnlyNameAndExt( cInputName ) + '.lst ' + CRLF
+         QPM_LogText( "A DLL" )
+         QPM_MemoWrit( RUN_FILE, US_ShortName( PUB_cQPM_Folder ) + DEF_SLASH + 'US_OBJDUMP.EXE -t ' + cInputName + ' > ' + OBJFOLDER + DEF_SLASH + US_FileNameOnlyNameAndExt( cInputName ) + '.lst' )
+         QPM_LogFile( RUN_FILE )
+         QPM_Execute( RUN_FILE, "", DEF_QPM_EXEC_WAIT, DEF_QPM_EXEC_MINIMIZE )
+         QPM_LogText( "Done" )
+         FErase( RUN_FILE )
+         QPM_Execute( US_ShortName( PUB_cQPM_Folder ) + DEF_SLASH + 'US_SHELL.EXE', 'QPM' + LISTOLOG + 'ANALIZE_LIB_MINGW ' + OBJFOLDER + DEF_SLASH + US_FileNameOnlyNameAndExt( cInputName ) + '.lst -OBJLST -EXPLST', DEF_QPM_EXEC_WAIT, DEF_QPM_EXEC_MINIMIZE )
+         MemoObj := MemoRead( OBJFOLDER + DEF_SLASH + US_FileNameOnlyNameAndExt( cInputName ) + '.Lst.ObjLst' )
+         Out := Out + PUB_cCharTab + '$(US_MSG_EXE) ' + Q_PROGRESS_LOG + ' -MSG:Extracting Modules from Library (.' + US_Word( PUB_cConvert, 1 ) + ')' + ' ...' + CRLF
+         Out := Out + PUB_cCharTab + '$(TLIB_EXE) x ' + OBJFOLDER + DEF_SLASH + US_FileNameOnlyNameAndExt( cInputName )
+         FOR i := 1 TO MLCount( MemoObj, 254 )
+            Out := Out + ' ' + AllTrim( memoline( MemoObj, 254, i ) ) + '.o'
+         NEXT
+         Out := Out + ' ' + CRLF
+         Out := Out + PUB_cCharTab + '$(US_MSG_EXE) ' + Q_PROGRESS_LOG + ' -MSG:Making DLL from Modules Object of Library (.' + US_Word( PUB_cConvert, 1 ) + ') in ' + cOutputNameDisplay + ' ...' + CRLF
+         Out := Out + PUB_cCharTab + '$(ILINK_EXE) -shared -o' + cOutputName + ' '
+         FOR i := 1 TO MLCount( MemoObj, 254 )
+            Out := Out + ' ' + US_ShortName( GetCppFolder() ) + DEF_SLASH + 'BIN' + DEF_SLASH + AllTrim( memoline( MemoObj, 254, i ) ) + '.o '
+         NEXT
+         Out := Out + iif( Prj_Check_Console, ' -mconsole', ' -mwindows' ) + ;
+                ' -L$(DIR_COMPC_LIB)' + ;
+                ' -L$(DIR_MINIGUI_LIB)' + ;
+                ' -L$(DIR_HARBOUR_LIB)' + CRLF
+         Out := Out + PUB_cCharTab + '$(US_MSG_EXE) ' + Q_PROGRESS_LOG + ' -MSG:DLL functions list for ' + cOutputNameDisplay + ' ...' + CRLF
+         Out := Out + PUB_cCharTab + '$(IMPDEF_MGW_EXE) ' + cOutputName + ' > ' + cOutputName + '.def ' + CRLF
+         Out := Out + PUB_cCharTab + '@$(US_SHELL_EXE) QPM' + LISTOLOG + 'ANALIZE_DLL ' + cOutputName + '.def -DELETE' + CRLF
+         Out := Out + PUB_cCharTab + '$(US_MSG_EXE) ' + Q_PROGRESS_LOG + ' -MSG:Cleaning Temporary Files' + ' ...' + CRLF
+         Out := Out + PUB_cCharTab + '@$(US_SHELL_EXE) QPM' + LISTOLOG + 'DELETE ' + OBJFOLDER + DEF_SLASH + US_FileNameOnlyNameAndExt( cInputName ) + CRLF
+         Out := Out + PUB_cCharTab + '@$(US_SHELL_EXE) QPM' + LISTOLOG + 'DELETE ' + OBJFOLDER + DEF_SLASH + US_FileNameOnlyNameAndExt( cInputName ) + '.lst' + CRLF
+         FOR i := 1 TO MLCount( MemoObj, 254 )
+            Out := Out + PUB_cCharTab + '@$(US_SHELL_EXE) QPM' + LISTOLOG + 'DELETE ' + US_ShortName( GetCppFolder() ) + DEF_SLASH + 'BIN' + DEF_SLASH + AllTrim( memoline( MemoObj, 254, i ) ) + '.o' + CRLF
+         NEXT
+         Out := Out + PUB_cCharTab + '@$(US_SHELL_EXE) QPM' + LISTOLOG + 'DELETE ' + OBJFOLDER + DEF_SLASH + US_FileNameOnlyNameAndExt( cInputName ) + '.lst.ObjLst' + CRLF
+         Out := Out + PUB_cCharTab + '@$(US_SHELL_EXE) QPM' + LISTOLOG + 'DELETE ' + OBJFOLDER + DEF_SLASH + US_FileNameOnlyNameAndExt( cInputName ) + '.lst.ExpLst' + CRLF
       ENDCASE
    ENDIF
 
@@ -7287,12 +7297,12 @@ FUNCTION QPM_Build2()
 RETURN .T.
 
 FUNCTION QPM_Run( bWithParm )
-   LOCAL RUNFOLDER     := AllTrim(US_FileNameOnlyPath(VentanaMain.TRunProjectFolder.Value))
+   LOCAL RUNFOLDER := AllTrim( US_FileNameOnlyPath( VentanaMain.TRunProjectFolder.Value ) )
    LOCAL App
-   LOCAL cParm         := ''
+   LOCAL cParm := ''
    LOCAL RunParms
-   LOCAL cOldFolder    := GetCurrentFolder()
-   LOCAL oInput        := US_InputBox():New()
+   LOCAL cOldFolder := GetCurrentFolder()
+   LOCAL oInput := US_InputBox():New()
 
    IF bWaitForBuild
       DO WHILE BUILD_IN_PROGRESS
@@ -8408,20 +8418,20 @@ RETURN .T.
 
 FUNCTION ActOutputTypeSet()
    DO CASE
-      CASE Prj_Radio_OutputType == DEF_RG_EXE
-         bBuildRun := bBuildRunBack
-         SetProperty( 'VentanaMain', 'bDropDownBandR', 'enabled', .T. )
-         SetProperty( 'VentanaMain', 'run', 'enabled', .T. )
-      CASE Prj_Radio_OutputType == DEF_RG_LIB
-         bBuildRunBack := bBuildRun
-         bBuildRun := .F.
-         SetProperty( 'VentanaMain', 'bDropDownBandR', 'enabled', .F. )
-         SetProperty( 'VentanaMain', 'run', 'enabled', .F. )
-      CASE Prj_Radio_OutputType == DEF_RG_IMPORT
-         bBuildRunBack := bBuildRun
-         bBuildRun := .F.
-         SetProperty( 'VentanaMain', 'bDropDownBandR', 'enabled', .F. )
-         SetProperty( 'VentanaMain', 'run', 'enabled', .F. )
+   CASE Prj_Radio_OutputType == DEF_RG_EXE
+      bBuildRun := bBuildRunBack
+      SetProperty( 'VentanaMain', 'bDropDownBandR', 'enabled', .T. )
+      SetProperty( 'VentanaMain', 'run', 'enabled', .T. )
+   CASE Prj_Radio_OutputType == DEF_RG_LIB
+      bBuildRunBack := bBuildRun
+      bBuildRun := .F.
+      SetProperty( 'VentanaMain', 'bDropDownBandR', 'enabled', .F. )
+      SetProperty( 'VentanaMain', 'run', 'enabled', .F. )
+   CASE Prj_Radio_OutputType == DEF_RG_IMPORT
+      bBuildRunBack := bBuildRun
+      bBuildRun := .F.
+      SetProperty( 'VentanaMain', 'bDropDownBandR', 'enabled', .F. )
+      SetProperty( 'VentanaMain', 'run', 'enabled', .F. )
    ENDCASE
 RETURN .T.
 
@@ -8738,24 +8748,24 @@ FUNCTION CheckMakeForm( cForm )
       DO WHILE hb_FReadLine( hFiIn, @cLinea, vFines ) == 0
          cLinea := AllTrim( strtran( cLinea, Chr(09), ' ' ) )
          DO CASE
-            CASE US_Upper( US_Word( cLinea, 1 ) ) == '*HMGS-MINIGUI-IDE'
-               reto := 'HMGSIDE (by Walter Formigoni)'
-               EXIT
-            CASE At( '* HARBOUR MINIGUI IDE HMI+', US_Upper( cLinea ) ) > 0
-               reto := 'HMI (by Ciro Vargas Clemow)'
-               EXIT
-            CASE At( "* GENERATED BY OOHG IDE PLUS", US_Upper( cLinea ) ) > 0
-               reto := 'OOHG IDE+ (by OOHG development team)'
-               EXIT
-            CASE At( '* OOHG IDE PLUS', US_Upper( cLinea ) ) > 0
-               reto := 'OOHG IDE+ (by OOHG development team)'
-               EXIT
-            CASE At( '* OOHG IDE', US_Upper( cLinea ) ) > 0
-               reto := 'HMI (by Ciro Vargas Clemow)'
-               EXIT
-            CASE At( '* HARBOUR MINIGUI IDE TWO-WAY', US_Upper( cLinea ) ) > 0
-               reto := 'IDE (by Roberto Lopez)'
-               EXIT
+         CASE US_Upper( US_Word( cLinea, 1 ) ) == '*HMGS-MINIGUI-IDE'
+            reto := 'HMGSIDE (by Walter Formigoni)'
+            EXIT
+         CASE At( '* HARBOUR MINIGUI IDE HMI+', US_Upper( cLinea ) ) > 0
+            reto := 'HMI (by Ciro Vargas Clemow)'
+            EXIT
+         CASE At( "* GENERATED BY OOHG IDE PLUS", US_Upper( cLinea ) ) > 0
+            reto := 'OOHG IDE+ (by OOHG development team)'
+            EXIT
+         CASE At( '* OOHG IDE PLUS', US_Upper( cLinea ) ) > 0
+            reto := 'OOHG IDE+ (by OOHG development team)'
+            EXIT
+         CASE At( '* OOHG IDE', US_Upper( cLinea ) ) > 0
+            reto := 'HMI (by Ciro Vargas Clemow)'
+            EXIT
+         CASE At( '* HARBOUR MINIGUI IDE TWO-WAY', US_Upper( cLinea ) ) > 0
+            reto := 'IDE (by Roberto Lopez)'
+            EXIT
          ENDCASE
       ENDDO
       FClose( hFiIn )
@@ -9364,46 +9374,46 @@ FUNCTION TabChange( cTabGroups )
    ENDIF
 /* End: to fix the scrollbar problem of a browse inside a tab page */
    DO CASE
-      CASE VentanaMain.TabGrids.Value == nPagePRG
-         GBL_TabGridNameFocus := 'PRG'
-      CASE VentanaMain.TabGrids.Value == nPageHEA
-         GBL_TabGridNameFocus := 'HEA'
-      CASE VentanaMain.TabGrids.Value == nPagePAN
-         GBL_TabGridNameFocus := 'PAN'
-      CASE VentanaMain.TabGrids.Value == nPageDBF
-         GBL_TabGridNameFocus := 'DBF'
-      CASE VentanaMain.TabGrids.Value == nPageLIB
-         GBL_TabGridNameFocus := 'LIB'
-      CASE VentanaMain.TabGrids.Value == nPageHLP
-         GBL_TabGridNameFocus := 'HLP'
+   CASE VentanaMain.TabGrids.Value == nPagePRG
+      GBL_TabGridNameFocus := 'PRG'
+   CASE VentanaMain.TabGrids.Value == nPageHEA
+      GBL_TabGridNameFocus := 'HEA'
+   CASE VentanaMain.TabGrids.Value == nPagePAN
+      GBL_TabGridNameFocus := 'PAN'
+   CASE VentanaMain.TabGrids.Value == nPageDBF
+      GBL_TabGridNameFocus := 'DBF'
+   CASE VentanaMain.TabGrids.Value == nPageLIB
+      GBL_TabGridNameFocus := 'LIB'
+   CASE VentanaMain.TabGrids.Value == nPageHLP
+      GBL_TabGridNameFocus := 'HLP'
 
-         IF VentanaMain.GHlpFiles.ItemCount > 0
-            VentanaMain.GHlpFiles.SetFocus
-            w_antes := GetProperty( 'VentanaMain', 'GHlpFiles', 'Value' )
-            SetProperty( 'VentanaMain', 'GHlpFiles', 'Value', 0 )
-            SetProperty( 'VentanaMain', 'GHlpFiles', 'Value', w_antes )
-         ENDIF
-      OTHERWISE
-         GBL_TabGridNameFocus := 'OTHER'
+      IF VentanaMain.GHlpFiles.ItemCount > 0
+         VentanaMain.GHlpFiles.SetFocus
+         w_antes := GetProperty( 'VentanaMain', 'GHlpFiles', 'Value' )
+         SetProperty( 'VentanaMain', 'GHlpFiles', 'Value', 0 )
+         SetProperty( 'VentanaMain', 'GHlpFiles', 'Value', w_antes )
+      ENDIF
+   OTHERWISE
+      GBL_TabGridNameFocus := 'OTHER'
    ENDCASE
 RETURN .T.
 
 FUNCTION TotCaption( cType, nValor )
    LOCAL nPage := 0, cAux := '', nAux := 0
    DO CASE
-      CASE cType == 'PRG'
-         nPage := nPagePrg
-      CASE cType == 'HEA'
-         nPage := nPageHea
-      CASE cType == 'PAN'
-         nPage := nPagePan
-      CASE cType == 'DBF'
-         nPage := nPageDbf
-      CASE cType == 'LIB'
-         nPage := nPageLib
+   CASE cType == 'PRG'
+      nPage := nPagePrg
+   CASE cType == 'HEA'
+      nPage := nPageHea
+   CASE cType == 'PAN'
+      nPage := nPagePan
+   CASE cType == 'DBF'
+      nPage := nPageDbf
+   CASE cType == 'LIB'
+      nPage := nPageLib
 #ifdef QPM_SHG
-      CASE cType == 'HLP'
-         nPage := nPageHlp
+   CASE cType == 'HLP'
+      nPage := nPageHlp
 #endif
    ENDCASE
    IF ! ( nValor == 0 )
@@ -9732,18 +9742,18 @@ FUNCTION RichEditDisplay( tipo, bReload, nRow, bForce )
                                           "     Library '" + IncName + "' not found!"
       ELSE
          DO CASE
-            CASE Upper( US_FileNameOnlyExt( IncName ) ) == 'LIB'
-               cType := QPM_ModuleType( IncName ) + ' Library'
-            CASE Upper( US_FileNameOnlyExt( IncName ) ) == 'A'
-               cType := QPM_ModuleType( IncName ) + ' Library'
-            CASE Upper( US_FileNameOnlyExt( IncName ) ) == "OBJ"
-               cType := QPM_ModuleType( IncName ) + ' Object'
-            CASE Upper( US_FileNameOnlyExt( IncName ) ) == 'O'
-               cType := QPM_ModuleType( IncName ) + ' Object'
-            CASE Upper( US_FileNameOnlyExt( IncName ) ) == "RES"
-               cType := QPM_ModuleType( IncName ) + ' Resource'
-            OTHERWISE
-               US_Log( 'Extension ' + DBLQT + Upper( US_FileNameOnlyExt( IncName ) ) + DBLQT + " is not supported." )
+         CASE Upper( US_FileNameOnlyExt( IncName ) ) == 'LIB'
+            cType := QPM_ModuleType( IncName ) + ' Library'
+         CASE Upper( US_FileNameOnlyExt( IncName ) ) == 'A'
+            cType := QPM_ModuleType( IncName ) + ' Library'
+         CASE Upper( US_FileNameOnlyExt( IncName ) ) == "OBJ"
+            cType := QPM_ModuleType( IncName ) + ' Object'
+         CASE Upper( US_FileNameOnlyExt( IncName ) ) == 'O'
+            cType := QPM_ModuleType( IncName ) + ' Object'
+         CASE Upper( US_FileNameOnlyExt( IncName ) ) == "RES"
+            cType := QPM_ModuleType( IncName ) + ' Resource'
+         OTHERWISE
+            US_Log( 'Extension ' + DBLQT + Upper( US_FileNameOnlyExt( IncName ) ) + DBLQT + " is not supported." )
          ENDCASE
          VentanaMain.RichEditLib.Value := CRLF + ;
                                           CRLF + ;
@@ -9877,16 +9887,16 @@ RETURN .T.
 #ifdef QPM_SHG
 FUNCTION OcultaHlpKeys()
    DO CASE
-      CASE VentanaMain.GHlpFiles.Value < 2 .AND. GetProperty( 'VentanaMain', 'TabFiles', 'Value' ) == nPageHlp
-         VentanaMain.BAddHlpKey.Enabled    := .F.
-         VentanaMain.BRemoveHlpKey.Enabled := .F.
-         VentanaMain.GHlpKeys.Enabled      := .F.
-         VentanaMain.ItC_AddHlpKey.Enabled := .F.
-      CASE VentanaMain.GHlpFiles.Value > 1 .AND. GetProperty( 'VentanaMain', 'TabFiles', 'Value' ) == nPageHlp
-         VentanaMain.BAddHlpKey.Enabled    := .T.
-         VentanaMain.BRemoveHlpKey.Enabled := .T.
-         VentanaMain.GHlpKeys.Enabled      := .T.
-         VentanaMain.ItC_AddHlpKey.Enabled := .T.
+   CASE VentanaMain.GHlpFiles.Value < 2 .AND. GetProperty( 'VentanaMain', 'TabFiles', 'Value' ) == nPageHlp
+      VentanaMain.BAddHlpKey.Enabled    := .F.
+      VentanaMain.BRemoveHlpKey.Enabled := .F.
+      VentanaMain.GHlpKeys.Enabled      := .F.
+      VentanaMain.ItC_AddHlpKey.Enabled := .F.
+   CASE VentanaMain.GHlpFiles.Value > 1 .AND. GetProperty( 'VentanaMain', 'TabFiles', 'Value' ) == nPageHlp
+      VentanaMain.BAddHlpKey.Enabled    := .T.
+      VentanaMain.BRemoveHlpKey.Enabled := .T.
+      VentanaMain.GHlpKeys.Enabled      := .T.
+      VentanaMain.ItC_AddHlpKey.Enabled := .T.
    ENDCASE
    IF GetProperty( 'VentanaMain', 'TabFiles', 'Value' ) == nPageHlp
       VentanaMain.ItC_Move.Enabled                := .T.
@@ -10734,39 +10744,39 @@ RETURN .F.
 FUNCTION LostRichEdit( tipo, nRecord )
    LOCAL cAuxMemo
    DO CASE
-      CASE tipo == 'PRG'
-         IF bPpoDisplayado
-            SetProperty( 'VentanaMain', 'GPrgFiles', 'Cell', nGridPrgLastRow, NCOLPRGOFFSET, cPpoCaretPrg )
-         ELSE
-            SetProperty( 'VentanaMain', 'GPrgFiles', 'Cell', nGridPrgLastRow, NCOLPRGOFFSET, AllTrim( Str( VentanaMain.RichEditPRG.CaretPos ) ) )
-         ENDIF
-         DoMethod( 'VentanaMain', 'GPrgFiles', 'ColumnsAutoFitH' )
-      CASE tipo == 'HEA'
-         SetProperty( 'VentanaMain', 'GHeaFiles', 'Cell', nGridHeaLastRow, NCOLHEAOFFSET, AllTrim( Str( VentanaMain.RichEditHea.CaretPos ) ) )
-         DoMethod( 'VentanaMain', 'GHeaFiles', 'ColumnsAutoFitH' )
-      CASE tipo == 'PAN'
-         SetProperty( 'VentanaMain', 'GPanFiles', 'Cell', nGridPanLastRow, NCOLPANOFFSET, AllTrim( Str( VentanaMain.RichEditPan.CaretPos ) ) )
-         DoMethod( 'VentanaMain', 'GPanFiles', 'ColumnsAutoFitH' )
-      CASE tipo == 'DBF'
-         SetProperty( 'VentanaMain', 'GDbfFiles', 'Cell', nGridDbfLastRow, NCOLDBFOFFSET, AllTrim( Str( VentanaMain.RichEditDbf.CaretPos ) ) + ' ' + AllTrim( Str( nRecord ) ) )
-         DoMethod( 'VentanaMain', 'GDbfFiles', 'ColumnsAutoFitH' )
+   CASE tipo == 'PRG'
+      IF bPpoDisplayado
+         SetProperty( 'VentanaMain', 'GPrgFiles', 'Cell', nGridPrgLastRow, NCOLPRGOFFSET, cPpoCaretPrg )
+      ELSE
+         SetProperty( 'VentanaMain', 'GPrgFiles', 'Cell', nGridPrgLastRow, NCOLPRGOFFSET, AllTrim( Str( VentanaMain.RichEditPRG.CaretPos ) ) )
+      ENDIF
+      DoMethod( 'VentanaMain', 'GPrgFiles', 'ColumnsAutoFitH' )
+   CASE tipo == 'HEA'
+      SetProperty( 'VentanaMain', 'GHeaFiles', 'Cell', nGridHeaLastRow, NCOLHEAOFFSET, AllTrim( Str( VentanaMain.RichEditHea.CaretPos ) ) )
+      DoMethod( 'VentanaMain', 'GHeaFiles', 'ColumnsAutoFitH' )
+   CASE tipo == 'PAN'
+      SetProperty( 'VentanaMain', 'GPanFiles', 'Cell', nGridPanLastRow, NCOLPANOFFSET, AllTrim( Str( VentanaMain.RichEditPan.CaretPos ) ) )
+      DoMethod( 'VentanaMain', 'GPanFiles', 'ColumnsAutoFitH' )
+   CASE tipo == 'DBF'
+      SetProperty( 'VentanaMain', 'GDbfFiles', 'Cell', nGridDbfLastRow, NCOLDBFOFFSET, AllTrim( Str( VentanaMain.RichEditDbf.CaretPos ) ) + ' ' + AllTrim( Str( nRecord ) ) )
+      DoMethod( 'VentanaMain', 'GDbfFiles', 'ColumnsAutoFitH' )
 #ifdef QPM_SHG
-      CASE tipo == 'HLP'
-         IF nRecord > 0
-            SetProperty( 'VentanaMain', 'GHlpFiles', 'Cell', nGridHlpLastRow, NCOLHLPOFFSET, AllTrim( Str( VentanaMain.RichEditHlp.CaretPos ) ) )
-            cAuxMemo := US_GetRichEditValue( 'VentanaMain', 'RichEditHlp', 'RTF' )
-            SHG_SetField( 'SHG_MEMOT', nRecord, cAuxMemo )
-            IF ! ( SHG_GetField( 'SHG_TYPE', nRecord ) == SHG_GetField( 'SHG_TYPET', nRecord ) ) .OR. ;
-               ! ( SHG_GetField( 'SHG_TOPIC', nRecord ) == SHG_GetField( 'SHG_TOPICT', nRecord ) ) .OR. ;
-               ! ( SHG_GetField( 'SHG_NICK', nRecord ) == SHG_GetField( 'SHG_NICKT', nRecord ) ) .OR. ;
-               oHlpRichEdit:lChanged .OR. ;
-               ! ( SHG_GetField( 'SHG_KEYS', nRecord ) == SHG_GetField( 'SHG_KEYST', nRecord ) )
+   CASE tipo == 'HLP'
+      IF nRecord > 0
+         SetProperty( 'VentanaMain', 'GHlpFiles', 'Cell', nGridHlpLastRow, NCOLHLPOFFSET, AllTrim( Str( VentanaMain.RichEditHlp.CaretPos ) ) )
+         cAuxMemo := US_GetRichEditValue( 'VentanaMain', 'RichEditHlp', 'RTF' )
+         SHG_SetField( 'SHG_MEMOT', nRecord, cAuxMemo )
+         IF ! ( SHG_GetField( 'SHG_TYPE', nRecord ) == SHG_GetField( 'SHG_TYPET', nRecord ) ) .OR. ;
+            ! ( SHG_GetField( 'SHG_TOPIC', nRecord ) == SHG_GetField( 'SHG_TOPICT', nRecord ) ) .OR. ;
+            ! ( SHG_GetField( 'SHG_NICK', nRecord ) == SHG_GetField( 'SHG_NICKT', nRecord ) ) .OR. ;
+            oHlpRichEdit:lChanged .OR. ;
+            ! ( SHG_GetField( 'SHG_KEYS', nRecord ) == SHG_GetField( 'SHG_KEYST', nRecord ) )
 
-               SetProperty( 'VentanaMain', 'GHlpFiles', 'Cell', nGridHlpLastRow, NCOLHLPEDIT, 'D' )
-               oHlpRichEdit:lChanged := .F.
-            ENDIF
-            DoMethod( 'VentanaMain', 'GHlpFiles', 'ColumnsAutoFitH' )
+            SetProperty( 'VentanaMain', 'GHlpFiles', 'Cell', nGridHlpLastRow, NCOLHLPEDIT, 'D' )
+            oHlpRichEdit:lChanged := .F.
          ENDIF
+         DoMethod( 'VentanaMain', 'GHlpFiles', 'ColumnsAutoFitH' )
+      ENDIF
 #endif
    ENDCASE
 RETURN .T.
@@ -11304,6 +11314,7 @@ FUNCTION ResetMsgs
       Prj_Warn_NullRDD         := .T.
       Prj_Warn_PPO_Browse      := .T.
       Prj_Warn_TopFile         := .T.
+      MyMsgInfo( "All warnings and messages are now enabled!" )
    ENDIF
 RETURN NIL
 
