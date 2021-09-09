@@ -7452,11 +7452,11 @@ FUNCTION QPM_Timer_StatusRefresh()
          SetProperty( Venta, 'LStatusLabel', 'value', '' )
       ENDIF
       IF File( END_FILE )
-         TabChange( 'FILES' )
+         SetProperty( Venta, 'bStop', 'enabled', .F. )
          PUB_bIsProcessing := .F.
+         TabChange( 'FILES' )
 /* The next sentence is for the case there's an error in the compile process while the stop process is active */
          FErase( MSG_SYSIN )
-         SetProperty( Venta, 'bStop', 'enabled', .T. )
          VentanaMain.TabFiles.Value := nPageSysout
          QPM_LogText( "Translating log" )
          QPM_MemoWrit( TEMP_LOG, cLog := TranslateLog( MemoRead( TEMP_LOG ) ) )
@@ -7606,6 +7606,12 @@ FUNCTION QPM_Timer_StatusRefresh()
             SetProperty( Venta, 'RichEditSysout', 'value', MemoRead( PROGRESS_LOG ) )
             SetProperty( Venta, 'RichEditSysout', 'CaretPos', Len( GetProperty( Venta, 'RichEditSysout', 'value' ) ) )
          ENDIF
+      ENDIF
+   ELSE
+      IF PUB_bLite
+         VentanaLite.bStop.Enabled := .F.
+      ELSE
+         VentanaMain.bStop.Enabled := .F.
       ENDIF
    ENDIF
 
